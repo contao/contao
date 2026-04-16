@@ -94,7 +94,7 @@ class LegacyRouteParametersListenerTest extends TestCase
         $listener($event);
     }
 
-    public function testThrowsUnusedArgumentsExceptionWithUnusedRoutParameters(): void
+    public function testThrowsUnusedArgumentsExceptionWithUnusedRouteParameters(): void
     {
         $this->expectException(UnusedArgumentsException::class);
         $this->expectExceptionMessage('Unused arguments: foo');
@@ -133,6 +133,44 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->method('getAdapter')
             ->with(Input::class)
             ->willReturn($inputAdapter)
+        ;
+
+        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
+        $listener($responseEvent);
+    }
+
+    public function testDoesNotThrowUnusedArgumentsExceptionWithUnusedRouteParametersOnUnsuccessfulResponses(): void
+    {
+        $responseEvent = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR),
+        );
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isFrontendMainRequest')
+            ->with($responseEvent)
+            ->willReturn(true)
+        ;
+
+        $inputAdapter = $this->createAdapterMock(['getUnusedRouteParameters', 'setUnusedRouteParameters']);
+        $inputAdapter
+            ->expects($this->never())
+            ->method('getUnusedRouteParameters')
+        ;
+
+        $inputAdapter
+            ->expects($this->never())
+            ->method('setUnusedRouteParameters')
+        ;
+
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->never())
+            ->method('getAdapter')
         ;
 
         $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
