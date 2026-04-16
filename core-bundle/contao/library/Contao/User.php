@@ -149,6 +149,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $roles = array();
 
 	/**
+	 * @var integer
+	 */
+	private $accessDecisionCacheRevision = 0;
+
+	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone()
@@ -163,6 +168,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function __set($strKey, $varValue)
 	{
+		$this->markAccessDecisionCacheStateChanged();
+
 		$this->arrData[$strKey] = $varValue;
 	}
 
@@ -328,6 +335,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public function getRoles(): array
 	{
 		return array();
+	}
+
+	public function getAccessDecisionCacheKey(): string
+	{
+		return static::class . ':' . spl_object_id($this) . ':' . $this->accessDecisionCacheRevision;
+	}
+
+	protected function markAccessDecisionCacheStateChanged(): void
+	{
+		++$this->accessDecisionCacheRevision;
 	}
 
 	public static function loadUserByIdentifier(string $identifier): self|null
