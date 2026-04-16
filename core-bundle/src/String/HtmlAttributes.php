@@ -20,6 +20,8 @@ use Contao\StringUtil;
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
+    private const ESCAPED_VALUE_CACHE_LIMIT = 4096;
+
     /**
      * @var array<array-key, string>
      */
@@ -458,13 +460,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function escapeValue(string $name, string $value): string
     {
+        static $escapedValues = [];
+
         if (!preg_match('//u', $value) || str_contains($value, "\x00")) {
             throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
+        $cacheKey = ($this->doubleEncoding ? '1' : '0')."\0".$value;
 
-        return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+        if (isset($escapedValues[$cacheKey])) {
+            return $escapedValues[$cacheKey];
+        }
+
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
+        $value = str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+
+        $escapedValues[$cacheKey] = $value;
+
+        if (\count($escapedValues) > self::ESCAPED_VALUE_CACHE_LIMIT) {
+            unset($escapedValues[array_key_first($escapedValues)]);
+        }
+
+        return $value;
     }
 
     /**
