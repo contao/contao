@@ -14,6 +14,9 @@ export default class OperationsMenuController extends Controller {
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             menuLinkSelector: 'a,button,img',
+            openClass: ['show'],
+            closeClass: [],
+            transitionClass: [],
         });
 
         menus.push(this.$menu);
