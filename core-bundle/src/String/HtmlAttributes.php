@@ -61,21 +61,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, \Stringable|bool|float|int|string|null $value): void {
-            if ('class' === $name) {
-                $this->addClass((string) $value);
-            } elseif ('style' === $name) {
-                $this->addStyle((string) $value);
-            } else {
-                $this->set($name, $value);
+        if ($attributes instanceof self) {
+            foreach ($attributes->attributes as $name => $value) {
+                $this->mergeAttribute((string) $name, $value, true);
             }
-        };
+
+            return $this;
+        }
 
         if (\is_string($attributes)) {
             foreach ($this->parseString($attributes) as $name => $value) {
                 try {
-                    $mergeSet($name, $value);
+                    $this->mergeAttribute($name, $value);
                 } catch (\InvalidArgumentException) {
                     // Skip invalid attributes
                 }
@@ -85,7 +82,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         foreach ($attributes as $name => $value) {
-            $mergeSet((string) $name, $value);
+            $this->mergeAttribute((string) $name, $value);
         }
 
         return $this;
@@ -333,7 +330,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         $attributes = [];
 
-        foreach ($this->getIterator() as $name => $value) {
+        foreach ($this->attributes as $name => $value) {
+            $name = (string) $name;
+
             // Special case if the attribute name starts with an equals sign and the previous
             // attribute was a boolean attribute
             if ('=' === $name[0] && !str_ends_with($attributes[\count($attributes) - 1] ?? '"', '"')) {
@@ -406,6 +405,19 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private function split(string $value): array
     {
         return array_filter(preg_split('/\s+/', $value));
+    }
+
+    private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
+    {
+        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addClass((string) $value);
+        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addStyle((string) $value);
+        } elseif ($trusted) {
+            $this->attributes[$name] = (string) $value;
+        } else {
+            $this->set($name, $value);
+        }
     }
 
     /**
