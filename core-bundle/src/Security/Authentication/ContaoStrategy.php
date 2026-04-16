@@ -20,6 +20,10 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
+    private int|null $contaoContextRequestId = null;
+
+    private bool|null $contaoContext = null;
+
     public function __construct(
         private readonly AccessDecisionStrategyInterface $defaultStrategy,
         private readonly AccessDecisionStrategyInterface $contaoStrategy,
@@ -55,17 +59,30 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
         $request = $this->requestStack->getMainRequest();
 
         if (!$request || !$this->firewallMap instanceof FirewallMap) {
+            $this->contaoContextRequestId = null;
+            $this->contaoContext = false;
+
             return false;
         }
+
+        $requestId = spl_object_id($request);
+
+        if ($this->contaoContextRequestId === $requestId && null !== $this->contaoContext) {
+            return $this->contaoContext;
+        }
+
+        $this->contaoContextRequestId = $requestId;
 
         $config = $this->firewallMap->getFirewallConfig($request);
 
         if (!$config instanceof FirewallConfig) {
+            $this->contaoContext = false;
+
             return false;
         }
 
         $context = $config->getContext();
 
-        return 'contao_frontend' === $context || 'contao_backend' === $context;
+        return $this->contaoContext = 'contao_frontend' === $context || 'contao_backend' === $context;
     }
 }
