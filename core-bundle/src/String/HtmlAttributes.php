@@ -475,8 +475,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
         $value = str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
 
-        if (\count($escapedValues) < self::ESCAPED_VALUE_CACHE_LIMIT) {
-            $escapedValues[$cacheKey] = $value;
+        $escapedValues[$cacheKey] = $value;
+
+        if (\count($escapedValues) > self::ESCAPED_VALUE_CACHE_LIMIT) {
+            unset($escapedValues[array_key_first($escapedValues)]);
         }
 
         return $value;
