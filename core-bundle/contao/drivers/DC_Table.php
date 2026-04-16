@@ -3423,12 +3423,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
 				$records[] = $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
-
-				if ($this->treeRecordLimitReached)
-				{
-					break;
-				}
 			}
+		}
+
+		if ($this->treeRecordLimitReached)
+		{
+			$records[] = $this->generateTreeRecordLimitNotice();
 		}
 
 		$parameters['records'] = $records;
@@ -3553,6 +3553,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		if ($this->treeRecordLimitReached)
+		{
+			$return .= ' ' . trim($this->generateTreeRecordLimitNotice());
+		}
+
 		return $return;
 	}
 
@@ -3574,6 +3579,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
+		$isTopMostRecord = $intMargin < 0;
+
 		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
 		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
 		// tree mode if both $table and $this->strTable point to the child table.
@@ -3584,9 +3591,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		if (!$this->canRenderTreeRecord())
+		if (!$isTopMostRecord && !$this->canRenderTreeRecord())
 		{
-			return $this->generateTreeRecordLimitNotice();
+			return '';
 		}
 
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
