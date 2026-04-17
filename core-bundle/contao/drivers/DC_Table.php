@@ -43,6 +43,8 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
+	private const DEFAULT_TREE_RECORD_LIMIT = 300;
+
 	/**
 	 * Name of the parent table
 	 * @var string
@@ -96,6 +98,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @var boolean
 	 */
 	protected $treeView = false;
+
+	/**
+	 * Number of records rendered in the current tree view request.
+	 */
+	private int $treeRecordCount = 0;
+
+	/**
+	 * Whether the tree record limit has been reached while trying to render another record.
+	 */
+	private bool $treeRecordLimitReached = false;
 
 	/**
 	 * The current back end module
@@ -3399,6 +3411,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Call a recursive function that builds the tree
 		$records = array();
 
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
 		if (!empty($topMostRootIds))
 		{
 			static::preloadCurrentRecords($topMostRootIds, $table);
@@ -3408,6 +3423,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$records[] = $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
 			}
+		}
+
+		if ($this->treeRecordLimitReached)
+		{
+			$records[] = $this->generateTreeRecordLimitNotice();
 		}
 
 		$parameters['records'] = $records;
@@ -3476,6 +3496,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$table = $this->strTable;
 		$blnPtable = false;
 
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
 		// Load parent table
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 		{
@@ -3522,6 +3545,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
 			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $arrIds[$i], !$blnPtable), $blnProtected));
+
+			if ($this->treeRecordLimitReached)
+			{
+				break;
+			}
+		}
+
+		if ($this->treeRecordLimitReached)
+		{
+			$return .= ' ' . trim($this->generateTreeRecordLimitNotice());
 		}
 
 		return $return;
@@ -3545,12 +3578,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
+		$isTopMostRecord = $intMargin < 0;
+
 		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
 		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
 		// tree mode if both $table and $this->strTable point to the child table.
 		$checkIdAllowed = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
 
 		if ($checkIdAllowed && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		{
+			return '';
+		}
+
+		if (!$isTopMostRecord && !$this->canRenderTreeRecord())
 		{
 			return '';
 		}
@@ -3606,6 +3646,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			return '';
 		}
+
+		$this->countTreeRecord();
 
 		$intSpacing = 16;
 		$children = array();
@@ -3856,6 +3898,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
 					$parameters['records'][] = $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
+
+					if ($this->treeRecordLimitReached)
+					{
+						break;
+					}
 				}
 			}
 		}
@@ -3870,6 +3917,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
 				$parameters['children'][] = $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+
+				if ($this->treeRecordLimitReached)
+				{
+					break;
+				}
 			}
 		}
 
@@ -3884,6 +3936,50 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'@Contao/backend/data_container/table/view/tree_records.html.twig',
 				$parameters
 			);
+	}
+
+	private function canRenderTreeRecord(): bool
+	{
+		if ($this->treeRecordLimitReached)
+		{
+			return false;
+		}
+
+		$limit = $this->getTreeRecordLimit();
+
+		if ($limit < 1 || $this->treeRecordCount < $limit)
+		{
+			return true;
+		}
+
+		$this->treeRecordLimitReached = true;
+
+		return false;
+	}
+
+	private function countTreeRecord(): void
+	{
+		if ($this->getTreeRecordLimit() > 0)
+		{
+			++$this->treeRecordCount;
+		}
+	}
+
+	private function getTreeRecordLimit(): int
+	{
+		if (Input::get('act') == 'select')
+		{
+			return 0;
+		}
+
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? self::DEFAULT_TREE_RECORD_LIMIT);
+	}
+
+	private function generateTreeRecordLimitNotice(): string
+	{
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	/**

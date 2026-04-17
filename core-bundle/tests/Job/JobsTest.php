@@ -43,6 +43,17 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
+    public function testRemoveJob(): void
+    {
+        $jobs = $this->getJobs();
+
+        $job = $jobs->createJob('job-type');
+        $this->assertInstanceOf(Job::class, $jobs->getByUuid($job->getUuid()));
+
+        $jobs->removeJob($job);
+        $this->assertNull($jobs->getByUuid($job->getUuid()));
+    }
+
     #[DataProvider('withProgressFromAmountsProvider')]
     public function testWithProgressFromFixedAmounts(int|null $total, int $amount, float $expectedProgress): void
     {
@@ -294,6 +305,10 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertSame('my-attachment-key', $attachment->getFilesystemItem()->getName());
         $this->assertCount(2, iterator_to_array($this->vfs->listContents($job->getUuid())));
         $this->assertCount(2, $jobs->getAttachments($job->getUuid()));
+
+        $jobs->removeAttachments($job->getUuid());
+        $this->assertCount(0, iterator_to_array($this->vfs->listContents($job->getUuid())));
+        $this->assertCount(0, $jobs->getAttachments($job->getUuid()));
     }
 
     public function testPrune(): void

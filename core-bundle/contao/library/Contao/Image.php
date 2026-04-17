@@ -81,9 +81,9 @@ class Image
 	/**
 	 * Generate an image tag and return it as string
 	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
+	 * @param string                $src        The image path
+	 * @param string                $alt        An optional alt attribute
+	 * @param string|HtmlAttributes $attributes A string of other attributes
 	 *
 	 * @return string The image HTML tag
 	 */
@@ -93,7 +93,7 @@ class Image
 
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
-		$attributesObject = new HtmlAttributes($attributes);
+		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
 		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
