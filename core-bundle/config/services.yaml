@@ -1185,6 +1185,11 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.job_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\JobAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.layout_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
         arguments:
