@@ -106,7 +106,7 @@ class JobsListener
     #[AsCallback(table: 'tl_job', target: 'config.ondelete')]
     public function onDeleteCallback(DC_Table $dc): void
     {
-        if (($currentRecord = $dc->getCurrentRecord()) === null) {
+        if (null === ($currentRecord = $dc->getCurrentRecord())) {
             return;
         }
 
