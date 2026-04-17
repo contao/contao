@@ -524,7 +524,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		else
 		{
-			if ($this->ptable && Input::get('table') && Database::getInstance()->fieldExists('pid', $this->strTable))
+			if ($this->ptable && $this->currentPid && Input::get('table') && Database::getInstance()->fieldExists('pid', $this->strTable))
 			{
 				$this->procedure[] = 'pid=?';
 				$this->values[] = $this->currentPid;
