@@ -16,7 +16,7 @@ More information: https://github.com/contao/core/issues/5234
 
 ## Infinitely repeating events in open-ended lists
 
-Events that are repeated infinitely only show up once in event lists that are open ended, as this would otherwise end up
-in an endless list.
+Events that repeat indefinitely are shown only once in open-ended event lists, as they would otherwise create an
+endless list.
 
 More information: https://github.com/contao/contao/issues/8354
