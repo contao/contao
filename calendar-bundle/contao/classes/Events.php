@@ -132,9 +132,16 @@ abstract class Events extends Module
 					$intStartTime = $objEvent->startTime;
 					$intEndTime = $objEvent->endTime;
 					$strtotime = '+ ' . $arrRepeat['value'] . ' ' . $arrRepeat['unit'];
+					$rangeCount = $intEndTime < $intStart || $intStartTime > $intEnd ? 0 : 1;
 
 					while ($intEndTime < $intEnd)
 					{
+						// If the range is open-ended, show infinitely repeating events only once (see #9730)
+						if ($rangeCount > 0 && $intEnd >= min(4294967295, PHP_INT_MAX) && $objEvent->recurrences === 0)
+						{
+							break;
+						}
+
 						if ($objEvent->recurrences > 0 && $count++ >= $objEvent->recurrences)
 						{
 							break;
@@ -156,6 +163,7 @@ abstract class Events extends Module
 						}
 
 						$this->addEvent($objEvent, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
+						++$rangeCount;
 					}
 				}
 			}
