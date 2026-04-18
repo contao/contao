@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,8 +32,8 @@ class ResponseContextAccessor
 
     public function setResponseContext(ResponseContext|null $responseContext): self
     {
-        // Unset some legacy globals (see #7659)
-        unset(
+        // Restore legacy globals to the state after framework init (see #7659)
+        [
             $GLOBALS['TL_HEAD'],
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_MOOTOOLS'],
@@ -41,7 +42,7 @@ class ResponseContextAccessor
             $GLOBALS['TL_FRAMEWORK_CSS'],
             $GLOBALS['TL_JAVASCRIPT'],
             $GLOBALS['TL_CSS'],
-        );
+        ] = $this->requestStack->getMainRequest()?->attributes->get(LegacyGlobalsBackupListener::ATTRIBUTE) ?? array_fill(0, 8, []);
 
         $request = $this->requestStack->getCurrentRequest();
         $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);

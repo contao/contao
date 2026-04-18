@@ -443,6 +443,9 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.legacy_globals_backup:
+        class: Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener
+
     contao.listener.legacy_route_parameters:
         class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
         arguments:
