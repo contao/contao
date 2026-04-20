@@ -29,7 +29,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testDelegatesCallsForIcon(): void
     {
-        $attributes = (new HtmlAttributes())->set('foo', 'bar');
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
 
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
@@ -48,7 +48,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForNoMimeType(): void
     {
-        $attributes = (new HtmlAttributes())->set('foo', 'bar');
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
 
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
@@ -67,7 +67,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsIconForMimeType(): void
     {
-        $attributes = (new HtmlAttributes())->set('foo', 'bar');
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
 
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
@@ -95,7 +95,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForMissingRegisteredMimeType(): void
     {
-        $attributes = (new HtmlAttributes())->set('foo', 'bar');
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
 
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter

@@ -180,7 +180,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $twig,
         );
 
-        $row = ['id' => 42, 'uuid' => $job->getUuid()];
+        $row = ['id' => 42, 'uuid' => $job->getUuid(), 'owner' => 1];
 
         $columns = [
             '2025-10-30 13:10',
