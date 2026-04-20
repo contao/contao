@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.1">
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
-        <target>Ограничение применяется, если пользователь выбирает значение 'Показать все записи'.</target>
+        <target>Ограничение применяется, если пользователь выбирает значение &apos;Показать все записи&apos;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>

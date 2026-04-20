@@ -413,6 +413,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Kalıp düzenleyiciye erişme iznini yalnızca bir yöneticiyseniz verebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>
@@ -1907,6 +1911,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Geçerli süzgeç ayarlarına uyan bir kayıt bulunamadı.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2090,7 +2095,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileUuid">
         <source>Unique ID</source>
-        <target>Eşsiz kimlik</target>
+        <target>Benzersiz kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.fileImageSize">
         <source>Width/height in pixel</source>
@@ -3057,11 +3062,11 @@
         <target>&lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt; tarafından korunuyor</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Robot değilim</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>İnsanım</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">

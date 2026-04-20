@@ -4,9 +4,9 @@
     {% if this.label %}
         <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
             {% if this.mandatory|default %}
-                <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+                <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
             {% else %}
-                {{ this.label }}
+                {{ this.label|insert_tag_raw }}
             {% endif %}
         </label>
     {% endif %}
@@ -17,6 +17,8 @@
         <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
+    {% set textarea_attributes = attrs(getAttributes.invoke()) %}
+
     <textarea{{ attrs()
         .set('name', this.name)
         .set('id', "ctrl_#{this.id}")
@@ -25,10 +27,11 @@
         .set('rows', this.rows)
         .set('cols', this.cols)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
-        .mergeWith(getAttributes.invoke())
+        .mergeWith(textarea_attributes)
+        .setIfExists('placeholder', textarea_attributes.placeholder|default|insert_tag)
     }}>{{ this.value|insert_tag }}</textarea>
 
     {% if this.help|default %}
-        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
     {% endif %}
 {% endblock %}

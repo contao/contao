@@ -304,11 +304,9 @@ class tl_user_group extends Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getModules(DataContainer $dc)
+	public function getModules()
 	{
 		$arrModules = array();
 
@@ -328,15 +326,6 @@ class tl_user_group extends Backend
 			}
 
 			$arrModules[$k] = array_keys($v);
-		}
-
-		$modules = StringUtil::deserialize($dc->activeRecord->modules);
-
-		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
-		{
-			unset($arrModules['design'][$key]);
-			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;

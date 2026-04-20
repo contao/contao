@@ -497,6 +497,74 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                 ],
             ],
         ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=select',
+            [
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
+                [
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
+                            'label' => 'Edit page ID 1',
+                        ],
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=2&rt=RT',
+                            'label' => 'Edit page ID 2',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                ],
+                [
+                    'label' => 'Edit multiple',
+                    'treeTrail' => null,
+                    'treeSiblings' => null,
+                    'url' => '/contao?do=article&id=1&table=tl_content&act=select',
+                ],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=deleteAll',
+            [
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
+                [
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
+                            'label' => 'Edit page ID 1',
+                        ],
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=2&rt=RT',
+                            'label' => 'Edit page ID 2',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                ],
+                [
+                    'label' => 'Delete',
+                    'treeTrail' => null,
+                    'treeSiblings' => null,
+                    'url' => '/contao?do=article&id=1&table=tl_content&act=deleteAll',
+                ],
+            ],
+        ];
     }
 
     private function loadFixtureFile(string $fileName): void

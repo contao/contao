@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao.listener.administrator_email:
         class: Contao\CoreBundle\EventListener\AdministratorEmailListener
         arguments:
@@ -84,6 +89,12 @@ services:
             - '@security.helper'
             - '@request_stack'
 
+    contao.listener.data_container.check_template_editor_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
+
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
         public: true
@@ -94,6 +105,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@router'
+            - '@clock'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -168,6 +180,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
             - '@translator'
+            - '@contao.data_container.value_formatter'
 
     contao.listener.data_container.file_image_preview:
         class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
@@ -435,6 +448,16 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.legacy_globals_backup:
+        class: Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener
+
+    contao.listener.legacy_route_parameters:
+        class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@contao.framework'
+            - '@contao.routing.response_context_accessor'
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
@@ -701,6 +724,9 @@ services:
             - '@router'
             - '@translator'
 
+    contao.listener.widget.title_tag:
+        class: Contao\CoreBundle\EventListener\Widget\TitleTagListener
+
     contao.messenger.message_listener:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
@@ -711,4 +737,3 @@ services:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.environment%'

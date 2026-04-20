@@ -18,6 +18,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DcaExtractor;
 use Contao\FilesModel;
 use Contao\Idna;
 use Contao\StringUtil;
@@ -72,7 +73,7 @@ class ValueFormatter implements ResetInterface
                 return null;
             }
 
-            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $id);
+            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $table, $fk->getKey(), $id);
 
             // If we don't have a column name, the expression can never be a valid DCA field
             // to format
@@ -93,21 +94,21 @@ class ValueFormatter implements ResetInterface
     public function formatGroup(string $table, string $field, mixed $value, int $mode, mixed $dc): string
     {
         if (\in_array($mode, [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_DAY_BOTH], true)) {
-            return $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+            return $value ? Date::parse(Config::get('dateFormat'), (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_MONTH_BOTH], true)) {
-            $intMonth = $value ? date('m', $value) - 1 : '-';
+            $intMonth = $value ? date('m', (int) $value) - 1 : '-';
 
             if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth])) {
-                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', $value) : '-';
+                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', (int) $value) : '-';
             }
 
-            return $value ? date('Y-m', $value) : '-';
+            return $value ? date('Y-m', (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC, DataContainer::SORT_YEAR_BOTH], true)) {
-            return $value ? date('Y', $value) : '-';
+            return $value ? date('Y', (int) $value) : '-';
         }
 
         if ('checkbox' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null) && !($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['multiple'] ?? null)) {
@@ -216,6 +217,8 @@ class ValueFormatter implements ResetInterface
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
     {
+        $value = StringUtil::deserialize($value);
+
         // Translate UUIDs to paths
         if ('fileTree' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null)) {
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
@@ -260,7 +263,7 @@ class ValueFormatter implements ResetInterface
             return $value ? $dateAdapter->parse($configAdapter->get('datimFormat'), (int) $value) : '';
         }
 
-        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
+        if (\is_scalar($value) && isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
             if (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
                 return (string) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value][0] ?? $value);
             }
@@ -302,13 +305,13 @@ class ValueFormatter implements ResetInterface
             $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
         }
 
-        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'])) {
+        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {
             if ('' === (string) $value) {
                 return '';
             }
 
             $fk = $this->foreignKeyParser->parse($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']);
-            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $value);
+            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $table, $field, $value);
 
             if ($fk->getColumnName()) {
                 return $this->getLabel($fk->getTableName(), $fk->getColumnName(), $value, $dc);
@@ -331,7 +334,7 @@ class ValueFormatter implements ResetInterface
             return Idna::decodeEmail((string) $value);
         }
 
-        return (string) $value;
+        return $this->flatten($value);
     }
 
     private function getDateOptions(string $table, string $field, array $values): array
@@ -431,16 +434,20 @@ class ValueFormatter implements ResetInterface
             return StringUtil::deserialize($value, true);
         }
 
-        return StringUtil::deserialize($value);
+        return $value;
     }
 
-    private function fetchForeignValue(string $table, string $field, mixed $id): mixed
+    private function fetchForeignValue(string $table, string $field, string $relationTable, string $relationField, mixed $id): mixed
     {
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
-            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE id=?", [$id]);
+            $dcaExtractor = $this->framework->createInstance(DcaExtractor::class, [$relationTable]);
+            $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
+            $fk = $this->connection->quoteIdentifier($fk);
 
-            $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
+            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk=?", [$id]);
+
+            $this->foreignValueCache[$table][$field][$id] = false === $value ? null : $value;
         }
 
         return $this->foreignValueCache[$table][$field][$id];
@@ -483,5 +490,30 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
+    }
+
+    private function flatten(mixed $value): string
+    {
+        if (\is_array($value)) {
+            if (isset($value['value'], $value['unit']) && 2 === \count($value)) {
+                return trim($value['value'].', '.$value['unit']);
+            }
+
+            foreach ($value as $kk => $vv) {
+                if (\is_array($vv)) {
+                    $value[$kk] = '['.$this->flatten(array_filter($vv)).']';
+                }
+            }
+
+            if (ArrayUtil::isAssoc($value)) {
+                foreach ($value as $kk => $vv) {
+                    $value[$kk] = $kk.': '.$vv;
+                }
+            }
+
+            return implode(', ', $value);
+        }
+
+        return (string) $value;
     }
 }

@@ -70,6 +70,8 @@ class ModelTest extends TestCase
                     'int_null' => Types::INTEGER,
                     'smallint_not_null' => Types::SMALLINT,
                     'smallint_null' => Types::SMALLINT,
+                    'bigint_not_null' => Types::BIGINT,
+                    'bigint_null' => Types::BIGINT,
                     'float_not_null' => Types::FLOAT,
                     'float_null' => Types::FLOAT,
                     'bool_not_null' => Types::BOOLEAN,
@@ -91,6 +93,8 @@ class ModelTest extends TestCase
                     'int_null' => Types::INTEGER,
                     'smallint_not_null' => Types::SMALLINT,
                     'smallint_null' => Types::SMALLINT,
+                    'bigint_not_null' => Types::BIGINT,
+                    'bigint_null' => Types::BIGINT,
                     'float_not_null' => Types::FLOAT,
                     'float_null' => Types::FLOAT,
                     'bool_not_null' => Types::BOOLEAN,
@@ -131,6 +135,22 @@ class ModelTest extends TestCase
 
         yield ['smallint_null', '12', 12];
 
+        yield ['bigint_not_null', (string) PHP_INT_MAX, PHP_INT_MAX];
+
+        yield ['bigint_null', (string) PHP_INT_MAX, PHP_INT_MAX];
+
+        yield ['bigint_not_null', '9223372036854775808', '9223372036854775808'];
+
+        yield ['bigint_null', '9223372036854775808', '9223372036854775808'];
+
+        yield ['bigint_not_null', (string) PHP_INT_MIN, PHP_INT_MIN];
+
+        yield ['bigint_null', (string) PHP_INT_MIN, PHP_INT_MIN];
+
+        yield ['bigint_not_null', '-9223372036854775809', '-9223372036854775809'];
+
+        yield ['bigint_null', '-9223372036854775809', '-9223372036854775809'];
+
         yield ['float_not_null', '12.3', 12.3];
 
         yield ['float_null', '12.3', 12.3];
@@ -144,6 +164,8 @@ class ModelTest extends TestCase
         yield ['int_null', null, null];
 
         yield ['smallint_null', null, null];
+
+        yield ['bigint_null', null, null];
 
         yield ['float_null', null, null];
 
@@ -189,6 +211,8 @@ class ModelTest extends TestCase
         $table->addColumn('int_null', Types::INTEGER, ['notnull' => false]);
         $table->addColumn('smallint_not_null', Types::SMALLINT, ['notnull' => true]);
         $table->addColumn('smallint_null', Types::SMALLINT, ['notnull' => false]);
+        $table->addColumn('bigint_not_null', Types::BIGINT, ['notnull' => true]);
+        $table->addColumn('bigint_null', Types::BIGINT, ['notnull' => false]);
         $table->addColumn('float_not_null', Types::FLOAT, ['notnull' => true]);
         $table->addColumn('float_null', Types::FLOAT, ['notnull' => false]);
         $table->addColumn('bool_not_null', Types::BOOLEAN, ['notnull' => true]);

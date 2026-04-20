@@ -27,7 +27,7 @@ services:
 
     Contao\CoreBundle\Controller\Backend\BackendController: ~
 
-    Contao\CoreBundle\Controller\BackendCsvImportController:
+    Contao\CoreBundle\Controller\Backend\CsvImportController:
         public: true
         arguments:
             - '@contao.framework'
@@ -35,6 +35,13 @@ services:
             - '@request_stack'
             - '@translator'
             - '%kernel.project_dir%'
+
+    Contao\CoreBundle\Controller\BackendCsvImportController:
+        public: true
+        alias: Contao\CoreBundle\Controller\Backend\CsvImportController
+        deprecated:
+            package: contao/core-bundle
+            version: 5.7
 
     Contao\CoreBundle\Controller\Backend\JobsController:
         arguments:
@@ -237,7 +244,10 @@ services:
 
     Contao\CoreBundle\Controller\Page\ErrorPageController:
         arguments:
-            - '@contao.framework'
+            - '@uri_signer'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     Contao\CoreBundle\Controller\Page\ForwardPageController:
         arguments:
@@ -253,12 +263,7 @@ services:
         arguments:
             - '@contao.routing.content_url_generator'
 
-    Contao\CoreBundle\Controller\Page\RegularPageController:
-        arguments:
-            - '@contao.content_composition'
-            - '@contao.routing.response_context_factory'
-            - '@contao.routing.response_context_accessor'
-            - '@contao.framework'
+    Contao\CoreBundle\Controller\Page\RegularPageController: ~
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:
