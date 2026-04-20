@@ -38,7 +38,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         return $this->framework
             ->getAdapter(Controller::class)
             ->getFrontendModule(
-                0 !== $typeOrId ? $this->getModel(ModuleModel::class, $typeOrId, $data) : 0,
+                0 !== $typeOrId ? $this->getModel('tl_module', $typeOrId, $data) : 0,
                 $context['_slot_name'] ?? 'main',
             )
         ;
@@ -51,7 +51,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         } elseif (\is_string($typeOrId) && \is_array($data['nested_fragments'] ?? null)) {
             $modelOrReference = $this->getContentReference($typeOrId, $data);
         } else {
-            $modelOrReference = $this->getModel(ContentModel::class, $typeOrId, $data);
+            $modelOrReference = $this->getModel('tl_content', $typeOrId, $data);
         }
 
         return $this->framework->getAdapter(Controller::class)->getContentElement($modelOrReference);
@@ -66,7 +66,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
 
         unset($data['nested_fragments']);
 
-        $model = $this->getModel(ContentModel::class, $type, $data);
+        $model = $this->getModel('tl_content', $type, $data);
 
         $contentElementReference = new ContentElementReference($model, 'main', [], true);
         $contentElementReference->setNestedFragments($nestedFragments);
@@ -77,8 +77,14 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     /**
      * @param class-string<ContentModel|ModuleModel> $class
      */
-    private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel|null
+    private function getModel(string $table, int|string $typeOrId, array $data = []): ContentModel|ModuleModel|null
     {
+        $class = $GLOBALS['TL_MODELS'][$table] ?? null;
+
+        if (!$class || !\class_exists($class)) {
+            return null;
+        }
+
         if (is_numeric($typeOrId)) {
             /** @var Adapter<ContentModel|ModuleModel> $adapter */
             $adapter = $this->framework->getAdapter($class);
@@ -92,9 +98,12 @@ final class FragmentRuntime implements RuntimeExtensionInterface
             return null;
         }
 
+        $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+
         foreach ($data as $k => $v) {
             if (null !== $v && !\is_scalar($v)) {
-                $v = serialize($v);
+                $csv = $GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['csv'] ?? null;
+                $v = $csv ? implode($csv, $v) : serialize($v);
             }
 
             $model->$k = $v;
