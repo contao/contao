@@ -51,6 +51,7 @@ class ThemeContentVoterTest extends TestCase
         ];
 
         $parentChecks = 1;
+
         if (
             $action instanceof UpdateAction
             && (isset($action->getNew()['ptable']) || isset($action->getNew()['pid']))
