@@ -74,14 +74,11 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         return $contentElementReference;
     }
 
-    /**
-     * @param class-string<ContentModel|ModuleModel> $class
-     */
     private function getModel(string $table, int|string $typeOrId, array $data = []): ContentModel|ModuleModel|null
     {
         $class = $GLOBALS['TL_MODELS'][$table] ?? null;
 
-        if (!$class || !\class_exists($class)) {
+        if (!$class || !class_exists($class)) {
             return null;
         }
 
