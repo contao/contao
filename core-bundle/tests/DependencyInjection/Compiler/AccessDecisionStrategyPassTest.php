@@ -49,7 +49,7 @@ class AccessDecisionStrategyPassTest extends TestCase
         $definition
             ->expects($this->once())
             ->method('getArgument')
-            ->with(1)
+            ->with('$strategy')
             ->willReturn($strategy)
         ;
 
@@ -57,7 +57,7 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->expects($this->once())
             ->method('replaceArgument')
             ->with(
-                1,
+                '$strategy',
                 $this->callback(
                     static fn (Definition $definition) => $definition->getArgument(0) === $strategy
                         && $definition->getArgument(1) instanceof Definition
