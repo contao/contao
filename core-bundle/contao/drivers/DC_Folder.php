@@ -2139,11 +2139,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file using the VFS (see #9450)
-				System::getContainer()
-					->get('contao.filesystem.virtual.files')
-					->write(Path::makeRelative($objFile->path, 'files'), $strSource)
-				;
+				// Write the file using the VFS if possible (see #9450)
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
+				{
+					System::getContainer()
+						->get('contao.filesystem.virtual.files')
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
+					;
+				}
+				else
+				{
+					$objFile->write($strSource);
+					$objFile->close();
+				}
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
@@ -2995,7 +3005,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
       <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
+          <select id="tl_search" name="tl_search" class="tl_select">
             ' . implode("\n", $options) . '
           </select>
       </div>

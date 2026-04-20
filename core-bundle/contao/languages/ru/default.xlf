@@ -267,11 +267,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
-        <target>В одном из имеющихся активных корней веб-сайта, у которого в настройках DNS не указано 'Имя домена', не включена опция 'Резервный язык'.</target>
+        <target>В одном из имеющихся активных корней веб-сайта, у которого в настройках DNS не указано &apos;Имя домена&apos;, не включена опция &apos;Резервный язык&apos;.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
-        <target>Ни в одном из имеющихся активных корней веб-сайта &lt;strong&gt;%s&lt;/strong&gt; не включена в настройках DNS опция 'Резервный язык'.</target>
+        <target>Ни в одном из имеющихся активных корней веб-сайта &lt;strong&gt;%s&lt;/strong&gt; не включена в настройках DNS опция &apos;Резервный язык&apos;.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
@@ -412,6 +412,10 @@
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
+      </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Вы можете предоставить доступ к редактору шаблонов только, если у вас есть права администратора.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -611,7 +615,7 @@
       </trans-unit>
       <trans-unit id="CTE.toplink.0">
         <source>Top link</source>
-        <target>Ссылка 'Наверх страницы'</target>
+        <target>Ссылка &apos;Наверх страницы&apos;</target>
       </trans-unit>
       <trans-unit id="CTE.toplink.1">
         <source>Generates a link to jump to the top of the page.</source>
@@ -799,7 +803,7 @@
       </trans-unit>
       <trans-unit id="FFL.password.0">
         <source>Password field</source>
-        <target>Поле 'Пароль'</target>
+        <target>Поле &apos;Пароль&apos;</target>
       </trans-unit>
       <trans-unit id="FFL.password.1">
         <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
@@ -879,7 +883,7 @@
       </trans-unit>
       <trans-unit id="FFL.submit.0">
         <source>Submit field</source>
-        <target>Кнопка 'Отправить'</target>
+        <target>Кнопка &apos;Отправить&apos;</target>
       </trans-unit>
       <trans-unit id="FFL.submit.1">
         <source>A button to submit the form.</source>
@@ -3058,11 +3062,11 @@
         <target>Защищено &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Я не робот</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>Я человек</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">

@@ -14,6 +14,10 @@ export default class OperationsMenuController extends Controller {
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             menuLinkSelector: 'a,button,img',
+            // Use arrays to bypass accessible-menu's string class selector validation
+            openClass: ['show'],
+            closeClass: [],
+            transitionClass: [],
         });
 
         menus.push(this.$menu);

@@ -24,7 +24,6 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
-		'notDeletable'                => true,
 		'permissions'                 => array(),
 		'backendSearchIgnore'         => true,
 		'sql' => array
@@ -57,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'operations' => array
 		(
 			'children',
+			'delete',
 			'show' => false,
 		)
 	),

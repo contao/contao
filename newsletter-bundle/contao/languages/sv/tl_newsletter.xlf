@@ -30,7 +30,7 @@
         <target>HTML-innehåll</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Här kan du skriva HTML-innehållet i nyhetsbrevet. Använd wildcard &lt;em&gt;##email##&lt;/em&gt; för att infoga mottagarens E-postadress. Följande exempel genererar en länk för uppsägning av prenumeration: &lt;em&gt;http://www.dindomän.se/unsubscribe-page.html?email=##email##&lt;/em&gt; (Byt ut &lt;em&gt;www.dindomän.se/unsubscribe-page.html&lt;/em&gt; mot sökvägen till en sida med frontend-modulen &quot;Avsluta prenumeration&quot;.)</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Textinnehåll</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Här kan du skriva textinnehållet i nyhetsbrevet. Använd wildcard &lt;em&gt;##email##&lt;/em&gt; för att infoga mottagarens E-postadress. Följande exempel genererar en länk för uppsägning av prenumeration: &lt;em&gt;http://www.dindomän.se/unsubscribe-page.html?email=##email##&lt;/em&gt; (Byt ut &lt;em&gt;www.dindomän.se/unsubscribe-page.html&lt;/em&gt; mot sökvägen till en sida med frontend-modulen &quot;Avsluta prenumeration&quot;.)</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

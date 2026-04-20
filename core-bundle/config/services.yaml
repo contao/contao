@@ -18,6 +18,11 @@ services:
             - 100000
             - 86400
 
+    contao.asset.mtime_version_strategy:
+        class: Contao\CoreBundle\Asset\VersionStrategy\MtimeVersionStrategy
+        arguments:
+            - '%contao.web_dir%'
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
@@ -85,6 +90,8 @@ services:
             - '@translator'
             - '@contao.routing.page_registry'
             - '@event_dispatcher'
+            - '@contao.routing.response_context_accessor'
+            - '@contao.routing.response_context_factory'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
@@ -1178,6 +1185,11 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.job_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\JobAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.layout_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
         arguments:
@@ -1594,6 +1606,7 @@ services:
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag.parser'
     Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    Contao\CoreBundle\Job\Jobs: '@contao.job.jobs'
     Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Pagination\PaginationFactoryInterface: '@contao.pagination.factory'

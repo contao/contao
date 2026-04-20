@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Approuver les commentaires avant qu'ils ne soient publiés sur le site.</target>
+        <target>Approuver les commentaires avant qu&apos;ils ne soient publiés sur le site.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.0">
         <source>Allow BBCode</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Autoriser les visiteurs à formater leurs commentaires à l'aide de BBCode.</target>
+        <target>Autoriser les visiteurs à formater leurs commentaires à l&apos;aide de BBCode.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.0">
         <source>Require login to comment</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
-        <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
+        <target>N&apos;autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>N'utiliser cette option que si vous avez restreint les commentaires aux utilisateurs authentifiés.</target>
+        <target>N&apos;utiliser cette option que si vous avez restreint les commentaires aux utilisateurs authentifiés.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments_legend">
         <source>Comments</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
-        <target>Auteur de l'actualité</target>
+        <target>Auteur de l&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>Afficher les commentaires de l'archive d'actualités ID %s</target>
+        <target>Afficher les commentaires de l&apos;archive d&apos;actualités ID %s</target>
       </trans-unit>
     </body>
   </file>

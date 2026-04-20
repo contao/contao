@@ -384,7 +384,7 @@ class PreviewFactoryTest extends TestCase
                 return str_ends_with($path, '.pdf') && str_starts_with($fileHeader, '%PDF-');
             }
 
-            public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): \Generator
+            public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable
             {
                 $lastPage = min(3, $lastPage);
 

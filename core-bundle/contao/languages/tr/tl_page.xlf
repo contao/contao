@@ -126,7 +126,7 @@
         <target>Varsayılan dil</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Ziyaretçinin diline uygun bir sayfa yoksa görüntülenecek sayfa.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

@@ -249,7 +249,7 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertSame($expected, array_map(static fn (FilesystemItem $item): string => $item->getPath(), $actual));
     }
 
-    private function generateItems(): \Generator
+    private function generateItems(): iterable
     {
         yield new FilesystemItem(true, 'foo');
         yield new FilesystemItem(true, 'bar');

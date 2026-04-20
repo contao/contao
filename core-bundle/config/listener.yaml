@@ -89,6 +89,12 @@ services:
             - '@security.helper'
             - '@request_stack'
 
+    contao.listener.data_container.check_template_editor_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
+
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
         public: true
@@ -442,6 +448,13 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.legacy_route_parameters:
+        class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@contao.framework'
+            - '@contao.routing.response_context_accessor'
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
@@ -721,4 +734,3 @@ services:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.environment%'
