@@ -250,8 +250,8 @@ services:
 
     Contao\CoreBundle\Controller\Page\ForwardPageController:
         arguments:
+            - '@contao.routing.page_registry'
             - '@?logger'
-            - '@?contao.routing.page_registry'
         tags:
             - { name: monolog.logger, channel: contao.error }
 

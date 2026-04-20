@@ -29,15 +29,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ForwardPageController extends AbstractController implements DynamicRouteInterface
 {
     public function __construct(
+        private readonly PageRegistry $pageRegistry,
         private readonly LoggerInterface|null $logger = null,
-        private readonly PageRegistry|null $pageRegistry = null,
     ) {
     }
 
     public function __invoke(Request $request, PageModel $pageModel): RedirectResponse
     {
         $forwardPage = $this->getForwardPage($pageModel);
-        $route = $this->pageRegistry?->getRoute($forwardPage);
+        $route = $this->pageRegistry->getRoute($forwardPage);
 
         $queryString = '';
 
@@ -46,7 +46,7 @@ class ForwardPageController extends AbstractController implements DynamicRouteIn
         }
 
         return $this->redirect(
-            $this->generateContentUrl($forwardPage, array_intersect_key($request->attributes->all(), array_flip($route?->compile()->getVariables() ?? [])), UrlGeneratorInterface::ABSOLUTE_URL).$queryString,
+            $this->generateContentUrl($forwardPage, array_intersect_key($request->attributes->all(), array_flip($route->compile()->getVariables())), UrlGeneratorInterface::ABSOLUTE_URL).$queryString,
             'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY,
         );
     }
