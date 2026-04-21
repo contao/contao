@@ -53,6 +53,16 @@ bundles:
 },
 ```
 
+Also update the config section so that Composer installs the monorepo from source instead of dist:
+
+```json
+"config": {
+    "preferred-install": {
+        "contao/contao": "source"
+    }
+},
+```
+
 Again, use `5.x-dev` if you want to add a new feature or `<lts-version>.x-dev` if you want to fix a bug.
 
 Next, install the dependencies:
