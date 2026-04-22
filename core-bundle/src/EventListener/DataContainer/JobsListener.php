@@ -49,6 +49,7 @@ class JobsListener
 
         $columns[2] = $this->twig->render('@Contao/backend/jobs/progress.html.twig', ['job' => $job]);
         $columns[3] = $this->twig->render('@Contao/backend/jobs/status.html.twig', ['job' => $job]);
+        $columns[4] = $row['owner'] ?: '-';
 
         $columns[5] = $this->twig->render('@Contao/backend/jobs/attachments.html.twig', [
             'job' => $job,
@@ -101,6 +102,16 @@ class JobsListener
         );
 
         $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['filter'][] = $query;
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'config.ondelete')]
+    public function onDeleteCallback(DC_Table $dc): void
+    {
+        if (null === ($currentRecord = $dc->getCurrentRecord())) {
+            return;
+        }
+
+        $this->jobs->removeAttachments($currentRecord['uuid']);
     }
 
     /**
