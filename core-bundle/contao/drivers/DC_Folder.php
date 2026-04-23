@@ -131,6 +131,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected $blnFilesOnly = false;
 
 	/**
+	 * Number of records rendered in the current tree view request.
+	 */
+	private int $treeRecordCount = 0;
+
+	/**
+	 * Whether the tree record limit has been reached while trying to render another record.
+	 */
+	private bool $treeRecordLimitReached = false;
+
+	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -444,6 +454,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Call recursive function tree()
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
 		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
@@ -464,6 +477,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 		}
+
+		$treeRecordLimitNotice = $this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '';
 
 		// Check for the "create new" button
 		$clsNew = 'header_new_folder';
@@ -560,7 +575,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . $treeRecordLimitNotice . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -2580,7 +2595,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
+		$return = $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+
+		return $return . ($this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '');
 	}
 
 	/**
@@ -2621,6 +2641,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$folders = array();
 		$intSpacing = 16;
 		$level = $intMargin / $intSpacing;
+		$isTopMostRecord = $mount;
 
 		// Mount folder
 		if ($mount)
@@ -2736,6 +2757,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				continue;
 			}
 
+			if (!$isTopMostRecord && !$this->canRenderTreeRecord())
+			{
+				break;
+			}
+
+			$this->countTreeRecord();
+
 			$blnIsOpen = !empty($arrFound) || $session['filetree'][$md5] == 1;
 
 			// Always show selected nodes
@@ -2841,6 +2869,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$return .= '<li class="parent" id="filetree_' . $md5 . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild' : '') . '"><ul class="level_' . $level . '">';
 				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
+
+				if ($this->treeRecordLimitReached)
+				{
+					break;
+				}
 			}
 		}
 
@@ -2874,6 +2907,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				continue;
 			}
+
+			if (!$isTopMostRecord && !$this->canRenderTreeRecord())
+			{
+				break;
+			}
+
+			$this->countTreeRecord();
 
 			$currentEncoded = $this->urlEncode($currentFile);
 
@@ -2946,6 +2986,50 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		return $return;
+	}
+
+	private function canRenderTreeRecord(): bool
+	{
+		if ($this->treeRecordLimitReached)
+		{
+			return false;
+		}
+
+		$limit = $this->getTreeRecordLimit();
+
+		if ($limit < 1 || $this->treeRecordCount < $limit)
+		{
+			return true;
+		}
+
+		$this->treeRecordLimitReached = true;
+
+		return false;
+	}
+
+	private function countTreeRecord(): void
+	{
+		if ($this->getTreeRecordLimit() > 0)
+		{
+			++$this->treeRecordCount;
+		}
+	}
+
+	private function getTreeRecordLimit(): int
+	{
+		if (Input::get('act') == 'select')
+		{
+			return 0;
+		}
+
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? Config::get('maxResultsPerPage'));
+	}
+
+	private function generateTreeRecordLimitNotice(): string
+	{
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	/**
