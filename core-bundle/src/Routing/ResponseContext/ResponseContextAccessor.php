@@ -33,16 +33,18 @@ class ResponseContextAccessor
     public function setResponseContext(ResponseContext|null $responseContext): self
     {
         // Restore legacy globals to the state after framework init (see #7659)
-        [
-            $GLOBALS['TL_HEAD'],
-            $GLOBALS['TL_BODY'],
-            $GLOBALS['TL_MOOTOOLS'],
-            $GLOBALS['TL_JQUERY'],
-            $GLOBALS['TL_USER_CSS'],
-            $GLOBALS['TL_FRAMEWORK_CSS'],
-            $GLOBALS['TL_JAVASCRIPT'],
-            $GLOBALS['TL_CSS'],
-        ] = $this->requestStack->getMainRequest()?->attributes->get(LegacyGlobalsBackupListener::ATTRIBUTE) ?? array_fill(0, 8, []);
+        if ($globalsBackup = $this->requestStack->getMainRequest()?->attributes->get(LegacyGlobalsBackupListener::ATTRIBUTE)) {
+            [
+                $GLOBALS['TL_HEAD'],
+                $GLOBALS['TL_BODY'],
+                $GLOBALS['TL_MOOTOOLS'],
+                $GLOBALS['TL_JQUERY'],
+                $GLOBALS['TL_USER_CSS'],
+                $GLOBALS['TL_FRAMEWORK_CSS'],
+                $GLOBALS['TL_JAVASCRIPT'],
+                $GLOBALS['TL_CSS'],
+            ] = $globalsBackup;
+        }
 
         $request = $this->requestStack->getCurrentRequest();
         $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
