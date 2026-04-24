@@ -210,6 +210,10 @@
         <source>Front end modules</source>
         <target>Muduly frontendu</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Elementy pro vytváření obsahu</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Muduly frontendu</target>

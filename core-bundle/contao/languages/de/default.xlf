@@ -1873,6 +1873,10 @@
         <source>All</source>
         <target>Alle</target>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Weitere Datensätze sind aus Performance-Gründen ausgeblendet. Klappen Sie den Baum ein oder nutzen Sie Filter, um die Ansicht einzugrenzen.</target>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
         <target>Details des Datensatzes %s anzeigen</target>
@@ -2819,7 +2823,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>Die Zwei-Faktor-Authentifizierung wurde aktiviert.</target>
+        <target>Die Zwei-Faktor-Authentifizierung ist aktiv.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2851,7 +2855,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
-        <target>Wenn Sie die Backup-Codes neu generieren, werden Ihre alten Codes nicht mehr funktionieren.</target>
+        <target>Wenn Sie die Backup-Codes neu generieren, verlieren die alten Codes ihre Gültigkeit.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
