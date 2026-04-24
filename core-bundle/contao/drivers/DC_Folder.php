@@ -131,16 +131,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected $blnFilesOnly = false;
 
 	/**
-	 * Number of records rendered in the current tree view request.
-	 */
-	private int $treeRecordCount = 0;
-
-	/**
-	 * Whether the tree record limit has been reached while trying to render another record.
-	 */
-	private bool $treeRecordLimitReached = false;
-
-	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -2986,50 +2976,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		return $return;
-	}
-
-	private function canRenderTreeRecord(): bool
-	{
-		if ($this->treeRecordLimitReached)
-		{
-			return false;
-		}
-
-		$limit = $this->getTreeRecordLimit();
-
-		if ($limit < 1 || $this->treeRecordCount < $limit)
-		{
-			return true;
-		}
-
-		$this->treeRecordLimitReached = true;
-
-		return false;
-	}
-
-	private function countTreeRecord(): void
-	{
-		if ($this->getTreeRecordLimit() > 0)
-		{
-			++$this->treeRecordCount;
-		}
-	}
-
-	private function getTreeRecordLimit(): int
-	{
-		if (Input::get('act') == 'select')
-		{
-			return 0;
-		}
-
-		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? Config::get('maxResultsPerPage'));
-	}
-
-	private function generateTreeRecordLimitNotice(): string
-	{
-		return System::getContainer()
-			->get('twig')
-			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	/**
