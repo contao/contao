@@ -381,6 +381,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Вы можете предоставить доступ к редактору шаблонов, только если у вас есть права администратора.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>

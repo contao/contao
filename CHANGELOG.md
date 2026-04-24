@@ -2,6 +2,24 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.46] (2026-04-24)
+
+**Fixed issues:**
+
+- [#9756] Conflict with `league/flysystem-bundle` 3.7 ([ausi])
+- [#9730] Show infinitely repeating events only once if the list is open-ended ([ausi])
+- [#9736] Require `symfony/polyfill-php84` and update the usage of `Mysql::ATTR_MULTI_STATEMENTS` ([zoglo])
+- [#9711] Support JSON-LD multiple types ([koertho])
+- [#9717] Fix the missing `Vary` header in the CAPTCHA controller ([Toflar])
+- [#9701] Cast bigint columns to integer ([ausi])
+- [#9704] Add the charset to the news feed content type ([fritzmg])
+- [#9694] Normalize paths in the `generateScriptTag()` and `generateStyleTag()` methods ([fritzmg])
+- [#9665] Add the missing aspect ratios for Reels, Shorts and TikTok videos ([fritzmg])
+- [#9656] Add text overflow handling to the `tl_tip` class ([Tastaturberuf])
+- [#9625] Move the template editor check to a `save_callback` ([fritzmg])
+- [#9638] Check for nested parent tables in the picker ([aschempp])
+- [#9635] Encode invalid and disallowed URL protocols in BBCode ([ausi])
+
 ## [5.3.45] (2026-03-04)
 
 **Fixed issues:**
@@ -897,6 +915,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.46]: https://github.com/contao/contao/releases/tag/5.3.46
 [5.3.45]: https://github.com/contao/contao/releases/tag/5.3.45
 [5.3.44]: https://github.com/contao/contao/releases/tag/5.3.44
 [5.3.43]: https://github.com/contao/contao/releases/tag/5.3.43
@@ -974,6 +993,7 @@ This project adheres to [Semantic Versioning].
 [falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
 [kllmanu]: https://github.com/kllmanu
+[koertho]: https://github.com/koertho
 [kuestenweb]: https://github.com/kuestenweb
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
@@ -1601,3 +1621,16 @@ This project adheres to [Semantic Versioning].
 [#9597]: https://github.com/contao/contao/pull/9597
 [#9611]: https://github.com/contao/contao/pull/9611
 [#9617]: https://github.com/contao/contao/pull/9617
+[#9625]: https://github.com/contao/contao/pull/9625
+[#9635]: https://github.com/contao/contao/pull/9635
+[#9638]: https://github.com/contao/contao/pull/9638
+[#9656]: https://github.com/contao/contao/pull/9656
+[#9665]: https://github.com/contao/contao/pull/9665
+[#9694]: https://github.com/contao/contao/pull/9694
+[#9701]: https://github.com/contao/contao/pull/9701
+[#9704]: https://github.com/contao/contao/pull/9704
+[#9711]: https://github.com/contao/contao/pull/9711
+[#9717]: https://github.com/contao/contao/pull/9717
+[#9730]: https://github.com/contao/contao/pull/9730
+[#9736]: https://github.com/contao/contao/pull/9736
+[#9756]: https://github.com/contao/contao/pull/9756

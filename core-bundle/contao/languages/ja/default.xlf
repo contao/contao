@@ -381,6 +381,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%dのIDの要素は既存の要素と競合するため、ここには挿入できません。</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>管理者の場合だけテンプレートエディターにアクセスできます。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>

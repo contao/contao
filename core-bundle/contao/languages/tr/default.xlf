@@ -381,6 +381,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Kalıp düzenleyiciye erişme iznini yalnızca bir yöneticiyseniz verebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>

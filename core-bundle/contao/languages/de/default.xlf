@@ -381,6 +381,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Das Element ID %d kann hier nicht eingefügt werden, da es mit einem bestehenden Element kollidiert.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Sie können nur als Administrator Zugriff auf den Template-Editor gewähren.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -2687,7 +2691,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>Die Zwei-Faktor-Authentifizierung wurde aktiviert.</target>
+        <target>Die Zwei-Faktor-Authentifizierung ist aktiv.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2719,7 +2723,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
-        <target>Wenn Sie die Backup-Codes neu generieren, werden Ihre alten Codes nicht mehr funktionieren.</target>
+        <target>Wenn Sie die Backup-Codes neu generieren, verlieren die alten Codes ihre Gültigkeit.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
