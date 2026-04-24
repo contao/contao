@@ -43,8 +43,6 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
-	private const DEFAULT_TREE_RECORD_LIMIT = 300;
-
 	/**
 	 * Name of the parent table
 	 * @var string
@@ -3973,7 +3971,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return 0;
 		}
 
-		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? self::DEFAULT_TREE_RECORD_LIMIT);
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? Config::get('maxResultsPerPage'));
 	}
 
 	private function generateTreeRecordLimitNotice(): string
