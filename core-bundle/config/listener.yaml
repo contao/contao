@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao.listener.administrator_email:
         class: Contao\CoreBundle\EventListener\AdministratorEmailListener
         arguments:
@@ -443,6 +448,9 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.legacy_globals_backup:
+        class: Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener
+
     contao.listener.legacy_route_parameters:
         class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
         arguments:
@@ -715,6 +723,9 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.listener.widget.title_tag:
+        class: Contao\CoreBundle\EventListener\Widget\TitleTagListener
 
     contao.messenger.message_listener:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener

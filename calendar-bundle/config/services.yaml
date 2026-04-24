@@ -7,12 +7,17 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao_calendar.controller.page.calendar_feed:
         class: Contao\CalendarBundle\Controller\Page\CalendarFeedController
         arguments:
             - '@contao.assets.files_context'
             - '@contao_calendar.feed_specification'
             - '%kernel.charset%'
+            - '%kernel.debug%'
 
     contao_calendar.feed_specification:
         class: FeedIo\Specification
@@ -100,6 +105,9 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_calendar.listener.title_tag:
+        class: Contao\CalendarBundle\EventListener\TitleTagListener
 
     contao_calendar.migration.feed:
         class: Contao\CalendarBundle\Migration\FeedMigration

@@ -499,7 +499,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                Mysql::ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
@@ -577,7 +577,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                Mysql::ATTR_MULTI_STATEMENTS => true,
                                 1002 => '',
                             ],
                         ],
@@ -628,7 +628,7 @@ class PluginTest extends ContaoTestCase
 
     public static function provideDatabaseDrivers(): iterable
     {
-        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
+        $key = Mysql::ATTR_MULTI_STATEMENTS;
 
         yield 'pdo with driver' => [
             [
@@ -701,7 +701,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'options' => [\defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'options' => [Mysql::ATTR_MULTI_STATEMENTS => false],
                             'default_table_options' => [
                                 'charset' => 'utf8mb4',
                                 'collate' => 'utf8mb4_unicode_ci',
@@ -779,12 +779,17 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
-    public function testAddsDefaultMailer(): void
+    public function testAddsDefaultMailerAndMtimeVersionStrategy(): void
     {
         $expect = [
             [
                 'mailer' => [
                     'dsn' => '%env(MAILER_DSN)%',
+                ],
+            ],
+            [
+                'assets' => [
+                    'version_strategy' => 'contao.asset.mtime_version_strategy',
                 ],
             ],
         ];
@@ -795,12 +800,15 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testDoesNotAddDefaultMailerIfDefined(): void
+    public function testDoesNotAddDefaultMailerOrMitmeVersionStrategy(): void
     {
         $extensionConfigs = [
             [
                 'mailer' => [
                     'dsn' => 'smtp://localhost',
+                ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
                 ],
             ],
         ];
@@ -818,6 +826,9 @@ class PluginTest extends ContaoTestCase
                     'transports' => [
                         'default' => 'smtp://localhost',
                     ],
+                ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
                 ],
             ],
         ];
@@ -1043,7 +1054,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                Mysql::ATTR_MULTI_STATEMENTS => false,
                                 1002 => '',
                             ],
                         ],

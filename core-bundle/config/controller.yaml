@@ -37,6 +37,7 @@ services:
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
+        public: true
         alias: Contao\CoreBundle\Controller\Backend\CsvImportController
         deprecated:
             package: contao/core-bundle

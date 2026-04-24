@@ -106,16 +106,11 @@ class DcaUrlAnalyzer
 
                 (new DcaLoader($table))->load();
                 $currentRecord = $this->getCurrentRecord($id, $table);
+                $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null;
 
                 // Select the parent node
-                if (
-                    \in_array(
-                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
-                        [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
-                        true,
-                    )
-                ) {
-                    $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                if (\in_array($mode, [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE], true)) {
+                    $query['pn'] = (int) ($currentRecord[DataContainer::MODE_TREE === $mode ? 'id' : 'pid'] ?? null);
                     $query['rt'] = $this->tokenManager->getDefaultTokenValue();
                 }
 
@@ -169,13 +164,14 @@ class DcaUrlAnalyzer
             }
 
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
-                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'deleteAll', 'select'], true)) {
                     $links[] = [
                         'query' => [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')],
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
                                 'editAll', 'select' => 'MSC.all.0',
                                 'overrideAll' => 'MSC.all_override.0',
+                                'deleteAll' => 'MSC.deleteSelected',
                                 default => throw new \LogicException(),
                             },
                             [],
