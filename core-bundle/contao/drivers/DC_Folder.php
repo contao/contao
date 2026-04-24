@@ -2696,7 +2696,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if ($this->blnIsDbAssisted)
 		{
-			$this->preloadCurrentFileModels(array_merge($folders, $files));
+			$this->preloadFileModels([...$folders, ...$files]);
 		}
 
 		// Folders
@@ -3387,12 +3387,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		FilesModel::findMultipleByPaths($locations);
 	}
 
-	private function preloadCurrentFileModels(array $locations): void
+	private function preloadFileModels(array $locations): void
 	{
-		$locations = array_values(array_unique(array_filter(array_map(
-			static fn (string $location): string => StringUtil::stripRootDir($location),
-			$locations,
-		), static fn (string $location): bool => Dbafs::shouldBeSynchronized($location))));
+		$locations = array_values(array_unique(array_filter(
+			array_map(
+				static fn (string $location): string => StringUtil::stripRootDir($location),
+				$locations,
+			),
+			static fn (string $location): bool => Dbafs::shouldBeSynchronized($location)
+		)));
 
 		if (!$locations)
 		{
