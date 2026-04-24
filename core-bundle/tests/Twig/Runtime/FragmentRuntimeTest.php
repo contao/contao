@@ -21,6 +21,19 @@ use Contao\ModuleModel;
 
 class FragmentRuntimeTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $GLOBALS['TL_MODELS'] = [
+            'tl_content' => ContentModel::class,
+            'tl_module' => ModuleModel::class,
+        ];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MODELS']);
+    }
+
     public function testRenderModuleFromType(): void
     {
         $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
