@@ -2694,6 +2694,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$security = System::getContainer()->get('security.helper');
 		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
+		if ($this->blnIsDbAssisted)
+		{
+			$this->preloadFileModels(array(...$folders, ...$files));
+		}
+
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
@@ -3378,6 +3383,24 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	private function syncDbafsAndUpdateModelCache(string ...$locations): void
 	{
 		System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$locations);
+
+		FilesModel::findMultipleByPaths($locations);
+	}
+
+	private function preloadFileModels(array $locations): void
+	{
+		$locations = array_values(array_unique(array_filter(
+			array_map(
+				static fn (string $location): string => StringUtil::stripRootDir($location),
+				$locations,
+			),
+			static fn (string $location): bool => Dbafs::shouldBeSynchronized($location)
+		)));
+
+		if (!$locations)
+		{
+			return;
+		}
 
 		FilesModel::findMultipleByPaths($locations);
 	}
