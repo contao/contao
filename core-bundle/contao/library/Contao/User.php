@@ -267,13 +267,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
 			}
 
-			$container = System::getContainer();
-
 			// Expand virtual fields
-			if ($container->has('contao.data_container.virtual_fields_handler'))
-			{
-				$this->arrData = $container->get('contao.data_container.virtual_fields_handler')->expandFields($this->arrData, $this->strTable);
-			}
+			$this->arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->expandFields($this->arrData, $this->strTable);
 
 			return true;
 		}
@@ -287,13 +282,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public function save()
 	{
 		$db = Database::getInstance();
-		$container = System::getContainer();
 
 		// Combine virtual fields
-		if ($container->has('contao.data_container.virtual_fields_handler'))
-		{
-			$arrData = $container->get('contao.data_container.virtual_fields_handler')->combineFields($this->arrData, $this->strTable);
-		}
+		$arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->arrData, $this->strTable);
 
 		$arrFields = $db->getFieldNames($this->strTable);
 		$arrSet = array_intersect_key($arrData, array_flip($arrFields));
