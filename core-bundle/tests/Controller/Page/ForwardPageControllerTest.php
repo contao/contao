@@ -15,10 +15,12 @@ namespace Contao\CoreBundle\Tests\Controller\Page;
 use Contao\CoreBundle\Controller\Page\ForwardPageController;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ForwardPageControllerTest extends TestCase
@@ -48,11 +50,32 @@ class ForwardPageControllerTest extends TestCase
             ->willReturn('https://example.org/')
         ;
 
+        $compiledRoute = $this->createMock(CompiledRoute::class);
+        $compiledRoute
+            ->expects($this->once())
+            ->method('getVariables')
+            ->willReturn(['parameters'])
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($this->once())
+            ->method('compile')
+            ->willReturn($compiledRoute)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
 
-        $controller = new ForwardPageController();
+        $controller = new ForwardPageController($pageRegistry);
         $controller->setContainer($container);
 
         $response = $controller(new Request(), $pageModel);
@@ -76,10 +99,12 @@ class ForwardPageControllerTest extends TestCase
             PageModel::class => $pageAdapter,
         ]);
 
+        $pageRegistry = $this->createStub(PageRegistry::class);
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
-        $controller = new ForwardPageController();
+        $controller = new ForwardPageController($pageRegistry);
         $controller->setContainer($container);
 
         $this->expectException(ForwardPageNotFoundException::class);
@@ -112,11 +137,32 @@ class ForwardPageControllerTest extends TestCase
             ->willReturn('https://example.org/')
         ;
 
+        $compiledRoute = $this->createMock(CompiledRoute::class);
+        $compiledRoute
+            ->expects($this->once())
+            ->method('getVariables')
+            ->willReturn(['parameters'])
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($this->once())
+            ->method('compile')
+            ->willReturn($compiledRoute)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
 
-        $controller = new ForwardPageController();
+        $controller = new ForwardPageController($pageRegistry);
         $controller->setContainer($container);
 
         $response = $controller(new Request(), $pageModel);
@@ -140,10 +186,12 @@ class ForwardPageControllerTest extends TestCase
             PageModel::class => $pageAdapter,
         ]);
 
+        $pageRegistry = $this->createStub(PageRegistry::class);
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
-        $controller = new ForwardPageController();
+        $controller = new ForwardPageController($pageRegistry);
         $controller->setContainer($container);
 
         $this->expectException(ForwardPageNotFoundException::class);
@@ -176,16 +224,95 @@ class ForwardPageControllerTest extends TestCase
             ->willReturn('https://example.org/')
         ;
 
+        $compiledRoute = $this->createMock(CompiledRoute::class);
+        $compiledRoute
+            ->expects($this->once())
+            ->method('getVariables')
+            ->willReturn(['parameters'])
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($this->once())
+            ->method('compile')
+            ->willReturn($compiledRoute)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
 
-        $controller = new ForwardPageController();
+        $controller = new ForwardPageController($pageRegistry);
         $controller->setContainer($container);
 
         $response = $controller(new Request(['foo' => 'bar', 'bar' => 'baz']), $pageModel);
 
         $this->assertSame('https://example.org/?foo=bar&bar=baz', $response->getTargetUrl());
+    }
+
+    public function testForwardsTheParameters(): void
+    {
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['jumpTo' => 42]);
+        $forwardPageModel = $this->createClassWithPropertiesStub(PageModel::class);
+
+        $pageAdapter = $this->createAdapterMock(['findPublishedById']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findPublishedById')
+            ->with(42)
+            ->willReturn($forwardPageModel)
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $pageAdapter,
+        ]);
+
+        $compiledRoute = $this->createMock(CompiledRoute::class);
+        $compiledRoute
+            ->expects($this->once())
+            ->method('getVariables')
+            ->willReturn(['parameters'])
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($this->once())
+            ->method('compile')
+            ->willReturn($compiledRoute)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
+        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($forwardPageModel, ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.org/foo')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+        $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
+
+        $controller = new ForwardPageController(pageRegistry: $pageRegistry);
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(attributes: ['parameters' => '/foo']), $pageModel);
+
+        $this->assertSame('https://example.org/foo', $response->getTargetUrl());
     }
 
     public function testDoesNotChangeTheRouteIfAlwaysForwardIsEnabled(): void
@@ -213,7 +340,9 @@ class ForwardPageControllerTest extends TestCase
             ->method('setDefaults')
         ;
 
-        $controller = new ForwardPageController();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+
+        $controller = new ForwardPageController($pageRegistry);
         $controller->configurePageRoute($route);
     }
 
@@ -255,7 +384,9 @@ class ForwardPageControllerTest extends TestCase
             ->with([])
         ;
 
-        $controller = new ForwardPageController();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+
+        $controller = new ForwardPageController($pageRegistry);
         $controller->configurePageRoute($route);
     }
 }

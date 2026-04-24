@@ -85,7 +85,7 @@ $GLOBALS['TL_CONFIG']['useCE']      = true;
 
 // Miscellaneous
 $GLOBALS['TL_CONFIG']['resultsPerPage']       = 30;
-$GLOBALS['TL_CONFIG']['maxResultsPerPage']    = 500;
+$GLOBALS['TL_CONFIG']['maxResultsPerPage']    = 300;
 $GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;

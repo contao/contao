@@ -1856,6 +1856,9 @@
         <source>All</source>
         <target>Vsi</target>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
         <target>Prikaži podrobnosti o zapisu %s</target>

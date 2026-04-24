@@ -437,7 +437,6 @@ class TemplateStudioController extends AbstractBackendController
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore isset.offset */
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }

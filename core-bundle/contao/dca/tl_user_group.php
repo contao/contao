@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['themes'],
 			'inputType'               => 'checkbox',
-			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
+			'options'                 => array('elements', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)

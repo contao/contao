@@ -1215,6 +1215,12 @@ services:
         tags:
             - { name: security.voter, priority: 100 }
 
+    contao.security.data_container.theme_content_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ThemeContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
+
     contao.security.data_container.undo_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
         arguments:

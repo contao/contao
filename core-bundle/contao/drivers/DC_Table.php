@@ -43,8 +43,6 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
-	private const DEFAULT_TREE_RECORD_LIMIT = 300;
-
 	/**
 	 * Name of the parent table
 	 * @var string
@@ -98,16 +96,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @var boolean
 	 */
 	protected $treeView = false;
-
-	/**
-	 * Number of records rendered in the current tree view request.
-	 */
-	private int $treeRecordCount = 0;
-
-	/**
-	 * Whether the tree record limit has been reached while trying to render another record.
-	 */
-	private bool $treeRecordLimitReached = false;
 
 	/**
 	 * The current back end module
@@ -524,7 +512,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		else
 		{
-			if ($this->ptable && Input::get('table') && Database::getInstance()->fieldExists('pid', $this->strTable))
+			if ($this->ptable && $this->currentPid && Input::get('table') && Database::getInstance()->fieldExists('pid', $this->strTable))
 			{
 				$this->procedure[] = 'pid=?';
 				$this->values[] = $this->currentPid;
@@ -3936,50 +3924,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'@Contao/backend/data_container/table/view/tree_records.html.twig',
 				$parameters
 			);
-	}
-
-	private function canRenderTreeRecord(): bool
-	{
-		if ($this->treeRecordLimitReached)
-		{
-			return false;
-		}
-
-		$limit = $this->getTreeRecordLimit();
-
-		if ($limit < 1 || $this->treeRecordCount < $limit)
-		{
-			return true;
-		}
-
-		$this->treeRecordLimitReached = true;
-
-		return false;
-	}
-
-	private function countTreeRecord(): void
-	{
-		if ($this->getTreeRecordLimit() > 0)
-		{
-			++$this->treeRecordCount;
-		}
-	}
-
-	private function getTreeRecordLimit(): int
-	{
-		if (Input::get('act') == 'select')
-		{
-			return 0;
-		}
-
-		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? self::DEFAULT_TREE_RECORD_LIMIT);
-	}
-
-	private function generateTreeRecordLimitNotice(): string
-	{
-		return System::getContainer()
-			->get('twig')
-			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	/**

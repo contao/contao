@@ -22,9 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener]
 class BackendLoginListener
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
     }
 
     public function __invoke(MenuEvent $event): void

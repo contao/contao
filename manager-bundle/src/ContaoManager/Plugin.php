@@ -215,6 +215,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
+                $extensionConfigs = $this->addDefaultVersionStrategy($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     if ($container->hasParameter('secret')) {
@@ -623,5 +624,22 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function encodeUrlParameter(string $parameter): string
     {
         return str_replace('%', '%%', rawurlencode($parameter));
+    }
+
+    private function addDefaultVersionStrategy(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['assets']['version_strategy']) || isset($config['assets']['json_manifest_path'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'assets' => [
+                'version_strategy' => 'contao.asset.mtime_version_strategy',
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 }
