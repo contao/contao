@@ -22,9 +22,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ModelTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -120,6 +123,38 @@ class ModelTest extends TestCase
         };
 
         $this->assertSame($expected, $fooModel::convertToPhpValue($key, $value));
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider getDatabaseValues
+     */
+    public function testMagicSetterTypesDeprecation(string $key, mixed $value, mixed $expected): void
+    {
+        $fooModel = new class() extends Model {
+            protected static $strTable = 'tl_Foo';
+
+            public function __construct()
+            {
+            }
+        };
+
+        if ($value !== $expected) {
+            $this->expectDeprecation('%s Setting "%s::$%s" to type %s has been deprecated %s');
+        }
+
+        $fooModel->$key = $value;
+
+        $this->assertSame($value, $fooModel->$key);
+
+        if (\is_int($expected)) {
+            $this->expectDeprecation('%s Setting "%s::$%s" to type string has been deprecated %s');
+
+            $fooModel->$key = 'not_an_integer';
+
+            $this->assertSame('not_an_integer', $fooModel->$key);
+        }
     }
 
     public static function getDatabaseValues(): iterable
