@@ -1110,6 +1110,14 @@ services:
             - '@security.token_storage'
             - '@?logger'
 
+    contao.security.authorization.user_access_decision_manager:
+        class: Contao\CoreBundle\Security\Authorization\ContaoUserAccessDecisionManager
+        decorates: security.access.decision_manager
+        arguments:
+            - '@contao.security.authorization.user_access_decision_manager.inner'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
         arguments:

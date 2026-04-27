@@ -109,6 +109,7 @@ class FrontendUser extends User
 	{
 		if ($strKey == 'allGroups')
 		{
+			$this->markAccessDecisionCacheStateChanged();
 			$this->arrGroups = $varValue;
 		}
 		else
