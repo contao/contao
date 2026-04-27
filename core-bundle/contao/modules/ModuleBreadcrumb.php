@@ -62,6 +62,7 @@ class ModuleBreadcrumb extends Module
 		$container = System::getContainer();
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 		$request = $container->get('request_stack')->getCurrentRequest();
+		$insertTagParser = $container->get('contao.insert_tag.parser');
 
 		// Get all pages up to the root page
 		$parents = array_reverse($objPage->trail);
@@ -108,7 +109,7 @@ class ModuleBreadcrumb extends Module
 			switch ($pages[$i]->type)
 			{
 				case 'redirect':
-					$href = $pages[$i]->url;
+					$href = $insertTagParser->replaceInline($pages[$i]->url);
 
 					if (strncasecmp($href, 'mailto:', 7) === 0)
 					{
