@@ -62,7 +62,6 @@ class ModuleBreadcrumb extends Module
 		$container = System::getContainer();
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$insertTagParser = $container->get('contao.insert_tag.parser');
 
 		// Get all pages up to the root page
 		$parents = array_reverse($objPage->trail);
@@ -109,7 +108,7 @@ class ModuleBreadcrumb extends Module
 			switch ($pages[$i]->type)
 			{
 				case 'redirect':
-					$href = $insertTagParser->replaceInline($pages[$i]->url);
+					$href = $pages[$i]->url;
 
 					if (strncasecmp($href, 'mailto:', 7) === 0)
 					{
@@ -215,6 +214,7 @@ class ModuleBreadcrumb extends Module
 
 			$position = 0;
 			$htmlDecoder = $container->get('contao.string.html_decoder');
+			$insertTagParser = $container->get('contao.insert_tag.parser');
 
 			foreach ($items as $item)
 			{
@@ -228,8 +228,8 @@ class ModuleBreadcrumb extends Module
 					'@type' => 'ListItem',
 					'position' => ++$position,
 					'item' => array(
-						'@id' => $item['href'],
-						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
+						'@id' => $insertTagParser->replaceInline($item['href']),
+						'name' => $insertTagParser->replaceInline($htmlDecoder->inputEncodedToPlainText($item['link']))
 					)
 				);
 			}
