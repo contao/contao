@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -266,6 +267,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
 			}
 
+			// Expand virtual fields
+			$this->arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->expandFields($this->arrData, $this->strTable);
+
 			return true;
 		}
 
@@ -279,10 +283,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		$db = Database::getInstance();
 
-		$arrFields = $db->getFieldNames($this->strTable);
-		$arrSet = array_intersect_key($this->arrData, array_flip($arrFields));
+		// Combine virtual fields
+		$arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->arrData, $this->strTable);
 
-		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")->set($arrSet)->execute($this->id);
+		$arrFields = $db->getFieldNames($this->strTable);
+		$arrSet = array_intersect_key($arrData, array_flip($arrFields));
+		$arrTypes = array_map(fn (string $k) => \in_array($k, DcaExtractor::getInstance($this->strTable)->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
+		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+			->set($arrSet)
+			->query('', array(...array_values($arrSet), $this->id), $arrTypes);
 	}
 
 	/**

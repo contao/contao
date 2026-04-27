@@ -17,8 +17,10 @@
     %}
     <main{{ template_studio_attributes }}>
         {# Headline #}
-        <h1 id="main_headline">
-            {{ headline }}
+        <div class="content-top">
+            <h1 id="main_headline">
+                {{ headline }}
+            </h1>
             {% set fullscreen_button_attributes = attrs()
                 .addClass('fullscreen')
                 .set('data-action', 'contao--template-studio#enterFullscreen')
@@ -36,7 +38,7 @@
                 </svg>
             </button>
             {{ include('@Contao/backend/component/_favorites.html.twig') }}
-        </h1>
+        </div>
 
         <section id="template-studio" class="content chrome" data-contao--template-studio-target="content" data-turbo="true">
             <div id="template-studio--nav">
