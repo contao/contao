@@ -132,6 +132,10 @@ class ModelTest extends TestCase
      */
     public function testMagicSetterTypesDeprecation(string $key, mixed $value, mixed $expected): void
     {
+        if (\PHP_VERSION_ID < 80200) {
+            $this->markTestSkipped('Deprecation messages do not work correctly in PHP 8.1 in this case');
+        }
+
         $fooModel = new class() extends Model {
             protected static $strTable = 'tl_Foo';
 
