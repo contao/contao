@@ -214,6 +214,7 @@ class ModuleBreadcrumb extends Module
 
 			$position = 0;
 			$htmlDecoder = $container->get('contao.string.html_decoder');
+			$insertTagParser = $container->get('contao.insert_tag.parser');
 
 			foreach ($items as $item)
 			{
@@ -227,8 +228,8 @@ class ModuleBreadcrumb extends Module
 					'@type' => 'ListItem',
 					'position' => ++$position,
 					'item' => array(
-						'@id' => $item['href'],
-						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
+						'@id' => $insertTagParser->replaceInline($item['href']),
+						'name' => $insertTagParser->replaceInline($htmlDecoder->inputEncodedToPlainText($item['link']))
 					)
 				);
 			}

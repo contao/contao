@@ -4084,7 +4084,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Order by the foreign key
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey']))
 			{
-				$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+				$dcaExtractor = DcaExtractor::getInstance($this->strTable);
 				$fkField = $dcaExtractor->getRelations()[$firstOrderBy]['field'] ?? 'id';
 				$fkField = Database::quoteIdentifier($fkField);
 
@@ -4372,7 +4372,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
 				{
-					$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+					$dcaExtractor = DcaExtractor::getInstance($this->strTable);
 					$fkField = $dcaExtractor->getRelations()[$key]['field'] ?? 'id';
 					$fkField = Database::quoteIdentifier($fkField);
 
@@ -4723,7 +4723,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
-				$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+				$dcaExtractor = DcaExtractor::getInstance($this->strTable);
 				$fkField = $dcaExtractor->getRelations()[$fld]['field'] ?? 'id';
 				$fkField = Database::quoteIdentifier($fkField);
 
