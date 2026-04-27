@@ -108,7 +108,7 @@ class ModuleBreadcrumb extends Module
 			switch ($pages[$i]->type)
 			{
 				case 'redirect':
-					$href = $pages[$i]->url;
+					$href = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($pages[$i]->url);
 
 					if (strncasecmp($href, 'mailto:', 7) === 0)
 					{
