@@ -290,6 +290,12 @@
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
       </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The "auto" keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to "auto".</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
