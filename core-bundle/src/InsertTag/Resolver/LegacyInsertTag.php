@@ -411,11 +411,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'base_url':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBaseUrl();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBaseUrl() ?? '';
                         break;
 
                     case 'base_path':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBasePath() ?? '';
                         break;
                 }
 
