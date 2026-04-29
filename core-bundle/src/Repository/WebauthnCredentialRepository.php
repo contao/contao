@@ -22,9 +22,7 @@ use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
- * @template T of WebauthnCredential
- *
- * @template-extends  ServiceEntityRepository<T>
+ * @template-extends  ServiceEntityRepository<WebauthnCredential>
  *
  * @internal
  */
