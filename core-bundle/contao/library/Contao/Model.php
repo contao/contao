@@ -264,12 +264,12 @@ abstract class Model
 		{
 			if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', get_debug_type($this), $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 			}
 		}
 		catch (\TypeError)
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use the appropriate type instead.', static::class, $strKey, get_debug_type($varValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use the appropriate type instead.', get_debug_type($this), $strKey, get_debug_type($varValue));
 		}
 	}
 
