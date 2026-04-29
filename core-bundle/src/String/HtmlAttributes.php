@@ -116,7 +116,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         $name = strtolower($name);
 
         if (!isset($validatedNames[$name])) {
-            if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
+            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
                 throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
             }
 
