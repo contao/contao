@@ -22,6 +22,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 {
     private const ESCAPED_VALUE_CACHE_LIMIT = 4096;
 
+    private const VALIDATED_NAME_CACHE_LIMIT = 256;
+
     /**
      * @var array<array-key, string>
      */
@@ -97,6 +99,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
+        static $validatedNames = [];
+
         if (!$this->test($condition)) {
             return $this;
         }
@@ -111,8 +115,16 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
-            throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+        if (!isset($validatedNames[$name])) {
+            if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
+                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            }
+
+            $validatedNames[$name] = true;
+
+            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
+                unset($validatedNames[array_key_first($validatedNames)]);
+            }
         }
 
         // Unset if value is set to false
@@ -122,7 +134,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        $this->attributes[$name] = true === $value ? '' : (string) $value;
+        $normalizedValue = true === $value ? '' : (string) $value;
+
+        if (($this->attributes[$name] ?? null) === $normalizedValue) {
+            return $this;
+        }
+
+        $this->attributes[$name] = $normalizedValue;
 
         // Normalize class names and style attributes
         if ('class' === $name) {
