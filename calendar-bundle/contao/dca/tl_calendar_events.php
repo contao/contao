@@ -248,7 +248,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array

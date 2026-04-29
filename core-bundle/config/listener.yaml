@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao.listener.administrator_email:
         class: Contao\CoreBundle\EventListener\AdministratorEmailListener
         arguments:
@@ -191,6 +196,11 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.item_sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\ItemSizesSaveCallbackListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
@@ -205,6 +215,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.lazy_loading_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\LazyLoadingSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.legacy_gallery_palette:
         class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
@@ -295,6 +310,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\SizesSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -442,6 +462,9 @@ services:
             - '@database_connection'
             - '@translator'
             - '@contao.framework'
+
+    contao.listener.legacy_globals_backup:
+        class: Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener
 
     contao.listener.legacy_route_parameters:
         class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
@@ -715,6 +738,9 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+
+    contao.listener.widget.title_tag:
+        class: Contao\CoreBundle\EventListener\Widget\TitleTagListener
 
     contao.messenger.message_listener:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener

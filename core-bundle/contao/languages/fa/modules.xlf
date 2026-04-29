@@ -209,6 +209,10 @@
         <source>Front end modules</source>
         <target>ماژول‌های بخش کاربری</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>المان‌های محتوایی</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>ماژول‌های بخش کاربری</target>

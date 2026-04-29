@@ -209,6 +209,10 @@
         <source>Front end modules</source>
         <target>フロントエンドモジュール</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>コンテント要素</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>フロントエンドモジュール</target>

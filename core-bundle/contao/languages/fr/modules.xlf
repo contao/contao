@@ -209,6 +209,10 @@
         <source>Front end modules</source>
         <target>Modules du front office</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Éléments de contenu</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Modules du front office</target>

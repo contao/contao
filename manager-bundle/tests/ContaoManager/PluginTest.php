@@ -779,12 +779,17 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
-    public function testAddsDefaultMailer(): void
+    public function testAddsDefaultMailerAndMtimeVersionStrategy(): void
     {
         $expect = [
             [
                 'mailer' => [
                     'dsn' => '%env(MAILER_DSN)%',
+                ],
+            ],
+            [
+                'assets' => [
+                    'version_strategy' => 'contao.asset.mtime_version_strategy',
                 ],
             ],
         ];
@@ -795,12 +800,15 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testDoesNotAddDefaultMailerIfDefined(): void
+    public function testDoesNotAddDefaultMailerOrMitmeVersionStrategy(): void
     {
         $extensionConfigs = [
             [
                 'mailer' => [
                     'dsn' => 'smtp://localhost',
+                ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
                 ],
             ],
         ];
@@ -818,6 +826,9 @@ class PluginTest extends ContaoTestCase
                     'transports' => [
                         'default' => 'smtp://localhost',
                     ],
+                ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
                 ],
             ],
         ];

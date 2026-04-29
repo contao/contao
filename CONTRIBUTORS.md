@@ -116,6 +116,7 @@
  * Stephan Gehle ([SGehle](https://github.com/SGehle))
  * Stephan Preßl ([pressi](https://github.com/pressi))
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))
+ * Thomas Meeks ([Thomas](https://github.com/Thomas))
  * Tsarma ([Tsarma](https://github.com/Tsarma))
  * Vladimir Reznichenko ([kalessil](https://github.com/kalessil))
  * Frank Ficzak ([agonyz](https://github.com/agonyz))

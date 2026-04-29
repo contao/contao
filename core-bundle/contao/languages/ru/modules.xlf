@@ -209,6 +209,10 @@
         <source>Front end modules</source>
         <target>Модули внешнего интерфейса</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Элементы контента</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Модули внешнего интерфейса</target>

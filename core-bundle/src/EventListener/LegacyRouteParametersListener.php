@@ -35,7 +35,7 @@ class LegacyRouteParametersListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->scopeMatcher->isFrontendMainRequest($event) || !$event->getResponse()->isSuccessful()) {
             return;
         }
 

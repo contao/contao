@@ -136,6 +136,7 @@ export class Navigation {
     #init() {
         this.#createSubMenuButton();
         this.#initMobileToggleEvents();
+        this.#initAnchorLinks();
 
         this.navigation.querySelectorAll('li').forEach(item => {
 
@@ -303,6 +304,12 @@ export class Navigation {
         return window.innerWidth >= this.options.minWidth;
     }
 
+    #samePage(link) {
+        const url = new URL(link.href, location.href);
+
+        return url.hash && url.pathname === location.pathname;
+    }
+
     #initMobileToggleEvents() {
         this.#initFocusTrapTargets();
         this.focusTrapEvent = this.focusTrapEvent.bind(this);
@@ -315,6 +322,24 @@ export class Navigation {
             this.#toggleMenuState();
             this.#focusMenu();
         });
+    }
+
+    /**
+     * Registers event listeners for each navigation link containing a hash and
+     * closes the menu if we are on the same page
+     */
+    #initAnchorLinks() {
+        for (const link of this.navigation.querySelectorAll('a[href*="#"]')) {
+            link.addEventListener('click', () => {
+                if (this.#isDesktop()) {
+                    return;
+                }
+
+                if (this.#samePage(link)) {
+                    this.#toggleMenuState();
+                }
+            });
+        }
     }
 
     /**

@@ -509,6 +509,7 @@ class StringUtilTest extends TestCase
 
     public function testResolvesReferencesInArrays(): void
     {
+        /** @phpstan-var array $ref (signals PHPStan that the array shape may change) */
         $ref = ['a'];
 
         $array = [
@@ -533,12 +534,10 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],

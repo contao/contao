@@ -1193,6 +1193,11 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.job_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\JobAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.layout_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
         arguments:
@@ -1225,6 +1230,12 @@ services:
             - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: 100 }
+
+    contao.security.data_container.theme_content_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ThemeContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.undo_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
@@ -1628,6 +1639,7 @@ services:
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
     Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
+    Contao\CoreBundle\Twig\Inspector\Inspector: '@contao.twig.inspector'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
