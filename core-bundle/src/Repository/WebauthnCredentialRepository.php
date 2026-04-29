@@ -22,6 +22,9 @@ use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
+ * @template T of WebauthnCredential
+ * @template-extends  ServiceEntityRepository<T>
+ *
  * @internal
  */
 class WebauthnCredentialRepository extends ServiceEntityRepository implements PublicKeyCredentialSourceRepositoryInterface, CanSaveCredentialSource
