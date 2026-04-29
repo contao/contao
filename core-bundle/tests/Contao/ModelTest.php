@@ -121,6 +121,34 @@ class ModelTest extends TestCase
         $this->assertSame($expected, $fooModel::convertToPhpValue($key, $value));
     }
 
+    #[DataProvider('getDatabaseValues')]
+    public function testMagicSetterTypesDeprecation(string $key, mixed $value, mixed $expected): void
+    {
+        $fooModel = new class() extends Model {
+            protected static $strTable = 'tl_Foo';
+
+            public function __construct()
+            {
+            }
+        };
+
+        if ($value !== $expected) {
+            $this->expectUserDeprecationMessageMatches('/Setting "[^":]+::\$[^"]+" to type [a-z]+ is deprecated/');
+        }
+
+        $fooModel->$key = $value;
+
+        $this->assertSame($value, $fooModel->$key);
+
+        if (\is_int($expected)) {
+            $this->expectUserDeprecationMessageMatches('/Setting "[^":]+::\$[^"]+" to type [a-z]+ is deprecated/');
+
+            $fooModel->$key = 'not_an_integer';
+
+            $this->assertSame('not_an_integer', $fooModel->$key);
+        }
+    }
+
     public static function getDatabaseValues(): iterable
     {
         yield ['string_not_null', 'string', 'string'];
