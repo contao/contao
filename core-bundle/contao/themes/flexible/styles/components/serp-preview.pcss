@@ -1,8 +1,8 @@
 .serp-preview {
-    max-width: 600px;
+    max-width: 640px;
     margin: 2px 0;
     padding: 6px 9px;
-    font-family: Arial, sans-serif;
+    font-family: Helvetica, sans-serif;
     font-weight: 400;
     color: var(--serp-preview);
     background: var(--panel-bg);
@@ -13,13 +13,22 @@
     }
 
     :is(.url, .description) {
-        line-height: 18px;
+        line-height: 22px;
     }
 
     .title {
-        margin: 4px 0;
-        font-size: 18px;
+        max-width: 550px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: "Google Sans", Helvetica, sans-serif;
+        white-space: nowrap;
+        margin: 6px 0;
+        font-size: 20px;
         color: var(--serp-preview-title);
+    }
+
+    .url {
+        font-size: 0.8rem;
     }
 
     .tl_info {
