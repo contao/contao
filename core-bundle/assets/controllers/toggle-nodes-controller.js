@@ -19,6 +19,12 @@ export default class extends Controller {
 
     static targets = ['operation', 'node', 'toggle', 'child', 'rootChild'];
 
+    toggleTargetConnected(el) {
+        if (el.classList.contains('foldable--open')) {
+            this.toggleToggler(el, el.getAttribute(`data-${this.identifier}-id-param`), el.getAttribute(`data-${this.identifier}-level-param`), el.getAttribute(`data-${this.identifier}-folder-param`));
+        }
+    }
+
     operationTargetConnected() {
         this.updateOperation();
     }

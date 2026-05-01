@@ -3584,6 +3584,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
+		$withOperations = $isTopMostRecord || Environment::get('isAjaxRequest');
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
@@ -3716,35 +3717,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 			elseif ($this->strTable == $table)
 			{
-				$operations = $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
+				$operations = $withOperations ? $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next) : null;
 
 				if (self::MODE_TREE == ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null))
 				{
-					$operations->addSeparator();
+					$operations?->addSeparator();
 
 					if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 					{
-						$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
+						$operations?->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
 					}
 
 					if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 					{
-						$operations->addNewButton($operations::CREATE_INTO, $table, $currentRecord['id']);
+						$operations?->addNewButton($operations::CREATE_INTO, $table, $currentRecord['id']);
 					}
 				}
 				elseif ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 				{
-					$operations->addSeparator();
-					$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
+					$operations?->addSeparator();
+					$operations?->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
 				}
 			}
 			else
 			{
-				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $currentRecord['id']);
+				$operations = $withOperations ? System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $currentRecord['id']) : null;
 
 				if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 				{
-					$operations->addNewButton($operations::CREATE_INTO, $this->strTable, $currentRecord['id']);
+					$operations?->addNewButton($operations::CREATE_INTO, $this->strTable, $currentRecord['id']);
 				}
 			}
 
@@ -3897,22 +3898,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Begin a new submenu
-		if (!$blnNoRecursion && $blnIsOpen && !empty($children))
-		{
-			static::preloadCurrentRecords($children, $table);
-			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
-
-			// Add the records of the parent table
-			for ($k=0, $c=\count($children); $k<$c; $k++)
-			{
-				$parameters['children'][] = $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
-
-				if ($this->treeRecordLimitReached)
-				{
-					break;
-				}
-			}
-		}
+		//if (!$blnNoRecursion && $blnIsOpen && !empty($children))
+		//{
+		//	static::preloadCurrentRecords($children, $table);
+		//	$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+		//
+		//	// Add the records of the parent table
+		//	for ($k=0, $c=\count($children); $k<$c; $k++)
+		//	{
+		//		$parameters['children'][] = $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+		//
+		//		if ($this->treeRecordLimitReached)
+		//		{
+		//			break;
+		//		}
+		//	}
+		//}
 
 		$parameters['label'] = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
 		$parameters['buttons'] = $_buttons;
