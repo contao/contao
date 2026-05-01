@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authorization;
 
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
@@ -42,10 +43,6 @@ class ContaoUserAccessDecisionManager implements AccessDecisionManagerInterface,
         if (\is_bool($accessDecision)) {
             $allowMultipleAttributes = $accessDecision;
             $accessDecision = null;
-        }
-
-        if ($accessDecision instanceof AccessDecision) {
-            return $this->inner->decide($token, $attributes, $object, $accessDecision, $allowMultipleAttributes);
         }
 
         $cacheKey = $this->getCacheKey($token, $attributes, $object, $allowMultipleAttributes);
@@ -82,8 +79,8 @@ class ContaoUserAccessDecisionManager implements AccessDecisionManagerInterface,
             return null;
         }
 
-        // Ignore complex objects
-        if (null !== $object && !\is_scalar($object)) {
+        // Ignore complex objects except data container actions.
+        if (null !== $object && !\is_scalar($object) && !$object instanceof AbstractAction) {
             return null;
         }
 
@@ -94,12 +91,12 @@ class ContaoUserAccessDecisionManager implements AccessDecisionManagerInterface,
             }
         }
 
-        return implode("\0", [
+        return hash('xxh3', implode("\0", [
             $user->getAccessDecisionCacheKey(),
             $allowMultipleAttributes ? '1' : '0',
             implode("\0", array_map($this->encodeScalar(...), $attributes)),
-            $this->encodeScalar($object),
-        ]);
+            $object instanceof AbstractAction ? $object->getAccessDecisionCacheKey() : $this->encodeScalar($object),
+        ]));
     }
 
     /**
