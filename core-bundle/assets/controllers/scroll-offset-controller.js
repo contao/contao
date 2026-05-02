@@ -108,7 +108,6 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        debugger;
         if (this.offset || this.#autoFocus) return;
 
         const input = this.autoFocusTarget;
