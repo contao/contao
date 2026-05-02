@@ -108,6 +108,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
+        debugger;
         if (this.offset || this.#autoFocus) return;
 
         const input = this.autoFocusTarget;
@@ -145,6 +146,10 @@ export default class extends Controller {
 
     discard() {
         this.offset = null;
+    }
+
+    resetAutoFocus() {
+        this.#autoFocus = false;
     }
 
     scrollToWidgetError() {
