@@ -60,17 +60,25 @@ class ConfigurationTest extends TestCase
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $targetDir = $windows;
+            $path = 'C:/Temp/contao';
+        } else {
+            $targetDir = $unix;
+            $path = '/tmp/contao';
+        }
+
         $params = [
             [
                 'image' => [
-                    'target_dir' => $windows,
+                    'target_dir' => $targetDir,
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
+        $this->assertSame($path, $configuration['image']['target_dir']);
     }
 
     public static function getPaths(): iterable
