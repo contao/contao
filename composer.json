@@ -123,7 +123,7 @@
         "symfony/event-dispatcher": "^6.4",
         "symfony/event-dispatcher-contracts": "^3.0",
         "symfony/expression-language": "^6.4",
-        "symfony/filesystem": "^6.4.34",
+        "symfony/filesystem": "^6.4",
         "symfony/finder": "^6.4",
         "symfony/framework-bundle": "^6.4",
         "symfony/html-sanitizer": "^6.4",
