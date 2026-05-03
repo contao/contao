@@ -174,7 +174,7 @@ export default class extends Controller {
 
         requestAnimationFrame(() => {
             // Do not prevent scroll to allow turbo to handle it (see #8934)
-            input.focus({preventScroll:true});
+            input.focus({ preventScroll: true });
             const len = input.value.length;
             input.setSelectionRange(len, len);
         });
