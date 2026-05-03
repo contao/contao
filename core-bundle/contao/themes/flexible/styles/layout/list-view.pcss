@@ -328,6 +328,12 @@
     margin-left: 0;
 }
 
+/* Shrink the container to allow closing the operations menu - See #9805 */
+#tl_buttons.operations {
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* ToDo: Move to components/operations-menu */
 .operations > ul {
     display: flex;
