@@ -64,8 +64,8 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
-        if (this.$menu.elements.submenuToggles[0].isOpen) {
-            this.$menu.elements.submenuToggles[0].close();
+        // Only open the native context from within the opened operations menu (see #9805)
+        if (event.target === this.submenuTarget) {
             return;
         }
 
