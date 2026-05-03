@@ -3,7 +3,7 @@
 {%- set rootAttributes = attrs()
     .set('lang', language)
     .set('data-controller', 'contao--scroll-offset')
-    .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore turbo:render@document->contao--scroll-offset#resetAutoFocus')
+    .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore turbo:before-render@document->contao--scroll-offset#resetAutoFocus')
     .set('data-turbo-prefetch', 'false', isDebug)
     .mergeWith(rootAttributes|default)
 -%}
