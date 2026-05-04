@@ -804,7 +804,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function getDcaPickerWizard($extras, $table, $field, $inputName)
+	public static function getDcaPickerWizard($extras, $table, $field, $inputName, $title = null)
 	{
 		$context = 'link';
 		$extras = \is_array($extras) ? $extras : array();
@@ -823,21 +823,13 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
-  <script>
-    $("pp_' . $inputName . '").addEvent("click", function(e) {
-      e.preventDefault();
-      Backend.openModalSelector({
-        "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
-        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
-        "callback": function(picker, value) {
-          $("ctrl_' . $inputName . '").value = value.join(",");
-          $("ctrl_' . $inputName . '").fireEvent("change");
-        }.bind(this)
-      });
-    });
-  </script>';
+		return sprintf(
+			' <a href="%s" id="pp_%s" class="picker-wizard" data-controller="contao--modal-selector" data-contao--modal-selector-title-value="%s" data-action="contao--modal-selector#dcapicker">%s</a>',
+			StringUtil::ampersand($factory->getUrl($context, $extras)),
+			$inputName,
+			StringUtil::specialchars($title ?? $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? ''),
+			Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']),
+		);
 	}
 
 	/**
