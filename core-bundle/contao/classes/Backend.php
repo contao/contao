@@ -823,7 +823,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return sprintf(
+		return \sprintf(
 			' <a href="%s" id="pp_%s" class="picker-wizard" data-controller="contao--modal-selector" data-contao--modal-selector-title-value="%s" data-action="contao--modal-selector#dcapicker">%s</a>',
 			StringUtil::ampersand($factory->getUrl($context, $extras)),
 			$inputName,
