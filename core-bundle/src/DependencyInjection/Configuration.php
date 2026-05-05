@@ -177,7 +177,7 @@ class Configuration implements ConfigurationInterface
                                     ->ifTrue(
                                         static function (array $options): bool {
                                             foreach ($options as $option) {
-                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && isset($matches[1]) && $matches[1] <= 60) {
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && $matches[1] <= 60) {
                                                     return false;
                                                 }
                                             }
