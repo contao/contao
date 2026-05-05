@@ -169,10 +169,10 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('options')
-                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
-                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=55".')
+                                ->example(['--sleep=5', '--time-limit=55'])
                                 ->scalarPrototype()->end()
-                                ->defaultValue(['--time-limit=56'])
+                                ->defaultValue(['--time-limit=55'])
                                 ->validate()
                                     ->ifTrue(
                                         static function (array $options): bool {
