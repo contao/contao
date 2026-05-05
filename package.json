@@ -10,7 +10,7 @@
         "@stylistic/stylelint-config": "^4.0",
         "@stylistic/stylelint-plugin": "^5.0",
         "@symfony/webpack-encore": "^5.1",
-        "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
+        "@web-auth/webauthn-stimulus": "^5.3",
         "accessible-menu": "^4.2",
         "ace-builds": "^1.43.3",
         "file-loader": "^6.2",
