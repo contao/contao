@@ -174,8 +174,18 @@ class Configuration implements ConfigurationInterface
                                 ->scalarPrototype()->end()
                                 ->defaultValue(['--time-limit=60'])
                                 ->validate()
-                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
-                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                    ->ifTrue(
+                                        static function (array $options): bool {
+                                            foreach ($options as $option) {
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && isset($matches[1]) && $matches[1] <= 60) {
+                                                    return false;
+                                                }
+                                            }
+
+                                            return true;
+                                        },
+                                    )
+                                    ->thenInvalid('Custom messenger:consume options must include a "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')
