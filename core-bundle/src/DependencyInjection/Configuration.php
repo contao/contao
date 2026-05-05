@@ -172,7 +172,7 @@ class Configuration implements ConfigurationInterface
                                 ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
                                 ->example(['--sleep=5', '--time-limit=60'])
                                 ->scalarPrototype()->end()
-                                ->defaultValue(['--time-limit=60'])
+                                ->defaultValue(['--time-limit=56'])
                                 ->validate()
                                     ->ifTrue(
                                         static function (array $options): bool {
