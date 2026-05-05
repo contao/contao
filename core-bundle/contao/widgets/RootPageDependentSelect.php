@@ -62,12 +62,12 @@ class RootPageDependentSelect extends SelectMenu
 	{
 		$options = array();
 
-		foreach ($this->arrOptions as $option)
+		foreach ($this->arrOptions as $key => $option)
 		{
-			$option['index'] = $rootPage->id;
-
 			if (isset($option['value']))
 			{
+				$option['index'] = $rootPage->id;
+
 				if ($this->isSelected($option))
 				{
 					$option['label'] = \sprintf(
@@ -83,6 +83,33 @@ class RootPageDependentSelect extends SelectMenu
 					$this->isSelected($option),
 					$option['label']
 				);
+			}
+			else
+			{
+				$optgroups = array();
+
+				foreach ($option as $optgroup)
+				{
+					$optgroup['index'] = $rootPage->id;
+
+					if ($this->isSelected($optgroup))
+					{
+						$optgroup['label'] = \sprintf(
+							'%s <span class="label-info">[%s]</span>',
+							$optgroup['label'],
+							$rootPage->title,
+						);
+					}
+
+					$optgroups[] = \sprintf(
+						'<option value="%s"%s>%s</option>',
+						self::specialcharsValue($optgroup['value']),
+						$this->isSelected($optgroup),
+						$optgroup['label']
+					);
+				}
+
+				$options[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($key), implode('', $optgroups));
 			}
 		}
 
