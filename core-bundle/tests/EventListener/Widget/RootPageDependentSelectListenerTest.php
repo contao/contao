@@ -77,37 +77,6 @@ class RootPageDependentSelectListenerTest extends TestCase
         $this->assertCount(3, unserialize($listener->wizardCallback($dataContainer)));
     }
 
-    public function testDoesNotSaveUnserializableData(): void
-    {
-        $listener = new RootPageDependentSelectListener(
-            $this->createStub(Connection::class),
-            $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
-        );
-
-        $this->assertSame('foobar', $listener->saveCallback('foobar'));
-    }
-
-    public function testSavesValuesRelatedToRootPage(): void
-    {
-        $connection = $this->mockGetRootPages();
-
-        $listener = new RootPageDependentSelectListener(
-            $connection,
-            $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
-        );
-
-        $this->assertSame(
-            serialize([
-                1 => 10,
-                2 => 20,
-                3 => 30,
-            ]),
-            $listener->saveCallback(serialize([10, 20, 30])),
-        );
-    }
-
     public function testReturnsAllTypesOfModulesAsOption(): void
     {
         $this->populateGlobalsArray([]);

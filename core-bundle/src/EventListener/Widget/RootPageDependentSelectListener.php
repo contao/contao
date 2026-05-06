@@ -74,25 +74,6 @@ class RootPageDependentSelectListener
         return $options;
     }
 
-    #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
-    public function saveCallback(mixed $value): string
-    {
-        $values = StringUtil::deserialize($value);
-
-        if (!\is_array($values)) {
-            return $value;
-        }
-
-        $newValues = [];
-        $availableRootPages = array_keys($this->getRootPages());
-
-        foreach ($values as $v) {
-            $newValues[array_shift($availableRootPages)] = $v;
-        }
-
-        return serialize($newValues);
-    }
-
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.wizard')]
     public function wizardCallback(DataContainer $dc): string
     {
@@ -127,29 +108,5 @@ class RootPageDependentSelectListener
         }
 
         return serialize($wizards);
-    }
-
-    private function getRootPages(): array
-    {
-        $statement = $this->connection->prepare(
-            <<<'SQL'
-                SELECT
-                    p.id,
-                    p.title,
-                    p.language
-                FROM tl_page p
-                WHERE p.pid = 0
-                ORDER BY p.sorting ASC
-                SQL,
-        );
-
-        $rows = $statement->executeQuery();
-        $pages = [];
-
-        foreach ($rows->iterateAssociative() as $rootPage) {
-            $pages[$rootPage['id']] = \sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
-        }
-
-        return $pages;
     }
 }
