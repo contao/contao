@@ -412,7 +412,6 @@ class DcaExtractor extends Controller
 		}
 
 		$arrRelations = array();
-		$supportsVirtualFieldSearchAndFilter = is_a(DataContainer::getDriverForTable($this->strTable), DC_Table::class, true);
 
 		// Check whether there are fields (see #4826)
 		if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']))
@@ -468,17 +467,6 @@ class DcaExtractor extends Controller
 				if (!\in_array($config['targetColumn'], $this->arrVirtualTargets, true))
 				{
 					throw new InvalidConfigException(\sprintf('The target column of the virtual field %s.%s does not exist.', $this->strTable, $field));
-				}
-
-				// Validate the config for virtual fields
-				if (($config['filter'] ?? false) && !$supportsVirtualFieldSearchAndFilter)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "filter" on virtual field %s.%s is not supported.', $this->strTable, $field));
-				}
-
-				if (($config['search'] ?? false) && !$supportsVirtualFieldSearchAndFilter)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "search" on virtual field %s.%s is not supported.', $this->strTable, $field));
 				}
 
 				if ($config['eval']['fallback'] ?? false)
