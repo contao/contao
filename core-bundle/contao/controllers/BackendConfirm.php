@@ -138,17 +138,17 @@ class BackendConfirm extends Backend
 				$arrInfo['act'] = $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['mode']][0];
 			}
 		}
-		elseif ($arrInfo['act'] == 'select' && isset($GLOBALS['TL_LANG']['MSC']['all']))
+		elseif (($arrInfo['act'] ?? null) == 'select' && isset($GLOBALS['TL_LANG']['MSC']['all']))
 		{
 			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG']['MSC']['all']) ? $GLOBALS['TL_LANG']['MSC']['all'][0] : $GLOBALS['TL_LANG']['MSC']['all'];
 		}
-		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]))
+		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act'] ?? null]))
 		{
 			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']];
 		}
 
 		// Replace the ID wildcard
-		if (str_contains($arrInfo['act'], '%s'))
+		if (str_contains($arrInfo['act'] ?? '', '%s'))
 		{
 			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}

@@ -4,6 +4,6 @@
     {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
         name: 'tl_limit',
         title: 'MSC.showOnly'|trans,
-        select_attributes: attrs().set('onchange', 'this.form.requestSubmit()'),
+        auto_submit: true,
     }) }}
 </div>

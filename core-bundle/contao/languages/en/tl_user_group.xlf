@@ -56,6 +56,9 @@
       <trans-unit id="tl_user_group.amg_legend">
         <source>Allowed member groups</source>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
       </trans-unit>
@@ -67,6 +70,9 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show.1">
         <source>Show the details of user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.versions.1">
+        <source>Show the versions of user group ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>

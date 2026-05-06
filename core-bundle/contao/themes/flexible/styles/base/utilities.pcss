@@ -1,11 +1,12 @@
 .invisible {
     border: 0;
-    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
     height: 1px;
-    margin: -1px;
+    margin: 0;
     overflow: hidden;
     padding: 0;
     position: absolute;
+    white-space: nowrap;
     width: 1px;
 }
 
@@ -14,9 +15,6 @@
 }
 
 .unselectable {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
 }
@@ -47,4 +45,3 @@
         clear: both;
     }
 }
-

@@ -43,7 +43,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
-            return $this->error($context, 'message.rename_variant.error');
+            return $this->error($context, 'template_studio.message.rename_variant.error');
         }
 
         // Rename the variant template file
@@ -102,7 +102,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         // Disallow selecting a name of an existing variant
         return \sprintf(
             '^(?!(%s)$).*',
-            implode('|', array_map(preg_quote(...), $existingVariantNames)),
+            implode('|', $existingVariantNames),
         );
     }
 

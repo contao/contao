@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendTemplateStudioListener;
 use Contao\TestCase\ContaoTestCase;
@@ -176,7 +176,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $translator = $this->getTranslator();
 
         $request = new Request();
-        $request->attributes->set('_controller', BackendTemplateStudioController::class);
+        $request->attributes->set('_controller', TemplateStudioController::class);
 
         $requestStack = new RequestStack([$request]);
 

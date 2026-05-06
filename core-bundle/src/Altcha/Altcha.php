@@ -50,7 +50,7 @@ class Altcha
         }
 
         if (!$salt) {
-            $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds");
+            $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds").'&';
         }
 
         $number ??= random_int(0, $this->altchaRangeMax);

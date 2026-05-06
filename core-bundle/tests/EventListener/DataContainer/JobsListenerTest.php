@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
-use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Tests\Job\AbstractJobsTestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
 class JobsListenerTest extends AbstractJobsTestCase
@@ -27,124 +24,6 @@ class JobsListenerTest extends AbstractJobsTestCase
         unset($GLOBALS['TL_DCA']);
 
         parent::tearDown();
-    }
-
-    public function testAttachmentsCallbackWithNoAttachments(): void
-    {
-        $security = $this->mockSecurity(42);
-        $jobs = $this->getJobs($security, new MockClock());
-        $job = $jobs->createJob('job-type');
-
-        $listener = new JobsListener(
-            $jobs,
-            $security,
-            $this->createStub(Connection::class),
-            $this->getRequestStack(),
-            $this->createContaoFrameworkStub(),
-            $this->createStub(Environment::class),
-        );
-
-        $operation = $this->getOperationForJob($job);
-
-        $listener->onAttachmentsCallback($operation);
-        $this->assertSame('', $operation->getHtml());
-    }
-
-    public function testAttachmentsCallbackWithOneAttachment(): void
-    {
-        $security = $this->mockSecurity(42);
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('_contao_jobs.download')
-            ->willReturn('https://contao.org/contao/jobs/download')
-        ;
-
-        $jobs = $this->getJobs($security, new MockClock(), $router);
-        $job = $jobs->createJob('job-type');
-
-        $jobs->addAttachment($job, 'foobar', 'foobar');
-
-        $listener = new JobsListener(
-            $jobs,
-            $security,
-            $this->createStub(Connection::class),
-            $this->getRequestStack(),
-            $this->createContaoFrameworkStub(),
-            $this->createStub(Environment::class),
-        );
-
-        $operation = $this->getOperationForJob($job);
-
-        $listener->onAttachmentsCallback($operation);
-        $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
-        $this->assertSame('theme_import.svg', $operation['icon']);
-    }
-
-    public function testAttachmentsCallbackWithMultipleAttachments(): void
-    {
-        $security = $this->mockSecurity(42);
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->exactly(2))
-            ->method('generate')
-            ->with('_contao_jobs.download')
-            ->willReturn('https://contao.org/contao/jobs/download')
-        ;
-
-        $jobs = $this->getJobs($security, new MockClock(), $router);
-        $job = $jobs->createJob('job-type');
-
-        $twig = $this->createMock(Environment::class);
-        $twig
-            ->expects($this->once())
-            ->method('render')
-            ->with(
-                '@Contao/backend/data_container/operations.html.twig',
-                $this->callback(
-                    function (array $context): bool {
-                        $this->assertSame('theme_import.svg', $context['more_icon']);
-                        $this->assertTrue($context['has_primary']);
-                        $this->assertFalse($context['globalOperations']);
-
-                        $this->assertCount(2, $context['operations']);
-                        $this->assertSame('theme_import.svg', $context['operations'][0]['icon']);
-                        $this->assertSame('https://contao.org/contao/jobs/download', $context['operations'][0]['href']);
-
-                        return true;
-                    },
-                ),
-            )
-            ->willReturn('rendered-html')
-        ;
-
-        $listener = new JobsListener(
-            $jobs,
-            $security,
-            $this->createStub(Connection::class),
-            $this->getRequestStack(),
-            $this->createContaoFrameworkStub(),
-            $twig,
-        );
-
-        $operation = new DataContainerOperation(
-            'attachments',
-            ['label' => 'attachments', 'title' => 'attachments'],
-            ['uuid' => $job->getUuid()],
-            $this->createStub(DataContainer::class),
-        );
-
-        $listener->onAttachmentsCallback($operation);
-        $this->assertSame('', $operation->getHtml());
-
-        $jobs->addAttachment($job, 'foobar', 'foobar');
-        $jobs->addAttachment($job, 'foobar2', 'foobar2');
-
-        $listener->onAttachmentsCallback($operation);
-
-        $this->assertSame('rendered-html', $operation->getHtml());
     }
 
     public function testInvokeWithoutRequest(): void
@@ -245,7 +124,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         );
     }
 
-    public function testProgress(): void
+    public function testLabelCallback(): void
     {
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
@@ -254,13 +133,42 @@ class JobsListenerTest extends AbstractJobsTestCase
         $job = $job->withProgress(37.0);
 
         $jobs->persist($job);
+        $jobs->addAttachment($job, 'foobar', 'foobar');
 
+        $call = 0;
         $twig = $this->createMock(Environment::class);
         $twig
-            ->expects($this->once())
+            ->expects($this->exactly(3))
             ->method('render')
-            ->with('@Contao/backend/jobs/_progress.html.twig', ['progress' => 37.0])
-            ->willReturn('the resulting twig output')
+            ->willReturnCallback(
+                function (string $template, array $context) use (&$call, $job) {
+                    ++$call;
+
+                    if (1 === $call) {
+                        $this->assertSame('@Contao/backend/jobs/progress.html.twig', $template);
+                        $this->assertSame($job->getUuid(), $context['job']->getUuid());
+
+                        return 'progress.html.twig output';
+                    }
+
+                    if (2 === $call) {
+                        $this->assertSame('@Contao/backend/jobs/status.html.twig', $template);
+                        $this->assertSame($job->getUuid(), $context['job']->getUuid());
+
+                        return 'status.html.twig output';
+                    }
+
+                    if (3 === $call) {
+                        $this->assertSame('@Contao/backend/jobs/attachments.html.twig', $template);
+                        $this->assertSame($job->getUuid(), $context['job']->getUuid());
+                        $this->assertCount(1, $context['attachments']);
+
+                        return 'attachments.html.twig output';
+                    }
+
+                    $this->fail('render() called too many times.');
+                },
+            )
         ;
 
         $listener = new JobsListener(
@@ -272,7 +180,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $twig,
         );
 
-        $row = ['id' => 42, 'uuid' => $job->getUuid()];
+        $row = ['id' => 42, 'uuid' => $job->getUuid(), 'owner' => 1];
 
         $columns = [
             '2025-10-30 13:10',
@@ -284,17 +192,48 @@ class JobsListenerTest extends AbstractJobsTestCase
 
         $columnsNew = $listener->onLabelCallback($row, 'label', $this->createStub(DC_Table::class), $columns);
 
-        $this->assertSame('the resulting twig output', $columnsNew[2]);
+        $this->assertSame('progress.html.twig output', $columnsNew[2]);
+        $this->assertSame('status.html.twig output', $columnsNew[3]);
+        $this->assertSame('attachments.html.twig output', $columnsNew[5]);
     }
 
-    private function getOperationForJob(Job $job): DataContainerOperation
+    #[AllowMockObjectsWithoutExpectations]
+    public function testDeleteCallback(): void
     {
-        return new DataContainerOperation(
-            'attachments',
-            ['label' => 'attachments', 'title' => 'attachments'],
-            ['uuid' => $job->getUuid()],
-            $this->createStub(DataContainer::class),
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
+
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('removeAttachments')
+        ;
+
+        $listener = new JobsListener(
+            $jobs,
+            $this->createMock(Security::class),
+            $this->createStub(Connection::class),
+            $this->getRequestStack(Request::create('/contao?do=jobs')),
+            $framework,
+            $this->createStub(Environment::class),
         );
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(null)
+        ;
+
+        // The empty current record should return early
+        $listener->onDeleteCallback($dcTable);
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(['uuid' => '6461058f-ebed-4249-80ae-496b502fb6af'])
+        ;
+
+        // The valid current record should call removeAttachments()
+        $listener->onDeleteCallback($dcTable);
     }
 
     private function getRequestStack(Request|null $request = null): RequestStack

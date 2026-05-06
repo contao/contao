@@ -1,0 +1,34 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set listing_attributes = attrs()
+    .addClass('tl_listing_container')
+    .set('id', 'tl_listing')
+    .set('data-controller', 'contao--check-all')
+    .set('data-picker-value', picker.value|default, as_picker)
+    .mergeWith(listing_attributes|default)
+%}
+<div{{ listing_attributes }}>
+    {% block records %}
+        {% block select_all_button %}
+            {# Add a "select all" checkbox when in select or picker mode #}
+            {% if as_select or (as_picker and picker.type == 'checkbox') %}
+                <div class="tl_select_trigger">
+                    <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
+                    <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {# Views will add their content here. #}
+    {% endblock %}
+
+    {# Add an input to reset picker radio buttons #}
+    {% if as_picker and picker.type == 'radio' %}
+        <div class="tl_radio_reset">
+            <label for="tl_radio_reset" class="tl_radio_label">
+                {{ 'MSC.resetSelected'|trans }}
+            </label>
+            <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
+        </div>
+    {% endif %}
+</div>

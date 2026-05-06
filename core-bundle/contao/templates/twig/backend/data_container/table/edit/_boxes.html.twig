@@ -13,7 +13,7 @@
             .set('data-contao--toggle-fieldset-table-value', table)
             .set('data-contao--toggle-fieldset-collapsed-class', 'collapsed')
             .set('data-contao--jump-targets-target', 'section', add_jump_targets|default(true))
-            .set('data-contao--jump-targets-label-value', add_jump_targets|default(true) and box.label)
+            .set('data-contao--jump-targets-label-value', box.label, add_jump_targets|default(true) and box.label)
             .set('data-action', 'contao--jump-targets:scrollto->contao--toggle-fieldset#open', add_jump_targets|default(true))
         %}
         <fieldset{{ fieldset_attributes }}>

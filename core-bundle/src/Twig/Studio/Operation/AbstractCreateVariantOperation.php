@@ -39,7 +39,7 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
-            return $this->error($context, 'message.create_variant.error');
+            return $this->error($context, 'template_studio.message.create_variant.error');
         }
 
         // Create the variant template file with some default content
@@ -79,7 +79,7 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
         // Disallow selecting a name of an existing variant
         return \sprintf(
             '^(?!(%s)$).*',
-            implode('|', array_map(preg_quote(...), $existingVariantNames)),
+            implode('|', $existingVariantNames),
         );
     }
 

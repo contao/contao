@@ -46,8 +46,9 @@ class JwtManager
             $filesystem->dumpFile($secretFile, $secret);
         }
 
-        $this->config = $config ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
-        $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
+        $config ??= Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
+
+        $this->config = $config->withValidationConstraints(new SignedWith($config->signer(), $config->signingKey()));
     }
 
     public function parseRequest(Request $request): array|null

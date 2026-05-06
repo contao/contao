@@ -14,6 +14,10 @@ export default class OperationsMenuController extends Controller {
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             menuLinkSelector: 'a,button,img',
+            // Use arrays to bypass accessible-menu's string class selector validation
+            openClass: ['show'],
+            closeClass: [],
+            transitionClass: [],
         });
 
         menus.push(this.$menu);
@@ -72,6 +76,16 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);
+    }
+
+    close() {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
+            return;
+        }
+
+        if (this.$menu.elements.submenuToggles[0].isOpen) {
+            this.$menu.elements.submenuToggles[0].close();
+        }
     }
 
     setPosition(event) {

@@ -17,7 +17,6 @@ use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 
 class ContaoTableHandlerTest extends TestCase
@@ -48,7 +47,7 @@ class ContaoTableHandlerTest extends TestCase
         ;
 
         $handler = new ContaoTableHandler(static fn () => $connection);
-        $handler->setLevel(Logger::INFO);
+        $handler->setLevel(Level::Info);
 
         $this->assertFalse($handler->handle($record));
     }

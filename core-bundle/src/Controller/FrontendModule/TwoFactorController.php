@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Controller\ContentElement\TwoFactorController as TwoFactorControllerContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -31,8 +32,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', TwoFactorController::class, TwoFactorControllerContentElement::class);
+
 /**
  * @internal
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\TwoFactorController instead.
  */
 #[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
 class TwoFactorController extends AbstractFrontendModuleController
@@ -63,12 +69,8 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
-        $adapter = $this->getContaoAdapter(PageModel::class);
-        $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
-        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
-
         $template->enforceTwoFactor = $pageModel->enforceTwoFactor;
-        $template->targetPath = $return;
+        $template->targetPath = $this->generateContentUrl($pageModel);
 
         $translator = $this->container->get('translator');
 
@@ -83,8 +85,14 @@ class TwoFactorController extends AbstractFrontendModuleController
             $enable = true;
         }
 
-        if ($enable && ($response = $this->enableTwoFactor($template, $request, $user, $return))) {
-            return $response;
+        if ($enable) {
+            $adapter = $this->getContaoAdapter(PageModel::class);
+            $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
+            $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            if ($response = $this->enableTwoFactor($template, $request, $user, $return)) {
+                return $response;
+            }
         }
 
         $formId = $request->request->get('FORM_SUBMIT');
@@ -109,7 +117,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
+        $template->href = $this->generateContentUrl($pageModel, ['2fa' => 'enable'], UrlGeneratorInterface::ABSOLUTE_URL);
         $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return $template->getResponse();

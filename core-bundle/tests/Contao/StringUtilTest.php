@@ -181,14 +181,17 @@ class StringUtilTest extends TestCase
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+            $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+            $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+            $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        }
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -509,6 +512,7 @@ class StringUtilTest extends TestCase
 
     public function testResolvesReferencesInArrays(): void
     {
+        /** @phpstan-var array $ref (signals PHPStan that the array shape may change) */
         $ref = ['a'];
 
         $array = [
@@ -533,12 +537,10 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],
@@ -658,6 +660,47 @@ class StringUtilTest extends TestCase
                     'value' => true,
                 ],
             ],
+        ];
+    }
+
+    #[DataProvider('ensureStringUuidsProvider')]
+    public function testEnsureStringUuids(mixed $input, mixed $expected): void
+    {
+        $this->assertSame($expected, StringUtil::ensureStringUuids($input));
+    }
+
+    public static function ensureStringUuidsProvider(): iterable
+    {
+        yield 'Single binary UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720'),
+            '0f075396-ed26-11ee-a657-14ac60298720',
+        ];
+
+        yield 'Serialized UUIDs' => [
+            serialize([StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')]),
+            'a:2:{i:0;s:36:"0f075374-ed26-11ee-a657-14ac60298720";i:1;s:36:"0f07538b-ed26-11ee-a657-14ac60298720";}',
+        ];
+
+        yield 'Array UUIDs' => [
+            [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')],
+            ['0f075374-ed26-11ee-a657-14ac60298720', '0f07538b-ed26-11ee-a657-14ac60298720'],
+        ];
+
+        yield 'Ignores regular string' => [
+            'Lorem',
+            'Lorem',
+        ];
+
+        $object = (object) [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')];
+
+        yield 'Ignores object' => [
+            $object,
+            $object,
+        ];
+
+        yield 'Ignores invalid UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
         ];
     }
 }

@@ -60,6 +60,12 @@ final class AddTokenParser extends AbstractTokenParser
         return new AddNode($this->extensionName, $body, $identifier, $location, $token->getLine());
     }
 
+    /**
+     * Keep the name of this function consistent - we use it to guess which token
+     * parsers have corresponding end tags.
+     *
+     * @see \Contao\CoreBundle\Twig\EnvironmentInformation
+     */
     public function decideAddEnd(Token $token): bool
     {
         return $token->test('endadd');

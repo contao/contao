@@ -6,7 +6,7 @@
         {% set new_identifier_token -%}
             <span class="token">{{ new_identifier }}</span>
         {%- endset %}
-        {{ 'message.rename_variant.success'|trans([new_identifier_token])|raw }}
+        {{ 'template_studio.message.rename_variant.success'|trans([new_identifier_token])|raw }}
     {% endblock %}
 {% endembed %}
 

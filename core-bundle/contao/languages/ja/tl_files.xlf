@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
+        <target>画像のプレビュー</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
@@ -268,13 +269,25 @@
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルまたはフォルダーを削除</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag.1">
-        <source>Drag file or folder &quot;%s&quot;</source>
-        <target>&quot;%s&quot;というファイルまたはフォルダーをドラッグ</target>
+      <trans-unit id="tl_files.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というフォルダーをドラッグ</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dragFile.1">
+        <source>Drag file &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というファイルをドラッグ</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
+        <target>ソースを編集</target>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルのソースのテキストを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>ファイルをアップロード</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

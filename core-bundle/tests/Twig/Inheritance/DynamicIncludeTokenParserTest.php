@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
@@ -119,8 +120,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo.html.twig')
-            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig'])
+            ->willReturnMap([['foo.html.twig', ['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig']]])
         ;
 
         $filesystemLoader
@@ -148,8 +148,9 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
+            ->expects($this->once())
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
@@ -164,8 +165,8 @@ class DynamicIncludeTokenParserTest extends TestCase
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('<original message> Did you try to include a non-existent template or a template from a theme directory?');
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage('Optional templates are only supported in array notation at line 1.');
 
         $parser->parse($tokenStream);
     }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Attribute;
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * An attribute class for page controllers.
@@ -33,6 +33,7 @@ class AsPage
         string|null $format = null,
         public bool $contentComposition = true,
         public string|null $urlSuffix = null,
+        public string|null $template = null,
     ) {
         if (null !== $locale) {
             $this->defaults['_locale'] = $locale;

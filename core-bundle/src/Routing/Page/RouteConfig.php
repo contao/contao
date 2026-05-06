@@ -30,6 +30,7 @@ final class RouteConfig
         private readonly array $options = [],
         private readonly array $defaults = [],
         array|string $methods = [],
+        private readonly string|null $template = null,
     ) {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
@@ -67,5 +68,10 @@ final class RouteConfig
     public function getMethods(): array
     {
         return $this->methods;
+    }
+
+    public function getTemplate(): string|null
+    {
+        return $this->template;
     }
 }

@@ -31,7 +31,7 @@ final class ArrayTree implements \IteratorAggregate
     {
         $this->parentNodes[] = &$this->currentNode;
 
-        if (\array_key_exists($key, $this->currentNode)) {
+        if (null !== $key && \array_key_exists($key, $this->currentNode)) {
             $childNode = &$this->currentNode[$key];
         } else {
             $childNode = [];

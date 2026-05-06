@@ -150,7 +150,10 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createContaoFrameworkMock(array $adapters = [], array $instances = []): ContaoFramework&MockObject
     {
-        return $this->addAdaptersAndInstances($this->createMock(ContaoFramework::class), $adapters, $instances);
+        $mock = $this->createMock(ContaoFramework::class);
+        $this->addAdaptersAndInstances($mock, $adapters, $instances);
+
+        return $mock;
     }
 
     /**
@@ -161,7 +164,10 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createContaoFrameworkStub(array $adapters = [], array $instances = []): ContaoFramework&Stub
     {
-        return $this->addAdaptersAndInstances($this->createStub(ContaoFramework::class), $adapters, $instances);
+        $stub = $this->createStub(ContaoFramework::class);
+        $this->addAdaptersAndInstances($stub, $adapters, $instances);
+
+        return $stub;
     }
 
     /**
@@ -459,31 +465,31 @@ abstract class ContaoTestCase extends TestCase
         return $fqcn;
     }
 
-    private function addAdaptersAndInstances(MockObject|Stub $framework, $adapters, $instances): MockObject|Stub
+    private function addAdaptersAndInstances(MockObject|Stub $object, $adapters, $instances): void
     {
         $this->addConfigAdapter($adapters);
 
-        $framework
+        $object
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $framework
+        $object
             ->method('getAdapter')
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
         ;
 
         if ($instances) {
-            $framework
+            $object
                 ->method('createInstance')
                 ->willReturnCallback(
-                    static function (string $key) use ($instances): mixed {
+                    static function (string $key, array $args = []) use ($instances): mixed {
                         if (!isset($instances[$key])) {
                             return null;
                         }
 
                         if ($instances[$key] instanceof \Closure) {
-                            return $instances[$key]();
+                            return $instances[$key]($args);
                         }
 
                         return $instances[$key];
@@ -491,8 +497,6 @@ abstract class ContaoTestCase extends TestCase
                 )
             ;
         }
-
-        return $framework;
     }
 
     private function addMethods(MockObject|Stub $object, array $methods, array $properties): MockObject|Stub

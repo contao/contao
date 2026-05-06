@@ -89,7 +89,7 @@ class ImagesController extends AbstractContentElementController
             return new Response();
         }
 
-        if ($model->serverPagination && !$randomize) {
+        if ($model->perPage > 0 && $model->serverPagination && !$randomize) {
             $param = 'page_g'.$model->id;
 
             try {

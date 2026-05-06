@@ -43,6 +43,17 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
+    public function testRemoveJob(): void
+    {
+        $jobs = $this->getJobs();
+
+        $job = $jobs->createJob('job-type');
+        $this->assertInstanceOf(Job::class, $jobs->getByUuid($job->getUuid()));
+
+        $jobs->removeJob($job);
+        $this->assertNull($jobs->getByUuid($job->getUuid()));
+    }
+
     #[DataProvider('withProgressFromAmountsProvider')]
     public function testWithProgressFromFixedAmounts(int|null $total, int $amount, float $expectedProgress): void
     {
@@ -125,6 +136,37 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertNotContains($uuid2, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
         $this->assertNotContains($uuid3, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
         $this->assertContains($uuid4, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+    }
+
+    public function testFindMyRecentIncludesJobsInWindow(): void
+    {
+        $securityUser1 = $this->mockSecurity(1);
+        $securityUser2 = $this->mockSecurity(2);
+
+        $clock = new MockClock();
+        $jobsUser1 = $this->getJobs($securityUser1, $clock);
+        $jobsUser2 = $this->getJobs($securityUser2, $clock);
+
+        $oldCompletedJob = $jobsUser1->createUserJob('my-type')->markCompleted();
+        $jobsUser1->persist($oldCompletedJob);
+
+        $clock->modify('+30 minutes');
+
+        $newJob = $jobsUser1->createUserJob('my-type');
+        $pendingJob = $jobsUser1->createUserJob('my-type')->markPending();
+        $completedJob = $jobsUser1->createUserJob('my-type')->markCompleted();
+        $otherJob = $jobsUser2->createUserJob('my-type');
+
+        $jobsUser1->persist($pendingJob);
+        $jobsUser1->persist($completedJob);
+
+        $uuids = $this->jobsToUuids($jobsUser1->findMyRecent(60));
+
+        $this->assertContains($newJob->getUuid(), $uuids);
+        $this->assertContains($pendingJob->getUuid(), $uuids);
+        $this->assertContains($completedJob->getUuid(), $uuids);
+        $this->assertNotContains($oldCompletedJob->getUuid(), $uuids);
+        $this->assertNotContains($otherJob->getUuid(), $uuids);
     }
 
     public function testDispatchJob(): void
@@ -263,6 +305,10 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertSame('my-attachment-key', $attachment->getFilesystemItem()->getName());
         $this->assertCount(2, iterator_to_array($this->vfs->listContents($job->getUuid())));
         $this->assertCount(2, $jobs->getAttachments($job->getUuid()));
+
+        $jobs->removeAttachments($job->getUuid());
+        $this->assertCount(0, iterator_to_array($this->vfs->listContents($job->getUuid())));
+        $this->assertCount(0, $jobs->getAttachments($job->getUuid()));
     }
 
     public function testPrune(): void

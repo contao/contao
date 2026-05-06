@@ -6,7 +6,7 @@
     {%- endset %}
 
     {% block headline %}
-        {{ 'info.block.title'|trans|replace({
+        {{ 'template_studio.info.block.title'|trans|replace({
             '%block%': block_token,
         })|raw }}
     {% endblock %}
@@ -20,14 +20,14 @@
                 {% set namespace_token -%}
                     <span class="token">{{ hierarchy|last.template.namespace }}</span>
                 {%- endset %}
-                {{ 'info.block.hierarchy'|trans|replace({
+                {{ 'template_studio.info.block.hierarchy'|trans|replace({
                     '%block%': block_token,
                     '%namespace%': namespace_token,
                     '%modify_count%': hierarchy|length - 1,
                     '%target_template%': target_template_token,
                 })|raw }}
             {% else %}
-                {{ 'info.block.flat_hierarchy'|trans|replace({
+                {{ 'template_studio.info.block.flat_hierarchy'|trans|replace({
                     '%block%': block_token,
                     '%target_template%': target_template_token,
                 })|raw }}
@@ -37,11 +37,11 @@
         <form class="block_hierarchy" method="get" data-turbo-stream>
             {# Block description #}
             {% for element in hierarchy %}
-                {% set element_attrs = attrs()
+                {% set element_attributes = attrs()
                     .addClass('block')
                     .addClass('target', element.target)
                     .addClass('shadowed', element.shadowed) %}
-                <div{{ element_attrs }}>
+                <div{{ element_attributes }}>
                     {{ include('@Contao/backend/template_studio/_template_badges.html.twig', {
                         badges: [
                             element.template.namespace == 'Contao_Global' ? 'user' : null,
@@ -104,7 +104,7 @@
                                 {% set parent_expression_token -%}
                                     <span class="token">parent()</span>
                                 {%- endset %}
-                                {{ 'info.block.overwrite_warning'|trans|replace({
+                                {{ 'template_studio.info.block.overwrite_warning'|trans|replace({
                                     '%block%': block_token,
                                     '%expression_to_use%': parent_expression_token,
                                 })|raw }}

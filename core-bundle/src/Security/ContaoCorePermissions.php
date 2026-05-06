@@ -95,6 +95,13 @@ final class ContaoCorePermissions
     public const USER_CAN_EDIT_FIELD_OF_TABLE = 'contao_user.alexf';
 
     /**
+     * Access is granted if the current user can create/update/delete records of
+     * a table. Subject must be a table and operation separated by two colons
+     * (e.g. "tl_page::create").
+     */
+    public const USER_CAN_OPERATE_ON_TABLE = 'contao_user.cud';
+
+    /**
      * Access is granted if the current user can access the back end module. Subject
      * must be a module name (e.g. "article").
      */
@@ -134,6 +141,11 @@ final class ContaoCorePermissions
      * Access is granted if the current user can access image sizes in themes.
      */
     public const USER_CAN_ACCESS_IMAGE_SIZES = 'contao_user.themes.image_sizes';
+
+    /**
+     * Access is granted if the current user can access content elements in themes.
+     */
+    public const USER_CAN_ACCESS_THEME_ELEMENTS = 'contao_user.themes.elements';
 
     /**
      * Access is granted if the current user can access front end modules in themes.
@@ -194,12 +206,12 @@ final class ContaoCorePermissions
     /**
      * Access is granted if the current user can create forms.
      */
-    public const USER_CAN_CREATE_FORMS = 'contao_user.formp.create';
+    public const USER_CAN_CREATE_FORMS = 'contao_user.cud.tl_form::create';
 
     /**
      * Access is granted if the current user can delete forms.
      */
-    public const USER_CAN_DELETE_FORMS = 'contao_user.formp.delete';
+    public const USER_CAN_DELETE_FORMS = 'contao_user.cud.tl_form::delete';
 
     /**
      * Access is granted if the current user is allowed to see a given search document.

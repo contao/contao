@@ -192,8 +192,7 @@ class FavoriteControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('load')
-            ->with('@Contao/backend/chrome/favorite.html.twig')
-            ->willReturn(new TemplateWrapper($twig, $template))
+            ->willReturnMap([['@Contao/backend/chrome/favorite.html.twig', new TemplateWrapper($twig, $template)]])
         ;
 
         if (!$urlGenerator) {
@@ -240,7 +239,7 @@ class FavoriteControllerTest extends TestCase
         if ($url) {
             $router
                 ->method('generate')
-                ->with(
+                ->willReturnMap([[
                     'contao_backend',
                     [
                         'do' => 'favorites',
@@ -249,14 +248,13 @@ class FavoriteControllerTest extends TestCase
                         'data' => base64_encode(UrlUtil::getNormalizePathAndQuery($url)),
                         'return' => '1',
                     ],
-                )
-                ->willReturn('/add/favorite')
+                    '/add/favorite',
+                ]])
             ;
         } else {
             $router
                 ->method('generate')
-                ->with(FavoriteController::class)
-                ->willReturn('/remove/favorite')
+                ->willReturnMap([[FavoriteController::class, '/remove/favorite']])
             ;
         }
 

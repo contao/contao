@@ -62,9 +62,13 @@
                         <label for="username">{{ username }}</label>
                         <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ username }}" required>
                     </div>
-                    <div class="widget widget-password">
+                    <div class="widget widget-password" data-controller="contao--password-visibility">
                         <label for="password">{{ password }}</label>
-                        <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="{{ password }}" required>
+                        <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="{{ password }}" data-contao--password-visibility-target="input" required>
+                        <button type="button" class="password-button" data-action="contao--password-visibility#toggle">
+                            <span data-contao--password-visibility-target="icon">{{ backend_icon('password-show.svg', 'MSC.showPassword'|trans) }}</span>
+                            <span class="hidden" data-contao--password-visibility-target="icon">{{ backend_icon('password-hide.svg', 'MSC.hidePassword'|trans) }}</span>
+                        </button>
                     </div>
                     <div class="submit_container">
                         <button type="submit" name="login" id="login" class="tl_submit">{{ loginButton }}</button>

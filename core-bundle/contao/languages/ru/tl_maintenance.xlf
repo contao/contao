@@ -197,10 +197,6 @@
         <source>Rebuild index</source>
         <target>Перестроить индекс</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
-        <target>Идет процесс перестроения. Следите за обновлениями в сводке заданий.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

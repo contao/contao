@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array
@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['themes'],
 			'inputType'               => 'checkbox',
-			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
+			'options'                 => array('elements', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
@@ -187,15 +187,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
-		'formp' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['formp'],
-			'inputType'               => 'checkbox',
-			'options'                 => array('create', 'delete'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
 		'amg' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['amg'],
@@ -204,6 +195,13 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'search'                  => true,
+			'inputType'               => 'cud',
+			'sql'                     => "blob NULL"
 		),
 		'alexf' => array
 		(
@@ -306,11 +304,9 @@ class tl_user_group extends Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getModules(DataContainer $dc)
+	public function getModules()
 	{
 		$arrModules = array();
 
@@ -330,15 +326,6 @@ class tl_user_group extends Backend
 			}
 
 			$arrModules[$k] = array_keys($v);
-		}
-
-		$modules = StringUtil::deserialize($dc->activeRecord->modules);
-
-		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
-		{
-			unset($arrModules['design'][$key]);
-			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;

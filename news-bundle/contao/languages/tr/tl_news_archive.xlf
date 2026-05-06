@@ -65,12 +65,16 @@
         <source>Show the details of news archive ID %s</source>
         <target>%s kimlikli haber arşivinin ayrıntılarını görüntüle</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.versions.1">
+        <source>Show the versions of news archive ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>
         <target>%s kimlikli haber arşivini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children.0">
         <source>News items</source>
+        <target>Haber ögeleri</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
@@ -78,6 +82,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>
@@ -86,6 +91,10 @@
       <trans-unit id="tl_news_archive.delete.1">
         <source>Delete news archive ID %s</source>
         <target>%s kimlikli haber arşivini sil</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>Haber arşivi</target>
       </trans-unit>
     </body>
   </file>

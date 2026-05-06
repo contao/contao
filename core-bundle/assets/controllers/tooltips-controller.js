@@ -12,6 +12,7 @@ export default class TooltipsController extends Controller {
         'p.tl_tip': { x: 0, y: 23, useContent: true },
         '#home[title]': { x: 6, y: 42 },
         '#tmenu a[title]': { x: 0, y: 42 },
+        '#tmenu button[title]': { x: 0, y: 42 },
         'a[title][class^="group-"]': { x: -6, y: 27 },
         'a[title].navigation': { x: 25, y: 32 },
         'img[title].gimage': { x: -9, y: 60 },
@@ -19,12 +20,14 @@ export default class TooltipsController extends Controller {
         'a[title].picker-wizard': { x: -4, y: 30 },
         'button img[alt]': { x: -9, y: 30 },
         '.tl_panel button[title]': { x: 0, y: 36 },
+        '.jump-target-scroll button[title]': { x: -4, y: 36 },
         'button[title].unselectable': { x: -4, y: 20 },
         'button[title]:not(.unselectable)': { x: -9, y: 30 },
         'a[title]:not(.picker-wizard)': { x: -9, y: 30 },
         'input[title]': { x: -9, y: 30 },
         'time[title]': { x: -9, y: 26 },
         'span[title]': { x: -9, y: 26 },
+        'label.mw_enable': { x: -9, y: 30, useContent: true },
     };
 
     /**
@@ -166,20 +169,23 @@ export default class TooltipsController extends Controller {
     /**
      * Migrate legacy targets to proper controller targets.
      */
-    static afterLoad(identifier, application) {
-        const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
+    static afterLoad(identifier) {
+        const targetAttribute = `data-${identifier}-target`;
+        const targetSelector = Object.keys(TooltipsController.defaultOptionsMap).join(',');
 
         const migrateTarget = (el) => {
-            for (const target of targetSelectors) {
-                if (!el.hasAttribute(`data-${identifier}-target`) && el.matches(target)) {
-                    el.setAttribute(`data-${identifier}-target`, 'tooltip');
-                }
+            if (!el.hasAttribute(targetAttribute)) {
+                el.setAttribute(targetAttribute, 'tooltip');
+            }
+        };
 
-                for (const sel of el.querySelectorAll(target)) {
-                    if (!sel.hasAttribute(`data-${identifier}-target`)) {
-                        sel.setAttribute(`data-${identifier}-target`, 'tooltip');
-                    }
-                }
+        const migrateTargets = (el) => {
+            if (el.matches(targetSelector)) {
+                migrateTarget(el);
+            }
+
+            for (const target of el.querySelectorAll(targetSelector)) {
+                migrateTarget(target);
             }
         };
 
@@ -194,7 +200,7 @@ export default class TooltipsController extends Controller {
                         continue;
                     }
 
-                    migrateTarget(node);
+                    migrateTargets(node);
                 }
             }
         }).observe(document, {
@@ -203,7 +209,7 @@ export default class TooltipsController extends Controller {
         });
 
         // Initially migrate all targets that are already in the DOM
-        for (const el of document.querySelectorAll(targetSelectors.join(','))) {
+        for (const el of document.querySelectorAll(targetSelector)) {
             migrateTarget(el);
         }
     }

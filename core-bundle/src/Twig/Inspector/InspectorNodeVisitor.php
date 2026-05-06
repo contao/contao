@@ -11,6 +11,8 @@ use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -18,6 +20,8 @@ use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Source;
 use Twig\Token;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * @experimental
@@ -56,6 +60,21 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     private string|null $currentBlock = null;
 
+    /**
+     * @var list<string>|null
+     */
+    private array|null $deprecatedFunctions = null;
+
+    /**
+     * @var list<string>|null
+     */
+    private array|null $deprecatedFilters = null;
+
+    /**
+     * @var list<array{line: int, message: string}>
+     */
+    private array $deprecations = [];
+
     public function __construct(
         private readonly Storage $storage,
         private readonly Environment $twig,
@@ -65,7 +84,9 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     public function enterNode(Node $node, Environment $env): Node
     {
-        if ($node instanceof SlotNode) {
+        if ($node instanceof ModuleNode) {
+            $this->init();
+        } elseif ($node instanceof SlotNode) {
             $this->slots[$node->getAttribute('name')] = $this->currentBlock;
         } elseif ($node instanceof BlockNode) {
             $name = $node->getAttribute('name');
@@ -81,6 +102,16 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             } elseif ($expression instanceof BlockReferenceExpression && null !== ($name = $this->getValue($expression->getNode('name')))) {
                 $this->calledBlocks[] = $name;
             }
+        } elseif ($node instanceof FunctionExpression && \in_array($name = $node->getAttribute('name'), $this->deprecatedFunctions, true)) {
+            $this->deprecations[] = [
+                'line' => $node->getTemplateLine(),
+                'message' => $this->captureDeprecation(fn () => $this->twig->getFunction($name)->triggerDeprecation()),
+            ];
+        } elseif ($node instanceof FilterExpression && \in_array($name = $node->getAttribute('name'), $this->deprecatedFilters, true)) {
+            $this->deprecations[] = [
+                'line' => $node->getTemplateLine(),
+                'message' => $this->captureDeprecation(fn () => $this->twig->getFilter($name)->triggerDeprecation()),
+            ];
         }
 
         return $node;
@@ -135,6 +166,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             'calls' => $this->calledBlocks,
             'parent' => $getParent($node),
             'uses' => $getUses($node),
+            'deprecations' => $this->deprecations,
         ]);
 
         $this->slots = [];
@@ -153,6 +185,33 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     public function getPriority(): int
     {
         return 128;
+    }
+
+    private function init(): void
+    {
+        if (null !== $this->deprecatedFunctions) {
+            return;
+        }
+
+        $this->deprecatedFunctions = array_values(
+            array_map(
+                static fn (TwigFunction $function): string => $function->getName(),
+                array_filter(
+                    $this->twig->getFunctions(),
+                    static fn (TwigFunction $function): bool => $function->isDeprecated(),
+                ),
+            ),
+        );
+
+        $this->deprecatedFilters = array_values(
+            array_map(
+                static fn (TwigFilter $filter): string => $filter->getName(),
+                array_filter(
+                    $this->twig->getFilters(),
+                    static fn (TwigFilter $filter): bool => $filter->isDeprecated(),
+                ),
+            ),
+        );
     }
 
     private function isPrototype(BlockNode $block): bool
@@ -201,5 +260,26 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         }
 
         return null;
+    }
+
+    private function captureDeprecation(callable $callable): string
+    {
+        $message = '';
+
+        set_error_handler(
+            static function ($type, $msg) use (&$message) {
+                if (E_USER_DEPRECATED === $type) {
+                    $message = $msg;
+                }
+
+                return false;
+            },
+        );
+
+        $callable();
+
+        restore_error_handler();
+
+        return $message;
     }
 }

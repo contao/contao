@@ -68,6 +68,12 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_503.caption_basic_entities:
+        class: Contao\CoreBundle\Migration\Version503\CaptionBasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
     contao.migration.version_503.file_extension:
         class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
         arguments:
@@ -103,5 +109,16 @@ services:
 
     contao.migration.version_506.search_indexer_settings:
         class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_507.default_cud:
+        class: Contao\CoreBundle\Migration\Version507\DefaultCudMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.listener.data_container.cud_permission'
+
+    contao.migration.version_507.field_permission:
+        class: Contao\CoreBundle\Migration\Version507\FieldPermissionMigration
         arguments:
             - '@database_connection'

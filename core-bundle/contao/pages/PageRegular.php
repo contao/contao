@@ -267,16 +267,19 @@ class PageRegular extends Frontend
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}
 
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
+
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
+		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
+		$this->Template->class = htmlspecialchars(trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Additional meta tags
 		$this->Template->metaTags = $headBag->getMetaTags();
+		$this->Template->linkTags = $headBag->getLinkTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);

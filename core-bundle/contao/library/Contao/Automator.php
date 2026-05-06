@@ -375,7 +375,7 @@ class Automator extends System
 		$container = System::getContainer();
 
 		$warmer = $container->get('contao.cache.warmer');
-		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
+		$warmer->warmUp($container->getParameter('kernel.cache_dir'), $container->getParameter('kernel.build_dir'));
 
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
 	}

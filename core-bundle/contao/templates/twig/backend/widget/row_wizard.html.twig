@@ -2,7 +2,7 @@
 
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
-    .addClass(['row_wizard'])
+    .addClass('row_wizard')
     .set('data-controller', 'contao--row-wizard')
     .addStyle(style|default)
     .set('data-contao--row-wizard-name-value', id)
@@ -91,8 +91,6 @@
 
                         {% set enable_label_attributes = attrs()
                             .set('for', "#{id}_#{loop.index0}_enable")
-                            .set('title', 'MSC.mw_enable'|trans)
-                            .set('data-contao--tooltips-target', 'tooltip')
                             .set('data-action', 'click->contao--scroll-offset#store')
                             .addClass('mw_enable')
                         %}

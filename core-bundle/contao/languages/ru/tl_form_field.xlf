@@ -314,6 +314,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Добавить числовой суффикс к загружаемому файлу, если имя файла уже существует.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Разрешить несколько файлов</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Разрешить пользователю загружать несколько файлов.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Значение по умолчанию</target>
@@ -356,19 +364,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
-        <target>Надпись на кнопке 'Отправить'</target>
+        <target>Надпись на кнопке &apos;Отправить&apos;</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.1">
         <source>Please enter the label of the submit button.</source>
-        <target>Введите надпись на кнопке 'Отправить'.</target>
+        <target>Введите надпись на кнопке &apos;Отправить&apos;.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.imageSubmit.0">
         <source>Create an image button</source>
-        <target>Изображение кнопки 'Отправить'</target>
+        <target>Изображение кнопки &apos;Отправить&apos;</target>
       </trans-unit>
       <trans-unit id="tl_form_field.imageSubmit.1">
         <source>Use an image submit button instead of the default one.</source>
-        <target>Использовать изображение кнопки 'Отправить', вместо кнопки по умолчанию.</target>
+        <target>Использовать изображение кнопки &apos;Отправить&apos;, вместо кнопки по умолчанию.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.singleSRC.0">
         <source>Source file</source>
@@ -401,6 +409,14 @@
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
         <target>Скрыть нижний колонтитул (с ссылкой на ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+        <target>Плавающий режим</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+        <target>Включить плавающий интерфейс</target>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
@@ -456,7 +472,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.submit_legend">
         <source>Submit button</source>
-        <target>Кнопка 'Отправить'</target>
+        <target>Кнопка &apos;Отправить&apos;</target>
       </trans-unit>
       <trans-unit id="tl_form_field.image_legend">
         <source>Image button</source>
@@ -473,6 +489,10 @@
       <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
         <target>Показать детали поля формы ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.versions.1">
+        <source>Show the versions of form field ID %s</source>
+        <target>Показать версии поля формы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
@@ -525,6 +545,10 @@
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Импорт настроек из файла CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Поле формы</target>
       </trans-unit>
     </body>
   </file>

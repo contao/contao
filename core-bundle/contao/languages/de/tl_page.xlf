@@ -126,7 +126,7 @@
         <target>Sprachen-Fallback</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Diese Seite anzeigen, wenn es keine in der Sprache des Besuchers gibt.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -653,6 +653,10 @@
         <source>Show the details of page ID %s</source>
         <target>Details der Seite ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_page.versions.1">
+        <source>Show the versions of page ID %s</source>
+        <target>Versionen der Seite ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Seite ID %s bearbeiten</target>
@@ -808,6 +812,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 Jahr</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Seite</target>
       </trans-unit>
     </body>
   </file>

@@ -25,8 +25,10 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentCompositionListener
 {
@@ -36,6 +38,8 @@ class ContentCompositionListener
         private readonly PageRegistry $pageRegistry,
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ClockInterface $clock,
     ) {
     }
 
@@ -55,14 +59,15 @@ class ContentCompositionListener
             return;
         }
 
+        $record = $operation->getRecord();
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($operation->getRecord());
+        $pageModel->setRow($record);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            $operation->disable();
+            $operation->hide();
         } else {
-            $operation['href'] .= '&amp;pn='.$operation->getRecord()['id'];
+            $operation->setUrl($this->urlGenerator->generate('contao_backend', ['do' => 'article', 'pn' => $record['id']]));
         }
     }
 
@@ -116,7 +121,7 @@ class ContentCompositionListener
         $article = [
             'pid' => $dc->id,
             'sorting' => 128,
-            'tstamp' => time(),
+            'tstamp' => $this->clock->now()->getTimestamp(),
             'author' => $user->id,
             'inColumn' => $column,
             'title' => $currentRecord['title'] ?? null,

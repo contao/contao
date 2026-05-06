@@ -49,8 +49,7 @@ class SwitchUserOperationTest extends TestCase
         $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
-            ->with('id')
-            ->willReturn(42)
+            ->willReturnMap([['id', 42]])
         ;
 
         $security = $this->createMock(Security::class);
@@ -88,15 +87,13 @@ class SwitchUserOperationTest extends TestCase
         $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
-            ->with('id')
-            ->willReturn(21)
+            ->willReturnMap([['id', 21]])
         ;
 
         $originalUser = $this->createStub(BackendUser::class);
         $originalUser
             ->method('__get')
-            ->with('id')
-            ->willReturn(42)
+            ->willReturnMap([['id', 42]])
         ;
 
         $originalToken = $this->createMock(TokenInterface::class);

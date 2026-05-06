@@ -86,7 +86,7 @@ class ClipboardManager
         $session = $this->requestStack->getSession();
         $clipboard = $session->get(self::SESSION_KEY);
 
-        if (!isset($clipboard[$table]) || !\is_array($clipboard[$table]['id'])) {
+        if (!isset($clipboard[$table]) || !\is_array($clipboard[$table]['id'] ?? null)) {
             return [];
         }
 

@@ -6,11 +6,12 @@
         <target>E-mailadres</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
         <target>Geef een e-mailadres op voor de ontvanger.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -46,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirm">
         <source>%s new recipients have been imported.</source>
-        <target>%s nieuwe abonnee's zijn geïmporteerd.</target>
+        <target>%s nieuwe abonnee&apos;s zijn geïmporteerd.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.invalid">
         <source>%s invalid entries have been skipped.</source>
@@ -75,6 +76,9 @@
       <trans-unit id="tl_newsletter_recipients.show.1">
         <source>Show the details of recipient ID %s</source>
         <target>Toon details van ontvanger ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.versions.1">
+        <source>Show the versions of recipient ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>
@@ -110,6 +114,23 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
+        <target>Activeren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Nieuwsbrief ontvanger</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Blokkeren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Blokkeer ontvanger ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>Wil je ontvanger ID %s echt blokkeren?</target>
       </trans-unit>
     </body>
   </file>

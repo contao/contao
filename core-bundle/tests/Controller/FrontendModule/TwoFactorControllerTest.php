@@ -25,13 +25,13 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -53,7 +53,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $this->createStub(BackendUser::class),
             true,
         );
@@ -76,7 +76,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $this->createStub(BackendUser::class),
             true,
         );
@@ -96,7 +96,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
 
         $controller = new TwoFactorController();
@@ -122,7 +122,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -151,7 +151,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -179,7 +179,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -228,7 +228,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -271,9 +271,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -299,7 +299,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -308,9 +308,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -343,7 +343,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, true),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -352,9 +352,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -384,7 +384,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -412,7 +412,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -471,18 +471,14 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils&Stub
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException): AuthenticationUtils&MockObject
     {
-        if ($authenticationException instanceof AuthenticationException) {
-            $authenticationUtils = $this->createMock(AuthenticationUtils::class);
-            $authenticationUtils
-                ->expects($this->once())
-                ->method('getLastAuthenticationError')
-                ->willReturn($authenticationException)
-            ;
-        } else {
-            $authenticationUtils = $this->createStub(AuthenticationUtils::class);
-        }
+        $authenticationUtils = $this->createMock(AuthenticationUtils::class);
+        $authenticationUtils
+            ->expects($this->once())
+            ->method('getLastAuthenticationError')
+            ->willReturn($authenticationException)
+        ;
 
         return $authenticationUtils;
     }
@@ -512,14 +508,12 @@ class TwoFactorControllerTest extends TestCase
         $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $framework
             ->method('createInstance')
-            ->with(FrontendTemplate::class, ['mod_two_factor'])
-            ->willReturn($template)
+            ->willReturnMap([[FrontendTemplate::class, ['mod_two_factor'], $template]])
         ;
 
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->with('IS_AUTHENTICATED_FULLY')
             ->willReturn($isFullyAuthenticated)
         ;
 

@@ -38,7 +38,7 @@ class PageResolverTest extends TestCase
         $result = $resolver->resolve($content);
         $this->assertNull($result);
 
-        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'news_feed']);
         $result = $resolver->resolve($content);
         $this->assertNull($result);
 
@@ -57,6 +57,26 @@ class PageResolverTest extends TestCase
         $this->assertTrue($result->isRedirect());
         $this->assertInstanceOf(StringUrl::class, $result->content);
         $this->assertSame('https://example.com/', $result->content->value);
+    }
+
+    public function testReturnsRootUrl(): void
+    {
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
+
+        $pageAdapter = $this->createAdapterMock(['findFirstPublishedRegularByPid']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findFirstPublishedRegularByPid')
+            ->with(42)
+            ->willReturn($jumpTo)
+        ;
+
+        $resolver = new PageResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
+        $result = $resolver->resolve($content);
+
+        $this->assertTrue($result->isRedirect());
+        $this->assertSame($jumpTo, $result->content);
     }
 
     public function testRedirectsToJumpToOfForwardPage(): void

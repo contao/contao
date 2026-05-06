@@ -105,7 +105,7 @@ class DefaultOperationsListener
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
-        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
         $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 

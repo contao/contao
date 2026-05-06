@@ -130,6 +130,14 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->scalarNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(static fn ($v) => null !== $v && !\is_bool($v))
+                        ->thenInvalid('Must be boolean or null.')
+                    ->end()
+                ->end()
             ->end()
         ;
 
@@ -186,13 +194,23 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('options')
-                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
-                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=55".')
+                                ->example(['--sleep=5', '--time-limit=55'])
                                 ->scalarPrototype()->end()
-                                ->defaultValue(['--time-limit=60'])
+                                ->defaultValue(['--time-limit=55'])
                                 ->validate()
-                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
-                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                    ->ifTrue(
+                                        static function (array $options): bool {
+                                            foreach ($options as $option) {
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && $matches[1] <= 60) {
+                                                    return false;
+                                                }
+                                            }
+
+                                            return true;
+                                        },
+                                    )
+                                    ->thenInvalid('Custom messenger:consume options must include a "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')

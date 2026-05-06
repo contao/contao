@@ -121,6 +121,10 @@
         <source>Show the details of question ID %s</source>
         <target>ID %sの質問の詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_faq.versions.1">
+        <source>Show the versions of question ID %s</source>
+        <target>ID %sの質問のバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>ID %sの質問を編集</target>
@@ -172,6 +176,18 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
         <target>ID %sの質問の後に新しい質問を作成</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenewtop.1">
+        <source>Add a new question at the top</source>
+        <target>先頭に新しい質問を追加</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenewafter.1">
+        <source>Add a new question after question ID %s</source>
+        <target>ID %sの質問の後に新しい質問を追加</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>質問</target>
       </trans-unit>
     </body>
   </file>

@@ -38,8 +38,8 @@ class Cron
     private array $cronJobs = [];
 
     /**
-     * @param \Closure(): CronJobRepository      $repository
-     * @param \Closure(): EntityManagerInterface $entityManager
+     * @param \Closure():CronJobRepository      $repository
+     * @param \Closure():EntityManagerInterface $entityManager
      */
     public function __construct(
         private readonly \Closure $repository,
@@ -172,6 +172,7 @@ class Cron
             }
 
             $entityManager->flush();
+            $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
         } finally {
             $repository->unlockTable();
         }

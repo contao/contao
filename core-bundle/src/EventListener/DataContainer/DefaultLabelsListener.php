@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\System;
 
 /**
  * Adds default labels to DCA operations and fields (see #509).
@@ -24,6 +25,8 @@ class DefaultLabelsListener
 {
     public function __invoke(string $table): void
     {
+        System::loadLanguageFile($table);
+
         // Operations
         foreach (['global_operations', 'operations'] as $key) {
             if (!isset($GLOBALS['TL_DCA'][$table]['list'][$key])) {

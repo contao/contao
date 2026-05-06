@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -209,7 +210,7 @@ class ModuleSearch extends Module
 				// Pagination menu
 				if ($pagination->getPageCount() > 1)
 				{
-					$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+					$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 				}
 
 				$this->Template->page = $pagination->getCurrent();

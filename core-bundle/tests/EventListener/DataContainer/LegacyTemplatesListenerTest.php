@@ -34,8 +34,10 @@ class LegacyTemplatesListenerTest extends TestCase
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('tl_templates.twig_studio_hint', ['<a href="contao_template_studio">Template Studio</a>'], 'contao_templates')
-            ->willReturn('<message>')
+            ->willReturnMap([
+                ['MOD.template_studio.0', [], 'contao_default', null, 'Template Studio'],
+                ['tl_templates.twig_studio_hint', ['<a href="contao_template_studio">Template Studio</a>'], 'contao_templates', null, '<message>'],
+            ])
         ;
 
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);

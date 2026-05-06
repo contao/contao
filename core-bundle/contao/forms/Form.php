@@ -308,16 +308,19 @@ class Form extends Hybrid
 		// Remove any uploads, if form did not validate (#1185)
 		if (($doNotSubmit || $this->hasErrors()) && $hasUpload)
 		{
-			foreach ($arrFiles as $upload)
+			foreach ($arrFiles as $uploads)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				foreach ((array) $uploads as $upload)
 				{
-					$file->delete();
-				}
+					if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+					{
+						$file->delete();
+					}
 
-				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
-				{
-					unlink($upload['tmp_name']);
+					if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
+					{
+						unlink($upload['tmp_name']);
+					}
 				}
 			}
 		}
@@ -600,13 +603,10 @@ class Form extends Hybrid
 			{
 				foreach ($arrFiles as $k=>$v)
 				{
-					if (\array_key_exists('name', $v))
+					if (\array_key_exists('name', $v) && ($v['uploaded'] ?? null))
 					{
-						if ($v['uploaded'] ?? null)
-						{
-							$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
-							continue;
-						}
+						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
+						continue;
 					}
 
 					$arrSet[$k] = serialize(array_map(static function ($file) {
@@ -614,6 +614,8 @@ class Form extends Hybrid
 						{
 							return StringUtil::stripRootDir($file['tmp_name']);
 						}
+
+						return null;
 					}, $v));
 				}
 			}

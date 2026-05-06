@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 		),
@@ -374,7 +374,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'useCaption' => array
 		(

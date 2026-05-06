@@ -7,7 +7,7 @@
     box-sizing: border-box;
     cursor: pointer;
     background: var(--form-button);
-    transition: background .2s ease;
+    transition: background 0.2s ease;
 }
 
 .tl_submit:hover {
@@ -26,11 +26,15 @@
     cursor: not-allowed;
 }
 
-.tl_panel .tl_submit, .tl_version_panel .tl_submit, .tl_formbody_submit .tl_submit {
+.tl_panel .tl_submit,
+.tl_version_panel .tl_submit,
+.tl_formbody_submit .tl_submit {
     background: var(--form-bg);
 }
 
-.tl_panel .tl_submit:hover, .tl_version_panel .tl_submit:hover, .tl_formbody_submit .tl_submit:hover {
+.tl_panel .tl_submit:hover,
+.tl_version_panel .tl_submit:hover,
+.tl_formbody_submit .tl_submit:hover {
     background: var(--form-bg-hover);
 }
 
@@ -45,7 +49,8 @@ a.tl_submit {
     z-index: 1;
 }
 
-.split-button ul, .split-button li {
+.split-button ul,
+.split-button li {
     margin: 0;
     padding: 0;
     list-style: none;

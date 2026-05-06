@@ -17,7 +17,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter;
 
 class FormAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
         // never grant access (see #6201).

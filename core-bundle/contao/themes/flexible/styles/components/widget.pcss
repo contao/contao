@@ -6,6 +6,7 @@ fieldset > .widget-group {
     --widget-col-amount: 12;
     --widget-gap-rows: 0;
     --widget-gap-cols: 0;
+
     display: grid;
     gap: var(--widget-gap-rows) var(--widget-gap-cols);
     grid-template-columns: repeat(var(--widget-col-amount), minmax(0, 1fr));
@@ -13,10 +14,12 @@ fieldset > .widget-group {
 
 .widget-group > * {
     --widget-cols: var(--widget-col-amount);
+
     grid-column-end: span var(--widget-cols);
 }
 
-.widget-group > .clr, .widget-group > .subpal {
+.widget-group > .clr,
+.widget-group > .subpal {
     grid-column-start: 1;
 }
 
@@ -45,7 +48,7 @@ fieldset > .widget-group {
     width: 100%;
 }
 
-:not(.widget-group) > .clr:before {
+:not(.widget-group) > .clr::before {
     content: "";
     display: table;
 }
@@ -59,7 +62,7 @@ fieldset > .widget-group {
 }
 
 .widget * {
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 .widget > div {
@@ -67,11 +70,12 @@ fieldset > .widget-group {
 }
 
 .widget > div > * {
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
-.widget pre, .widget code {
-    font-size: .7rem;
+.widget pre,
+.widget code {
+    font-size: 0.7rem;
 }
 
 .widget h3 {

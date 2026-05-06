@@ -145,6 +145,10 @@
         <source>Cannot move %s to %s because the target exists!</source>
         <target>%s kann nicht nach %s verschoben werden, da das Ziel existiert!</target>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>Das Hochladen mehrerer Dateien ist bei diesem Feld nicht erlaubt!</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
         <target>Zugriff verweigert! Die aktuelle Hostadresse (%s) stimmt nicht mit der verweisenden Hostadresse (%s) überein!</target>
@@ -409,6 +413,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Das Element ID %d kann hier nicht eingefügt werden, da es mit einem bestehenden Element kollidiert.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Sie können nur als Administrator Zugriff auf den Template-Editor gewähren.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -424,6 +432,22 @@
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
         <target>Text-Elemente</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>Passwort ändern</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+        <target>Erzeugt ein Formular zur Passwort-Änderung.</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>Konto schließen</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+        <target>Erzeugt ein Formular zur Löschung eines Benutzerkontos.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -704,6 +728,14 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Zeigt den Teasertext eines Artikels an.</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Zwei-Faktor-Authentifizierung</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Erzeugt ein Formular zur Einrichtung der Zwei-Faktor-Authentifizierung.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1806,8 +1838,8 @@
         <target>Zurück</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
-        <target>Zurück zur vorherigen Seite</target>
+        <source>Go up one level</source>
+        <target>Eine Ebene nach oben</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -1841,6 +1873,10 @@
         <source>All</source>
         <target>Alle</target>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Weitere Datensätze sind aus Performance-Gründen ausgeblendet. Klappen Sie den Baum ein oder nutzen Sie Filter, um die Ansicht einzugrenzen.</target>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
         <target>Details des Datensatzes %s anzeigen</target>
@@ -1869,9 +1905,17 @@
         <source>Search</source>
         <target>Suchen</target>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>Datei</target>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
         <target>Keine Einträge gefunden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
+        <target>Keine Einträge mit den aktuellen Filtereinstellungen gefunden.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -1888,10 +1932,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
         <target>Speichern und Kindelemente bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-        <target>Speichern und zurück</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -2220,6 +2260,10 @@
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>Filter zurücksetzen</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>Filtern</target>
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
@@ -2713,6 +2757,22 @@
         <source>Header</source>
         <target>Kopfzeile</target>
       </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>Benutzerprofil anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>Benutzerprofil ausblenden</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>Hauptnavigation anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>Hauptnavigation ausblenden</target>
+      </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
         <target>Paginierung</target>
@@ -2763,7 +2823,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>Die Zwei-Faktor-Authentifizierung wurde aktiviert.</target>
+        <target>Die Zwei-Faktor-Authentifizierung ist aktiv.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2795,7 +2855,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
-        <target>Wenn Sie die Backup-Codes neu generieren, werden Ihre alten Codes nicht mehr funktionieren.</target>
+        <target>Wenn Sie die Backup-Codes neu generieren, verlieren die alten Codes ihre Gültigkeit.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
@@ -2805,9 +2865,25 @@
         <source>Favorites</source>
         <target>Favoriten</target>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+        <target>Pfad anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+        <target>Elemente derselben Ebene anzeigen</target>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
         <target>URL als Favorit speichern</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>URL als Favorit entfernen</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>Möchten Sie die URL wirklich als Favorit entfernen?</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2905,6 +2981,14 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil das Formular Fehler enthält.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>Die URL wird aufgrund der Robots-Tag-Einstellungen nicht indexiert.</target>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Unbekannte Option: %s</target>
@@ -2925,9 +3009,21 @@
         <source>Manual</source>
         <target>Handbuch</target>
       </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>Die Aufgabe wurde in die Warteschlange gestellt. In der Jobübersicht finden Sie den aktuellen Status.</target>
+      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
         <target>Job-Übersicht</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>Anhänge ansehen</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>Anhang %s herunterladen</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -2970,11 +3066,11 @@
         <target>Geschützt durch &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Ich bin kein Roboter</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>Ich bin ein Mensch</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
@@ -3034,8 +3130,16 @@
         <target>Bitte geben Sie mindestens %s Zeichen ein</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Ergebnisse werden geladen...</target>
+        <source>Loading results …</source>
+        <target>Ergebnisse werden geladen …</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3044,6 +3148,18 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
         <target>%s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>Typ</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>Keine Ergebnisse gefunden oder keine Berechtigung zur Ansicht der Ergebnisse.</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
@@ -3088,6 +3204,26 @@
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
         <target>Nie indizieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>Feld</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>Suchbegriff</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>Vollbildmodus aktivieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+        <target>Nach links scrollen</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
+        <target>Nach rechts scrollen</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3241,6 +3377,18 @@
         <source>Collapse all nodes</source>
         <target>Alle Knoten schließen</target>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>Filtern</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>Filter einblenden</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>Filter ausblenden</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Neu</target>
@@ -3296,6 +3444,14 @@
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>Element ID %s löschen</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>Versionen</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>Versionen des Elements ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
@@ -3384,6 +3540,26 @@
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
         <target>Neues Element im Element ID %s erstellen</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+        <target>Zugriffsrechte</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+        <target>Backend-Rechte</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+        <target>Die hier vorgenommenen Änderungen werden in den Benutzer- und Gruppeneinstellungen gespeichert.</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+        <target>Gruppen</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>Benutzer</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

@@ -272,6 +272,9 @@
       <trans-unit id="tl_calendar_events.show.1">
         <source>Show the details of event ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.versions.1">
+        <source>Show the versions of event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
       </trans-unit>
