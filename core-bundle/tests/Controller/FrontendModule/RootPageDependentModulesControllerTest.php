@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class RootPageDependentModulesControllerTest extends TestCase
@@ -110,7 +111,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $controller->getResponse(
-            new FragmentTemplate('', static fn () => ''),
+            new FragmentTemplate('', static fn () => new Response()),
             $this->createStub(ModuleModel::class),
             new Request(),
         );
