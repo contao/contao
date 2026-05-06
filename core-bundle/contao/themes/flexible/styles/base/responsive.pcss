@@ -136,7 +136,25 @@
     }
 
     #tl_versions {
-        display: none;
+        table {
+            tr {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+
+                td, th {
+                    display: block;
+                }
+
+                th:last-child {
+                    display: none;
+                }
+
+                td:last-child {
+                    width: auto;
+                    grid-column: 1 / -1;
+                }
+            }
+        }
     }
 
     #tl_buttons > ul,
