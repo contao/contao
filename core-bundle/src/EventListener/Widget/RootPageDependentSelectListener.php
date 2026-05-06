@@ -50,7 +50,7 @@ class RootPageDependentSelectListener
         $moduleGroup = $this->translator->trans('MSC.mw_modules', [], 'contao_default');
 
         $elements = $this->connection->executeQuery(
-            "SELECT * FROM tl_content WHERE ptable='tl_theme' AND pid=(SELECT pid FROM tl_module WHERE id=?)",
+            "SELECT * FROM tl_content WHERE ptable='tl_theme' AND pid=?",
             [$pid],
         );
 
