@@ -422,6 +422,11 @@ class InputTest extends TestCase
             'Text &#60;with&#62; <span> tags',
         ];
 
+        yield 'Allows self-closing tags' => [
+            '<p><img /></p>',
+            '<p><img /></p>',
+        ];
+
         yield 'Removes attributes' => [
             'foo <span onerror=alert(1)> bar',
             'foo <span> bar',

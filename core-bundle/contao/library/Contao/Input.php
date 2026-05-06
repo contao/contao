@@ -734,6 +734,12 @@ class Input
 					$strReturn .= ' ' . $strAttributeName . '="' . $strAttributeValue . '"';
 				}
 
+				// Self-closing tag (see #9817)
+				if (' /' === $matches[2])
+				{
+					$strReturn .= ' /';
+				}
+
 				$strReturn .= '>';
 
 				return $strReturn;
