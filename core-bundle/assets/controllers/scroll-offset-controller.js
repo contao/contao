@@ -111,7 +111,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.#pendingAutoFocus) return;
+        if (this.#pendingAutoFocus) return;
 
         const input = this.autoFocusTarget;
 
@@ -172,8 +172,8 @@ export default class extends Controller {
 
         const input = this.#pendingAutoFocus;
 
-        requestAnimationFrame(() => {
-            // Do not prevent scroll to allow turbo to handle it (see #8934)
+        queueMicrotask(() => {
+            // Do prevent scroll to allow turbo to handle it (see #8934)
             input.focus({ preventScroll: true });
             const len = input.value.length;
             input.setSelectionRange(len, len);
