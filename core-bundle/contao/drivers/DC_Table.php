@@ -5358,9 +5358,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return Database::quoteIdentifier($field);
 		}
 
-		$path = '$."' . str_replace(array('\\', '"'), array('\\\\', '\\"'), $field) . '"';
+		$path = System::getContainer()
+			->get('database_connection')
+			->getDatabasePlatform()
+			->quoteStringLiteral('$.' . json_encode($field, JSON_THROW_ON_ERROR))
+		;
 
-		return "JSON_UNQUOTE(JSON_EXTRACT(" . Database::quoteIdentifier($virtualFields[$field]) . ", '" . $path . "'))";
+		return "JSON_UNQUOTE(JSON_EXTRACT(" . Database::quoteIdentifier($virtualFields[$field]) . ", " . $path . '))';
 	}
 
 	/**
