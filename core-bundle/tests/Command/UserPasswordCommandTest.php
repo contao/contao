@@ -273,15 +273,13 @@ class UserPasswordCommandTest extends TestCase
         $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
-            ->with($password)
-            ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
+            ->willReturnMap([[$password, '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ']])
         ;
 
         $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
-            ->with(BackendUser::class)
-            ->willReturn($passwordHasher)
+            ->willReturnMap([[BackendUser::class, $passwordHasher]])
         ;
 
         $command = new UserPasswordCommand($this->createContaoFrameworkStub(), $connection, $passwordHasherFactory);

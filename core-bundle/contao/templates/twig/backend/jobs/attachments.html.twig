@@ -2,7 +2,7 @@
 
 {% set attachment_attributes = attrs().set('data-job-attachments', job.uuid) %}
 
-{% if job.completed %}
+{% if attachments is not empty %}
     <ul{{ attachment_attributes }}>
         {% for attachment in attachments %}
             <li>
@@ -13,5 +13,5 @@
         {% endfor %}
     </ul>
 {% else %}
-    <span{{ attachment_attributes.addClass('pending') }}>…</span>
+    <span>-</span>
 {% endif %}

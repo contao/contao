@@ -54,8 +54,7 @@ class AbstractFragmentControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with('@Contao/modified/template.html.twig', ['some' => 'data'])
-            ->willReturn('rendered modified/template')
+            ->willReturnMap([['@Contao/modified/template.html.twig', ['some' => 'data'], 'rendered modified/template']])
         ;
 
         $fragmentController = $this->getFragmentController('original/template', $twig);
@@ -78,8 +77,7 @@ class AbstractFragmentControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with('@Contao/foo/bar.html.twig', [])
-            ->willReturn('rendered foo/bar')
+            ->willReturnMap([['@Contao/foo/bar.html.twig', [], 'rendered foo/bar']])
         ;
 
         $fragmentController = $this->getFragmentController('foo/bar', $twig);
@@ -105,16 +103,14 @@ class AbstractFragmentControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with("@Contao/$defaultTemplateName.html.twig")
-            ->willReturn(true)
+            ->willReturnMap([["@Contao/$defaultTemplateName.html.twig", true]])
         ;
 
         if (!$twig) {
             $twig = $this->createStub(Environment::class);
             $twig
                 ->method('render')
-                ->with("@Contao/$defaultTemplateName.html.twig", ['some' => 'data'])
-                ->willReturn("rendered $defaultTemplateName")
+                ->willReturnMap([["@Contao/$defaultTemplateName.html.twig", ['some' => 'data'], "rendered $defaultTemplateName"]])
             ;
         }
 

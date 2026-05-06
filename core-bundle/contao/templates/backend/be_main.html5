@@ -13,16 +13,11 @@ $this->bodyAttributes = $this
     ->attrs($this->attributes)
     ->set('id', 'top')
     ->addClass('be_main')
+    ->addClass($this->backendWidth)
     ->addClass('popup', $this->isPopup)
     ->set('data-controller', 'contao--tooltips')
     ->set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     ->mergeWith($this->bodyAttributes)
-;
-
-$this->containerAttributes = $this
-    ->attrs()
-    ->addClass($this->containerClass)
-    ->mergeWith($this->containerAttributes)
 ;
 
 $this->mainAttributes = $this
@@ -89,14 +84,12 @@ $this->asideAttributes = $this
     <?php if (!$this->renderMainOnly): ?>
       <header id="header">
         <div class="inner">
-          <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
-              <span class="app-title">Contao</span>
-              <?php if ($this->badgeTitle): ?>
-                <span class="badge-title"><?= $this->badgeTitle ?></span>
-              <?php endif; ?>
-            </a>
-          </h1>
+          <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
+            <span class="app-title">Contao</span>
+            <?php if ($this->badgeTitle): ?>
+              <span class="badge-title"><?= $this->badgeTitle ?></span>
+            <?php endif; ?>
+          </a>
           <?= $this->headerMenu ?>
         </div>
       </header>
@@ -109,7 +102,7 @@ $this->asideAttributes = $this
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container"<?= $this->containerAttributes ?>>
+    <div id="container">
 
       <?php $this->block('left'); ?>
         <?php if (!$this->renderMainOnly): ?>
@@ -128,14 +121,14 @@ $this->asideAttributes = $this
         <turbo-frame id="contao-main" target="_top">
           <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
-              <h1 id="main_headline">
+              <div class="content-top">
                 <?php if ($this->breadcrumb): ?>
-                  <?= $this->breadcrumb ?>
+                  <nav id="main_breadcrumb"><?= $this->breadcrumb ?></nav>
                 <?php else: ?>
-                  <?= $this->headline ?>
+                  <h1 id="main_headline"><?= $this->headline ?></h1>
                 <?php endif; ?>
                 <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
-              </h1>
+              </div>
             <?php $this->endblock(); ?>
             <div class="content">
               <?php if ($this->pickerMenu): ?>

@@ -679,12 +679,12 @@ class InsertTagsTest extends TestCase
 
         yield 'Unclosed insert tag' => [
             '<span title="{{xx">}} class="broken-out">',
-            '<span title="[{]xx">}} class="broken-out">',
+            '<span title="&#123;&#123;xx">}} class="broken-out">',
         ];
 
         yield 'Trick comments detection with insert tag' => [
             '<!-- {{plain::--}}> got you! -->',
-            '<!-- [{]plain::--[}]> got you! -->',
+            '<!-- &#123;&#123;plain::--&#125;&#125;> got you! -->',
         ];
 
         yield 'Do not destroy JSON attributes' => [
@@ -710,6 +710,16 @@ class InsertTagsTest extends TestCase
         yield 'Trick insert tag detection with JSON' => [
             '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
             '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+        ];
+
+        yield 'Literal insert tags' => [
+            'foo [{] bar [}] baz',
+            'foo &#123;&#123; bar &#125;&#125; baz',
+        ];
+
+        yield 'literal insert tags inside script tag are not replaced' => [
+            '[{] <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> [}]',
+            '&#123;&#123; <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> &#125;&#125;',
         ];
     }
 
@@ -1033,7 +1043,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
-        $this->assertSame('[{]infinite-try-catch::66[}]', $output);
+        $this->assertSame('&#123;&#123;infinite-try-catch::66&#125;&#125;', $output);
     }
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void

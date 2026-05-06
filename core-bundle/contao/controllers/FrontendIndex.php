@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +28,21 @@ class FrontendIndex extends Frontend
 	 * @throws \LogicException
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+	 *             use the AbstractPageController instead.
 	 */
-	public function renderPage(PageModel $pageModel)
+	public function renderPage(PageModel $pageModel): Response
+	{
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the AbstractPageController instead.', __METHOD__);
+
+		return System::getContainer()->get(RegularPageController::class)($pageModel);
+	}
+
+	/**
+	 * @internal
+	 */
+	public function renderLegacy(PageModel $pageModel): Response
 	{
 		global $objPage;
 
@@ -47,42 +61,9 @@ class FrontendIndex extends Frontend
 			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}
 
-		// Backup some globals (see #7659)
-		$arrBackup = array(
-			$GLOBALS['TL_HEAD'] ?? array(),
-			$GLOBALS['TL_BODY'] ?? array(),
-			$GLOBALS['TL_MOOTOOLS'] ?? array(),
-			$GLOBALS['TL_JQUERY'] ?? array(),
-			$GLOBALS['TL_USER_CSS'] ?? array(),
-			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array(),
-			System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext()
-		);
+		$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+		$objHandler = new $pageType();
 
-		try
-		{
-			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
-			$objHandler = new $pageType();
-
-			return $objHandler->getResponse($objPage, true);
-		}
-
-		// Render the error page (see #5570)
-		catch (UnusedArgumentsException $e)
-		{
-			// Restore the globals (see #7659)
-			list(
-				$GLOBALS['TL_HEAD'],
-				$GLOBALS['TL_BODY'],
-				$GLOBALS['TL_MOOTOOLS'],
-				$GLOBALS['TL_JQUERY'],
-				$GLOBALS['TL_USER_CSS'],
-				$GLOBALS['TL_FRAMEWORK_CSS'],
-				$responseContext
-			) = $arrBackup;
-
-			System::getContainer()->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
-
-			throw $e;
-		}
+		return $objHandler->getResponse($objPage);
 	}
 }

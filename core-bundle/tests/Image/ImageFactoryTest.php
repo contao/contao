@@ -472,15 +472,15 @@ class ImageFactoryTest extends TestCase
     {
         $path = Path::join($this->getTempDir(), 'images/non-existent-deferred.jpg');
         $imageMock = $this->createStub(DeferredImageInterface::class);
+        $imagine = $this->createStub(ImagineInterface::class);
 
         $resizer = $this->createStub(DeferredResizer::class);
         $resizer
             ->method('getDeferredImage')
-            ->with($path)
-            ->willReturn($imageMock)
+            ->willReturnMap([[$path, $imagine, $imageMock]])
         ;
 
-        $imageFactory = $this->getImageFactory($resizer);
+        $imageFactory = $this->getImageFactory($resizer, $imagine);
         $image = $imageFactory->create($path);
 
         $this->assertSame($imageMock, $image);

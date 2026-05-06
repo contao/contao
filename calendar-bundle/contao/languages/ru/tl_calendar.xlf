@@ -91,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.versions.1">
         <source>Show the versions of calendar ID %s</source>
+        <target>Показать версии календаря ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>

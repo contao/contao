@@ -30,7 +30,7 @@
         <target>HTML-контент</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Вы можете ввести HTML-контент новостной рассылки. Используйте подстановочные знаки &lt;em&gt;##email##&lt;/em&gt; для вставки e-mail адреса получателя.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Текстовый контент</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Вы можете ввести текст содержания новостной рассылки.  Используйте подстановочные знаки &lt;em&gt;##email##&lt;/em&gt; для вставки e-mail адреса получателя.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">
@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.versions.1">
         <source>Show the versions of newsletter ID %s</source>
+        <target>Показать версии новостной рассылки ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>

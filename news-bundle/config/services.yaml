@@ -7,6 +7,10 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao_news.controller.page.news_feed:
         class: Contao\NewsBundle\Controller\Page\NewsFeedController
         arguments:
@@ -25,6 +29,13 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+
+    contao_news.listener.add_feeds_from_layout:
+        class: Contao\NewsBundle\EventListener\AddFeedsFromLayoutListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+            - '@contao.routing.response_context_accessor'
 
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
@@ -51,12 +62,6 @@ services:
             - '@translator'
         tags:
             - { name: contao.callback, table: tl_news, target: config.onbeforesubmit }
-
-    contao_news.listener.generate_page:
-        class: Contao\NewsBundle\EventListener\GeneratePageListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
 
     contao_news.listener.news_feed:
         class: Contao\NewsBundle\EventListener\NewsFeedListener
@@ -90,6 +95,9 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_news.listener.title_tag:
+        class: Contao\NewsBundle\EventListener\TitleTagListener
+
     contao_news.migration.feed:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
@@ -99,6 +107,11 @@ services:
 
     contao_news.migration.field_permission:
         class: Contao\NewsBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
+    contao_news.migration.keep_canonical:
+        class: Contao\NewsBundle\Migration\KeepCanonicalMigration
         arguments:
             - '@database_connection'
 

@@ -283,6 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_news.versions.1">
         <source>Show the versions of news item ID %s</source>
+        <target>Показать версии элемента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>

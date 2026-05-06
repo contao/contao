@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.parent.1">
         <source>The associated record.</source>
-        <target>L'enregistrement associé.</target>
+        <target>L&apos;enregistrement associé.</target>
       </trans-unit>
       <trans-unit id="tl_comments.date.0">
         <source>Date</source>
@@ -30,8 +30,8 @@
         <target>Auteur</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
-        <source>Please enter the author's name.</source>
-        <target>Saisir le nom de l'auteur.</target>
+        <source>Please enter the author&apos;s name.</source>
+        <target>Saisir le nom de l&apos;auteur.</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>Saisir l'adresse e-mail de l'auteur (ne sera pas publiée).</target>
+        <target>Saisir l&apos;adresse e-mail de l&apos;auteur (ne sera pas publiée).</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
-        <target>Changer l'auteur de la réponse.</target>
+        <target>Changer l&apos;auteur de la réponse.</target>
       </trans-unit>
       <trans-unit id="tl_comments.reply.0">
         <source>Reply</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.ip.1">
         <source>The IP address of the author.</source>
-        <target>Adresse IP de l'auteur.</target>
+        <target>Adresse IP de l&apos;auteur.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>
@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_news">
         <source>News item</source>
-        <target>Élément d'actualités</target>
+        <target>Élément d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_faq">
         <source>FAQ</source>

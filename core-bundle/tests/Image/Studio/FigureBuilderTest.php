@@ -126,8 +126,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByUuid']);
         $filesModelAdapter
             ->method('findByUuid')
-            ->with($uuid)
-            ->willReturn($model)
+            ->willReturnMap([[$uuid, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
@@ -164,8 +163,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findById']);
         $filesModelAdapter
             ->method('findById')
-            ->with(5)
-            ->willReturn($model)
+            ->willReturnMap([[5, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
@@ -399,8 +397,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($model)
+            ->willReturnMap([[$absoluteFilePath, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
@@ -446,26 +443,17 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
-            ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
-            ->willReturn($filesModel)
+            ->willReturnMap([['1d902bf1-2683-406e-b004-f0b59095e5a1', $filesModel]])
         ;
 
         $filesModelAdapter
             ->method('findById')
-            ->with(5)
-            ->willReturn($filesModel)
-        ;
-
-        $filesModelAdapter
-            ->method('findByUuid')
-            ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
-            ->willReturn($filesModel)
+            ->willReturnMap([[5, $filesModel]])
         ;
 
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($filesModel)
+            ->willReturnMap([[$absoluteFilePath, $filesModel]])
         ;
 
         $validatorAdapter = $this->createAdapterStub(['isUuid']);
@@ -512,8 +500,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($model)
+            ->willReturnMap([[$absoluteFilePath, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);

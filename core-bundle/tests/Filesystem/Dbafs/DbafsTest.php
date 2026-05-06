@@ -245,8 +245,9 @@ class DbafsTest extends TestCase
             return $column;
         };
 
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
+            ->expects($this->once())
             ->method('listTableColumns')
             ->with('tl_files')
             ->willReturn(
@@ -1393,8 +1394,7 @@ class DbafsTest extends TestCase
         if ($connection instanceof Stub) {
             $connection
                 ->method('quoteIdentifier')
-                ->with('tl_files')
-                ->willReturn('tl_files')
+                ->willReturnArgument(0)
             ;
         }
 

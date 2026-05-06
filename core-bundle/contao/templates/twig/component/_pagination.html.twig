@@ -1,12 +1,13 @@
 {% trans_default_domain 'contao_default' %}
 
 {% block pagination_component %}
-    {% set page_count = pagination|default ? pagination.pageCount : number_of_pages %}
+    {% set page_count = pagination|default ? pagination.pageCount : number_of_pages|default(0) %}
     {% if page_count > 1 %}
-        {% set pagination_attributes = attrs(pagination_attributes|default)
+        {% set pagination_attributes = attrs()
             .addClass('pagination')
             .set('role', 'navigation')
             .set('aria-label', 'MSC.pagination'|trans)
+            .mergeWith(pagination_attributes|default)
         %}
         <!-- indexer::stop -->
         <nav{{ pagination_attributes }}>
@@ -15,7 +16,7 @@
                     <p>{{ 'MSC.totalPages'|trans([pagination.current, pagination.pageCount]) }}</p>
                 {% endif %}
             {% endblock %}
-            <ul>
+            <ul{{ list_attributes|default }}>
                 {% if pagination|default %}
                     {% block pagination_first %}
                         {% if pagination.first %}
@@ -23,6 +24,7 @@
                                 {% set first_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.first))
                                     .addClass('first')
+                                    .mergeWith(first_attributes|default)
                                 %}
                                 <a{{ first_attributes }}>{% block pagination_first_label %}{{ 'MSC.first'|trans }}{% endblock %}</a>
                             </li>
@@ -34,6 +36,7 @@
                                 {% set previous_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.previous))
                                     .addClass('previous')
+                                    .mergeWith(previous_attributes|default)
                                 %}
                                 <a{{ previous_attributes }}>{% block pagination_previous_label %}{{ 'MSC.previous'|trans }}{% endblock %}</a>
                             </li>
@@ -46,15 +49,22 @@
                         {% set href = pagination|default ? pagination.urlForPage(page) : '#' %}
                         {% block pagination_link %}
                             <li>
-                                {% set link_attributes = attrs()
-                                    .set('href', href)
-                                    .set('aria-label', 'MSC.goToPage'|trans([page]))
-                                    .set('aria-current', 'page', pagination.current|default == page)
-                                    .addClass('link')
-                                    .addClass('active', pagination.current|default == page)
-                                    .mergeWith(link_attributes|default)
-                                %}
-                                <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                                {% if pagination.current|default == page %}
+                                    {% set active_attributes = attrs()
+                                        .set('aria-current', 'page')
+                                        .addClass('active')
+                                        .mergeWith(active_attributes|default)
+                                    %}
+                                    <strong{{ active_attributes }}>{% block pagination_active_label %}{{ page }}{% endblock %}</strong>
+                                {% else %}
+                                    {% set link_attributes = attrs()
+                                        .set('href', href)
+                                        .set('aria-label', 'MSC.goToPage'|trans([page]))
+                                        .addClass('link')
+                                        .mergeWith(link_attributes|default)
+                                    %}
+                                    <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                                {% endif %}
                             </li>
                         {% endblock %}
                     {% endfor %}
@@ -67,6 +77,7 @@
                                 {% set next_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.next))
                                     .addClass('next')
+                                    .mergeWith(next_attributes|default)
                                 %}
                                 <a{{ next_attributes }}>{% block pagination_next_label %}{{ 'MSC.next'|trans }}{% endblock %}</a>
                             </li>
@@ -78,6 +89,7 @@
                                 {% set last_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.last))
                                     .addClass('last')
+                                    .mergeWith(last_attributes|default)
                                 %}
                                 <a{{ last_attributes }}>{% block pagination_last_label %}{{ 'MSC.last'|trans }}{% endblock %}</a>
                             </li>

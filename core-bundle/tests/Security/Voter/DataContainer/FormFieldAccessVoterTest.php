@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FormFieldAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         yield 'Permission granted with ReadAction' => [
             ['pid' => 42, 'type' => 'text'],

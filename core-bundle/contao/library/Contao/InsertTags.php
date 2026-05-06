@@ -335,7 +335,7 @@ class InsertTags extends Controller
 	 */
 	public function encodeHtmlAttributes($html)
 	{
-		if (!str_contains($html, '{{') && !str_contains($html, '}}'))
+		if (0 === preg_match('/\{\{|\}\}|\[\{\]|\[\}\]/', $html))
 		{
 			return $html;
 		}
@@ -371,7 +371,7 @@ class InsertTags extends Controller
 
 		while (preg_match($tagRegEx, $html, $matches, PREG_OFFSET_CAPTURE, $offset))
 		{
-			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
+			$htmlResult .= str_replace(array('[{]', '[}]'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $offset, $matches[0][1] - $offset));
 
 			// Skip comments
 			if (\in_array($matches[0][0], array('<!--', '<!', '</', '<?'), true))
@@ -381,7 +381,7 @@ class InsertTags extends Controller
 				$offset = $commentClosePos ? $commentClosePos + \strlen($commentCloseString) : \strlen($html);
 
 				// Encode insert tags in comments
-				$htmlResult .= str_replace(array('{{', '}}'), array('[{]', '[}]'), substr($html, $matches[0][1], $offset - $matches[0][1]));
+				$htmlResult .= str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $matches[0][1], $offset - $matches[0][1]));
 				continue;
 			}
 
@@ -409,7 +409,7 @@ class InsertTags extends Controller
 			}
 		}
 
-		$htmlResult .= substr($html, $offset);
+		$htmlResult .= str_replace(array('[{]', '[}]'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $offset));
 
 		return $htmlResult;
 	}
@@ -475,7 +475,7 @@ class InsertTags extends Controller
 			if ($intLastOpen !== false && ($intLastClose === false || $intLastClose < $intLastOpen))
 			{
 				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
-				$matches[0][0] = str_replace(array('{{', '}}'), array('[{]', '[}]'), $matches[0][0]);
+				$matches[0][0] = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $matches[0][0]);
 			}
 			elseif ($intLastOpen === false && $intLastClose !== false)
 			{

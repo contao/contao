@@ -11,15 +11,11 @@
 {%- set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
+    .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
     .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
--%}
-
-{%- set containerAttributes = attrs()
-    .addClass(containerClass)
-    .mergeWith(containerAttributes|default)
 -%}
 
 {% set mainAttributes = attrs()
@@ -82,14 +78,12 @@
     {% if not renderMainOnly %}
         <header id="header">
             <div class="inner">
-                <h1>
-                    <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
-                        <span class="app-title">Contao</span>
-                        {% if badgeTitle|default %}
-                            <span class="badge-title">{{ badgeTitle }}</span>
-                        {% endif %}
-                    </a>
-                </h1>
+                <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
+                    <span class="app-title">Contao</span>
+                    {% if badgeTitle|default %}
+                        <span class="badge-title">{{ badgeTitle }}</span>
+                    {% endif %}
+                </a>
                 {{ headerMenu|raw }}
             </div>
         </header>
@@ -102,7 +96,7 @@
 {% endblock %}
 
 {% block container %}
-    <div id="container"{{ containerAttributes }}>
+    <div id="container">
 
         {% block left %}
             {% if not renderMainOnly %}
@@ -121,14 +115,18 @@
             <turbo-frame id="contao-main" target="_top">
                 <main{{ mainAttributes }}>
                     {% block main_headline %}
-                        <h1 id="main_headline">
+                        <div class="content-top">
                             {% if breadcrumb|default %}
-                                {{ breadcrumb|raw }}
+                                <nav id="main_breadcrumb">
+                                    {{ breadcrumb|raw }}
+                                </nav>
                             {% else %}
-                                {{ headline|raw }}
+                                <h1 id="main_headline">
+                                    {{ headline|raw }}
+                                </h1>
                             {% endif %}
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
-                        </h1>
+                        </div>
                     {% endblock %}
                     <div class="content">
                         {% if pickerMenu|default %}

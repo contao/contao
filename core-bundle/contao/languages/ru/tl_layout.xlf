@@ -463,6 +463,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.versions.1">
         <source>Show the versions of page layout ID %s</source>
+        <target>Показать версии макета страницы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>

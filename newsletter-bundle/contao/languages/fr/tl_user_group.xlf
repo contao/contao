@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Permissions du bulletin d'information</target>
+        <target>Permissions du bulletin d&apos;information</target>
       </trans-unit>
     </body>
   </file>

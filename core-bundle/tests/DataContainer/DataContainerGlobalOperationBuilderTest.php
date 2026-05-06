@@ -290,8 +290,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter
             ->method('get')
-            ->with('act')
-            ->willReturn($selectView ? 'select' : '')
+            ->willReturnMap([['act', $selectView ? 'select' : '']])
         ;
 
         $backendAdapter = $this->createAdapterStub(['addToUrl']);

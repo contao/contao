@@ -6,9 +6,9 @@
         {% if this.label %}
             <legend>
                 {% if this.mandatory|default %}
-                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
                 {% else %}
-                    {{ this.label }}
+                    {{ this.label|insert_tag_raw }}
                 {% endif %}
             </legend>
         {% endif %}
@@ -41,7 +41,7 @@
         {% endfor %}
 
         {% if this.help|default %}
-            <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+            <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
         {% endif %}
 
     </fieldset>
