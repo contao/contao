@@ -4,6 +4,8 @@ import AccessibleMenu from 'accessible-menu';
 let menus = [];
 
 export default class OperationsMenuController extends Controller {
+    #contextMenuEventPosition = null;
+
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect() {
@@ -69,11 +71,20 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
+        const posX = event.clientX;
+        const posY = event.clientY;
+
+        // Open the native context menu when clicking the same position
+        if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
+            return;
+        }
+
         event.preventDefault();
 
         // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
         this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
+        this.#contextMenuEventPosition = { x: posX, y: posY };
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);
     }
@@ -85,6 +96,7 @@ export default class OperationsMenuController extends Controller {
 
         if (this.$menu.elements.submenuToggles[0].isOpen) {
             this.$menu.elements.submenuToggles[0].close();
+            this.#contextMenuEventPosition = null;
         }
     }
 
