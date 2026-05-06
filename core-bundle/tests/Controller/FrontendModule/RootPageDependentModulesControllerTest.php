@@ -18,10 +18,10 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
-use Contao\Template;
 use Contao\TemplateLoader;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -110,7 +110,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $controller->getResponse(
-            $this->createStub(Template::class),
+            new FragmentTemplate('', static fn () => ''),
             $this->createStub(ModuleModel::class),
             new Request(),
         );
