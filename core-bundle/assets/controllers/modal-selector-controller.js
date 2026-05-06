@@ -13,6 +13,7 @@ export default class extends Controller {
         }
 
         e.preventDefault();
+
         Backend.openModalSelector({
             id: 'tl_listing',
             title: this.titleValue,
