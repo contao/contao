@@ -137,7 +137,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
-    private function createConfig(array|int|string|null $size): array
+    public function createConfig(array|int|string|null $size): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
