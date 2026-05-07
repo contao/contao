@@ -58,8 +58,6 @@ class InsertTagParser implements ResetInterface
 
     private const MAX_RECURSION = 64;
 
-    private int $recursionCount = 0;
-
     private array $recursionTrace = [];
 
     /**
@@ -316,7 +314,6 @@ class InsertTagParser implements ResetInterface
 
     public function reset(): void
     {
-        $this->recursionCount = 0;
         $this->recursionTrace = [];
         InsertTags::reset();
     }
@@ -460,12 +457,11 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if ($this->recursionCount >= self::MAX_RECURSION) {
+        if (\count($this->recursionTrace) >= self::MAX_RECURSION) {
             throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
         $this->recursionTrace[] = $tag->serialize();
-        ++$this->recursionCount;
 
         try {
             $result = $subscription->service->{$subscription->method}($tag);
@@ -498,7 +494,6 @@ class InsertTagParser implements ResetInterface
 
             return $result;
         } finally {
-            --$this->recursionCount;
             array_pop($this->recursionTrace);
         }
     }
@@ -565,17 +560,15 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if ($this->recursionCount > self::MAX_RECURSION) {
+        if (\count($this->recursionTrace) > self::MAX_RECURSION) {
             throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
         $this->recursionTrace[] = $tag->serialize();
-        ++$this->recursionCount;
 
         try {
             return $subscription->service->{$subscription->method}($tag, $content);
         } finally {
-            --$this->recursionCount;
             array_pop($this->recursionTrace);
         }
     }
