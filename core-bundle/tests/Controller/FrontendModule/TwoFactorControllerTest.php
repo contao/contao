@@ -32,7 +32,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -242,7 +241,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
 
         $container
             ->get('contao.routing.content_url_generator')
@@ -272,9 +271,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -287,7 +286,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
 
         $controller($request, $module, 'main');
     }
@@ -309,9 +308,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -324,7 +323,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
@@ -353,9 +352,9 @@ class TwoFactorControllerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('generate')
-            ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($page)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
@@ -368,7 +367,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 

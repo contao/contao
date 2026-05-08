@@ -200,12 +200,14 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),
 		'alexf' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
 			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedGroups'=>true),

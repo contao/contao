@@ -196,6 +196,11 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.item_sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\ItemSizesSaveCallbackListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
@@ -210,6 +215,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.lazy_loading_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\LazyLoadingSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.legacy_gallery_palette:
         class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
@@ -300,6 +310,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\SizesSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
