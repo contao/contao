@@ -180,5 +180,7 @@ export default class extends Controller {
         });
 
         this.#pendingAutoFocus = null;
+
+        return true;
     }
 }
