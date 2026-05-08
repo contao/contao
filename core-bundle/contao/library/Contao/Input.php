@@ -702,6 +702,12 @@ class Input
 							return true;
 						}
 
+						// Self-closing tag (see #9817)
+						if ($strAttribute === '/')
+						{
+							return true;
+						}
+
 						$arrCandidates = array($strAttribute);
 
 						// Check for wildcard attributes like data-*
@@ -730,14 +736,15 @@ class Input
 
 				foreach ($arrAttributes as $strAttributeName => $strAttributeValue)
 				{
+					// Self-closing tag (see #9817)
+					if ($strAttributeName === '/')
+					{
+						$strReturn .= ' /';
+						break;
+					}
+
 					// The value was already encoded by the getAttributesFromTag() method
 					$strReturn .= ' ' . $strAttributeName . '="' . $strAttributeValue . '"';
-				}
-
-				// Self-closing tag (see #9817)
-				if (' /' === $matches[2])
-				{
-					$strReturn .= ' /';
 				}
 
 				$strReturn .= '>';
@@ -758,7 +765,7 @@ class Input
 	private static function getAttributesFromTag($strAttributes)
 	{
 		// Match every attribute name value pair
-		if (!preg_match_all('@\s+([a-z][a-z0-9_:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
+		if (!preg_match_all('@\s+([a-z][a-z0-9_:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?|/$@i', $strAttributes, $matches, PREG_SET_ORDER))
 		{
 			return array();
 		}
@@ -767,6 +774,12 @@ class Input
 
 		foreach ($matches as $arrMatch)
 		{
+			if ($arrMatch[0] === '/')
+			{
+				$arrAttributes['/'] = null;
+				break;
+			}
+
 			$strAttribute = strtolower($arrMatch[1]);
 
 			// Skip attributes that end with dashes or use a double dash
