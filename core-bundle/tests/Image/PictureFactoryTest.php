@@ -260,7 +260,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory->create($path, 1);
     }
 
-    public function testCreatesAPictureConfigurationFromADatabaseSize(): void
+    public function testCreatesAPictureGenerationConfigFromADatabaseSize(): void
     {
         $imageSizeProperties = [
             'width' => 100,
@@ -292,12 +292,12 @@ class PictureFactoryTest extends TestCase
         $framework = $this->mockContaoFramework($adapters);
         $pictureFactory = $this->getPictureFactory(framework: $framework);
 
-        [$config, $attributes, $options] = $pictureFactory->createConfig(1);
+        $configResult = $pictureFactory->createPictureConfiguration(1);
+        $config = $configResult->getPictureConfiguration();
+        $options = $configResult->getResizeOptions();
 
         $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
         $this->assertSame(200, $config->getSize()->getResizeConfig()->getHeight());
-        $this->assertSame('my-size', $attributes['class']);
-        $this->assertSame('lazy', $attributes['loading']);
         $this->assertTrue($options->getSkipIfDimensionsMatch());
     }
 

@@ -33,8 +33,6 @@ interface PictureFactoryInterface
      * TODO: enable in Contao 6.
      *
      * Creates a picture configuration.
-     *
-     * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
-    /*public function createConfig(array|int|string|null $size): array;*/
+    /*public function createPictureConfiguration(array|int|string|null $size): PictureGenerationConfig;*/
 }

@@ -132,12 +132,19 @@ class PictureFactory implements PictureFactoryInterface
         return $this->addImageAttributes($picture, $attributes);
     }
 
+    public function createPictureConfiguration(array|int|string|null $size): PictureGenerationConfig
+    {
+        [$config, , $options] = $this->createConfig(StringUtil::deserialize($size));
+
+        return new PictureGenerationConfig($config, $options);
+    }
+
     /**
      * Creates a picture configuration.
      *
      * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
-    public function createConfig(array|int|string|null $size): array
+    private function createConfig(array|int|string|null $size): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
