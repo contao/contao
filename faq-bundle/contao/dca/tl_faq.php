@@ -124,6 +124,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
@@ -150,6 +151,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'robots' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
@@ -213,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
@@ -262,7 +264,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),

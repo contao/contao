@@ -39,8 +39,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $cacheItemPool = $this->createStub(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
-            ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
-            ->willReturn($dirty)
+            ->willReturnMap([[BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG, $dirty]])
         ;
 
         $request = $this->createMock(Request::class);
@@ -82,15 +81,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $cacheItemPool = $this->createStub(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
-            ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
-            ->willReturn(true)
+            ->willReturnMap([[BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG, true]])
         ;
 
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('ERR.applicationCache', [], 'contao_default')
-            ->willReturn('message')
+            ->willReturnMap([['ERR.applicationCache', [], 'contao_default', 'message']])
         ;
 
         $flashBag = $this->createMock(FlashBagInterface::class);

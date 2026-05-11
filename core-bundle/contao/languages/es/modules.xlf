@@ -209,6 +209,10 @@
         <source>Front end modules</source>
         <target>Módulos del Front end</target>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Elementos de contenido</target>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
         <target>Módulos del Front end</target>
@@ -322,7 +326,7 @@
         <target>Datos personales</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Genera un formulario para editar los datos personales de un miembro.</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

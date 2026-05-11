@@ -227,7 +227,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return $toggle;
         }
 
-        if ('show' === $name) {
+        if ($href && 'show' === $name) {
             $config['attributes']->set(
                 'onclick',
                 \sprintf(

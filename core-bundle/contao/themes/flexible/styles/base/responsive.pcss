@@ -41,7 +41,7 @@
 
 /* Handheld */
 @media (width < 768px) {
-    #header h1 a {
+    #home {
         min-width: 22px;
         padding: 12px;
     }
@@ -79,22 +79,16 @@
 
     #tmenu .profile button {
         width: 40px;
-        margin: 0 0 -2px;
         padding-right: 12px;
         overflow: hidden;
         white-space: nowrap;
         text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
-        background: url("icons/profile.svg") center center no-repeat;
+        background: var(--icon-user-profile) center center no-repeat;
         background-size: 18px;
     }
 
     #main .content {
         margin: 0 5px 5px;
-    }
-
-    #main_headline {
-        margin: 13px 0;
-        padding: 0 9px;
     }
 
     div.tl_tbox,
@@ -330,7 +324,7 @@
 
     .split-button ul {
         display: inline-flex;
-        clip: initial;
+        clip-path: revert;
         height: auto;
         margin: 0 0 0 -4px;
         overflow: initial;

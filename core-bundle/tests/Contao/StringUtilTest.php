@@ -181,14 +181,17 @@ class StringUtilTest extends TestCase
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+            $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+            $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+            $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        }
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -509,6 +512,7 @@ class StringUtilTest extends TestCase
 
     public function testResolvesReferencesInArrays(): void
     {
+        /** @phpstan-var array $ref (signals PHPStan that the array shape may change) */
         $ref = ['a'];
 
         $array = [
@@ -533,12 +537,10 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],

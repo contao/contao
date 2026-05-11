@@ -112,8 +112,7 @@ class InheritanceTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn($paths)
+            ->willReturnMap([['templates', $paths]])
         ;
 
         $themeNamespace = new ThemeNamespace();

@@ -115,6 +115,15 @@ class VirtualFieldsMappingListenerTest extends TestCase
             ],
             DC_File::class,
         ];
+
+        yield 'Does not auto map without inputType' => [
+            [
+                'foobar' => ['label' => []],
+            ],
+            [
+                'foobar' => ['label' => []],
+            ],
+        ];
     }
 
     public function testDoesNotMapForNonEditableDcas(): void

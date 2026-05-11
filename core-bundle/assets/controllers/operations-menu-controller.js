@@ -4,6 +4,8 @@ import AccessibleMenu from 'accessible-menu';
 let menus = [];
 
 export default class OperationsMenuController extends Controller {
+    #contextMenuEventPosition = null;
+
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect() {
@@ -14,6 +16,10 @@ export default class OperationsMenuController extends Controller {
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             menuLinkSelector: 'a,button,img',
+            // Use arrays to bypass accessible-menu's string class selector validation
+            openClass: ['show'],
+            closeClass: [],
+            transitionClass: [],
         });
 
         menus.push(this.$menu);
@@ -60,8 +66,19 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
-        if (this.$menu.elements.submenuToggles[0].isOpen) {
+        // Only open the native context from within the opened operations menu (see #9805)
+        if (event.target === this.submenuTarget) {
+            return;
+        }
+
+        const posX = event.clientX;
+        const posY = event.clientY;
+
+        // Open the native context menu when clicking the same position
+        if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
             this.$menu.elements.submenuToggles[0].close();
+            this.#contextMenuEventPosition = null;
+
             return;
         }
 
@@ -70,6 +87,7 @@ export default class OperationsMenuController extends Controller {
         // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
         this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
+        this.#contextMenuEventPosition = { x: posX, y: posY };
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);
     }
@@ -81,10 +99,13 @@ export default class OperationsMenuController extends Controller {
 
         if (this.$menu.elements.submenuToggles[0].isOpen) {
             this.$menu.elements.submenuToggles[0].close();
+            this.#contextMenuEventPosition = null;
         }
     }
 
     setPosition(event) {
+        this.resetPosition();
+
         const offset = 2; // border-width that is excluded from getBoundingClientRect
 
         const submenuRect = this.submenuTarget.getBoundingClientRect();
@@ -119,6 +140,12 @@ export default class OperationsMenuController extends Controller {
         this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
         this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height + offset}px` : `${y}px`;
         this.submenuTarget.style.right = 'auto';
+    }
+
+    resetPosition() {
+        this.submenuTarget.style.removeProperty('top');
+        this.submenuTarget.style.removeProperty('right');
+        this.submenuTarget.style.removeProperty('left');
     }
 
     isInteractive(el) {

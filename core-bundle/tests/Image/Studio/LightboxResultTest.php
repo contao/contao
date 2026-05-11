@@ -58,8 +58,7 @@ class LightboxResultTest extends TestCase
         $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
-            ->with($layoutId)
-            ->willReturn($layoutModel)
+            ->willReturnMap([[$layoutId, $layoutModel]])
         ;
 
         $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);
@@ -112,8 +111,7 @@ class LightboxResultTest extends TestCase
         $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
-            ->with($layoutId)
-            ->willReturn($layoutModel)
+            ->willReturnMap([[$layoutId, $layoutModel]])
         ;
 
         $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);

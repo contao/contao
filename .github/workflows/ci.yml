@@ -165,6 +165,9 @@ jobs:
                   show-progress: false
                   persist-credentials: false
 
+            - name: Run YAMLlint
+              run: yamllint --format=github .
+
     linter:
         name: Linter
         runs-on: ubuntu-latest

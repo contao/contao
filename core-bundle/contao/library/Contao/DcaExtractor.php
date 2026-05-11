@@ -425,7 +425,7 @@ class DcaExtractor extends Controller
 
 					if (isset($config['foreignKey']))
 					{
-						$table = explode('.', $config['foreignKey'])[0];
+						$table = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($config['foreignKey'])->getTableName();
 					}
 
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
@@ -467,17 +467,6 @@ class DcaExtractor extends Controller
 				if (!\in_array($config['targetColumn'], $this->arrVirtualTargets, true))
 				{
 					throw new InvalidConfigException(\sprintf('The target column of the virtual field %s.%s does not exist.', $this->strTable, $field));
-				}
-
-				// Validate the config for virtual fields
-				if ($config['filter'] ?? false)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "filter" on virtual field %s.%s is not supported.', $this->strTable, $field));
-				}
-
-				if ($config['search'] ?? false)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "search" on virtual field %s.%s is not supported.', $this->strTable, $field));
 				}
 
 				if ($config['eval']['fallback'] ?? false)

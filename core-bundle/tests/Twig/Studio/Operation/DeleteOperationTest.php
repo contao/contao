@@ -107,7 +107,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->method('render')
             ->with(
                 '@Contao/backend/template_studio/operation/delete_result.stream.html.twig',
-                ['identifier' => 'content_element/existing_user_template', 'was_last' => true],
+                ['identifier' => 'content_element/existing_user_template', 'was_last' => false],
             )
             ->willReturn('delete_result.stream')
         ;

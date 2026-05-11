@@ -11,6 +11,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -179,7 +180,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $twig,
         );
 
-        $row = ['id' => 42, 'uuid' => $job->getUuid()];
+        $row = ['id' => 42, 'uuid' => $job->getUuid(), 'owner' => 1];
 
         $columns = [
             '2025-10-30 13:10',
@@ -194,6 +195,45 @@ class JobsListenerTest extends AbstractJobsTestCase
         $this->assertSame('progress.html.twig output', $columnsNew[2]);
         $this->assertSame('status.html.twig output', $columnsNew[3]);
         $this->assertSame('attachments.html.twig output', $columnsNew[5]);
+    }
+
+    #[AllowMockObjectsWithoutExpectations]
+    public function testDeleteCallback(): void
+    {
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
+
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('removeAttachments')
+        ;
+
+        $listener = new JobsListener(
+            $jobs,
+            $this->createMock(Security::class),
+            $this->createStub(Connection::class),
+            $this->getRequestStack(Request::create('/contao?do=jobs')),
+            $framework,
+            $this->createStub(Environment::class),
+        );
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(null)
+        ;
+
+        // The empty current record should return early
+        $listener->onDeleteCallback($dcTable);
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(['uuid' => '6461058f-ebed-4249-80ae-496b502fb6af'])
+        ;
+
+        // The valid current record should call removeAttachments()
+        $listener->onDeleteCallback($dcTable);
     }
 
     private function getRequestStack(Request|null $request = null): RequestStack

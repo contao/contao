@@ -11,7 +11,7 @@
             <div class="ce_text block">
                 <h2>{{ headline|insert_tag_raw }}</h2>
                 <div class="teaser">
-                    {{ teaser|default|sanitize_html('contao')|csp_inline_styles }}
+                    {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
                     <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }} <span class="invisible">{{ headline }}</span></a></p>
                 </div>
             </div>

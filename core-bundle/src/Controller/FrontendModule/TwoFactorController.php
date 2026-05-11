@@ -69,12 +69,8 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
-        $adapter = $this->getContaoAdapter(PageModel::class);
-        $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
-        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
-
         $template->enforceTwoFactor = $pageModel->enforceTwoFactor;
-        $template->targetPath = $return;
+        $template->targetPath = $this->generateContentUrl($pageModel);
 
         $translator = $this->container->get('translator');
 
@@ -83,14 +79,20 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
-        $enable = 'enable' === $request->get('2fa');
+        $enable = 'enable' === $request->query->get('2fa');
 
         if (!$user->useTwoFactor && $pageModel->enforceTwoFactor) {
             $enable = true;
         }
 
-        if ($enable && ($response = $this->enableTwoFactor($template, $request, $user, $return))) {
-            return $response;
+        if ($enable) {
+            $adapter = $this->getContaoAdapter(PageModel::class);
+            $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
+            $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            if ($response = $this->enableTwoFactor($template, $request, $user, $return)) {
+                return $response;
+            }
         }
 
         $formId = $request->request->get('FORM_SUBMIT');
@@ -115,7 +117,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
+        $template->href = $this->generateContentUrl($pageModel, ['2fa' => 'enable'], UrlGeneratorInterface::ABSOLUTE_URL);
         $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return $template->getResponse();

@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.versions.1">
         <source>Show the versions of theme ID %s</source>
+        <target>%s kimlikli temanın sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>

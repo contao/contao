@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>Bulletins d'information disponibles pour inscription</target>
+        <target>Bulletins d&apos;information disponibles pour inscription</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
-        <target>Ici, vous pouvez par exemple saisir une note sur la protection des données afin de rendre l'inscription au bulletin d'information conforme au RGPD.</target>
+        <target>Ici, vous pouvez par exemple saisir une note sur la protection des données afin de rendre l&apos;inscription au bulletin d&apos;information conforme au RGPD.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>E-mail d'abonnement</target>
+        <target>E-mail d&apos;abonnement</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Vous pouvez utiliser les jokers &lt;em&gt;##channels##&lt;/em&gt; (nom des listes de diffusion), &lt;em&gt;##domain##&lt;/em&gt; (nom de domaine courant) et &lt;em&gt;##link##&lt;/em&gt; (lien d'activation).</target>
+        <target>Vous pouvez utiliser les jokers &lt;em&gt;##channels##&lt;/em&gt; (nom des listes de diffusion), &lt;em&gt;##domain##&lt;/em&gt; (nom de domaine courant) et &lt;em&gt;##link##&lt;/em&gt; (lien d&apos;activation).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
@@ -51,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Modèle du bulletin d'information</target>
+        <target>Modèle du bulletin d&apos;information</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
-        <target>Choisir un modèle de bulletin d'information.</target>
+        <target>Choisir un modèle de bulletin d&apos;information.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

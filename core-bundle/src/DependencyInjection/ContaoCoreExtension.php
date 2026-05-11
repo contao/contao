@@ -225,6 +225,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
+
+        if (false === $config['auto_refresh_template_hierarchy'] || (null === $config['auto_refresh_template_hierarchy'] && !$container->getParameter('kernel.debug'))) {
+            $container->removeDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener');
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
@@ -238,6 +242,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
             ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
+            ->setPublic(true)
         ;
 
         $config

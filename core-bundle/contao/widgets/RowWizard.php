@@ -187,7 +187,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -197,7 +197,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -282,6 +282,12 @@ class RowWizard extends Widget
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
 		$data['id'] = $data['name'];
+
+		if ($data['dcaPicker'] ?? null)
+		{
+			$data['wizard'] = ($data['wizard'] ?? '') . Backend::getDcaPickerWizard($data['dcaPicker'], $this->strTable, $this->strField, $data['name'], $data['label'] ?? null);
+			$data['cell_class'] = trim(($data['cell_class'] ?? '') . ' wizard');
+		}
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}

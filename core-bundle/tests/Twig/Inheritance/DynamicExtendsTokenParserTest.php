@@ -110,8 +110,9 @@ class DynamicExtendsTokenParserTest extends TestCase
 
     public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
+            ->expects($this->once())
             ->method('getAllDynamicParentsByThemeSlug')
             ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))

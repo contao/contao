@@ -356,10 +356,11 @@ class FeedReaderControllerTest extends TestCase
             )
         ;
 
-        $twig = $this->createStub(TwigEnvironment::class);
+        $twig = $this->createMock(TwigEnvironment::class);
 
         if ($assertTwigContext) {
             $twig
+                ->expects($this->once())
                 ->method('render')
                 ->with(
                     '@Contao/frontend_module/feed_reader.html.twig',
@@ -369,6 +370,7 @@ class FeedReaderControllerTest extends TestCase
             ;
         } else {
             $twig
+                ->expects($this->once())
                 ->method('render')
                 ->with('@Contao/frontend_module/feed_reader.html.twig')
                 ->willReturn('rendered frontend_module/feed_reader')
