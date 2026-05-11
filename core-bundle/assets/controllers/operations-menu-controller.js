@@ -66,15 +66,19 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
+        // Only open the native context from within the opened operations menu (see #9805)
+        if (event.target === this.submenuTarget) {
+            return;
+        }
+
         const posX = event.clientX;
         const posY = event.clientY;
 
-        // Open the native context from within the opened operations menu or when clicking the same position (see #9805)
-        if (
-            event.target === this.submenuTarget ||
-            (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y)
-        ) {
+        // Open the native context menu when clicking the same position
+        if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
             this.$menu.elements.submenuToggles[0].close();
+            this.#contextMenuEventPosition = null;
+
             return;
         }
 
