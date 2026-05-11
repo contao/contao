@@ -330,6 +330,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'accesskey' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w25'),
 			'sql'                     => "char(1) NOT NULL default ''"
