@@ -1,8 +1,8 @@
 #header {
     min-height: 40px;
     text-align: left;
-    background: var(--header-bg);
-    border-bottom: 1px solid var(--border);
+    background: var(--content-bg);
+    border-bottom: 1px solid var(--content-border);
 }
 
 #home {
@@ -19,7 +19,7 @@
 
 #home .app-title {
     font-size: 17px;
-    color: var(--header-text);
+    color: var(--contao);
 }
 
 #header .inner {
@@ -37,6 +37,8 @@
 #tmenu {
     display: flex;
     justify-content: flex-end;
+    gap: 3px;
+    margin-right: 3px;
 }
 
 #tmenu li {
@@ -45,9 +47,10 @@
 
 #tmenu a,
 #tmenu .profile button {
-    margin: 0;
-    padding: 13px 12px;
+    margin: 5px 0;
+    padding: 8px 12px;
     display: inline-block;
+    border-radius: 20px;
 }
 
 #tmenu sup {
@@ -55,9 +58,9 @@
     top: 5px;
     left: 20px;
     font-size: 0.6rem;
-    color: var(--header-bg);
-    background: var(--header-text);
-    padding: 2px;
+    color: var(--white);
+    background: var(--red);
+    padding: 2px 4px;
     border-radius: var(--border-radius);
     text-indent: 0;
     font-weight: 400;
@@ -68,9 +71,11 @@
 }
 
 #tmenu .burger button {
-    padding: 8px 10px 9px;
+    margin-block: 5px;
+    padding: 3px 8px 4px;
     background: none;
     border: 0;
+    border-radius: 20px;
 }
 
 #tmenu .burger svg {
@@ -90,7 +95,7 @@
 
     .profile button {
         padding-right: 26px;
-        background: var(--icon-chevron-down) right 9px top 14px no-repeat;
+        background: var(--icon-chevron-down) right 9px top 9px no-repeat;
     }
 }
 
@@ -103,7 +108,7 @@
 #tmenu a,
 #tmenu .profile button,
 #tmenu .burger button {
-    color: var(--header-text);
+    color: var(--text);
     transition: background-color 0.3s ease;
 }
 
@@ -112,7 +117,7 @@
 #tmenu li:hover .profile button,
 #tmenu .active .profile button,
 #tmenu .burger button:hover {
-    background-color: var(--header-bg-hover);
+    background-color: var(--nav-bg-hover);
 }
 
 #tmenu ul.menu_level_1 {
@@ -143,6 +148,7 @@
         color: inherit;
         padding: 6px 20px 6px 40px;
         white-space: nowrap;
+        border-radius: 0;
 
         &:hover {
             background-color: var(--nav-bg-hover);
