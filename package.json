@@ -17,6 +17,7 @@
         "focus-trap": "^8.0",
         "image-minimizer-webpack-plugin": "^5.0",
         "npm-run-all": "^4.1",
+        "patch-package": "^8.0.1",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
         "postcss-preset-env": "^11.1",
@@ -31,6 +32,7 @@
         "defaults"
     ],
     "scripts": {
+        "postinstall": "patch-package",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
