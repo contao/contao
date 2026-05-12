@@ -414,20 +414,22 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
-			$this->Template->headline = '';
-
-			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
-			{
-				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
-			}
-
-			$do = Input::get('do');
-
 			// Only render the breadcrumb for DC_Table (see #9514)
 			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
 			{
 				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 			}
+			else
+			{
+				$this->Template->headline = '';
+
+				foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
+				{
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
+				}
+			}
+
+			$do = Input::get('do');
 
 			// Add the current action
 			if (Input::get('id'))
