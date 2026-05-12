@@ -2,6 +2,36 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.5] (2026-05-12)
+
+**Fixed issues:**
+
+- [#9833] Use `grid-auto-flow` for the main headline ([leofeyer])
+- [#9822] Make the dashboard version history mobile friendly ([fritzmg])
+- [#9430] Patch `@hotwired/turbo` to cancel pending prefetch requests ([zoglo])
+- [#9805] Fix the operation menu positioning and quirks ([zoglo])
+- [#9792] Save some calls on `HtmlAttributes` ([Toflar])
+- [#9780] Adjust the insufficient color contrasts in the back end ([zoglo])
+- [#9828] Use the named import for the `WebauthnController` ([zoglo])
+- [#9803] Fix the scroll offset controller behavior ([zoglo])
+- [#9814] Support searching and filtering virtual fields in `DC_Table` ([Toflar])
+- [#9825] Register the `textarea-autogrow` Stimulus controller on the meta caption field ([zoglo])
+- [#9821] Remove the search for cache settings and add a filter for enabling instead ([fritzmg])
+- [#9796] Fix the SERP preview styling ([leofeyer])
+- [#9397] Improve the searchable content settings on DCAs ([Toflar])
+- [#9820] Remove the deprecated `terminate_on_cache_hit` option ([fritzmg])
+- [#9810] Support `dcaPicker` in the row wizard ([aschempp])
+- [#9813] Fix the cancel URL in 2FA elements ([aschempp])
+- [#9818] Fix the job owner display in the backend ([qzminski])
+- [#9816] Add an autowiring alias for the record labeler ([aschempp])
+- [#9798] Fix incorrect spacing for `#main_headline` on <768px viewport width ([lukasbableck])
+- [#9791] Do not extend from the deprecated WebAuthn credential repository class ([fritzmg])
+- [#9786] Replace breadcrumb insert tags for JSON-LD in the module and for HTML in the template ([lukasbableck])
+- [#9784] Don't use `$this->framework` in `DC_Table` ([leofeyer])
+- [#9785] Resolve insert tags in the redirect page URL in the breadcrumb module ([lukasbableck])
+- [#9776] Support accessing and manipulating virtual fields in user objects ([fritzmg])
+- [#9782] Fix the button styling in the Template Studio header ([lukasbableck])
+
 ## [5.7.4] (2026-04-24)
 
 **Fixed issues:**
@@ -435,6 +465,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.5]: https://github.com/contao/contao/releases/tag/5.7.5
 [5.7.4]: https://github.com/contao/contao/releases/tag/5.7.4
 [5.7.3]: https://github.com/contao/contao/releases/tag/5.7.3
 [5.7.2]: https://github.com/contao/contao/releases/tag/5.7.2
@@ -703,6 +734,7 @@ This project adheres to [Semantic Versioning].
 [#9390]: https://github.com/contao/contao/pull/9390
 [#9391]: https://github.com/contao/contao/pull/9391
 [#9393]: https://github.com/contao/contao/pull/9393
+[#9397]: https://github.com/contao/contao/pull/9397
 [#9399]: https://github.com/contao/contao/pull/9399
 [#9405]: https://github.com/contao/contao/pull/9405
 [#9406]: https://github.com/contao/contao/pull/9406
@@ -716,6 +748,7 @@ This project adheres to [Semantic Versioning].
 [#9427]: https://github.com/contao/contao/pull/9427
 [#9428]: https://github.com/contao/contao/pull/9428
 [#9429]: https://github.com/contao/contao/pull/9429
+[#9430]: https://github.com/contao/contao/pull/9430
 [#9433]: https://github.com/contao/contao/pull/9433
 [#9437]: https://github.com/contao/contao/pull/9437
 [#9439]: https://github.com/contao/contao/pull/9439
@@ -842,3 +875,26 @@ This project adheres to [Semantic Versioning].
 [#9771]: https://github.com/contao/contao/pull/9771
 [#9773]: https://github.com/contao/contao/pull/9773
 [#9775]: https://github.com/contao/contao/pull/9775
+[#9776]: https://github.com/contao/contao/pull/9776
+[#9780]: https://github.com/contao/contao/pull/9780
+[#9782]: https://github.com/contao/contao/pull/9782
+[#9784]: https://github.com/contao/contao/pull/9784
+[#9785]: https://github.com/contao/contao/pull/9785
+[#9786]: https://github.com/contao/contao/pull/9786
+[#9791]: https://github.com/contao/contao/pull/9791
+[#9792]: https://github.com/contao/contao/pull/9792
+[#9796]: https://github.com/contao/contao/pull/9796
+[#9798]: https://github.com/contao/contao/pull/9798
+[#9803]: https://github.com/contao/contao/pull/9803
+[#9805]: https://github.com/contao/contao/pull/9805
+[#9810]: https://github.com/contao/contao/pull/9810
+[#9813]: https://github.com/contao/contao/pull/9813
+[#9814]: https://github.com/contao/contao/pull/9814
+[#9816]: https://github.com/contao/contao/pull/9816
+[#9818]: https://github.com/contao/contao/pull/9818
+[#9820]: https://github.com/contao/contao/pull/9820
+[#9821]: https://github.com/contao/contao/pull/9821
+[#9822]: https://github.com/contao/contao/pull/9822
+[#9825]: https://github.com/contao/contao/pull/9825
+[#9828]: https://github.com/contao/contao/pull/9828
+[#9833]: https://github.com/contao/contao/pull/9833
