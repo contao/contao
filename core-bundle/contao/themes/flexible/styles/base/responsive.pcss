@@ -134,26 +134,28 @@
         padding: 3px;
     }
 
-    #tl_versions {
-        table {
-            tr {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+    #tl_versions table tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
 
-                td,
-                th {
-                    display: block;
-                }
+        td,
+        th {
+            display: block;
+            border-top: 0;
+        }
 
-                th:last-child {
-                    display: none;
-                }
+        th:last-child {
+            display: none;
+        }
 
-                td:last-child {
-                    width: auto;
-                    grid-column: 1 / -1;
-                }
-            }
+        td:first-child,
+        td:nth-child(2) {
+            border-top: 2px solid var(--border);
+        }
+
+        td:last-child {
+            width: auto;
+            grid-column: 1 / -1;
         }
     }
 
