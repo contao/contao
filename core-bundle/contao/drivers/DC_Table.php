@@ -4720,6 +4720,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
+			$searchField = $this->getFilterFieldExpression($fld);
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
@@ -4728,12 +4729,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$fkField = Database::quoteIdentifier($fkField);
 
 				$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-				$this->procedure[] = "(" . \sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . \sprintf($strPattern, "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
+				$this->procedure[] = "(" . \sprintf($strPattern, $searchField) . " OR " . \sprintf($strPattern, "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
 			else
 			{
-				$this->procedure[] = \sprintf($strPattern, Database::quoteIdentifier($fld));
+				$this->procedure[] = \sprintf($strPattern, $searchField);
 			}
 
 			$this->values[] = $searchValue;
@@ -5128,7 +5129,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($sortingFields as $field)
 			{
-				$what = Database::quoteIdentifier($field);
+				$what = $this->getFilterFieldExpression($field);
 
 				if (isset($session['filter'][$filter][$field]))
 				{
@@ -5186,7 +5187,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// CSV lists (see #2890)
 						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['csv']))
 						{
-							$this->procedure[] = $db->findInSet('?', $field, true);
+							$this->procedure[] = "FIND_IN_SET(?, $what)";
 							$this->values[] = $session['filter'][$filter][$field];
 						}
 						else
@@ -5248,7 +5249,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues[] = $this->ptable;
 			}
 
-			$what = Database::quoteIdentifier($field);
+			$what = $this->getFilterFieldExpression($field);
+			$whatWithAlias = $what . ' AS ' . Database::quoteIdentifier($field);
 
 			// Optimize the SQL query (see #8485)
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag']))
@@ -5256,19 +5258,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-%d'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-%d'))), '') AS " . Database::quoteIdentifier($field);
 				}
 
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-01'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-01'))), '') AS " . Database::quoteIdentifier($field);
 				}
 
 				// Sort by year
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-01-01'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-01-01'))), '') AS " . Database::quoteIdentifier($field);
 				}
 			}
 
@@ -5296,7 +5298,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$objFields = $db
-				->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
+				->prepare("SELECT DISTINCT " . $whatWithAlias . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
 				->execute(...$arrValues);
 
 			$active = isset($session['filter'][$filter][$field]);
@@ -5340,6 +5342,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'filters' => $filters,
 			))
 		;
+	}
+
+	/**
+	 * Returns the SQL expression used for search and filter operations.
+	 * Supports regular columns and JSON searching in virtual fields.
+	 */
+	private function getFilterFieldExpression(string $field): string
+	{
+		$virtualFields = DcaExtractor::getInstance($this->strTable)->getVirtualFields();
+
+		if (!isset($virtualFields[$field]))
+		{
+			return Database::quoteIdentifier($field);
+		}
+
+		$path = System::getContainer()
+			->get('database_connection')
+			->getDatabasePlatform()
+			->quoteStringLiteral('$.' . json_encode($field, JSON_THROW_ON_ERROR))
+		;
+
+		return "JSON_UNQUOTE(JSON_EXTRACT(" . Database::quoteIdentifier($virtualFields[$field]) . ", " . $path . '))';
 	}
 
 	/**

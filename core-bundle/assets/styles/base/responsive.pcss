@@ -79,22 +79,16 @@
 
     #tmenu .profile button {
         width: 40px;
-        margin: 0 0 -2px;
         padding-right: 12px;
         overflow: hidden;
         white-space: nowrap;
         text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
-        background: url("../../icons/profile.svg") center center no-repeat;
+        background: var(--icon-user-profile) center center no-repeat;
         background-size: 18px;
     }
 
     #main .content {
         margin: 0 5px 5px;
-    }
-
-    #main_headline {
-        margin: 13px 0;
-        padding: 0 9px;
     }
 
     div.tl_tbox,
@@ -140,8 +134,29 @@
         padding: 3px;
     }
 
-    #tl_versions {
-        display: none;
+    #tl_versions table tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        td,
+        th {
+            display: block;
+            border-top: 0;
+        }
+
+        th:last-child {
+            display: none;
+        }
+
+        td:first-child,
+        td:nth-child(2) {
+            border-top: 2px solid var(--border);
+        }
+
+        td:last-child {
+            width: auto;
+            grid-column: 1 / -1;
+        }
     }
 
     #tl_buttons > ul,

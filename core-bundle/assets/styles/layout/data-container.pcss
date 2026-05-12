@@ -35,15 +35,14 @@
 
 #main_headline {
     font-size: 1.1rem;
+    display: grid;
+    grid-auto-flow: column;
 }
 
 #main_headline span {
-    display: inline-block;
-    max-width: max-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    flex: 1 0 0;
 }
 
 #main_headline span:nth-child(n+2) {

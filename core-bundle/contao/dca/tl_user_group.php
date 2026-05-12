@@ -201,12 +201,14 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'cud',
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'alexf' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
 			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedGroups'=>true),

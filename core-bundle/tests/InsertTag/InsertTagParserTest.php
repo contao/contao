@@ -385,7 +385,7 @@ class InsertTagParserTest extends TestCase
             ),
         );
 
-        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
         $parser->replaceInline('{{recursion}}');
     }
 
@@ -412,8 +412,61 @@ class InsertTagParserTest extends TestCase
             ),
         );
 
-        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
         $parser->replaceInline('{{recursion::{{recursion}}}}');
+    }
+
+    public function testInfiniteMutualRecursion(): void
+    {
+        $parser = new InsertTagParser(
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
+        );
+
+        $parser->addSubscription(
+            new InsertTagSubscription(
+                new class($parser) implements InsertTagResolverNestedResolvedInterface {
+                    public function __construct(private readonly InsertTagParser $parser)
+                    {
+                    }
+
+                    public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
+                    {
+                        return new InsertTagResult($this->parser->replaceInline('{{bar}}'));
+                    }
+                },
+                '__invoke',
+                'foo',
+                null,
+                true,
+                false,
+            ),
+        );
+
+        $parser->addSubscription(
+            new InsertTagSubscription(
+                new class($parser) implements InsertTagResolverNestedResolvedInterface {
+                    public function __construct(private readonly InsertTagParser $parser)
+                    {
+                    }
+
+                    public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
+                    {
+                        return new InsertTagResult($this->parser->replaceInline('{{foo}}'));
+                    }
+                },
+                '__invoke',
+                'bar',
+                null,
+                true,
+                false,
+            ),
+        );
+
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{foo}} -> {{bar}} -> {{foo}} -> ... (repeats)');
+
+        $parser->replaceInline('{{foo}}');
     }
 
     private function getInsertTagParser(): InsertTagParser

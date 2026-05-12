@@ -162,6 +162,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -205,6 +206,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'robots' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
@@ -389,7 +391,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),

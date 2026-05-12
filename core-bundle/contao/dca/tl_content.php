@@ -651,6 +651,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerColor' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
@@ -676,6 +677,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderDelay' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
@@ -683,6 +685,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>300)

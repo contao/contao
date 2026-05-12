@@ -160,6 +160,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'sections' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'sectionWizard',
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
@@ -197,6 +198,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
@@ -226,6 +228,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'viewport' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'width=device-width,initial-scale=1.0,shrink-to-fit=no')
@@ -247,6 +250,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'onload' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
@@ -268,6 +272,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
@@ -285,6 +290,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');
