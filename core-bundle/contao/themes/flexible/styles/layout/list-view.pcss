@@ -328,6 +328,17 @@
     margin-left: 0;
 }
 
+/* Set pointer events none to allow closing the operations menu - See #9805 */
+#tl_buttons.operations {
+    > ul {
+        pointer-events: none;
+
+        > li {
+            pointer-events: auto;
+        }
+    }
+}
+
 /* ToDo: Move to components/operations-menu */
 .operations > ul {
     display: flex;
