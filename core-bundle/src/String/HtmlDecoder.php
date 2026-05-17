@@ -62,8 +62,8 @@ class HtmlDecoder
 
         // Add new lines before and after block level elements
         $val = preg_replace(
-            ['/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'],
-            [' ', "\n$0"],
+            ['/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i', '/(<(script|style)\b[^>]*>).*?(<\/\2>)/is'],
+            [' ', "\n$0", ''],
             $val,
         );
 
