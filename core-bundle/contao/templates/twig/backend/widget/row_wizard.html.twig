@@ -33,7 +33,13 @@
     %}
     <tbody{{ table_body_attributes }}>
         {% for row in rows %}
-            <tr data-contao--row-wizard-target="row">
+            {% set is_dummy_row = loop.first and values_empty|default(false) %}
+            {% set table_row_attributes = attrs()
+                .addClass('is-empty', is_dummy_row)
+                .set('data-contao--row-wizard-target', 'row')
+                .set('data-action', 'focusin->contao--row-wizard#removeDummyState')
+            %}
+            <tr{{ table_row_attributes }}>
                 {% if sortable %}
                     <td>
                         {% set drag_handle_attributes = attrs()
@@ -55,7 +61,7 @@
 
                 {# Controls #}
                 <td class="tl_right">
-                    <input type="hidden" name="{{ id }}[_rows][]" value="1"/>
+                    <input type="hidden" name="{{ id }}[_rows][]" value="1" {{ is_dummy_row ? 'disabled' : '' }}/>
                     {# Copy row #}
                     {% if 'copy' in actions %}
                         {% set copy_button_attributes = attrs()

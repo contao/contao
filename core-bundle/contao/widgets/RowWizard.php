@@ -149,19 +149,33 @@ class RowWizard extends Widget
 		}
 
 		$this->varValue = $varValue;
+
+		if ($this->allRowValuesEmpty())
+		{
+			$this->varValue = null;
+		}
 	}
 
 	public function generate(): string
 	{
+		$valuesEmpty = false;
+
 		// Make sure there is at least an empty array
 		if (!\is_array($this->varValue) || array() === $this->varValue)
 		{
 			$this->varValue = array(array(''));
+			$valuesEmpty = true;
+		}
+		elseif ($this->allRowValuesEmpty())
+		{
+			$valuesEmpty = true;
 		}
 
 		// Populate the rows if the initial count has not been reached
 		if (null !== $this->min)
 		{
+			$valuesEmpty = false;
+
 			$rowCount = \count($this->varValue);
 
 			while ($rowCount < $this->min)
@@ -242,6 +256,7 @@ class RowWizard extends Widget
 			'max_rows' => $this->max,
 			'sortable' => $this->sortable,
 			'actions' => $this->actions,
+			'values_empty' => $valuesEmpty,
 		));
 	}
 
@@ -299,6 +314,22 @@ class RowWizard extends Widget
 			if (!empty($value[$key]))
 			{
 				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private function allRowValuesEmpty(): bool
+	{
+		foreach ($this->varValue as $row)
+		{
+			foreach ($row as $val)
+			{
+				if (!empty($val))
+				{
+					return false;
+				}
 			}
 		}
 
