@@ -19,12 +19,24 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\ScopingHttpClient;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
@@ -53,12 +65,17 @@ class Factory
     /**
      * @param array<string>                                            $additionalUris
      * @param \Closure(array<string, mixed>): HttpClientInterface|null $httpClientFactory
+     * @param UserProviderInterface<UserInterface>                     $userProvider
      */
     public function __construct(
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly RequestStack $requestStack,
+        private readonly UserProviderInterface $userProvider,
+        private readonly LoginLinkHandlerInterface $loginLinkHandler,
+        private readonly HttpClientInterface $httpClient,
+        private readonly UriSigner $uriSigner,
         private readonly array $additionalUris = [],
         private readonly array $defaultHttpClientOptions = [],
         \Closure|null $httpClientFactory = null,
@@ -149,8 +166,12 @@ class Factory
         return $collection;
     }
 
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string|null $username = null): Escargot
     {
+        if ($username) {
+            $clientOptions['headers']['Cookie'] = $this->getAuthenticatedCookie($baseUris->all(), $username);
+        }
+
         $escargot = Escargot::create($baseUris, $queue)->withHttpClient($this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
@@ -162,8 +183,12 @@ class Factory
     /**
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string|null $username = null): Escargot
     {
+        if ($username) {
+            $clientOptions['headers']['Cookie'] = $this->getAuthenticatedCookie($queue->getBaseUris($jobId)->all(), $username);
+        }
+
         $escargot = Escargot::createFromJobId($jobId, $queue)->withHttpClient($this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
@@ -271,5 +296,54 @@ class Factory
         }
 
         return $selectedSubscribers;
+    }
+
+    private function getAuthenticatedCookie(array $uris, string $username): Cookie|null
+    {
+        $mainRequest = $this->requestStack->getMainRequest();
+        $cookieJar = new CookieJar();
+
+        try {
+            $user = $this->userProvider->loadUserByIdentifier($username);
+        } catch (UserNotFoundException) {
+            return null;
+        }
+
+        foreach ($uris as $uri) {
+            $request = Request::create((string) $uri);
+
+            if (!$mainRequest) {
+                $this->requestStack->push($request);
+            }
+
+            $loginLink = $this->loginLinkHandler->createLoginLink($user, $request);
+            $loginUri = new Uri($loginLink->getUrl());
+
+            parse_str($loginUri->getQuery(), $query);
+
+            $query['_target_path'] = base64_encode($request->getUri());
+
+            $url = $this->uriSigner->sign((string) $loginUri->withQuery(http_build_query($query)));
+
+            try {
+                $response = $this->httpClient->request('GET', $url, ['max_redirects' => 0]);
+
+                if (302 !== $response->getStatusCode()) {
+                    continue;
+                }
+
+                $headers = $response->getHeaders(false);
+            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
+                continue;
+            }
+
+            if (\array_key_exists('set-cookie', $headers)) {
+                $cookieJar->updateFromSetCookie($headers['set-cookie']);
+
+                break;
+            }
+        }
+
+        return $cookieJar->get(session_name());
     }
 }
