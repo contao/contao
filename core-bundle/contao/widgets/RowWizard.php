@@ -149,11 +149,6 @@ class RowWizard extends Widget
 		}
 
 		$this->varValue = $varValue;
-
-		if ($this->allRowValuesEmpty())
-		{
-			$this->varValue = null;
-		}
 	}
 
 	public function generate(): string
@@ -164,10 +159,6 @@ class RowWizard extends Widget
 		if (!\is_array($this->varValue) || array() === $this->varValue)
 		{
 			$this->varValue = array(array(''));
-			$valuesEmpty = true;
-		}
-		elseif ($this->allRowValuesEmpty())
-		{
 			$valuesEmpty = true;
 		}
 
@@ -314,22 +305,6 @@ class RowWizard extends Widget
 			if (!empty($value[$key]))
 			{
 				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private function allRowValuesEmpty(): bool
-	{
-		foreach ($this->varValue as $row)
-		{
-			foreach ($row as $val)
-			{
-				if (!empty($val))
-				{
-					return false;
-				}
 			}
 		}
 
