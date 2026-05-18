@@ -26,6 +26,8 @@ export default class extends Controller {
             return;
         }
 
+        this.removeDummyState();
+
         const row = this.#getRow(event);
         const previous = row.previousElementSibling;
 
@@ -63,7 +65,7 @@ export default class extends Controller {
             row.remove();
         } else {
             this.#resetInputs(row);
-            this.#focus(row);
+            this.#setDummyState(row);
         }
 
         this.#updatePermissions();
@@ -180,6 +182,19 @@ export default class extends Controller {
                 }
             }
         });
+    }
+
+    removeDummyState() {
+        const row = this.rowTargets[0];
+        if (!row?.classList.contains('is-empty')) return;
+
+        row.classList.remove('is-empty');
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
+    }
+
+    #setDummyState(row) {
+        row.classList.add('is-empty');
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
     }
 
     #getRow(event) {
