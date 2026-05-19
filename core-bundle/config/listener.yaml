@@ -502,8 +502,8 @@ services:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
             - '@messenger.bus.default'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
-            - '%contao.backend.route_prefix%'
             - '%kernel.debug%'
 
     contao.listener.security.logout:
