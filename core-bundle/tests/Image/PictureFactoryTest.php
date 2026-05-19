@@ -260,6 +260,47 @@ class PictureFactoryTest extends TestCase
         $pictureFactory->create($path, 1);
     }
 
+    public function testCreatesAPictureGenerationConfigFromADatabaseSize(): void
+    {
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+            'sizes' => '100vw',
+            'densities' => '1x, 2x',
+            'cssClass' => 'my-size',
+            'lazyLoading' => true,
+            'formats' => '',
+            'skipIfDimensionsMatch' => true,
+        ];
+
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
+
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
+        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
+
+        $adapters = [
+            ImageSizeModel::class => $imageSizeAdapter,
+            ImageSizeItemModel::class => $imageSizeItemAdapter,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $pictureFactory = $this->getPictureFactory(framework: $framework);
+
+        $configResult = $pictureFactory->createPictureConfiguration(1);
+        $config = $configResult->getPictureConfiguration();
+        $options = $configResult->getResizeOptions();
+
+        $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
+        $this->assertSame(200, $config->getSize()->getResizeConfig()->getHeight());
+        $this->assertTrue($options->getSkipIfDimensionsMatch());
+    }
+
     public function testCreatesAPictureObjectFromAnImageObjectWithAPredefinedImageSize(): void
     {
         $predefinedSizes = [
