@@ -409,6 +409,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ->setArgument('$indexName', $indexName),
             )
         ;
+
+        if ($container->hasDefinition('contao.search.backend.security.document_allowed_groups_resolver')) {
+            $resolverDefinition = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+            $resolverDefinition
+                ->setArgument('$maxGroups', $config['backend_search']['permission_aware_facets']['max_groups'])
+            ;
+        }
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

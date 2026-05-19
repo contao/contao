@@ -67,6 +67,18 @@ class BackendUser extends User
 	}
 
 	/**
+	 * @param array<string, mixed> $data
+	 */
+	public static function createFromData(array $data): self
+	{
+		$user = new self();
+		$user->arrData = $data;
+		$user->setUserFromDb();
+
+		return $user;
+	}
+
+	/**
 	 * Instantiate a new user object
 	 *
 	 * @return static|User The object instance
