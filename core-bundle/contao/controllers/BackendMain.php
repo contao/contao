@@ -61,7 +61,7 @@ class BackendMain extends Backend
 		}
 
 		// Two-factor setup required
-		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security')
+		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security' && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
