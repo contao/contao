@@ -50,14 +50,14 @@ class SearchIndexListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
-        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $debug, $features);
+        $listener = new SearchIndexListener($messenger, $this->mockScopeMatcher(), '_fragment', $debug, $features);
         $listener($event);
     }
 
     public static function getRequestResponse(): iterable
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
-            Request::create('/contao-likes-to-index-things'),
+            self::createFrontendRequest('/contao-likes-to-index-things'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
@@ -66,7 +66,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should not index because even though the response was successful and contains ld+json information, it was disabled by the feature flag' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE,
             false,
@@ -75,7 +75,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because kernel.debug is true' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -84,7 +84,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is not a GET request' => [
-            Request::create('/foobar', 'POST'),
+            self::createFrontendRequest('/foobar', 'POST'),
             new Response('', Response::HTTP_INTERNAL_SERVER_ERROR),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -93,7 +93,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it was requested by our own crawler' => [
-            Request::create('/foobar', 'GET', [], [], [], ['HTTP_USER_AGENT' => Factory::USER_AGENT]),
+            self::createFrontendRequest('/foobar', 'GET', ['HTTP_USER_AGENT' => Factory::USER_AGENT]),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -102,7 +102,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it was a redirect' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new RedirectResponse('https://somewhere.else'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -111,25 +111,16 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is a fragment request' => [
-            Request::create('/_fragment/foo/bar'),
-            new Response(),
+            self::createFrontendRequest('/_fragment/foo/bar'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
             false,
         ];
 
-        yield 'Should be skipped because it is a contao backend request' => [
-            Request::create('/contao?do=article'),
-            new Response(),
-            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
-            false,
-            false,
-            false,
-        ];
-
-        yield 'Should be skipped because it is a web profiler request' => [
-            Request::create('/_wdt/123'),
+        yield 'Should be skipped because request scope is not frontend' => [
+            self::createBackendRequest('/contao?do=article'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -138,7 +129,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be deleted because the response was "not found" (404)' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -147,7 +138,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be deleted because the response was "gone" (410)' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -156,7 +147,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should not be deleted because even though the response was "not found" (404), it was disabled by the feature flag' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_INDEX,
             false,
@@ -168,7 +159,7 @@ class SearchIndexListenerTest extends TestCase
         $response->headers->set('X-Robots-Tag', 'noindex');
 
         yield 'Should not index but should delete because the X-Robots-Tag header contains "noindex"' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -180,7 +171,7 @@ class SearchIndexListenerTest extends TestCase
         $response->headers->set('X-Robots-Tag', 'noindex');
 
         yield 'Should not index and delete because the X-Robots-Tag header contains "noindex" and response is unsuccessful' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -189,7 +180,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should not index but should delete because the meta robots tag contains "noindex"' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -198,7 +189,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should not index and delete because the meta robots tag contains "noindex" and response is unsuccessful' => [
-            Request::create('/foobar'),
+            self::createFrontendRequest('/foobar'),
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 500),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -214,7 +205,7 @@ class SearchIndexListenerTest extends TestCase
             }
 
             yield 'Should be skipped because the response status ('.$status.') is not successful and not a "not found" or "gone" response' => [
-                Request::create('/foobar'),
+                self::createFrontendRequest('/foobar'),
                 new Response('', $status),
                 SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
                 false,
@@ -222,5 +213,21 @@ class SearchIndexListenerTest extends TestCase
                 false,
             ];
         }
+    }
+
+    private static function createFrontendRequest(string $uri, string $method = 'GET', array $server = []): Request
+    {
+        $request = Request::create($uri, $method, [], [], [], $server);
+        $request->attributes->set('_scope', 'frontend');
+
+        return $request;
+    }
+
+    private static function createBackendRequest(string $uri, string $method = 'GET', array $server = []): Request
+    {
+        $request = Request::create($uri, $method, [], [], [], $server);
+        $request->attributes->set('_scope', 'backend');
+
+        return $request;
     }
 }
