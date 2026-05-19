@@ -2,6 +2,7 @@
 
 {% set listing_attributes = attrs()
     .addClass('tl_listing_container')
+    .addClass('picker', as_picker)
     .set('id', 'tl_listing')
     .set('data-controller', 'contao--check-all')
     .set('data-picker-value', picker.value|default, as_picker)
