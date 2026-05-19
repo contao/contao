@@ -110,6 +110,8 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 
+        Config::set('allowedTags', '<script><style>'.Config::get('allowedTags'));
+
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
 

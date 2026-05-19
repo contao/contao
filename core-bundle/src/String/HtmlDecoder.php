@@ -60,10 +60,18 @@ class HtmlDecoder
             $val = $this->insertTagParser->replaceInline($val);
         }
 
+        // Remove hidden elements according to
+        // https://html.spec.whatwg.org/multipage/rendering.html#hidden-elements
+        $val = preg_replace(
+            ['/(<(area|base|basefont|datalist|head|link|meta|noembed|noframes|param|rp|script|style|template|title)\b[^>]*>).*?(<\/\2>)/is'],
+            [''],
+            $val,
+        );
+
         // Add new lines before and after block level elements
         $val = preg_replace(
-            ['/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i', '/(<(script|style)\b[^>]*>).*?(<\/\2>)/is'],
-            [' ', "\n$0", ''],
+            ['/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'],
+            [' ', "\n$0"],
             $val,
         );
 
