@@ -75,6 +75,7 @@ class WebWorkerTest extends TestCase
         $webWorker = new WebWorker(
             $cache,
             $this->command,
+            $this->mockScopeMatcher(),
             ['transport-1'],
         );
 
@@ -89,6 +90,7 @@ class WebWorkerTest extends TestCase
         $webWorker = new WebWorker(
             $cache,
             $this->command,
+            $this->mockScopeMatcher(),
             ['transport-1'],
         );
 
@@ -101,11 +103,68 @@ class WebWorkerTest extends TestCase
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
-    private function triggerWebWorker(): void
+    public function testDoesNotRunWebWorkerForNonFrontendMainRequests(): void
     {
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->expects($this->never())
+            ->method('getItem')
+        ;
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'backend');
+
         $this->eventDispatcher->dispatch(new TerminateEvent(
             $this->createMock(HttpKernelInterface::class),
-            new Request(),
+            $request,
+            new Response(),
+        ));
+    }
+
+    public function testRunsWebWorkerForNonFrontendMainRequestsIfExplicitlyEnabled(): void
+    {
+        $cache = new ArrayAdapter(); // No real workers running
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set(WebWorker::REQUEST_ATTRIBUTE_ENABLE, true);
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+
+        // @phpstan-ignore method.notFound
+        $this->assertContains('Stopping worker.', $this->logger->getLogs());
+    }
+
+    private function triggerWebWorker(): void
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
             new Response(),
         ));
     }

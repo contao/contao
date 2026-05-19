@@ -42,7 +42,7 @@ services:
         arguments:
             - '@contao.cron'
             - '@database_connection'
-            - '%fragment.path%'
+            - '@contao.routing.scope_matcher'
             - false
 
     contao.listener.csp_report:

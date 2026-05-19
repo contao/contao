@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -42,6 +43,8 @@ use Symfony\Component\Messenger\Event\WorkerStartedEvent;
  */
 class WebWorker
 {
+    final public const REQUEST_ATTRIBUTE_ENABLE = '_contao_web_worker';
+
     private const MAX_DURATION = 30;
 
     private bool $webWorkerRunning = false;
@@ -49,6 +52,7 @@ class WebWorker
     public function __construct(
         private readonly CacheItemPoolInterface $cache,
         private readonly ConsumeMessagesCommand $consumeMessagesCommand,
+        private readonly ScopeMatcher $scopeMatcher,
         private readonly array $transports,
         private readonly string $gracePeriod = 'PT10M',
     ) {
@@ -61,7 +65,16 @@ class WebWorker
     #[AsEventListener(priority: -2048)]
     public function onKernelTerminate(TerminateEvent $event): void
     {
-        $stopTime = $this->calculateStopTime($event->getRequest());
+        $request = $event->getRequest();
+
+        if (
+            !$this->scopeMatcher->isFrontendMainRequest($event)
+            && true !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)
+        ) {
+            return;
+        }
+
+        $stopTime = $this->calculateStopTime($request);
 
         foreach ($this->transports as $transportName) {
             $this->processTransport($transportName, $stopTime);
