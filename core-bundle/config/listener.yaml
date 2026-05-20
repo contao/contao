@@ -43,6 +43,7 @@ services:
             - '@contao.cron'
             - '@database_connection'
             - '@contao.routing.scope_matcher'
+            - '%fragment.path%'
             - false
 
     contao.listener.csp_report:

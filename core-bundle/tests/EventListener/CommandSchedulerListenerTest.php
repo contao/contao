@@ -59,7 +59,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->with(Cron::SCOPE_WEB)
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), true);
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), '_fragment', true);
         $listener($this->getTerminateEvent('frontend'));
     }
 
@@ -77,7 +77,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('run')
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), true);
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), '_fragment', true);
         $listener($this->getTerminateEvent('frontend'));
     }
 
@@ -92,6 +92,22 @@ class CommandSchedulerListenerTest extends TestCase
 
         $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
         $listener($this->getTerminateEvent('backend'));
+    }
+
+    public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->never())
+            ->method('run')
+        ;
+
+        $request = Request::create('/_fragment/foo/bar');
+
+        $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($event);
     }
 
     public function testRunsTheCommandSchedulerForNonFrontendMainRequestsIfExplicitlyEnabled(): void
@@ -109,7 +125,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
-        $listener($this->getTerminateEvent('backend', [CommandSchedulerListener::REQUEST_ATTRIBUTE_ENABLE => true]));
+        $listener($this->getTerminateEvent(null, [CommandSchedulerListener::REQUEST_ATTRIBUTE_ENABLE => true]));
     }
 
     public function testDoesNotRunTheCommandSchedulerForNonContaoMainRequestsWithoutOptIn(): void

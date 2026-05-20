@@ -31,6 +31,7 @@ class CommandSchedulerListener
         private readonly Cron $cron,
         private readonly Connection $connection,
         private readonly ScopeMatcher $scopeMatcher,
+        private readonly string $fragmentPath = '_fragment',
         private readonly bool $autoMode = false,
     ) {
     }
@@ -48,6 +49,12 @@ class CommandSchedulerListener
     private function shouldRunCron(TerminateEvent $event): bool
     {
         $request = $event->getRequest();
+        $pathInfo = $request->getPathInfo();
+
+        // Skip the listener upon fragment URLs
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $pathInfo)) {
+            return false;
+        }
 
         if (
             !$this->scopeMatcher->isContaoMainRequest($event)
