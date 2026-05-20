@@ -40,8 +40,8 @@ class CommandSchedulerListenerTest extends TestCase
             ->with(Cron::SCOPE_WEB)
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection());
-        $listener($this->getTerminateEvent('contao_frontend'));
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent('frontend'));
     }
 
     public function testRunsTheCommandSchedulerIfAutoModeIsEnabledAndCronDoesNotExist(): void
@@ -59,8 +59,8 @@ class CommandSchedulerListenerTest extends TestCase
             ->with(Cron::SCOPE_WEB)
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), '_fragment', true);
-        $listener($this->getTerminateEvent('contao_frontend'));
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), '_fragment', true);
+        $listener($this->getTerminateEvent('frontend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfAutoModeIsEnabledAndCronExists(): void
@@ -77,8 +77,21 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('run')
         ;
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), '_fragment', true);
-        $listener($this->getTerminateEvent('contao_frontend'));
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher(), '_fragment', true);
+        $listener($this->getTerminateEvent('frontend'));
+    }
+
+    public function testRunsTheCommandSchedulerForBackendMainRequests(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->once())
+            ->method('run')
+            ->with(Cron::SCOPE_WEB)
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent('backend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
@@ -89,16 +102,42 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('run')
         ;
 
-        $ref = new \ReflectionClass(Request::class);
-        $request = $ref->newInstance();
-
-        $pathInfo = $ref->getProperty('pathInfo');
-        $pathInfo->setValue($request, '/foo/_fragment/bar');
+        $request = Request::create('/_fragment/foo/bar');
 
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
-        $listener = new CommandSchedulerListener($cron, $this->mockConnection());
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
         $listener($event);
+    }
+
+    public function testRunsTheCommandSchedulerForNonFrontendMainRequestsIfExplicitlyEnabled(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->never())
+            ->method('hasMinutelyCliCron')
+        ;
+
+        $cron
+            ->expects($this->once())
+            ->method('run')
+            ->with(Cron::SCOPE_WEB)
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent(null, [CommandSchedulerListener::REQUEST_ATTRIBUTE_ENABLE => true]));
+    }
+
+    public function testDoesNotRunTheCommandSchedulerForNonContaoMainRequestsWithoutOptIn(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->never())
+            ->method('run')
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent());
     }
 
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
@@ -115,8 +154,8 @@ class CommandSchedulerListenerTest extends TestCase
             ->willThrowException($this->createMock(DriverException::class))
         ;
 
-        $listener = new CommandSchedulerListener($cron, $connection);
-        $listener($this->getTerminateEvent('contao_backend'));
+        $listener = new CommandSchedulerListener($cron, $connection, $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent('frontend'));
     }
 
     private function mockConnection(): Connection&MockObject
@@ -141,12 +180,16 @@ class CommandSchedulerListenerTest extends TestCase
         return $connection;
     }
 
-    private function getTerminateEvent(string|null $route = null): TerminateEvent
+    private function getTerminateEvent(string|null $scope = null, array $attributes = []): TerminateEvent
     {
         $request = new Request();
 
-        if (null !== $route) {
-            $request->attributes->set('_route', $route);
+        if (null !== $scope) {
+            $request->attributes->set('_scope', $scope);
+        }
+
+        foreach ($attributes as $key => $value) {
+            $request->attributes->set($key, $value);
         }
 
         return new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
