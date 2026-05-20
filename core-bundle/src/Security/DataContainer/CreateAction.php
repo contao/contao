@@ -22,4 +22,12 @@ class CreateAction extends AbstractAction
     ) {
         parent::__construct($dataSource);
     }
+
+    protected function getCacheKeyData(): array
+    {
+        return [
+            ...parent::getCacheKeyData(),
+            'new' => $this->new,
+        ];
+    }
 }

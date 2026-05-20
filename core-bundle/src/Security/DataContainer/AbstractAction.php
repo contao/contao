@@ -37,6 +37,7 @@ abstract class AbstractAction implements \Stringable
      * also allows voters to optimize for performance (entirely optional though).
      */
     private array|null $preloadHints = null;
+    private string|null $accessDecisionCacheKey = null;
 
     public function __construct(private readonly string $dataSource)
     {
@@ -59,6 +60,7 @@ abstract class AbstractAction implements \Stringable
         }
 
         $this->preloadHints = $preloadHints;
+        $this->accessDecisionCacheKey = null;
 
         return $this;
     }
@@ -68,11 +70,45 @@ abstract class AbstractAction implements \Stringable
         return $this->dataSource;
     }
 
+    public function getAccessDecisionCacheKey(): string
+    {
+        return $this->accessDecisionCacheKey ??= hash('xxh3', serialize($this->normalizeForCacheKey($this->getCacheKeyData())));
+    }
+
     protected function getSubjectInfo(): array
     {
         $subject = [];
         $subject[] = 'Source: '.$this->getDataSource();
 
         return $subject;
+    }
+
+    protected function getCacheKeyData(): array
+    {
+        return [
+            'dataSource' => $this->dataSource,
+            'preloadHints' => $this->preloadHints,
+        ];
+    }
+
+    private function normalizeForCacheKey(mixed $value): mixed
+    {
+        if (!\is_array($value)) {
+            return $value;
+        }
+
+        if (array_is_list($value)) {
+            return array_map($this->normalizeForCacheKey(...), $value);
+        }
+
+        $normalized = [];
+
+        foreach ($value as $key => $item) {
+            $normalized[$key] = $this->normalizeForCacheKey($item);
+        }
+
+        ksort($normalized);
+
+        return $normalized;
     }
 }

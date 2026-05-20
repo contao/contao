@@ -32,4 +32,13 @@ class UpdateAction extends AbstractAction
 
         return $subject;
     }
+
+    protected function getCacheKeyData(): array
+    {
+        return [
+            ...parent::getCacheKeyData(),
+            'current' => $this->current,
+            'new' => $this->new,
+        ];
+    }
 }
