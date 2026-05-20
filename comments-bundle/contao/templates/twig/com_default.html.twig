@@ -2,7 +2,7 @@
     <p class="info">{{ by }} {% if website %}<a href="{{ website }}" target="_blank" rel="nofollow noreferrer noopener">{{ name }}</a>{% else %}{{ name }}{% endif %} | <time datetime="{{ datetime }}" class="date">{{ date }}</time></p>
 
     <div class="comment">
-        {{ comment|sanitize_html }}
+        {{ comment|sanitize_html('contao') }}
     </div>
 
     {% if addReply %}
