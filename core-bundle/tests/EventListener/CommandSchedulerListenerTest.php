@@ -81,12 +81,13 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('frontend'));
     }
 
-    public function testDoesNotRunTheCommandSchedulerForNonFrontendMainRequests(): void
+    public function testRunsTheCommandSchedulerForBackendMainRequests(): void
     {
         $cron = $this->createMock(Cron::class);
         $cron
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('run')
+            ->with(Cron::SCOPE_WEB)
         ;
 
         $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
@@ -109,6 +110,18 @@ class CommandSchedulerListenerTest extends TestCase
 
         $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
         $listener($this->getTerminateEvent('backend', [CommandSchedulerListener::REQUEST_ATTRIBUTE_ENABLE => true]));
+    }
+
+    public function testDoesNotRunTheCommandSchedulerForNonContaoMainRequestsWithoutOptIn(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->never())
+            ->method('run')
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent());
     }
 
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void

@@ -50,7 +50,7 @@ class CommandSchedulerListener
         $request = $event->getRequest();
 
         if (
-            !$this->scopeMatcher->isFrontendMainRequest($event)
+            !$this->scopeMatcher->isContaoMainRequest($event)
             && true !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)
         ) {
             return false;
