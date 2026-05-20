@@ -17,6 +17,7 @@ use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Monolog\Handler\GroupHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -77,7 +78,7 @@ class CrawlMessageHandler
         $logger = $this->createLogger($job, $message->subscribers);
 
         $escargot = $escargot
-            ->withMaxDurationInSeconds(20) // This we can improve in the future. It's only needed in the "web" scope
+            ->withMaxDurationInSeconds(ScopeAwareMessageInterface::SCOPE_CLI === $message->getScope() ? 0 : 20) // Limit to 20 seconds in the "web" scope
             ->withConcurrency($this->concurrency)
             ->withMaxDepth($message->maxDepth)
             ->withLogger($logger)
