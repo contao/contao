@@ -5,11 +5,29 @@ let menus = [];
 
 export default class OperationsMenuController extends Controller {
     #contextMenuEventPosition = null;
+    #operationsLoaded = false;
 
-    static targets = ['menu', 'submenu', 'controller', 'title'];
+    static targets = ['operations', 'menu', 'submenu', 'controller', 'title'];
+    static values = {
+        recordId: Number,
+        recordTable: String,
+        primaryOnly: Boolean,
+    };
 
     connect() {
         if (!this.hasControllerTarget || !this.hasMenuTarget) {
+            return;
+        }
+
+        this.initializeMenu();
+    }
+
+    disconnect() {
+        this.destroyMenu();
+    }
+
+    initializeMenu() {
+        if ((this.primaryOnlyValue && !this.#operationsLoaded) || this.$menu) {
             return;
         }
 
@@ -35,7 +53,11 @@ export default class OperationsMenuController extends Controller {
         });
     }
 
-    disconnect() {
+    destroyMenu() {
+        if (!this.$menu) {
+            return;
+        }
+
         // Cleanup menu instance, otherwise we would leak memory
         for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
             if (value === this.$menu) {
@@ -44,6 +66,7 @@ export default class OperationsMenuController extends Controller {
         }
 
         menus = menus.filter((menu) => menu !== this.$menu);
+        this.$menu = null;
     }
 
     titleTargetConnected(el) {
@@ -62,38 +85,54 @@ export default class OperationsMenuController extends Controller {
     }
 
     open(event) {
-        if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
-        // Only open the native context from within the opened operations menu (see #9805)
-        if (event.target === this.submenuTarget) {
+        const needsLazyLoad = this.primaryOnlyValue && !this.#operationsLoaded && this.hasRecordIdValue;
+
+        if (!needsLazyLoad && this.isInteractive(event.target)) {
             return;
         }
 
-        const posX = event.clientX;
-        const posY = event.clientY;
-
-        // Open the native context menu when clicking the same position
-        if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
-            this.$menu.elements.submenuToggles[0].close();
-            this.#contextMenuEventPosition = null;
-
-            return;
+        if (needsLazyLoad) {
+            event.preventDefault();
         }
 
-        event.preventDefault();
+        this.loadOperationsIfNeeded().then((loaded) => {
+            if (!loaded || !this.$menu) {
+                return;
+            }
 
-        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
-        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
+            // Only open the native context from within the opened operations menu (see #9805)
+            if (event.target === this.submenuTarget) {
+                return;
+            }
 
-        this.#contextMenuEventPosition = { x: posX, y: posY };
-        this.$menu.elements.submenuToggles[0].open();
-        this.setPosition(event);
+            const posX = event.clientX;
+            const posY = event.clientY;
+
+            // Open the native context menu when clicking the same position
+            if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
+                this.$menu.elements.submenuToggles[0].close();
+                this.#contextMenuEventPosition = null;
+
+                return;
+            }
+
+            event.preventDefault();
+
+            // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
+            this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
+
+            this.#contextMenuEventPosition = { x: posX, y: posY };
+            this.$menu.elements.submenuToggles[0].open();
+            this.setPosition(event);
+        });
     }
 
     close() {
-        if (!this.hasControllerTarget || !this.hasMenuTarget) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || !this.$menu) {
             return;
         }
 
@@ -155,5 +194,42 @@ export default class OperationsMenuController extends Controller {
             el instanceof HTMLInputElement ||
             el?.closest('a, button, input')
         );
+    }
+
+    async loadOperationsIfNeeded() {
+        if (!this.primaryOnlyValue || this.#operationsLoaded || !this.hasRecordIdValue) {
+            return true;
+        }
+
+        const headers = {
+            'Contao-Operations': String(this.recordIdValue),
+        };
+
+        if (this.hasRecordTableValue && this.recordTableValue) {
+            headers['Contao-Operations-Table'] = this.recordTableValue;
+        }
+
+        let response;
+
+        try {
+            response = await fetch(window.location.href, { headers, credentials: 'same-origin' });
+        } catch {
+            return false;
+        }
+
+        if (!response.ok) {
+            return false;
+        }
+
+        if (!this.hasOperationsTarget) {
+            return false;
+        }
+
+        this.destroyMenu();
+        this.operationsTarget.outerHTML = await response.text();
+        this.#operationsLoaded = true;
+        this.initializeMenu();
+
+        return true;
     }
 }

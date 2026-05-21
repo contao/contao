@@ -502,6 +502,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$this->handleSingleRecordOperationsRequest();
+
 		// Render view
 		if ($this->treeView)
 		{
@@ -525,6 +527,49 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return $this->render('show_all', $parameters);
+	}
+
+	private function handleSingleRecordOperationsRequest(): void
+	{
+		$respond = static function (string $content): never {
+			throw new ResponseException(new Response($content));
+		};
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$id = (int) $request?->headers->get('Contao-Operations');
+
+		if ($id < 1)
+		{
+			return;
+		}
+
+		$table = $request?->headers->get('Contao-Operations-Table');
+
+		$table = \is_string($table) && '' !== $table ? $table : $this->strTable;
+
+		// Restrict to the current table context (plus parent table in extended tree mode).
+		if ($table !== $this->strTable && $table !== $this->ptable)
+		{
+			$respond('');
+		}
+
+		try
+		{
+			$record = $this->getCurrentRecord($id, $table);
+		}
+		catch (AccessDeniedException)
+		{
+			$record = null;
+		}
+
+		if (null === $record)
+		{
+			$respond('');
+		}
+
+		$operations = $this->generateButtons($record, $table, $this->root);
+
+		$respond((string) $operations);
 	}
 
 	/**
@@ -3324,6 +3369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'message' => Message::generate(),
 			'global_operations' => $operations,
 			'has_clipboard_content' => $blnClipboard,
+			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -3849,11 +3895,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'id' => "{$node}_$id",
+			'record_id' => (int) $currentRecord['id'],
+			'record_table' => $table,
 			'level' => $intMargin / $intSpacing + 1,
 			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
 			'is_group' => ($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable,
 			'is_expanded' => $blnIsOpen,
 			'enable_deeplink' => $isCurrentTable,
+			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
 			'toggler_url' => !empty($children) ? $this->addToUrl('ptg=' . $id) : null,
 			'records' => array(),
 			'children' => array(),
@@ -4315,6 +4364,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters['message'] = Message::generate();
 		$parameters['global_operations'] = $operations;
+		$parameters['table_name'] = $this->strTable;
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		return $this->render('view/parent', $parameters);
 	}
@@ -4554,8 +4605,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$record = array(
 					'id' => $row['id'],
 					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
-					'operations' => $this->generateButtons($row, $this->strTable, $this->root),
 				);
+
+				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
+				$record['operations'] = $recordOperations;
 
 				if ($this->strPickerFieldType)
 				{
@@ -4628,6 +4681,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$parameters['records'] = $records;
 		$parameters['order_by'] = $firstOrderBy;
 		$parameters['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
+		$parameters['table_name'] = $this->strTable;
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		return $this->render('view/list', $parameters);
 	}
