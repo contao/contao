@@ -414,48 +414,50 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
-			$this->Template->headline = '';
-
-			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
-			{
-				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
-			}
-
-			$do = Input::get('do');
-
-			// Only render the breadcrumb for DC_Table (see #9514)
+			// Render the breadcrumb for DC_Table (see #9514)
 			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
 			{
 				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 			}
-
-			// Add the current action
-			if (Input::get('id'))
+			else
 			{
-				if ($do == 'files' || $do == 'tpl_editor')
+				$this->Template->headline = '';
+
+				foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
 				{
-					// Handle new folders (see #7980)
-					if (str_contains(Input::get('id'), '__new__'))
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
+				}
+
+				$do = Input::get('do');
+
+				// Add the current action
+				if (Input::get('id'))
+				{
+					if ($do == 'files' || $do == 'tpl_editor')
 					{
-						$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
+						// Handle new folders (see #7980)
+						if (str_contains(Input::get('id'), '__new__'))
+						{
+							$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
+						}
+						else
+						{
+							$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
+						}
 					}
 				}
-			}
-			elseif (Input::get('pid'))
-			{
-				if ($do == 'files' || $do == 'tpl_editor')
+				elseif (Input::get('pid'))
 				{
-					if ($act == 'move')
+					if ($do == 'files' || $do == 'tpl_editor')
 					{
-						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
+						if ($act == 'move')
+						{
+							$this->Template->headline .= ' <span>' . Input::get('pid') . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+						}
+						else
+						{
+							$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
+						}
 					}
 				}
 			}
