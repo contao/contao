@@ -106,6 +106,29 @@ class JobTest extends TestCase
         $this->assertSame($parent->getChildren()[0]->getUuid(), $child->getUuid());
     }
 
+    public function testStateFingerprintOnlyChangesWithMutableState(): void
+    {
+        $job = $this->getJob();
+        $fingerprint = $job->getStateFingerprint();
+
+        // Immutable identity should not affect the mutable state fingerprint.
+        $jobWithDifferentIdentity = new Job(
+            '5b79effc-9744-4c8a-bcb5-ed78c9c00eaa',
+            new \DateTimeImmutable('2024-01-01 00:00:00'),
+            Status::new,
+            'other-type',
+            new Owner(42),
+        );
+        $this->assertSame($fingerprint, $jobWithDifferentIdentity->getStateFingerprint());
+
+        $this->assertNotSame($fingerprint, $job->markPending()->getStateFingerprint());
+        $this->assertNotSame($fingerprint, $job->withProgress(42.0)->getStateFingerprint());
+        $this->assertNotSame($fingerprint, $job->withMetadata(['foo' => 'bar'])->getStateFingerprint());
+        $this->assertNotSame($fingerprint, $job->withWarnings(['warn'])->getStateFingerprint());
+        $this->assertNotSame($fingerprint, $job->withErrors(['err'])->getStateFingerprint());
+        $this->assertNotSame($fingerprint, $job->withIsPublic(true)->getStateFingerprint());
+    }
+
     private function getJob(string $uuid = '9ad2f29c-671b-4a1a-9a15-dabda4fd6bad'): Job
     {
         return new Job(

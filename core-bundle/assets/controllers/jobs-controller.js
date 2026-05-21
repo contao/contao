@@ -7,6 +7,7 @@ export default class extends Controller {
     #runningJobs = false;
     #pollInterval = null;
     #timer = null;
+    #etag = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -21,6 +22,7 @@ export default class extends Controller {
     connect() {
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
+        this.#etag = null;
 
         if (this.enabledValue) {
             this.enable();
@@ -63,10 +65,26 @@ export default class extends Controller {
     }
 
     #waitAndPoll() {
-        this.#timer = setTimeout(() => this.#poll(), this.#pollInterval);
+        this.#timer = setTimeout(() => {
+            this.#timer = null;
+            this.#poll();
+        }, this.#pollInterval);
     }
 
-    #poll() {
-        this.#turboStreamConnection.get(this.pendingJobsUrlValue, { range: this.#pollInterval }, true);
+    async #poll() {
+        const result = await this.#turboStreamConnection.get(
+            this.pendingJobsUrlValue,
+            { range: this.#pollInterval },
+            true,
+            this.#etag ? { 'If-None-Match': this.#etag } : {},
+        );
+
+        this.#etag = result.response?.headers.get('etag') || this.#etag;
+
+        // If no turbo stream update happened (e.g. 204 no changes), schedule
+        // the next poll here.
+        if (!this.#timer) {
+            this.#waitAndPoll();
+        }
     }
 }
