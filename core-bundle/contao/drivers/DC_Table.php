@@ -553,8 +553,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new ResponseException(new Response(''));
 		}
 
-		// Ensure permission check, otherwise anybody can send an ajax request with those headers and lookup
-		// arbitrary rows.
+		// Check permission, otherwise anybody can send an Ajax request
+		// with those headers and lookup arbitrary rows.
 		try
 		{
 			$record = $this->getCurrentRecord($id, $table);
@@ -605,8 +605,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		return null !== $this->singleRecordOperationsTarget
 			&& $this->singleRecordOperationsTarget['id'] === $recordId
-			&& $this->singleRecordOperationsTarget['table'] === $table
-		;
+			&& $this->singleRecordOperationsTarget['table'] === $table;
 	}
 
 	/**
@@ -4351,6 +4350,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row[$i]['id'], $recordOperations);
+
 					$record['operations'] = $recordOperations;
 				}
 
@@ -4643,6 +4643,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
+
 				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
 				$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row['id'], $recordOperations);
 
