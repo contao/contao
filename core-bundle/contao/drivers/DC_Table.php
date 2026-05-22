@@ -4604,10 +4604,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$record = array(
 					'id' => $row['id'],
 					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
+					'operations' => $this->generateButtons($row, $this->strTable, $this->root),
 				);
-
-				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
-				$record['operations'] = $recordOperations;
 
 				if ($this->strPickerFieldType)
 				{
