@@ -170,13 +170,13 @@ class tl_module_news extends Backend
 	/**
 	 * Return the sorting options
 	 *
-	 * @param DataContainer $dc
+	 * @param DataContainer|null $dc
 	 *
 	 * @return array
 	 */
-	public function getSortingOptions(DataContainer $dc)
+	public function getSortingOptions(DataContainer|null $dc=null)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->type == 'newsmenu')
+		if ($dc?->activeRecord?->type == 'newsmenu')
 		{
 			return array('order_date_asc', 'order_date_desc');
 		}

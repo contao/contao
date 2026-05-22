@@ -211,7 +211,7 @@ class tl_image_size extends Backend
 	/**
 	 * Return the image format options
 	 *
-	 * @param DataContainer $dc
+	 * @param DataContainer|null $dc
 	 *
 	 * @return array
 	 */
@@ -220,7 +220,7 @@ class tl_image_size extends Backend
 		$formats = array();
 		$missingSupport = array();
 
-		if ($dc->value)
+		if ($dc?->value)
 		{
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
@@ -297,11 +297,9 @@ class tl_image_size extends Backend
 	/**
 	 * Return the image metadata fields
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getMetadataFields(DataContainer|null $dc=null)
+	public function getMetadataFields()
 	{
 		$options = array();
 

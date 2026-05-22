@@ -495,11 +495,11 @@ class tl_news extends Backend
 	/**
 	 * Add the source options depending on the allowed fields (see #5498)
 	 *
-	 * @param DataContainer $dc
+	 * @param DataContainer|null $dc
 	 *
 	 * @return array
 	 */
-	public function getSourceOptions(DataContainer $dc)
+	public function getSourceOptions(DataContainer|null $dc=null)
 	{
 		if (BackendUser::getInstance()->isAdmin)
 		{
@@ -532,7 +532,7 @@ class tl_news extends Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord?->source)
+		if ($dc?->activeRecord?->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);

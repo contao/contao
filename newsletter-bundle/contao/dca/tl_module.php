@@ -94,7 +94,7 @@ class tl_module_newsletter extends Backend
 	 *
 	 * @return array
 	 */
-	public function getChannels(DataContainer $dc)
+	public function getChannels(DataContainer|null $dc=null)
 	{
 		$user = BackendUser::getInstance();
 
@@ -106,7 +106,7 @@ class tl_module_newsletter extends Backend
 		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
 
 		// Show only channels with a redirect page in the web modules
-		if (in_array($dc->activeRecord->type, array('newsletterlist', 'newsletterreader')))
+		if (in_array($dc?->activeRecord?->type, array('newsletterlist', 'newsletterreader')))
 		{
 			$strQuery .= " WHERE jumpTo>0";
 		}

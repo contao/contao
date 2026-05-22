@@ -1016,7 +1016,7 @@ class Newsletter extends Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param ModuleModel $objModule
+	 * @param ModuleModel|null $objModule
 	 *
 	 * @return array
 	 */
