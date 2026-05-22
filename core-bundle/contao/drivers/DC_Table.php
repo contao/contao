@@ -607,11 +607,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		;
 	}
 
-	protected function handleGeneratedButtons(array $row, string $table, DataContainerOperationsBuilder $operations): void
-	{
-		$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($row['id'] ?? 0), $operations);
-	}
-
 	/**
 	 * Return all non-excluded fields of a record as HTML table
 	 *
@@ -3823,6 +3818,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$operations->addSeparator();
 					$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
 				}
+
+				$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($currentRecord['id'] ?? 0), $operations);
 			}
 			else
 			{
@@ -4351,6 +4348,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
+					$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row[$i]['id'], $recordOperations);
 					$record['operations'] = $recordOperations;
 				}
 
@@ -4643,11 +4641,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
+				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
+				$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row['id'], $recordOperations);
 
 				$record = array(
 					'id' => $row['id'],
 					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
-					'operations' => $this->generateButtons($row, $this->strTable, $this->root),
+					'operations' => $recordOperations,
 				);
 
 				if ($this->strPickerFieldType)
