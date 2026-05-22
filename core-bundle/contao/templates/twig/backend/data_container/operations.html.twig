@@ -12,7 +12,7 @@
             {% set html = operation.html|default(null) %}
             {% set is_link = href or (html is not null and ('<a ' in html or '<button ' in html)) %}
             {% set has_submenu = has_submenu or is_link %}
-            {% if has_primary and not operation.primary|default(false) %}
+            {% if has_primary and not operation.primary|default(false) and not operation.separator|default(false) %}
                 {% set show_button = true %}
             {% else %}
                 {{ _self.operation(operation, false, globalOperations) }}
