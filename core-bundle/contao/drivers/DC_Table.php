@@ -544,7 +544,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$table = $request?->headers->get('Contao-Operations-Table');
-
 		$table = \is_string($table) && '' !== $table ? $table : $this->strTable;
 
 		// Restrict to the current table context (plus parent table in extended tree mode).

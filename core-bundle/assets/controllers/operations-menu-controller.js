@@ -8,6 +8,7 @@ export default class OperationsMenuController extends Controller {
     #operationsLoaded = false;
 
     static targets = ['operations', 'menu', 'submenu', 'controller', 'title'];
+
     static values = {
         recordId: Number,
         recordTable: String,
