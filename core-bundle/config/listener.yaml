@@ -179,6 +179,7 @@ services:
     contao.listener.data_container.fallback_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
+            - '@contao.framework'
             - '@translator'
             - '@contao.data_container.value_formatter'
 
