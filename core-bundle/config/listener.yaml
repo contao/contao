@@ -738,6 +738,7 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+            - '@contao.data_container.record_labeler'
 
     contao.listener.widget.title_tag:
         class: Contao\CoreBundle\EventListener\Widget\TitleTagListener
