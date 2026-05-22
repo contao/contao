@@ -119,6 +119,7 @@ class JobTest extends TestCase
             'other-type',
             new Owner(42),
         );
+
         $this->assertSame($fingerprint, $jobWithDifferentIdentity->getStateFingerprint());
 
         $this->assertNotSame($fingerprint, $job->markPending()->getStateFingerprint());

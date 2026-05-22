@@ -81,7 +81,7 @@ export default class extends Controller {
 
         this.#etag = result.response?.headers.get('etag') || this.#etag;
 
-        // If no turbo stream update happened (e.g. 204 no changes), schedule
+        // If no Turbo stream update happened (e.g. 204 no changes), schedule
         // the next poll here.
         if (!this.#timer) {
             this.#waitAndPoll();
