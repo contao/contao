@@ -553,6 +553,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new ResponseException(new Response(''));
 		}
 
+		// Ensure permission check, otherwise anybody can send an ajax request with those headers and lookup
+		// arbitrary rows.
 		try
 		{
 			$record = $this->getCurrentRecord($id, $table);
