@@ -44,6 +44,11 @@ use Symfony\Component\String\UnicodeString;
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
+	 * @var array{id: int, table: string}|null
+	 */
+	private array|null $singleRecordOperationsTarget = null;
+
+	/**
 	 * Name of the parent table
 	 * @var string
 	 */
@@ -531,10 +536,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	private function handleSingleRecordOperationsRequest(): void
 	{
-		$respond = static function (string $content): never {
-			throw new ResponseException(new Response($content));
-		};
-
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$id = (int) $request?->headers->get('Contao-Operations');
 
@@ -549,7 +550,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Restrict to the current table context (plus parent table in extended tree mode).
 		if ($table !== $this->strTable && $table !== $this->ptable)
 		{
-			$respond('');
+			throw new ResponseException(new Response(''));
 		}
 
 		try
@@ -563,12 +564,52 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (null === $record)
 		{
-			$respond('');
+			throw new ResponseException(new Response(''));
 		}
 
-		$operations = $this->generateButtons($record, $table, $this->root);
+		$this->singleRecordOperationsTarget = array(
+			'id' => $id,
+			'table' => $table,
+		);
 
-		$respond((string) $operations);
+		// Restrict the root to the current ID now so we don't render
+		// the entire tree/list - we're only interested in one row.
+		$rootId = $id;
+
+		// In extended tree mode, child-table rows are rendered within their parent-table node.
+		// Use the parent ID as root so normal tree generation can still reach the target child row.
+		if (self::MODE_TREE_EXTENDED == ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $table === $this->strTable)
+		{
+			$rootId = (int) ($record['pid'] ?? 0);
+		}
+
+		if ($rootId > 0)
+		{
+			$this->updateRoot(array($rootId));
+		}
+	}
+
+	private function respondWithSingleRecordOperationsIfNeeded(string $table, int $recordId, mixed $operations): void
+	{
+		if (!$this->shouldRespondWithSingleRecordOperations($table, $recordId))
+		{
+			return;
+		}
+
+		throw new ResponseException(new Response((string) $operations));
+	}
+
+	private function shouldRespondWithSingleRecordOperations(string $table, int $recordId): bool
+	{
+		return null !== $this->singleRecordOperationsTarget
+			&& $this->singleRecordOperationsTarget['id'] === $recordId
+			&& $this->singleRecordOperationsTarget['table'] === $table
+		;
+	}
+
+	protected function handleGeneratedButtons(array $row, string $table, DataContainerOperationsBuilder $operations): void
+	{
+		$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($row['id'] ?? 0), $operations);
 	}
 
 	/**
@@ -3886,6 +3927,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons .= $this->getPickerInputField($id);
 			}
+
+			$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($currentRecord['id'] ?? 0), $operations);
 		}
 
 		// Add the records of the table itself

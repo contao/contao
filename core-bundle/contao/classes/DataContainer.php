@@ -841,7 +841,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithButtons(
+		$operations = System::getContainer()->get('contao.data_container.operations_builder')->initializeWithButtons(
 			$strTable,
 			$arrRow,
 			$this,
@@ -860,6 +860,14 @@ abstract class DataContainer extends Backend
 			},
 			$this->shouldRenderPrimaryOperationsOnly()
 		);
+
+		$this->handleGeneratedButtons($arrRow, $strTable, $operations);
+
+		return $operations;
+	}
+
+	protected function handleGeneratedButtons(array $row, string $table, DataContainerOperationsBuilder $operations): void
+	{
 	}
 
 	protected function shouldRenderPrimaryOperationsOnly(): bool
