@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
+use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -19,8 +20,8 @@ use Contao\Image;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
-use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,6 +42,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             $this->createStub(Connection::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),
+            $this->createStub(RecordLabeler::class),
         );
 
         $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
@@ -64,6 +66,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             $this->createStub(Connection::class),
             $this->createStub(UrlGeneratorInterface::class),
             $translator,
+            $this->createStub(RecordLabeler::class),
         );
 
         $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
@@ -75,37 +78,6 @@ class RootPageDependentSelectListenerTest extends TestCase
         ]);
 
         $this->assertCount(3, unserialize($listener->wizardCallback($dataContainer)));
-    }
-
-    public function testDoesNotSaveUnserializableData(): void
-    {
-        $listener = new RootPageDependentSelectListener(
-            $this->createStub(Connection::class),
-            $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
-        );
-
-        $this->assertSame('foobar', $listener->saveCallback('foobar'));
-    }
-
-    public function testSavesValuesRelatedToRootPage(): void
-    {
-        $connection = $this->mockGetRootPages();
-
-        $listener = new RootPageDependentSelectListener(
-            $connection,
-            $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
-        );
-
-        $this->assertSame(
-            serialize([
-                1 => 10,
-                2 => 20,
-                3 => 30,
-            ]),
-            $listener->saveCallback(serialize([10, 20, 30])),
-        );
     }
 
     public function testReturnsAllTypesOfModulesAsOption(): void
@@ -122,19 +94,79 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->willReturn(['pid' => 1])
         ;
 
-        $connection = $this->mockGetModules();
+        $connection = $this->mockConnection([], [
+            ['id' => 10, 'name' => 'name-10', 'type' => 'foo'],
+            ['id' => 20, 'name' => 'name-20', 'type' => 'bar'],
+            ['id' => 30, 'name' => 'name-30', 'type' => 'baz'],
+        ]);
 
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
+            $this->createTranslatorStub(),
+            $this->createStub(RecordLabeler::class),
         );
 
         $this->assertSame(
             [
-                10 => 'name-10',
-                20 => 'name-20',
-                30 => 'name-30',
+                'MSC.mw_modules' => [
+                    10 => 'name-10',
+                    20 => 'name-20',
+                    30 => 'name-30',
+                ],
+            ],
+            $listener->optionsCallback($dataContainer),
+        );
+
+        $this->unsetGlobalsArray();
+    }
+
+    public function testReturnsElementsAndModulesAsOption(): void
+    {
+        $this->populateGlobalsArray([]);
+
+        $dataContainer = $this->createClassWithPropertiesMock(DataContainer::class);
+        $dataContainer->table = 'tl_module';
+        $dataContainer->field = 'field';
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 1])
+        ;
+
+        $connection = $this->mockConnection(
+            [
+                ['id' => 10, 'title' => 'title-10', 'type' => 'foo'],
+                ['id' => 20, 'title' => 'title-20', 'type' => 'bar'],
+                ['id' => 30, 'title' => 'title-30', 'type' => 'baz'],
+            ],
+            [
+                ['id' => 10, 'name' => 'name-10', 'type' => 'foo'],
+                ['id' => 20, 'name' => 'name-20', 'type' => 'bar'],
+                ['id' => 30, 'name' => 'name-30', 'type' => 'baz'],
+            ],
+        );
+
+        $listener = new RootPageDependentSelectListener(
+            $connection,
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createTranslatorStub(),
+            $this->createRecordLabelerStub(),
+        );
+
+        $this->assertSame(
+            [
+                'MSC.mw_elements' => [
+                    'content-10' => 'title-10',
+                    'content-20' => 'title-20',
+                    'content-30' => 'title-30',
+                ],
+                'MSC.mw_modules' => [
+                    10 => 'name-10',
+                    20 => 'name-20',
+                    30 => 'name-30',
+                ],
             ],
             $listener->optionsCallback($dataContainer),
         );
@@ -165,18 +197,25 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->willReturn(['pid' => 1])
         ;
 
-        $connection = $this->mockGetModules();
+        $connection = $this->mockConnection([], [
+            ['id' => 10, 'name' => 'name-10', 'type' => 'foo'],
+            ['id' => 20, 'name' => 'name-20', 'type' => 'bar'],
+            ['id' => 30, 'name' => 'name-30', 'type' => 'baz'],
+        ]);
 
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(TranslatorInterface::class),
+            $this->createTranslatorStub(),
+            $this->createStub(RecordLabeler::class),
         );
 
         $this->assertSame(
             [
-                10 => 'name-10',
-                20 => 'name-20',
+                'MSC.mw_modules' => [
+                    10 => 'name-10',
+                    20 => 'name-20',
+                ],
             ],
             $listener->optionsCallback($dataContainer),
         );
@@ -194,56 +233,62 @@ class RootPageDependentSelectListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']['tl_module']['fields']);
     }
 
-    private function mockGetRootPages(): Connection&MockObject
+    private function mockConnection(array $elements, array $modules): Connection&MockObject
     {
-        $result = $this->createMock(Result::class);
-        $result
+        $contentResult = $this->createMock(Result::class);
+        $contentResult
             ->expects($this->once())
             ->method('iterateAssociative')
-            ->willReturn(new \ArrayIterator([
-                ['id' => 1, 'title' => 'title-1', 'language' => 'language-1'],
-                ['id' => 2, 'title' => 'title-2', 'language' => 'language-2'],
-                ['id' => 3, 'title' => 'title-3', 'language' => 'language-3'],
-            ]))
+            ->willReturn(new \ArrayIterator($elements))
         ;
 
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $moduleResult = $this->createMock(Result::class);
+        $moduleResult
             ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
+            ->method('iterateAssociative')
+            ->willReturn(new \ArrayIterator($modules))
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->once())
-            ->method('prepare')
-            ->willReturn($statement)
+            ->expects($this->exactly(2))
+            ->method('executeQuery')
+            ->willReturnMap([
+                [
+                    "SELECT * FROM tl_content WHERE ptable='tl_theme' AND pid=?",
+                    [1],
+                    $contentResult,
+                ],
+                [
+                    'SELECT m.id, m.name, m.type FROM tl_module m WHERE m.type != \'root_page_dependent_modules\' AND m.pid = ? ORDER BY m.name',
+                    [1],
+                    $moduleResult,
+                ],
+            ])
         ;
 
         return $connection;
     }
 
-    private function mockGetModules(): Connection&MockObject
+    private function createTranslatorStub(): TranslatorInterface&Stub
     {
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('iterateAssociative')
-            ->willReturn(new \ArrayIterator([
-                ['id' => 10, 'name' => 'name-10', 'type' => 'foo'],
-                ['id' => 20, 'name' => 'name-20', 'type' => 'bar'],
-                ['id' => 30, 'name' => 'name-30', 'type' => 'baz'],
-            ]))
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
+        return $translator;
+    }
+
+    private function createRecordLabelerStub(): RecordLabeler&Stub
+    {
+        $recordLabeler = $this->createStub(RecordLabeler::class);
+        $recordLabeler
+            ->method('getLabel')
+            ->willReturnCallback(static fn (string $id, array $element) => $element['title'])
         ;
 
-        return $connection;
+        return $recordLabeler;
     }
 }
