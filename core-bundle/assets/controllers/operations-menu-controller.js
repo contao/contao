@@ -4,7 +4,9 @@ import AccessibleMenu from 'accessible-menu';
 let menus = [];
 
 export default class OperationsMenuController extends Controller {
+    #onMenuExpand = null;
     #contextMenuEventPosition = null;
+    #operationsPromise = null;
     #operationsLoaded = false;
 
     static targets = ['operations', 'menu', 'submenu', 'controller', 'title'];
@@ -20,54 +22,11 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
-        this.initializeMenu();
+        this.#initializeMenu();
     }
 
     disconnect() {
-        this.destroyMenu();
-    }
-
-    initializeMenu() {
-        if ((this.primaryOnlyValue && !this.#operationsLoaded) || this.$menu) {
-            return;
-        }
-
-        this.$menu = new AccessibleMenu.DisclosureMenu({
-            menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img',
-            // Use arrays to bypass accessible-menu's string class selector validation
-            openClass: ['show'],
-            closeClass: [],
-            transitionClass: [],
-        });
-
-        menus.push(this.$menu);
-
-        this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            for (const menu of menus) {
-                if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
-                    menu.elements.submenuToggles[0].close();
-                }
-            }
-
-            this.setPosition();
-        });
-    }
-
-    destroyMenu() {
-        if (!this.$menu) {
-            return;
-        }
-
-        // Cleanup menu instance, otherwise we would leak memory
-        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
-            if (value === this.$menu) {
-                delete window.AccessibleMenu.menus[key];
-            }
-        }
-
-        menus = menus.filter((menu) => menu !== this.$menu);
-        this.$menu = null;
+        this.#destroyMenu();
     }
 
     titleTargetConnected(el) {
@@ -85,6 +44,29 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
+    controllerTargetConnected(el) {
+        this.#onMenuExpand = () => {
+            for (const menu of menus) {
+                if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
+                    menu.elements.submenuToggles[0].close();
+                }
+            }
+
+            this.#setPosition();
+        };
+
+        el.addEventListener('accessibleMenuExpand', this.#onMenuExpand);
+    }
+
+    controllerTargetDisconnected(el) {
+        el.removeEventListener('accessibleMenuExpand', this.#onMenuExpand);
+        this.#onMenuExpand = null;
+    }
+
+    preload() {
+        this.#loadOperationsIfNeeded();
+    }
+
     open(event) {
         if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
@@ -92,7 +74,7 @@ export default class OperationsMenuController extends Controller {
 
         const needsLazyLoad = this.primaryOnlyValue && !this.#operationsLoaded && this.hasRecordIdValue;
 
-        if (!needsLazyLoad && this.isInteractive(event.target)) {
+        if (!needsLazyLoad && this.#isInteractive(event)) {
             return;
         }
 
@@ -100,7 +82,7 @@ export default class OperationsMenuController extends Controller {
             event.preventDefault();
         }
 
-        this.loadOperationsIfNeeded().then((loaded) => {
+        this.#loadOperationsIfNeeded().then((loaded) => {
             if (!loaded || !this.$menu) {
                 return;
             }
@@ -128,7 +110,7 @@ export default class OperationsMenuController extends Controller {
 
             this.#contextMenuEventPosition = { x: posX, y: posY };
             this.$menu.elements.submenuToggles[0].open();
-            this.setPosition(event);
+            this.#setPosition(event);
         });
     }
 
@@ -143,8 +125,8 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    setPosition(event) {
-        this.resetPosition();
+    #setPosition(event) {
+        this.#resetPosition();
 
         const offset = 2; // border-width that is excluded from getBoundingClientRect
 
@@ -155,12 +137,12 @@ export default class OperationsMenuController extends Controller {
         let clientX;
         let clientY;
 
-        if (event === undefined) {
-            clientX = rect.right;
-            clientY = rect.bottom;
-        } else {
+        if (event?.type === 'contextmenu') {
             clientX = event.clientX;
             clientY = event.clientY;
+        } else {
+            clientX = rect.right;
+            clientY = rect.bottom;
         }
 
         const { innerWidth, innerHeight } = window;
@@ -172,7 +154,6 @@ export default class OperationsMenuController extends Controller {
         const x = innerWidth - clientX - (innerWidth - parentRect.left);
         let y = clientY - rowRect.top - (parentRect.top - rowRect.top);
 
-        // If not a context menu and bottom overflow, position at the top of the "more" handle.
         if (event === undefined && overflowBottom) {
             y = y - clientY + rect.top - offset;
         }
@@ -182,13 +163,19 @@ export default class OperationsMenuController extends Controller {
         this.submenuTarget.style.right = 'auto';
     }
 
-    resetPosition() {
+    #resetPosition() {
         this.submenuTarget.style.removeProperty('top');
         this.submenuTarget.style.removeProperty('right');
         this.submenuTarget.style.removeProperty('left');
     }
 
-    isInteractive(el) {
+    #isInteractive(event) {
+        if (event.type !== 'contextmenu') {
+            return false;
+        }
+
+        const el = event.target;
+
         return (
             el instanceof HTMLAnchorElement ||
             el instanceof HTMLButtonElement ||
@@ -197,40 +184,80 @@ export default class OperationsMenuController extends Controller {
         );
     }
 
-    async loadOperationsIfNeeded() {
+    async #loadOperationsIfNeeded() {
         if (!this.primaryOnlyValue || this.#operationsLoaded || !this.hasRecordIdValue) {
             return true;
-        }
-
-        const headers = {
-            'Contao-Operations': String(this.recordIdValue),
-        };
-
-        if (this.hasRecordTableValue && this.recordTableValue) {
-            headers['Contao-Operations-Table'] = this.recordTableValue;
-        }
-
-        let response;
-
-        try {
-            response = await fetch(window.location.href, { headers, credentials: 'same-origin' });
-        } catch {
-            return false;
-        }
-
-        if (!response.ok) {
-            return false;
         }
 
         if (!this.hasOperationsTarget) {
             return false;
         }
 
-        this.destroyMenu();
-        this.operationsTarget.outerHTML = await response.text();
-        this.#operationsLoaded = true;
-        this.initializeMenu();
+        if (this.#operationsPromise) {
+            return this.#operationsPromise;
+        }
 
-        return true;
+        this.#operationsPromise = (async () => {
+            const headers = {
+                'Contao-Operations': String(this.recordIdValue),
+            };
+
+            if (this.hasRecordTableValue && this.recordTableValue) {
+                headers['Contao-Operations-Table'] = this.recordTableValue;
+            }
+
+            try {
+                const response = await fetch(window.location.href, { headers, credentials: 'same-origin' });
+
+                if (!response.ok) {
+                    return false;
+                }
+
+                this.#destroyMenu();
+                this.operationsTarget.outerHTML = await response.text();
+                this.#operationsLoaded = true;
+                this.#initializeMenu();
+            } catch {
+                return false;
+            }
+
+            return true;
+        })();
+
+        return this.#operationsPromise;
     }
+
+    #initializeMenu() {
+        if ((this.primaryOnlyValue && !this.#operationsLoaded) || this.$menu) {
+            return;
+        }
+
+        this.$menu = new AccessibleMenu.DisclosureMenu({
+            menuElement: this.menuTarget,
+            menuLinkSelector: 'a,button,img',
+            // Use arrays to bypass accessible-menu's string class selector validation
+            openClass: ['show'],
+            closeClass: [],
+            transitionClass: [],
+        });
+
+        menus.push(this.$menu);
+    }
+
+    #destroyMenu() {
+        if (!this.$menu) {
+            return;
+        }
+
+        // Cleanup menu instance, otherwise we would leak memory
+        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
+            if (value === this.$menu) {
+                delete window.AccessibleMenu.menus[key];
+            }
+        }
+
+        menus = menus.filter((menu) => menu !== this.$menu);
+        this.$menu = null;
+    }
+
 }

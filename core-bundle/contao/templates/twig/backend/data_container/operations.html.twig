@@ -20,7 +20,7 @@
         {% endfor %}
         {% if has_submenu or primary_only %}
             <li class="operations-menu-container{% if not show_button and not primary_only %} is-hidden{% endif %}">
-                <button type="button" class="has-icon" data-action="click->contao--operations-menu#open" data-contao--operations-menu-target="controller">
+                <button type="button" class="has-icon" data-action="pointerdown->contao--operations-menu#preload contao--operations-menu#open" data-contao--operations-menu-target="controller">
                     {% if globalOperations %}
                         {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
                     {% else %}
