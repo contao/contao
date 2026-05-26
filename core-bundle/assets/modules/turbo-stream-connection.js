@@ -11,7 +11,7 @@ export class TurboStreamConnection {
      *
      * @returns {Promise<TurboStreamResult>}
      */
-    async get(url, query_params = null, abortPending = false) {
+    async get(url, query_params = null, abortPending = false, requestHeaders = {}) {
         if (abortPending) {
             this.abortPending();
         }
@@ -20,6 +20,7 @@ export class TurboStreamConnection {
             method: 'get',
             headers: {
                 Accept: 'text/vnd.turbo-stream.html',
+                ...requestHeaders,
             },
             signal: this._abortController.signal,
         };
@@ -44,6 +45,16 @@ export class TurboStreamConnection {
             document.location = response.url;
 
             return new TurboStreamResult('error', response);
+        }
+
+        // No content is a valid outcome for polling endpoints that have no
+        // relevant updates to stream.
+        if (204 === response.status) {
+            return new TurboStreamResult('ok', response);
+        }
+
+        if (304 === response.status) {
+            return new TurboStreamResult('ok', response);
         }
 
         if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
