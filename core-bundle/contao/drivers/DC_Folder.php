@@ -629,10 +629,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 	private function handleSingleRecordOperationsRequest(): void
 	{
-		$respond = static function (string $content): never {
-			throw new ResponseException(new Response($content));
-		};
-
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$id = $request?->headers->get('Contao-Operations');
 
@@ -646,14 +642,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if ($table !== $this->strTable)
 		{
-			$respond('');
+			throw new AccessDeniedException('Invalid table "' . $table . '"');
 		}
 
 		$decodedId = rawurldecode($id);
 
 		if (!file_exists($this->strRootDir . '/' . $decodedId) || !$this->isMounted($decodedId))
 		{
-			$respond('');
+			throw new AccessDeniedException('Access to file "' . $decodedId . '" denied');
 		}
 
 		$type = is_dir($this->strRootDir . '/' . $decodedId) ? 'folder' : 'file';
@@ -663,14 +659,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			'type' => $type,
 		);
 
-		try
-		{
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $record));
-		}
-		catch (AccessDeniedException)
-		{
-			$respond('');
-		}
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $record));
 
 		$fileNameEncoded = StringUtil::convertEncoding(
 			StringUtil::specialchars(basename($decodedId), false, true),
@@ -680,7 +669,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$record['fileNameEncoded'] = $fileNameEncoded;
 		$operations = $this->generateButtons($record, $this->strTable);
 
-		$respond((string) $operations);
+		throw new ResponseException(new Response((string) $operations));
 	}
 
 	protected function shouldRenderPrimaryOperationsOnly(): bool

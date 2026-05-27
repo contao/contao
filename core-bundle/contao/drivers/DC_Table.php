@@ -550,23 +550,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Restrict to the current table context (plus parent table in extended tree mode).
 		if ($table !== $this->strTable && $table !== $this->ptable)
 		{
-			throw new ResponseException(new Response(''));
+			throw new AccessDeniedException('Invalid table "' . $table . '"');
 		}
 
-		// Check permission, otherwise anybody can send an Ajax request
-		// with those headers and lookup arbitrary rows.
-		try
-		{
-			$record = $this->getCurrentRecord($id, $table);
-		}
-		catch (AccessDeniedException)
-		{
-			$record = null;
-		}
+		// Check permission, otherwise anybody can send an Ajax request with those
+		// headers and lookup arbitrary rows.
+		$record = $this->getCurrentRecord($id, $table);
 
 		if (null === $record)
 		{
-			throw new ResponseException(new Response(''));
+			throw new AccessDeniedException('Access to record "' . $table . '.' . $id . '" denied');
 		}
 
 		$this->singleRecordOperationsTarget = array(
