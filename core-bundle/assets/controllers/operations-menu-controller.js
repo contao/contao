@@ -46,7 +46,8 @@ export default class OperationsMenuController extends Controller {
     }
 
     controllerTargetConnected(el) {
-        // Native pointerup listener to handle long-press cases where the browser suppresses click and the accessible menu does not register open states correctly
+        // Native pointerup listener to handle long-press cases where the browser suppresses
+        // click and the accessible menu does not register open states correctly.
         this.#onPointerUp = () => el.click();
         el.addEventListener('pointerup', this.#onPointerUp);
 
