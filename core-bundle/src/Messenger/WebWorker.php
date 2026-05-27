@@ -201,8 +201,10 @@ class WebWorker
      */
     private function shouldAllowQueueDraining(TerminateEvent $event): bool
     {
-        return $this->scopeMatcher->isContaoMainRequest($event)
-            || true === $event->getRequest()->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
+        $request = $event->getRequest();
+
+        return ($this->scopeMatcher->isContaoMainRequest($event) && false !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE))
+            || true === $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
     }
 
     private function calculateStopTime(Request $request): float

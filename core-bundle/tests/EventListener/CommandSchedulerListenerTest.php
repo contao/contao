@@ -140,6 +140,18 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent());
     }
 
+    public function testDoesNotRunTheCommandSchedulerForContaoMainRequestsIfExplicitlyDisabled(): void
+    {
+        $cron = $this->createMock(Cron::class);
+        $cron
+            ->expects($this->never())
+            ->method('run')
+        ;
+
+        $listener = new CommandSchedulerListener($cron, $this->mockConnection(), $this->mockScopeMatcher());
+        $listener($this->getTerminateEvent('frontend', [CommandSchedulerListener::REQUEST_ATTRIBUTE_ENABLE => false]));
+    }
+
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
     {
         $cron = $this->createMock(Cron::class);

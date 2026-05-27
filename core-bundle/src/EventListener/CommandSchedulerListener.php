@@ -57,8 +57,11 @@ class CommandSchedulerListener
         }
 
         if (
-            !$this->scopeMatcher->isContaoMainRequest($event)
-            && true !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)
+            (
+                !$this->scopeMatcher->isContaoMainRequest($event)
+                && true !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)
+            )
+            || false === $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)
         ) {
             return false;
         }

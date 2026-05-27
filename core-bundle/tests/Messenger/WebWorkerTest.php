@@ -185,6 +185,34 @@ class WebWorkerTest extends TestCase
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
+    public function testDoesNotRunWebWorkerForContaoMainRequestsIfExplicitlyDisabledWithoutDispatchedMessages(): void
+    {
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->expects($this->never())
+            ->method('getItem')
+        ;
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+        $request->attributes->set(WebWorker::REQUEST_ATTRIBUTE_ENABLE, false);
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+    }
+
     public function testRunsWebWorkerForNonContaoMainRequestsIfMessagesWereDispatched(): void
     {
         $cache = new ArrayAdapter(); // No real workers running
