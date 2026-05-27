@@ -54,14 +54,14 @@ class DcaUrlAnalyzer
     /**
      * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
-    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
+    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false, bool $loadLabels = true): array
     {
         return $this->dcaRequestSwitcher->runWithRequest(
             $request,
-            function () use ($limit, $withTreeTrail) {
+            function () use ($limit, $withTreeTrail, $loadLabels) {
                 [$table, $id] = $this->findTableAndId();
 
-                return $this->doGetTrail($table, $id, $limit, $withTreeTrail);
+                return $this->doGetTrail($table, $id, $limit, $withTreeTrail, $loadLabels);
             },
         );
     }
@@ -124,7 +124,7 @@ class DcaUrlAnalyzer
     /**
      * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
-    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
+    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail, bool $loadLabels): array
     {
         $do = $this->findGet('do');
         $trail = [];
@@ -138,7 +138,10 @@ class DcaUrlAnalyzer
         $links = [];
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
-            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+            if ($loadLabels) {
+                $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+            }
+
             (new DcaLoader($table))->load();
 
             $query = [
@@ -198,7 +201,7 @@ class DcaUrlAnalyzer
 
             $links[] = [
                 'query' => $query,
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'label' => $loadLabels ? $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row) : '',
                 'treeTrail' => $treeTrail,
                 'treeSiblings' => $treeSiblings,
             ];
@@ -206,7 +209,7 @@ class DcaUrlAnalyzer
 
         $links[] = [
             'query' => ['do' => $do, 'table' => $table],
-            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'label' => $loadLabels ? $this->translator->trans("MOD.$do.0", [], 'contao_modules') : '',
             'treeTrail' => null,
             'treeSiblings' => null,
         ];
