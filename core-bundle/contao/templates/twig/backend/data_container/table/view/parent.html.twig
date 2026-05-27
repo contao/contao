@@ -69,7 +69,14 @@
                                 .set('data-action', 'click->contao--check-all#toggleInput')
                             %}
                             <div{{ record_attributes }}>
-                                <div class="inside hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                                <div
+                                    class="inside hover-div"
+                                    data-controller="contao--deeplink contao--operations-menu"
+                                    data-action="contextmenu->contao--operations-menu#open"
+                                    data-contao--operations-menu-record-id-value="{{ record.id }}"
+                                    data-contao--operations-menu-record-table-value="{{ table_name }}"
+                                    data-contao--operations-menu-primary-only-value="{{ primary_only ? 'true' : 'false' }}"
+                                >
                                     {# Right column #}
                                     <div class="tl_content_right" data-turbo="true">
                                         {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
