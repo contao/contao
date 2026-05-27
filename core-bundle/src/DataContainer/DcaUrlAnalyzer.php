@@ -136,10 +136,11 @@ class DcaUrlAnalyzer
         }
 
         $links = [];
+        $systemAdapter = $this->framework->getAdapter(System::class);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
             if ($loadLabels) {
-                $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+                $systemAdapter->loadLanguageFile($table);
             }
 
             (new DcaLoader($table))->load();
