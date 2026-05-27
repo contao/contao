@@ -124,7 +124,7 @@
         "symfony/http-client": "^6.4",
         "symfony/http-client-contracts": "^3.1",
         "symfony/http-foundation": "^6.4",
-        "symfony/http-kernel": "^6.4",
+        "symfony/http-kernel": "^6.4.39",
         "symfony/intl": "^6.4",
         "symfony/mailer": "^6.4",
         "symfony/messenger": "^6.4",
