@@ -332,6 +332,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, $this->urlEncode($this->intId), $children, $mode);
 		}
 
+		$this->handleSingleRecordOperationsRequest();
+
 		// Get the session data and toggle the nodes
 		if (Input::get('tg') == 'all')
 		{
@@ -623,6 +625,68 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
 			>' . $return . '</div>';
+	}
+
+	private function handleSingleRecordOperationsRequest(): void
+	{
+		$respond = static function (string $content): never {
+			throw new ResponseException(new Response($content));
+		};
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$id = $request?->headers->get('Contao-Operations');
+
+		if (!\is_string($id) || '' === $id)
+		{
+			return;
+		}
+
+		$table = $request?->headers->get('Contao-Operations-Table');
+		$table = \is_string($table) && '' !== $table ? $table : $this->strTable;
+
+		if ($table !== $this->strTable)
+		{
+			$respond('');
+		}
+
+		$decodedId = rawurldecode($id);
+
+		if (!file_exists($this->strRootDir . '/' . $decodedId) || !$this->isMounted($decodedId))
+		{
+			$respond('');
+		}
+
+		$type = is_dir($this->strRootDir . '/' . $decodedId) ? 'folder' : 'file';
+		$record = array(
+			'id' => $id,
+			'type' => $type,
+		);
+
+		try
+		{
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $record));
+		}
+		catch (AccessDeniedException)
+		{
+			$respond('');
+		}
+
+		$fileNameEncoded = StringUtil::convertEncoding(
+			StringUtil::specialchars(basename($decodedId), false, true),
+			System::getContainer()->getParameter('kernel.charset')
+		);
+
+		$record['fileNameEncoded'] = $fileNameEncoded;
+		$operations = $this->generateButtons($record, $this->strTable);
+
+		$respond((string) $operations);
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		return $request && !$request->headers->has('Contao-Operations');
 	}
 
 	/**
@@ -2774,7 +2838,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFolder'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput" data-contao--operations-menu-record-id-value="' . htmlspecialchars($currentEncoded, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--operations-menu-record-table-value="' . htmlspecialchars($this->strTable, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--operations-menu-primary-only-value="' . ($this->shouldRenderPrimaryOperationsOnly() ? 'true' : 'false') . '">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2919,7 +2983,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput" data-contao--operations-menu-record-id-value="' . htmlspecialchars($currentEncoded, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--operations-menu-record-table-value="' . htmlspecialchars($this->strTable, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--operations-menu-primary-only-value="' . ($this->shouldRenderPrimaryOperationsOnly() ? 'true' : 'false') . '">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
