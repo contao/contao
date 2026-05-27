@@ -224,6 +224,7 @@ export default class OperationsMenuController extends Controller {
             } catch {
                 this.element.style.cursor = '';
                 this.controllerTarget.style.cursor = '';
+
                 return false;
             }
 
