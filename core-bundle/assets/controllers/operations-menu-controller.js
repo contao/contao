@@ -199,6 +199,9 @@ export default class OperationsMenuController extends Controller {
         }
 
         this.#operationsPromise = (async () => {
+            this.element.style.cursor = 'wait';
+            this.controllerTarget.style.cursor = 'wait';
+
             const headers = {
                 'Contao-Operations': String(this.recordIdValue),
             };
@@ -219,8 +222,13 @@ export default class OperationsMenuController extends Controller {
                 this.#operationsLoaded = true;
                 this.#initializeMenu();
             } catch {
+                this.element.style.cursor = '';
+                this.controllerTarget.style.cursor = '';
                 return false;
             }
+
+            this.element.style.cursor = '';
+            this.controllerTarget.style.cursor = '';
 
             return true;
         })();
