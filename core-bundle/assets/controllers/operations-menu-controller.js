@@ -154,6 +154,7 @@ export default class OperationsMenuController extends Controller {
         const x = innerWidth - clientX - (innerWidth - parentRect.left);
         let y = clientY - rowRect.top - (parentRect.top - rowRect.top);
 
+        // If not a context menu and bottom overflow, position at the top of the "more" handle.
         if (event === undefined && overflowBottom) {
             y = y - clientY + rect.top - offset;
         }
@@ -259,5 +260,4 @@ export default class OperationsMenuController extends Controller {
         menus = menus.filter((menu) => menu !== this.$menu);
         this.$menu = null;
     }
-
 }

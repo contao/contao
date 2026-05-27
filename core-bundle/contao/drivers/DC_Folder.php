@@ -657,6 +657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$type = is_dir($this->strRootDir . '/' . $decodedId) ? 'folder' : 'file';
+
 		$record = array(
 			'id' => $id,
 			'type' => $type,
