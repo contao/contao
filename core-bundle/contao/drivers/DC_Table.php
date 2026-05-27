@@ -608,6 +608,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			&& $this->singleRecordOperationsTarget['table'] === $table;
 	}
 
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		return $request && !$request->headers->has('Contao-Operations');
+	}
+
 	/**
 	 * Return all non-excluded fields of a record as HTML table
 	 *

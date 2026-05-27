@@ -864,9 +864,7 @@ abstract class DataContainer extends Backend
 
 	protected function shouldRenderPrimaryOperationsOnly(): bool
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		return $request && !$request->headers->has('Contao-Operations');
+		return false;
 	}
 
 	/**
