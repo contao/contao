@@ -96,7 +96,7 @@
                                             <div{{ record_label_attributes }}>
                                                 {% block label %}
                                                     {% if record.allow_dragging %}
-                                                        <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
+                                                        <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" data-contao--sortable-target="primaryHandle">
                                                             {{ backend_icon('drag.svg', record.drag_handle_label) }}
                                                         </button>
                                                         <div>{{ record.label|raw }}</div>
