@@ -208,7 +208,8 @@ class WebWorker
             return true;
         }
 
-        // Automatically enable the feature for Contao requests unless it is disabled explicitly
+        // Automatically enable the feature for Contao requests unless it is
+        // disabled explicitly
         return $this->scopeMatcher->isContaoMainRequest($event)
             && false !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
     }
