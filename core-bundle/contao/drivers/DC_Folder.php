@@ -52,6 +52,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
+	private const LAZY_LOAD_OPERATIONS_THRESHOLD = 300;
+
 	/**
 	 * Current path
 	 * @var string
@@ -111,6 +113,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @var array
 	 */
 	protected $arrCounts = array();
+
+	private bool|null $lazyLoadOperations = null;
+
+	private int|null $lazyLoadOperationsRows = null;
 
 	/**
 	 * Database assisted
@@ -445,7 +451,34 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Call recursive function tree()
+		// Pre-count visible rows so "auto" lazy loading can use the actual rendered count.
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
+		if ((string) $for !== '' && empty($this->arrFilemounts))
+		{
+			// Show an empty tree if there are no search results
+		}
+		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
+		{
+			$this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
+		}
+		else
+		{
+			$topMostVisibleRootTrails = $this->eliminateNestedPaths($this->visibleRootTrails);
+
+			for ($i=0, $c=\count($topMostVisibleRootTrails); $i<$c; $i++)
+			{
+				if ($topMostVisibleRootTrails[$i] && is_dir($this->strRootDir . '/' . $topMostVisibleRootTrails[$i]))
+				{
+					$this->generateTree($this->strRootDir . '/' . $topMostVisibleRootTrails[$i], 0, true, $this->isProtectedPath($topMostVisibleRootTrails[$i]), $blnClipboard ? $arrClipboard : false, $arrFound);
+				}
+			}
+		}
+
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
+
+		// Call recursive function tree() to render output.
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
 
@@ -470,6 +503,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
 		$treeRecordLimitNotice = $this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '';
 
 		// Check for the "create new" button
@@ -676,7 +710,56 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		return $request && !$request->headers->has('Contao-Operations');
+		if ($request && $request->headers->has('Contao-Operations'))
+		{
+			return false;
+		}
+
+		if (null !== $this->lazyLoadOperations)
+		{
+			return $this->lazyLoadOperations;
+		}
+
+		$mode = $GLOBALS['TL_DCA'][$this->strTable]['list']['lazyLoadOperations'] ?? 'auto';
+
+		if (\is_bool($mode))
+		{
+			return $this->lazyLoadOperations = $mode;
+		}
+
+		if (!\is_string($mode) || 'auto' !== strtolower($mode))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid list.lazyLoadOperations value "%s" in DCA "%s". Allowed values are true, false or "auto".', $mode, $this->strTable));
+		}
+
+		// The row count can be initialized later in the rendering pipeline.
+		// Do not cache a preliminary auto decision in that case.
+		if (null === $this->lazyLoadOperationsRows)
+		{
+			return false;
+		}
+		$rows = max(0, (int) $this->lazyLoadOperationsRows);
+		$operationsPerRow = $this->getOperationsPerRowCount();
+
+		return $this->lazyLoadOperations = $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+	}
+
+	private function getOperationsPerRowCount(): int
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? array();
+		$count = 0;
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			++$count;
+		}
+
+		return $count;
 	}
 
 	/**
@@ -2643,6 +2726,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->treeRecordLimitReached = false;
 
 		$return = $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
 
 		return $return . ($this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '');
 	}
