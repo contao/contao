@@ -71,15 +71,15 @@ class WebWorker
     #[AsEventListener(priority: -2048)]
     public function onKernelTerminate(TerminateEvent $event): void
     {
-        if (!$this->shouldAllowQueueDraining($event)) {
-            foreach ($this->dispatchedMessagesByTransport as $transportName => $count) {
-                $this->processTransportByLimit($transportName, $count);
-            }
-        } else {
+        if ($this->allowsQueueDraining($event)) {
             $stopTime = $this->calculateStopTime($event->getRequest());
 
             foreach ($this->transports as $transportName) {
                 $this->processTransportByStopTime($transportName, $stopTime);
+            }
+        } else {
+            foreach ($this->dispatchedMessagesByTransport as $transportName => $count) {
+                $this->processTransportByLimit($transportName, $count);
             }
         }
 
@@ -199,12 +199,18 @@ class WebWorker
      * Queue draining is only allowed for Contao main requests or when explicitly enabled.
      * Otherwise, processing is restricted to messages dispatched in this request.
      */
-    private function shouldAllowQueueDraining(TerminateEvent $event): bool
+    private function allowsQueueDraining(TerminateEvent $event): bool
     {
         $request = $event->getRequest();
 
-        return ($this->scopeMatcher->isContaoMainRequest($event) && false !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE))
-            || true === $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
+        // The feature is enabled explicitly
+        if (true === $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)) {
+            return true;
+        }
+
+        // Automatically enable the feature for Contao requests unless it is disabled explicitly
+        return $this->scopeMatcher->isContaoMainRequest($event)
+            && false !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
     }
 
     private function calculateStopTime(Request $request): float
