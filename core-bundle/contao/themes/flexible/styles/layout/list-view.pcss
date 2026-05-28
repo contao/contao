@@ -350,6 +350,11 @@
     padding: 0;
 }
 
+/* BC for fallback handles (see #9855) */
+.operations li:has(>.hidden) {
+    display: none;
+}
+
 .operations a,
 .operations button {
     display: flex;
