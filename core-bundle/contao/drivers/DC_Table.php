@@ -43,10 +43,16 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
+	private const LAZY_LOAD_OPERATIONS_THRESHOLD = 300;
+
 	/**
 	 * @var array{id: int, table: string}|null
 	 */
 	private array|null $singleRecordOperationsTarget = null;
+
+	private bool|null $lazyLoadOperations = null;
+
+	private int|null $lazyLoadOperationsRows = null;
 
 	/**
 	 * Name of the parent table
@@ -605,7 +611,64 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		return $request && !$request->headers->has('Contao-Operations');
+		if ($request && $request->headers->has('Contao-Operations'))
+		{
+			return false;
+		}
+
+		if (null !== $this->lazyLoadOperations)
+		{
+			return $this->lazyLoadOperations;
+		}
+
+		$mode = $GLOBALS['TL_DCA'][$this->strTable]['list']['lazyLoadOperations'] ?? 'auto';
+
+		if (\is_bool($mode))
+		{
+			return $this->lazyLoadOperations = $mode;
+		}
+
+		if (!\is_string($mode) || 'auto' !== strtolower($mode))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid list.lazyLoadOperations value "%s" in DCA "%s". Allowed values are true, false or "auto".', $mode, $this->strTable));
+		}
+
+		// The row count can be initialized later in the rendering pipeline.
+		// Do not cache a preliminary auto decision in that case.
+		if (null === $this->lazyLoadOperationsRows)
+		{
+			return false;
+		}
+
+		$rows = max(0, (int) $this->lazyLoadOperationsRows);
+		$operationsPerRow = $this->getOperationsPerRowCount();
+		$result = $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+
+		return $this->lazyLoadOperations = $result;
+	}
+
+	private function getOperationsPerRowCount(): int
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? null;
+
+		if (!\is_array($operations))
+		{
+			return 0;
+		}
+
+		$count = 0;
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			++$count;
+		}
+
+		return $count;
 	}
 
 	/**
@@ -3405,7 +3468,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'message' => Message::generate(),
 			'global_operations' => $operations,
 			'has_clipboard_content' => $blnClipboard,
-			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -3481,6 +3543,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Call a recursive function that builds the tree
 		$records = array();
+		$this->lazyLoadOperationsRows = \count($topMostRootIds) + \count($this->rootChildren ?? array());
+		$treeRecordLimit = $this->getTreeRecordLimit();
+
+		if ($treeRecordLimit > 0)
+		{
+			$this->lazyLoadOperationsRows = min($this->lazyLoadOperationsRows, $treeRecordLimit);
+		}
+
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
@@ -4241,6 +4312,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$blnIndent = false;
 			$intWrapLevel = 0;
 			$row = $objOrderBy->fetchAllAssoc();
+			$this->lazyLoadOperationsRows = \count($row);
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
@@ -4588,6 +4660,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($objRow->numRows)
 		{
 			$result = $objRow->fetchAllAssoc();
+			$this->lazyLoadOperationsRows = \count($result);
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
