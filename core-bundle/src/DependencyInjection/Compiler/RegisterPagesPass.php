@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
-use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -132,7 +132,7 @@ class RegisterPagesPass implements CompilerPassInterface
             return $controller;
         }
 
-        return FrontendIndex::class.'::renderPage';
+        return RegularPageController::class;
     }
 
     private function getPageType(string $className, array $attributes): string

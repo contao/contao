@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Controller\Page\ErrorPageController;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -155,7 +156,7 @@ class Route404Provider extends AbstractPageRouteProvider
         }
 
         $defaults = [
-            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_controller' => ErrorPageController::class,
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',

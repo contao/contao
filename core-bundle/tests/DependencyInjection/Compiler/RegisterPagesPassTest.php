@@ -14,10 +14,10 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -278,7 +278,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return FrontendIndex::class.'::renderPage' === $definition->getArgument(5)['_controller'];
+                        return RegularPageController::class === $definition->getArgument(5)['_controller'];
                     },
                 ),
             )
