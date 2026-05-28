@@ -32,8 +32,12 @@ class Route404Provider extends AbstractPageRouteProvider
     /**
      * @internal
      */
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        ContaoFramework $framework,
+        CandidatesInterface $candidates,
+        PageRegistry $pageRegistry,
+        private readonly string $controller = ErrorPageController::class,
+    ) {
         parent::__construct($framework, $candidates, $pageRegistry);
     }
 
@@ -156,7 +160,7 @@ class Route404Provider extends AbstractPageRouteProvider
         }
 
         $defaults = [
-            '_controller' => ErrorPageController::class,
+            '_controller' => $this->controller,
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
