@@ -289,6 +289,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		$return = '';
 
+		$panel = $this->panel();
+
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSessionBag = $objSession->getBag('contao_backend');
 		$session = $objSessionBag->all();
@@ -503,7 +505,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons());
 
 		// Build the tree
-		$return = $this->panel() . Message::generate() . ($buttons ? '
+		$return = $panel . Message::generate() . ($buttons ? '
 <div id="tl_buttons">' . $buttons . '</div>' : '') . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
