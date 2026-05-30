@@ -231,7 +231,7 @@ export default class extends Controller {
             this.ghostTarget.insertBefore(ghostCell, last);
         }
 
-        this.#resetInputs(this.ghostTarget)
+        this.#resetInputs(this.ghostTarget);
 
         if (this.#template.querySelector('.drag-handle')) {
             this.ghostTarget.prepend(addButton);
@@ -283,7 +283,7 @@ export default class extends Controller {
     }
 
     #updatePermissions() {
-        const count = this.rowTargets.filter(row => !row.hidden).length;
+        const count = this.rowTargets.filter((row) => !row.hidden).length;
         this.element.dataset.rowsCount = count;
 
         if (this.hasMinValue) {
