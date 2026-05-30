@@ -85,8 +85,8 @@ export default class extends Controller {
 
         if (this.rowTargets.length > 1) {
             this.#focus(row.nextElementSibling) ||
-            this.#focus(row.previousElementSibling) ||
-            this.#focus(this.bodyTarget);
+                this.#focus(row.previousElementSibling) ||
+                this.#focus(this.bodyTarget);
 
             row.remove();
         } else {
@@ -213,6 +213,7 @@ export default class extends Controller {
 
     #buildGhostRow() {
         const addButton = this.ghostTarget.querySelector('td');
+        const last = this.ghostTarget.querySelector('.tl_right');
 
         for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
             if (cell.querySelector('.drag-handle')) {
@@ -226,7 +227,8 @@ export default class extends Controller {
                 el.tabIndex = -1;
             }
 
-            this.ghostTarget.appendChild(ghostCell);
+            // if last is null, it will still append at last position
+            this.ghostTarget.insertBefore(ghostCell, last);
         }
 
         this.#resetInputs(this.ghostTarget)
@@ -281,6 +283,9 @@ export default class extends Controller {
     }
 
     #updatePermissions() {
+        const count = this.rowTargets.filter(row => !row.hidden).length;
+        this.element.dataset.rowsCount = count;
+
         if (this.hasMinValue) {
             const enable = this.#deleteAllowed();
 

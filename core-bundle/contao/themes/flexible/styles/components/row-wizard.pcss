@@ -1,6 +1,6 @@
 .widget:has(.row_wizard) {
     margin-top: 13px;
-    background: var(--body-bg);
+    background: var(--form-bg-hover);
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
     padding: 8px 10px;
@@ -59,12 +59,6 @@
         font-weight: inherit;
     }
 
-    tr {
-        &.is-empty {
-            opacity: 0.5;
-        }
-    }
-
     td {
         padding: 2px 6px 2px 0;
 
@@ -77,11 +71,47 @@
             display: flex;
         }
 
-        &:first-child:has(>.drag-handle),
+        &:first-child:has(>.drag-handle, .row-wizard-add),
         &:last-child {
             width: 1%;
             white-space: nowrap;
         }
+    }
+
+    tbody {
+        tr:last-child {
+            td {
+                padding-bottom: 5px;
+            }
+        }
+    }
+
+    &[data-rows-count="0"] {
+        &:not(:has(>thead)) {
+            margin-top: 6px;
+        }
+
+        th {
+            padding-bottom: 6px;
+        }
+    }
+
+    + .tl_help {
+        margin-top: 7px;
+    }
+}
+
+.row-wizard-ghost {
+    outline: 1px dashed var(--form-border);
+    outline-offset: 2px;
+    background-color: var(--table-even);
+
+    td {
+        padding: 0 6px 0 0;
+    }
+
+    td:not(:has(>.row-wizard-add)) {
+        opacity: .5;
     }
 }
 
@@ -91,7 +121,7 @@
     filter: brightness(var(--disable-brightness, 0.2)) grayscale(1) opacity(0.3);
 }
 
-.row-wizard-drag-handle {
+.row-wizard-drag-handle, .row-wizard-add {
     background: none;
     border: 0;
     margin: 0;

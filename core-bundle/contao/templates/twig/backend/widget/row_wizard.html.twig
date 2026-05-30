@@ -106,12 +106,16 @@
             <td>
                 {% set add_button_attributes = attrs()
                     .set('type', 'button')
+                    .addClass('row-wizard-add')
                     .set('data-action', 'contao--row-wizard#add contao--scroll-offset#store')
                 %}
                 <button{{ add_button_attributes }}>
-                    {{ backend_icon('new.svg', 'Add / ToDo: Find Translation') }}
+                    {{ backend_icon('new.svg', 'DCA.new.1'|trans) }}
                 </button>
             </td>
+            {% if sortable %}
+                <td class="tl_right">&nbsp;</td>
+            {% endif %}
         </tr>
         {% if showFooter %}
             <tr>
