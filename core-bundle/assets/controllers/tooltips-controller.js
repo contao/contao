@@ -172,6 +172,8 @@ export default class TooltipsController extends Controller {
     static afterLoad(identifier) {
         const targetAttribute = `data-${identifier}-target`;
         const targetSelector = Object.keys(TooltipsController.defaultOptionsMap).join(',');
+        const pendingNodes = new Set();
+        let flushQueued = false;
 
         const migrateTarget = (el) => {
             if (!el.hasAttribute(targetAttribute)) {
@@ -189,6 +191,27 @@ export default class TooltipsController extends Controller {
             }
         };
 
+        const flushPendingNodes = () => {
+            flushQueued = false;
+
+            for (const node of pendingNodes) {
+                migrateTargets(node);
+            }
+
+            pendingNodes.clear();
+        };
+
+        const queueMigrateTargets = (node) => {
+            pendingNodes.add(node);
+
+            if (flushQueued) {
+                return;
+            }
+
+            flushQueued = true;
+            requestAnimationFrame(flushPendingNodes);
+        };
+
         new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {
                 if (mutation.type !== 'childList') {
@@ -200,7 +223,7 @@ export default class TooltipsController extends Controller {
                         continue;
                     }
 
-                    migrateTargets(node);
+                    queueMigrateTargets(node);
                 }
             }
         }).observe(document, {

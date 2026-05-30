@@ -290,7 +290,7 @@ class ModuleSearch extends Module
 
 		foreach ($meta as $v)
 		{
-			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl'], $v['https://schema.org/primaryImageOfPage']['@id']))
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
 			{
 				continue;
 			}

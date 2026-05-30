@@ -62,6 +62,9 @@
                             .addClass('hover-row')
                             .set('data-controller', 'contao--deeplink contao--operations-menu')
                             .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+                            .set('data-contao--operations-menu-record-id-value', record.id)
+                            .set('data-contao--operations-menu-record-table-value', table_name)
+                            .set('data-contao--operations-menu-primary-only-value', primary_only ? 'true' : 'false')
                         %}
                         <tr{{ row_attributes }}>
                             {% if record.columns is defined %}

@@ -32,6 +32,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     private int|string|null $id = null;
 
+    private bool $primaryOnly = false;
+
     public function __construct(
         ContaoFramework $framework,
         private readonly Environment $twig,
@@ -53,6 +55,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'id' => $this->id,
             'operations' => $operations,
             'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
+            'primary_only' => $this->primaryOnly,
             'globalOperations' => false,
         ]);
     }
@@ -65,13 +68,15 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         $builder->id = $id;
         $builder->table = $table;
         $builder->operations = [];
+        $builder->primaryOnly = false;
 
         return $builder;
     }
 
-    public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null, bool $primaryOnly = false): self
     {
         $builder = $this->initialize($table, $record['id'] ?? null);
+        $builder->primaryOnly = $primaryOnly;
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $builder;
@@ -88,6 +93,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             }
 
             $v = \is_array($v) ? $v : [$v];
+
+            if ($builder->primaryOnly && !($v['primary'] ?? false)) {
+                continue;
+            }
+
             $operation = $builder->generateOperation($k, $v, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
