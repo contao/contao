@@ -65,6 +65,7 @@ export default class OperationsMenuController extends Controller {
     toggle(event) {
         if (event.type === 'pointerup') {
             this.#skipClickEvent = true;
+            // skipClickEvent will be reset in the next cycle but will still prevent the click event
             setTimeout(() => (this.#skipClickEvent = false), 0);
         }
 
