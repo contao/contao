@@ -201,16 +201,22 @@ class Configuration implements ConfigurationInterface
                                 ->validate()
                                     ->ifTrue(
                                         static function (array $options): bool {
+                                            $timeLimitCount = 0;
+
                                             foreach ($options as $option) {
-                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && $matches[1] <= 60) {
-                                                    return false;
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches)) {
+                                                    ++$timeLimitCount;
+
+                                                    if ($timeLimitCount > 1 || (int) $matches[1] > 60) {
+                                                        return true;
+                                                    }
                                                 }
                                             }
 
-                                            return true;
+                                            return 1 !== $timeLimitCount;
                                         },
                                     )
-                                    ->thenInvalid('Custom messenger:consume options must include a "--time-limit" of 60 seconds or less.')
+                                    ->thenInvalid('Custom messenger:consume options must include exactly one "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')
