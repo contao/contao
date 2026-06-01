@@ -228,6 +228,15 @@ class ModuleSubscribe extends Module
 
 			$optInToken->confirm();
 
+			// Remove the deny list entries (see #4999)
+			foreach ($arrRecipients as $objRecipient)
+			{
+				if ($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($objRecipient->email), $objRecipient->pid))
+				{
+					$objDenyList->delete();
+				}
+			}
+
 			// HOOK: post activation callback
 			if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
 			{
@@ -350,12 +359,6 @@ class ModuleSubscribe extends Module
 			$objRecipient->active = false;
 			$objRecipient->addedOn = $time;
 			$objRecipient->save();
-
-			// Remove the deny list entry (see #4999)
-			if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($strEmail), $id)) !== null)
-			{
-				$objDenyList->delete();
-			}
 
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
