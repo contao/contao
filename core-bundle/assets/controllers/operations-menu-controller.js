@@ -148,6 +148,11 @@ export default class OperationsMenuController extends Controller {
             openMenu = this;
             this.#setState(true);
             this.#setPosition(event);
+
+            if (event?.type !== 'contextmenu') {
+                // Focus the controller target as focus gets lost when prefetching
+                this.controllerTarget.focus();
+            }
         });
     }
 
