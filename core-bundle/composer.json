@@ -145,7 +145,7 @@
         "symfony/string": "^6.4",
         "symfony/translation": "^6.4",
         "symfony/translation-contracts": "^3.0",
-        "symfony/twig-bridge": "^6.4",
+        "symfony/twig-bridge": "^6.4.16",
         "symfony/twig-bundle": "^6.4",
         "symfony/uid": "^6.4",
         "symfony/var-dumper": "^6.4",
