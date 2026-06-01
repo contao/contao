@@ -20,14 +20,14 @@
         {% endfor %}
         {% if has_submenu or primary_only %}
             <li class="operations-menu-container{% if not show_button and not primary_only %} is-hidden{% endif %}">
-                <button type="button" class="has-icon" data-action="contao--operations-menu#open" data-contao--operations-menu-target="controller">
+                <button type="button" class="has-icon" data-action="pointerdown->contao--operations-menu#preload pointerup->contao--operations-menu#toggle contao--operations-menu#toggle" data-contao--operations-menu-target="controller">
                     {% if globalOperations %}
                         {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
                     {% else %}
                         {{ backend_icon(more_icon, more_alt|trans([id|default])) }}
                     {% endif %}
                 </button>
-                <ul class="operations-menu" data-contao--operations-menu-target="submenu">
+                <ul class="operations-menu" data-contao--operations-menu-target="submenu" data-action="focusout->contao--operations-menu#submenuFocusOut">
                     {% if not primary_only %}
                         {% set add_separator = false %}
                         {% for operation in operations %}

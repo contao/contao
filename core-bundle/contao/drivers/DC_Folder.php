@@ -308,8 +308,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function showAll()
 	{
-		$return = '';
-
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSessionBag = $objSession->getBag('contao_backend');
 		$session = $objSessionBag->all();
@@ -482,6 +480,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
 
+		$return = '';
+
 		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
@@ -522,6 +522,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
+
+		$panel = $this->panel();
 
 		if ((string) $for !== '')
 		{
@@ -584,8 +586,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null)
 			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
-
-		$panel = $this->panel();
 
 		// Build the tree
 		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
