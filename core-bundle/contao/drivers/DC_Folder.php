@@ -287,10 +287,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function showAll()
 	{
-		$return = '';
-
-		$panel = $this->panel();
-
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSessionBag = $objSession->getBag('contao_backend');
 		$session = $objSessionBag->all();
@@ -433,6 +429,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
+		$return = '';
+
 		// Call recursive function tree()
 		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
@@ -471,6 +469,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
+
+		$panel = $this->panel();
 
 		if ((string) $for !== '')
 		{
