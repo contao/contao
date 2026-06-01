@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.1">
         <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku...&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>

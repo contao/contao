@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Proxy for new front end module fragments, so they are accessible via $GLOBALS['FE_MOD'].
@@ -81,5 +82,10 @@ class ModuleProxy extends Module
 	protected function compile()
 	{
 		// noop
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return System::getContainer()->get('contao.fragment.compositor')->shouldPreload(FrontendModuleReference::TAG_NAME . '.' . $type);
 	}
 }

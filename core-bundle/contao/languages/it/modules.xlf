@@ -306,7 +306,7 @@
         <target>Dati personali</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Genera un modulo per modificare i dati personali di un membro</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
@@ -331,7 +331,7 @@
       </trans-unit>
       <trans-unit id="FMD.lostPassword.1">
         <source>Generates a form to request a new password</source>
-        <target>Questo modulo crea un'area nel front end che permette agli utenti di cambiare la loro password.</target>
+        <target>Questo modulo crea un&apos;area nel front end che permette agli utenti di cambiare la loro password.</target>
       </trans-unit>
       <trans-unit id="FMD.closeAccount.0">
         <source>Close account</source>
@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="FMD.closeAccount.1">
         <source>Generates a form to delete a member account</source>
-        <target>Questo modulo crea un'area nel front end che permette agli utenti di cancellare il proprio account.</target>
+        <target>Questo modulo crea un&apos;area nel front end che permette agli utenti di cancellare il proprio account.</target>
       </trans-unit>
       <trans-unit id="FMD.application">
         <source>Applications</source>
@@ -427,7 +427,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
-        <target>Genera un modulo per impostare o modificare l'autenticazione a due fattori</target>
+        <target>Genera un modulo per impostare o modificare l&apos;autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>

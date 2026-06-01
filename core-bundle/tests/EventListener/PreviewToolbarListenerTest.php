@@ -70,7 +70,6 @@ class PreviewToolbarListenerTest extends TestCase
     public function testInjectsTheToolbarIntoTheResponse(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
-        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),

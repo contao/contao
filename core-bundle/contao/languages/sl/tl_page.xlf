@@ -42,6 +42,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Route priority</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
@@ -122,7 +123,7 @@
         <target>Rezervni jezik</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Prikaži to stran, če portal ne vsebuje jezika skladnega z obiskovalčevim.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -418,6 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Skrij prijavljenim uporabnikom</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
@@ -489,6 +491,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
+        <target>Samo poročanje</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Only report policy violations without enforcing them.</source>
@@ -513,6 +516,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonical_legend">
         <source>Canonical URL</source>
+        <target>Canonical URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -668,6 +672,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Route conflicts</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>

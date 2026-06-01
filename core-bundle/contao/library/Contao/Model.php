@@ -260,9 +260,16 @@ abstract class Model
 
 		unset($this->arrRelated[$strKey]);
 
-		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
+		try
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
+			{
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', get_debug_type($this), $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			}
+		}
+		catch (\TypeError)
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use the appropriate type instead.', get_debug_type($this), $strKey, get_debug_type($varValue));
 		}
 	}
 
@@ -451,7 +458,7 @@ abstract class Model
 			{
 				$type = strtolower($column->getType()->getName());
 
-				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
+				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::BIGINT, Types::FLOAT, Types::BOOLEAN), true))
 				{
 					$types[$table->getName()][$column->getName()] = $type;
 				}
@@ -495,7 +502,7 @@ abstract class Model
 
 		return match (self::$arrColumnCastTypes[static::$strTable][$strKey] ?? null)
 		{
-			Types::INTEGER, Types::SMALLINT => (int) $varValue,
+			Types::INTEGER, Types::SMALLINT, Types::BIGINT => \is_int($number = +$varValue) ? $number : $varValue,
 			Types::FLOAT => (float) $varValue,
 			Types::BOOLEAN => (bool) $varValue,
 			default => $varValue,
@@ -841,7 +848,7 @@ abstract class Model
 		{
 			$varAliasValue = $this->{$strColumn};
 
-			if (!$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
+			if (null !== $varAliasValue && !$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
 			{
 				$registry->registerAlias($this, $strColumn, $varAliasValue);
 			}

@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
-        <target>Scegli l'ordine predefinito.</target>
+        <target>Scegli l&apos;ordine predefinito.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.0">
         <source>Items per page</source>

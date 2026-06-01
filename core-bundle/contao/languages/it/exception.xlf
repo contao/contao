@@ -6,8 +6,8 @@
         <target>Si è verificato un errore</target>
       </trans-unit>
       <trans-unit id="XPT.matter">
-        <source>What's the matter?</source>
-        <target>Qual'è il problema?</target>
+        <source>What&apos;s the matter?</source>
+        <target>Qual&apos;è il problema?</target>
       </trans-unit>
       <trans-unit id="XPT.howToFix">
         <source>How can I fix the issue?</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
-        <target>Si è verificato un errore durante l'esecuzione di questo script. Qualcosa non funziona correttamente.</target>
+        <target>Si è verificato un errore durante l&apos;esecuzione di questo script. Qualcosa non funziona correttamente.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>'esecuzione dello script si è arrestato, perché qualcosa non funziona correttamente. Il messaggio di errore effettivo è nascosto da questo avviso per motivi di sicurezza e può essere trovato nel file di log corrente (vedi sopra). Se non capisci il messaggio di errore o non sai come risolvere il problema, visita la pagina di  &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;supporto di Contao &lt;/a&gt;.</target>
+        <target>&apos;esecuzione dello script si è arrestato, perché qualcosa non funziona correttamente. Il messaggio di errore effettivo è nascosto da questo avviso per motivi di sicurezza e può essere trovato nel file di log corrente (vedi sopra). Se non capisci il messaggio di errore o non sai come risolvere il problema, visita la pagina di  &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;supporto di Contao &lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
         <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>Questo errore si verifica se c'è una richiesta POST senza un token di autenticazione valido. In Contao 2.10, il referer check è stato sostituito con un sistema di richiesta token. Se il problema persiste, è possibile che si stia utilizzando un'estensione di terzi non compatibile o non si abbia aggiornato correttamente l'installazione di Contao.</target>
+        <target>Questo errore si verifica se c&apos;è una richiesta POST senza un token di autenticazione valido. In Contao 2.10, il referer check è stato sostituito con un sistema di richiesta token. Se il problema persiste, è possibile che si stia utilizzando un&apos;estensione di terzi non compatibile o non si abbia aggiornato correttamente l&apos;installazione di Contao.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
@@ -63,11 +63,11 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.title">
         <source>Unable to generate front end URL</source>
-        <target>Impossibile generare l'URL del front end</target>
+        <target>Impossibile generare l&apos;URL del front end</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
-        <target>Non è stato possibile generare l'URL, perché la rotta ha dei parametri obbligatori che non sono indicati. Devono essere fornite informazioni aggiuntive (ad esempio un alias di notizie).</target>
+        <target>Non è stato possibile generare l&apos;URL, perché la rotta ha dei parametri obbligatori che non sono indicati. Devono essere fornite informazioni aggiuntive (ad esempio un alias di notizie).</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
         <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>

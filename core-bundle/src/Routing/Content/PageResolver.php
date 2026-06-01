@@ -35,7 +35,7 @@ class PageResolver implements ContentUrlResolverInterface
                 $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
                 if ($content->jumpTo) {
-                    $forwardPage = $pageAdapter->findPublishedById($content->jumpTo);
+                    $forwardPage = $pageAdapter->findById($content->jumpTo);
                 } else {
                     $forwardPage = $pageAdapter->findFirstPublishedRegularByPid($content->id);
                 }

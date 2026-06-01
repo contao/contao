@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_article.alias.1">
         <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>Makale kısaltması makalenin sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Makale kısaltması makalenin sayısal kimliği olarak kullanılacak benzersiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>

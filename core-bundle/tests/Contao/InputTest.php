@@ -129,7 +129,6 @@ class InputTest extends TestCase
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::postHtml('key', true));
         $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
@@ -156,8 +155,6 @@ class InputTest extends TestCase
 
         $this->assertSame($expected, Input::post('decoded', true));
         $this->assertSame($expectedEncoded, Input::post('encoded'));
-
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
 
         $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
@@ -425,6 +422,36 @@ class InputTest extends TestCase
             'Text &#60;with&#62; <span> tags',
         ];
 
+        yield 'Allows self-closing tags' => [
+            '<p><img src="img.png" /></p>',
+            '<p><img src="img.png" /></p>',
+        ];
+
+        yield 'Self-closing no space' => [
+            '<img src="img.png"/>',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no quotes' => [
+            '<img src=img.png />',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no attributes' => [
+            '<img />',
+            '<img />',
+        ];
+
+        yield 'Self-closing no attributes no space' => [
+            '<img/>',
+            '<img />',
+        ];
+
+        yield 'Not self-closing' => [
+            '<img src=img.png/>',
+            '<img src="img.png/">',
+        ];
+
         yield 'Removes attributes' => [
             'foo <span onerror=alert(1)> bar',
             'foo <span> bar',
@@ -562,7 +589,7 @@ class InputTest extends TestCase
 
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
-            '<form><input></form>',
+            '<form><input /></form>',
         ];
 
         yield [
@@ -697,14 +724,10 @@ class InputTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
      * @dataProvider stripTagsNoTagsAllowedProvider
      */
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
-
         $this->assertSame($expected, Input::stripTags($source));
     }
 
@@ -736,9 +759,6 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
-    /**
-     * @group legacy
-     */
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
@@ -749,17 +769,11 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
 
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testStripTagsScriptAllowed(): void
     {
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
-
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
             Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),

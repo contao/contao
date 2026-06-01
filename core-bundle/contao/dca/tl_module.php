@@ -367,7 +367,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'useCaption' => array
 		(
@@ -596,7 +596,7 @@ class tl_module extends Backend
 		{
 			if ($v['eval']['feEditable'] ?? null)
 			{
-				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
+				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0] ?? $k;
 			}
 		}
 

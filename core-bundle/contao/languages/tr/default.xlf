@@ -381,6 +381,10 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Kalıp düzenleyiciye erişme iznini yalnızca bir yöneticiyseniz verebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>
@@ -1171,7 +1175,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Lütfen bir site adresi (http://...), bir e-posta adresi (mailto:...) ya da bir eklenebilecek kod imi yazın.</target>
+        <target>Lütfen bir site adresi (http://…), bir e-posta adresi (mailto:…) ya da bir eklenebilecek kod imi yazın.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -1987,7 +1991,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileUuid">
         <source>Unique ID</source>
-        <target>Eşsiz kimlik</target>
+        <target>Benzersiz kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.fileImageSize">
         <source>Width/height in pixel</source>
@@ -2824,6 +2828,10 @@
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Yolda zorunlu parametreler bulunduğundan ön izleme adresi oluşturulamadı.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Formda sorunlar olduğundan ön izleme adresi oluşturulamadı.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

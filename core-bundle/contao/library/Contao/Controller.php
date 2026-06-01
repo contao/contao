@@ -277,12 +277,13 @@ abstract class Controller extends System
 	/**
 	 * Generate a front end module and return it as string
 	 *
-	 * @param mixed  $intId     A module ID or a Model object
-	 * @param string $strColumn The name of the column
+	 * @param mixed  $intId                       A module ID or a Model object
+	 * @param string $strColumn                   The name of the column
+	 * @param array  $arrPreloadedContentElements
 	 *
 	 * @return string The module HTML markup
 	 */
-	public static function getFrontendModule($intId, $strColumn='main')
+	public static function getFrontendModule($intId, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
 		if (!\is_object($intId) && !\strlen($intId))
 		{
@@ -353,7 +354,7 @@ abstract class Controller extends System
 
 			while ($objArticles->next())
 			{
-				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn);
+				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn, $arrPreloadedContentElements);
 			}
 
 			return $return;
@@ -414,9 +415,9 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$groups = StringUtil::deserialize($objModule->groups, true);
+			$groups = StringUtil::deserialize($objRow->groups, true);
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
@@ -435,14 +436,15 @@ abstract class Controller extends System
 	/**
 	 * Generate an article and return it as string
 	 *
-	 * @param mixed   $varId          The article ID or a Model object
-	 * @param boolean $blnMultiMode   If true, only teasers will be shown
-	 * @param boolean $blnIsInsertTag If true, there will be no page relation
-	 * @param string  $strColumn      The name of the column
+	 * @param mixed   $varId                       The article ID or a Model object
+	 * @param boolean $blnMultiMode                If true, only teasers will be shown
+	 * @param boolean $blnIsInsertTag              If true, there will be no page relation
+	 * @param string  $strColumn                   The name of the column
+	 * @param array   $arrPreloadedContentElements
 	 *
 	 * @return string|boolean The article HTML markup or false
 	 */
-	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
 		global $objPage;
 
@@ -492,6 +494,8 @@ abstract class Controller extends System
 		}
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
+		$objArticle->setPreloadedContentElements($arrPreloadedContentElements);
+
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
 		// Disable indexing if protected
@@ -629,9 +633,9 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$groups = StringUtil::deserialize($objElement->groups, true);
+			$groups = StringUtil::deserialize($objRow->groups, true);
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{

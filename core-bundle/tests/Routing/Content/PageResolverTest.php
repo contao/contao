@@ -64,10 +64,10 @@ class PageResolverTest extends TestCase
         $content = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 43]);
         $jumpTo = $this->mockClassWithProperties(PageModel::class, ['id' => 43]);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(43)
             ->willReturn($jumpTo)
         ;

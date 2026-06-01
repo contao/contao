@@ -56,6 +56,10 @@ class InsertTagParser implements ResetInterface
             |'.self::TAG_REGEX.'  # Or an insert tag
         )*';
 
+    private const MAX_RECURSION = 64;
+
+    private array $recursionTrace = [];
+
     /**
      * @var array<string, InsertTagSubscription>
      */
@@ -310,6 +314,7 @@ class InsertTagParser implements ResetInterface
 
     public function reset(): void
     {
+        $this->recursionTrace = [];
         InsertTags::reset();
     }
 
@@ -452,35 +457,45 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        $result = $subscription->service->{$subscription->method}($tag);
-
-        foreach ($tag->getFlags() as $flag) {
-            // ESI tags need to be replaced before flags can be applied
-            $result = $this->replaceEsiTags($result, $esiTagsCount);
-
-            if ($esiTagsCount) {
-                $this->logger->error(
-                    \sprintf(
-                        'Using the insert tag flag "%s" in %s on page %s disables lazy loading of the fragment',
-                        $flag->getName(),
-                        $tag->serialize(),
-                        $this->framework->getAdapter(Environment::class)->get('uri'),
-                    ),
-                );
-            }
-
-            if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
-                $result = $callback($flag, $result);
-            } else {
-                $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
-            }
+        if (\count($this->recursionTrace) >= self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
-        if (!$allowEsiTags) {
-            $result = $this->replaceEsiTags($result);
-        }
+        $this->recursionTrace[] = $tag->serialize();
 
-        return $result;
+        try {
+            $result = $subscription->service->{$subscription->method}($tag);
+
+            foreach ($tag->getFlags() as $flag) {
+                // ESI tags need to be replaced before flags can be applied
+                $result = $this->replaceEsiTags($result, $esiTagsCount);
+
+                if ($esiTagsCount) {
+                    $this->logger->error(
+                        \sprintf(
+                            'Using the insert tag flag "%s" in %s on page %s disables lazy loading of the fragment',
+                            $flag->getName(),
+                            $tag->serialize(),
+                            $this->framework->getAdapter(Environment::class)->get('uri'),
+                        ),
+                    );
+                }
+
+                if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
+                    $result = $callback($flag, $result);
+                } else {
+                    $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
+                }
+            }
+
+            if (!$allowEsiTags) {
+                $result = $this->replaceEsiTags($result);
+            }
+
+            return $result;
+        } finally {
+            array_pop($this->recursionTrace);
+        }
     }
 
     /**
@@ -545,7 +560,38 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        return $subscription->service->{$subscription->method}($tag, $content);
+        if (\count($this->recursionTrace) > self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
+        }
+
+        $this->recursionTrace[] = $tag->serialize();
+
+        try {
+            return $subscription->service->{$subscription->method}($tag, $content);
+        } finally {
+            array_pop($this->recursionTrace);
+        }
+    }
+
+    private static function formatRecursionTrace(array $trace): string
+    {
+        if (!$trace) {
+            return '';
+        }
+
+        $seen = [];
+
+        foreach ($trace as $index => $entry) {
+            if (isset($seen[$entry])) {
+                $trace = [...\array_slice($trace, 0, $index + 1), '... (repeats)'];
+
+                break;
+            }
+
+            $seen[$entry] = $index;
+        }
+
+        return implode(' -> ', $trace);
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag

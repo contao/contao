@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -34,7 +35,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $class
  * @property string       $inColumn
  * @property string       $headline
- * @property array        $hl
+ * @property string       $hl
  * @property string       $content
  * @property string       $action
  * @property boolean      $enforceTwoFactor
@@ -220,13 +221,16 @@ abstract class Template extends Controller
 	 */
 	public static function once(callable $callback)
 	{
-		return static function () use (&$callback) {
-			if (\is_callable($callback))
+		$result = null;
+
+		return static function () use (&$callback, &$result) {
+			if ($callback !== null)
 			{
-				$callback = $callback();
+				$result = $callback();
+				$callback = null;
 			}
 
-			return $callback;
+			return $result;
 		};
 	}
 
@@ -455,19 +459,21 @@ abstract class Template extends Controller
 		{
 			$container = System::getContainer();
 			$projectDir = $container->getParameter('kernel.project_dir');
+			$projectPath = Path::join($projectDir, $href);
 
-			if (file_exists($projectDir . '/' . $href))
+			if (file_exists($projectPath))
 			{
-				$mtime = filemtime($projectDir . '/' . $href);
+				$mtime = filemtime($projectPath);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webPath = Path::join($projectDir, $webDir, $href);
 
 				// Handle public bundle resources in the contao.web_dir folder
-				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
+				if (file_exists($webPath))
 				{
-					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($webPath);
 				}
 			}
 		}
@@ -521,19 +527,21 @@ abstract class Template extends Controller
 		{
 			$container = System::getContainer();
 			$projectDir = $container->getParameter('kernel.project_dir');
+			$projectPath = Path::join($projectDir, $src);
 
-			if (file_exists($projectDir . '/' . $src))
+			if (file_exists($projectPath))
 			{
-				$mtime = filemtime($projectDir . '/' . $src);
+				$mtime = filemtime($projectPath);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webPath = Path::join($projectDir, $webDir, $src);
 
 				// Handle public bundle resources in the contao.web_dir folder
-				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
+				if (file_exists($webPath))
 				{
-					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($webPath);
 				}
 			}
 		}

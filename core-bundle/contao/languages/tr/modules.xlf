@@ -306,7 +306,7 @@
         <target>Kişisel veriler</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Bir üyenin kişisel verilerini güncelleyebileceği bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

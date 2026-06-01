@@ -879,7 +879,7 @@ class PageModel extends Model
 		parent::onRegister($registry);
 
 		// Register this model as being the fallback page for a given dns
-		if ($this->fallback && $this->type == 'root' && !$registry->isRegisteredAlias($this, 'contao.dns-fallback', $this->dns))
+		if ($this->fallback && $this->type == 'root' && null !== $this->dns && !$registry->isRegisteredAlias($this, 'contao.dns-fallback', $this->dns))
 		{
 			$registry->registerAlias($this, 'contao.dns-fallback', $this->dns);
 		}

@@ -19,9 +19,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
-        readonly private SessionFactoryInterface $inner,
-        readonly private SessionBagInterface $backendBag,
-        readonly private SessionBagInterface $frontendBag,
+        private readonly SessionFactoryInterface $inner,
+        private readonly SessionBagInterface $backendBag,
+        private readonly SessionBagInterface $frontendBag,
     ) {
     }
 

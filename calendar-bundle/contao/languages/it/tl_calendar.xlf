@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Seleziona la pagina alla quale i visitatori saranno diretti cliccando sull'evento.</target>
+        <target>Seleziona la pagina alla quale i visitatori saranno diretti cliccando sull&apos;evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Autore dell'evento</target>
+        <target>Autore dell&apos;evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>

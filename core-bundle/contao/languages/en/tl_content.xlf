@@ -360,7 +360,7 @@
         <source>Player size</source>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>

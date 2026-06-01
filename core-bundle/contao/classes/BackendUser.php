@@ -45,6 +45,7 @@ class BackendUser extends User
 	/**
 	 * Name of the current cookie
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie = 'BE_USER_AUTH';
 

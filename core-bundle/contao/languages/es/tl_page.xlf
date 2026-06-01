@@ -126,7 +126,7 @@
         <target>Fallo idioma</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Muestra esta página si no hay ninguno que coincida con el idioma del visitante.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

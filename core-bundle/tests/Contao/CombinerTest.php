@@ -246,6 +246,19 @@ class CombinerTest extends TestCase
         );
     }
 
+    public function testDoesNotAddCharset(): void
+    {
+        $this->filesystem->dumpFile($this->getTempDir().'/file.scss', '.foobar { content: "ö" }');
+
+        $combiner = new Combiner();
+        $combiner->add('file.scss');
+
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combiner->getCombinedFile(),
+            ".foobar{content:\"ö\"}\n",
+        );
+    }
+
     public function testCombinesJsFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.js', 'file1();');

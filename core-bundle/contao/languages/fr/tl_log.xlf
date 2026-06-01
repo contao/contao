@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_log.tstamp.1">
         <source>Date and time of the log entry</source>
-        <target>Date et heure de création de l'entrée du journal</target>
+        <target>Date et heure de création de l&apos;entrée du journal</target>
       </trans-unit>
       <trans-unit id="tl_log.source.0">
         <source>Origin</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_log.action.1">
         <source>Category of the action</source>
-        <target>Catégorie de l'action</target>
+        <target>Catégorie de l&apos;action</target>
       </trans-unit>
       <trans-unit id="tl_log.username.0">
         <source>User</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_log.username.1">
         <source>Name of the authenticated user</source>
-        <target>Nom de l'utilisateur identifié</target>
+        <target>Nom de l&apos;utilisateur identifié</target>
       </trans-unit>
       <trans-unit id="tl_log.text.0">
         <source>Details</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_log.text.1">
         <source>Details of the log entry</source>
-        <target>Détails de l'entrée du journal</target>
+        <target>Détails de l&apos;entrée du journal</target>
       </trans-unit>
       <trans-unit id="tl_log.func.0">
         <source>Function</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_log.browser.1">
         <source>Name of the user agent</source>
-        <target>Navigateur de l'utilisateur</target>
+        <target>Navigateur de l&apos;utilisateur</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
-        <target>L'URI de la demande</target>
+        <target>L&apos;URI de la demande</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_log.page.1">
         <source>The ID of the page</source>
-        <target>L'ID de la page</target>
+        <target>L&apos;ID de la page</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>

@@ -518,17 +518,14 @@ services:
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - '%contao.intl.countries%'
-            - '%kernel.default_locale%'
 
     contao.intl.locales:
         class: Contao\CoreBundle\Intl\Locales
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - []
             - '%contao.intl.locales%'
@@ -578,6 +575,7 @@ services:
         arguments:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
+            - '@contao.routing.scope_matcher'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -978,6 +976,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.page_type_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
@@ -1038,7 +1037,6 @@ services:
             - '@security.token_storage'
             - '@contao.routing.page_registry'
             - '@http_kernel'
-            - '@request_stack'
             - !abstract set by ContaoLoginFactory::createAuthenticator()
             - !abstract set by ContaoLoginFactory::createAuthenticator()
 

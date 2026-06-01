@@ -39,6 +39,9 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@contao.resource_finder'
+        tags:
+            # Use a higher priority for the boolean fields migration (#8707)
+            - { name: contao.migration, priority: 1 }
 
     contao.migration.version_500.empty_ptable:
         class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
@@ -64,6 +67,12 @@ services:
         class: Contao\CoreBundle\Migration\Version502\AlwaysForwardMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_503.caption_basic_entities:
+        class: Contao\CoreBundle\Migration\Version503\CaptionBasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
 
     contao.migration.version_503.file_extension:
         class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
