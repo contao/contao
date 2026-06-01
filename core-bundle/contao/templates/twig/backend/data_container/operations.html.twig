@@ -27,7 +27,7 @@
                         {{ backend_icon(more_icon, more_alt|trans([id|default])) }}
                     {% endif %}
                 </button>
-                <ul class="operations-menu" data-contao--operations-menu-target="submenu">
+                <ul class="operations-menu" data-contao--operations-menu-target="submenu" data-action="focusout->contao--operations-menu#submenuFocusOut">
                     {% if not primary_only %}
                         {% set add_separator = false %}
                         {% for operation in operations %}

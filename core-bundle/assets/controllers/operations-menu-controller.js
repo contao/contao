@@ -131,6 +131,12 @@ export default class OperationsMenuController extends Controller {
         this.#closeMenu();
     }
 
+    submenuFocusOut(event) {
+        if (!this.submenuTarget.contains(event.relatedTarget)) {
+            this.#closeMenu();
+        }
+    }
+
     #openMenu(event, onBeforeOpenCallback = null) {
         this.#loadOperationsIfNeeded().then((loaded) => {
             if (!loaded) {
