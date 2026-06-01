@@ -108,6 +108,8 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 
+        Config::set('allowedTags', '<script><style>'.Config::get('allowedTags'));
+
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
 
@@ -123,6 +125,8 @@ class HtmlDecoderTest extends TestCase
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
         yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
         yield [" \t\r\n<br>foo \t<br>\r\n \r\n\t<br> bar <br>\t\r\n", "foo\nbar"];
+        yield ['<script>foo</script>', ''];
+        yield ['<style>foo</style>', ''];
 
         yield [
             '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p><div><div><div>single newline',

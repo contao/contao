@@ -274,7 +274,8 @@ class ValueFormatter implements ResetInterface
         }
 
         if (
-            \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
+            \is_scalar($value)
+            && \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
             && (
                 ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['isAssociative'] ?? null)
                 || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
@@ -287,7 +288,7 @@ class ValueFormatter implements ResetInterface
             }
         }
 
-        if ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc)) {
+        if (\is_scalar($value) && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
             $label = $this->findOptionLabel($callbackOptions, $value);
 
             if (null !== $label) {

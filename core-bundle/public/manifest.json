@@ -1,6 +1,6 @@
 {
-  "backend.css": "/bundles/contaocore/backend.cc3ff80f.css",
-  "backend.js": "/bundles/contaocore/backend.aaf83880.js",
+  "backend.css": "/bundles/contaocore/backend.2cbb4cf0.css",
+  "backend.js": "/bundles/contaocore/backend.653a9b50.js",
   "navigation.css": "/bundles/contaocore/navigation.c572a459.css",
   "navigation.js": "/bundles/contaocore/navigation.85a29788.js",
   "passkey_login.js": "/bundles/contaocore/passkey_login.b50772ea.js",
@@ -81,6 +81,8 @@
   "images/error.svg": "/bundles/contaocore/images/error.acaa5a14.svg",
   "images/show.svg": "/bundles/contaocore/images/show.41c88aa9.svg",
   "images/new.svg": "/bundles/contaocore/images/new.4a644136.svg",
+  "images/corner-down-right--dark.svg": "/bundles/contaocore/images/corner-down-right--dark.44efa01c.svg",
+  "images/corner-down-right.svg": "/bundles/contaocore/images/corner-down-right.2e96e552.svg",
   "images/jobs--dark.svg": "/bundles/contaocore/images/jobs--dark.c08d272b.svg",
   "images/jobs.svg": "/bundles/contaocore/images/jobs.3b352503.svg",
   "images/search--dark.svg": "/bundles/contaocore/images/search--dark.e8865bb3.svg",

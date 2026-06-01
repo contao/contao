@@ -856,8 +856,14 @@ abstract class DataContainer extends Backend
 				{
 					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
-			}
+			},
+			$this->shouldRenderPrimaryOperationsOnly()
 		);
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		return false;
 	}
 
 	/**

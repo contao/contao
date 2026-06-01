@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -26,7 +26,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
-        if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+        if ($this->isBackendScope($request)) {
             return $this->getBackendWildcard($model);
         }
 
@@ -34,21 +34,22 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             return new Response();
         }
 
-        $modules = StringUtil::deserialize($model->rootPageDependentModules, true);
+        $elements = StringUtil::deserialize($model->rootPageDependentModules, true);
+        $id = $elements[$pageModel->rootId] ?? null;
 
-        if (empty($modules[$pageModel->rootId])) {
+        if (!$id) {
             return new Response();
         }
 
-        /** @var ContaoFramework $framework */
-        $framework = $this->container->get('contao.framework');
-        $moduleModel = $framework->getAdapter(ModuleModel::class);
+        if ($isElement = str_starts_with($id, 'content-')) {
+            $id = substr($id, 8);
+        }
 
-        if (!$module = $moduleModel->findById($modules[$pageModel->rootId])) {
+        if (!$contentModel = $this->getContaoAdapter($isElement ? ContentModel::class : ModuleModel::class)->findById($id)) {
             return new Response();
         }
 
-        $cssID = StringUtil::deserialize($module->cssID, true);
+        $cssID = StringUtil::deserialize($contentModel->cssID, true);
 
         if ($idAttribute = $request->attributes->get('templateProperties', [])['cssID'] ?? null) {
             $cssID[0] = substr($idAttribute, 5, -1);
@@ -56,10 +57,10 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
 
         $cssID[1] = trim(\sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
 
-        $module->cssID = $cssID;
+        $contentModel->cssID = $cssID;
 
-        $controller = $framework->getAdapter(Controller::class);
-        $content = $controller->getFrontendModule($module);
+        $controller = $this->getContaoAdapter(Controller::class);
+        $content = $isElement ? $controller->getContentElement($contentModel) : $controller->getFrontendModule($contentModel);
 
         $this->tagResponse($model);
 

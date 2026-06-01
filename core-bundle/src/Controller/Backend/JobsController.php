@@ -37,14 +37,26 @@ class JobsController extends AbstractBackendController
     public function latestJobsAction(Request $request): Response
     {
         $jobs = $this->jobs->findMyRecent($request->query->getInt('range'));
+        $etag = $this->buildEtag($jobs);
 
-        return $this->render('@Contao/backend/jobs/update_running_jobs.stream.html.twig', [
+        $etagResponse = new Response();
+        $etagResponse->setEtag($etag);
+
+        if ($etagResponse->isNotModified($request)) {
+            return $etagResponse;
+        }
+
+        $response = $this->render('@Contao/backend/jobs/update_running_jobs.stream.html.twig', [
             'jobs' => $jobs,
             'attachments' => array_combine(
                 array_map(static fn (Job $job): string => $job->getUuid(), $jobs),
                 array_map($this->jobs->getAttachments(...), $jobs),
             ),
         ]);
+
+        $response->setEtag($etag);
+
+        return $response;
     }
 
     #[Route(
@@ -69,5 +81,15 @@ class JobsController extends AbstractBackendController
         }
 
         return $attachment->toStreamedResponse();
+    }
+
+    /**
+     * @param array<Job> $jobs
+     */
+    private function buildEtag(array $jobs): string
+    {
+        $state = array_map(static fn (Job $job): string => $job->getStateFingerprint(), $jobs);
+
+        return hash('xxh3', json_encode($state, JSON_THROW_ON_ERROR));
     }
 }
