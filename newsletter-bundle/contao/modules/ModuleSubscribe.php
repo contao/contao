@@ -212,18 +212,21 @@ class ModuleSubscribe extends Module
 				$arrAdd[] = $objRecipient->id;
 				$arrCids[] = $objRecipient->pid;
 
-				// Remove the deny list entry (see #4999)
-				if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($objRecipient->email), $objRecipient->pid)) !== null)
-				{
-					$objDenyList->delete();
-				}
-
 				$objRecipient->tstamp = $time;
 				$objRecipient->active = true;
 				$objRecipient->save();
 			}
 
 			$optInToken->confirm();
+
+			// Remove the deny list entries (see #4999)
+			foreach ($arrRecipients as $objRecipient)
+			{
+				if ($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($objRecipient->email), $objRecipient->pid))
+				{
+					$objDenyList->delete();
+				}
+			}
 
 			// HOOK: post activation callback
 			if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
