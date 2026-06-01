@@ -212,45 +212,25 @@ export default class extends Controller {
     }
 
     #buildGhostRow() {
-        const addButton = this.ghostTarget.querySelector('td');
+        const _addButton = this.ghostTarget.querySelector('td');
+        const last = this.ghostTarget.querySelector('.tl_right');
 
-        for (const cell of this.#template.querySelectorAll('td')) {
+        for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
             if (cell.querySelector('.drag-handle')) {
                 continue;
             }
 
-            this.ghostTarget.appendChild(this.#getClone(cell));
+            const ghostCell = cell.cloneNode(true);
+
+            for (const el of ghostCell.querySelectorAll('input, select, textarea')) {
+                el.disabled = true;
+                el.tabindex = -1;
+            }
+
+            this.ghostTarget.insertBefore(ghostCell, last);
         }
 
         this.#resetInputs(this.ghostTarget);
-
-        if (this.#template.querySelector('.drag-handle')) {
-            this.ghostTarget.prepend(addButton);
-        } else {
-            this.ghostTarget.querySelector('.tl_right button').replaceWith(...addButton.children);
-            addButton.remove();
-        }
-    }
-
-    #getClone(cell) {
-        const clone = cell.cloneNode(true);
-
-        // Remove the enable label completely
-        clone.querySelector('label.mw_enable')?.remove();
-
-        for (const el of clone.querySelectorAll('input, select, textarea, button')) {
-            for (const attr of [...el.attributes]) {
-                if (attr.name.startsWith('data-') || attr.name === 'id' || attr.name === 'for') {
-                    el.removeAttribute(attr.name);
-                }
-            }
-
-            el.classList.remove('mw_enable');
-            el.disabled = true;
-            el.tabIndex = -1;
-        }
-
-        return clone;
     }
 
     #getRow(event) {

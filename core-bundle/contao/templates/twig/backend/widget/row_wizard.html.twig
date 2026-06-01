@@ -103,7 +103,10 @@
     </tbody>
     <tfoot>
         <tr class="row-wizard-ghost" data-contao--row-wizard-target="ghost">
-            <td>
+            {% if sortable %}
+                <td></td>
+            {% endif %}
+            <td class="tl_right">
                 {% set add_button_attributes = attrs()
                     .set('type', 'button')
                     .addClass('row-wizard-add')
@@ -112,6 +115,27 @@
                 <button{{ add_button_attributes }}>
                     {{ backend_icon('new.svg', 'DCA.new.1'|trans) }}
                 </button>
+
+                {# Delete row #}
+                {% if 'delete' in actions %}
+                    {% set delete_button_attributes = attrs()
+                        .set('type', 'button')
+                        .set('disabled', '')
+                        .set('tabindex', '-1')
+                    %}
+                    <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.mw_delete'|trans) }}</button>
+                {% endif %}
+
+                {# Enable checkbox #}
+                {% if 'enable' in actions %}
+                    {% set enable_input_attributes = attrs()
+                        .set('type', 'checkbox')
+                        .set('disabled', '')
+                        .set('tabindex', '-1')
+                        .addClass('tl_checkbox')
+                    %}
+                    <input{{ enable_input_attributes }}>
+                {% endif %}
             </td>
         </tr>
         {% if showFooter %}
