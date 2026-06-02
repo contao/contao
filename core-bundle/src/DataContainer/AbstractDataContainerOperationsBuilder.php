@@ -19,7 +19,11 @@ use Contao\Input;
 use Contao\System;
 
 /**
- * @phpstan-type LegacyOperation array{html: string, primary?: bool}
+ * @phpstan-type LegacyOperation array{
+ *     html: string,
+ *     listAttributes?: HtmlAttributes,
+ *     primary?: bool
+ * }
  * @phpstan-type ParametricOperation array{
  *     label: string,
  *     title?: string,
@@ -126,6 +130,8 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * Generate multiple operations if the given operation is using HTML.
+     *
+     * @param Operation $operation
      */
     protected function parseOperationsHtml(array $operation): array
     {

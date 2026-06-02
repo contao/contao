@@ -23,6 +23,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
+ * @phpstan-type LegacyOperation array{
+ *     html: string,
+ *     listAttributes?: HtmlAttributes,
+ *     primary?: bool
+ * }
+ * @phpstan-type ParametricOperation array{
+ *     label: string,
+ *     title?: string,
+ *     attributes?: HtmlAttributes,
+ *     listAttributes?: HtmlAttributes,
+ *     icon?: string,
+ *     iconAttributes?: HtmlAttributes,
+ *     href?: string,
+ *     primary?: bool
+ * }
+ * @phpstan-type Operation LegacyOperation|ParametricOperation
+ *
  * @internal
  */
 class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperationsBuilder
@@ -180,6 +197,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         return $this;
     }
 
+    /**
+     * @return Operation|null
+     */
     private function generateOperation(string $name, array $operation, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, null, $dataContainer);
@@ -208,13 +228,13 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $config['attributes']->addClass($name);
 
         return [
-            'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'] ?? null,
             'iconAttributes' => $config['iconAttributes'],
+            'href' => $href,
             'primary' => $config['primary'] ?? ('all' === $name ? true : null),
         ];
     }

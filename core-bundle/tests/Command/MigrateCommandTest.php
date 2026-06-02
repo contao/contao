@@ -456,10 +456,9 @@ class MigrateCommandTest extends TestCase
         $connection = $this->createDefaultConnection();
 
         if (interface_exists(ServerInfoAwareConnection::class)) {
-            /** @phpstan-ignore class.notFound */
             $driverConnection = $this->createStub(ServerInfoAwareConnection::class);
 
-            /** @phpstan-ignore class.notFound, phpunit.mockMethod */
+            /** @phpstan-ignore phpunit.mockMethod */
             $driverConnection
                 ->method('getServerVersion')
                 ->willReturn('8.0.29')
