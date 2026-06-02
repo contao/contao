@@ -113,14 +113,16 @@
     outline-offset: 2px;
     background-color: var(--table-even);
     border-radius: calc(var(--border-radius) - 4px);
+    cursor: cell;
 
     td {
         padding: 0 6px 0 0;
     }
 
-    td:not(:has(>.row-wizard-add)),
+    td:not(:has(>.row-wizard-add)) > *,
     td > *:not(.row-wizard-add) {
         opacity: 0.5;
+        pointer-events: none
     }
 }
 
