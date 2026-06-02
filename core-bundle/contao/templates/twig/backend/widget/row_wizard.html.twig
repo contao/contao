@@ -102,12 +102,7 @@
         {% endfor %}
     </tbody>
     <tfoot>
-        {% set ghost_row_attributes = attrs()
-            .addClass('row-wizard-ghost')
-            .set('data-action', 'click->contao--row-wizard#add')
-            .set('data-contao--row-wizard-target', 'ghost')
-        %}
-        <tr{{ ghost_row_attributes }}>
+        <tr class="row-wizard-ghost" data-contao--row-wizard-target="ghost">
             {% if sortable %}
                 <td class="ghost-spacer"><span></span></td>
             {% endif %}
@@ -115,6 +110,7 @@
                 {% set add_button_attributes = attrs()
                     .set('type', 'button')
                     .addClass('row-wizard-add')
+                    .set('data-action', 'contao--row-wizard#add contao--scroll-offset#store')
                 %}
                 <button{{ add_button_attributes }}>
                     {{ backend_icon('new.svg', 'DCA.new.1'|trans) }}
