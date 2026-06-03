@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Hier kunt u de gewenste breedte van de afbeelding definiëren; de uiteindelijke grootte moet via CSS worden bepaald. Voorbeeld: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -190,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.versions.1">
         <source>Show the versions of image size ID %s</source>
+        <target>Toon de versies van afbeeldingsformaat ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>

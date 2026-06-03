@@ -415,12 +415,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Je kunt alleen toegang tot de template editor verlenen als je beheerder bent.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Het trefwoord &apos;auto&apos; is alleen toegestaan ​​aan het begin van het attribuut &apos;sizes&apos; en moet worden gevolgd door een komma als er aanvullende waarden zijn.</target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy loading moet ingeschakeld zijn als het attribuut &apos;sizes&apos; is ingesteld op &apos;auto&apos;.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1880,6 +1883,7 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Er zijn meer records beschikbaar, maar deze zijn om prestatieredenen verborgen. Vouw de boomstructuur samen of pas filters toe om de weergave te beperken.</target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -1919,6 +1923,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Er zijn geen records die overeenkomen met de huidige filterinstellingen.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>

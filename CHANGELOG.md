@@ -2,6 +2,35 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.6] (2026-06-03)
+
+**Fixed issues:**
+
+- [#9843] Fix the initial state visibility and the missing reset support of the row wizard ([zoglo])
+- [#9887] Do not open the context menu when text has been selected ([zoglo])
+- [#9885] Ensure that there is only one `--time-limit` option ([leofeyer])
+- [#9883] Fix the operations menu controller performance ([zoglo])
+- [#9874] Show the translated slot names instead of `{% slot … %}` ([leofeyer])
+- [#9873] Always use modern controllers ([aschempp])
+- [#9872] Revert `pointerDown` preload for lazy operations ([zoglo])
+- [#9855] Lazy-load secondary operations ([Toflar])
+- [#9865] Do not load labels in `System::getReferer()` ([Toflar])
+- [#9857] Queue the tooltips migration ([Toflar])
+- [#9863] Also check for scalar values when formatting options ([aschempp])
+- [#9859] Use ETag-based conditional polling for backend jobs ([Toflar])
+- [#9854] Fix an error if a hidden form field is created without a value ([qzminski])
+- [#9846] Improve the breadcrumb menu implementation ([leofeyer])
+- [#9851] Ignore separators when checking whether to show the operations menu button or not ([qzminski])
+- [#9860] Pass a `DataContainer` object instead of `null` in the `FallbackRecordLabelListener` ([leofeyer])
+- [#9815] Support content elements in the root-page-dependent frontend module ([aschempp])
+- [#9858] Negate the condition for auto-closing messages ([bytehead])
+- [#9852] Add a class service alias for `VirtualFieldsHandler` ([aschempp])
+- [#9836] Handle empty user when indexing protected pages ([aschempp])
+- [#9840] Set the `picker` class in the listing attributes ([leofeyer])
+- [#9834] Do not render the trail headline if there is a breadcrumb ([leofeyer])
+- [#9837] Fix the facet alignment ([aschempp])
+- [#9835] Add the `SORT_INITIAL_LETTER_BOTH` flags to the value formatter ([pressi])
+
 ## [5.7.5] (2026-05-12)
 
 **Fixed issues:**
@@ -465,6 +494,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.6]: https://github.com/contao/contao/releases/tag/5.7.6
 [5.7.5]: https://github.com/contao/contao/releases/tag/5.7.5
 [5.7.4]: https://github.com/contao/contao/releases/tag/5.7.4
 [5.7.3]: https://github.com/contao/contao/releases/tag/5.7.3
@@ -489,6 +519,7 @@ This project adheres to [Semantic Versioning].
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
+[pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
@@ -890,6 +921,7 @@ This project adheres to [Semantic Versioning].
 [#9810]: https://github.com/contao/contao/pull/9810
 [#9813]: https://github.com/contao/contao/pull/9813
 [#9814]: https://github.com/contao/contao/pull/9814
+[#9815]: https://github.com/contao/contao/pull/9815
 [#9816]: https://github.com/contao/contao/pull/9816
 [#9818]: https://github.com/contao/contao/pull/9818
 [#9820]: https://github.com/contao/contao/pull/9820
@@ -898,3 +930,26 @@ This project adheres to [Semantic Versioning].
 [#9825]: https://github.com/contao/contao/pull/9825
 [#9828]: https://github.com/contao/contao/pull/9828
 [#9833]: https://github.com/contao/contao/pull/9833
+[#9834]: https://github.com/contao/contao/pull/9834
+[#9835]: https://github.com/contao/contao/pull/9835
+[#9836]: https://github.com/contao/contao/pull/9836
+[#9837]: https://github.com/contao/contao/pull/9837
+[#9840]: https://github.com/contao/contao/pull/9840
+[#9843]: https://github.com/contao/contao/pull/9843
+[#9846]: https://github.com/contao/contao/pull/9846
+[#9851]: https://github.com/contao/contao/pull/9851
+[#9852]: https://github.com/contao/contao/pull/9852
+[#9854]: https://github.com/contao/contao/pull/9854
+[#9855]: https://github.com/contao/contao/pull/9855
+[#9857]: https://github.com/contao/contao/pull/9857
+[#9858]: https://github.com/contao/contao/pull/9858
+[#9859]: https://github.com/contao/contao/pull/9859
+[#9860]: https://github.com/contao/contao/pull/9860
+[#9863]: https://github.com/contao/contao/pull/9863
+[#9865]: https://github.com/contao/contao/pull/9865
+[#9872]: https://github.com/contao/contao/pull/9872
+[#9873]: https://github.com/contao/contao/pull/9873
+[#9874]: https://github.com/contao/contao/pull/9874
+[#9883]: https://github.com/contao/contao/pull/9883
+[#9885]: https://github.com/contao/contao/pull/9885
+[#9887]: https://github.com/contao/contao/pull/9887
