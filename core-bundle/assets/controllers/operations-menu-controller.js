@@ -217,6 +217,10 @@ export default class OperationsMenuController extends Controller {
             return false;
         }
 
+        if (window.getSelection()?.type === 'Range') {
+            return true;
+        }
+
         const el = event.target;
 
         return (
