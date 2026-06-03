@@ -921,7 +921,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
-		$dc = clone $this;
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
 		$dc->strTable = $strPtable;
 		$dc->intId = $arrRow['id'] ?? $this->intCurrentPid;
 

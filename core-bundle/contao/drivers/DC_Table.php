@@ -4038,7 +4038,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$headerFields = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['headerFields'];
 		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 
-		$dc = clone $this;
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
 		$dc->strTable = $this->ptable;
 		$dc->intId = $this->intCurrentPid;
 
