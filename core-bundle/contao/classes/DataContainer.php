@@ -929,7 +929,7 @@ abstract class DataContainer extends Backend
 			$strPtable,
 			$arrRow,
 			$dc,
-			function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
+			static function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
