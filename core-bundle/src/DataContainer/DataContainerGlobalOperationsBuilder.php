@@ -23,22 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
- * @phpstan-type LegacyOperation array{
- *     html: string,
- *     listAttributes?: HtmlAttributes,
- *     primary?: bool
- * }
- * @phpstan-type ParametricOperation array{
- *     label: string,
- *     title?: string,
- *     attributes?: HtmlAttributes,
- *     listAttributes?: HtmlAttributes,
- *     icon?: string,
- *     iconAttributes?: HtmlAttributes,
- *     href?: string,
- *     primary?: bool
- * }
- * @phpstan-type Operation LegacyOperation|ParametricOperation
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
  *
  * @internal
  */

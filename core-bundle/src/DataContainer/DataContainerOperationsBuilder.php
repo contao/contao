@@ -24,23 +24,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 /**
- * @phpstan-type LegacyOperation array{
- *     html: string,
- *     listAttributes?: HtmlAttributes,
- *     primary?: bool
- * }
- * @phpstan-type ParametricOperation array{
- *     label: string,
- *     title?: string,
- *     attributes?: HtmlAttributes,
- *     listAttributes?: HtmlAttributes,
- *     icon?: string,
- *     iconAttributes?: HtmlAttributes,
- *     href?: string,
- *     method: string,
- *     primary?: bool
- * }
- * @phpstan-type Operation LegacyOperation|ParametricOperation
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ * @phpstan-import-type ParametricOperation from AbstractDataContainerOperationsBuilder
  *
  * @internal
  */
