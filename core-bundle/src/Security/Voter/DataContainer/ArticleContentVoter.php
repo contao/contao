@@ -18,12 +18,17 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
+ * @phpstan-type Record array{
+ *     id: int,
+ *     type: string
+ * }
+ *
  * @internal
  */
 class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
     /**
-     * @var array<int, array{id: int, type: string}|null>
+     * @var array<int, Record|null>
      */
     private array $pageMap = [];
 
@@ -65,11 +70,12 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     }
 
     /**
-     * @return array{id: int, type: string}|null
+     * @return Record|null
      */
     private function getPage(int $articleId): array|null
     {
         if (!\array_key_exists($articleId, $this->pageMap)) {
+            /** @var Record|false $record */
             $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)', [$articleId]);
             $this->pageMap[$articleId] = false !== $record ? $record : null;
         }

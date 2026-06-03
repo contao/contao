@@ -29,6 +29,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @phpstan-type TrailItem array{
+ *     url: string,
+ *     query: array,
+ *     label: string,
+ *     treeTrail: list<array{url: string|null, label: string}>|null,
+ *     treeSiblings: list<array{url: string|null, label: string, active: bool}>|null
+ * }
+ */
 class DcaUrlAnalyzer
 {
     public function __construct(
@@ -52,7 +61,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
     public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false, bool $loadLabels = true): array
     {
@@ -122,7 +131,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
     private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail, bool $loadLabels): array
     {
@@ -493,6 +502,9 @@ class DcaUrlAnalyzer
         return array_keys($modules)[0] ?? null;
     }
 
+    /**
+     * @return list<array{url: string|null, label: string}>|null
+     */
     private function getRootTrail(string $table, int $id, array $query): array|null
     {
         if (!$table || !$id) {
@@ -535,6 +547,9 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    /**
+     * @return list<array{url: string|null, label: string, active: bool}>|null
+     */
     private function getTreeSiblings(string $table, int $pid, int $id, array $query): array|null
     {
         if (!$table || !$pid) {

@@ -1,10 +1,21 @@
 import { Controller } from '@hotwired/stimulus';
-import AccessibleMenu from 'accessible-menu';
 
-let menus = [];
+let openMenu = null;
+
+// Register one listener for the menu instead of multiple separate ones for each controller
+document.addEventListener('click', (event) => {
+    openMenu?.documentClick(event);
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        openMenu?.close();
+    }
+});
 
 export default class OperationsMenuController extends Controller {
-    #onMenuExpand = null;
+    #menuId = null;
+    #skipClickEvent = false;
     #contextMenuEventPosition = null;
     #operationsPromise = null;
     #operationsLoaded = false;
@@ -17,16 +28,19 @@ export default class OperationsMenuController extends Controller {
         primaryOnly: Boolean,
     };
 
-    connect() {
-        if (!this.hasControllerTarget || !this.hasMenuTarget) {
-            return;
-        }
-
-        this.#initializeMenu();
+    initialize() {
+        this.#menuId = `menu-${(Math.random() + 1).toString(36).substring(7)}`;
     }
 
-    disconnect() {
-        this.#destroyMenu();
+    controllerTargetConnected() {
+        this.controllerTarget.id = this.#controllerTargetId;
+        this.controllerTarget.setAttribute('aria-controls', this.#menuId);
+        this.controllerTarget.setAttribute('aria-expanded', 'false');
+    }
+
+    submenuTargetConnected() {
+        this.submenuTarget.id = this.#menuId;
+        this.submenuTarget.setAttribute('aria-labelledby', this.#controllerTargetId);
     }
 
     titleTargetConnected(el) {
@@ -44,52 +58,39 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    controllerTargetConnected(el) {
-        this.#onMenuExpand = () => {
-            for (const menu of menus) {
-                if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
-                    menu.elements.submenuToggles[0].close();
-                }
-            }
-
-            this.#setPosition();
-        };
-
-        el.addEventListener('accessibleMenuExpand', this.#onMenuExpand);
-    }
-
-    controllerTargetDisconnected(el) {
-        el.removeEventListener('accessibleMenuExpand', this.#onMenuExpand);
-        this.#onMenuExpand = null;
-    }
-
     preload() {
         this.#loadOperationsIfNeeded();
     }
 
+    toggle(event) {
+        if (event.type === 'pointerup') {
+            this.#skipClickEvent = true;
+            // skipClickEvent will be reset in the next cycle but will still prevent the click event
+            setTimeout(() => (this.#skipClickEvent = false), 0);
+        }
+
+        if (event.type === 'click' && this.#skipClickEvent) {
+            this.#skipClickEvent = false;
+            return;
+        }
+
+        this.#isOpen ? this.#closeMenu() : this.#openMenu(event);
+    }
+
     open(event) {
-        if (!this.hasControllerTarget || !this.hasMenuTarget) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || this.#isInteractive(event)) {
             return;
         }
 
-        const needsLazyLoad = this.primaryOnlyValue && !this.#operationsLoaded && this.hasRecordIdValue;
-
-        if (!needsLazyLoad && this.#isInteractive(event)) {
-            return;
-        }
-
-        if (needsLazyLoad) {
+        // Needs lazyload
+        if (this.primaryOnlyValue && !this.#operationsLoaded && this.hasRecordIdValue) {
             event.preventDefault();
         }
 
-        this.#loadOperationsIfNeeded().then((loaded) => {
-            if (!loaded || !this.$menu) {
-                return;
-            }
-
+        this.#openMenu(event, () => {
             // Only open the native context from within the opened operations menu (see #9805)
             if (event.target === this.submenuTarget) {
-                return;
+                return false;
             }
 
             const posX = event.clientX;
@@ -97,32 +98,73 @@ export default class OperationsMenuController extends Controller {
 
             // Open the native context menu when clicking the same position
             if (posX === this.#contextMenuEventPosition?.x && posY === this.#contextMenuEventPosition?.y) {
-                this.$menu.elements.submenuToggles[0].close();
                 this.#contextMenuEventPosition = null;
-
-                return;
+                return false;
             }
 
             event.preventDefault();
 
-            // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
-            this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
-
             this.#contextMenuEventPosition = { x: posX, y: posY };
-            this.$menu.elements.submenuToggles[0].open();
-            this.#setPosition(event);
+
+            return true;
         });
     }
 
     close() {
-        if (!this.hasControllerTarget || !this.hasMenuTarget || !this.$menu) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
-        if (this.$menu.elements.submenuToggles[0].isOpen) {
-            this.$menu.elements.submenuToggles[0].close();
-            this.#contextMenuEventPosition = null;
+        this.#closeMenu();
+        this.#contextMenuEventPosition = null;
+    }
+
+    documentClick(event) {
+        if (
+            !this.#isOpen ||
+            this.submenuTarget.contains(event.target) ||
+            this.controllerTarget.contains(event.target)
+        ) {
+            return;
         }
+
+        this.#closeMenu();
+    }
+
+    submenuFocusOut(event) {
+        if (!this.submenuTarget.contains(event.relatedTarget)) {
+            this.#closeMenu();
+        }
+    }
+
+    #openMenu(event, onBeforeOpenCallback = null) {
+        this.#loadOperationsIfNeeded().then((loaded) => {
+            if (!loaded) {
+                return;
+            }
+
+            if (onBeforeOpenCallback && !onBeforeOpenCallback()) {
+                return;
+            }
+
+            if (openMenu && openMenu !== this) {
+                openMenu.#closeMenu();
+            }
+
+            openMenu = this;
+            this.#setState(true);
+            this.#setPosition(event);
+
+            if (event?.type !== 'contextmenu') {
+                // Focus the controller target as focus gets lost when prefetching
+                this.controllerTarget.focus();
+            }
+        });
+    }
+
+    #closeMenu() {
+        openMenu = null;
+        this.#setState(false);
     }
 
     #setPosition(event) {
@@ -175,6 +217,10 @@ export default class OperationsMenuController extends Controller {
             return false;
         }
 
+        if (window.getSelection()?.type === 'Range') {
+            return true;
+        }
+
         const el = event.target;
 
         return (
@@ -194,76 +240,52 @@ export default class OperationsMenuController extends Controller {
             return false;
         }
 
-        if (this.#operationsPromise) {
-            return this.#operationsPromise;
-        }
-
-        this.#operationsPromise = (async () => {
-            this.element.style.cursor = 'progress';
-            this.controllerTarget.style.cursor = 'progress';
-
-            const headers = {
-                'Contao-Operations': String(this.recordIdValue),
-            };
-
-            if (this.hasRecordTableValue && this.recordTableValue) {
-                headers['Contao-Operations-Table'] = this.recordTableValue;
-            }
-
-            try {
-                const response = await fetch(window.location.href, { headers, credentials: 'same-origin' });
-
-                if (!response.ok) {
-                    return false;
-                }
-
-                this.#destroyMenu();
-                this.operationsTarget.outerHTML = await response.text();
-                this.#operationsLoaded = true;
-                this.#initializeMenu();
-            } catch {
-                return false;
-            } finally {
-                this.element.style.removeProperty('cursor');
-                this.controllerTarget.style.removeProperty('cursor');
-            }
-
-            return true;
-        })();
+        this.#operationsPromise ??= this.#fetchOperations();
 
         return this.#operationsPromise;
     }
 
-    #initializeMenu() {
-        if ((this.primaryOnlyValue && !this.#operationsLoaded) || this.$menu) {
-            return;
+    async #fetchOperations() {
+        this.element.style.cursor = 'progress';
+        this.controllerTarget.style.cursor = 'progress';
+
+        const headers = {
+            'Contao-Operations': String(this.recordIdValue),
+        };
+
+        if (this.hasRecordTableValue && this.recordTableValue) {
+            headers['Contao-Operations-Table'] = this.recordTableValue;
         }
 
-        this.$menu = new AccessibleMenu.DisclosureMenu({
-            menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img',
-            // Use arrays to bypass accessible-menu's string class selector validation
-            openClass: ['show'],
-            closeClass: [],
-            transitionClass: [],
-        });
+        try {
+            const response = await fetch(window.location.href, { headers, credentials: 'same-origin' });
 
-        menus.push(this.$menu);
+            if (!response.ok) {
+                return false;
+            }
+
+            this.operationsTarget.outerHTML = await response.text();
+            this.#operationsLoaded = true;
+        } catch {
+            return false;
+        } finally {
+            this.element.style.removeProperty('cursor');
+            this.controllerTarget.style.removeProperty('cursor');
+        }
+
+        return true;
     }
 
-    #destroyMenu() {
-        if (!this.$menu) {
-            return;
-        }
+    #setState(state) {
+        this.controllerTarget.setAttribute('aria-expanded', String(state));
+        this.submenuTarget.classList.toggle('show', state);
+    }
 
-        // Cleanup menu instance, otherwise we would leak memory
-        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
-            if (value === this.$menu) {
-                delete window.AccessibleMenu.menus[key];
-            }
-        }
+    get #isOpen() {
+        return this.controllerTarget.ariaExpanded === 'true';
+    }
 
-        menus = menus.filter((menu) => menu !== this.$menu);
-        this.$menu = null;
+    get #controllerTargetId() {
+        return `menu-button-${this.#menuId}`;
     }
 }

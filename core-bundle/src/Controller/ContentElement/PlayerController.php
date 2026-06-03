@@ -33,7 +33,8 @@ use Symfony\Component\Uid\Uuid;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>
+ *          sources: list<HtmlAttributes>,
+ *          tracks: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -196,6 +197,7 @@ class PlayerController extends AbstractContentElementController
                 'type' => 'audio',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => [],
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',

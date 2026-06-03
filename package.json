@@ -11,7 +11,6 @@
         "@stylistic/stylelint-plugin": "^5.0",
         "@symfony/webpack-encore": "^6.0",
         "@web-auth/webauthn-stimulus": "^5.3",
-        "accessible-menu": "^4.2",
         "ace-builds": "^1.43.3",
         "file-loader": "^6.2",
         "focus-trap": "^8.0",

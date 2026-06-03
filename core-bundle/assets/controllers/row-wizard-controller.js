@@ -1,15 +1,25 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['body', 'row', 'copy', 'delete'];
+    #template;
+
+    static targets = ['body', 'row', 'copy', 'delete', 'ghost'];
 
     static values = {
         name: String,
         min: Number,
         max: Number,
+        empty: Boolean,
     };
 
     connect() {
+        this.#template = this.rowTargets[0].cloneNode(true);
+        this.#buildGhostRow();
+
+        if (this.emptyValue) {
+            this.rowTargets[0].hidden = true;
+        }
+
         this.#updatePermissions();
     }
 
@@ -48,6 +58,24 @@ export default class extends Controller {
         });
     }
 
+    add() {
+        const firstRow = this.rowTargets[0];
+
+        if (firstRow.hidden) {
+            this.#enableRow(firstRow);
+            this.#focus(firstRow);
+            this.#updatePermissions();
+            return;
+        }
+
+        const newRow = this.#template.cloneNode(true);
+
+        this.#resetInputs(newRow);
+        this.bodyTarget.appendChild(newRow);
+        this.#focus(newRow);
+        this.#updatePermissions();
+    }
+
     delete(event) {
         if (!this.#deleteAllowed()) {
             return;
@@ -55,7 +83,7 @@ export default class extends Controller {
 
         const row = this.#getRow(event);
 
-        if (this.bodyTarget.children.length > 1) {
+        if (this.rowTargets.length > 1) {
             this.#focus(row.nextElementSibling) ||
                 this.#focus(row.previousElementSibling) ||
                 this.#focus(this.bodyTarget);
@@ -63,7 +91,8 @@ export default class extends Controller {
             row.remove();
         } else {
             this.#resetInputs(row);
-            this.#focus(row);
+            this.#disableRow(row);
+            this.#focus(this.bodyTarget);
         }
 
         this.#updatePermissions();
@@ -182,8 +211,39 @@ export default class extends Controller {
         });
     }
 
+    #buildGhostRow() {
+        const last = this.ghostTarget.querySelector('.tl_right');
+
+        for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
+            if (cell.querySelector('.drag-handle')) {
+                continue;
+            }
+
+            const ghostCell = cell.cloneNode(true);
+
+            for (const el of ghostCell.querySelectorAll('input, select, textarea')) {
+                el.disabled = true;
+                el.tabindex = -1;
+            }
+
+            this.ghostTarget.insertBefore(ghostCell, last);
+        }
+
+        this.#resetInputs(this.ghostTarget);
+    }
+
     #getRow(event) {
         return event.target.closest(`*[data-${this.identifier}-target="row"]`);
+    }
+
+    #disableRow(row) {
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
+        row.hidden = true;
+    }
+
+    #enableRow(row) {
+        row.hidden = false;
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
     }
 
     #resetInputs(row) {
@@ -207,14 +267,16 @@ export default class extends Controller {
     }
 
     #deleteAllowed() {
-        return !(this.hasMinValue && this.bodyTarget.children.length === this.minValue);
+        return !(this.hasMinValue && this.rowTargets.length === this.minValue);
     }
 
     #copyAllowed() {
-        return !(this.hasMaxValue && this.bodyTarget.children.length === this.maxValue);
+        return !(this.hasMaxValue && this.rowTargets.length === this.maxValue);
     }
 
     #updatePermissions() {
+        this.element.dataset.rowsCount = this.rowTargets.filter((row) => !row.hidden).length;
+
         if (this.hasMinValue) {
             const enable = this.#deleteAllowed();
 
@@ -237,6 +299,8 @@ export default class extends Controller {
                     el.disabled = true;
                 }
             }
+
+            this.ghostTarget.hidden = !enable;
         }
     }
 }
