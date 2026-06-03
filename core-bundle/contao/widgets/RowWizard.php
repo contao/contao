@@ -166,7 +166,6 @@ class RowWizard extends Widget
 		if (null !== $this->min)
 		{
 			$valuesEmpty = false;
-
 			$rowCount = \count($this->varValue);
 
 			while ($rowCount < $this->min)
