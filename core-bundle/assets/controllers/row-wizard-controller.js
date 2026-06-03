@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
     #template;
@@ -212,7 +212,6 @@ export default class extends Controller {
     }
 
     #buildGhostRow() {
-        const _addButton = this.ghostTarget.querySelector('td');
         const last = this.ghostTarget.querySelector('.tl_right');
 
         for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
@@ -276,8 +275,7 @@ export default class extends Controller {
     }
 
     #updatePermissions() {
-        const count = this.rowTargets.filter((row) => !row.hidden).length;
-        this.element.dataset.rowsCount = count;
+        this.element.dataset.rowsCount = this.rowTargets.filter((row) => !row.hidden).length;
 
         if (this.hasMinValue) {
             const enable = this.#deleteAllowed();

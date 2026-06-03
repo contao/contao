@@ -105,9 +105,12 @@
         padding: 0 6px 0 0;
     }
 
-    td:not(:has(>.row-wizard-add)),
-    td > *:not(.row-wizard-add) {
-        opacity: 0.5;
+    td:not(.tl_right) {
+        opacity: 0.7;
+    }
+
+    .tl_right > *:not(.row-wizard-add) {
+        visibility: hidden;
     }
 }
 
