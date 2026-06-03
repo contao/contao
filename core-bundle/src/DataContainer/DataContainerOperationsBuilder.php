@@ -24,6 +24,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 /**
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ * @phpstan-import-type ParametricOperation from AbstractDataContainerOperationsBuilder
+ *
  * @internal
  */
 class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuilder
@@ -214,6 +217,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         return $this;
     }
 
+    /**
+     * @return Operation|null
+     */
     private function generateOperation(string $name, array $operation, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
@@ -293,6 +299,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     /**
      * Returns true if this was a toggle operation (which is added to $operations).
+     *
+     * @return ParametricOperation|false|null
      */
     private function handleToggle(DataContainerOperation $config, array $record, array $operation, string|null $href): array|false|null
     {
@@ -370,12 +378,14 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         ;
 
         return [
-            'href' => $href,
-            'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $state ? $labelEnabled : $labelDisabled,
+            'title' => $state ? $config['title'] : $titleDisabled,
             'attributes' => $attributes,
+            'listAttributes' => $config['listAttributes'],
             'icon' => $state ? $icon : $_icon,
             'iconAttributes' => $iconAttributes,
+            'href' => $href,
+            'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,
         ];
     }
