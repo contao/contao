@@ -927,21 +927,25 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+		$dc->strTable = $strPtable;
+		$dc->intId = $arrRow['id'] ?? $this->intCurrentPid;
+
 		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithHeaderButtons(
 			$strPtable,
 			$arrRow,
-			$this,
-			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
+			$dc,
+			static function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{
 					$callback = System::importStatic($config['button_callback'][0]);
-					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 				elseif (\is_callable($config['button_callback'] ?? null))
 				{
-					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 			}
 		);
