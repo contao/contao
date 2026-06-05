@@ -241,11 +241,19 @@ export default class extends Controller {
     }
 
     #disableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
         row.hidden = true;
     }
 
     #enableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
         row.hidden = false;
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
     }
