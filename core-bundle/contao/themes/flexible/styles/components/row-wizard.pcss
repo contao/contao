@@ -107,6 +107,14 @@
 
     td:not(.tl_right) {
         opacity: 0.7;
+
+        a {
+            cursor: not-allowed;
+
+            &:active {
+                color: currentColor;
+            }
+        }
     }
 
     .tl_right > *:not(.row-wizard-add) {
