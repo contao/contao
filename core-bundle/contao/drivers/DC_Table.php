@@ -4392,18 +4392,43 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addPasteButton('pasteafter', $table, null);
 						}
 
-						// Copy/move multiple
-						elseif ($blnMultiboard)
+						// Copy/move
+						elseif ($blnMultiboard || $blnClipboard)
 						{
-							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']));
-						}
+							if($blnMultiboard){
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $row[$i]['id'] . '&ptable=' . $this->strTable);
+							}else{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id'] . '&ptable=' . $this->strTable);
+							}
 
-						// Paste buttons
-						elseif ($blnClipboard)
-						{
 							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']));
+							$recordOperations->addPasteButton('pasteafter', $table, $pasteAfterHref);
+
+							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
+							$data = array(
+								'pid' => $row[$i]['id'] ?? null,
+							);
+
+							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+							{
+								$data['ptable'] = $this->strTable;
+							}
+
+							$subject = new ReadAction($ctable, $data);
+
+							if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $ctable, $subject))
+							{
+								if ($ctable !== $this->strTable)
+								{
+									$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+								}
+							}
+							else
+							{
+								$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+							}
 						}
 
 						// Create new button
