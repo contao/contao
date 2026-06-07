@@ -1392,11 +1392,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Calculate the new position of a moved or inserted record
 	 *
-	 * @param string  $mode
-	 * @param integer $pid
-	 * @param integer $insertMode
+	 * @param string               $mode
+	 * @param integer              $pid
+	 * @param boolean|integer|null $insertMode
 	 */
-	protected function getNewPosition($mode, $pid=null, int|null $insertMode=self::PASTE_AFTER)
+	protected function getNewPosition($mode, $pid=null, bool|int|null $insertMode=self::PASTE_AFTER)
 	{
 		$db = Database::getInstance();
 
@@ -1420,7 +1420,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
-				if ($insertMode == self::PASTE_INTO && isset($session['filter'][$filter]['limit']))
+				if (($insertMode === true || $insertMode === self::PASTE_INTO) && isset($session['filter'][$filter]['limit']))
 				{
 					$limit = substr($session['filter'][$filter]['limit'], 0, strpos($session['filter'][$filter]['limit'], ','));
 
@@ -1433,14 +1433,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($objInsertAfter->numRows)
 						{
-							$insertInto = false;
+							$insertMode = false;
 							$pid = $objInsertAfter->id;
 						}
 					}
 				}
 
 				// Insert the current record at the beginning when inserting into the parent record (prepend)
-				if ($insertMode == self::PASTE_INTO)
+				if ($insertMode === true || $insertMode === self::PASTE_INTO)
 				{
 					$newPID = $pid;
 
@@ -1485,7 +1485,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$newSorting = 128;
 					}
 				}
-				elseif ($insertMode == self::PASTE_INTO_APPEND)
+				elseif ($insertMode === self::PASTE_INTO_APPEND)
 				{
 					$newPID = $pid;
 
@@ -1602,7 +1602,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (is_numeric($pid))
 			{
 				// Insert the current record into the parent record
-				if ($insertMode == self::PASTE_INTO)
+				if ($insertMode === true || $insertMode === self::PASTE_INTO)
 				{
 					$this->set['pid'] = $pid;
 				}
