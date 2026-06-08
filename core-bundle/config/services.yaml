@@ -1437,6 +1437,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.global.variable'
             - '@contao.twig.inspector_node_visitor'
+            - '@contao.insert_tag.parser'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader

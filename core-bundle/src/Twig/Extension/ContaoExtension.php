@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
@@ -62,6 +63,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         private readonly ContaoFilesystemLoader $filesystemLoader,
         private readonly ContaoVariable $contaoVariable,
         private readonly InspectorNodeVisitor $inspectorNodeVisitor,
+        private readonly InsertTagParser $insertTagParser,
     ) {
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
@@ -69,6 +71,18 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
+
+        $this->environment->registerUndefinedFunctionCallback(function (string $name) {
+            if ($this->insertTagParser->hasInsertTag($name)) {
+                return new TwigFunction($name, function() use($name) {
+                    $args = implode('::', func_get_args());
+
+                    return $this->insertTagParser->renderTag($name.($args ? '::'.$args : ''))->getValue();
+                });
+            }
+
+            return false;
+        });
     }
 
     public function getGlobals(): array
