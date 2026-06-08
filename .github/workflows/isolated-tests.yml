@@ -32,10 +32,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install the isolated tests
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/isolated-tests
 

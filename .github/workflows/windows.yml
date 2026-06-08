@@ -36,7 +36,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat
