@@ -130,6 +130,8 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
 		// Do not cache the response if caching was not configured
 		if ($objPage->cache < 1 && $objPage->clientCache < 1)
 		{
