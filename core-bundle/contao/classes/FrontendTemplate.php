@@ -140,8 +140,6 @@ class FrontendTemplate extends Template
 			return $response->setPrivate(); // Make sure the response is private
 		}
 
-		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
-
 		// Private cache
 		if ($objPage->clientCache > 0)
 		{
