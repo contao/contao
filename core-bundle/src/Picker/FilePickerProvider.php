@@ -130,7 +130,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string, string|bool>
+     * @return array<string, mixed>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
