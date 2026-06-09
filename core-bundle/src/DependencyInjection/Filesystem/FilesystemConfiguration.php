@@ -18,6 +18,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -47,7 +48,7 @@ class FilesystemConfiguration
 
             /** @var list<class-string<AdapterDefinitionBuilderInterface>> $builderClasses */
             $builderClasses = array_filter(
-                get_declared_classes(),
+                [...get_declared_classes(), LocalAdapterDefinitionBuilder::class],
                 static fn ($class) => \in_array(AdapterDefinitionBuilderInterface::class, class_implements($class), true) && !(new \ReflectionClass($class))->isAbstract(),
             );
 

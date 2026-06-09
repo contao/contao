@@ -23,7 +23,6 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
-use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -79,9 +78,6 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountNativeAdapter(): void
     {
         $container = $this->getContainerBuilder();
-
-        // Make local adapter available
-        new \ReflectionClass(LocalAdapterDefinitionBuilder::class);
 
         $config = new FilesystemConfiguration($container);
         $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
@@ -164,9 +160,6 @@ class FilesystemConfigurationTest extends TestCase
             'kernel.project_dir' => '/my/site',
             'bar' => 'path/to/bar',
         ]);
-
-        // Make local adapter available
-        new \ReflectionClass(LocalAdapterDefinitionBuilder::class);
 
         $config = new FilesystemConfiguration($container);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
