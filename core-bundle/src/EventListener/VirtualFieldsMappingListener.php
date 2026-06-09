@@ -64,7 +64,8 @@ class VirtualFieldsMappingListener
 
         // Do not use array_map() – it replaces the fields array with a fresh copy,
         // breaking PHP references used for cross-table DCA field definitions (e.g.
-        // $GLOBALS['TL_DCA']['tl_content']['fields']['x'] = &$GLOBALS['TL_DCA']['tl_module']['fields']['x']).
+        // $GLOBALS['TL_DCA']['tl_content']['fields']['x'] =
+        // &$GLOBALS['TL_DCA']['tl_module']['fields']['x'] ).
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
             if (
                 !\array_key_exists('sql', $config)
