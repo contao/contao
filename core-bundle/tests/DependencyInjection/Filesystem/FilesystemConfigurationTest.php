@@ -22,7 +22,8 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -79,14 +80,17 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        // Make local adapter available
+        new \ReflectionClass(LocalAdapterDefinitionBuilder::class);
+
+        $config = new FilesystemConfiguration($container);
         $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
 
-        $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
+        $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
+        $this->assertTrue(($alias = $container->getAlias('contao.filesystem.adapter.foo'))->isPublic());
 
-        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.foo');
+        $adapterDefinition = $container->getDefinition((string) $alias);
         $this->assertSame(LocalFilesystemAdapter::class, $adapterDefinition->getClass());
-        $this->assertFalse($adapterDefinition->isPublic());
 
         $calls = $container->getDefinition('contao.filesystem.mount_manager')->getMethodCalls();
 
@@ -99,9 +103,10 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountCustomAdapter(): void
     {
         $container = $this->getContainerBuilder();
+        $container->setDefinition('custom_adapter_id', new Definition());
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
-        $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
+        $config = new FilesystemConfiguration($container);
+        $config->mountAdapter('custom_adapter_id', [], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
         $this->assertFalse($container->getAlias('contao.filesystem.adapter.foo')->isPublic());
@@ -118,7 +123,14 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountAdapterAutoGeneratesId(string $mountPath, string $expectedId): void
     {
         $container = $this->getContainerBuilder();
-        $config = new FilesystemConfiguration($container);
+
+        $fooAdapterBuilder = $this->createStub(AdapterDefinitionBuilderInterface::class);
+        $fooAdapterBuilder
+            ->method('createAdapter')
+            ->willReturn('flysystem.adaper.foo')
+        ;
+
+        $config = new FilesystemConfiguration($container, ['foo' => $fooAdapterBuilder]);
 
         $this->assertFalse($container->hasAlias($expectedId));
 
@@ -153,12 +165,15 @@ class FilesystemConfigurationTest extends TestCase
             'bar' => 'path/to/bar',
         ]);
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        // Make local adapter available
+        new \ReflectionClass(LocalAdapterDefinitionBuilder::class);
+
+        $config = new FilesystemConfiguration($container);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
-        $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
+        $this->assertTrue($container->hasAlias('contao.filesystem.adapter.my_adapter'));
 
-        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.my_adapter');
+        $adapterDefinition = $container->getDefinition((string) $container->getAlias('contao.filesystem.adapter.my_adapter'));
 
         $this->assertSame(
             $expected,

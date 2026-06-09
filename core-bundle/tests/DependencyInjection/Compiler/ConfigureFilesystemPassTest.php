@@ -19,6 +19,7 @@ use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -124,6 +125,9 @@ class ConfigureFilesystemPassTest extends TestCase
             'contao.filesystem.public_uri.symlinked_local_files_provider',
             $publicUriProviderDefinition = new Definition(SymlinkedLocalFilesProvider::class),
         );
+
+        // Make local adapter available
+        new \ReflectionClass(LocalAdapterDefinitionBuilder::class);
 
         (new ConfigureFilesystemPass())->process($container);
 

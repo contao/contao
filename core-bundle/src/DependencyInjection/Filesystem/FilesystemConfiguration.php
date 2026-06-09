@@ -17,7 +17,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
-use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,10 +30,34 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
+    /**
+     * @var array<string, AdapterDefinitionBuilderInterface>
+     */
+    private array $adapterDefinitionBuilders;
+
+    /**
+     * @param array<string, AdapterDefinitionBuilderInterface> $adapterDefinitionBuilders
+     */
     public function __construct(
         private readonly ContainerBuilder $container,
-        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
+        array|null $adapterDefinitionBuilders = null,
     ) {
+        if (null === $adapterDefinitionBuilders) {
+            $adapterDefinitionBuilders = [];
+
+            /** @var list<class-string<AdapterDefinitionBuilderInterface>> $builderClasses */
+            $builderClasses = array_filter(
+                get_declared_classes(),
+                static fn ($class) => \in_array(AdapterDefinitionBuilderInterface::class, class_implements($class), true) && !(new \ReflectionClass($class))->isAbstract(),
+            );
+
+            foreach ($builderClasses as $builderClass) {
+                $builder = new $builderClass();
+                $adapterDefinitionBuilders[$builder->getName()] = $builder;
+            }
+        }
+
+        $this->adapterDefinitionBuilders = $adapterDefinitionBuilders;
     }
 
     public function getContainer(): ContainerBuilder
@@ -80,32 +104,44 @@ class FilesystemConfiguration
      * The $mountPath must be a path relative to and inside the project root (e.g.
      * "files/foo" or "assets/images").
      *
-     * If you do not set a name, the id/alias for the adapter service will be derived
+     * If you do not set a $name, the id/alias for the adapter service will be derived
      * from the mount path.
      */
-    public function mountAdapter(string $adapter, array $options, string $mountPath, string|null $name = null): self
+    public function mountAdapter(string $adapterNameOrId, array $options, string $mountPath, string|null $name = null): self
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
-        $adapterId = "contao.filesystem.adapter.$name";
+        $contaoAdapterId = "contao.filesystem.adapter.$name";
 
-        // TODO: Fix compatibility with league/flysystem-bundle 3.7
-        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
-            // Native adapter
-            $this->container
-                ->setDefinition($adapterId, $adapterDefinition)
-                ->setPublic(false)
-            ;
+        if ($this->container->has($adapterNameOrId)) {
+            // Alias custom adapter service
+            $this->container->setAlias($contaoAdapterId, $adapterNameOrId);
         } else {
-            // Custom adapter
+            $builder = $this->adapterDefinitionBuilders[$adapterNameOrId] ?? throw new InvalidConfigurationException(\sprintf('There is no Flysystem adapter definition builder for the type "%s".', $adapterNameOrId));
+
+            // Set default permissions
+            if (!isset($options['permissions'])) {
+                $options['permissions'] = [
+                    'file' => ['public' => 0655, 'private' => 0600],
+                    'dir' => ['public' => 0755, 'private' => 0700],
+                ];
+            }
+
+            $adapterId = $builder->createAdapter(
+                $this->container,
+                "contao_vfs_$name",
+                $options,
+                null,
+            ) ?? throw new InvalidConfigurationException(\sprintf('The Flysystem adapter for the type "%s" could not be created.', $adapterNameOrId));
+
             $this->container
-                ->setAlias($adapterId, $adapter)
-                ->setPublic(false)
+                ->setAlias($contaoAdapterId, $adapterId)
+                ->setPublic(true)
             ;
         }
 
         $this->container
             ->getDefinition('contao.filesystem.mount_manager')
-            ->addMethodCall('mount', [new Reference($adapterId), $mountPath])
+            ->addMethodCall('mount', [new Reference($contaoAdapterId), $mountPath])
         ;
 
         return $this;
