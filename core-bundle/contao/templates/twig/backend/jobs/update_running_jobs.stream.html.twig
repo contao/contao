@@ -36,7 +36,7 @@
         </template>
     </turbo-stream>
 
-    <turbo-stream action="update" targets="[data-job-attachments='{{ job.uuid }}']">
+    <turbo-stream action="replace" targets="[data-job-attachments='{{ job.uuid }}']">
         <template>
             {{ include('@Contao/backend/jobs/attachments.html.twig', {attachments: attachments[job.uuid]}) }}
         </template>
