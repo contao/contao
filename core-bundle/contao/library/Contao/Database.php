@@ -474,12 +474,7 @@ class Database
 			return $arrReturn;
 		}
 
-		if ($this->fieldExists('ptable', $strTable))
-		{
-			$strWhere .= " ptable = '" . $strTable . "'";
-		}
-
-		$objChildren = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
+		$objChildren = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($this->fieldExists('ptable', $strTable) ? " AND ptable = '" . $strTable . "'" : "") . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
 		if ($objChildren->numRows > 0)
 		{
