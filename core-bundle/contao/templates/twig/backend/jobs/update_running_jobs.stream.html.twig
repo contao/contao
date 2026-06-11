@@ -24,13 +24,13 @@
 
 {# Update the status columns #}
 {% for job in jobs %}
-    <turbo-stream action="update" targets="[data-job-progress='{{ job.uuid }}']">
+    <turbo-stream action="replace" targets="[data-job-progress='{{ job.uuid }}']">
         <template>
             {{ include('@Contao/backend/jobs/progress.html.twig') }}
         </template>
     </turbo-stream>
 
-    <turbo-stream action="update" targets="[data-job-status='{{ job.uuid }}']">
+    <turbo-stream action="replace" targets="[data-job-status='{{ job.uuid }}']">
         <template>
             {{ include('@Contao/backend/jobs/status.html.twig') }}
         </template>
