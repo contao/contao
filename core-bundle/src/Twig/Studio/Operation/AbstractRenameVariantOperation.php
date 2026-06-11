@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,7 +16,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
-        if ($context->isThemeContext()) {
+        if ($context->isThemeContext() || !$this->userTemplateExists($context)) {
             return false;
         }
 
