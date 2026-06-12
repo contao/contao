@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Doctrine\DBAL\Connection;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

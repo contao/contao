@@ -106,9 +106,9 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         // Check if the first template in the chain is a custom template from the
         // Contao_Global or any theme namespace.
-        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()];
-        $first = $chains[array_key_first($chains)];
-        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
+        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()] ?? [];
+        $first = array_first($chains);
+        $namespace = ContaoTwigUtil::parseContaoName($first ?? '')[0] ?? '';
 
         $userTemplateExists = match ($context->isThemeContext()) {
             true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
