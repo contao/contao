@@ -14,7 +14,10 @@ export default class extends Controller {
 
     connect() {
         this.#template = this.rowTargets[0].cloneNode(true);
-        this.#buildGhostRow();
+
+        if (this.hasGhostTarget) {
+            this.#buildGhostRow();
+        }
 
         if (this.emptyValue) {
             this.rowTargets[0].hidden = true;
@@ -221,9 +224,10 @@ export default class extends Controller {
 
             const ghostCell = cell.cloneNode(true);
 
-            for (const el of ghostCell.querySelectorAll('input, select, textarea')) {
+            for (const el of ghostCell.querySelectorAll('input, select, textarea, button, a')) {
                 el.disabled = true;
                 el.tabindex = -1;
+                el.removeAttribute('href');
             }
 
             this.ghostTarget.insertBefore(ghostCell, last);
@@ -237,11 +241,19 @@ export default class extends Controller {
     }
 
     #disableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
         row.hidden = true;
     }
 
     #enableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
         row.hidden = false;
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
     }
