@@ -59,42 +59,34 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
 
         yield 'matching nested variant identifier' => [
             static::getOperationContext('prefix/foo/bar/my_variant'),
-            true,[
+            true, [
                 '/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_Global/prefix/foo/bar/my_variant.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/bar/my_variant.html.twig',
-            ]
+            ],
         ];
 
         yield 'arbitrary identifier in theme context' => [
             static::getOperationContext('bar/foo', 'theme'),
-            false,[
+            false, [
                 '/templates/bar/foo.html.twig' => '@Contao_Global/bar/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
-            ]
+            ],
         ];
 
         yield 'identifier matching the prefix in theme context' => [
             static::getOperationContext('prefix/foo', 'theme'),
-            false,[
+            false, [
                 '/templates/prefix/foo.html.twig' => '@Contao_Global/prefix/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
-            ]
+            ],
         ];
 
         yield 'matching variant identifier in theme context' => [
             static::getOperationContext('prefix/foo/my_variant', 'theme'),
-            false,[
+            false, [
                 '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
-            ]
-        ];
-
-        yield 'matching variant identifier in theme context' => [
-            static::getOperationContext('prefix/foo/my_variant', 'theme'),
-            false,[
-                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
-                '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
-            ]
+            ],
         ];
 
         yield 'no root template' => [
@@ -102,7 +94,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             false,
             [
                 '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
-            ]
+            ],
         ];
     }
 
