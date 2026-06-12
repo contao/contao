@@ -12,7 +12,6 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
 use Twig\Environment;
@@ -20,7 +19,6 @@ use Twig\Environment;
 /**
  * @experimental
  */
-#[AutoconfigureTag('container.service_subscriber', ['id' => 'contao.twig.studio.cache_invalidator'])]
 abstract class AbstractOperation extends AbstractController implements OperationInterface
 {
     private string|null $name = null;
@@ -106,9 +104,9 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         // Check if the first template in the chain is a custom template from the
         // Contao_Global or any theme namespace.
-        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()] ?? [];
-        $first = array_first($chains);
-        $namespace = ContaoTwigUtil::parseContaoName($first ?? '')[0] ?? '';
+        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()];
+        $first = $chains[array_key_first($chains)];
+        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
 
         $userTemplateExists = match ($context->isThemeContext()) {
             true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
