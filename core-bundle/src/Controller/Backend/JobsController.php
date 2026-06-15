@@ -16,6 +16,7 @@ use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\IsSignatureValid;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -66,6 +67,7 @@ class JobsController extends AbstractBackendController
         defaults: ['_scope' => 'backend'],
         methods: ['GET'],
     )]
+    #[IsSignatureValid]
     public function downloadJobAttachment(string $jobUuid, string $identifier): Response
     {
         $job = $this->jobs->getByUuid($jobUuid);
