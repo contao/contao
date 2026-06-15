@@ -23,6 +23,8 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -79,6 +81,11 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
+
         $config = new FilesystemConfiguration($container);
         $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
 
@@ -120,13 +127,29 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
+        $fooAdapterDefinitionBuilder = $this->createStub(AdapterDefinitionBuilderInterface::class);
+        $fooAdapterDefinitionBuilder
+            ->method('getName')
+            ->willReturn('foo')
+        ;
+
+        $fooAdapterDefinitionBuilder
+            ->method('createAdapter')
+            ->willReturn('flysystem.adapter.foo')
+        ;
+
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder($fooAdapterDefinitionBuilder);
+
+        $container->registerExtension($flysystemExtension);
+
         $fooAdapterBuilder = $this->createStub(AdapterDefinitionBuilderInterface::class);
         $fooAdapterBuilder
             ->method('createAdapter')
             ->willReturn('flysystem.adaper.foo')
         ;
 
-        $config = new FilesystemConfiguration($container, ['foo' => $fooAdapterBuilder]);
+        $config = new FilesystemConfiguration($container);
 
         $this->assertFalse($container->hasAlias($expectedId));
 
@@ -160,6 +183,11 @@ class FilesystemConfigurationTest extends TestCase
             'kernel.project_dir' => '/my/site',
             'bar' => 'path/to/bar',
         ]);
+
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
 
         $config = new FilesystemConfiguration($container);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');

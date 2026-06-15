@@ -17,12 +17,12 @@ use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
-use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
-use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 
@@ -31,34 +31,8 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    /**
-     * @var array<string, AdapterDefinitionBuilderInterface>
-     */
-    private array $adapterDefinitionBuilders;
-
-    /**
-     * @param array<string, AdapterDefinitionBuilderInterface> $adapterDefinitionBuilders
-     */
-    public function __construct(
-        private readonly ContainerBuilder $container,
-        array|null $adapterDefinitionBuilders = null,
-    ) {
-        if (null === $adapterDefinitionBuilders) {
-            $adapterDefinitionBuilders = [];
-
-            /** @var list<class-string<AdapterDefinitionBuilderInterface>> $builderClasses */
-            $builderClasses = array_filter(
-                [...get_declared_classes(), LocalAdapterDefinitionBuilder::class],
-                static fn ($class) => \in_array(AdapterDefinitionBuilderInterface::class, class_implements($class), true) && !(new \ReflectionClass($class))->isAbstract(),
-            );
-
-            foreach ($builderClasses as $builderClass) {
-                $builder = new $builderClass();
-                $adapterDefinitionBuilders[$builder->getName()] = $builder;
-            }
-        }
-
-        $this->adapterDefinitionBuilders = $adapterDefinitionBuilders;
+    public function __construct(private readonly ContainerBuilder $container)
+    {
     }
 
     public function getContainer(): ContainerBuilder
@@ -117,8 +91,6 @@ class FilesystemConfiguration
             // Alias custom adapter service
             $this->container->setAlias($contaoAdapterId, $adapterNameOrId);
         } else {
-            $builder = $this->adapterDefinitionBuilders[$adapterNameOrId] ?? throw new InvalidConfigurationException(\sprintf('There is no Flysystem adapter definition builder for the type "%s".', $adapterNameOrId));
-
             // Set default permissions
             if (!isset($options['permissions'])) {
                 $options['permissions'] = [
@@ -127,12 +99,25 @@ class FilesystemConfiguration
                 ];
             }
 
-            $adapterId = $builder->createAdapter(
-                $this->container,
-                "contao_vfs_$name",
-                $options,
-                null,
-            ) ?? throw new InvalidConfigurationException(\sprintf('The Flysystem adapter for the type "%s" could not be created.', $adapterNameOrId));
+            // Unfortunately the adapter definition builders are hardcoded in the Flysytem
+            // bundle class. By using reflection to call "createAdapterDefinition", we ensure
+            // the passed $options are handled the same way the extension does.
+            /** @var ExtensionInterface $flysystemExtension */
+            $flysystemExtension = $this->container->getExtension('flysystem');
+
+            $adapterId = (new \ReflectionMethod(FlysystemExtension::class, 'createAdapterDefinition'))
+                ->invoke(
+                    $flysystemExtension,
+                    $this->container,
+                    $adapterNameOrId,
+                    "contao_vfs_$name",
+                    $options,
+                )
+            ;
+
+            if (null === $adapterId) {
+                throw new InvalidConfigurationException(\sprintf('The Flysystem adapter for the type "%s" could not be created.', $adapterNameOrId));
+            }
 
             $this->container
                 ->setAlias($contaoAdapterId, $adapterId)
