@@ -32,7 +32,7 @@ class SitemapEvent extends Event
     public function addUrlToDefaultUrlSet(string $url): self
     {
         $sitemap = $this->getDocument();
-        $urlSet = $sitemap->getElementsByTagNameNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
+        $urlSet = $sitemap->getElementsByTagNameNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
 
         if (!$urlSet) {
             return $this;

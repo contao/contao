@@ -62,17 +62,21 @@ class VirtualFieldsMappingListener
             return;
         }
 
-        $GLOBALS['TL_DCA'][$table]['fields'] = array_map(
-            function (array $config): array {
-                // Automatically save to virtual field in DC_Table
-                if (!\array_key_exists('sql', $config) && !\array_key_exists('targetColumn', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config) && \array_key_exists('inputType', $config)) {
-                    $config['targetColumn'] = $this->defaultStorageName;
-                }
-
-                return $config;
-            },
-            $GLOBALS['TL_DCA'][$table]['fields'] ?? [],
-        );
+        // Do not use array_map() – it replaces the fields array with a fresh copy,
+        // breaking PHP references used for cross-table DCA field definitions (e.g.
+        // $GLOBALS['TL_DCA']['tl_content']['fields']['x'] =
+        // &$GLOBALS['TL_DCA']['tl_module']['fields']['x'] ).
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $name => $config) {
+            if (
+                !\array_key_exists('sql', $config)
+                && !\array_key_exists('targetColumn', $config)
+                && !\array_key_exists('input_field_callback', $config)
+                && !\array_key_exists('save_callback', $config)
+                && \array_key_exists('inputType', $config)
+            ) {
+                $GLOBALS['TL_DCA'][$table]['fields'][$name]['targetColumn'] = $this->defaultStorageName;
+            }
+        }
 
         // Configure virtual field targets
         foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'targetColumn')) as $target) {

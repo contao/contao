@@ -59,7 +59,6 @@
             display: flex;
         }
 
-        &.ghost-spacer,
         &:first-child:has(>.drag-handle),
         &:last-child {
             width: 1%;
@@ -73,12 +72,6 @@
                 padding-bottom: 5px;
             }
         }
-    }
-
-    /* Prevent layout shift due to missing sortable button (#9843)  */
-    .ghost-spacer > span {
-        display: inline-block;
-        width: 16px;
     }
 
     &[data-rows-count="0"] {
@@ -107,6 +100,25 @@
 
     td:not(.tl_right) {
         opacity: 0.7;
+
+        a {
+            cursor: not-allowed;
+
+            &:active {
+                color: currentcolor;
+            }
+        }
+    }
+
+    /* Prevent layout shift due to missing sortable button (#9843)  */
+    .ghost-spacer {
+        width: 1%;
+        white-space: nowrap;
+
+        > span {
+            display: inline-block;
+            width: 16px;
+        }
     }
 
     .tl_right > *:not(.row-wizard-add) {

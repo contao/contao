@@ -4197,10 +4197,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$headerFields = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['headerFields'];
 		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+		$dc->strTable = $this->ptable;
+		$dc->intId = $this->intCurrentPid;
+
 		foreach ($headerFields as $v)
 		{
-			$this->strField = $v;
-			$_v = $valueFormatter->format($this->ptable, $v, $objParent->$v, $this);
+			$dc->strField = $v;
+			$_v = $valueFormatter->format($this->ptable, $v, $objParent->$v, $dc);
 
 			// Add the sorting field
 			if ($_v)

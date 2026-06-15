@@ -272,6 +272,7 @@ abstract class Widget extends Controller
 			case 'alt':
 			case 'style':
 			case 'accesskey':
+			case 'form':
 			case 'onblur':
 			case 'onchange':
 			case 'onclick':
