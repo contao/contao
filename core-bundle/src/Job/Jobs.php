@@ -17,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -33,6 +34,7 @@ class Jobs
         private readonly VirtualFilesystemInterface $jobAttachmentsStorage,
         private readonly RouterInterface $router,
         private readonly MessageBusInterface $messageBus,
+        private readonly UriSigner $uriSigner,
         private readonly ClockInterface $clock = new NativeClock(),
     ) {
     }
@@ -316,10 +318,12 @@ class Jobs
         return new Attachment(
             $filesystemItem,
             new TranslatableMessage('MSC.downloadAttachment', [$filesystemItem->getName()], 'contao_default'),
-            $this->router->generate(
-                '_contao_jobs.download',
-                ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
-                UrlGeneratorInterface::ABSOLUTE_URL,
+            $this->uriSigner->sign(
+                $this->router->generate(
+                    '_contao_jobs.download',
+                    ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
+                    UrlGeneratorInterface::ABSOLUTE_URL,
+                ),
             ),
         );
     }
