@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Security;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorCodeEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -21,14 +20,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @internal
  */
 #[AsEventListener('scheb_two_factor.authentication.code_valid')]
-readonly class CompleteTwoFactorProviderListener
+class CompleteTwoFactorProviderListener
 {
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 
-    public function __invoke(TwoFactorCodeEvent $event): void
+    public function __invoke(): void
     {
         $token = $this->tokenStorage->getToken();
 
