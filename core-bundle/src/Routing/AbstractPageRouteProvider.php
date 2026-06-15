@@ -150,7 +150,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             }
         } elseif (null === $langA && null !== $langB) {
             return 1;
-        } elseif (null !== $langA && null === $langB) { // @phpstan-ignore notIdentical.alwaysTrue
+        } elseif (null === $langB) {
             return -1;
         } elseif ($langA < $langB) {
             return -1;

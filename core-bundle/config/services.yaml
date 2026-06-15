@@ -694,6 +694,7 @@ services:
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
             - '@messenger.bus.default'
+            - '@uri_signer'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer

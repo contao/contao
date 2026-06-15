@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -81,6 +82,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
             $this->vfs,
             $router ?? $this->createStub(RouterInterface::class),
             $messageBus ?? $this->createStub(MessageBusInterface::class),
+            $this->createStub(UriSigner::class),
             $clock,
         );
     }

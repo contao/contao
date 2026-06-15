@@ -453,7 +453,6 @@
 .cte_type {
     margin: 0 0 4px;
     font-size: 0.75rem;
-    color: var(--info);
 }
 
 .as-grid .cte_type {
@@ -674,7 +673,11 @@
 }
 
 .as-grid .cte_preview {
-    padding: 10px 10px 6px;
+    padding: 10px;
+}
+
+.as-grid .cte_preview:has(p, pre, figure, h1, h2, h3, h4, h5, h6, ol, ul, table, div) {
+    padding-bottom: 4px;
 }
 
 .cte_content {
