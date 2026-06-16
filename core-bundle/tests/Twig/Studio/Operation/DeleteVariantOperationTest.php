@@ -34,7 +34,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('bar/foo'),
             false,
             [
-                '/templates/bar/foo.html.twig' => '@Contao_Global/bar/foo.html.twig',
+                '/templates/bar/foo.html.twig' => '@Contao_User/bar/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
             ],
         ];
@@ -43,7 +43,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('prefix/foo'),
             false,
             [
-                '/templates/prefix/foo.html.twig' => '@Contao_Global/prefix/foo.html.twig',
+                '/templates/prefix/foo.html.twig' => '@Contao_User/prefix/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
             ],
         ];
@@ -52,7 +52,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('prefix/foo/my_variant'),
             true,
             [
-                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_User/prefix/foo/my_variant.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
             ],
         ];
@@ -61,7 +61,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('prefix/foo/bar/my_variant'),
             true,
             [
-                '/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_Global/prefix/foo/bar/my_variant.html.twig',
+                '/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_User/prefix/foo/bar/my_variant.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/bar/my_variant.html.twig',
             ],
         ];
@@ -70,7 +70,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('bar/foo', 'theme'),
             false,
             [
-                '/templates/bar/foo.html.twig' => '@Contao_Global/bar/foo.html.twig',
+                '/templates/bar/foo.html.twig' => '@Contao_User/bar/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
             ],
         ];
@@ -79,7 +79,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('prefix/foo', 'theme'),
             false,
             [
-                '/templates/prefix/foo.html.twig' => '@Contao_Global/prefix/foo.html.twig',
+                '/templates/prefix/foo.html.twig' => '@Contao_User/prefix/foo.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
             ],
         ];
@@ -88,7 +88,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             static::getOperationContext('prefix/foo/my_variant', 'theme'),
             false,
             [
-                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_User/prefix/foo/my_variant.html.twig',
                 '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
             ],
         ];
