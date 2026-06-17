@@ -116,7 +116,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             $source = file_get_contents($path);
 
             if (false === $source) {
-                throw new LoaderError(sprintf('Could not get contents of "%s"', $path));
+                throw new LoaderError(\sprintf('Could not get contents of "%s"', $path));
             }
 
             return new Source($source, $templateName, $path);
