@@ -279,40 +279,27 @@ export default class extends Controller {
     }
 
     #deleteAllowed() {
-        return !(this.hasMinValue && this.rowTargets.length === this.minValue);
+        return this.hasDeleteTarget && (!this.hasMinValue || this.rowTargets.length > this.minValue);
     }
 
     #copyAllowed() {
-        return !(this.hasMaxValue && this.rowTargets.length === this.maxValue);
+        return this.hasCopyTarget && (!this.hasMaxValue || this.rowTargets.length < this.maxValue);
     }
 
     #updatePermissions() {
         this.element.dataset.rowsCount = this.rowTargets.filter((row) => !row.hidden).length;
 
-        if (this.hasMinValue) {
-            const enable = this.#deleteAllowed();
+        const canCopy = this.#copyAllowed();
+        const canDelete = this.#deleteAllowed();
 
-            for (const el of this.deleteTargets) {
-                if (enable) {
-                    el.removeAttribute('disabled');
-                } else {
-                    el.disabled = true;
-                }
-            }
+        for (const el of this.deleteTargets) {
+            el.disabled = canDelete ? '' : true;
         }
 
-        if (this.hasMaxValue) {
-            const enable = this.#copyAllowed();
-
-            for (const el of this.copyTargets) {
-                if (enable) {
-                    el.removeAttribute('disabled');
-                } else {
-                    el.disabled = true;
-                }
-            }
-
-            this.ghostTarget.hidden = !enable;
+        for (const el of this.copyTargets) {
+            el.disabled = canCopy ? '' : true;
         }
+
+        this.ghostTarget.hidden = !canCopy;
     }
 }
