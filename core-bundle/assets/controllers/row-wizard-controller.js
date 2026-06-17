@@ -134,11 +134,12 @@ export default class extends Controller {
     }
 
     updateNesting(i) {
+        const selector = this.nameValue.replaceAll('[', '\\[').replaceAll(']', '\\]');
         const name = this.nameValue.replace(/\d+$/, i);
 
         this.bodyTarget
             .querySelectorAll(
-                `[for^=${this.nameValue}\\[],[for^=opt_${this.nameValue}\\[],[name^=${this.nameValue}\\[]`,
+                `[for^=${selector}\\[],[for^=opt_${selector}\\[],[name^=${selector}\\[]`,
             )
             .forEach((el) => {
                 if (el.name) {
@@ -162,11 +163,12 @@ export default class extends Controller {
     }
 
     updateSorting() {
+        const selector = this.nameValue.replaceAll('[', '\\[').replaceAll(']', '\\]');
         const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}\\[], [for^=opt_${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
+                `[for^=${selector}\\[], [for^=opt_${selector}\\[], [name^=${selector}\\[], [id*=${selector}\\[]`,
             )) {
                 if (el.name) {
                     el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
@@ -198,7 +200,7 @@ export default class extends Controller {
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}_default_], [for^=${this.nameValue}_group_], [id^=${this.nameValue}_default_], [id^=${this.nameValue}_group_]`,
+                `[for^=${selector}_default_], [for^=${selector}_group_], [id^=${selector}_default_], [id^=${selector}_group_]`,
             )) {
                 if (el.id) {
                     el.id = el.id.replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`);
@@ -217,12 +219,20 @@ export default class extends Controller {
     #buildGhostRow() {
         const last = this.ghostTarget.querySelector('.tl_right');
 
-        for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
-            if (cell.querySelector('.drag-handle')) {
+        for (const cell of this.#template.children) {
+            if (cell.classList.contains('tl_right') || cell.querySelector('.drag-handle')) {
                 continue;
             }
 
             const ghostCell = cell.cloneNode(true);
+
+            for (const el of ghostCell.querySelectorAll('[data-controller="contao--row-wizard"]')) {
+                el.removeAttribute('data-controller');
+
+                for (const rw of el.querySelectorAll('.row-wizard-ghost, [data-contao--row-wizard-target="row"]:not(:first-child)')) {
+                    rw.remove();
+                }
+            }
 
             for (const el of ghostCell.querySelectorAll('input, select, textarea, button, a')) {
                 el.disabled = true;
