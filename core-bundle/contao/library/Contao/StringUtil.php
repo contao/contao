@@ -204,7 +204,7 @@ class StringUtil
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
-	 * @return string The decoded string
+	 * @return string|array<string> The decoded string
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
@@ -235,9 +235,11 @@ class StringUtil
 	/**
 	 * Convert basic entities
 	 *
-	 * @param string|array $strBuffer The string with the entities to be replaced
+	 * @template T of string|array
 	 *
-	 * @return string|array<string> The string with the tags in square brackets
+	 * @param T $strBuffer The string with the entities to be replaced
+	 *
+	 * @return T The string with the tags in square brackets
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
@@ -263,9 +265,11 @@ class StringUtil
 	/**
 	 * Restore basic entities
 	 *
-	 * @param string|array $strBuffer The string with the tags to be replaced
+	 * @template T of string|array
 	 *
-	 * @return string|array<string> The string with the original entities
+	 * @param T $strBuffer The string with the tags to be replaced
+	 *
+	 * @return T The string with the original entities
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
