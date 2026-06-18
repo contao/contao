@@ -499,7 +499,7 @@ class StringUtil
 	 * @param string $strString    The string to split
 	 * @param string $strDelimiter An optional delimiter
 	 *
-	 * @return array<string> The string chunks
+	 * @return list<string> The string chunks
 	 */
 	public static function splitCsv($strString, $strDelimiter=',')
 	{
@@ -1075,7 +1075,7 @@ class StringUtil
 	 * @param string $strPattern The split pattern
 	 * @param string $strString  The input string
 	 *
-	 * @return array<string> The fragments array
+	 * @return list<string> The fragments array
 	 */
 	public static function trimsplit($strPattern, $strString)
 	{
