@@ -383,6 +383,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Solo puede otorgar acceso al editor de plantillas si es administrador.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>La palabra clave &quot;auto&quot; solo está permitida al principio del atributo sizes y debe ir seguida de una coma si hay valores adicionales.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>La carga diferida debe estar habilitada si el atributo sizes está configurado como &quot;auto&quot;.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

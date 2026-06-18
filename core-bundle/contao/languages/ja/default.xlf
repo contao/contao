@@ -385,6 +385,14 @@
         <source>You can only grant access to the template editor if you are an admin.</source>
         <target>管理者の場合だけテンプレートエディターにアクセスできます。</target>
       </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>キーワードの&quot;auto&quot;はsizes属性の先頭にだけ使用でき、追加の値がある場合は後にコンマで区切って続けなければなりません。</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>sizes属性を&quot;auto&quot;に設定する場合は遅延読み込みを有効にしなければなりません。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>

@@ -385,6 +385,14 @@
         <source>You can only grant access to the template editor if you are an admin.</source>
         <target>Вы можете предоставить доступ к редактору шаблонов, только если у вас есть права администратора.</target>
       </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Ключевое слово &quot;auto&quot; допускается использовать только в начале атрибута sizes, при наличии дополнительных значений за ним обязательно должна следовать запятая.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>При установке значения &quot;auto&quot; для атрибута sizes необходимо включить ленивую загрузку (lazy loading).</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
