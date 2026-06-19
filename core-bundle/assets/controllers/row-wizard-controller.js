@@ -138,9 +138,7 @@ export default class extends Controller {
         const name = this.nameValue.replace(/\d+$/, i);
 
         this.bodyTarget
-            .querySelectorAll(
-                `[for^=${selector}\\[],[for^=opt_${selector}\\[],[name^=${selector}\\[]`,
-            )
+            .querySelectorAll(`[for^=${selector}\\[],[for^=opt_${selector}\\[],[name^=${selector}\\[]`)
             .forEach((el) => {
                 if (el.name) {
                     el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
@@ -229,7 +227,9 @@ export default class extends Controller {
             for (const el of ghostCell.querySelectorAll('[data-controller="contao--row-wizard"]')) {
                 el.removeAttribute('data-controller');
 
-                for (const rw of el.querySelectorAll('.row-wizard-ghost, [data-contao--row-wizard-target="row"]:not(:first-child)')) {
+                for (const rw of el.querySelectorAll(
+                    '.row-wizard-ghost, [data-contao--row-wizard-target="row"]:not(:first-child)',
+                )) {
                     rw.remove();
                 }
             }
