@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning].
 
 ## [5.7.7] (2026-06-15)
 
+**Security fixes:**
+
+- [CVE-2026-55824]: Contao crawler leaks auth credentials to external hosts
+- [CVE-2026-55825]: Possible path traversal in job download URIs
+
 **Fixed issues:**
 
 - [#9906] Only allow user templates to be modified in the Template Studio ([aschempp])
@@ -517,6 +522,8 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
+[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
+[CVE-2026-55825]: https://github.com/contao/contao/security/advisories/GHSA-grm4-wm43-9jh5
 [alike03]: https://github.com/alike03
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
