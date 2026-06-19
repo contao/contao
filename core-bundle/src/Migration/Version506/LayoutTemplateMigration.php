@@ -44,7 +44,7 @@ class LayoutTemplateMigration extends AbstractMigration
             return false;
         }
 
-        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_layout WHERE type='modern' AND template='layout/default' LIMIT 1");
+        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_layout WHERE type = 'modern' AND template = 'layout/default' LIMIT 1");
 
         return false !== $test;
     }
