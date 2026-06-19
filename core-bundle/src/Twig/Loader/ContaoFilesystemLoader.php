@@ -113,7 +113,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // and parser and just keep the block names. At some point we may transpile the
         // source to valid Twig instead and drop the proxy.
         if ('html5' !== Path::getExtension($path, true)) {
-            $source = file_get_contents($path);
+            $source = @file_get_contents($path);
 
             if (false === $source) {
                 throw new LoaderError(\sprintf('Could not get contents of "%s"', $path));
