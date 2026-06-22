@@ -19,6 +19,7 @@ request or report an issue.
 The monorepo is automatically split into separate packages:
 
  * [CalendarBundle](https://github.com/contao/calendar-bundle)
+ * [ApiBundle](https://github.com/contao/api-bundle)
  * [CommentsBundle](https://github.com/contao/comments-bundle)
  * [CoreBundle](https://github.com/contao/core-bundle)
  * [FaqBundle](https://github.com/contao/faq-bundle)

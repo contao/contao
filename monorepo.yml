@@ -82,6 +82,9 @@ repositories:
             68e318965dd839ad339936069055b2a169cbd8fe: 7f250dcce34ebd71f0aee8311597aea7a3117e96
             7086050842a5babf22fd552181874a0e72b1e4ee: 5ad35c1360dc582289506553e55f21cd3823c621
 
+    # api-bundle:
+    #     url: https://github.com/contao/api-bundle.git
+
     test-case:
         url: https://github.com/contao/test-case.git
         mapping:

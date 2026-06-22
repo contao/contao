@@ -15,6 +15,7 @@
 >
   <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
     <include>
+      <directory>./api-bundle/src</directory>
       <directory>./calendar-bundle/src</directory>
       <directory>./comments-bundle/src</directory>
       <directory>./core-bundle/src</directory>
@@ -40,6 +41,7 @@
   </php>
   <testsuites>
     <testsuite name="unit">
+      <directory>./api-bundle/tests</directory>
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
       <exclude>./*-bundle/tests/Functional</exclude>
@@ -49,6 +51,7 @@
       <exclude>./core-bundle/tests/Functional/app</exclude>
     </testsuite>
     <testsuite name="coverage">
+      <directory>./api-bundle/tests</directory>
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
       <exclude>./core-bundle/tests/Functional</exclude>
