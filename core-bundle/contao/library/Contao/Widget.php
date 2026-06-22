@@ -243,6 +243,11 @@ abstract class Widget extends Controller
 				{
 					$this->varValue = StringUtil::deserialize($varValue);
 				}
+
+				if (is_string($this->varValue))
+				{
+					$this->varValue = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->varValue);
+				}
 				break;
 
 			case 'class':
