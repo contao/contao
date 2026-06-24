@@ -58,6 +58,19 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
 
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('de_DE', $availableLocales);
+        $this->assertContains('de_AT', $availableLocales);
+        $this->assertContains('de_CH', $availableLocales);
+        $this->assertContains('pt', $availableLocales);
+        $this->assertContains('pt_PT', $availableLocales);
+        $this->assertContains('pt_BR', $availableLocales);
+        $this->assertContains('en_AU', $availableLocales);
+
+        $this->assertNotContains('de_CA', $availableLocales, 'Should not contain spoken languages');
+        $this->assertNotContains('sl_AT', $availableLocales, 'Should not contain regional languages');
+        $this->assertNotContains('gsw', $availableLocales, 'Should not contain unofficial languages');
+
         $this->assertIsArray($enabledLocales);
         $this->assertNotEmpty($enabledLocales);
         $this->assertFalse(ArrayUtil::isAssoc($enabledLocales));
