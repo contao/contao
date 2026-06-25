@@ -65,7 +65,9 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $this->assertContains('pt', $availableLocales);
         $this->assertContains('pt_PT', $availableLocales);
         $this->assertContains('pt_BR', $availableLocales);
-        $this->assertContains('en_AU', $availableLocales);
+        $this->assertContains('en_AU', $availableLocales, 'Should contain de facto official countries');
+        $this->assertContains('zh_Hant', $availableLocales, 'Should contain official script variants');
+        $this->assertContains('zh_Hant_HK', $availableLocales, 'Should contain official script variant countries');
 
         $this->assertNotContains('de_CA', $availableLocales, 'Should not contain spoken languages');
         $this->assertNotContains('sl_AT', $availableLocales, 'Should not contain regional languages');
