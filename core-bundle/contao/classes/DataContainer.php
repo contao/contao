@@ -169,9 +169,14 @@ abstract class DataContainer extends Backend
 	public const PASTE_AFTER = 1;
 
 	/**
-	 * Paste into the parent
+	 * Paste into the parent at the top
 	 */
 	public const PASTE_INTO = 2;
+
+	/**
+	 * Paste into the parent at the end
+	 */
+	public const PASTE_INTO_APPEND = 3;
 
 	/**
 	 * Current ID
