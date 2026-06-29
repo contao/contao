@@ -62,7 +62,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "6.0-dev"
+            "dev-main": "6.1-dev"
         },
         "contao-manager-plugin": "Contao\\MakerBundle\\ContaoManager\\Plugin"
     }

@@ -306,7 +306,7 @@
             "forward-command": false
         },
         "branch-alias": {
-            "dev-main": "6.0-dev"
+            "dev-main": "6.1-dev"
         },
         "contao-manager-plugin": {
             "contao/api-bundle": "Contao\\ApiBundle\\ContaoManager\\Plugin",
