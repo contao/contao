@@ -67,7 +67,7 @@ class FavoriteController extends AbstractController
                         'id' => $id,
                         'active' => false,
                         'action' => $this->saveAsFavoriteLink($url),
-                        'empty' => !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user=?', [$user->id]),
+                        'empty' => !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user = ?', [$user->id]),
                     ],
                 );
             }
