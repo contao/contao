@@ -20,6 +20,9 @@ repositories:
             6eb1458a692527d10fd32ed32374bc5098b568d8: 1aed32807fa1d93958ee4bf0f0a84a81dfb40726
             fed3c7b4204d66533d463c98e8fea9d59d8c1b78: 0e6ace663e45bf4e120b164e9db1c8109d9087b7
 
+    api-bundle:
+        url: https://github.com/contao/api-bundle.git
+
     calendar-bundle:
         url: https://github.com/contao/calendar-bundle.git
         mapping:
@@ -81,9 +84,6 @@ repositories:
             22fb6437b09e08c022b507fcf0c5a9c2390fd9d9: 89ee40d099df11e777de0d6a1d8e02d46366b406
             68e318965dd839ad339936069055b2a169cbd8fe: 7f250dcce34ebd71f0aee8311597aea7a3117e96
             7086050842a5babf22fd552181874a0e72b1e4ee: 5ad35c1360dc582289506553e55f21cd3823c621
-
-    # api-bundle:
-    #     url: https://github.com/contao/api-bundle.git
 
     test-case:
         url: https://github.com/contao/test-case.git
