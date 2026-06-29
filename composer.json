@@ -192,6 +192,7 @@
         "symfony/browser-kit": "^7.4"
     },
     "replace": {
+        "contao/api-bundle": "self.version",
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
         "contao/core-bundle": "self.version",
@@ -217,6 +218,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Contao\\ApiBundle\\": "api-bundle/src/",
             "Contao\\CalendarBundle\\": "calendar-bundle/src/",
             "Contao\\CommentsBundle\\": "comments-bundle/src/",
             "Contao\\CoreBundle\\": "core-bundle/src/",
@@ -307,6 +309,7 @@
             "dev-main": "6.1-dev"
         },
         "contao-manager-plugin": {
+            "contao/api-bundle": "Contao\\ApiBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
             "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",

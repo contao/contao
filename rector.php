@@ -27,6 +27,8 @@ return RectorConfig::configure()
     ->withPhpSets(php84: true)
     ->withSets([SetList::CONTAO])
     ->withPaths([
+        __DIR__.'/api-bundle/src',
+        __DIR__.'/api-bundle/tests',
         __DIR__.'/calendar-bundle/src',
         __DIR__.'/calendar-bundle/tests',
         __DIR__.'/comments-bundle/src',
