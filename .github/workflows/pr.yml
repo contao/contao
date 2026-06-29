@@ -20,7 +20,7 @@ jobs:
               uses: zoispag/action-assign-milestone@v2
               if: github.event.pull_request.milestone == null && github.event.pull_request.base.ref == 'main'
               with:
-                  milestone: '6.0'
+                  milestone: '6.1'
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Assign the milestone
