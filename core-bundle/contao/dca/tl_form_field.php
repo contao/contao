@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'help' => array
@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customRgxp' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr', 'mandatory'=>true),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50 clr', 'mandatory'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'errorMsg' => array
@@ -325,7 +325,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'accesskey' => array

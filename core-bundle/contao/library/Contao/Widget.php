@@ -81,7 +81,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customTpl          A custom template name
  * @property string        $slabel             The submit button label
  * @property boolean       $preserveTags       Preserve HTML tags
- * @property boolean       $decodeEntities     Decode HTML entities
  * @property boolean       $useRawRequestData  Use the raw request data from the Symfony request
  * @property integer       $minlength          The minimum length
  * @property integer       $maxlength          The maximum length
@@ -758,7 +757,7 @@ abstract class Widget extends Controller
 		}
 		else
 		{
-			$varValue = Input::postHtml(array_shift($arrParts), $this->decodeEntities);
+			$varValue = Input::postHtml(array_shift($arrParts), true);
 		}
 
 		foreach ($arrParts as $part)
@@ -977,11 +976,7 @@ abstract class Widget extends Controller
 
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
-
-					if ($this->decodeEntities)
-					{
-						$varInput = StringUtil::decodeEntities($varInput);
-					}
+					$varInput = StringUtil::decodeEntities($varInput);
 
 					if (!Validator::isUrl($varInput))
 					{
@@ -1287,12 +1282,6 @@ abstract class Widget extends Controller
 		{
 			$rte = $arrData['eval']['rte'] ?? '';
 			$arrAttributes['allowHtml'] = 'ace|html' === $rte || str_starts_with($rte, 'tiny');
-		}
-
-		// Decode entities if HTML is allowed
-		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
-		{
-			$arrAttributes['decodeEntities'] = true;
 		}
 
 		// Add Ajax event

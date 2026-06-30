@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'alias' => array
@@ -126,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
+			'eval'                    => array('maxlength'=>255),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'content' => array
@@ -149,7 +149,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('decodeEntities'=>true, 'autogrow' => false),
+			'eval'                    => array('autogrow' => false),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'addFile' => array
@@ -199,7 +199,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
+			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
+			'eval'                    => array('maxlength'=>128, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')

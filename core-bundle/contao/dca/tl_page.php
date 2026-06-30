@@ -212,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>''),
 			'save_callback'           => array
 			(
@@ -240,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'serpPreview' => array
@@ -287,7 +287,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'target' => array
@@ -301,7 +301,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>255, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
 				array('tl_page', 'loadDns')
@@ -361,7 +361,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'robotsTxt' => array
 		(
 			'inputType'               => 'textarea',
-			'eval'                    => array('doNotCopy'=>true, 'decodeEntities' => true),
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'maintenanceMode' => array
@@ -387,20 +387,20 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'canonicalKeepParams' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'adminEmail' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'dateFormat' => array
@@ -408,7 +408,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
 			'explanation'             => 'dateFormat',
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
@@ -417,7 +417,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'datimFormat' => array
@@ -425,7 +425,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'validAliasCharacters' => array
@@ -434,7 +434,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'useFolderUrl' => array
@@ -672,7 +672,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'textarea',
 			'default'                 => "default-src 'self'",
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true),
+			'eval'                    => array('mandatory'=>true),
 			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
 		'cspReportOnly' => array
