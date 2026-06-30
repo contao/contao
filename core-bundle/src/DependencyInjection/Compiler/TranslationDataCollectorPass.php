@@ -31,6 +31,6 @@ class TranslationDataCollectorPass implements CompilerPassInterface
         $definition->setDecoratedService('translator');
 
         $definition = $container->getDefinition('data_collector.translation');
-        $definition->replaceArgument(0, new Reference('contao.translation.data_collector_translator'));
+        $definition->replaceArgument('$translator', new Reference('contao.translation.data_collector_translator'));
     }
 }
