@@ -94,8 +94,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		$blnClearInput = false;
-
 		$intYear = (int) Input::get('year');
 		$intMonth = (int) Input::get('month');
 		$intDay = (int) Input::get('day');
@@ -129,8 +127,6 @@ class ModuleEventlist extends Events
 					$intDay = date('Ymd');
 					break;
 			}
-
-			$blnClearInput = true;
 		}
 
 		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
@@ -457,14 +453,6 @@ class ModuleEventlist extends Events
 		$this->Template->headline = $this->headline;
 		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
-
-		// Clear the $_GET array (see #2445)
-		if ($blnClearInput)
-		{
-			Input::setGet('year', null);
-			Input::setGet('month', null);
-			Input::setGet('day', null);
-		}
 	}
 
 	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
