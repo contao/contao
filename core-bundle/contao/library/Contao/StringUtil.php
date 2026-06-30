@@ -239,12 +239,18 @@ class StringUtil
 	 *
 	 * @return string|array The string with the tags in square brackets
 	 */
-	public static function convertBasicEntities($strBuffer)
+	public static function convertBasicEntities($strBuffer, $blnForHtml=true)
 	{
-		$replace = static function (&$value) {
+		$from = $blnForHtml
+			? array('&lsqb;', '&rsqb;', '&lsqb;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;')
+			: array('[', ']', '[lsqb[rsqb]', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}")
+		;
+		$to = array('[lsqb]', '[rsqb]', '[lsqb]', '[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]');
+
+		$replace = static function (&$value) use ($from, $to) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]'), $value);
+				$value = str_replace($from, $to, $value);
 			}
 		};
 
@@ -267,12 +273,18 @@ class StringUtil
 	 *
 	 * @return string|array The string with the original entities
 	 */
-	public static function restoreBasicEntities($strBuffer)
+	public static function restoreBasicEntities($strBuffer, $blnForHtml=true)
 	{
-		$replace = static function (&$value) {
+		$from = array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]');
+		$to = $blnForHtml
+			? array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;')
+			: array('&', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}", '[', ']')
+		;
+
+		$replace = static function (&$value) use ($from, $to) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;'), $value);
+				$value = str_replace($from, $to, $value);
 			}
 		};
 

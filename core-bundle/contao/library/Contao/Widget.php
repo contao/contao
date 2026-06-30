@@ -373,7 +373,7 @@ abstract class Widget extends Controller
 
 				if ($this->basicEntities)
 				{
-					return StringUtil::restoreBasicEntities($this->varValue);
+					return StringUtil::restoreBasicEntities($this->varValue, $this->allowHtml);
 				}
 
 				return $this->varValue;
@@ -1260,11 +1260,6 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
-		if ($arrData['eval']['basicEntities'] ?? null)
-		{
-			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
-		}
-
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
@@ -1293,6 +1288,11 @@ abstract class Widget extends Controller
 		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
 		{
 			$arrAttributes['decodeEntities'] = true;
+		}
+
+		if ($arrData['eval']['basicEntities'] ?? null)
+		{
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value'], $arrAttributes['allowHtml']);
 		}
 
 		// Add Ajax event

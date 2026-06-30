@@ -592,10 +592,12 @@ class StringUtilTest extends TestCase
     }
 
     #[DataProvider('basicEntitiesProvider')]
-    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities, array|string $unicodeEntities): void
     {
         $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
         $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($unicodeEntities, false));
+        $this->assertSame($unicodeEntities, StringUtil::restoreBasicEntities($basicEntities, false));
     }
 
     public static function basicEntitiesProvider(): iterable
@@ -603,6 +605,7 @@ class StringUtilTest extends TestCase
         yield 'String value' => [
             'foo&amp;bar&ZeroWidthSpace;baz',
             'foo[&]bar[zwsp]baz',
+            "foo&bar\u{200B}baz",
         ];
 
         yield 'InputUnit field' => [
@@ -613,6 +616,10 @@ class StringUtilTest extends TestCase
             [
                 'unit' => 'h2',
                 'value' => '[lt]strong[gt] and [lsqb]-[rsqb]',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '<strong> and [-]',
             ],
         ];
 
@@ -637,9 +644,29 @@ class StringUtilTest extends TestCase
                     'value' => 'Con[-]tao',
                 ],
             ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => "10\u{A0}€",
+                ],
+                [
+                    'key' => 'name',
+                    'value' => "Con\u{AD}tao",
+                ],
+            ],
         ];
 
         yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
             [
                 [
                     'key' => 'sum',
