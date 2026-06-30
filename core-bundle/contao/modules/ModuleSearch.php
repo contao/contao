@@ -187,7 +187,7 @@ class ModuleSearch extends Module
 			}
 
 			$from = 0;
-			$to = $count + 1;
+			$to = $count;
 
 			// Pagination
 			if ($this->perPage > 0)
