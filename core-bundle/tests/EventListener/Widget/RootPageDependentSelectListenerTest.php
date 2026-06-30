@@ -255,12 +255,12 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->method('executeQuery')
             ->willReturnMap([
                 [
-                    "SELECT * FROM tl_content WHERE ptable='tl_theme' AND pid=?",
+                    "SELECT * FROM tl_content WHERE ptable = 'tl_theme' AND pid = ?",
                     [1],
                     $contentResult,
                 ],
                 [
-                    'SELECT m.id, m.name, m.type FROM tl_module m WHERE m.type != \'root_page_dependent_modules\' AND m.pid = ? ORDER BY m.name',
+                    "SELECT m.id, m.name, m.type FROM tl_module m WHERE m.type != 'root_page_dependent_modules' AND m.pid = ? ORDER BY m.name",
                     [1],
                     $moduleResult,
                 ],

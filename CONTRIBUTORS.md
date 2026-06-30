@@ -119,6 +119,7 @@
  * Thomas Meeks ([Thomas](https://github.com/Thomas))
  * Tsarma ([Tsarma](https://github.com/Tsarma))
  * Vladimir Reznichenko ([kalessil](https://github.com/kalessil))
+ * XananasX ([XananasX](https://github.com/XananasX))
  * Frank Ficzak ([agonyz](https://github.com/agonyz))
  * Alexander Stulnikov ([alarstyle](https://github.com/alarstyle))
  * alike03 ([alike03](https://github.com/alike03))

@@ -19,6 +19,9 @@
     },
     "linter": {
         "rules": {
+            "a11y": {
+                "noSvgWithoutTitle": "off"
+            },
             "suspicious": {
                 "noAssignInExpressions": "off"
             }

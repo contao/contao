@@ -76,7 +76,7 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     {
         if (!\array_key_exists($articleId, $this->pageMap)) {
             /** @var Record|false $record */
-            $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)', [$articleId]);
+            $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id = (SELECT pid FROM tl_article WHERE id = ?)', [$articleId]);
             $this->pageMap[$articleId] = false !== $record ? $record : null;
         }
 

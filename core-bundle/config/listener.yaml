@@ -649,6 +649,11 @@ services:
             - '%fragment.path%'
             - '%kernel.debug%'
 
+    contao.listener.security.complete_two_factor_provider:
+        class: Contao\CoreBundle\EventListener\Security\CompleteTwoFactorProviderListener
+        arguments:
+            - '@security.token_storage'
+
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
         arguments:
