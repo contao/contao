@@ -340,7 +340,7 @@ class Input
 	 */
 	public static function setGet($strKey, $varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the request object instead.', __METHOD__);
+		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the request object instead.', __METHOD__);
 
 		// Convert special characters (see #7829)
 		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
@@ -1156,6 +1156,11 @@ class Input
 
 			if (\array_key_exists($strKey, $arrGet))
 			{
+				if ($strKey === 'language')
+				{
+					trigger_deprecation('contao/core-bundle', '6.0', 'Relying on Input::get(\'language\') set by the InputEnhancer is deprecated and will no longer work in Contao 7.');
+				}
+
 				return $arrGet[$strKey];
 			}
 

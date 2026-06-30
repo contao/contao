@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Enhancer;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
@@ -46,12 +47,20 @@ class InputEnhancer implements RouteEnhancerInterface
 
         $input = $this->framework->getAdapter(Input::class);
 
+        if (!empty($page->urlPrefix)) {
+            $input->setGet('language', LocaleUtil::formatAsLanguageTag($page->rootLanguage));
+        }
+
         if (empty($defaults['parameters'])) {
             return $defaults;
         }
 
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];
+
+        if (\count($fragments) > 1) {
+            trigger_deprecation('contao/core-bundle', '6.0', 'Using dynamic URL parameters like "%s" is deprecated and will no longer work in Contao 7.', $defaults['parameters']);
+        }
 
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
@@ -70,7 +79,7 @@ class InputEnhancer implements RouteEnhancerInterface
             }
 
             $inputKeys[] = $fragments[$i];
-            $request->query->set($fragments[$i], $fragments[$i + 1]);
+            $input->setGet($fragments[$i], $fragments[$i + 1]);
         }
 
         $input->setUnusedRouteParameters($inputKeys);
