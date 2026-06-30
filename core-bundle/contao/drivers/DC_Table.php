@@ -642,9 +642,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$rows = max(0, (int) $this->lazyLoadOperationsRows);
 		$operationsPerRow = $this->getOperationsPerRowCount();
-		$result = $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+		$hasPrimaryOperation = $this->hasPrimaryOperation();
+		$result = $hasPrimaryOperation && $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
 
 		return $this->lazyLoadOperations = $result;
+	}
+
+	private function hasPrimaryOperation(): bool
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? null;
+
+		if (!\is_array($operations))
+		{
+			return false;
+		}
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			if (\is_array($operation) && ($operation['primary'] ?? false))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function getOperationsPerRowCount(): int
