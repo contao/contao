@@ -802,11 +802,11 @@ class Input
 			// Encode all special characters and insert tags that are not encoded yet
 			if (1 === preg_match('((?:^|:)(?:src|srcset|href|action|formaction|codebase|cite|background|longdesc|profile|usemap|classid|data|icon|manifest|poster|archive)$)', $strAttribute))
 			{
-				$strValue = StringUtil::specialcharsUrl($strValue);
+				$strValue = StringUtil::specialcharsUrl($strValue, false, false);
 			}
 			else
 			{
-				$strValue = StringUtil::specialcharsAttribute($strValue);
+				$strValue = StringUtil::specialcharsAttribute($strValue, false, false);
 			}
 
 			$arrAttributes[$strAttribute] = $strValue;
