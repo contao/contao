@@ -28,7 +28,7 @@ export default class extends Controller {
     navigationTargetDisconnected(element) {
         element.removeEventListener('scroll', this.#onScroll);
         window.removeEventListener('resize', this.#onResize);
-        this.#linksContainer.destroy();
+        this.#linksContainer?.destroy();
     }
 
     sectionTargetConnected() {
