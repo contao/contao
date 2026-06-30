@@ -41,7 +41,6 @@
   </php>
   <testsuites>
     <testsuite name="unit">
-      <directory>./api-bundle/tests</directory>
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
       <exclude>./*-bundle/tests/Functional</exclude>
@@ -51,7 +50,6 @@
       <exclude>./core-bundle/tests/Functional/app</exclude>
     </testsuite>
     <testsuite name="coverage">
-      <directory>./api-bundle/tests</directory>
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
       <exclude>./core-bundle/tests/Functional</exclude>
