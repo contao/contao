@@ -2688,15 +2688,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions = new Versions($this->strTable, $this->intId);
 		$objVersions->initialize();
 
-		$prevSubmit = Input::post('FORM_SUBMIT', true);
-		Input::setPost('FORM_SUBMIT', $this->strTable);
-
 		$this->varValue = $currentRecord[$this->strField] ?? null;
-		$this->save(!$this->varValue);
+		$this->save(!$this->varValue, true);
 
-		$this->submit();
-
-		Input::setPost('FORM_SUBMIT', $prevSubmit);
+		$this->submit(true);
 
 		if (!$blnDoNotRedirect)
 		{
@@ -2923,9 +2918,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @throws \Exception
 	 */
-	protected function save($varValue)
+	protected function save($varValue, $blnSkipFormSubmitCheck=false)
 	{
-		if (Input::post('FORM_SUBMIT') != $this->strTable)
+		if (!$blnSkipFormSubmitCheck && Input::post('FORM_SUBMIT') != $this->strTable)
 		{
 			return;
 		}
@@ -3035,9 +3030,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	protected function submit()
+	protected function submit($blnSkipFormSubmitCheck=false)
 	{
-		if (Input::post('FORM_SUBMIT') != $this->strTable)
+		if (!$blnSkipFormSubmitCheck && Input::post('FORM_SUBMIT') != $this->strTable)
 		{
 			return;
 		}
