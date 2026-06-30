@@ -71,7 +71,7 @@ class FilesystemConfiguration
      * Mounts a new Flysystem adapter to the virtual filesystem.
      *
      * The $adapter and $options can be set analogous to the configuration of the
-     * Flysystem Symfony bundle. Alternatively you can pass in an id of an already
+     * Flysystem Symfony bundle. Alternatively, you can pass in an ID of an already
      * existing filesystem adapter service.
      *
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
@@ -79,8 +79,8 @@ class FilesystemConfiguration
      * The $mountPath must be a path relative to and inside the project root (e.g.
      * "files/foo" or "assets/images").
      *
-     * If you do not set a $name, the id/alias for the adapter service will be derived
-     * from the mount path.
+     * If you do not provide a name, the ID/alias for the adapter service will be
+     * derived from the mount path.
      */
     public function mountAdapter(string $adapterNameOrId, array $options, string $mountPath, string|null $name = null): self
     {
@@ -99,20 +99,14 @@ class FilesystemConfiguration
                 ];
             }
 
-            // Unfortunately the adapter definition builders are hardcoded in the Flysytem
+            // Unfortunately, the adapter definition builders are hardcoded in the Flysytem
             // bundle class. By using reflection to call "createAdapterDefinition", we ensure
             // the passed $options are handled the same way the extension does.
             /** @var ExtensionInterface $flysystemExtension */
             $flysystemExtension = $this->container->getExtension('flysystem');
 
             $adapterId = (new \ReflectionMethod(FlysystemExtension::class, 'createAdapterDefinition'))
-                ->invoke(
-                    $flysystemExtension,
-                    $this->container,
-                    $adapterNameOrId,
-                    "contao_vfs_$name",
-                    $options,
-                )
+                ->invoke($flysystemExtension, $this->container, $adapterNameOrId, "contao_vfs_$name", $options)
             ;
 
             if (null === $adapterId) {
@@ -142,7 +136,7 @@ class FilesystemConfiguration
      * "files/foo" or "assets/images"); the $filesystemPath can either be absolute or
      * relative to the project root and may contain placeholders (%name%).
      *
-     * If you do not set a name, the id for the adapter service will be derived from
+     * If you do not set a name, the ID for the adapter service will be derived from
      * the mount path.
      */
     public function mountLocalAdapter(string $filesystemPath, string $mountPath, string|null $name = null): self
@@ -185,8 +179,8 @@ class FilesystemConfiguration
     /**
      * Registers a DBAFS service with the default implementation.
      *
-     * If you want to fine tune settings (e.g. adjust the bulk insert size or the
-     * maximum file size) add method calls to the definition returned by this method.
+     * If you want to fine-tune settings (e.g., adjust the bulk insert size or the
+     * maximum file size), add method calls to the definition returned by this method.
      *
      * @return Definition the newly created definition
      */
