@@ -104,7 +104,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                $strEmail = StringUtil::specialcharsUrl(StringUtil::encodeEmail($insertTag->getParameters()->get(0)));
+                $strEmail = StringUtil::specialcharsUrl(StringUtil::encodeEmail($insertTag->getParameters()->get(0)), false, false);
 
                 // Replace the tag
                 switch ($insertTag->getName()) {
