@@ -33,10 +33,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getBundles(ParserInterface $parser): array
     {
         return [
-            BundleConfig::create(ApiPlatformBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class]),
+            BundleConfig::create(ApiPlatformBundle::class),
             BundleConfig::create(ContaoApiBundle::class)
-                ->setLoadAfter([ApiPlatformBundle::class]),
+                ->setLoadAfter([ApiPlatformBundle::class, ContaoCoreBundle::class]),
         ];
     }
 

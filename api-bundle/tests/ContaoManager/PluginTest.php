@@ -32,9 +32,9 @@ final class PluginTest extends TestCase
 
         $this->assertCount(2, $bundles);
         $this->assertSame(ApiPlatformBundle::class, $bundles[0]->getName());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[0]->getLoadAfter());
+        $this->assertSame([], $bundles[0]->getLoadAfter());
         $this->assertSame(ContaoApiBundle::class, $bundles[1]->getName());
-        $this->assertSame([ApiPlatformBundle::class], $bundles[1]->getLoadAfter());
+        $this->assertSame([ApiPlatformBundle::class, ContaoCoreBundle::class], $bundles[1]->getLoadAfter());
     }
 
     public function testLoadsTheSkeletonConfigAndApiPlatformRoutes(): void
