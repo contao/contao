@@ -60,7 +60,7 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
                     AND column_name = :column
                     AND virtual_target_name <=> :virtualTarget
                     AND encoding_options = CAST(:options as JSON)
-                SQL,
+                    SQL,
                 [
                     'table' => $table,
                     'column' => $column,
