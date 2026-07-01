@@ -899,7 +899,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		if ($blnStripInsertTags)
 		{
@@ -918,7 +918,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
 
@@ -945,7 +945,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
 
