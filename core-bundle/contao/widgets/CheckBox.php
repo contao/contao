@@ -204,9 +204,9 @@ class CheckBox extends Widget
 			return \sprintf(
 				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s" data-controller="contao--check-all"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
 				$this->strId,
-				$this->strClass ? ' ' . $this->strClass : '',
+				$this->strClass ? ' ' . StringUtil::specialchars($this->strClass) : '',
 				$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-				$this->strLabel,
+				StringUtil::specialchars($this->strLabel),
 				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
@@ -247,7 +247,7 @@ class CheckBox extends Widget
 			$this->multiple ? ' data-contao--check-all-target="input"' : '',
 			$this->strId . '_' . $i,
 			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-			$arrOption['label'] ?? null,
+			StringUtil::specialchars($arrOption['label'] ?? ''),
 			$this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '',
 			!$this->multiple ? $this->xlabel : ''
 		);
