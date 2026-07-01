@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
@@ -51,22 +52,25 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
             return true;
         }
 
-        foreach ($targets as [$table, $column, $options]) {
+        foreach ($targets as [$table, $column, $virtualTarget, $options]) {
             $test = $this->connection->fetchOne(
                 '
                     SELECT TRUE FROM prepare_for_output_encoding
                     WHERE table_name = :table
                     AND column_name = :column
+                    AND virtual_target_name <=> :virtualTarget
                     AND encoding_options = CAST(:options as JSON)
                 ',
                 [
                     'table' => $table,
                     'column' => $column,
+                    'virtualTarget' => $virtualTarget,
                     'options' => $options,
                 ],
                 [
                     'table' => Types::STRING,
                     'column' => Types::STRING,
+                    'virtualTarget' => Types::STRING,
                     'options' => Types::JSON,
                 ],
             );
@@ -83,18 +87,20 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
     {
         $this->connection->executeStatement('TRUNCATE TABLE prepare_for_output_encoding');
 
-        foreach ($this->getTargets() as [$table, $column, $options]) {
+        foreach ($this->getTargets() as [$table, $column, $virtualTarget, $options]) {
             $this->connection->insert(
                 'prepare_for_output_encoding',
                 [
                     'table_name' => $table,
                     'column_name' => $column,
+                    'virtual_target_name' => $virtualTarget,
                     'encoding_options' => $options,
                     'performed_migration' => false,
                 ],
                 [
                     'table_name' => Types::STRING,
                     'column_name' => Types::STRING,
+                    'virtual_target_name' => Types::STRING,
                     'encoding_options' => Types::JSON,
                     'performed_migration' => Types::BOOLEAN,
                 ],
@@ -105,7 +111,7 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
     }
 
     /**
-     * @return list<array{0: string, 1: string, 2: array}>
+     * @return list<array{0: string, 1: string, 2: string|null, 3: array}>
      */
     private function getTargets(): array
     {
@@ -133,20 +139,25 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
             $columns = $schemaManager->listTableColumns($tableName);
 
             Controller::loadDataContainer($tableName);
+            $virtualFields = DcaExtractor::getInstance($tableName)->getVirtualFields();
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                $fieldName = strtolower($fieldName);
-                $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
+                $virtualTargetColumn = $virtualFields[$fieldName] ?? null;
 
-                if (
-                    !$field?->getType() instanceof StringType
-                    && !$field?->getType() instanceof BinaryType
-                    && !$field?->getType() instanceof BlobType
-                    && !$field?->getType() instanceof JsonType
-                    && !$field?->getType() instanceof SimpleArrayType
-                    && !$field?->getType() instanceof TextType
-                ) {
-                    continue;
+                if (!$virtualTargetColumn) {
+                    $fieldName = strtolower($fieldName);
+                    $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
+
+                    if (
+                        !$field?->getType() instanceof StringType
+                        && !$field?->getType() instanceof BinaryType
+                        && !$field?->getType() instanceof BlobType
+                        && !$field?->getType() instanceof JsonType
+                        && !$field?->getType() instanceof SimpleArrayType
+                        && !$field?->getType() instanceof TextType
+                    ) {
+                        continue;
+                    }
                 }
 
                 $options = $this->getEncodingOptions($fieldConfig);
@@ -155,7 +166,7 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
                     continue;
                 }
 
-                $targets[] = [$tableName, $fieldName, $options];
+                $targets[] = [$tableName, $fieldName, $virtualTargetColumn, $options];
             }
         }
 

@@ -31,6 +31,9 @@ class PrepareForOutputEncoding
     #[Column(name: 'column_name')]
     public string $columnName;
 
+    #[Column(name: 'virtual_target_name', nullable: true)]
+    public string|null $virtualTargetName = null;
+
     #[Column(name: 'encoding_options')]
     public array $encodingOptions;
 
