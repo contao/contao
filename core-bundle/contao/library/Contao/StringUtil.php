@@ -245,6 +245,7 @@ class StringUtil
 			? array('&lsqb;', '&rsqb;', '&lsqb;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;')
 			: array('[', ']', '[lsqb[rsqb]', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}")
 		;
+
 		$to = array('[lsqb]', '[rsqb]', '[lsqb]', '[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]');
 
 		$replace = static function (&$value) use ($from, $to) {
@@ -276,6 +277,7 @@ class StringUtil
 	public static function restoreBasicEntities($strBuffer, $blnForHtml=true)
 	{
 		$from = array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]');
+
 		$to = $blnForHtml
 			? array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;')
 			: array('&', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}", '[', ']')
