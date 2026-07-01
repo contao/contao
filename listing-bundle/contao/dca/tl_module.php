@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_listing', 'getAllTables'),
 	'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
@@ -75,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 		return Controller::getTemplateGroup('list_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 		return Controller::getTemplateGroup('info_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 /**

@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao.listener.administrator_email:
         class: Contao\CoreBundle\EventListener\AdministratorEmailListener
         arguments:
@@ -46,6 +51,7 @@ services:
         arguments:
             - '@contao.cron'
             - '@database_connection'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
             - false
 
@@ -84,6 +90,12 @@ services:
             - '@security.helper'
             - '@request_stack'
 
+    contao.listener.data_container.check_template_editor_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
+
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
         public: true
@@ -94,6 +106,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@router'
+            - '@clock'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -167,7 +180,9 @@ services:
     contao.listener.data_container.fallback_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
+            - '@contao.framework'
             - '@translator'
+            - '@contao.data_container.value_formatter'
 
     contao.listener.data_container.file_image_preview:
         class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
@@ -183,6 +198,11 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.item_sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\ItemSizesSaveCallbackListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
@@ -197,6 +217,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.lazy_loading_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\LazyLoadingSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.legacy_gallery_palette:
         class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
@@ -231,7 +256,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@security.helper'
-            - '@?event_dispatcher'
 
     contao.listener.data_container.page_url:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUrlListener
@@ -279,6 +303,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.sizes_save_callback:
+        class: Contao\CoreBundle\EventListener\DataContainer\SizesSaveCallbackListener
+        arguments:
+            - '@translator'
 
     contao.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -426,6 +455,16 @@ services:
             - '@database_connection'
             - '@translator'
             - '@contao.framework'
+
+    contao.listener.legacy_globals_backup:
+        class: Contao\CoreBundle\EventListener\LegacyGlobalsBackupListener
+
+    contao.listener.legacy_route_parameters:
+        class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@contao.framework'
+            - '@contao.routing.response_context_accessor'
 
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
@@ -592,9 +631,14 @@ services:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
             - '@messenger.bus.default'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
-            - '%contao.backend.route_prefix%'
             - '%kernel.debug%'
+
+    contao.listener.security.complete_two_factor_provider:
+        class: Contao\CoreBundle\EventListener\Security\CompleteTwoFactorProviderListener
+        arguments:
+            - '@security.token_storage'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -687,6 +731,10 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+            - '@contao.data_container.record_labeler'
+
+    contao.listener.widget.title_tag:
+        class: Contao\CoreBundle\EventListener\Widget\TitleTagListener
 
     contao.messenger.message_listener:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
@@ -698,4 +746,3 @@ services:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.environment%'

@@ -23,6 +23,7 @@ use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
@@ -48,13 +49,14 @@ class InsertTagsTest extends TestCase
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
+        $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
 
         System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
 
         InsertTags::reset();
 
@@ -298,7 +300,7 @@ class InsertTagsTest extends TestCase
 
     public static function provideFigureInsertTags(): iterable
     {
-        $defaultTemplate = '@ContaoCore/Image/Studio/figure.html.twig';
+        $defaultTemplate = '@Contao/insert_tag/figure.html.twig';
 
         yield 'without any configuration' => [
             '{{figure::123}}',
@@ -679,12 +681,12 @@ class InsertTagsTest extends TestCase
 
         yield 'Unclosed insert tag' => [
             '<span title="{{xx">}} class="broken-out">',
-            '<span title="[{]xx">}} class="broken-out">',
+            '<span title="&#123;&#123;xx">}} class="broken-out">',
         ];
 
         yield 'Trick comments detection with insert tag' => [
             '<!-- {{plain::--}}> got you! -->',
-            '<!-- [{]plain::--[}]> got you! -->',
+            '<!-- &#123;&#123;plain::--&#125;&#125;> got you! -->',
         ];
 
         yield 'Do not destroy JSON attributes' => [
@@ -710,6 +712,16 @@ class InsertTagsTest extends TestCase
         yield 'Trick insert tag detection with JSON' => [
             '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
             '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+        ];
+
+        yield 'Literal insert tags' => [
+            'foo [{] bar [}] baz',
+            'foo &#123;&#123; bar &#125;&#125; baz',
+        ];
+
+        yield 'literal insert tags inside script tag are not replaced' => [
+            '[{] <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> [}]',
+            '&#123;&#123; <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> &#125;&#125;',
         ];
     }
 
@@ -1033,7 +1045,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
-        $this->assertSame('[{]infinite-try-catch::66[}]', $output);
+        $this->assertSame('&#123;&#123;infinite-try-catch::66&#125;&#125;', $output);
     }
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void

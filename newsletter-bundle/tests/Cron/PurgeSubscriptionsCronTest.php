@@ -36,6 +36,6 @@ class PurgeSubscriptionsCronTest extends ContaoTestCase
 
         $framework = $this->createContaoFrameworkStub([NewsletterRecipientsModel::class => $commentsNotifyModelAdapter]);
 
-        (new PurgeSubscriptionsCron($framework, null))();
+        new PurgeSubscriptionsCron($framework, null)();
     }
 }

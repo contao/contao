@@ -76,8 +76,8 @@ class PageAccessListener
 
         $pageModel = $request->attributes->get('pageModel');
 
-        // As discovered in #9500, this cannot be replaced with the PageFinder, because
-        // $pageModel can be either a model or a numeric ID.
+        // Do not use the PageFinder here, because $pageModel can be either a model or a
+        // numeric ID (see ##9500)
         if (
             isset($GLOBALS['objPage'])
             && $GLOBALS['objPage'] instanceof PageModel

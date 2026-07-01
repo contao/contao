@@ -54,7 +54,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
             ],
         ];
 
-        (new DefaultGlobalOperationsListener())('tl_foo');
+        new DefaultGlobalOperationsListener()('tl_foo');
 
         $this->assertArrayHasKey('global_operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['global_operations'];
@@ -98,7 +98,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
             ],
         ];
 
-        (new DefaultGlobalOperationsListener())('tl_foo');
+        new DefaultGlobalOperationsListener()('tl_foo');
 
         $this->assertArrayHasKey('global_operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['global_operations'];
@@ -143,7 +143,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
             ],
         ];
 
-        (new DefaultGlobalOperationsListener())('tl_foo');
+        new DefaultGlobalOperationsListener()('tl_foo');
 
         $this->assertArrayHasKey('global_operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['global_operations'];

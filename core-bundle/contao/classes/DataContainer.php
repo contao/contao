@@ -319,6 +319,16 @@ abstract class DataContainer extends Backend
 	protected $panelActive = false;
 
 	/**
+	 * Number of records rendered in the current tree view request.
+	 */
+	protected int $treeRecordCount = 0;
+
+	/**
+	 * Whether the tree record limit has been reached while trying to render another record.
+	 */
+	protected bool $treeRecordLimitReached = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -781,7 +791,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&' : '') . 'act=edit&id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		return Backend::addToUrl($strRequest, true, $arrUnset);
@@ -846,8 +856,14 @@ abstract class DataContainer extends Backend
 				{
 					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
-			}
+			},
+			$this->shouldRenderPrimaryOperationsOnly()
 		);
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		return false;
 	}
 
 	/**
@@ -910,21 +926,25 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+		$dc->strTable = $strPtable;
+		$dc->intId = $arrRow['id'] ?? $this->intCurrentPid;
+
 		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithHeaderButtons(
 			$strPtable,
 			$arrRow,
-			$this,
-			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
+			$dc,
+			static function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{
 					$callback = System::importStatic($config['button_callback'][0]);
-					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 				elseif (\is_callable($config['button_callback'] ?? null))
 				{
-					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 			}
 		);
@@ -1304,6 +1324,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
+			$this->strField = $k;
 			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
@@ -1488,6 +1509,50 @@ abstract class DataContainer extends Backend
 				unset(self::$arrCurrentRecordCache[$key]);
 			}
 		}
+	}
+
+	protected function canRenderTreeRecord(): bool
+	{
+		if ($this->treeRecordLimitReached)
+		{
+			return false;
+		}
+
+		$limit = $this->getTreeRecordLimit();
+
+		if ($limit < 1 || $this->treeRecordCount < $limit)
+		{
+			return true;
+		}
+
+		$this->treeRecordLimitReached = true;
+
+		return false;
+	}
+
+	protected function countTreeRecord(): void
+	{
+		if ($this->getTreeRecordLimit() > 0)
+		{
+			++$this->treeRecordCount;
+		}
+	}
+
+	protected function getTreeRecordLimit(): int
+	{
+		if (Input::get('act') == 'select')
+		{
+			return 0;
+		}
+
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? Config::get('maxResultsPerPage'));
+	}
+
+	protected function generateTreeRecordLimitNotice(): string
+	{
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	public function setPanelState(bool $state): void

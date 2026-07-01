@@ -14,16 +14,19 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
+use Webauthn\Bundle\Repository\CanSaveCredentialSource;
+use Webauthn\Bundle\Repository\PublicKeyCredentialSourceRepositoryInterface;
 use Webauthn\PublicKeyCredentialSource;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 /**
- * @template-extends DoctrineCredentialSourceRepository<WebauthnCredential>
+ * @template-extends ServiceEntityRepository<WebauthnCredential>
  *
  * @internal
  */
-class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
+class WebauthnCredentialRepository extends ServiceEntityRepository implements PublicKeyCredentialSourceRepositoryInterface, CanSaveCredentialSource
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -38,7 +41,7 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
         return $this->getEntityManager()
             ->createQueryBuilder()
             ->select('c')
-            ->from($this->class, 'c')
+            ->from(WebauthnCredential::class, 'c')
             ->where('c.userHandle = :user_handle')
             ->setParameter(':user_handle', $user->getPasskeyUserHandle())
             ->getQuery()
@@ -62,14 +65,28 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
             );
         }
 
-        parent::saveCredentialSource($publicKeyCredentialSource);
+        $this->getEntityManager()->persist($publicKeyCredentialSource);
+        $this->getEntityManager()->flush();
+    }
+
+    public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
+    {
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->from(WebauthnCredential::class, 'c')
+            ->select('c')
+            ->where('c.userHandle = :userHandle')
+            ->setParameter(':userHandle', $publicKeyCredentialUserEntity->id)
+            ->getQuery()
+            ->execute()
+        ;
     }
 
     public function findOneByCredentialId(string $publicKeyCredentialId): WebauthnCredential|null
     {
         return $this->getEntityManager()
             ->createQueryBuilder()
-            ->from($this->class, 'c')
+            ->from(WebauthnCredential::class, 'c')
             ->select('c')
             ->where('c.publicKeyCredentialId = :publicKeyCredentialId')
             ->setParameter(':publicKeyCredentialId', base64_encode($publicKeyCredentialId))
@@ -83,7 +100,7 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
     {
         return $this->getEntityManager()
             ->createQueryBuilder()
-            ->from($this->class, 'c')
+            ->from(WebauthnCredential::class, 'c')
             ->select('c')
             ->where('c.id = :id')
             ->setParameter(':id', $id)
@@ -104,7 +121,7 @@ class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
         return $this->getEntityManager()
             ->createQueryBuilder()
             ->select('c')
-            ->from($this->class, 'c')
+            ->from(WebauthnCredential::class, 'c')
             ->where('c.userHandle = :user_handle')
             ->setParameter(':user_handle', $user->getPasskeyUserHandle())
             ->orderBy('c.createdAt', 'desc')

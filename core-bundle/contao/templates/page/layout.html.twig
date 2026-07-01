@@ -35,6 +35,9 @@
             {% if page['enableCanonical'] %}
                 <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request)|default }}">
             {% endif %}
+            {% for link_tag in response_context.head.linkTags %}
+                <link{{ link_tag }}>
+            {% endfor %}
         {% endif %}
 
         {% block end_of_head %}

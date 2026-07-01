@@ -25,6 +25,10 @@
         <source>Search templates…</source>
         <target>テンプレートを検索...</target>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+        <target>自分のテンプレートだけ表示</target>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>保存</target>
@@ -97,6 +101,30 @@
         <source>Rename the %s variant template</source>
         <target>%sというバリアント・テンプレートの名前を変更</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+        <source>Create variant</source>
+        <target>バリアントを作成</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
+        <source>Create a new variant template for the %s legacy content element</source>
+        <target>%sの旧いコンテント要素の新しいバリアント・テンプレートを作成</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>バリアントを作成</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>%sのフロントエンドモジュールの新しいバリアント・テンプレートを作成 </target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
+        <source>Create variant</source>
+        <target>バリアントを作成</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>%sというテンプレート用の新しいバリアント・テンプレートを作成</target>
+      </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>
         <target>%sのテンプレートを作成しました。</target>
@@ -162,7 +190,7 @@
         <target>%identifier%のテンプレートは2つの形式で提供されます。テンプレートを調整するときは、Contao 6でも互換性と保てるTwig形式の方が良いです。</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>このテンプレートの関係はエラーを含んでいるため解析できません。</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">

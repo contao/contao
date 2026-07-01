@@ -30,7 +30,7 @@
         <target>Treść HTML</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Wprowadź treść HTML newslettera. Użyj tagu &lt;em&gt;##email##&lt;/em&gt; do umieszczenia adresu e-mail odbiorcy. Link do anulowania subskrypcji &lt;em&gt;http://www.domena.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Treść tekstowa</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Wprowadź treść tekstową newslettera. Użyj tagu &lt;em&gt;##email##&lt;/em&gt; do umieszczenia adresu e-mail odbiorcy. Link do anulowania subskrypcji &lt;em&gt;http://www.domena.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

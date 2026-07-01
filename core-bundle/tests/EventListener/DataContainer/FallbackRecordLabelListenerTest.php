@@ -13,10 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Fixtures\TranslatorStub;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -34,7 +38,12 @@ class FallbackRecordLabelListenerTest extends TestCase
 
     public function testIgnoresOtherIdentifiers(): void
     {
-        $listener = new FallbackRecordLabelListener($this->createStub(TranslatorStub::class));
+        $listener = new FallbackRecordLabelListener(
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(TranslatorStub::class),
+            $this->createStub(ValueFormatter::class),
+        );
+
         $listener($event = new DataContainerRecordLabelEvent('contao.something.tl_foo.123', ['id' => 123]));
 
         $this->assertNull($event->getLabel());
@@ -65,7 +74,12 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->willReturn('Edit 123')
         ;
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $listener = new FallbackRecordLabelListener(
+            $this->createStub(ContaoFramework::class),
+            $translator,
+            $this->createStub(ValueFormatter::class),
+        );
+
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123]));
 
         $this->assertSame('Edit 123', $event->getLabel());
@@ -80,9 +94,68 @@ class FallbackRecordLabelListenerTest extends TestCase
 
         $translator = $this->createStub(TranslatorStub::class);
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $formatter = $this->createMock(ValueFormatter::class);
+        $formatter
+            ->expects($this->once())
+            ->method('format')
+            ->with('tl_foo', 'fieldA', 'A <span>(B &amp; B)</span>')
+            ->willReturn('A (B & B)')
+        ;
+
+        $dataContainer = $this->createAdapterMock(['getDriverForTable']);
+        $dataContainer
+            ->expects($this->once())
+            ->method('getDriverForTable')
+            ->willReturn(DC_Table::class)
+        ;
+
+        $framework = $this->createStub(ContaoFramework::class);
+        $framework
+            ->method('getAdapter')
+            ->willReturn($dataContainer)
+        ;
+
+        $listener = new FallbackRecordLabelListener($framework, $translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
 
         $this->assertSame('A (B & B)', $event->getLabel());
+    }
+
+    public function testGetsLabelFromDcaWithDateFlaggedDefaultSearchField(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['defaultSearchField'] = 'fieldA';
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['fieldA']['flag'] = DataContainer::SORT_MONTH_ASC;
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['fieldA']['eval']['rgxp'] = 'date';
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+        new \ReflectionClass(DcaLoader::class)->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
+
+        $translator = $this->createStub(TranslatorStub::class);
+
+        $formatter = $this->createMock(ValueFormatter::class);
+        $formatter
+            ->expects($this->once())
+            ->method('format')
+            ->with('tl_foo', 'fieldA', '1772131097')
+            ->willReturn('2026-02-26')
+        ;
+
+        $dataContainer = $this->createAdapterMock(['getDriverForTable']);
+        $dataContainer
+            ->expects($this->once())
+            ->method('getDriverForTable')
+            ->willReturn(DC_Table::class)
+        ;
+
+        $framework = $this->createStub(ContaoFramework::class);
+        $framework
+            ->method('getAdapter')
+            ->willReturn($dataContainer)
+        ;
+
+        $listener = new FallbackRecordLabelListener($framework, $translator, $formatter);
+        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => '1772131097']));
+
+        $this->assertSame('2026-02-26', $event->getLabel());
     }
 }

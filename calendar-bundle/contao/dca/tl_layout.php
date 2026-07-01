@@ -16,6 +16,7 @@ PaletteManipulator::create()
 	->addLegend('feed_legend', 'modules_legend', PaletteManipulator::POSITION_BEFORE)
 	->addField('calendarfeeds', 'feed_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_layout')
+	->applyToPalette('modern', 'tl_layout')
 ;
 
 // Extend fields

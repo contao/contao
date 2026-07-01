@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
@@ -23,6 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
+    use DynamicPtableTrait;
+
     private const PREFIX = 'dc.';
 
     private const PREFIX_LENGTH = 3;
@@ -45,7 +48,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         $module = array_keys($modules)[0];
-        [$ptable, $pid, $id] = $this->getPtableAndPid($table, $config->getValue());
+        [$ptable, $pid, $id, $pptable] = $this->getPtableAndPid($table, $config->getValue());
 
         // If we have no selected entry, we need to start at the topmost parent table.
         // This can also result in setting it to null for dynamic parent tables.
@@ -67,7 +70,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             return $this->getUrlForValue($config, $module);
         }
 
-        return $this->getUrlForValue($config, $module, $table, $pid);
+        return $this->getUrlForValue($config, $module, $table, $pid, $ptable !== $pptable ? $pptable : null);
     }
 
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void
@@ -182,7 +185,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    protected function getUrlForValue(PickerConfig $config, string $module, string|null $table = null, int|null $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, string|null $table = null, int|null $pid = null, string|null $ptable = null): string
     {
         $params = [
             'do' => $module,
@@ -192,6 +195,10 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         if (null !== $table) {
             $params['table'] = $table;
+
+            if ($ptable) {
+                $params['ptable'] = $ptable;
+            }
 
             if (null !== $pid) {
                 $params['id'] = $pid;
@@ -223,15 +230,21 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
             if ($dynamicPtable) {
                 $qb->addSelect('ptable');
+
+                try {
+                    [$ptable] = $this->getParentTableAndId($this->connection, $table, $id);
+                } catch (\RuntimeException) {
+                }
             }
 
             $data = $qb->executeQuery()->fetchAssociative();
         }
 
         return [
-            $data['ptable'] ?? $ptable ?? null,
+            $ptable ?? $data['ptable'] ?? null,
             (int) ($data['pid'] ?? 0) ?: null,
             (int) ($data['id'] ?? 0) ?: null,
+            $data['ptable'] ?? null,
         ];
     }
 

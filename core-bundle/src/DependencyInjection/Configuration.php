@@ -130,6 +130,14 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->scalarNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(static fn ($v) => null !== $v && !\is_bool($v))
+                        ->thenInvalid('Must be boolean or null.')
+                    ->end()
+                ->end()
             ->end()
         ;
 
@@ -186,13 +194,29 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('options')
-                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
-                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=55".')
+                                ->example(['--sleep=5', '--time-limit=55'])
                                 ->scalarPrototype()->end()
-                                ->defaultValue(['--time-limit=60'])
+                                ->defaultValue(['--time-limit=55'])
                                 ->validate()
-                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
-                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                    ->ifTrue(
+                                        static function (array $options): bool {
+                                            $timeLimitCount = 0;
+
+                                            foreach ($options as $option) {
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches)) {
+                                                    ++$timeLimitCount;
+
+                                                    if ($timeLimitCount > 1 || (int) $matches[1] > 60) {
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+
+                                            return 1 !== $timeLimitCount;
+                                        },
+                                    )
+                                    ->thenInvalid('Custom messenger:consume options must include exactly one "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')
@@ -405,9 +429,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                     ->example(['+heic', '-svgz'])
                     ->validate()
-                        ->ifTrue(
-                            static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)),
-                        )
+                        ->ifTrue(static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)))
                         ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
                     ->end()
                     ->validate()

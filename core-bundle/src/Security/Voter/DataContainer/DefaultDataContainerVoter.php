@@ -37,10 +37,8 @@ class DefaultDataContainerVoter implements CacheableVoterInterface
 
     public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
-        foreach ($attributes as $attribute) {
-            if ($this->supportsAttribute($attribute)) {
-                return self::ACCESS_GRANTED;
-            }
+        if (array_any($attributes, fn ($attribute) => $this->supportsAttribute($attribute))) {
+            return self::ACCESS_GRANTED;
         }
 
         return self::ACCESS_ABSTAIN;

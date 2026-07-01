@@ -63,7 +63,7 @@ class FilesystemItemIterator implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param callable(FilesystemItem):bool $filter
+     * @param callable(FilesystemItem): bool $filter
      */
     public function filter(callable $filter): self
     {
@@ -109,7 +109,7 @@ class FilesystemItemIterator implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param callable(FilesystemItem):bool $condition
+     * @param callable(FilesystemItem): bool $condition
      */
     public function any(callable $condition): bool
     {
@@ -123,7 +123,7 @@ class FilesystemItemIterator implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param callable(FilesystemItem):bool $condition
+     * @param callable(FilesystemItem): bool $condition
      */
     public function all(callable $condition): bool
     {

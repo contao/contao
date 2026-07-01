@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.40",
+            "version": "2.2.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
-                "reference": "9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
                 "shasum": ""
             },
             "require": {
@@ -34,6 +34,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -57,7 +68,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-23T15:04:35+00:00"
+            "time": "2026-06-05T09:00:01+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -117,16 +128,16 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "2.0.14",
+            "version": "2.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "678136545a552a33b07f1a59a013f76df286cc34"
+                "reference": "53f1a6462dbe71fad36ce054caf5e1b725b740fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/678136545a552a33b07f1a59a013f76df286cc34",
-                "reference": "678136545a552a33b07f1a59a013f76df286cc34",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/53f1a6462dbe71fad36ce054caf5e1b725b740fd",
+                "reference": "53f1a6462dbe71fad36ce054caf5e1b725b740fd",
                 "shasum": ""
             },
             "require": {
@@ -185,35 +196,35 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.14"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.20"
             },
-            "time": "2026-02-11T12:27:30+00:00"
+            "time": "2026-06-16T09:17:35+00:00"
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.8.0",
+            "version": "v6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "772320f8e41b1fef3274cfea743987dcaa0baaa9"
+                "reference": "98424c7f2828169918d2d85e702d986a3422f16d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/772320f8e41b1fef3274cfea743987dcaa0baaa9",
-                "reference": "772320f8e41b1fef3274cfea743987dcaa0baaa9",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/98424c7f2828169918d2d85e702d986a3422f16d",
+                "reference": "98424c7f2828169918d2d85e702d986a3422f16d",
                 "shasum": ""
             },
             "require": {
                 "php": "~8.4.0 || ~8.5.0",
-                "phpstan/phpstan": "^2.1.31"
+                "phpstan/phpstan": "^2.1.55"
             },
             "require-dev": {
-                "nette/di": "^3.2.5",
-                "nette/neon": "^3.4.5",
-                "nikic/php-parser": "^4.19.2 || ^5.6.2",
-                "phpstan/phpstan-phpunit": "^2.0.7",
-                "phpunit/phpunit": "^12.4.2",
-                "slam/php-cs-fixer-extensions": "^3.14.0"
+                "nette/di": "^3.2.6",
+                "nette/neon": "^3.4.8",
+                "nikic/php-parser": "^4.19.2 || ^5.7.0",
+                "phpstan/phpstan-phpunit": "^2.0.16",
+                "phpunit/phpunit": "^13.1.10",
+                "slam/php-cs-fixer-extensions": "^3.15.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -242,7 +253,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.8.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.9.0"
             },
             "funding": [
                 {
@@ -254,7 +265,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-01T07:13:35+00:00"
+            "time": "2026-05-19T03:26:23+00:00"
         }
     ],
     "packages-dev": [],

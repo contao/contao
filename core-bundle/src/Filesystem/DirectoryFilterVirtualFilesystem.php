@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
@@ -258,7 +258,7 @@ class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
         return $path;
     }
 
-    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
+    public function generatePublicUri(Uuid|string $location, Options|null $options = null): UriInterface|null
     {
         if (!$this->isAccessible($path = $this->resolveLocation($location))) {
             return null;
@@ -327,10 +327,8 @@ class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
      */
     private function isAccessible(string $path, bool $requireFullOwnership = false): bool
     {
-        foreach ($this->prefixPaths as $prefixPath) {
-            if (Path::isBasePath($prefixPath, $path)) {
-                return true;
-            }
+        if (array_any($this->prefixPaths, static fn ($prefixPath) => Path::isBasePath($prefixPath, $path))) {
+            return true;
         }
 
         return !$requireFullOwnership && $this->isTrailPath($path);

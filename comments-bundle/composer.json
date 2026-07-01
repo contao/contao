@@ -63,9 +63,6 @@
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "6.0-dev"
-        },
         "contao-manager-plugin": "Contao\\CommentsBundle\\ContaoManager\\Plugin"
     }
 }

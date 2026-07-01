@@ -1,25 +1,31 @@
 .serp-preview {
-    max-width: 600px;
+    max-width: 640px;
     margin: 2px 0;
     padding: 6px 9px;
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
     color: var(--serp-preview);
     background: var(--panel-bg);
     border-radius: var(--border-radius);
+    line-height: 22px;
 
     p {
         margin: 0;
     }
 
-    :is(.url, .description) {
-        line-height: 18px;
+    .title {
+        max-width: 550px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: "Google Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        white-space: nowrap;
+        margin: 5px 0;
+        font-size: 20px;
+        color: var(--serp-preview-title);
     }
 
-    .title {
-        margin: 4px 0;
-        font-size: 18px;
-        color: var(--serp-preview-title);
+    .url {
+        font-size: 0.75rem;
     }
 
     .tl_info {

@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Accorder l'accès à une ou plusieurs catégories de FAQ.</target>
+        <target>Accorder l&apos;accès à une ou plusieurs catégories de FAQ.</target>
       </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>

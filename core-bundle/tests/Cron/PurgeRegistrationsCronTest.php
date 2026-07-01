@@ -36,6 +36,6 @@ class PurgeRegistrationsCronTest extends ContaoTestCase
 
         $framework = $this->createContaoFrameworkStub([MemberModel::class => $memberModelAdapter]);
 
-        (new PurgeRegistrationsCron($framework, null))();
+        new PurgeRegistrationsCron($framework, null)();
     }
 }

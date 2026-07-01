@@ -18,6 +18,27 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayUtilTest extends TestCase
 {
+    #[DataProvider('consistentHashProvider')]
+    public function testConsistentHash(array $array, string $algorithm, string $expected): void
+    {
+        $this->assertSame($expected, ArrayUtil::consistentHash($array, $algorithm));
+    }
+
+    public static function consistentHashProvider(): iterable
+    {
+        yield [
+            ['a' => 1, 'b' => 2, 'c' => 3],
+            'xxh3',
+            '70672364af898048',
+        ];
+
+        yield [
+            ['a' => 1, 'c' => 3, 'b' => 2],
+            'xxh3',
+            '70672364af898048',
+        ];
+    }
+
     #[DataProvider('sortByOrderFieldProvider')]
     public function testSortsByOrderField(array $items, array $order, array $expected): void
     {

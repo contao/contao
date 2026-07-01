@@ -34,7 +34,7 @@ class ButtonsBuilder
     public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, bool $hasCopyPermission, DataContainer $dc): string
     {
         $arrButtons = [];
-        $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
+        $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
 
         if (!Input::get('nb')) {
             $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';

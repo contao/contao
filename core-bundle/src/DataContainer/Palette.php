@@ -62,13 +62,7 @@ class Palette implements \Stringable
      */
     public function getLegendForField(string $name): int|string|null
     {
-        foreach ($this->config as $legend => $group) {
-            if (\in_array($name, $group['fields'], true)) {
-                return $legend;
-            }
-        }
-
-        return null;
+        return array_find_key($this->config, static fn ($group) => \in_array($name, $group['fields'], true));
     }
 
     /**

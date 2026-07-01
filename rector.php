@@ -74,5 +74,5 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withParallel()
-    ->withCache(sys_get_temp_dir().'/rector/contao')
+    ->withCache(sys_get_temp_dir().'/rector/contao60')
 ;

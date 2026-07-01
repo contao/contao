@@ -37,7 +37,7 @@ class LegacyGalleryPaletteListenerTest extends TestCase
     {
         $GLOBALS['TL_CTE']['media']['gallery'] = ContentGallery::class;
 
-        (new LegacyGalleryPaletteListener())();
+        new LegacyGalleryPaletteListener()();
 
         $this->assertSame('galleryTpl,customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }
@@ -46,7 +46,7 @@ class LegacyGalleryPaletteListenerTest extends TestCase
     {
         $GLOBALS['TL_CTE']['media']['gallery'] = ContentProxy::class;
 
-        (new LegacyGalleryPaletteListener())();
+        new LegacyGalleryPaletteListener()();
 
         $this->assertSame('customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }
@@ -55,7 +55,7 @@ class LegacyGalleryPaletteListenerTest extends TestCase
     {
         $GLOBALS['TL_CTE']['media'] = null;
 
-        (new LegacyGalleryPaletteListener())();
+        new LegacyGalleryPaletteListener()();
 
         $this->assertSame('customTpl', $GLOBALS['TL_DCA']['tl_content']['palettes']['gallery']);
     }

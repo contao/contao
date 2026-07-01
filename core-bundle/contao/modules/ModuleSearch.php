@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -60,23 +61,36 @@ class ModuleSearch extends Module
 	 */
 	protected function compile()
 	{
+		$paginationRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		// Trigger the search module from a custom form
 		if (Input::get('keywords') === null && Input::post('FORM_SUBMIT') == 'tl_search')
 		{
-			Input::setGet('keywords', Input::post('keywords'));
-			Input::setGet('query_type', Input::post('query_type'));
-			Input::setGet('per_page', Input::post('per_page'));
+			$strKeywords = Input::post('keywords');
+			$strQueryType = Input::post('query_type');
+			$per_page = Input::post('per_page');
+
+			$paginationRequest = $paginationRequest->duplicate();
+			$paginationRequest->query->set('keywords', $strKeywords);
+			$paginationRequest->query->set('query_type', $strQueryType ?: null);
+			$paginationRequest->query->set('per_page', $per_page ?: null);
+		}
+		else
+		{
+			$strKeywords = Input::get('keywords');
+			$strQueryType = Input::get('query_type');
+			$per_page = Input::get('per_page');
 		}
 
 		$blnFuzzy = $this->fuzzy;
-		$strQueryType = Input::get('query_type') ?: $this->queryType;
+		$strQueryType = $strQueryType ?: $this->queryType;
 
-		if (\is_array(Input::get('keywords')))
+		if (\is_array($strKeywords))
 		{
 			throw new BadRequestHttpException('Expected string, got array');
 		}
 
-		$strKeywords = trim(Input::get('keywords'));
+		$strKeywords = trim($strKeywords);
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
@@ -123,8 +137,7 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
-				global $objPage;
-
+				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
@@ -187,17 +200,17 @@ class ModuleSearch extends Module
 			}
 
 			$from = 0;
-			$to = $count + 1;
+			$to = $count;
 
 			// Pagination
 			if ($this->perPage > 0)
 			{
 				$param = 'page_s' . $this->id;
-				$per_page = (int) Input::get('per_page') ?: $this->perPage;
+				$per_page = (int) $per_page ?: $this->perPage;
 
 				try
 				{
-					$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $count, $per_page));
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create((new PaginationConfig($param, $count, $per_page))->withRequest($paginationRequest));
 				}
 				catch (PageOutOfRangeException $e)
 				{
@@ -209,7 +222,7 @@ class ModuleSearch extends Module
 				// Pagination menu
 				if ($pagination->getPageCount() > 1)
 				{
-					$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+					$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 				}
 
 				$this->Template->page = $pagination->getCurrent();
@@ -289,7 +302,7 @@ class ModuleSearch extends Module
 
 		foreach ($meta as $v)
 		{
-			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl'], $v['https://schema.org/primaryImageOfPage']['@id']))
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
 			{
 				continue;
 			}

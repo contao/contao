@@ -30,10 +30,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install Rector
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/rector
 
@@ -58,10 +58,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install ECS
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/ecs
 
@@ -86,10 +86,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install ECS
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/ecs
 
@@ -117,10 +117,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install Twig CS Fixer
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/twig-cs-fixer
 
@@ -145,10 +145,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install PHPStan
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/phpstan
 
@@ -164,6 +164,9 @@ jobs:
               with:
                   show-progress: false
                   persist-credentials: false
+
+            - name: Run YAMLlint
+              run: yamllint --format=github .
 
     linter:
         name: Linter
@@ -202,10 +205,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install the service linter
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/service-linter
 
@@ -231,7 +234,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Check for unknown symbols (contao/contao)
               run: vendor/bin/composer-dependency-analyser --config=depcheck.php
@@ -280,7 +283,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --fail-on-phpunit-notice
@@ -313,7 +316,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
@@ -342,7 +345,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   composer-options: --ignore-platform-req=php+
 
@@ -377,7 +380,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   dependency-versions: lowest
 
@@ -455,10 +458,10 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install the monorepo tools
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/monorepo-tools
 

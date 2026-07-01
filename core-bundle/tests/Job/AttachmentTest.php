@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -30,7 +31,7 @@ class AttachmentTest extends TestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            new MountManager()->mount(new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }

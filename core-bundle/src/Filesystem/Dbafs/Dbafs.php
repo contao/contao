@@ -511,6 +511,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         $record = [
             'isFile' => $isFile,
             'path' => $path,
+            'lastModified' => null,
+            'fileSize' => null,
+            'mimeType' => null,
             'extra' => $event->getExtraMetadata(),
         ];
 

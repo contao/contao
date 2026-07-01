@@ -14,6 +14,7 @@ use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
@@ -34,8 +35,6 @@ class Comments extends Frontend
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		global $objPage;
-
 		$limit = 0;
 		$offset = 0;
 		$total = 0;
@@ -77,7 +76,7 @@ class Comments extends Frontend
 			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			$objTemplate->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 		}
 
 		$objTemplate->allowComments = true;
@@ -97,6 +96,7 @@ class Comments extends Frontend
 		{
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 			while ($objComments->next())
 			{
@@ -447,31 +447,6 @@ class Comments extends Frontend
 		);
 
 		return preg_replace(array_keys($arrReplace), array_values($arrReplace), $strComment);
-	}
-
-	/**
-	 * Purge subscriptions that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use CommentsNotifyModel::findExpiredSubscriptions() instead.
-	 */
-	public function purgeSubscriptions()
-	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" is deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
-
-		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
-
-		if ($objNotify === null)
-		{
-			return;
-		}
-
-		while ($objNotify->next())
-		{
-			$objNotify->delete();
-		}
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated comment subscriptions');
 	}
 
 	/**

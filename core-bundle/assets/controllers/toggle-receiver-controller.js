@@ -22,6 +22,9 @@ export default class extends Controller {
     }
 
     open(event) {
+        // Cancel any pending close
+        clearTimeout(this.#closeDelay);
+
         if (this.isOpen()) {
             return;
         }
@@ -86,7 +89,7 @@ export default class extends Controller {
             handler.setState(state);
         }
 
-        if (['mouseenter', 'mouseover', 'mouseleave'].includes(event?.type)) {
+        if (['mouseenter', 'mouseover', 'mouseleave', 'focusin', 'focusout'].includes(event?.type)) {
             return;
         }
 

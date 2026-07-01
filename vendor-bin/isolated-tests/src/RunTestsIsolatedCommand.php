@@ -34,7 +34,7 @@ class RunTestsIsolatedCommand extends Command
     {
         parent::__construct();
 
-        $this->phpPath = (new PhpExecutableFinder())->find();
+        $this->phpPath = new PhpExecutableFinder()->find();
     }
 
     protected function configure(): void

@@ -77,14 +77,12 @@
     {% if not renderMainOnly %}
         <header id="header">
             <div class="inner">
-                <h1>
-                    <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
-                        <span class="app-title">Contao</span>
-                        {% if badgeTitle|default %}
-                            <span class="badge-title">{{ badgeTitle }}</span>
-                        {% endif %}
-                    </a>
-                </h1>
+                <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
+                    <span class="app-title">Contao</span>
+                    {% if badgeTitle|default %}
+                        <span class="badge-title">{{ badgeTitle }}</span>
+                    {% endif %}
+                </a>
                 {{ headerMenu|raw }}
             </div>
         </header>
@@ -116,14 +114,18 @@
             <turbo-frame id="contao-main" target="_top">
                 <main{{ mainAttributes }}>
                     {% block main_headline %}
-                        <h1 id="main_headline">
+                        <div class="content-top">
                             {% if breadcrumb|default %}
-                                {{ breadcrumb|raw }}
+                                <nav id="main_breadcrumb">
+                                    {{ breadcrumb|raw }}
+                                </nav>
                             {% else %}
-                                {{ headline|raw }}
+                                <h1 id="main_headline">
+                                    {{ headline|raw }}
+                                </h1>
                             {% endif %}
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
-                        </h1>
+                        </div>
                     {% endblock %}
                     <div class="content">
                         {% if pickerMenu|default %}

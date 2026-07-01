@@ -14,11 +14,16 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Fragment\FragmentHandler;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Contao\Template;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\VarDumper\VarDumper;
 use Twig\Environment;
 
@@ -28,12 +33,16 @@ class TemplateTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
+        $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([System::class, Config::class]);
 
@@ -92,11 +101,6 @@ class TemplateTest extends TestCase
     #[DataProvider('provideBuffer')]
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
-        $page = new \stdClass();
-        $page->minifyMarkup = false;
-
-        $GLOBALS['objPage'] = $page;
-
         $template = new class($buffer) extends FrontendTemplate {
             public function __construct(private readonly string|null $testBuffer)
             {
@@ -105,7 +109,7 @@ class TemplateTest extends TestCase
 
             public function parse(): string
             {
-                return $this->testBuffer;
+                return System::getContainer()->get('contao.insert_tag.parser')->replace($this->testBuffer);
             }
 
             public function testCompile(): string
@@ -122,8 +126,6 @@ class TemplateTest extends TestCase
         };
 
         $this->assertSame($expectedOutput, $template->testCompile());
-
-        unset($GLOBALS['objPage']);
     }
 
     public static function provideBuffer(): iterable

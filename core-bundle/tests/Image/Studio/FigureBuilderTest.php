@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -403,7 +404,7 @@ class FigureBuilderTest extends TestCase
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
@@ -506,7 +507,7 @@ class FigureBuilderTest extends TestCase
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
@@ -519,7 +520,7 @@ class FigureBuilderTest extends TestCase
         $inMemoryAdapter = new InMemoryFilesystemAdapter();
         $inMemoryAdapter->write('foo.jpg', 'image-data', new FlysystemConfig());
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($inMemoryAdapter);
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
@@ -537,7 +538,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromStorageFailsWithUnreadableResource(): void
     {
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new InMemoryFilesystemAdapter());
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));

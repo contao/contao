@@ -30,12 +30,16 @@ abstract class Events extends Module
 	/**
 	 * Today 00:00:00
 	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $intTodayBegin;
 
 	/**
 	 * Today 23:59:59
 	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $intTodayEnd;
 
@@ -114,7 +118,7 @@ abstract class Events extends Module
 	{
 		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.', __METHOD__);
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);
@@ -349,7 +353,7 @@ abstract class Events extends Module
 		}
 		catch (ExceptionInterface)
 		{
-			return StringUtil::ampersand(Environment::get('requestUri'));
+			return Environment::get('requestUri');
 		}
 
 		return $url;
