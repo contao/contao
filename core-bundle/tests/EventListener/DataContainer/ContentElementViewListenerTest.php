@@ -15,11 +15,15 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
 use Contao\Image;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class ContentElementViewListenerTest extends TestCase
 {
@@ -38,7 +42,7 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_theme',
         ]);
 
-        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener = $this->createContentElementViewListener();
         $listener->adjustListView($dc);
 
         $this->assertIsArray($GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
@@ -52,7 +56,7 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_article',
         ]);
 
-        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener = $this->createContentElementViewListener();
         $listener->adjustListView($dc);
 
         $this->assertSame('foobar', $GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
@@ -106,7 +110,7 @@ class ContentElementViewListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = 'foobar';
 
-        $listener = new ContentElementViewListener($framework, $translator);
+        $listener = $this->createContentElementViewListener($framework, $translator);
         $label = $listener->generateLabel($row, '', $dc);
 
         $this->assertSame($expectedLabel, $label[0]);
@@ -222,9 +226,20 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_article',
         ]);
 
-        $listener = new ContentElementViewListener($framework, $translator);
+        $listener = $this->createContentElementViewListener($framework, $translator);
         $label = $listener->generateLabel(['type' => 'text'], '', $dc);
 
         $this->assertSame('<p class="tl_error">foobar</p>', $label[1]);
+    }
+
+    private function createContentElementViewListener(ContaoFramework|null $framework = null, TranslatorInterface|null $translator = null): ContentElementViewListener
+    {
+        $framework ??= $this->createContaoFrameworkStub();
+        $translator ??= $this->createStub(TranslatorInterface::class);
+
+        $twig = new Environment($this->createStub(LoaderInterface::class));
+        $twig->addExtension(new TranslationExtension($translator));
+
+        return new ContentElementViewListener($framework, $translator, $twig);
     }
 }
