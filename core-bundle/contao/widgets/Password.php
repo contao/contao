@@ -51,8 +51,6 @@ class Password extends Widget
 		}
 
 		parent::__construct($arrAttributes);
-
-		$this->useRawRequestData = true;
 	}
 
 	/**

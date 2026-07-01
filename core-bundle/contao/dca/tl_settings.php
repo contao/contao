@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'allowedTags' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
+			'eval'                    => array('tl_class'=>'long')
 		),
 		'allowedAttributes' => array
 		(
