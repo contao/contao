@@ -21,6 +21,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
+use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
@@ -41,6 +43,8 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         $apiResource = new ApiResource()
             ->withClass(DataContainerRecord::class)
             ->withShortName('Content')
+            ->withProvider(DataContainerStateProvider::class)
+            ->withProcessor(DataContainerStateProcessor::class)
             ->withRoutePrefix($this->getRoutePrefix('tl_content'))
             ->withExtraProperties([
                 'contao' => [

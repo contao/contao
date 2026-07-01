@@ -22,6 +22,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
+use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
+use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
 
@@ -40,6 +42,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends TestCase
         $this->assertInstanceOf(ApiResource::class, $resource);
         $this->assertSame(DataContainerRecord::class, $resource->getClass());
         $this->assertSame('Content', $resource->getShortName());
+        $this->assertSame(DataContainerStateProvider::class, $resource->getProvider());
+        $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
         $this->assertSame('/_api/backend/dc/tl_content', $resource->getRoutePrefix());
         $this->assertSame('tl_content', $resource->getExtraProperties()['contao']['table']);
 
