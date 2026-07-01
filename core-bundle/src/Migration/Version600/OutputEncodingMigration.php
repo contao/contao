@@ -20,9 +20,8 @@ use Doctrine\DBAL\Types\Types;
 
 class OutputEncodingMigration extends AbstractMigration
 {
-    public function __construct(
-        private readonly Connection $connection,
-    ) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function shouldRun(): bool
@@ -42,12 +41,13 @@ class OutputEncodingMigration extends AbstractMigration
     {
         $converted = [];
 
-        foreach ($this->getTargets() as [$table, $column, $options]) {
+        foreach ($this->getTargets() as [$table, $column, $virtualTarget, $options]) {
             $convertedIds = match ($options) {
-                ['decodeEntities'] => $this->migrateColumn($table, $column, static fn (string $value): string => str_replace(['&#60;', '&#92;0'], ['<', '\0'], $value)),
+                ['decodeEntities'] => $this->migrateColumn($table, $column, $virtualTarget, static fn (string $value): string => str_replace(['&#60;', '&#92;0'], ['<', '\0'], $value)),
                 ['fullyEncoded'] => $this->migrateColumn(
                     $table,
                     $column,
+                    $virtualTarget,
                     static function (string $value): string {
                         $value = str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $value);
 
@@ -69,28 +69,38 @@ class OutputEncodingMigration extends AbstractMigration
         return $this->createResult(true, "{$this->getName()} executed successfully: ".implode(', ', $converted));
     }
 
-    /**
-     * @return list<array{0: string, 1: string, 2: array}>
-     */
     private function getTargets(): array
     {
         return array_map(
             static function ($row) {
-                $row[2] = json_decode($row[2], true, flags: JSON_THROW_ON_ERROR);
+                $row[3] = json_decode($row[3], true, flags: JSON_THROW_ON_ERROR);
 
                 return $row;
             },
-            $this->connection->fetchAllNumeric('SELECT table_name, column_name, encoding_options FROM prepare_for_output_encoding WHERE performed_migration = 0'),
+            $this->connection->fetchAllNumeric('SELECT table_name, column_name, virtual_target_name, encoding_options FROM prepare_for_output_encoding WHERE performed_migration = 0'),
         );
     }
 
-    private function migrateColumn(string $table, string $column, \Closure $convert): array
+    private function migrateColumn(string $table, string $column, string|null $virtualTarget, \Closure $convert): array
     {
         $convertedIds = [];
 
-        foreach ($this->connection->fetchAllKeyValue("SELECT id, `$column` FROM `$table` WHERE `$column` != ''") as $id => $value) {
-            if (!\is_string($value)) {
+        $dbColumn = $virtualTarget ?? $column;
+
+        foreach ($this->connection->fetchAllKeyValue("SELECT id, `$dbColumn` FROM `$table` WHERE `$dbColumn` != ''") as $id => $dbValue) {
+            if (!\is_string($dbValue)) {
                 continue;
+            }
+
+            if (null !== $virtualTarget) {
+                try {
+                    $json = json_decode($dbValue, true, flags: JSON_THROW_ON_ERROR);
+                    $value = $json[$column];
+                } catch (\Throwable) {
+                    continue;
+                }
+            } else {
+                $value = $dbValue;
             }
 
             $convertedValue = StringUtil::deserialize($value);
@@ -111,12 +121,19 @@ class OutputEncodingMigration extends AbstractMigration
                 continue;
             }
 
-            if ($value !== $convertedValue) {
+            if (null !== $virtualTarget) {
+                $json[$column] = $convertedValue;
+                $convertedDbValue = $this->connection->convertToDatabaseValue($json, Types::JSON);
+            } else {
+                $convertedDbValue = $convertedValue;
+            }
+
+            if ($dbValue !== $convertedDbValue) {
                 $this->connection->update(
                     $table,
-                    [$column => $convertedValue],
-                    ['id' => $id, $column => $value],
-                    [Types::STRING, Types::INTEGER, Types::STRING],
+                    [$dbColumn => $convertedDbValue],
+                    ['id' => $id],
+                    [Types::STRING, Types::INTEGER],
                 );
 
                 $convertedIds[] = $id;
