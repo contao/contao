@@ -59,8 +59,10 @@ class LogoutPageController extends AbstractController
             return $referer;
         }
 
+        $jumpTo = $pageModel->getRelated('jumpTo');
+
         // Redirect to jumpTo page
-        if (($jumpTo = $pageModel->getRelated('jumpTo')) instanceof PageModel) {
+        if ($jumpTo instanceof PageModel) {
             return $this->generateContentUrl($jumpTo);
         }
 

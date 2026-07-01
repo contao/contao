@@ -155,7 +155,7 @@ class BbCodeTest extends TestCase
 
         yield 'encodes encoded javascript url protocol' => [
             '[url]javascript&colon;alert(1)[/url]',
-            'javascript&colon;alert(1)',
+            'javascript&amp;colon;alert(1)',
         ];
 
         yield 'encodes insert tags' => [

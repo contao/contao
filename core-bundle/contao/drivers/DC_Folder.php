@@ -740,8 +740,29 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		$rows = max(0, (int) $this->lazyLoadOperationsRows);
 		$operationsPerRow = $this->getOperationsPerRowCount();
+		$hasPrimaryOperation = $this->hasPrimaryOperation();
 
-		return $this->lazyLoadOperations = $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+		return $this->lazyLoadOperations = $hasPrimaryOperation && $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+	}
+
+	private function hasPrimaryOperation(): bool
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? array();
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			if (\is_array($operation) && ($operation['primary'] ?? false))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function getOperationsPerRowCount(): int

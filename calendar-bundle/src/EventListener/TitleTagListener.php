@@ -28,11 +28,15 @@ class TitleTagListener extends AbstractTitleTagCallback
             return null;
         }
 
-        if (!($calendar = $record->getRelated('pid')) instanceof CalendarModel) {
+        $calendar = $record->getRelated('pid');
+
+        if (!$calendar instanceof CalendarModel) {
             return null;
         }
 
-        if (!($page = $calendar->getRelated('jumpTo')) instanceof PageModel) {
+        $page = $calendar->getRelated('jumpTo');
+
+        if (!$page instanceof PageModel) {
             return null;
         }
 

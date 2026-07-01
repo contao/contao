@@ -216,7 +216,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
-			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLanguages(),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'groups' => array

@@ -269,7 +269,6 @@ class Form extends Hybrid
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
-						Input::setPost($objField->name, null); // see #5474
 					}
 				}
 
