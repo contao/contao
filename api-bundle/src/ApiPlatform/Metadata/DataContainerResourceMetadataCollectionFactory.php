@@ -38,7 +38,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             return $this->decorated->create($resourceClass);
         }
 
-        $apiResource = (new ApiResource())
+        $apiResource = new ApiResource()
             ->withClass(DataContainerRecord::class)
             ->withShortName('Content')
             ->withRoutePrefix($this->getRoutePrefix('tl_content'))
@@ -48,23 +48,23 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 ],
             ])
             ->withOperations(new Operations([
-                'get_collection' => (new GetCollection())
+                'get_collection' => new GetCollection()
                     ->withClass(DataContainerRecord::class)
                     ->withShortName('Content')
                     ->withUriTemplate($this->getRoutePrefix('tl_content')),
-                'get' => (new Get())
+                'get' => new Get()
                     ->withClass(DataContainerRecord::class)
                     ->withShortName('Content')
                     ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),
-                'post' => (new Post())
+                'post' => new Post()
                     ->withClass(DataContainerRecord::class)
                     ->withShortName('Content')
                     ->withUriTemplate($this->getRoutePrefix('tl_content')),
-                'patch' => (new Patch())
+                'patch' => new Patch()
                     ->withClass(DataContainerRecord::class)
                     ->withShortName('Content')
                     ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),
-                'delete' => (new Delete())
+                'delete' => new Delete()
                     ->withClass(DataContainerRecord::class)
                     ->withShortName('Content')
                     ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),

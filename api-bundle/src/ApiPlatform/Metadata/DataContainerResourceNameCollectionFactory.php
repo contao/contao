@@ -18,9 +18,8 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
 
 final class DataContainerResourceNameCollectionFactory implements ResourceNameCollectionFactoryInterface
 {
-    public function __construct(
-        private readonly ResourceNameCollectionFactoryInterface $decorated,
-    ) {
+    public function __construct(private readonly ResourceNameCollectionFactoryInterface $decorated)
+    {
     }
 
     public function create(): ResourceNameCollection

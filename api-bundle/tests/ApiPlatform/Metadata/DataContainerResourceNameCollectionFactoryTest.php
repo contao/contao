@@ -14,8 +14,8 @@ namespace Contao\ApiBundle\Tests\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceNameCollection;
-use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory;
+use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
 
 final class DataContainerResourceNameCollectionFactoryTest extends TestCase
