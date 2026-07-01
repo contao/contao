@@ -28,11 +28,15 @@ class TitleTagListener extends AbstractTitleTagCallback
             return null;
         }
 
-        if (!($archive = $record->getRelated('pid')) instanceof NewsArchiveModel) {
+        $archive = $record->getRelated('pid');
+
+        if (!$archive instanceof NewsArchiveModel) {
             return null;
         }
 
-        if (!($page = $archive->getRelated('jumpTo')) instanceof PageModel) {
+        $page = $archive->getRelated('jumpTo');
+
+        if (!$page instanceof PageModel) {
             return null;
         }
 

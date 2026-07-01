@@ -28,17 +28,10 @@ class News extends Frontend
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-
-		$type = 'NewsArticle';
-		$newsArchive = $objArticle->getRelated('pid');
-
-		if ($newsArchive instanceof NewsArchiveModel && $newsArchive->jsonLdType)
-		{
-			$type = $newsArchive->jsonLdType;
-		}
+		$newsArchive = NewsArchiveModel::findById($objArticle->pid);
 
 		$jsonLd = array(
-			'@type' => $type,
+			'@type' => $newsArchive?->jsonLdType ?: 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
 			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
