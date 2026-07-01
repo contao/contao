@@ -54,13 +54,13 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
 
         foreach ($targets as [$table, $column, $virtualTarget, $options]) {
             $test = $this->connection->fetchOne(
-                '
+                <<<'SQL'
                     SELECT TRUE FROM prepare_for_output_encoding
                     WHERE table_name = :table
                     AND column_name = :column
                     AND virtual_target_name <=> :virtualTarget
                     AND encoding_options = CAST(:options as JSON)
-                ',
+                SQL,
                 [
                     'table' => $table,
                     'column' => $column,
@@ -167,13 +167,19 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
                     $fieldName = strtolower($fieldName);
                     $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
 
+                    if (!$field) {
+                        continue;
+                    }
+
+                    $type = $field->getType();
+
                     if (
-                        !$field?->getType() instanceof StringType
-                        && !$field?->getType() instanceof BinaryType
-                        && !$field?->getType() instanceof BlobType
-                        && !$field?->getType() instanceof JsonType
-                        && !$field?->getType() instanceof SimpleArrayType
-                        && !$field?->getType() instanceof TextType
+                        !$type instanceof StringType
+                        && !$type instanceof BinaryType
+                        && !$type instanceof BlobType
+                        && !$type instanceof JsonType
+                        && !$type instanceof SimpleArrayType
+                        && !$type instanceof TextType
                     ) {
                         continue;
                     }
@@ -225,7 +231,7 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
             ($fieldConfig['eval']['useRawRequestData'] ?? null)
             || ($fieldConfig['eval']['allowHtml'] ?? null)
             || ($fieldConfig['eval']['preserveTags'] ?? null)
-            || ($fieldConfig['eval']['rte'] ?? null) === 'ace|html'
+            || 'ace|html' === ($fieldConfig['eval']['rte'] ?? null)
             || str_starts_with($fieldConfig['eval']['rte'] ?? '', 'tiny')
         ) {
             return [];
