@@ -257,6 +257,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
+                    } elseif (Validator::isBinaryUuid($value)) {
+                        $result = StringUtil::binToUuid($value);
                     } else {
                         $result = $value;
                     }
@@ -417,11 +419,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'base_url':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBaseUrl();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBaseUrl() ?? '';
                         break;
 
                     case 'base_path':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBasePath() ?? '';
                         break;
                 }
 

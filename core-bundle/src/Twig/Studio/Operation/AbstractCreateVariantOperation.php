@@ -79,7 +79,7 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
         // Disallow selecting a name of an existing variant
         return \sprintf(
             '^(?!(%s)$).*',
-            implode('|', array_map(preg_quote(...), $existingVariantNames)),
+            implode('|', $existingVariantNames),
         );
     }
 

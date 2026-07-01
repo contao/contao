@@ -7,15 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_news.headline.1">
         <source>Please enter the news title.</source>
-        <target>Saisir le titre de l'actualité.</target>
+        <target>Saisir le titre de l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.0">
         <source>News alias</source>
-        <target>Alias d'actualité</target>
+        <target>Alias d&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
         <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
-        <target>Un alias d'actualité est une référence unique qui remplace l'ID numérique de l'actualité.</target>
+        <target>Un alias d&apos;actualité est une référence unique qui remplace l&apos;ID numérique de l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
-        <target>Changer l'auteur de l'actualité.</target>
+        <target>Changer l&apos;auteur de l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.date.0">
         <source>Date</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news.date.1">
         <source>Please enter the date according to the global date format.</source>
-        <target>Saisir la date de l'actualité selon le format de date global.</target>
+        <target>Saisir la date de l&apos;actualité selon le format de date global.</target>
       </trans-unit>
       <trans-unit id="tl_news.time.0">
         <source>Time</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Saisir les heures et minutes de l'actualité selon le format de date global.</target>
+        <target>Saisir les heures et minutes de l&apos;actualité selon le format de date global.</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
@@ -87,15 +87,15 @@
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
         <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Une accroche peut être affichée dans la liste des actualités à la place de l'article complet.  Un lien &quot;En savoir plus ...&quot; sera ajouté automatiquement.</target>
+        <target>Une accroche peut être affichée dans la liste des actualités à la place de l&apos;article complet.  Un lien &quot;En savoir plus ...&quot; sera ajouté automatiquement.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
-        <target>Texte de l'actualité</target>
+        <target>Texte de l&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.text.1">
         <source>Here you can enter the news text.</source>
-        <target>Saisir le texte de l'actualité.</target>
+        <target>Saisir le texte de l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.addImage.0">
         <source>Add an image</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addImage.1">
         <source>Add an image to the news item.</source>
-        <target>Ajouter une image à l'actualité.</target>
+        <target>Ajouter une image à l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.1">
         <source>Add one or more downloadable files to the news item.</source>
-        <target>Ajouter un ou plusieurs fichiers à l'élément d'actualité.</target>
+        <target>Ajouter un ou plusieurs fichiers à l&apos;élément d&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the news item.</source>
-        <target>Choisir la page vers laquelle les visiteurs seront redirigés en cliquant sur l'actualité.</target>
+        <target>Choisir la page vers laquelle les visiteurs seront redirigés en cliquant sur l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>Choisir l'article vers lequel les visiteurs seront redirigés en cliquant sur l'actualité.</target>
+        <target>Choisir l&apos;article vers lequel les visiteurs seront redirigés en cliquant sur l&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -199,15 +199,15 @@
       </trans-unit>
       <trans-unit id="tl_news.featured.1">
         <source>Show the news item in a featured news list.</source>
-        <target>Afficher l'élément d'actualité dans une liste d'actualités vedettes.</target>
+        <target>Afficher l&apos;élément d&apos;actualité dans une liste d&apos;actualités vedettes.</target>
       </trans-unit>
       <trans-unit id="tl_news.published.0">
         <source>Publish item</source>
-        <target>Publier l'actualité</target>
+        <target>Publier l&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.published.1">
         <source>Make the news item publicly visible on the website.</source>
-        <target>Rendre l'actualité visible aux visiteurs de votre site.</target>
+        <target>Rendre l&apos;actualité visible aux visiteurs de votre site.</target>
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
@@ -215,15 +215,15 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Si vous souhaitez empêcher l'affichage de l'actualité sur le site avant une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
+        <target>Si vous souhaitez empêcher l&apos;affichage de l&apos;actualité sur le site avant une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Afficher jusqu'au</target>
+        <target>Afficher jusqu&apos;au</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Si vous souhaitez empêcher l'affichage de l'actualité sur le site après une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
+        <target>Si vous souhaitez empêcher l&apos;affichage de l&apos;actualité sur le site après une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -247,11 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_news.text_legend">
         <source>News text</source>
-        <target>Texte de l'actualité</target>
+        <target>Texte de l&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.image_legend">
         <source>Image settings</source>
-        <target>Paramètres d'image</target>
+        <target>Paramètres d&apos;image</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
@@ -279,14 +279,14 @@
       </trans-unit>
       <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
-        <target>Afficher les détails de l'actualité ID %s</target>
+        <target>Afficher les détails de l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.versions.1">
         <source>Show the versions of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
-        <target>Éditer l'actualité ID %s</target>
+        <target>Éditer l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.children.0">
         <source>Content elements</source>
@@ -294,31 +294,31 @@
       </trans-unit>
       <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
-        <target>Éditer les éléments de contenu de l'actualité ID %s</target>
+        <target>Éditer les éléments de contenu de l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
-        <target>Dupliquer l'actualité ID %s</target>
+        <target>Dupliquer l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
-        <target>Déplacer l'actualité ID %s</target>
+        <target>Déplacer l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
-        <target>Supprimer l'actualité ID %s</target>
+        <target>Supprimer l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>
-        <target>Publier/dé-publier l'actualité</target>
+        <target>Publier/dé-publier l&apos;actualité</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
         <source>Unpublish news item ID %s</source>
-        <target>Dé-publier l'actualité ID %s</target>
+        <target>Dé-publier l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
-        <target>Publier l'actualité ID %s</target>
+        <target>Publier l&apos;actualité ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
         <source>Unpublish</source>
@@ -334,11 +334,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
         <source>Unfeature news item ID %s</source>
-        <target>Retirer l'actualité ID %s de la liste des vedettes</target>
+        <target>Retirer l&apos;actualité ID %s de la liste des vedettes</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
-        <target>Mettre l'actualité ID %s en vedette</target>
+        <target>Mettre l&apos;actualité ID %s en vedette</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.3">
         <source>Unfeature</source>

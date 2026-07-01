@@ -61,9 +61,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $options['trace_level'] = $_SERVER['TRACE_LEVEL'] ?? 'short';
         $options['trace_header'] = 'Contao-Cache';
 
-        // TODO: Remove once symfony/http-kernel is required in at least ^7.0
-        $options['terminate_on_cache_hit'] = false;
-
         return $options;
     }
 

@@ -67,6 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.versions.1">
         <source>Show the versions of news archive ID %s</source>
+        <target>نمایش نسخه‌های بایگانی خبر با شناسهٔ %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>
@@ -74,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.children.0">
         <source>News items</source>
+        <target>آیتم‌های خبری</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
@@ -81,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate</source>
+        <target>رونوشت</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>

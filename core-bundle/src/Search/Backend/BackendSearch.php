@@ -181,6 +181,11 @@ class BackendSearch
         $offset = 0;
         $limit = $query->getPerPage();
 
+        $facetCounts = [
+            'type' => [],
+            'tags' => [],
+        ];
+
         // Stop after 10 iterations
         for ($i = 0; $i <= 10; ++$i) {
             /** @var array $document */
@@ -213,7 +218,7 @@ class BackendSearch
         $typeFacets = [];
         $tagsFacets = [];
 
-        foreach ($facetCounts['type'] ?? [] as $type => $count) {
+        foreach ($facetCounts['type'] as $type => $count) {
             $provider = $this->getProviderForType($type);
 
             if (!$provider) {
@@ -227,7 +232,7 @@ class BackendSearch
             $provider = $this->getProviderForType($query->getType());
 
             if ($provider instanceof TagProvidingProviderInterface) {
-                foreach ($facetCounts['tags'] ?? [] as $tag => $count) {
+                foreach ($facetCounts['tags'] as $tag => $count) {
                     $tagsFacets[] = new BackendSearchFacet($tag, $provider->getFacetLabelForTag($tag), $count);
                 }
             }

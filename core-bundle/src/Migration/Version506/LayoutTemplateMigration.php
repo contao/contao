@@ -44,7 +44,7 @@ class LayoutTemplateMigration extends AbstractMigration
             return false;
         }
 
-        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_layout WHERE type='modern' AND template='layout/default' LIMIT 1");
+        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_layout WHERE type = 'modern' AND template = 'layout/default' LIMIT 1");
 
         return false !== $test;
     }
@@ -88,6 +88,9 @@ class LayoutTemplateMigration extends AbstractMigration
         return $this->createResult(!$error);
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function getOldTemplatePaths(): \Generator
     {
         foreach ($this->filesystemLoader->getInheritanceChains()['layout/default'] ?? [] as $path => $logicalName) {

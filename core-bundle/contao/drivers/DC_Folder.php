@@ -52,6 +52,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
+	private const LAZY_LOAD_OPERATIONS_THRESHOLD = 300;
+
 	/**
 	 * Current path
 	 * @var string
@@ -112,6 +114,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	protected $arrCounts = array();
 
+	private bool|null $lazyLoadOperations = null;
+
+	private int|null $lazyLoadOperationsRows = null;
+
 	/**
 	 * Database assisted
 	 * @var boolean
@@ -153,6 +159,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->intId = Input::get('id', true);
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -232,7 +239,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
@@ -302,8 +308,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function showAll()
 	{
-		$return = '';
-
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 		$objSessionBag = $objSession->getBag('contao_backend');
 		$session = $objSessionBag->all();
@@ -331,6 +335,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, $this->urlEncode($this->intId), $children, $mode);
 		}
+
+		$this->handleSingleRecordOperationsRequest();
 
 		// Get the session data and toggle the nodes
 		if (Input::get('tg') == 'all')
@@ -443,7 +449,39 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Call recursive function tree()
+		// Pre-count visible rows so "auto" lazy loading can use the actual rendered count.
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
+		if ((string) $for !== '' && empty($this->arrFilemounts))
+		{
+			// Show an empty tree if there are no search results
+		}
+		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
+		{
+			$this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, $blnClipboard ? $arrClipboard : false, $arrFound);
+		}
+		else
+		{
+			$topMostVisibleRootTrails = $this->eliminateNestedPaths($this->visibleRootTrails);
+
+			for ($i=0, $c=\count($topMostVisibleRootTrails); $i<$c; $i++)
+			{
+				if ($topMostVisibleRootTrails[$i] && is_dir($this->strRootDir . '/' . $topMostVisibleRootTrails[$i]))
+				{
+					$this->generateTree($this->strRootDir . '/' . $topMostVisibleRootTrails[$i], 0, true, $this->isProtectedPath($topMostVisibleRootTrails[$i]), $blnClipboard ? $arrClipboard : false, $arrFound);
+				}
+			}
+		}
+
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
+
+		// Call recursive function tree() to render output.
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
+		$return = '';
+
 		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
@@ -465,6 +503,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
+		$treeRecordLimitNotice = $this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '';
+
 		// Check for the "create new" button
 		$clsNew = 'header_new_folder';
 		$lblNew = $GLOBALS['TL_LANG'][$this->strTable]['new'][0];
@@ -481,6 +522,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
+
+		$panel = $this->panel();
 
 		if ((string) $for !== '')
 		{
@@ -544,8 +587,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
-		$panel = $this->panel();
-
 		// Build the tree
 		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
@@ -560,7 +601,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . $treeRecordLimitNotice . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -618,6 +659,128 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
 			>' . $return . '</div>';
+	}
+
+	private function handleSingleRecordOperationsRequest(): void
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$id = $request?->headers->get('Contao-Operations');
+
+		if (!\is_string($id) || '' === $id)
+		{
+			return;
+		}
+
+		$table = $request?->headers->get('Contao-Operations-Table');
+		$table = \is_string($table) && '' !== $table ? $table : $this->strTable;
+
+		if ($table !== $this->strTable)
+		{
+			throw new AccessDeniedException('Invalid table "' . $table . '"');
+		}
+
+		$decodedId = rawurldecode($id);
+
+		if (!file_exists($this->strRootDir . '/' . $decodedId) || !$this->isMounted($decodedId))
+		{
+			throw new AccessDeniedException('Access to file "' . $decodedId . '" denied');
+		}
+
+		$type = is_dir($this->strRootDir . '/' . $decodedId) ? 'folder' : 'file';
+
+		$record = array(
+			'id' => $id,
+			'type' => $type,
+		);
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $record));
+
+		$fileNameEncoded = StringUtil::convertEncoding(
+			StringUtil::specialchars(basename($decodedId), false, true),
+			System::getContainer()->getParameter('kernel.charset')
+		);
+
+		$record['fileNameEncoded'] = $fileNameEncoded;
+		$operations = $this->generateButtons($record, $this->strTable);
+
+		throw new ResponseException(new Response((string) $operations));
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && $request->headers->has('Contao-Operations'))
+		{
+			return false;
+		}
+
+		if (null !== $this->lazyLoadOperations)
+		{
+			return $this->lazyLoadOperations;
+		}
+
+		$mode = $GLOBALS['TL_DCA'][$this->strTable]['list']['lazyLoadOperations'] ?? 'auto';
+
+		if (\is_bool($mode))
+		{
+			return $this->lazyLoadOperations = $mode;
+		}
+
+		if (!\is_string($mode) || 'auto' !== strtolower($mode))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid list.lazyLoadOperations value "%s" in DCA "%s". Allowed values are true, false or "auto".', $mode, $this->strTable));
+		}
+
+		// The row count can be initialized later in the rendering pipeline.
+		// Do not cache a preliminary auto decision in that case.
+		if (null === $this->lazyLoadOperationsRows)
+		{
+			return false;
+		}
+		$rows = max(0, (int) $this->lazyLoadOperationsRows);
+		$operationsPerRow = $this->getOperationsPerRowCount();
+		$hasPrimaryOperation = $this->hasPrimaryOperation();
+
+		return $this->lazyLoadOperations = $hasPrimaryOperation && $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+	}
+
+	private function hasPrimaryOperation(): bool
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? array();
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			if (\is_array($operation) && ($operation['primary'] ?? false))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function getOperationsPerRowCount(): int
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? array();
+		$count = 0;
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			++$count;
+		}
+
+		return $count;
 	}
 
 	/**
@@ -2139,11 +2302,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file using the VFS (see #9450)
-				System::getContainer()
-					->get('contao.filesystem.virtual.files')
-					->write(Path::makeRelative($objFile->path, 'files'), $strSource)
-				;
+				// Write the file using the VFS if possible (see #9450)
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
+				{
+					System::getContainer()
+						->get('contao.filesystem.virtual.files')
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
+					;
+				}
+				else
+				{
+					$objFile->write($strSource);
+					$objFile->close();
+				}
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
@@ -2570,7 +2743,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
 
-		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		$this->treeRecordCount = 0;
+		$this->treeRecordLimitReached = false;
+
+		$return = $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
+		$this->lazyLoadOperationsRows = $this->treeRecordCount;
+
+		return $return . ($this->treeRecordLimitReached ? $this->generateTreeRecordLimitNotice() : '');
 	}
 
 	/**
@@ -2611,6 +2790,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$folders = array();
 		$intSpacing = 16;
 		$level = $intMargin / $intSpacing;
+		$isTopMostRecord = $mount;
 
 		// Mount folder
 		if ($mount)
@@ -2673,6 +2853,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$security = System::getContainer()->get('security.helper');
 		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
+		if ($this->blnIsDbAssisted)
+		{
+			$this->preloadFileModels(array(...$folders, ...$files));
+		}
+
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
@@ -2726,6 +2911,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				continue;
 			}
 
+			if (!$isTopMostRecord && !$this->canRenderTreeRecord())
+			{
+				break;
+			}
+
+			$this->countTreeRecord();
+
 			$blnIsOpen = !empty($arrFound) || $session['filetree'][$md5] == 1;
 
 			// Always show selected nodes
@@ -2741,7 +2933,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFolder'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput" data-contao--operations-menu-record-id-value="' . StringUtil::specialchars($currentEncoded) . '" data-contao--operations-menu-record-table-value="' . StringUtil::specialchars($this->strTable) . '" data-contao--operations-menu-primary-only-value="' . ($this->shouldRenderPrimaryOperationsOnly() ? 'true' : 'false') . '">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2831,6 +3023,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$return .= '<li class="parent" id="filetree_' . $md5 . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild' : '') . '"><ul class="level_' . $level . '">';
 				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
+
+				if ($this->treeRecordLimitReached)
+				{
+					break;
+				}
 			}
 		}
 
@@ -2865,6 +3062,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				continue;
 			}
 
+			if (!$isTopMostRecord && !$this->canRenderTreeRecord())
+			{
+				break;
+			}
+
+			$this->countTreeRecord();
+
 			$currentEncoded = $this->urlEncode($currentFile);
 
 			$dragHandle = '';
@@ -2874,7 +3078,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput" data-contao--operations-menu-record-id-value="' . StringUtil::specialchars($currentEncoded) . '" data-contao--operations-menu-record-table-value="' . StringUtil::specialchars($this->strTable) . '" data-contao--operations-menu-primary-only-value="' . ($this->shouldRenderPrimaryOperationsOnly() ? 'true' : 'false') . '">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
@@ -2995,7 +3199,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
       <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
+          <select id="tl_search" name="tl_search" class="tl_select">
             ' . implode("\n", $options) . '
           </select>
       </div>
@@ -3338,6 +3542,24 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	private function syncDbafsAndUpdateModelCache(string ...$locations): void
 	{
 		System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$locations);
+
+		FilesModel::findMultipleByPaths($locations);
+	}
+
+	private function preloadFileModels(array $locations): void
+	{
+		$locations = array_values(array_unique(array_filter(
+			array_map(
+				static fn (string $location): string => StringUtil::stripRootDir($location),
+				$locations,
+			),
+			static fn (string $location): bool => Dbafs::shouldBeSynchronized($location)
+		)));
+
+		if (!$locations)
+		{
+			return;
+		}
 
 		FilesModel::findMultipleByPaths($locations);
 	}

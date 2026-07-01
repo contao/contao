@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_fields.1">
         <source>Please enter a comma separated list of the fields you want to list.</source>
-        <target>Geef een door komma's gescheiden lijst van de velden die u wilt weergeven.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst van de velden die u wilt weergeven.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_where.0">
         <source>Condition</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
-        <target>Geef een door komma's gescheiden lijst op van velden die u wilt doorzoeken.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst op van velden die u wilt doorzoeken.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.0">
         <source>Order by</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_sort.1">
         <source>Here you can enter a comma seperated list of fields to sort the results by.</source>
-        <target>Geef een door komma's gescheiden lijst op van velden die gebruikt zullen worden om de resultaten te sorteren.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst op van velden die gebruikt zullen worden om de resultaten te sorteren.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.0">
         <source>Details page fields</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info.1">
         <source>Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.</source>
-        <target>Geef een door komma's gescheiden lijst van de velden die u wilt tonen op de detailpagina. Laat dit veld leeg als u geen detailpagina wenst.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst van de velden die u wilt tonen op de detailpagina. Laat dit veld leeg als u geen detailpagina wenst.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.0">
         <source>Details page condition</source>

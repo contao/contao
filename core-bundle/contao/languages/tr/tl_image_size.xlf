@@ -46,8 +46,7 @@
         <target>Sizes özniteliği</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Buradan görselin istenilen genişliğini tanımlayabilirsiniz. Gerçek boyut CSS ile tanımlanmalıdır. Örnek: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -191,6 +190,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.versions.1">
         <source>Show the versions of image size ID %s</source>
+        <target>%s kimlikli görsel boyutunun sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>

@@ -100,17 +100,20 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->name;
     }
 
-    protected function userTemplateExists(OperationContext $context): bool
+    protected function userTemplateExists(OperationContext $context, bool $exclusive = false): bool
     {
         // Check if the first template in the chain is a custom template from the
         // Contao_Global or any theme namespace.
-        $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug());
+        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()];
+        $first = $chains[array_key_first($chains)];
         $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
 
-        return match ($context->isThemeContext()) {
-            true => str_starts_with($namespace, 'Contao_Theme_'),
+        $userTemplateExists = match ($context->isThemeContext()) {
+            true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
             false => 'Contao_Global' === $namespace,
         };
+
+        return $userTemplateExists && (!$exclusive || 1 === \count($chains));
     }
 
     protected function invalidateTemplateCache(OperationContext $context): void

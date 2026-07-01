@@ -133,22 +133,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			return;
 		}
 
-		$files = $_FILES[$this->strName];
+		$files = array_map(static fn ($value): array => (array) $value, $_FILES[$this->strName]);
 		$uploadedFiles = array();
-		$fileCount = \count(array_filter((array) $files['name']));
+		$fileCount = \count(array_filter($files['name']));
 		$maxlength_kb = $this->getMaximumUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
-
-		if ($fileCount == 1)
-		{
-			foreach ($files as $k => $v)
-			{
-				if (!\is_array($v))
-				{
-					$files[$k] = array($v);
-				}
-			}
-		}
 
 		if ($fileCount > 1 && !$this->multipleFiles)
 		{

@@ -413,6 +413,18 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Das Element ID %d kann hier nicht eingefügt werden, da es mit einem bestehenden Element kollidiert.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Sie können nur als Administrator Zugriff auf den Template-Editor gewähren.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Das Keyword &quot;auto&quot; ist nur am Anfang des sizes-Attributs zulässig. Wenn weitere Werte vorhanden sind, muss darauf ein Komma folgen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy-Loading muss aktiviert sein, wenn das sizes-Attribut auf &quot;auto&quot; gesetzt ist.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -1869,6 +1881,10 @@
         <source>All</source>
         <target>Alle</target>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Weitere Datensätze sind aus Performance-Gründen ausgeblendet. Klappen Sie den Baum ein oder nutzen Sie Filter, um die Ansicht einzugrenzen.</target>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
         <target>Details des Datensatzes %s anzeigen</target>
@@ -2815,7 +2831,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>Die Zwei-Faktor-Authentifizierung wurde aktiviert.</target>
+        <target>Die Zwei-Faktor-Authentifizierung ist aktiv.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
@@ -2847,7 +2863,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
-        <target>Wenn Sie die Backup-Codes neu generieren, werden Ihre alten Codes nicht mehr funktionieren.</target>
+        <target>Wenn Sie die Backup-Codes neu generieren, verlieren die alten Codes ihre Gültigkeit.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
@@ -3058,11 +3074,11 @@
         <target>Geschützt durch &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Ich bin kein Roboter</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>Ich bin ein Mensch</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend\EventListener;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsChangeEvent;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
@@ -44,6 +45,9 @@ class TriggerReindexOnFilesStorageUpdateListener
         $this->backendSearch->reindex((new ReindexConfig())->limitToDocumentIds($documentIds));
     }
 
+    /**
+     * @return \Generator<FilesystemItem>
+     */
     private function generateFilesystemItemsFromAllSources(DbafsChangeEvent $event): \Generator
     {
         yield from $event->getCreatedFilesystemItems($this->filesStorage)->files();

@@ -20,6 +20,10 @@ use Contao\StringUtil;
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
+    private const ESCAPED_VALUE_CACHE_LIMIT = 4096;
+
+    private const VALIDATED_NAME_CACHE_LIMIT = 256;
+
     /**
      * @var array<array-key, string>
      */
@@ -59,21 +63,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, \Stringable|bool|float|int|string|null $value): void {
-            if ('class' === $name) {
-                $this->addClass((string) $value);
-            } elseif ('style' === $name) {
-                $this->addStyle((string) $value);
-            } else {
-                $this->set($name, $value);
+        if ($attributes instanceof self) {
+            foreach ($attributes->attributes as $name => $value) {
+                $this->mergeAttribute((string) $name, $value, true);
             }
-        };
+
+            return $this;
+        }
 
         if (\is_string($attributes)) {
             foreach ($this->parseString($attributes) as $name => $value) {
                 try {
-                    $mergeSet($name, $value);
+                    $this->mergeAttribute($name, $value);
                 } catch (\InvalidArgumentException) {
                     // Skip invalid attributes
                 }
@@ -83,7 +84,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         foreach ($attributes as $name => $value) {
-            $mergeSet((string) $name, $value);
+            $this->mergeAttribute((string) $name, $value);
         }
 
         return $this;
@@ -98,6 +99,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
+        static $validatedNames = [];
+
         if (!$this->test($condition)) {
             return $this;
         }
@@ -112,8 +115,16 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
-            throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+        if (!isset($validatedNames[$name])) {
+            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
+                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            }
+
+            $validatedNames[$name] = true;
+
+            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
+                unset($validatedNames[array_key_first($validatedNames)]);
+            }
         }
 
         // Unset if value is set to false
@@ -123,7 +134,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        $this->attributes[$name] = true === $value ? '' : (string) $value;
+        $normalizedValue = true === $value ? '' : (string) $value;
+
+        if (($this->attributes[$name] ?? null) === $normalizedValue) {
+            return $this;
+        }
+
+        $this->attributes[$name] = $normalizedValue;
 
         // Normalize class names and style attributes
         if ('class' === $name) {
@@ -331,7 +348,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         $attributes = [];
 
-        foreach ($this->getIterator() as $name => $value) {
+        foreach ($this->attributes as $name => $value) {
+            $name = (string) $name;
+
             // Special case if the attribute name starts with an equals sign and the previous
             // attribute was a boolean attribute
             if ('=' === $name[0] && !str_ends_with($attributes[\count($attributes) - 1] ?? '"', '"')) {
@@ -406,6 +425,19 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return array_filter(preg_split('/\s+/', $value));
     }
 
+    private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
+    {
+        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addClass((string) $value);
+        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addStyle((string) $value);
+        } elseif ($trusted) {
+            $this->attributes[$name] = (string) $value;
+        } else {
+            $this->set($name, $value);
+        }
+    }
+
     /**
      * Parse attributes from an attribute string like 'foo="bar" baz="42'.
      *
@@ -458,13 +490,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function escapeValue(string $name, string $value): string
     {
+        static $escapedValues = [];
+
         if (!preg_match('//u', $value) || str_contains($value, "\x00")) {
             throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
+        $cacheKey = ($this->doubleEncoding ? '1' : '0')."\0".$value;
 
-        return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+        if (isset($escapedValues[$cacheKey])) {
+            return $escapedValues[$cacheKey];
+        }
+
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
+        $value = str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+
+        $escapedValues[$cacheKey] = $value;
+
+        if (\count($escapedValues) > self::ESCAPED_VALUE_CACHE_LIMIT) {
+            unset($escapedValues[array_key_first($escapedValues)]);
+        }
+
+        return $value;
     }
 
     /**

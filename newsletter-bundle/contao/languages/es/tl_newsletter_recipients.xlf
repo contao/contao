@@ -6,7 +6,7 @@
         <target>E-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
         <target>Por favor introduzca el e-mail del recipiente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.versions.1">
         <source>Show the versions of recipient ID %s</source>
+        <target>Mostrar las versiones del destinatario con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>

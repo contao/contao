@@ -44,8 +44,8 @@ class DefaultCudMigration extends AbstractMigration
 
         $default = serialize($this->getDefault());
 
-        $this->connection->executeStatement("UPDATE tl_user SET cud=? WHERE inherit IN ('extend', 'custom') AND admin = false", [$default]);
-        $this->connection->executeStatement('UPDATE tl_user_group SET cud=?', [$default]);
+        $this->connection->executeStatement("UPDATE tl_user SET cud = ? WHERE inherit IN ('extend', 'custom') AND admin = false", [$default]);
+        $this->connection->executeStatement('UPDATE tl_user_group SET cud = ?', [$default]);
 
         return $this->createResult(true);
     }

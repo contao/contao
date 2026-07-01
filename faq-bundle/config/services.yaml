@@ -7,6 +7,10 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+        Contao\CoreBundle\EventListener\Widget\AbstractTitleTagCallback:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     contao_faq.insert_tag.faq:
         class: Contao\FaqBundle\InsertTag\FaqInsertTag
         arguments:
@@ -26,6 +30,9 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_faq.listener.title_tag:
+        class: Contao\FaqBundle\EventListener\TitleTagListener
 
     contao_faq.migration.field_permission:
         class: Contao\FaqBundle\Migration\FieldPermissionMigration
