@@ -12,18 +12,37 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Dto;
 
+use ApiPlatform\Metadata\ApiProperty;
+
 final class DataContainerRecord
 {
-    /**
-     * The identifier is nullable because the same transport object is used for
-     * collection payloads and create operations before a record has been persisted.
-     *
-     * @param array<string, mixed> $data
-     */
     public function __construct(
         public readonly string $table,
         public array $data = [],
+        #[ApiProperty(identifier: true)]
         public readonly int|string|null $id = null,
     ) {
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public static function fromArray(string $table, array $data, int|string|null $id = null): self
+    {
+        return new self($table, $data, $id);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        $normalized = $this->data;
+
+        if (null !== $this->id) {
+            $normalized = ['id' => $this->id] + $normalized;
+        }
+
+        return $normalized;
     }
 }
