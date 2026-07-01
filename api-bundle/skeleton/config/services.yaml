@@ -13,3 +13,9 @@ services:
             $decorated: '@Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory.inner'
             $apiPrefix: '%contao_api.api_prefix%'
             $dataContainerApiPrefix: '%contao_api.data_container_api_prefix%'
+
+    # Provide and process DataContainerRecord payloads through API Platform's
+    # state layer. The metadata factory references these services on the shared
+    # resource definition so every Contao DCA resource uses the same handlers.
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider: ~
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor: ~
