@@ -117,6 +117,21 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
     {
         $this->framework->initialize();
 
+        $includeFields = [
+            'tl_log' => [
+                'text' => true,
+            ],
+            'tl_version' => [
+                'description' => true,
+            ],
+        ];
+
+        $excludeFields = [
+            'tl_files' => [
+                'name' => true,
+            ],
+        ];
+
         $schemaManager = $this->connection->createSchemaManager();
         $targets = [];
         $processed = [];
@@ -144,6 +159,10 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
                 $virtualTargetColumn = $virtualFields[$fieldName] ?? null;
 
+                if ($excludeFields[$tableName][$fieldName] ?? null) {
+                    continue;
+                }
+
                 if (!$virtualTargetColumn) {
                     $fieldName = strtolower($fieldName);
                     $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
@@ -160,7 +179,7 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
                     }
                 }
 
-                $options = $this->getEncodingOptions($fieldConfig);
+                $options = $this->getEncodingOptions($fieldConfig, $includeFields[$tableName][$fieldName] ?? false);
 
                 if (!$options) {
                     continue;
@@ -173,10 +192,11 @@ class PrepareForOutputEncodingMigration extends AbstractMigration
         return $targets;
     }
 
-    private function getEncodingOptions(array $fieldConfig): array
+    private function getEncodingOptions(array $fieldConfig, bool $force): array
     {
         if (
-            \in_array(
+            !$force
+            && \in_array(
                 $fieldConfig['inputType'] ?? null,
                 [
                     null,
