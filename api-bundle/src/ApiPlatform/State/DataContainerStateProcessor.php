@@ -19,6 +19,9 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
+/**
+ * @implements ProcessorInterface<DataContainerRecord|mixed, DataContainerRecord|mixed>
+ */
 final class DataContainerStateProcessor implements ProcessorInterface
 {
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
