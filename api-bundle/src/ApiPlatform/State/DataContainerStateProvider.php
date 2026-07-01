@@ -18,6 +18,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
+/**
+ * @implements ProviderInterface<DataContainerRecord>
+ */
 final class DataContainerStateProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
