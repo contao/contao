@@ -86,7 +86,7 @@ class ContentElementViewListener
             $sectionHeadline = StringUtil::deserialize($row['sectionHeadline'], true);
 
             if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit'])) {
-                $preview = '<'.$sectionHeadline['unit'].'>'.$sectionHeadline['value'].'</'.$sectionHeadline['unit'].'>'.$preview;
+                $preview = '<'.$sectionHeadline['unit'].'>'.StringUtil::specialchars($sectionHeadline['value']).'</'.$sectionHeadline['unit'].'>'.$preview;
             }
         }
 
@@ -109,7 +109,7 @@ class ContentElementViewListener
 
         // Add the ID of the aliased element
         if ('alias' === $row['type']) {
-            $label .= ' ID '.($row['cteAlias'] ?? 0);
+            $label .= ' ID '.StringUtil::specialchars($row['cteAlias'] ?? '0');
         }
 
         // Add the headline level (see #5858)
@@ -119,7 +119,7 @@ class ContentElementViewListener
 
         // Show the title
         if ($row['title'] ?? null) {
-            $label = $row['title'].' <span class="tl_gray">['.$label.']</span>';
+            $label = StringUtil::specialchars($row['title']).' <span class="tl_gray">['.$label.']</span>';
         }
 
         // Add the protection status
@@ -141,7 +141,7 @@ class ContentElementViewListener
             }
 
             $label = $this->framework->getAdapter(Image::class)->getHtml('protected.svg').' '.$label;
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.protected', [], 'contao_default').($groupNames ? ': '.implode(', ', $groupNames) : '').')</span>';
+            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.protected', [], 'contao_default').($groupNames ? ': '.StringUtil::specialchars(implode(', ', $groupNames)) : '').')</span>';
         }
 
         if (($row['start'] ?? null) && ($row['stop'] ?? null)) {
