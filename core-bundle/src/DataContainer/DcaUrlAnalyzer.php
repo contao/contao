@@ -29,6 +29,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @phpstan-type TrailItem array{
+ *     url: string,
+ *     query: array,
+ *     label: string,
+ *     treeTrail: list<array{url: string|null, label: string}>|null,
+ *     treeSiblings: list<array{url: string|null, label: string, active: bool}>|null
+ * }
+ */
 class DcaUrlAnalyzer
 {
     public function __construct(
@@ -52,16 +61,16 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
-    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
+    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false, bool $loadLabels = true): array
     {
         return $this->dcaRequestSwitcher->runWithRequest(
             $request,
-            function () use ($limit, $withTreeTrail) {
+            function () use ($limit, $withTreeTrail, $loadLabels) {
                 [$table, $id] = $this->findTableAndId();
 
-                return $this->doGetTrail($table, $id, $limit, $withTreeTrail);
+                return $this->doGetTrail($table, $id, $limit, $withTreeTrail, $loadLabels);
             },
         );
     }
@@ -106,16 +115,11 @@ class DcaUrlAnalyzer
 
                 new DcaLoader($table)->load();
                 $currentRecord = $this->getCurrentRecord($id, $table);
+                $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null;
 
                 // Select the parent node
-                if (
-                    \in_array(
-                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
-                        [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
-                        true,
-                    )
-                ) {
-                    $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                if (\in_array($mode, [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE], true)) {
+                    $query['pn'] = (int) ($currentRecord[DataContainer::MODE_TREE === $mode ? 'id' : 'pid'] ?? null);
                     $query['rt'] = $this->tokenManager->getDefaultTokenValue();
                 }
 
@@ -127,9 +131,9 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
-    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
+    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail, bool $loadLabels): array
     {
         $do = $this->findGet('do');
         $trail = [];
@@ -141,9 +145,13 @@ class DcaUrlAnalyzer
         }
 
         $links = [];
+        $systemAdapter = $this->framework->getAdapter(System::class);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
-            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+            if ($loadLabels) {
+                $systemAdapter->loadLanguageFile($table);
+            }
+
             new DcaLoader($table)->load();
 
             $query = [
@@ -169,13 +177,14 @@ class DcaUrlAnalyzer
             }
 
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
-                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'deleteAll', 'select'], true)) {
                     $links[] = [
                         'query' => [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')],
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
                                 'editAll', 'select' => 'MSC.all.0',
                                 'overrideAll' => 'MSC.all_override.0',
+                                'deleteAll' => 'MSC.deleteSelected',
                                 default => throw new \LogicException(),
                             },
                             [],
@@ -202,7 +211,7 @@ class DcaUrlAnalyzer
 
             $links[] = [
                 'query' => $query,
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'label' => $loadLabels ? $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row) : '',
                 'treeTrail' => $treeTrail,
                 'treeSiblings' => $treeSiblings,
             ];
@@ -210,7 +219,7 @@ class DcaUrlAnalyzer
 
         $links[] = [
             'query' => ['do' => $do, 'table' => $table],
-            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'label' => $loadLabels ? $this->translator->trans("MOD.$do.0", [], 'contao_modules') : '',
             'treeTrail' => null,
             'treeSiblings' => null,
         ];
@@ -443,7 +452,15 @@ class DcaUrlAnalyzer
             $ptable = (string) ($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         }
 
-        if (!$ptable || !$pid || DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+        if (
+            !$ptable
+            || !$pid
+            || \in_array(
+                $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
+                [DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED],
+                true,
+            )
+        ) {
             return [[$table, $currentRecord]];
         }
 
@@ -485,6 +502,9 @@ class DcaUrlAnalyzer
         return array_keys($modules)[0] ?? null;
     }
 
+    /**
+     * @return list<array{url: string|null, label: string}>|null
+     */
     private function getRootTrail(string $table, int $id, array $query): array|null
     {
         if (!$table || !$id) {
@@ -527,6 +547,9 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    /**
+     * @return list<array{url: string|null, label: string, active: bool}>|null
+     */
     private function getTreeSiblings(string $table, int $pid, int $id, array $query): array|null
     {
         if (!$table || !$pid) {
@@ -545,7 +568,7 @@ class DcaUrlAnalyzer
         $rows = array_filter(array_map(
             function ($row) use ($table) {
                 try {
-                    return $this->getCurrentRecord($row['id'], $table);
+                    return $this->getCurrentRecord((int) $row['id'], $table);
                 } catch (AccessDeniedException) {
                     // Skip tree siblings without read permission
                     return null;

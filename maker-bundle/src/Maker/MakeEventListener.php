@@ -111,12 +111,10 @@ class MakeEventListener extends AbstractMaker
     private function getAvailableEvents(): array
     {
         $yaml = Yaml::parseFile(__DIR__.'/../../config/events.yaml');
-        $events = [];
 
-        foreach ($yaml['events'] as $key => $config) {
-            $events[$key] = new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null);
-        }
-
-        return $events;
+        return array_map(
+            static fn ($config) => new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null),
+            $yaml['events'],
+        );
     }
 }

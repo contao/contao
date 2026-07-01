@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 	'options'                 => array('all_items', 'featured', 'unfeatured', 'featured_first'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr'),
-	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
 	'options'                 => array('hide_module', 'show_current', 'all_items'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	'options'                 => array('news_day', 'news_month', 'news_year'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
-	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'news_month', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'news_month', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'order_date_desc', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'order_date_desc', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array

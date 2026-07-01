@@ -78,8 +78,6 @@ class ModuleCustomnav extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$items = array();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
@@ -92,6 +90,7 @@ class ModuleCustomnav extends Module
 		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($this->objPages ?? array() as $objModel)
 		{

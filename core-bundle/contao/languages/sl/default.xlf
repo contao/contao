@@ -411,6 +411,9 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Element z ID %d ne more biti vstavljen na to mesto, ker je v navzkrižju z obstoječim elementom.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Seštejte %d in %d.</target>
@@ -1853,6 +1856,9 @@
         <source>All</source>
         <target>Vsi</target>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
         <target>Prikaži podrobnosti o zapisu %s</target>
@@ -3036,11 +3042,11 @@
         <target>Zaščiten z &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Nisem robot</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>Sem človek</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">

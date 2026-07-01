@@ -122,12 +122,10 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $pageIds = [(int) $action->getNewPid()];
         }
 
-        return array_any(
-            $pageIds,
-            fn ($pageId) => $this->canEdit($action, $token, $pageId)
-                && $this->canChangeHierarchy($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()),
-        );
+        // To create a record, both hierarchy and edit permissions must be available.
+        return array_any($pageIds, fn ($pageId) => $this->canEdit($action, $token, $pageId)
+            && $this->canChangeHierarchy($action, $token, $pageId)
+            && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()));
     }
 
     private function canRead(ReadAction $action, TokenInterface $token): bool
@@ -279,7 +277,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private function getPageType(int $id): string
     {
         if (!isset($this->pageTypeCache[$id])) {
-            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$id]);
+            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id = ?', [$id]);
         }
 
         if (false === $this->pageTypeCache[$id]) {

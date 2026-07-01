@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
-	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'cal_month', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'cal_month', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'ascending', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'ascending', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 		return Controller::getTemplateGroup('event_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 		return Controller::getTemplateGroup('cal_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['events'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_keepCanonical'] = array

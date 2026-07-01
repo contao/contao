@@ -133,12 +133,13 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				array('tl_article', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'author' => array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',

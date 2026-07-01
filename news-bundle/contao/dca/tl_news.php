@@ -15,10 +15,8 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\LayoutModel;
 use Contao\News;
 use Contao\NewsArchiveModel;
-use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
@@ -158,12 +156,13 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'author' => array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -207,6 +206,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'robots' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
@@ -223,7 +223,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array
@@ -290,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
@@ -391,7 +391,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
@@ -491,52 +491,6 @@ class tl_news extends Backend
 	public function loadTime($value)
 	{
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
-	}
-
-	/**
-	 * Return the title tag from the associated page layout
-	 *
-	 * @param NewsModel $model
-	 *
-	 * @return string
-	 */
-	public function getTitleTag(NewsModel $model)
-	{
-		if (!$archive = NewsArchiveModel::findById($model->pid))
-		{
-			return '';
-		}
-
-		if (!$page = PageModel::findById($archive->jumpTo))
-		{
-			return '';
-		}
-
-		$page->loadDetails();
-
-		if (!$layout = LayoutModel::findById($page->layout))
-		{
-			return '';
-		}
-
-		$origObjPage = $GLOBALS['objPage'] ?? null;
-
-		// Override the global page object, so we can replace the insert tags
-		$GLOBALS['objPage'] = $page;
-
-		$title = implode(
-			'%s',
-			array_map(
-				static function ($strVal) {
-					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
-				},
-				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
-			)
-		);
-
-		$GLOBALS['objPage'] = $origObjPage;
-
-		return $title;
 	}
 
 	/**

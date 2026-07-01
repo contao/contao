@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Sélectionner la page qui permettra aux visiteurs de lire le détail de l'événement après avoir cliqué sur celui-ci.</target>
+        <target>Sélectionner la page qui permettra aux visiteurs de lire le détail de l&apos;événement après avoir cliqué sur celui-ci.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
-        <target>Protection d'accès</target>
+        <target>Protection d&apos;accès</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify_author">
         <source>Author of the event</source>
-        <target>Auteur de l'événement</target>
+        <target>Auteur de l&apos;événement</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_both">
         <source>Author and system administrator</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
-        <target>Accroche d'événements</target>
+        <target>Accroche d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>

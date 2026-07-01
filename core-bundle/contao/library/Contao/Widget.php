@@ -272,6 +272,7 @@ abstract class Widget extends Controller
 			case 'alt':
 			case 'style':
 			case 'accesskey':
+			case 'form':
 			case 'onblur':
 			case 'onchange':
 			case 'onclick':
@@ -372,7 +373,7 @@ abstract class Widget extends Controller
 
 				if ($this->basicEntities)
 				{
-					return StringUtil::restoreBasicEntities($this->varValue);
+					return StringUtil::restoreBasicEntities($this->varValue, $this->allowHtml);
 				}
 
 				return $this->varValue;
@@ -1259,11 +1260,6 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
-		if ($arrData['eval']['basicEntities'] ?? null)
-		{
-			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
-		}
-
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
@@ -1294,6 +1290,11 @@ abstract class Widget extends Controller
 			$arrAttributes['decodeEntities'] = true;
 		}
 
+		if ($arrData['eval']['basicEntities'] ?? null)
+		{
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value'], $arrAttributes['allowHtml']);
+		}
+
 		// Add Ajax event
 		if (($arrData['inputType'] ?? null) == 'checkbox' && ($arrData['eval']['submitOnChange'] ?? null) && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes'] ?? null) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
 		{
@@ -1314,9 +1315,9 @@ abstract class Widget extends Controller
 		// Foreign key
 		elseif (isset($arrData['foreignKey']))
 		{
-			$arrKey = explode('.', $arrData['foreignKey'], 2);
+			$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($arrData['foreignKey']);
 			$strField = Database::quoteIdentifier($arrData['relation']['field'] ?? 'id');
-			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $fk->getColumnExpression() . " AS value FROM " . $fk->getTableName() . " WHERE tstamp>0 ORDER BY value");
 
 			$arrData['options'] = array();
 
@@ -1397,9 +1398,9 @@ abstract class Widget extends Controller
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (!isset($arrAttributes['unique']) && (isset($arrAttributes['sql']['customSchemaOptions']['unique']) || isset($arrAttributes['sql']['platformOptions']['unique'])))
+			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['platformOptions']['unique']))
 			{
-				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'] ?? $arrAttributes['sql']['customSchemaOptions']['unique'];
+				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'];
 			}
 		}
 

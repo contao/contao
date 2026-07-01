@@ -35,13 +35,6 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao_comments.security.legacy_hook_comments_voter:
-        class: Contao\CommentsBundle\Security\Voter\LegacyHookCommentsVoter
-        arguments:
-            - '@contao.framework'
-        tags:
-            - { name: security.voter, priority: -100 }
-
     contao_comments.security.news_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\NewsCommentsVoter
         arguments:

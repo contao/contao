@@ -168,7 +168,7 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame(
-            Path::normalize($kernel->getProjectDir()).'/var/logs',
+            Path::normalize($kernel->getProjectDir()).'/var/log',
             Path::normalize($kernel->getLogDir()),
         );
     }

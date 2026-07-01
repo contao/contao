@@ -1,6 +1,0 @@
-contact_links:
-    - name: Go to contao/contao
-      url: https://github.com/contao/contao
-      about: This is a read-only split repository; go to contao/contao instead
-
-blank_issues_enabled: false

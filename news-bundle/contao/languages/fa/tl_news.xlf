@@ -283,6 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_news.versions.1">
         <source>Show the versions of news item ID %s</source>
+        <target>نمایش نسخه‌های خبر با شناسهٔ %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
@@ -322,9 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
         <source>Unpublish</source>
+        <target>لغو انتشار</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
         <source>Publish</source>
+        <target>انتشار</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -340,9 +343,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.3">
         <source>Unfeature</source>
+        <target>لغو ویژه‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.4">
         <source>Feature</source>
+        <target>ویژه‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

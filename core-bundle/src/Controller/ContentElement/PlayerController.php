@@ -22,18 +22,19 @@ use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use Contao\FilesModel;
 use Contao\StringUtil;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @phpstan-type FigureData array{
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>
+ *          sources: list<HtmlAttributes>,
+ *          tracks: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -82,14 +83,13 @@ class PlayerController extends AbstractContentElementController
         $poster = null;
 
         if ($uuid = $model->posterSRC) {
-            $filesModel = $this->getContaoAdapter(FilesModel::class);
-            $poster = $filesModel->findByUuid($uuid);
+            $poster = $this->filesStorage->generatePublicUri(Uuid::fromBinary($uuid));
         }
 
         $size = StringUtil::deserialize($model->playerSize, true);
 
         $attributes = $this->parsePlayerOptions($model)
-            ->setIfExists('poster', $poster?->path)
+            ->setIfExists('poster', (string) $poster)
             ->setIfExists('width', $size[0] ?? null)
             ->setIfExists('height', $size[1] ?? null)
             ->setIfExists('preload', $model->playerPreload)
@@ -197,6 +197,7 @@ class PlayerController extends AbstractContentElementController
                 'type' => 'audio',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => [],
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.showUnpublished.1">
         <source>Show unpublished pages and elements when sharing this link.</source>
-        <target>Toon niet-gepubliceerde pagina's en elementen bij het delen van deze link.</target>
+        <target>Toon niet-gepubliceerde pagina&apos;s en elementen bij het delen van deze link.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>

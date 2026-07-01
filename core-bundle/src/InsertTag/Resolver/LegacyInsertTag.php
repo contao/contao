@@ -34,7 +34,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -65,7 +64,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[AsInsertTag('figure')]
 #[AsInsertTag('image')]
 #[AsInsertTag('picture')]
-#[AsInsertTag('file')]
 /**
  * @internal
  *
@@ -106,7 +104,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                $strEmail = StringUtil::specialcharsUrl(StringUtil::encodeEmail($insertTag->getParameters()->get(0)));
+                $strEmail = StringUtil::specialcharsUrl(StringUtil::encodeEmail($insertTag->getParameters()->get(0)), false, false);
 
                 // Replace the tag
                 switch ($insertTag->getName()) {
@@ -245,18 +243,22 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['options'] ?? null;
                     $rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$insertTag->getParameters()->get(0)]['reference'] ?? null;
 
+                    $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
+
                     if ('date' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '', $value);
+                        $result = Date::parse($pageModel->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '', $value);
                     } elseif ('time' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->timeFormat ?? $GLOBALS['TL_CONFIG']['timeFormat'] ?? '', $value);
+                        $result = Date::parse($pageModel->timeFormat ?? $GLOBALS['TL_CONFIG']['timeFormat'] ?? '', $value);
                     } elseif ('datim' === $rgxp) {
-                        $result = Date::parse($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
+                        $result = Date::parse($pageModel->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
                     } elseif (\is_array($value)) {
                         $result = implode(', ', $value);
                     } elseif (ArrayUtil::isAssoc($opts)) {
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
+                    } elseif (Validator::isBinaryUuid($value)) {
+                        $result = StringUtil::binToUuid($value);
                     } else {
                         $result = $value;
                     }
@@ -362,7 +364,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
-                    $result = Date::parse($insertTag->getParameters()->get(0) ?? ($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? ''), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+                    $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
+                    $result = Date::parse($insertTag->getParameters()->get(0) ?? $pageModel->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
                 }
                 break;
 
@@ -417,11 +420,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'base_url':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBaseUrl();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBaseUrl() ?? '';
                         break;
 
                     case 'base_path':
-                        $result = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
+                        $result = $this->container->get('request_stack')->getCurrentRequest()?->getBasePath() ?? '';
                         break;
                 }
 
@@ -431,11 +434,12 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             // Page
             case 'page':
                 $property = $insertTag->getParameters()->get(0);
+                $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
 
-                if ($GLOBALS['objPage'] ?? null) {
-                    if (!$GLOBALS['objPage']->parentPageTitle && 'parentPageTitle' === $property) {
+                if ($pageModel) {
+                    if (!$pageModel->parentPageTitle && 'parentPageTitle' === $property) {
                         $property = 'parentTitle';
-                    } elseif (!$GLOBALS['objPage']->mainPageTitle && 'mainPageTitle' === $property) {
+                    } elseif (!$pageModel->mainPageTitle && 'mainPageTitle' === $property) {
                         $property = 'mainTitle';
                     }
                 }
@@ -449,13 +453,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                         'description' => htmlspecialchars($htmlHeadBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                     };
-                } elseif ($GLOBALS['objPage'] ?? null) {
+                } elseif ($pageModel) {
                     // Do not use StringUtil::specialchars() here (see #4687)
                     if (!\in_array($property, ['title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'], true)) {
                         $outputType = OutputType::text;
                     }
 
-                    $result = $GLOBALS['objPage']->{$property};
+                    $result = $pageModel->{$property};
                 }
                 break;
 
@@ -479,7 +483,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $size = $configuration['size'] ?? null;
-                $template = $configuration['template'] ?? '@ContaoCore/Image/Studio/figure.html.twig';
+                $template = $configuration['template'] ?? '@Contao/insert_tag/figure.html.twig';
 
                 unset($configuration['size'], $configuration['template']);
 
@@ -572,7 +576,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Use the alternative text from the image metadata if none is given
                 if (!$alt && ($objFile = FilesModel::findByPath($strFile))) {
-                    $arrMeta = Frontend::getMetaData($objFile->meta, $GLOBALS['objPage']->language ?? $GLOBALS['TL_LANGUAGE']);
+                    $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
+                    $arrMeta = Frontend::getMetaData($objFile->meta, $pageModel->language ?? $GLOBALS['TL_LANGUAGE']);
 
                     if (isset($arrMeta['alt'])) {
                         $alt = $arrMeta['alt'];
@@ -616,66 +621,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 } catch (\Exception) {
                     $result = '';
                 }
-                break;
-
-            // Files (UUID or template path)
-            case 'file':
-                $uuid = $insertTag->getParameters()->get(0);
-
-                if (Validator::isUuid($uuid) && ($objFile = FilesModel::findByUuid($uuid))) {
-                    $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
-                    break;
-                }
-
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates is deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
-
-                $requestStack = $this->container->get('request_stack');
-                $subRequest = null;
-                $arrGet = $_GET;
-                $strFile = $insertTag->getParameters()->get(0);
-
-                // Take arguments and add them to the $_GET array
-                if (str_contains($strFile, '?')) {
-                    $subRequest = $requestStack->getCurrentRequest()->duplicate();
-                    $arrChunks = explode('?', urldecode($strFile));
-                    $strSource = StringUtil::decodeEntities($arrChunks[1]);
-                    $arrParams = explode('&', $strSource);
-
-                    foreach ($arrParams as $strParam) {
-                        $arrParam = explode('=', $strParam);
-                        $subRequest->query->set($arrParam[0], $arrParam[1]);
-                        $_GET[$arrParam[0]] = $arrParam[1];
-                    }
-
-                    $strFile = $arrChunks[0];
-                }
-
-                // Check the path
-                if (Validator::isInsecurePath($strFile)) {
-                    throw new \RuntimeException('Invalid path '.$strFile);
-                }
-
-                // Include .php, .tpl, .xhtml and .html5 files
-                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && new Filesystem()->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
-                    if ($subRequest) {
-                        $requestStack->push($subRequest);
-                    }
-
-                    ob_start();
-
-                    try {
-                        include $this->container->getParameter('kernel.project_dir').'/templates/'.$strFile;
-                        $result = ob_get_contents();
-                    } finally {
-                        ob_end_clean();
-
-                        if ($subRequest) {
-                            $requestStack->pop();
-                        }
-                    }
-                }
-
-                $_GET = $arrGet;
                 break;
         }
 
