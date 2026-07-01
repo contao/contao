@@ -1,0 +1,15 @@
+services:
+    # Merge Contao resources into API Platform's discovered resource names so the
+    # entrypoint, docs and metadata pipeline can see DataContainerRecord.
+    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory:
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory.inner'
+
+    # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
+    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
+        decorates: api_platform.metadata.resource.metadata_collection_factory
+        arguments:
+            $decorated: '@Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory.inner'
+            $apiPrefix: '%contao_api.api_prefix%'
+            $dataContainerApiPrefix: '%contao_api.data_container_api_prefix%'
