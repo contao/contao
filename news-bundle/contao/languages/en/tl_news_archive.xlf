@@ -44,6 +44,9 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.expert_legend">
+        <source>Expert settings</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
       </trans-unit>
