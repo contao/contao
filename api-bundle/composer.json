@@ -30,6 +30,7 @@
         "php": "^8.4",
         "api-platform/core": "^4.3",
         "contao/core-bundle": "self.version",
+        "opis/json-schema": "^2.6",
         "symfony/http-kernel": "^7.4",
         "symfony/serializer": "^7.4"
     },

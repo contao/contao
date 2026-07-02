@@ -21,6 +21,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -35,7 +36,6 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly ContaoFramework $framework,
         private readonly ResourceFinderInterface $resourceFinder,
-        private readonly string $apiPrefix,
         private readonly string $dataContainerApiPrefix,
     ) {
     }
@@ -105,6 +105,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 ->withExtraProperties([
                     'contao' => [
                         'table' => $table,
+                        'schema_path' => DataContainerOpenApiFactory::getSchemaPath($table),
                     ],
                 ])
                 ->withOperations(new Operations($operations))
@@ -149,6 +150,6 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
     private function getRoutePrefix(string $table): string
     {
-        return '/'.trim($this->apiPrefix, '/').'/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
+        return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
     }
 }
