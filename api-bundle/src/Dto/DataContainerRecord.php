@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Dto;
 
 use ApiPlatform\Metadata\ApiProperty;
+use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
 
+#[DataContainerRecordSchema]
 final class DataContainerRecord
 {
     public function __construct(

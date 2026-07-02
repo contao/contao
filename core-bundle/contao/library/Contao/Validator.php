@@ -22,6 +22,12 @@ namespace Contao;
  */
 class Validator
 {
+	public const REGEXP_DIGIT = '^\d+$';
+
+	public const REGEXP_ALPHA = '^[\pL .-]+$';
+
+	public const REGEXP_ALNUM = '^[\w .-]+$';
+
 	/**
 	 * Numeric characters (including full stop [.] and minus [-])
 	 *
@@ -43,7 +49,7 @@ class Validator
 	 */
 	public static function isNatural($varValue)
 	{
-		return 1 === preg_match('/^\d+$/', $varValue);
+		return 1 === preg_match('/' . static::REGEXP_DIGIT . '/u', $varValue);
 	}
 
 	/**
@@ -55,7 +61,7 @@ class Validator
 	 */
 	public static function isAlphabetic($varValue)
 	{
-		return 1 === preg_match('/^[\pL .-]+$/u', $varValue);
+		return 1 === preg_match('/' . static::REGEXP_ALPHA . '/u', $varValue);
 	}
 
 	/**
@@ -67,7 +73,7 @@ class Validator
 	 */
 	public static function isAlphanumeric($varValue)
 	{
-		return 1 === preg_match('/^[\w .-]+$/u', $varValue);
+		return 1 === preg_match('/' . static::REGEXP_ALNUM . '/u', $varValue);
 	}
 
 	/**
