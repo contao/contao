@@ -58,10 +58,6 @@ class InputEnhancer implements RouteEnhancerInterface
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];
 
-        if (\count($fragments) > 1) {
-            trigger_deprecation('contao/core-bundle', '6.0', 'Using dynamic URL parameters like "%s" is deprecated and will no longer work in Contao 7.', $defaults['parameters']);
-        }
-
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
             array_unshift($fragments, 'auto_item');
