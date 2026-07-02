@@ -55,15 +55,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
 
     public function enterNode(Node $node, Environment $env): Node
     {
-        $isAffected = static function (array $rules, string $name): bool {
-            foreach ($rules as $rule) {
-                if (1 === preg_match($rule, $name)) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+        $isAffected = (static fn (array $rules, string $name): bool => array_any($rules, static fn ($rule) => 1 === preg_match($rule, $name)));
 
         if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
