@@ -25,14 +25,12 @@ final class DataContainerRecordNormalizerTest extends TestCase
         $normalizer = new DataContainerRecordNormalizer();
         $record = new DataContainerRecord('tl_content', ['headline' => 'Example'], 17);
 
-        $normalized = $normalizer->normalize($record);
-
         $this->assertSame(
             [
                 'id' => 17,
                 'headline' => 'Example',
             ],
-            $normalized,
+            $normalizer->normalize($record),
         );
     }
 
