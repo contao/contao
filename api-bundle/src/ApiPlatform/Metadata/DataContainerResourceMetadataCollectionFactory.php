@@ -24,11 +24,17 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DC_Table;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
 {
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinderInterface $resourceFinder,
         private readonly string $apiPrefix,
         private readonly string $dataContainerApiPrefix,
     ) {
@@ -40,42 +46,105 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             return $this->decorated->create($resourceClass);
         }
 
-        $apiResource = new ApiResource()
-            ->withClass(DataContainerRecord::class)
-            ->withShortName('Content')
-            ->withProvider(DataContainerStateProvider::class)
-            ->withProcessor(DataContainerStateProcessor::class)
-            ->withRoutePrefix($this->getRoutePrefix('tl_content'))
-            ->withExtraProperties([
-                'contao' => [
-                    'table' => 'tl_content',
-                ],
-            ])
-            ->withOperations(new Operations([
+        $this->framework->initialize();
+
+        $apiResources = [];
+
+        foreach ($this->getTables() as $table) {
+            $config = $this->loadDcaConfig($table);
+
+            if (!is_a((string) ($config['dataContainer'] ?? ''), DC_Table::class, true)) {
+                continue;
+            }
+
+            if (($config['closed'] ?? false) === true) {
+                continue;
+            }
+
+            $shortName = $this->getShortName($table);
+            $routePrefix = $this->getRoutePrefix($table);
+            $operations = [
                 'get_collection' => new GetCollection()
                     ->withClass(DataContainerRecord::class)
-                    ->withShortName('Content')
-                    ->withUriTemplate($this->getRoutePrefix('tl_content')),
+                    ->withShortName($shortName)
+                    ->withUriTemplate($routePrefix)
+                    ->withDefaults(['_scope' => 'backend']),
                 'get' => new Get()
                     ->withClass(DataContainerRecord::class)
-                    ->withShortName('Content')
-                    ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),
+                    ->withShortName($shortName)
+                    ->withUriTemplate($routePrefix.'/{id}')
+                    ->withDefaults(['_scope' => 'backend']),
                 'post' => new Post()
                     ->withClass(DataContainerRecord::class)
-                    ->withShortName('Content')
-                    ->withUriTemplate($this->getRoutePrefix('tl_content')),
+                    ->withShortName($shortName)
+                    ->withUriTemplate($routePrefix)
+                    ->withDefaults(['_scope' => 'backend']),
                 'patch' => new Patch()
                     ->withClass(DataContainerRecord::class)
-                    ->withShortName('Content')
-                    ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),
-                'delete' => new Delete()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName('Content')
-                    ->withUriTemplate($this->getRoutePrefix('tl_content').'/{id}'),
-            ]))
-        ;
+                    ->withShortName($shortName)
+                    ->withUriTemplate($routePrefix.'/{id}')
+                    ->withDefaults(['_scope' => 'backend']),
+            ];
 
-        return new ResourceMetadataCollection($resourceClass, [$apiResource]);
+            if (!($config['notDeletable'] ?? false)) {
+                $operations['delete'] = new Delete()
+                    ->withClass(DataContainerRecord::class)
+                    ->withShortName($shortName)
+                    ->withUriTemplate($routePrefix.'/{id}')
+                    ->withDefaults(['_scope' => 'backend'])
+                ;
+            }
+
+            $apiResources[] = new ApiResource()
+                ->withClass(DataContainerRecord::class)
+                ->withShortName($shortName)
+                ->withProvider(DataContainerStateProvider::class)
+                ->withProcessor(DataContainerStateProcessor::class)
+                ->withRoutePrefix($routePrefix)
+                ->withDefaults(['_scope' => 'backend'])
+                ->withExtraProperties([
+                    'contao' => [
+                        'table' => $table,
+                    ],
+                ])
+                ->withOperations(new Operations($operations))
+            ;
+        }
+
+        return new ResourceMetadataCollection($resourceClass, $apiResources);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getTables(): array
+    {
+        $tables = [];
+
+        foreach ($this->resourceFinder->findIn('dca')->files()->name('*.php') as $file) {
+            $tables[] = $file->getBasename('.php');
+        }
+
+        sort($tables);
+
+        return $tables;
+    }
+
+    private function getShortName(string $table): string
+    {
+        $shortName = preg_replace('/^tl_/', '', $table) ?? $table;
+
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $shortName)));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function loadDcaConfig(string $table): array
+    {
+        $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+
+        return $GLOBALS['TL_DCA'][$table]['config'] ?? [];
     }
 
     private function getRoutePrefix(string $table): string

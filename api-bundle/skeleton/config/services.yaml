@@ -11,6 +11,8 @@ services:
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
             $decorated: '@Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory.inner'
+            $framework: '@contao.framework'
+            $resourceFinder: '@contao.resource_finder'
             $apiPrefix: '%contao_api.api_prefix%'
             $dataContainerApiPrefix: '%contao_api.data_container_api_prefix%'
 
