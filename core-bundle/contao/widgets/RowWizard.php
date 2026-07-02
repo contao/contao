@@ -38,7 +38,6 @@ class RowWizard extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 
 		System::loadLanguageFile('default');
 	}

@@ -79,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
+			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'maxlength'=>2048),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>''),
 		),
 		'showUnpublished' => array

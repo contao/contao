@@ -130,14 +130,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'member' => array

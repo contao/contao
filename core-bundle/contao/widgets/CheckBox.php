@@ -40,7 +40,6 @@ class CheckBox extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 	}
 
 	/**

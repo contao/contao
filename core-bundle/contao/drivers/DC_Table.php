@@ -4904,7 +4904,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strReplaceSuffix = '';
 
 			// Decode HTML entities to make them searchable
-			if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['eval']['decodeEntities']))
+			if (!empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['eval']['allowHtml']))
 			{
 				$arrReplace = array(
 					'&#35;' => '#',

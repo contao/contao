@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'alias' => array

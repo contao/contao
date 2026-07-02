@@ -222,7 +222,6 @@ class Form extends Hybrid
 
 				$arrData = $objField->row();
 
-				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
 
 				// Submit buttons do not use the name attribute

@@ -208,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
 				array('tl_files', 'addFileLocation')

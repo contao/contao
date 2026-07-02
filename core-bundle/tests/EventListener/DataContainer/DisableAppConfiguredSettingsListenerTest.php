@@ -48,7 +48,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'eval' => [
                     'mandatory' => true,
                     'rgxp' => 'friendly',
-                    'decodeEntities' => true,
                     'tl_class' => 'w50',
                 ],
             ],
@@ -57,7 +56,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'eval' => [
                     'mandatory' => true,
                     'helpwizard' => true,
-                    'decodeEntities' => true,
                     'tl_class' => 'w50',
                 ],
                 'explanation' => 'dateFormat',
@@ -83,7 +81,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'eval' => [
                         'mandatory' => true,
                         'rgxp' => 'friendly',
-                        'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'helpwizard' => false,
@@ -96,7 +93,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'eval' => [
                         'mandatory' => true,
                         'helpwizard' => false,
-                        'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'chosen' => false,
