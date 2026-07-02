@@ -88,7 +88,7 @@ class ContentElementViewListener
             $sectionHeadline = StringUtil::deserialize($row['sectionHeadline'], true);
 
             if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit'])) {
-                $preview = $this->twig->createTemplate('<{{unit}}>{{ value }}</{{unit}}>')->render($sectionHeadline).$preview;
+                $preview = $this->twig->createTemplate('<{{ unit }}>{{ value }}</{{ unit }}>')->render($sectionHeadline).$preview;
             }
         }
 
