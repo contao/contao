@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'fullsize' => array
@@ -295,7 +295,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
+			'eval'                    => array('preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
@@ -387,7 +387,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'mooStyle' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'mooClasses' => array
@@ -401,7 +401,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
-			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'markdownSource' => array
@@ -416,7 +416,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'decodeEntities'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
@@ -429,7 +429,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'target' => array
@@ -558,7 +558,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractYouTubeId')
@@ -569,7 +569,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractVimeoId')
@@ -653,7 +653,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
+			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'youtubeOptions' => array

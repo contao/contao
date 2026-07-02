@@ -194,14 +194,14 @@ class Comments extends Frontend
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
 				'value'     => $user->email,
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255)
 			),
 			'website' => array
 			(
 				'name'      => 'website',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_website'],
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>128, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>128)
 			)
 		);
 

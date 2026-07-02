@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\Palette;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
@@ -222,7 +223,6 @@ class Form extends Hybrid
 
 				$arrData = $objField->row();
 
-				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
 
 				// Submit buttons do not use the name attribute
@@ -232,9 +232,13 @@ class Form extends Hybrid
 				}
 
 				// Unset the default value depending on the field type (see #4722)
-				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? '')))
+				if (!empty($arrData['value']) && !(new Palette($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? ''))->hasField('value'))
 				{
 					$arrData['value'] = '';
+				}
+				elseif (!empty($arrData['value']) && \is_string($arrData['value']))
+				{
+					$arrData['value'] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($arrData['value']);
 				}
 
 				$objWidget = new $strClass($arrData);
@@ -270,7 +274,6 @@ class Form extends Hybrid
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
-						Input::setPost($objField->name, null); // see #5474
 					}
 				}
 

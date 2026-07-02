@@ -118,6 +118,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@translator'
+            - '@twig'
 
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener

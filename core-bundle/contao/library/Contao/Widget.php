@@ -81,8 +81,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customTpl          A custom template name
  * @property string        $slabel             The submit button label
  * @property boolean       $preserveTags       Preserve HTML tags
- * @property boolean       $decodeEntities     Decode HTML entities
- * @property boolean       $useRawRequestData  Use the raw request data from the Symfony request
  * @property integer       $minlength          The minimum length
  * @property integer       $maxlength          The maximum length
  * @property integer       $minval             The minimum value
@@ -322,7 +320,6 @@ abstract class Widget extends Controller
 			case 'trailingSlash':
 			case 'spaceToUnderscore':
 			case 'doNotTrim':
-			case 'useRawRequestData':
 				$this->arrConfiguration[$strKey] = (bool) $varValue;
 				break;
 
@@ -373,7 +370,7 @@ abstract class Widget extends Controller
 
 				if ($this->basicEntities)
 				{
-					return StringUtil::restoreBasicEntities($this->varValue);
+					return StringUtil::restoreBasicEntities($this->varValue, $this->allowHtml);
 				}
 
 				return $this->varValue;
@@ -750,7 +747,7 @@ abstract class Widget extends Controller
 		// Support arrays (thanks to Andreas Schempp)
 		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
 
-		if (!$this->allowHtml || $this->preserveTags || $this->useRawRequestData)
+		if (!$this->allowHtml || $this->preserveTags)
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
@@ -758,7 +755,7 @@ abstract class Widget extends Controller
 		}
 		else
 		{
-			$varValue = Input::postHtml(array_shift($arrParts), $this->decodeEntities);
+			$varValue = Input::postHtml(array_shift($arrParts), true);
 		}
 
 		foreach ($arrParts as $part)
@@ -977,11 +974,7 @@ abstract class Widget extends Controller
 
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
-
-					if ($this->decodeEntities)
-					{
-						$varInput = StringUtil::decodeEntities($varInput);
-					}
+					$varInput = StringUtil::decodeEntities($varInput);
 
 					if (!Validator::isUrl($varInput))
 					{
@@ -1260,11 +1253,6 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
-		if ($arrData['eval']['basicEntities'] ?? null)
-		{
-			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
-		}
-
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
@@ -1289,10 +1277,9 @@ abstract class Widget extends Controller
 			$arrAttributes['allowHtml'] = 'ace|html' === $rte || str_starts_with($rte, 'tiny');
 		}
 
-		// Decode entities if HTML is allowed
-		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
+		if ($arrData['eval']['basicEntities'] ?? null)
 		{
-			$arrAttributes['decodeEntities'] = true;
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value'], $arrAttributes['allowHtml']);
 		}
 
 		// Add Ajax event

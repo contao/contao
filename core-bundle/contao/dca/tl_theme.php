@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'author' => array
