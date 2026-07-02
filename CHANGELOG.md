@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.8] (2026-07-01)
+
+**Fixed issues:**
+
+- [#9937] Fix destroying an undefined `linkContainer` in the `jump-targets-controller` ([zoglo])
+- [#9935] Fix incorrect pagination range in `ModuleSearch` ([fritzmg])
+- [#9902] Make the VFS configuration helper compatible with Flysystem 3.7 ([m-vo])
+- [#9928] Fix lazy-loaded list operations for tables without primary operations ([Toflar])
+- [#9914] Fix root redirect not working for forward pages ([Toflar])
+
 ## [5.7.7] (2026-06-15)
 
 **Security fixes:**
@@ -12,7 +22,6 @@ This project adheres to [Semantic Versioning].
 **Fixed issues:**
 
 - [#9906] Only allow user templates to be modified in the Template Studio ([aschempp])
-- [#9882] Prevent PHP object injection in `Document::__unserialize()` ([XananasX7])
 - [#9890] Fix more ghost target functionality in the row wizard ([zoglo])
 - [#9908] Fix job attachments not updating ([fritzmg])
 - [#9898] Use `foreach` instead of `array_map` to preserve cross-table DCA field references ([qzminski])
@@ -510,6 +519,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.8]: https://github.com/contao/contao/releases/tag/5.7.8
 [5.7.7]: https://github.com/contao/contao/releases/tag/5.7.7
 [5.7.6]: https://github.com/contao/contao/releases/tag/5.7.6
 [5.7.5]: https://github.com/contao/contao/releases/tag/5.7.5
@@ -543,7 +553,6 @@ This project adheres to [Semantic Versioning].
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
-[XananasX7]: https://github.com/XananasX7
 [xchs]: https://github.com/xchs
 [zoglo]: https://github.com/zoglo
 [#7562]: https://github.com/contao/contao/pull/7562
@@ -971,11 +980,15 @@ This project adheres to [Semantic Versioning].
 [#9872]: https://github.com/contao/contao/pull/9872
 [#9873]: https://github.com/contao/contao/pull/9873
 [#9874]: https://github.com/contao/contao/pull/9874
-[#9882]: https://github.com/contao/contao/pull/9882
 [#9883]: https://github.com/contao/contao/pull/9883
 [#9885]: https://github.com/contao/contao/pull/9885
 [#9887]: https://github.com/contao/contao/pull/9887
 [#9890]: https://github.com/contao/contao/pull/9890
 [#9898]: https://github.com/contao/contao/pull/9898
+[#9902]: https://github.com/contao/contao/pull/9902
 [#9906]: https://github.com/contao/contao/pull/9906
 [#9908]: https://github.com/contao/contao/pull/9908
+[#9914]: https://github.com/contao/contao/pull/9914
+[#9928]: https://github.com/contao/contao/pull/9928
+[#9935]: https://github.com/contao/contao/pull/9935
+[#9937]: https://github.com/contao/contao/pull/9937

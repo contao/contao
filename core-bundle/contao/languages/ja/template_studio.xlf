@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="template_studio.getting-started.1">
         <source>Select a template from the browser. You can then inspect all its representations and create your own versions and variants.</source>
-        <target>ブラウザーでテンプレートを選択してください。そうすると、そのすべての表現を分析でき、独自のバージョンと異形を作成できます。</target>
+        <target>ブラウザーでテンプレートを選択してください。そうすると、そのすべての表現を分析でき、独自のバージョンとバリアントを作成できます。</target>
       </trans-unit>
       <trans-unit id="template_studio.theme-selector">
         <source>Theme context</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
         <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
-        <target>%identifier%のテンプレートは2つの形式で提供されます。テンプレートを調整するときは、Contao 6でも互換性と保てるTwig形式の方が良いです。</target>
+        <target>%identifier%のテンプレートは2つの形式で提供されます。テンプレートを調整するときは、Contao 6でも互換性を保てるTwig形式を推奨します。</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
         <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>

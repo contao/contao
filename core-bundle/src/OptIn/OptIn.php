@@ -101,8 +101,13 @@ class OptIn implements OptInInterface
                 $related = $token->getRelatedRecords();
 
                 foreach ($related as $table => $id) {
-                    /** @var class-string<Model> $class */
-                    $class = $adapter->getClassFromTable($table);
+                    try {
+                        /** @var class-string<Model> $class */
+                        $class = $adapter->getClassFromTable($table);
+                    } catch (\RuntimeException) {
+                        // If the model class does not exist anymore, we can delete the token
+                        continue;
+                    }
 
                     /** @var Adapter<Model> $model */
                     $model = $this->framework->getAdapter($class);
