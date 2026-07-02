@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Controller\CspReporterController;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -24,6 +25,7 @@ use Contao\CoreBundle\Util\UrlUtil;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Spatie\SchemaOrg\ImageObject;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,6 +45,7 @@ class CoreResponseContextFactory
         private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
+        private readonly Studio $studio,
     ) {
     }
 
@@ -109,6 +112,21 @@ class CoreResponseContextFactory
         }
 
         $jsonLdManager = $context->get(JsonLdManager::class);
+        if ($pageModel->primaryImage) {
+            $figureBuilder = $this->studio->createFigureBuilder()
+                ->fromUuid($pageModel->primaryImage)
+            ;
+
+            if ($figure = $figureBuilder->buildIfResourceExists()) {
+                $imageObject = new ImageObject();
+
+                foreach ($figure->getSchemaOrgData() as $key => $value) {
+                    $imageObject->{$key}($value);
+                }
+                $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->getNodes()[WebPage::class]['default']->primaryImageOfPage($imageObject);
+            }
+        }
+
         $jsonLdManager
             ->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
             ->set(
