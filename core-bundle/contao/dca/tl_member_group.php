@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
+use Contao\StringUtil;
 
 $GLOBALS['TL_DCA']['tl_member_group'] = array
 (
@@ -149,7 +150,7 @@ class tl_member_group extends Backend
 			Image::getUrl($image),
 			Image::getUrl($icon),
 			Image::getUrl($icon . '--disabled'),
-			$label
+			StringUtil::specialchars($label)
 		);
 	}
 }
