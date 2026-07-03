@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @experimental
+ * @internal
  */
-abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
+#[AsOperationForTemplateStudioElement]
+class CreateLegacyVariantOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
@@ -18,11 +20,7 @@ abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
             return false;
         }
 
-        if ($this->disallowCustomName()) {
-            return $context->getIdentifier() === $this->getPrefix();
-        }
-
-        if (1 !== preg_match('%^'.preg_quote($this->getPrefix(), '%').'_[^/]+$%', $context->getIdentifier())) {
+        if (str_contains($context->getIdentifier(), '/') || !str_contains($context->getIdentifier(), '_')) {
             return false;
         }
 
@@ -31,21 +29,23 @@ abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
 
     public function execute(Request $request, OperationContext $context): Response|null
     {
+        [$identifier] = explode('_', $context->getIdentifier(), 2);
+
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
             return $this->render('@Contao/backend/template_studio/operation/create_or_rename_variant.stream.html.twig', [
                 'operation' => $this->getName(),
                 'operation_type' => 'create',
-                'identifier' => $context->getIdentifier(),
+                'identifier' => $identifier,
                 'extension' => $context->getExtension(),
                 'separator' => '_',
-                'suggested_identifier_fragment' => $this->suggestIdentifierFragmentName($context->getIdentifier(), $context->getExtension()),
-                'allowed_identifier_fragment_pattern' => $this->buildAllowedIdentifierFragmentsPattern($context->getIdentifier(), $context->getThemeSlug()),
+                'suggested_identifier_fragment' => $this->suggestIdentifierFragmentName($identifier, $context->getExtension()),
+                'allowed_identifier_fragment_pattern' => $this->buildAllowedIdentifierFragmentsPattern($identifier, $context->getThemeSlug()),
             ]);
         }
 
         // Do not allow creating subdirectories
-        $newIdentifier = str_replace('/', '-', "{$context->getIdentifier()}_$identifierFragment");
+        $newIdentifier = str_replace('/', '-', "{$identifier}_$identifierFragment");
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
@@ -66,19 +66,6 @@ abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
         return $this->render('@Contao/backend/template_studio/operation/create_variant_result.stream.html.twig', [
             'identifier' => $newIdentifier,
         ]);
-    }
-
-    /**
-     * Return the template identifier prefix this operation is targeting (e.g. "ce").
-     */
-    abstract protected function getPrefix(): string;
-
-    /**
-     * Return true if no name is allowed after the prefix.
-     */
-    protected function disallowCustomName(): bool
-    {
-        return false;
     }
 
     private function buildAllowedIdentifierFragmentsPattern(string $identifier, string|null $themeSlug): string
