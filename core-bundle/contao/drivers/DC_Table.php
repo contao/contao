@@ -4449,12 +4449,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addSeparator();
 							$recordOperations->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id);
 						}
-
-						// Backwards compatibility: Drag handle in case the child_record_callback is used and no leftside handle is output (to be removed in Contao 6)
-						if ($blnIsSortable && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
-						{
-							$recordOperations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle hidden" data-action="keydown->contao--sortable#move" data-contao--sortable-target="fallbackHandle">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
-						}
 					}
 
 					$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row[$i]['id'], $recordOperations);
@@ -4462,36 +4456,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$record['operations'] = $recordOperations;
 				}
 
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+				$label = $this->generateRecordLabel($row[$i]);
+
+				$record['label'] = \is_array($label) ? ($label[0] ?? '') : $label;
+				$record['preview'] = \is_array($label) ? trim($label[1] ?? '') : '';
+				$record['state'] = \is_array($label) ? ($label[2] ?? '') : '';
+
+				$record['allow_dragging'] = $blnIsSortable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i]));
+
+				if ($record['allow_dragging'])
 				{
-					trigger_deprecation('contao/core-bundle', '5.7', 'Using the child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
-
-					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
-					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
-
-					$record['legacy_data'] = System::importStatic($strClass)->$strMethod($row[$i]);
-				}
-				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
-				{
-					trigger_deprecation('contao/core-bundle', '5.7', 'Using the child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
-
-					$record['legacy_data'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]);
-				}
-				else
-				{
-					$label = $this->generateRecordLabel($row[$i]);
-
-					$record['label'] = \is_array($label) ? ($label[0] ?? '') : $label;
-					$record['preview'] = \is_array($label) ? trim($label[1] ?? '') : '';
-					$record['state'] = \is_array($label) ? ($label[2] ?? '') : '';
-
-					$record['allow_dragging'] = $blnIsSortable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i]));
-
-					if ($record['allow_dragging'])
-					{
-						$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-						$record['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id']);
-					}
+					$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+					$record['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id']);
 				}
 
 				$records[] = $record;
