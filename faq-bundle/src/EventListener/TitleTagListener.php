@@ -28,15 +28,13 @@ class TitleTagListener extends AbstractTitleTagCallback
             return null;
         }
 
-        $category = $record->getRelated('pid');
+        $framework = $this->container->get('contao.framework');
 
-        if (!$category instanceof FaqCategoryModel) {
+        if (!$category = $framework->getAdapter(FaqCategoryModel::class)->findById($record->pid)) {
             return null;
         }
 
-        $page = $category->getRelated('jumpTo');
-
-        if (!$page instanceof PageModel) {
+        if (!$page = $framework->getAdapter(PageModel::class)->findById($category->jumpTo)) {
             return null;
         }
 
