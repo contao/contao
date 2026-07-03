@@ -35,7 +35,7 @@ final class RenameLegacyVariantOperation extends AbstractOperation
         return $this->userTemplateExists($context, true);
     }
 
-    public function execute(Request $request, OperationContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response
     {
         [$baseIdentifier, $oldFragment] = explode('_', $context->getIdentifier());
 
