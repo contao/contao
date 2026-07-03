@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,8 +38,8 @@ final class RenameLegacyVariantOperation extends AbstractOperation
     public function execute(Request $request, OperationContext $context): Response|null
     {
         [$baseIdentifier, $oldFragment] = explode('_', $context->getIdentifier());
-        //preg_match('%^('.preg_quote($this->getPrefix(), '%').'/.+)/(.+)$%', $context->getIdentifier(), $matches);
-        //[, $baseIdentifier, $oldFragment] = $matches;
+        // preg_match('%^('.preg_quote($this->getPrefix(), '%').'/.+)/(.+)$%', $context->getIdentifier(), $matches);
+        // [, $baseIdentifier, $oldFragment] = $matches;
 
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
