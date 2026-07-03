@@ -145,8 +145,8 @@ class DataContainerCallbackListenerTest extends TestCase
 
     public static function singletonProvider(): iterable
     {
-        yield 'handles child_record_callback' => [
-            ['list.sorting.child_record_callback' => [[
+        yield 'handles label_callback' => [
+            ['list.sorting.label_callback' => [[
                 [
                     'service' => 'Test\CallbackListener',
                     'method' => 'firstCallback',
@@ -163,7 +163,7 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => ['Test\CallbackListener', 'firstCallback'],
+                        'label_callback' => ['Test\CallbackListener', 'firstCallback'],
                     ],
                 ],
             ],
@@ -194,7 +194,7 @@ class DataContainerCallbackListenerTest extends TestCase
         ];
 
         yield 'does not use singleton if attribute is false' => [
-            ['list.sorting.child_record_callback' => [[
+            ['list.sorting.label_callback' => [[
                 [
                     'service' => 'Test\CallbackListener',
                     'method' => 'firstCallback',
@@ -211,7 +211,7 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => [
+                        'label_callback' => [
                             ['Test\CallbackListener', 'firstCallback'],
                             ['Test\CallbackListener', 'secondCallback'],
                         ],
@@ -507,7 +507,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.child_record_callback' => [
+                    'list.sorting.label_callback' => [
                         0 => [
                             [
                                 'service' => 'Test\CallbackListener',
@@ -545,7 +545,7 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => ['Test\CallbackListener', 'priority10Callback'],
+                        'label_callback' => ['Test\CallbackListener', 'priority10Callback'],
                     ],
                 ],
             ],
@@ -558,7 +558,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_page'] = [
             'list' => [
                 'sorting' => [
-                    'child_record_callback' => ['Test\CallbackListener', 'existingCallback'],
+                    'label_callback' => ['Test\CallbackListener', 'existingCallback'],
                 ],
             ],
         ];
@@ -566,7 +566,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.child_record_callback' => [[
+                    'list.sorting.label_callback' => [[
                         [
                             'service' => 'Test\CallbackListener',
                             'method' => 'newCallback',
@@ -586,7 +586,7 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => ['Test\CallbackListener', 'newCallback'],
+                        'label_callback' => ['Test\CallbackListener', 'newCallback'],
                     ],
                 ],
             ],
@@ -599,7 +599,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_page'] = [
             'list' => [
                 'sorting' => [
-                    'child_record_callback' => ['Test\CallbackListener', 'existingCallback'],
+                    'label_callback' => ['Test\CallbackListener', 'existingCallback'],
                 ],
             ],
         ];
@@ -607,7 +607,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.child_record_callback' => [
+                    'list.sorting.label_callback' => [
                         -1 => [
                             [
                                 'service' => 'Test\CallbackListener',
@@ -629,7 +629,7 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => ['Test\CallbackListener', 'existingCallback'],
+                        'label_callback' => ['Test\CallbackListener', 'existingCallback'],
                     ],
                 ],
             ],
