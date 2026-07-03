@@ -221,21 +221,6 @@ class Picker extends Widget
 	{
 		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
-		if ($mode === DataContainer::MODE_PARENT)
-		{
-			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
-
-			if (\is_array($callback))
-			{
-				return System::importStatic($callback[0])->{$callback[1]}($arrRow);
-			}
-
-			if (\is_callable($callback))
-			{
-				return $callback($arrRow);
-			}
-		}
-
 		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
 		if ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['renderAsGrid'] ?? null)
