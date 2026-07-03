@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -33,7 +34,7 @@ class LabelListener
     ) {
     }
 
-    public function __invoke(array $row, string $label, DataContainer $dc): string
+    public function __invoke(array $row, string $label, DataContainer $dc): RecordLabel
     {
         $this->framework->initialize();
 
@@ -43,9 +44,11 @@ class LabelListener
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer($table);
 
-        return $this->twig->render(
-            '@Contao/backend/undo/label.html.twig',
-            $this->getTemplateData($table, $row, $originalRow),
+        return RecordLabel::fromHtml(
+            $this->twig->render(
+                '@Contao/backend/undo/label.html.twig',
+                $this->getTemplateData($table, $row, $originalRow),
+            ),
         );
     }
 

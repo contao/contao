@@ -113,9 +113,9 @@ class ContentElementViewListenerTest extends TestCase
         $listener = $this->createContentElementViewListener($framework, $translator);
         $label = $listener->generateLabel($row, '', $dc);
 
-        $this->assertSame($expectedLabel, $label[0]);
-        $this->assertSame($expectedPreview, $label[1]);
-        $this->assertSame($expectedClass, $label[2]);
+        $this->assertSame($expectedLabel, $label->htmlLabel);
+        $this->assertSame($expectedPreview, $label->htmlPreview);
+        $this->assertSame($expectedClass, $label->state);
     }
 
     public static function gridViewProvider(): iterable
@@ -229,7 +229,7 @@ class ContentElementViewListenerTest extends TestCase
         $listener = $this->createContentElementViewListener($framework, $translator);
         $label = $listener->generateLabel(['type' => 'text'], '', $dc);
 
-        $this->assertSame('<p class="tl_error">foobar</p>', $label[1]);
+        $this->assertSame('<p class="tl_error">foobar</p>', $label->htmlPreview);
     }
 
     private function createContentElementViewListener(ContaoFramework|null $framework = null, TranslatorInterface|null $translator = null): ContentElementViewListener
