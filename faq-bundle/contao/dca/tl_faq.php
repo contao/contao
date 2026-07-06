@@ -361,10 +361,9 @@ class tl_faq extends Backend
 	 */
 	public function listQuestions($arrRow): RecordLabel
 	{
-		$label = new RecordLabel($arrRow['question']);
-		$label->htmlPreview = '<h2>' . StringUtil::specialchars($arrRow['question']) . '</h2>' . $arrRow['answer'];
-		$label->state = $arrRow['published'] ? 'published' : 'unpublished';
-
-		return $label;
+		return (new RecordLabel($arrRow['question']))
+			->setHtmlPreview('<h2>' . StringUtil::specialchars($arrRow['question']) . '</h2>' . $arrRow['answer'])
+			->setState($arrRow['published'] ? 'published' : 'unpublished')
+		;
 	}
 }

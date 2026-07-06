@@ -73,4 +73,46 @@ final class RecordLabel implements \Stringable
 
         return $label;
     }
+
+    public function setLabel(string $label): self
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    public function setColumns(array|null $columns): self
+    {
+        $this->columns = $columns;
+
+        return $this;
+    }
+
+    public function setHtmlLabel(string|null $htmlLabel): self
+    {
+        $this->htmlLabel = $htmlLabel;
+
+        return $this;
+    }
+
+    public function setHtmlColumns(array|null $htmlColumns): self
+    {
+        $this->htmlColumns = $htmlColumns;
+
+        return $this;
+    }
+
+    public function setHtmlPreview(string|null $htmlPreview): self
+    {
+        $this->htmlPreview = $htmlPreview;
+
+        return $this;
+    }
+
+    public function setState(string|null $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
 }
