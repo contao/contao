@@ -2343,7 +2343,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		;
 
 		// Back button
-		$strBackUrl = $this->getReferer(true);
+		$strBackUrl = $this->getReferer();
 
 		if ((string) $currentRecord['tstamp'] === '0')
 		{
@@ -4143,7 +4143,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (Input::get('act') == 'select')
 			{
-				$operations->addBackButton($this->getReferer(true, $this->ptable));
+				$operations->addBackButton($this->getReferer(false, $this->ptable));
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
@@ -4151,7 +4151,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif ($this->ptable)
 			{
-				$operations->addBackButton($this->getReferer(true, $this->ptable));
+				$operations->addBackButton($this->getReferer(false, $this->ptable));
 			}
 		}
 
@@ -4628,7 +4628,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (Input::get('act') == 'select')
 		{
-			$operations->addBackButton($this->getReferer(true, $this->ptable));
+			$operations->addBackButton($this->getReferer(false, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
@@ -4636,7 +4636,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif ($this->ptable)
 		{
-			$operations->addBackButton($this->getReferer(true, $this->ptable));
+			$operations->addBackButton($this->getReferer(false, $this->ptable));
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
