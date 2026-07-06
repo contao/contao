@@ -1436,7 +1436,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function getNewPosition($mode, $pid=null, $insertMode=self::PASTE_AFTER)
 	{
-		if (!\is_numeric($insertMode))
+		if (!is_numeric($insertMode))
 		{
 			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-numeric value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
@@ -1550,8 +1550,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Select sorting value of the last record
 					if ($objSorting->numRows)
 					{
-						$curSorting = $objSorting->sorting;
-						$newSorting = $curSorting + 128;
+						$newSorting = $objSorting->sorting + 128;
 					}
 
 					// Else new sorting = 128
