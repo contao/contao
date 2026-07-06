@@ -416,7 +416,7 @@ jobs:
 
             - name: Test the single bundles
               run: |
-                  bundles=(api-bundle calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle news-bundle newsletter-bundle)
+                  bundles=(api-bundle calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle mcp-bundle news-bundle newsletter-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
                       php -r '

@@ -38,6 +38,8 @@ return RectorConfig::configure()
         __DIR__.'/faq-bundle/src',
         __DIR__.'/faq-bundle/tests',
         __DIR__.'/listing-bundle/src',
+        __DIR__.'/mcp-bundle/src',
+        __DIR__.'/mcp-bundle/tests',
         __DIR__.'/maker-bundle/src',
         __DIR__.'/maker-bundle/tests',
         __DIR__.'/manager-bundle/bin',

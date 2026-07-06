@@ -20,6 +20,7 @@
       <directory>./comments-bundle/src</directory>
       <directory>./core-bundle/src</directory>
       <directory>./faq-bundle/src</directory>
+      <directory>./mcp-bundle/src</directory>
       <directory>./maker-bundle/src</directory>
       <directory>./manager-bundle/src</directory>
       <directory>./news-bundle/src</directory>
