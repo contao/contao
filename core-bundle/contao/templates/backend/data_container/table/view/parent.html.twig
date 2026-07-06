@@ -52,7 +52,7 @@
                     {% for record in records %}
                         <li{{ attrs().set('data-id', record.id, is_sortable) }}>
                             {% if record.group_header is defined %}
-                                <div class="tl_content_header">{{ record.group_header|raw }}</div>
+                                <div class="tl_content_header">{{ record.group_header }}</div>
                             {% endif %}
 
                             {% set record_attributes = attrs()
