@@ -28,15 +28,13 @@ class TitleTagListener extends AbstractTitleTagCallback
             return null;
         }
 
-        $archive = $record->getRelated('pid');
+        $framework = $this->container->get('contao.framework');
 
-        if (!$archive instanceof NewsArchiveModel) {
+        if (!$archive = $framework->getAdapter(NewsArchiveModel::class)->findById($record->pid)) {
             return null;
         }
 
-        $page = $archive->getRelated('jumpTo');
-
-        if (!$page instanceof PageModel) {
+        if (!$page = $framework->getAdapter(PageModel::class)->findById($archive->jumpTo)) {
             return null;
         }
 
