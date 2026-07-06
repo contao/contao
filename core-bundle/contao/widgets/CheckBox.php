@@ -246,7 +246,7 @@ class CheckBox extends Widget
 			$this->multiple ? ' data-contao--check-all-target="input"' : '',
 			$this->strId . '_' . $i,
 			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-			StringUtil::specialchars($arrOption['label'] ?? ''),
+			Input::encodeInput($arrOption['label'] ?? '', InputEncodingMode::sanitizeHtml),
 			$this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '',
 			!$this->multiple ? $this->xlabel : ''
 		);

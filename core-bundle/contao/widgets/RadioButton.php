@@ -136,7 +136,7 @@ class RadioButton extends Widget
 				$this->isChecked($arrOption),
 				$this->getAttributes(),
 				$this->strId . '_' . $i,
-				$arrOption['label'] ?? null
+				Input::encodeInput($arrOption['label'] ?? '', InputEncodingMode::sanitizeHtml),
 			);
 		}
 
