@@ -37,7 +37,7 @@ final class RenameLegacyVariantOperation extends AbstractOperation
 
     public function execute(Request $request, OperationContext $context): Response
     {
-        [$baseIdentifier, $oldFragment] = explode('_', $context->getIdentifier());
+        [$baseIdentifier, $oldFragment] = explode('_', $context->getIdentifier(), 2);
 
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
