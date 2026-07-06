@@ -1430,12 +1430,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * Calculate the new position of a moved or inserted record
 	 *
-	 * @param string               $mode
-	 * @param integer              $pid
-	 * @param boolean|integer|null $insertMode
+	 * @param string  $mode
+	 * @param integer $pid
+	 * @param integer $insertMode
 	 */
-	protected function getNewPosition($mode, $pid=null, bool|int|null $insertMode=self::PASTE_AFTER)
+	protected function getNewPosition($mode, $pid=null, $insertMode=self::PASTE_AFTER)
 	{
+		if (!\is_numeric($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-numeric value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = $insertMode ? self::PASTE_INTO : self::PASTE_AFTER;
+		}
+
+		if (!\is_int($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-integer value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = (int) $insertMode;
+		}
+
 		$db = Database::getInstance();
 
 		// If there is pid and sorting
@@ -1458,7 +1472,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
-				if (($insertMode === true || $insertMode === self::PASTE_INTO) && isset($session['filter'][$filter]['limit']))
+				if ($insertMode === self::PASTE_INTO && isset($session['filter'][$filter]['limit']))
 				{
 					$limit = substr($session['filter'][$filter]['limit'], 0, strpos($session['filter'][$filter]['limit'], ','));
 
@@ -1471,14 +1485,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($objInsertAfter->numRows)
 						{
-							$insertMode = false;
+							$insertMode = self::PASTE_AFTER;
 							$pid = $objInsertAfter->id;
 						}
 					}
 				}
 
 				// Insert the current record at the beginning when inserting into the parent record (prepend)
-				if ($insertMode === true || $insertMode === self::PASTE_INTO)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$newPID = $pid;
 
@@ -1523,6 +1537,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$newSorting = 128;
 					}
 				}
+
+				// Insert the current record at the end when inserting into the parent record (append)
 				elseif ($insertMode === self::PASTE_INTO_APPEND)
 				{
 					$newPID = $pid;
@@ -1640,7 +1656,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (is_numeric($pid))
 			{
 				// Insert the current record into the parent record
-				if ($insertMode === true || $insertMode === self::PASTE_INTO)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$this->set['pid'] = $pid;
 				}
@@ -4468,9 +4484,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addPasteButton('pasteafter', $table, $pasteAfterHref);
 
 							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
-							$data = array(
-								'pid' => $row[$i]['id'] ?? null,
-							);
+							$data = array('pid' => $row[$i]['id'] ?? null);
 
 							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
 							{
