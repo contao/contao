@@ -23,9 +23,6 @@ repositories:
     api-bundle:
         url: https://github.com/contao/api-bundle.git
 
-    mcp-bundle:
-        url: https://github.com/contao/mcp-bundle.git
-
     calendar-bundle:
         url: https://github.com/contao/calendar-bundle.git
         mapping:
@@ -71,6 +68,9 @@ repositories:
             fa8afff2a25c57aa46a4f66d4dcc5225f0e11143: ef92ee33e28db237b34ffaf559d41bc5969f2265
             9e4fdd366d3b98ba481be54c0e06f816ff7f1879: dfbe7e4780bf72b6ded007e803f38b785dd7c912
             d931914e27e442bc89a66aa70531348753708da7: 4bc56a8d0960a51c7119e2eebdb08b968e582da0
+
+    mcp-bundle:
+        url: https://github.com/contao/mcp-bundle.git
 
     news-bundle:
         url: https://github.com/contao/news-bundle.git
