@@ -118,6 +118,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@translator'
+            - '@twig'
 
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
@@ -634,6 +635,11 @@ services:
             - '@contao.routing.scope_matcher'
             - '%fragment.path%'
             - '%kernel.debug%'
+
+    contao.listener.security.complete_two_factor_provider:
+        class: Contao\CoreBundle\EventListener\Security\CompleteTwoFactorProviderListener
+        arguments:
+            - '@security.token_storage'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener

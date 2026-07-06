@@ -34,7 +34,7 @@ class NewsCommentsVoter extends AbstractCommentsVoter
     protected function hasAccess(TokenInterface $token, string $source, int $parent): bool
     {
         $archiveId = $this->connection->fetchOne(
-            'SELECT pid FROM tl_news WHERE id=?',
+            'SELECT pid FROM tl_news WHERE id = ?',
             [$parent],
         );
 

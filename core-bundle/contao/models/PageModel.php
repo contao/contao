@@ -63,6 +63,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean           $autoforward
  * @property boolean           $protected
  * @property string|array|null $groups
+ * @property string|null       $primaryImage
  * @property boolean           $includeLayout
  * @property integer           $layout
  * @property integer           $subpageLayout
@@ -162,6 +163,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByAutoforward($val, array $opt=array())
  * @method static PageModel|null findOneByProtected($val, array $opt=array())
  * @method static PageModel|null findOneByGroups($val, array $opt=array())
+ * @method static PageModel|null findOneByPrimaryImage($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeLayout($val, array $opt=array())
  * @method static PageModel|null findOneByLayout($val, array $opt=array())
  * @method static PageModel|null findOneBySubpageLayout($val, array $opt=array())
@@ -227,6 +229,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|null findByAutoforward($val, array $opt=array())
  * @method static Collection<PageModel>|null findByProtected($val, array $opt=array())
  * @method static Collection<PageModel>|null findByGroups($val, array $opt=array())
+ * @method static Collection<PageModel>|null findByPrimaryImage($val, array $opt=array())
  * @method static Collection<PageModel>|null findByIncludeLayout($val, array $opt=array())
  * @method static Collection<PageModel>|null findByLayout($val, array $opt=array())
  * @method static Collection<PageModel>|null findBySubpageLayout($val, array $opt=array())
@@ -296,6 +299,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByAutoforward($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
+ * @method static integer countByPrimaryImage($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
  * @method static integer countByLayout($val, array $opt=array())
  * @method static integer countBySubpageLayout($val, array $opt=array())

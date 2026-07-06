@@ -32,18 +32,18 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'dateFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25'),
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w25'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w25')
 		),
 		'datimFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25')
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w25')
 		),
 		'timeZone' => array
 		(
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'adminEmail' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'tl_class'=>'w50')
 		),
 		'resultsPerPage' => array
 		(
@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'allowedTags' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
+			'eval'                    => array('tl_class'=>'long')
 		),
 		'allowedAttributes' => array
 		(

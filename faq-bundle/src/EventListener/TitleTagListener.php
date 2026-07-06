@@ -28,11 +28,15 @@ class TitleTagListener extends AbstractTitleTagCallback
             return null;
         }
 
-        if (!($category = $record->getRelated('pid')) instanceof FaqCategoryModel) {
+        $category = $record->getRelated('pid');
+
+        if (!$category instanceof FaqCategoryModel) {
             return null;
         }
 
-        if (!($page = $category->getRelated('jumpTo')) instanceof PageModel) {
+        $page = $category->getRelated('jumpTo');
+
+        if (!$page instanceof PageModel) {
             return null;
         }
 

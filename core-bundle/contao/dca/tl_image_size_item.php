@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'media' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long', 'decodeEntities'=>true),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'densities' => array
@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'width' => array

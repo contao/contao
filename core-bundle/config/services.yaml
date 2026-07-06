@@ -689,6 +689,7 @@ services:
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
             - '@messenger.bus.default'
+            - '@uri_signer'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -1046,6 +1047,7 @@ services:
             - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
             - '@security.helper'
+            - '@contao.image.studio'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider

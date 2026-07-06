@@ -17,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -33,6 +34,7 @@ class Jobs
         private readonly VirtualFilesystemInterface $jobAttachmentsStorage,
         private readonly RouterInterface $router,
         private readonly MessageBusInterface $messageBus,
+        private readonly UriSigner $uriSigner,
         private readonly ClockInterface $clock = new NativeClock(),
     ) {
     }
@@ -126,7 +128,7 @@ class Jobs
 
     public function getByUuid(string $uuid): Job|null
     {
-        $jobData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE uuid=?', [$uuid]);
+        $jobData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE uuid = ?', [$uuid]);
 
         if (false === $jobData) {
             return null;
@@ -250,7 +252,7 @@ class Jobs
 
         if ($parent && $applyRecursive) {
             $this->persist($parent, false);
-            $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$parent->getUuid()]) ?? 0;
+            $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid = ?', [$parent->getUuid()]) ?? 0;
         }
 
         if ($applyRecursive) {
@@ -298,7 +300,7 @@ class Jobs
         // cleans up orphans in case, e.g., jobs were deleted in the database manually)
         foreach ($this->jobAttachmentsStorage->listContents('')->directories() as $jobDirectory) {
             $jobUuid = $jobDirectory->getName();
-            $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$jobUuid]);
+            $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid = ?', [$jobUuid]);
 
             if (false === $id) {
                 $this->jobAttachmentsStorage->deleteDirectory($jobDirectory->getPath());
@@ -316,10 +318,12 @@ class Jobs
         return new Attachment(
             $filesystemItem,
             new TranslatableMessage('MSC.downloadAttachment', [$filesystemItem->getName()], 'contao_default'),
-            $this->router->generate(
-                '_contao_jobs.download',
-                ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
-                UrlGeneratorInterface::ABSOLUTE_URL,
+            $this->uriSigner->sign(
+                $this->router->generate(
+                    '_contao_jobs.download',
+                    ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
+                    UrlGeneratorInterface::ABSOLUTE_URL,
+                ),
             ),
         );
     }
@@ -399,13 +403,13 @@ class Jobs
 
     private function updateStatusBasedOnChildren(Job $job): void
     {
-        $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$job->getUuid()]);
+        $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid = ?', [$job->getUuid()]);
 
         if (false === $id) {
             return;
         }
 
-        $children = $this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE pid=?', [$id], [Types::INTEGER]);
+        $children = $this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE pid = ?', [$id], [Types::INTEGER]);
 
         $onePending = false;
         $allCompleted = true;
@@ -451,12 +455,12 @@ class Jobs
         if (0 === $row['pid']) {
             $children = [];
 
-            foreach ($this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE id=?', [$row['pid']], [Types::INTEGER]) as $jobRow) {
+            foreach ($this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE id = ?', [$row['pid']], [Types::INTEGER]) as $jobRow) {
                 $children[] = $this->databaseRowToDto($jobRow, false);
             }
             $job = $job->withChildren($children);
         } elseif ($withParent) {
-            $parentData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE id=?', [$row['pid']]);
+            $parentData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE id = ?', [$row['pid']]);
             if (false !== $parentData) {
                 $job = $job->withParent($this->databaseRowToDto($parentData, false));
             }

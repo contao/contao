@@ -29,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+	'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
@@ -43,21 +43,21 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
