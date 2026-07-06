@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
+use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -74,26 +75,24 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         ],
                         default => [],
                     };
+
+                    $GLOBALS['TL_DCA'][$table]['fields'] = [];
                 },
             )
         ;
-        $framework = $this->createContaoFrameworkMock([Controller::class => $controllerAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
         $resourceFinder = $this->createResourceFinder(['tl_article', 'tl_content', 'tl_log', 'tl_page', 'tl_settings']);
 
-        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, '/_api', 'backend/dc');
+        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
         $collection = $factory->create(DataContainerRecord::class);
 
         $this->assertCount(3, $collection);
 
         $resources = iterator_to_array($collection);
 
-        $this->assertResource($resources[0], 'Article', 'tl_article', '/_api/backend/dc/tl_article', true);
-        $this->assertResource($resources[1], 'Content', 'tl_content', '/_api/backend/dc/tl_content', true);
-        $this->assertResource($resources[2], 'Page', 'tl_page', '/_api/backend/dc/tl_page', false);
+        $this->assertResource($resources[0], 'Article', 'tl_article', '/backend/dc/tl_article', true);
+        $this->assertResource($resources[1], 'Content', 'tl_content', '/backend/dc/tl_content', true);
+        $this->assertResource($resources[2], 'Page', 'tl_page', '/backend/dc/tl_page', false);
     }
 
     public function testDelegatesForNonDataContainerResources(): void
@@ -108,8 +107,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             ->with('App\\Entity\\Foo')
             ->willReturn($collection)
         ;
-
-        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, '/_api', 'backend/dc');
+        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
     }
@@ -123,6 +121,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
+        $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
 
         $operations = $resource->getOperations();
         $this->assertInstanceOf(Operations::class, $operations);
@@ -149,6 +148,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame($expectedShortName, $operation->getShortName());
         $this->assertSame($expectedUriTemplate, $operation->getUriTemplate());
         $this->assertSame(['_scope' => 'backend'], $operation->getDefaults());
+        $this->assertNull($operation->getOpenapi());
     }
 
     /**

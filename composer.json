@@ -91,6 +91,7 @@
         "monolog/monolog": "^3.0",
         "nelmio/cors-bundle": "^2.0.1",
         "nelmio/security-bundle": "^3.0",
+        "opis/json-schema": "^2.6",
         "nikic/php-parser": "^5.0",
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.8 || ^3.1",
