@@ -739,12 +739,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->strField = $i;
 			$row[$i] = $valueFormatter->format($this->strTable, $i, $row[$i], $this);
-
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
-			{
-				$row[$i] = StringUtil::specialchars($row[$i]);
-			}
-
 			$label = null;
 
 			// Label
