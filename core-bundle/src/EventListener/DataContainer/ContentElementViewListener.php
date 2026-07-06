@@ -24,12 +24,14 @@ use Contao\Image;
 use Contao\MemberGroupModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ContentElementViewListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly TranslatorInterface $translator,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -79,14 +81,14 @@ class ContentElementViewListener
         try {
             $preview = StringUtil::insertTagToSrc($this->framework->getAdapter(Controller::class)->getContentElement($objModel));
         } catch (\Throwable $exception) {
-            $preview = '<p class="tl_error">'.StringUtil::specialchars($exception->getMessage()).'</p>';
+            $preview = $this->twig->createTemplate('<p class="tl_error">{{ message }}</p>')->render(['message' => $exception->getMessage()]);
         }
 
         if (!empty($row['sectionHeadline'])) {
             $sectionHeadline = StringUtil::deserialize($row['sectionHeadline'], true);
 
             if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit'])) {
-                $preview = '<'.$sectionHeadline['unit'].'>'.$sectionHeadline['value'].'</'.$sectionHeadline['unit'].'>'.$preview;
+                $preview = $this->twig->createTemplate('<{{ unit }}>{{ value }}</{{ unit }}>')->render($sectionHeadline).$preview;
             }
         }
 
@@ -109,7 +111,7 @@ class ContentElementViewListener
 
         // Add the ID of the aliased element
         if ('alias' === $row['type']) {
-            $label .= ' ID '.($row['cteAlias'] ?? 0);
+            $label .= ' ID '.(int) ($row['cteAlias'] ?? 0);
         }
 
         // Add the headline level (see #5858)
@@ -119,7 +121,7 @@ class ContentElementViewListener
 
         // Show the title
         if ($row['title'] ?? null) {
-            $label = $row['title'].' <span class="tl_gray">['.$label.']</span>';
+            $label = $this->twig->createTemplate('{{ title }} <span class="tl_gray">[{{ label }}]</span>')->render(['title' => $row['title'], 'label' => $label]);
         }
 
         // Add the protection status
@@ -141,15 +143,15 @@ class ContentElementViewListener
             }
 
             $label = $this->framework->getAdapter(Image::class)->getHtml('protected.svg').' '.$label;
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.protected', [], 'contao_default').($groupNames ? ': '.implode(', ', $groupNames) : '').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.protected'|trans({}, 'contao_default') }}{{ group_names ? ': ' ~ group_names|join(', ') : '' }})</span>")->render(['group_names' => $groupNames]);
         }
 
         if (($row['start'] ?? null) && ($row['stop'] ?? null)) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFromTo', [Date::parse(Config::get('datimFormat'), $row['start']), Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showFromTo'|trans([from, to], 'contao_default') }})</span>")->render(['from' => Date::parse(Config::get('datimFormat'), $row['start']), 'to' => Date::parse(Config::get('datimFormat'), $row['stop'])]);
         } elseif ($row['start'] ?? null) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFrom', [Date::parse(Config::get('datimFormat'), $row['start'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showFrom'|trans([from], 'contao_default') }})</span>")->render(['from' => Date::parse(Config::get('datimFormat'), $row['start'])]);
         } elseif ($row['stop'] ?? null) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showTo', [Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showTo'|trans([to], 'contao_default') }})</span>")->render(['to' => Date::parse(Config::get('datimFormat'), $row['stop'])]);
         }
 
         return $label;

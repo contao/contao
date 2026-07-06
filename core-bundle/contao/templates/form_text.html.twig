@@ -4,9 +4,9 @@
     {% if this.label %}
         <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
             {% if this.mandatory|default %}
-                <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+                <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
             {% else %}
-                {{ this.label }}
+                {{ this.label|insert_tag_raw }}
             {% endif %}
         </label>
     {% endif %}
@@ -26,7 +26,7 @@
         .addClass('text')
         .addClass('password', this.hideInput|default)
         .addClass(this.class|default)
-        .set('value', convertDate.invoke(this.value|default|insert_tag))
+        .set('value', convertDate.invoke(this.value|default))
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(input_attributes)
         .setIfExists('placeholder', input_attributes.placeholder|default|insert_tag)

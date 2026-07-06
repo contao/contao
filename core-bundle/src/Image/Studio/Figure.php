@@ -33,10 +33,10 @@ final class Figure
      * All arguments but the main image result can also be set via a Closure that only
      * returns the value on demand.
      *
-     * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
-     * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
-     * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
-     * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
+     * @param Metadata|(\Closure(self): Metadata|null)|null                                $metadata       Metadata container
+     * @param array<string, string|null>|(\Closure(self): array<string, string|null>)|null $linkAttributes Link attributes
+     * @param LightboxResult|(\Closure(self): LightboxResult|null)|null                    $lightbox       Lightbox
+     * @param array<string, mixed>|(\Closure(self): array<string, mixed>)|null             $options        Template options
      */
     public function __construct(
         private readonly ImageResult $image,

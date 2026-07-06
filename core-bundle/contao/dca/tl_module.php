@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'navigation', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'navigation', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'ariaLabel' => array
 		(
@@ -199,13 +199,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'pages' => array
 		(
@@ -284,7 +284,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'form' => array
 		(
@@ -301,7 +301,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('and', 'or'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'and', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'and', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'fuzzy' => array
 		(
@@ -313,7 +313,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50', 'placeholder'=>array(48, 360)),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'minKeywordLength' => array
 		(
@@ -333,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('simple', 'advanced'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'simple', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'simple', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'searchTpl' => array
 		(
@@ -342,7 +342,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'inColumn' => array
 		(
@@ -350,7 +350,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getLayoutSections'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'main', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'main', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'skipFirst' => array
 		(
@@ -375,7 +375,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'useCaption' => array
 		(
@@ -411,7 +411,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
+			'eval'                    => array('preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
@@ -426,7 +426,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rss_feed' => array
 		(
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'style'=>'height:60px'),
+			'eval'                    => array('mandatory'=>true, 'style'=>'height:60px'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'rss_template' => array
@@ -436,7 +436,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'numberOfItems' => array
 		(
@@ -474,7 +474,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('close_deactivate', 'close_delete'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'reg_deleteDir' => array
 		(
@@ -512,14 +512,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
+			'eval'                    => array('style'=>'height:120px'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'reg_password' => array
 		(
 			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
+			'eval'                    => array('style'=>'height:120px'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'data' => array

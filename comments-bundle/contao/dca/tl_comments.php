@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Comments;
-use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\Config;
@@ -131,14 +130,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'member' => array
@@ -248,24 +247,6 @@ class tl_comments extends Backend
 		}
 
 		Database::getInstance()->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
-	}
-
-	/**
-	 * Check whether the user is allowed to edit a comment
-	 *
-	 * @param integer $intParent
-	 * @param string  $strSource
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-	 *             vote on the ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT security attribute instead
-	 */
-	protected function isAllowedToEditComment($intParent, $strSource)
-	{
-		trigger_deprecation('contao/comments-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.', __METHOD__, ContaoCommentsPermissions::class);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT, array('source' => $strSource, 'parent' => $intParent));
 	}
 
 	/**

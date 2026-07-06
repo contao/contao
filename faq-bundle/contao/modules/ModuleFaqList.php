@@ -143,6 +143,6 @@ class ModuleFaqList extends Module
 			$url = Environment::get('requestUri');
 		}
 
-		return StringUtil::ampersand($url);
+		return $url;
 	}
 }

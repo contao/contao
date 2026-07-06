@@ -58,7 +58,7 @@ class ModuleComments extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$objConfig = new \stdClass();
 		$objConfig->perPage = $this->perPage;

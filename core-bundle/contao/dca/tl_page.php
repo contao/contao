@@ -21,7 +21,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Input;
-use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -179,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'requireItem' => array
 		(
@@ -211,8 +210,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'language' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>''),
 			'save_callback'           => array
 			(
@@ -230,6 +230,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'robots' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50'),
@@ -239,14 +240,14 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'serpPreview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -286,7 +287,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'target' => array
@@ -300,7 +301,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>255, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
 				array('tl_page', 'loadDns')
@@ -314,6 +315,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'staticFiles' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -325,6 +327,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'staticPlugins' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -358,7 +361,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'robotsTxt' => array
 		(
 			'inputType'               => 'textarea',
-			'eval'                    => array('doNotCopy'=>true, 'decodeEntities' => true),
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'maintenanceMode' => array
@@ -384,42 +387,45 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'canonicalKeepParams' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'adminEmail' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'dateFormat' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
 			'explanation'             => 'dateFormat',
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'timeFormat' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'datimFormat' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'validAliasCharacters' => array
@@ -428,7 +434,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'useFolderUrl' => array
@@ -442,7 +448,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'urlSuffix' => array
 		(
@@ -489,6 +495,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'layout' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -498,6 +505,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'subpageLayout' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true, 'blankOptionLabel'=>&$GLOBALS['TL_LANG']['tl_page']['layout_inherit']),
@@ -506,13 +514,13 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'includeCache' => array
 		(
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'cache' => array
 		(
-			'search'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000, 7776000, 15552000, 31536000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
@@ -527,7 +535,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'clientCache' => array
 		(
-			'search'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
@@ -544,6 +551,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'default'                 => (int) Config::get('defaultUser'),
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -554,6 +562,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'default'                 => (int) Config::get('defaultGroup'),
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user_group.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -570,6 +579,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cssClass' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
@@ -584,7 +594,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
@@ -609,6 +619,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'accesskey' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>1, 'default'=>'', 'fixed'=>true)
@@ -661,7 +672,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'textarea',
 			'default'                 => "default-src 'self'",
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true),
+			'eval'                    => array('mandatory'=>true),
 			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
 		'cspReportOnly' => array
@@ -682,7 +693,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 			'eval'                    => array('tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'maxFeedItems' => array
 		(
@@ -705,7 +716,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'primaryImage' => array(
 			'inputType'               => 'fileTree',
@@ -791,42 +802,6 @@ class tl_page extends Backend
 				$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 			}
 		}
-	}
-
-	/**
-	 * Return the title tag from the associated page layout
-	 *
-	 * @param PageModel $page
-	 *
-	 * @return string
-	 */
-	public function getTitleTag(PageModel $page)
-	{
-		$page->loadDetails();
-
-		if (!$layout = LayoutModel::findById($page->layout))
-		{
-			return '';
-		}
-
-		$origObjPage = $GLOBALS['objPage'] ?? null;
-
-		// Override the global page object, so we can replace the insert tags
-		$GLOBALS['objPage'] = $page;
-
-		$title = implode(
-			'%s',
-			array_map(
-				static function ($strVal) {
-					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
-				},
-				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
-			)
-		);
-
-		$GLOBALS['objPage'] = $origObjPage;
-
-		return $title;
 	}
 
 	/**

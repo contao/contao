@@ -93,6 +93,9 @@ return new Configuration()
     ->ignoreErrorsOnPackage('symfony/polyfill-intl-idn', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-mbstring', [ErrorType::UNUSED_DEPENDENCY])
 
+    // Allows us to use array_first/array_last in PHP <8.5.
+    ->ignoreErrorsOnPackage('symfony/polyfill-php85', [ErrorType::UNUSED_DEPENDENCY])
+
     // The rate limiter is required for the functional tests.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::UNUSED_DEPENDENCY])
 

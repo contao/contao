@@ -201,6 +201,45 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail(withTreeTrail: true));
     }
 
+    public function testGetTrailWithoutLabels(): void
+    {
+        $container = self::createClient()->getContainer();
+        System::setContainer($container);
+
+        $container->get('request_stack')->push(Request::create('https://example.com/contao?do=article&act=edit&id=1'));
+
+        $container->set(
+            'security.authorization_checker',
+            new class() implements AuthorizationCheckerInterface {
+                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                {
+                    return true;
+                }
+            },
+        );
+
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('RT')
+        ;
+
+        $container->set(
+            'contao.csrf.token_manager',
+            $tokenManager,
+        );
+
+        $this->loadFixtureFile('default');
+
+        $this->assertSame(
+            [
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_article&act=edit'],
+            ],
+            $container->get('contao.data_container.dca_url_analyzer')->getTrail(loadLabels: false),
+        );
+    }
+
     public static function getTrail(): iterable
     {
         yield [
@@ -494,6 +533,74 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                         ],
                     ],
                     'url' => '/contao?do=article&id=2&table=tl_article&act=edit',
+                ],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=select',
+            [
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
+                [
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
+                            'label' => 'Edit page ID 1',
+                        ],
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=2&rt=RT',
+                            'label' => 'Edit page ID 2',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                ],
+                [
+                    'label' => 'Edit multiple',
+                    'treeTrail' => null,
+                    'treeSiblings' => null,
+                    'url' => '/contao?do=article&id=1&table=tl_content&act=select',
+                ],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=deleteAll',
+            [
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
+                [
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
+                            'label' => 'Edit page ID 1',
+                        ],
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=2&rt=RT',
+                            'label' => 'Edit page ID 2',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                ],
+                [
+                    'label' => 'Delete',
+                    'treeTrail' => null,
+                    'treeSiblings' => null,
+                    'url' => '/contao?do=article&id=1&table=tl_content&act=deleteAll',
                 ],
             ],
         ];

@@ -126,7 +126,7 @@
         <target>Språkreträtt</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Contao kommer automatiskt att omdirigera en användare till en rotsida på dennes språk eller till språkreträtt-sidan. Om det inte finns någon språkreträtt-sida kommer ett felmeddelande - &lt;em&gt;Ingen sida funnen&lt;/em&gt; - att visas.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

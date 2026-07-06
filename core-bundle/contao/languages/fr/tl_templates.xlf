@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.invalid">
         <source>Invalid source or target directory &quot;%s&quot;!</source>
-        <target>Le répertoire source ou cible &quot;%s&quot; n'est pas valide !</target>
+        <target>Le répertoire source ou cible &quot;%s&quot; n&apos;est pas valide !</target>
       </trans-unit>
       <trans-unit id="tl_templates.hasErrors">
         <source>The template &quot;%s&quot; has errors and cannot be inspected: %s</source>

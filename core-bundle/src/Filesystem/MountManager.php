@@ -464,7 +464,7 @@ class MountManager
         }
 
         $disposition = HeaderUtils::DISPOSITION_INLINE;
-        $dispositionOption = $options?->get(Options::OPTION_CONTENT_DISPOSITION_TYPE);
+        $dispositionOption = $options->get(Options::OPTION_CONTENT_DISPOSITION_TYPE);
 
         if ($dispositionOption instanceof ContentDispositionOption) {
             $disposition = $dispositionOption->getContentDispositionType();

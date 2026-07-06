@@ -19,7 +19,11 @@ use Contao\Input;
 use Contao\System;
 
 /**
- * @phpstan-type LegacyOperation array{html: string, primary?: bool}
+ * @phpstan-type LegacyOperation array{
+ *     html: string,
+ *     listAttributes?: HtmlAttributes,
+ *     primary?: bool
+ * }
  * @phpstan-type ParametricOperation array{
  *     label: string,
  *     title?: string,
@@ -32,7 +36,7 @@ use Contao\System;
  *     primary?: bool|null,
  * }
  * @phpstan-type Separator array{separator: true}
- * @phpstan-type Operation LegacyOperation|ParametricOperation|Separator
+ * @phpstan-type Operation LegacyOperation|ParametricOperation
  *
  * @internal
  */
@@ -49,7 +53,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     public const CREATE_TOP = 'top';
 
     /**
-     * @var list<Operation>
+     * @var list<Operation|Separator>
      */
     protected array|null $operations = null;
 
@@ -74,7 +78,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param Operation $operation
+     * @param Operation|Separator $operation
      */
     public function append(array $operation, bool $parseHtml = false): self
     {
@@ -126,6 +130,8 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * Generate multiple operations if the given operation is using HTML.
+     *
+     * @param Operation $operation
      */
     protected function parseOperationsHtml(array $operation): array
     {
@@ -258,22 +264,22 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     {
         $url = match ($mode) {
             self::CREATE_NEW => 'act=create',
-            self::CREATE_PASTE => 'act=paste&amp;mode=create',
-            self::CREATE_AFTER => 'act=create&amp;mode=1',
+            self::CREATE_PASTE => 'act=paste&mode=create',
+            self::CREATE_AFTER => 'act=create&mode=1',
             self::CREATE_TOP,
-            self::CREATE_INTO => 'act=create&amp;mode=2',
+            self::CREATE_INTO => 'act=create&mode=2',
         };
 
         if (null !== $pid) {
-            $url .= '&amp;pid='.$pid;
+            $url .= '&pid='.$pid;
         }
 
         if (null !== $id) {
-            $url .= '&amp;id='.$id;
+            $url .= '&id='.$id;
         }
 
         if ($this->framework->getAdapter(Input::class)->get('nb')) {
-            $url .= '&amp;nc=1';
+            $url .= '&nc=1';
         }
 
         return $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);

@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'ptable' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'tl_article', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'tl_article', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'sorting' => array
 		(
@@ -253,13 +253,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'fullsize' => array
@@ -281,7 +281,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'above', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'above', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'html' => array
 		(
@@ -295,7 +295,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
+			'eval'                    => array('preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
@@ -305,7 +305,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('ordered', 'unordered'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'listitems' => array
 		(
@@ -370,7 +370,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'ascending', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'ascending', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'closeSections' => array
 		(
@@ -387,7 +387,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'mooStyle' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'mooClasses' => array
@@ -401,8 +401,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
-			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'markdownSource' => array
 		(
@@ -410,13 +410,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('sourceText', 'sourceFile'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['markdownSource'],
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'sourceText', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'sourceText', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'code' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'decodeEntities'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
@@ -429,7 +429,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'target' => array
@@ -525,7 +525,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc', 'random'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'metaIgnore' => array
 		(
@@ -540,13 +540,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				return Controller::getTemplateGroup('gallery_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'playerSRC' => array
 		(
@@ -558,23 +558,23 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractYouTubeId')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'vimeo' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractVimeoId')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'posterSRC' => array
 		(
@@ -586,7 +586,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'playerOptions' => array
 		(
@@ -623,10 +623,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerAspect' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
+			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2', '9:16', '1:1'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'textTrackSRC' => array
 		(
@@ -646,14 +646,15 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('auto', 'metadata', 'none'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_preload'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'playerColor' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'tl_class'=>'w25 wizard'),
+			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'youtubeOptions' => array
 		(
@@ -676,6 +677,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderDelay' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
@@ -683,6 +685,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>300)
@@ -833,13 +836,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'reg_close' => array
 		(

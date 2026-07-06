@@ -78,13 +78,7 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
 
         // Additionally check the subfolders of the mounted files
         if ('filemounts' === $field) {
-            foreach ($user->filemounts as $folder) {
-                if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
-                    return true;
-                }
-            }
-
-            return false;
+            return array_any($user->filemounts, static fn ($folder) => preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0]));
         }
 
         // Additionally check the child pages of the mounted pages

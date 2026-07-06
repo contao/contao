@@ -19,23 +19,23 @@
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
-        <target>Il n'y a pas d'événements pour ce jour.</target>
+        <target>Il n&apos;y a pas d&apos;événements pour ce jour.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyWeek">
         <source>There are no events for this week.</source>
-        <target>Il n'y a pas d'événements pour cette semaine.</target>
+        <target>Il n&apos;y a pas d&apos;événements pour cette semaine.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyMonth">
         <source>There are no events for this month.</source>
-        <target>Il n'y a pas d'événements pour ce mois.</target>
+        <target>Il n&apos;y a pas d&apos;événements pour ce mois.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>Il n'y a pas d'événements pour cette année.</target>
+        <target>Il n&apos;y a pas d&apos;événements pour cette année.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>Il n'y a pas d'événements.</target>
+        <target>Il n&apos;y a pas d&apos;événements.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
         <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
-        <target>jusqu'au %s</target>
+        <target>jusqu&apos;au %s</target>
       </trans-unit>
       <trans-unit id="MSC.cal_single_days">
         <source>every day</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
-        <target>Retour à l'aperçu de l'événement</target>
+        <target>Retour à l&apos;aperçu de l&apos;événement</target>
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.0">
         <source>Calendar feed</source>

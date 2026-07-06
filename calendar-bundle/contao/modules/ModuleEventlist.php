@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -93,10 +94,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
-		$blnClearInput = false;
-
 		$intYear = (int) Input::get('year');
 		$intMonth = (int) Input::get('month');
 		$intDay = (int) Input::get('day');
@@ -130,10 +127,9 @@ class ModuleEventlist extends Events
 					$intDay = date('Ymd');
 					break;
 			}
-
-			$blnClearInput = true;
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$blnDynamicFormat = !$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year'));
 
 		// Create the date object
@@ -290,7 +286,7 @@ class ModuleEventlist extends Events
 
 			list($offset, $limit) = $pagination->getIndexRange();
 
-			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 		}
 
 		$strMonth = '';
@@ -457,14 +453,6 @@ class ModuleEventlist extends Events
 		$this->Template->headline = $this->headline;
 		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
-
-		// Clear the $_GET array (see #2445)
-		if ($blnClearInput)
-		{
-			Input::setGet('year', null);
-			Input::setGet('month', null);
-			Input::setGet('day', null);
-		}
 	}
 
 	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool

@@ -6,7 +6,7 @@
         <target>E-mailadres</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
         <target>Geef een e-mailadres op voor de ontvanger.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirm">
         <source>%s new recipients have been imported.</source>
-        <target>%s nieuwe abonnee's zijn geïmporteerd.</target>
+        <target>%s nieuwe abonnee&apos;s zijn geïmporteerd.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.invalid">
         <source>%s invalid entries have been skipped.</source>

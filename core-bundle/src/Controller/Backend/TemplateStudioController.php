@@ -423,7 +423,7 @@ class TemplateStudioController extends AbstractBackendController
 
     private function generateTree(): array
     {
-        $userNamespace = '@Contao_Global';
+        $userNamespace = '@Contao_User';
 
         if (null !== ($themeSlug = $this->getThemeContext())) {
             $userNamespace = $this->themeNamespace->getFromSlug($themeSlug);
@@ -437,7 +437,6 @@ class TemplateStudioController extends AbstractBackendController
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore isset.offset */
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }

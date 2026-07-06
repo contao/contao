@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_user.newsletters.1">
         <source>Here you can grant access to one or more channels.</source>
-        <target>Accorder l'accès à une ou plusieurs listes de diffusion.</target>
+        <target>Accorder l&apos;accès à une ou plusieurs listes de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Permissions du bulletin d'information</target>
+        <target>Permissions du bulletin d&apos;information</target>
       </trans-unit>
     </body>
   </file>

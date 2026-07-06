@@ -11,9 +11,11 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\LayoutModel;
@@ -172,8 +174,11 @@ class ContentCompositionBuilderTest extends TestCase
             'element_references' => [],
         ];
 
-        $this->assertSame($expectedTemplateData, $template->getData());
+        $templateData = $template->getData();
 
+        unset($templateData['response_context']);
+
+        $this->assertSame($expectedTemplateData, $templateData);
         $this->assertSame($page, $GLOBALS['objPage'], 'global $objPage is set after building');
     }
 
@@ -182,6 +187,19 @@ class ContentCompositionBuilderTest extends TestCase
         $responseContext = new ResponseContext();
         $responseContext->add($htmlHeadBag = new HtmlHeadBag());
         $responseContext->add($jsonLdManager = new JsonLdManager($responseContext));
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->never())
+            ->method('createContaoWebpageResponseContext')
+        ;
 
         $jsonLdManager
             ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
@@ -195,8 +213,10 @@ class ContentCompositionBuilderTest extends TestCase
         $GLOBALS['TL_JAVASCRIPT'][] = 'additional_javascript_filename.js|123|async|defer';
 
         $parameters = $this
-            ->getContentCompositionBuilder()
-            ->setResponseContext($responseContext)
+            ->getContentCompositionBuilder(
+                responseContextAccessor: $responseContextAccessor,
+                responseContextFactory: $responseContextFactory,
+            )
             ->buildLayoutTemplate()
             ->getData()
         ;
@@ -417,7 +437,7 @@ class ContentCompositionBuilderTest extends TestCase
         ;
     }
 
-    private function getContentCompositionBuilder(ContaoFramework|null $framework = null, PageModel|null $page = null, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null, EventDispatcherInterface|null $eventDispatcher = null): ContentCompositionBuilder
+    private function getContentCompositionBuilder(ContaoFramework|null $framework = null, PageModel|null $page = null, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null, EventDispatcherInterface|null $eventDispatcher = null, ResponseContextAccessor|null $responseContextAccessor = null, CoreResponseContextFactory|null $responseContextFactory = null): ContentCompositionBuilder
     {
         $page ??= $this->createClassWithPropertiesStub(PageModel::class, [
             'layout' => 1,
@@ -430,6 +450,14 @@ class ContentCompositionBuilderTest extends TestCase
             ->willReturn('https://static-url/')
         ;
 
+        if (!$responseContextFactory) {
+            $responseContextFactory = $this->createStub(CoreResponseContextFactory::class);
+            $responseContextFactory
+                ->method('createContaoWebpageResponseContext')
+                ->willReturn(new ResponseContext())
+            ;
+        }
+
         return new ContentCompositionBuilder(
             $framework ?? $this->mockFramework(),
             $logger ?? $this->createStub(LoggerInterface::class),
@@ -440,6 +468,8 @@ class ContentCompositionBuilderTest extends TestCase
             $requestStack ?? $this->createStub(RequestStack::class),
             $translator ?? $this->createStub(LocaleAwareInterface::class),
             $eventDispatcher ?? $this->createStub(EventDispatcherInterface::class),
+            $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class),
+            $responseContextFactory,
             $page,
         );
     }

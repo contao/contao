@@ -14,8 +14,6 @@ namespace Contao\CoreBundle\Tests\String;
 
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Input;
-use Contao\InputEncodingMode;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class HtmlAttributesTest extends TestCase
@@ -667,33 +665,6 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame([], iterator_to_array($attributes));
     }
 
-    public function testAddEncodedStyles(): void
-    {
-        $attributes = new HtmlAttributes();
-
-        $attributes->addStyle(Input::encodeInput('color: #F00;', InputEncodingMode::encodeAll));
-        $this->assertSame('color: #F00;', $attributes['style']);
-        $this->assertSame(' style="color: #F00;"', $attributes->toString());
-
-        $attributes->set('style', Input::encodeInput('foo:url("bar.jpg");baz:foo;c\6F lor:red', InputEncodingMode::encodeAll));
-        $this->assertSame('foo: url(&quot;bar.jpg&quot;); baz: foo; c\6F lor: red;', $attributes['style']);
-
-        $attributes->set('style', Input::encodeInput('foo: func("ba\"r;"); baz: foo\; bar: baz; bar: foo;', InputEncodingMode::encodeAll));
-        $this->assertSame('foo: func(&quot;ba\&quot;r;&quot;); baz: foo\; bar: baz; bar: foo;', $attributes['style']);
-
-        $attributes->set('style', 'foo:func(&quot;double &amp;quot; encoded&quot;)');
-        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;);', $attributes['style']);
-        $attributes->addStyle('bar:"foo"');
-        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;); bar: "foo";', $attributes['style']);
-        $attributes->addStyle('');
-        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;); bar: &quot;foo&quot;;', $attributes['style']);
-
-        $attributes = new HtmlAttributes();
-        $attributes->setDoubleEncoding(true);
-        $attributes->addStyle('color: &#35;F00;');
-        $this->assertSame('color: &#35;', $attributes['style']);
-    }
-
     public function testDoesNotOutputEmptyStyleAttribute(): void
     {
         $attributes = new HtmlAttributes();
@@ -733,14 +704,6 @@ class HtmlAttributesTest extends TestCase
             'data-json' => json_encode('foo &quot; bar'),
         ]);
 
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" e="&ZeroWidthSpace;" property-without-value data-json="&quot;foo &amp;quot; bar&quot;"';
-
-        $this->assertSame(" $expectedString", (string) $attributes);
-        $this->assertSame(" $expectedString", $attributes->toString());
-        $this->assertSame($expectedString, $attributes->toString(false));
-
-        // With double encoding
-        $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
         $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" e="&amp;ZeroWidthSpace;" property-without-value data-json="&quot;foo &amp;quot; bar&quot;"';
 
         $this->assertSame(" $expectedString", (string) $attributes);

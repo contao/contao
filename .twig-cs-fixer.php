@@ -64,6 +64,6 @@ $config->addTokenParser(new AddTokenParser(''));
 $config->addTokenParser(new SlotTokenParser());
 $config->setRuleset($ruleset);
 $config->setFinder(new Finder()->in(__DIR__ . '/*-bundle/contao/templates/*'));
-$config->setCacheFile(sys_get_temp_dir().'/twig-cs-fixer/contao');
+$config->setCacheFile(sys_get_temp_dir().'/twig-cs-fixer/contao60');
 
 return $config;

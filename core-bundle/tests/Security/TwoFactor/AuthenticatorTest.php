@@ -115,7 +115,7 @@ class AuthenticatorTest extends TestCase
     {
         $beginSvg = <<<'SVG'
             <?xml version="1.0" encoding="UTF-8"?>
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180" height="180" viewBox="0 0 180 180"><rect x="0" y="0" width="180" height="180" fill="#fefefe"/>
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180" height="180" viewBox="0 0 180 180"><rect x="0" y="0" width="180" height="180" fill="#ffffff"/>
             SVG;
 
         $clock = new MockClock('2025-08-12 08:24:00');
@@ -139,7 +139,7 @@ class AuthenticatorTest extends TestCase
         $authenticator = new Authenticator($clock);
         $svg = $authenticator->getQrCode($user, $request);
 
-        $this->assertSame(5905, \strlen($svg));
+        $this->assertSame(5897, \strlen($svg));
         $this->assertSame(0, strpos($svg, $beginSvg));
     }
 

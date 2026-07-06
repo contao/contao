@@ -122,17 +122,25 @@ class ConfigurationTest extends TestCase
     #[DataProvider('getPaths')]
     public function testResolvesThePaths(string $unix, string $windows): void
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $targetDir = $windows;
+            $path = 'C:/Temp/contao';
+        } else {
+            $targetDir = $unix;
+            $path = '/tmp/contao';
+        }
+
         $params = [
             [
                 'image' => [
-                    'target_dir' => $windows,
+                    'target_dir' => $targetDir,
                 ],
             ],
         ];
 
         $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
+        $this->assertSame($path, $configuration['image']['target_dir']);
     }
 
     public static function getPaths(): iterable
@@ -315,7 +323,7 @@ class ConfigurationTest extends TestCase
                         ],
                         [
                             'transports' => ['prio_normal'],
-                            'options' => ['--sleep=10', '--time-limit=60'],
+                            'options' => ['--sleep=10', '--time-limit=55'],
                             'autoscale' => [
                                 'desired_size' => 10,
                                 'max' => 20,
@@ -323,7 +331,7 @@ class ConfigurationTest extends TestCase
                         ],
                         [
                             'transports' => ['prio_high'],
-                            'options' => ['--sleep=5', '--time-limit=60'],
+                            'options' => ['--sleep=5', '--time-limit=55'],
                             'autoscale' => [
                                 'desired_size' => 5,
                                 'max' => 30,
@@ -342,7 +350,7 @@ class ConfigurationTest extends TestCase
                 'workers' => [
                     [
                         'transports' => ['prio_low'],
-                        'options' => ['--time-limit=60'],
+                        'options' => ['--time-limit=55'],
                         'autoscale' => [
                             'enabled' => false,
                             'min' => 1,
@@ -350,7 +358,7 @@ class ConfigurationTest extends TestCase
                     ],
                     [
                         'transports' => ['prio_normal'],
-                        'options' => ['--sleep=10', '--time-limit=60'],
+                        'options' => ['--sleep=10', '--time-limit=55'],
                         'autoscale' => [
                             'desired_size' => 10,
                             'max' => 20,
@@ -360,7 +368,7 @@ class ConfigurationTest extends TestCase
                     ],
                     [
                         'transports' => ['prio_high'],
-                        'options' => ['--sleep=5', '--time-limit=60'],
+                        'options' => ['--sleep=5', '--time-limit=55'],
                         'autoscale' => [
                             'desired_size' => 5,
                             'max' => 30,
@@ -384,7 +392,7 @@ class ConfigurationTest extends TestCase
                         'workers' => [
                             [
                                 'transports' => ['prio_normal'],
-                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'options' => ['--sleep=10', '--time-limit=55'],
                                 'autoscale' => [
                                     'enabled' => true,
                                 ],
@@ -407,7 +415,7 @@ class ConfigurationTest extends TestCase
                         'workers' => [
                             [
                                 'transports' => ['prio_normal'],
-                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'options' => ['--sleep=10', '--time-limit=55'],
                                 'autoscale' => [
                                     'enabled' => true,
                                     'desired_size' => 10,

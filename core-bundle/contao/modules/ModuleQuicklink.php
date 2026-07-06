@@ -67,8 +67,6 @@ class ModuleQuicklink extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		// Get all active pages
 		$objPages = PageModel::findPublishedRegularByIds($this->pages);
 
@@ -83,6 +81,7 @@ class ModuleQuicklink extends Module
 		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($objPages as $objSubpage)
 		{
@@ -121,7 +120,7 @@ class ModuleQuicklink extends Module
 
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
+		$this->Template->request = Environment::get('requestUri');
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}

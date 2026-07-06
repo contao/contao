@@ -81,9 +81,9 @@ class Image
 	/**
 	 * Generate an image tag and return it as string
 	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
+	 * @param string                $src        The image path
+	 * @param string                $alt        An optional alt attribute
+	 * @param string|HtmlAttributes $attributes A string of other attributes
 	 *
 	 * @return string The image HTML tag
 	 */
@@ -91,7 +91,9 @@ class Image
 	{
 		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
-		$attributesObject = new HtmlAttributes($attributes);
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
 		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
@@ -105,7 +107,9 @@ class Image
 				if (isset($darkAttributes[$icon]))
 				{
 					$pathinfo = pathinfo($darkAttributes[$icon]);
-					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+					$fileName = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+
+					$darkAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
 				}
 			}
 
@@ -115,8 +119,20 @@ class Image
 
 		if (str_contains($template, '{lightAttributes}'))
 		{
+			$lightAttributes = new HtmlAttributes($attributesObject);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($lightAttributes[$icon]))
+				{
+					$fileName = pathinfo($lightAttributes[$icon], PATHINFO_BASENAME);
+
+					$lightAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
+				}
+			}
+
 			$search[] = '{lightAttributes}';
-			$replace[] = (new HtmlAttributes($attributesObject))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+			$replace[] = $lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
 		}
 
 		return str_replace($search, $replace, $template);

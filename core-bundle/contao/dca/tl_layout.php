@@ -160,6 +160,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'sections' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'sectionWizard',
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
@@ -197,6 +198,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
@@ -214,7 +216,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'defaultImageDensities' => array
 		(
@@ -226,29 +228,31 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'viewport' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'width=device-width,initial-scale=1.0,shrink-to-fit=no')
 		),
 		'titleTag' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'placeholder'=>'{{page::pageTitle}} - {{page::rootPageTitle}}', 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'placeholder'=>'{{page::pageTitle}} - {{page::rootPageTitle}}', 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'cssClass' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'onload' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'head' => array
@@ -268,6 +272,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
@@ -285,6 +290,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');

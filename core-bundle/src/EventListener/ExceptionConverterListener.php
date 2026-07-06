@@ -69,13 +69,7 @@ class ExceptionConverterListener
 
     private function getTargetClass(\Throwable $exception): string|null
     {
-        foreach (self::MAPPER as $source => $target) {
-            if ($exception instanceof $source) {
-                return $target;
-            }
-        }
-
-        return null;
+        return array_find(self::MAPPER, static fn ($target, $source) => $exception instanceof $source);
     }
 
     private function convertToHttpException(\Throwable $exception, string $class): HttpException

@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'undo' => array
 			(
-				'href'                => '&amp;act=undo',
+				'href'                => '&act=undo',
 				'icon'                => 'undo.svg',
 				'method'              => 'POST'
 			),

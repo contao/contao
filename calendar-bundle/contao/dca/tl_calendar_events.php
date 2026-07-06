@@ -84,14 +84,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'delete',
 			'toggle' => array
 			(
-				'href'                => 'act=toggle&amp;field=published',
+				'href'                => 'act=toggle&field=published',
 				'icon'                => 'visible.svg',
 				'primary'             => true,
 				'showInHeader'        => true
 			),
 			'feature' => array
 			(
-				'href'                => 'act=toggle&amp;field=featured',
+				'href'                => 'act=toggle&field=featured',
 				'icon'                => 'featured.svg',
 				'primary'             => true
 			),
@@ -163,12 +163,13 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'author' => array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -227,12 +228,13 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'robots' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
@@ -242,21 +244,21 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'serpPreview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'location' => array
@@ -323,14 +325,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageUrl'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'fullsize' => array
@@ -406,7 +408,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'jumpTo' => array
@@ -430,7 +432,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'target' => array
@@ -448,7 +450,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
