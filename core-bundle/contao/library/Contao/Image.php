@@ -160,8 +160,26 @@ class Image
 
 		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
+		if (isset($attributesObject['width']))
+		{
+			$defaultSize['width'] = $attributesObject['width'];
+
+			// Unset the width attribute, otherwise it would be added twice
+			// (once in {width} and once in {attributes})
+			unset($attributesObject['width']);
+		}
+
+		if (isset($attributesObject['height']))
+		{
+			$defaultSize['height'] = $attributesObject['height'];
+
+			// Unset the height attribute, otherwise it would be added twice
+			// (once in {height} and once in {attributes})
+			unset($attributesObject['height']);
+		}
+
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
-		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
