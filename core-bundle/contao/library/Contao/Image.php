@@ -178,6 +178,15 @@ class Image
 			unset($attributesObject['height']);
 		}
 
+		if (isset($attributesObject['alt']))
+		{
+			$alt = $attributesObject['alt'];
+
+			// Unset the alt attribute, otherwise it would be added twice
+			// (once in {alt} and once in {attributes})
+			unset($attributesObject['alt']);
+		}
+
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
 		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
