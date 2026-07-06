@@ -112,10 +112,9 @@ class CoreResponseContextFactory
         }
 
         $jsonLdManager = $context->get(JsonLdManager::class);
+
         if ($pageModel->primaryImage) {
-            $figureBuilder = $this->studio->createFigureBuilder()
-                ->fromUuid($pageModel->primaryImage)
-            ;
+            $figureBuilder = $this->studio->createFigureBuilder()->fromUuid($pageModel->primaryImage);
 
             if ($figure = $figureBuilder->buildIfResourceExists()) {
                 $imageObject = new ImageObject();
@@ -123,6 +122,7 @@ class CoreResponseContextFactory
                 foreach ($figure->getSchemaOrgData() as $key => $value) {
                     $imageObject->{$key}($value);
                 }
+
                 $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->getNodes()[WebPage::class]['default']->primaryImageOfPage($imageObject);
             }
         }
