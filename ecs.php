@@ -37,6 +37,8 @@ return ECSConfig::configure()
         __DIR__.'/manager-bundle/bin',
         __DIR__.'/manager-bundle/src',
         __DIR__.'/manager-bundle/tests',
+        __DIR__.'/mcp-bundle/src',
+        __DIR__.'/mcp-bundle/tests',
         __DIR__.'/news-bundle/src',
         __DIR__.'/news-bundle/tests',
         __DIR__.'/newsletter-bundle/src',

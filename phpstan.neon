@@ -24,6 +24,8 @@ parameters:
         - %currentWorkingDirectory%/listing-bundle/src
         - %currentWorkingDirectory%/maker-bundle/src
         - %currentWorkingDirectory%/maker-bundle/tests
+        - %currentWorkingDirectory%/mcp-bundle/src
+        - %currentWorkingDirectory%/mcp-bundle/tests
         - %currentWorkingDirectory%/news-bundle/src
         - %currentWorkingDirectory%/news-bundle/tests
         - %currentWorkingDirectory%/newsletter-bundle/src

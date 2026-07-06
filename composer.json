@@ -91,9 +91,9 @@
         "monolog/monolog": "^3.0",
         "nelmio/cors-bundle": "^2.0.1",
         "nelmio/security-bundle": "^3.0",
-        "opis/json-schema": "^2.6",
         "nikic/php-parser": "^5.0",
         "nyholm/psr7": "^1.2",
+        "opis/json-schema": "^2.6",
         "paragonie/constant_time_encoding": "^2.8 || ^3.1",
         "php-feed-io/feed-io": "^6.0",
         "phpspec/php-diff": "^1.0",
@@ -204,6 +204,7 @@
         "contao/loupe-bridge": "self.version",
         "contao/maker-bundle": "self.version",
         "contao/manager-bundle": "self.version",
+        "contao/mcp-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
         "contao/test-case": "self.version"
@@ -230,6 +231,7 @@
             "Contao\\LoupeBridge\\": "loupe-bridge/src/",
             "Contao\\MakerBundle\\": "maker-bundle/src/",
             "Contao\\ManagerBundle\\": "manager-bundle/src/",
+            "Contao\\McpBundle\\": "mcp-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
@@ -321,6 +323,7 @@
             "contao/loupe-bridge": "Contao\\LoupeBridge\\ContaoManager\\Plugin",
             "contao/maker-bundle": "Contao\\MakerBundle\\ContaoManager\\Plugin",
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
+            "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
         }

@@ -26,6 +26,7 @@ The monorepo is automatically split into separate packages:
  * [ListingBundle](https://github.com/contao/listing-bundle)
  * [MakerBundle](https://github.com/contao/maker-bundle)
  * [ManagerBundle](https://github.com/contao/manager-bundle)
+ * [McpBundle](https://github.com/contao/mcp-bundle)
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
