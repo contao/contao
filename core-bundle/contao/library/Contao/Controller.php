@@ -1025,7 +1025,7 @@ abstract class Controller extends System
 		// Merge the request string to be added
 		if ($strRequest)
 		{
-			parse_str(str_replace('&', '&', $strRequest), $newPairs);
+			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
 			$pairs = array_merge($pairs, $newPairs);
 		}
 
@@ -1033,7 +1033,7 @@ abstract class Controller extends System
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
 		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
@@ -1055,7 +1055,7 @@ abstract class Controller extends System
 	 */
 	public static function redirect($strLocation, $intStatus=303): never
 	{
-		$strLocation = str_replace('&', '&', $strLocation);
+		$strLocation = str_replace('&amp;', '&', $strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
