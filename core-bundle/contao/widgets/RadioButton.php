@@ -136,7 +136,7 @@ class RadioButton extends Widget
 				$this->isChecked($arrOption),
 				$this->getAttributes(),
 				$this->strId . '_' . $i,
-				$arrOption['label'] ?? null
+				System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('label', $arrOption['label'] ?? ''),
 			);
 		}
 

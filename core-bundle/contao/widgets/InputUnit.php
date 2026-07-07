@@ -138,7 +138,7 @@ class InputUnit extends Widget
 				'<option value="%s"%s>%s</option>',
 				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
-				$arrUnit['label']
+				StringUtil::specialchars($arrUnit['label']),
 			);
 		}
 

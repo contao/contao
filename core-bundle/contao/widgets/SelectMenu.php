@@ -165,7 +165,7 @@ class SelectMenu extends Widget
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->isSelected($arrOption),
-					$arrOption['label'] ?? null
+					StringUtil::specialchars($arrOption['label'] ?? ''),
 				);
 			}
 			else
@@ -178,7 +178,7 @@ class SelectMenu extends Widget
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->isSelected($arrOptgroup),
-						$arrOptgroup['label'] ?? null
+						StringUtil::specialchars($arrOptgroup['label'] ?? ''),
 					);
 				}
 
