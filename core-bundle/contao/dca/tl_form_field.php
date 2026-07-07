@@ -492,7 +492,7 @@ class tl_form_field extends Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '</a>';
+		return ' <a href="' . StringUtil::ampersand($this->addToUrl('key=option')) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '</a>';
 	}
 
 	/**
