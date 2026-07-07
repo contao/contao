@@ -29,10 +29,10 @@
     "require": {
         "php": "^8.4",
         "contao/core-bundle": "self.version",
-        "symfony/filesystem": "^7.4",
+        "symfony/filesystem": "^8.0",
         "symfony/maker-bundle": "^1.1",
-        "symfony/options-resolver": "^7.4",
-        "symfony/yaml": "^7.4"
+        "symfony/options-resolver": "^8.0",
+        "symfony/yaml": "^8.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
