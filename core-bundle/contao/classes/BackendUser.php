@@ -47,7 +47,7 @@ class BackendUser extends User
 	/**
 	 * Name of the current cookie
 	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	protected $strCookie = 'BE_USER_AUTH';
 
@@ -146,12 +146,12 @@ class BackendUser extends User
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated Deprecated since Contao 5.2, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.2, to be removed in Contao 7;
 	 *             use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.
 	 */
 	public function hasAccess($field, $array)
 	{
-		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
 
 		if ($this->isAdmin)
 		{

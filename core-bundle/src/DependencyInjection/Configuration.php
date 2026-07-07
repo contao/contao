@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 6. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 7. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 

@@ -73,7 +73,7 @@ class Document
     public function __unserialize(array $data): void
     {
         // Backwards compatibility: For documents serialized before introducing
-        // compression (to be removed in Contao 6)
+        // compression (to be removed in Contao 7)
         if (!isset($data['compressed'])) {
             $this->uri = $data['uri'];
             $this->statusCode = $data['statusCode'];

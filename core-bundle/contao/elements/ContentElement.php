@@ -104,7 +104,7 @@ use Contao\Model\Collection;
  * @property integer $origId
  * @property string  $hl
  *
- * @deprecated extending from ContentElement is deprecated since Contao 6 and will
+ * @deprecated extending from ContentElement is deprecated since Contao 7 and will
  *             no longer work in Contao 7; use a fragment controller instead
  */
 abstract class ContentElement extends Frontend

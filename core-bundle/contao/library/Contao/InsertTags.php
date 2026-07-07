@@ -184,7 +184,7 @@ class InsertTags extends Controller
 			{
 				if (($elements[1] ?? null) == 'referer' || str_starts_with($elements[0], 'cache_'))
 				{
-					trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments are deprecated and will no longer work in Contao 6. Use {{fragment::*}} instead.');
+					trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments are deprecated and will no longer work in Contao 7. Use {{fragment::*}} instead.');
 
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
 
@@ -211,7 +211,7 @@ class InsertTags extends Controller
 
 			if (strtolower($elements[0]) !== $elements[0])
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 6. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 7. Use "%s" instead.', $elements[0], strtolower($elements[0]));
 			}
 
 			// Replace the tag
@@ -223,7 +223,7 @@ class InsertTags extends Controller
 					{
 						if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 						{
-							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook is deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTag::class);
+							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook is deprecated and will no longer work in Contao 7. Use the "%s" attribute instead.', AsInsertTag::class);
 
 							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
@@ -258,7 +258,7 @@ class InsertTags extends Controller
 					switch ($flag)
 					{
 						case 'flatten':
-							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" is deprecated and will no longer work in Contao 6. Use a proper insert tag instead.');
+							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" is deprecated and will no longer work in Contao 7. Use a proper insert tag instead.');
 
 							if (\is_array($arrCache[$strTag]))
 							{
@@ -283,7 +283,7 @@ class InsertTags extends Controller
 							// HOOK: pass unknown flags to callback functions
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
-								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 7. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{

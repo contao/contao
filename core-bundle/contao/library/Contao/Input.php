@@ -181,7 +181,7 @@ class Input
 			return array_map(\strval(...), array_values($keys));
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class is deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class is deprecated and will no longer work in Contao 7. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return array_map(\strval(...), array_keys($_GET ?? array()));
 	}
@@ -227,7 +227,7 @@ class Input
 			return $request->isMethod('POST');
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class is deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class is deprecated and will no longer work in Contao 7. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return !empty($_POST);
 	}
@@ -248,7 +248,7 @@ class Input
 
 		if (!$blnDecodeEntities)
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with $blnDecodeEntities set to false is deprecated and will no longer work in Contao 6.', __METHOD__);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with $blnDecodeEntities set to false is deprecated and will no longer work in Contao 7.', __METHOD__);
 		}
 
 		$varValue = static::findPost($strKey);
@@ -376,7 +376,7 @@ class Input
 
 		if (\func_num_args() > 2 && func_get_arg(2))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with the third parameter "$blnAddUnused" is deprecated and will no longer work in Contao 6.', __METHOD__);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with the third parameter "$blnAddUnused" is deprecated and will no longer work in Contao 7.', __METHOD__);
 			self::$arrUnusedRouteParameters[$strKey] = true;
 		}
 
@@ -422,11 +422,11 @@ class Input
 	 * @param string $strKey   The variable name
 	 * @param mixed  $varValue The variable value
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function setCookie($strKey, $varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		$strKey = static::cleanKeyInternal($strKey);
 
@@ -450,11 +450,11 @@ class Input
 	/**
 	 * Reset the internal cache
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function resetCache()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 	}
 
 	/**
@@ -462,11 +462,11 @@ class Input
 	 *
 	 * @return boolean True if there are unused GET parameters
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function hasUnusedGet()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		return \count(static::getUnusedRouteParameters()) > 0;
 	}
@@ -476,11 +476,11 @@ class Input
 	 *
 	 * @return array The unused GET parameter array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function getUnusedGet()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		return static::getUnusedRouteParameters();
 	}
@@ -491,11 +491,11 @@ class Input
 	 * @param string $strKey   The array key
 	 * @param mixed  $varValue The array value
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function setUnusedGet($strKey, $varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		self::$arrUnusedRouteParameters[$strKey] = true;
 	}
@@ -503,11 +503,11 @@ class Input
 	/**
 	 * Reset the unused GET parameters
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function resetUnusedGet()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		static::setUnusedRouteParameters(array());
 	}
@@ -547,11 +547,11 @@ class Input
 	 *
 	 * @return mixed The clean name or array of names
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function cleanKey($varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		return static::cleanKeyInternal($varValue);
 	}
@@ -589,7 +589,7 @@ class Input
 
 		if ((\is_array($varValue) ? $varValue : (string) $varValue) !== $encoded)
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Relying on input keys being encoded in "%s::cleanKey()" is deprecated and will no longer work in Contao 6.', __CLASS__);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Relying on input keys being encoded in "%s::cleanKey()" is deprecated and will no longer work in Contao 7.', __CLASS__);
 		}
 
 		return $encoded;
@@ -876,11 +876,11 @@ class Input
 	 *
 	 * @return mixed The cleaned string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		if (!$varValue)
 		{
@@ -995,11 +995,11 @@ class Input
 	 *
 	 * @return mixed The decoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function decodeEntities($varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		if (!$varValue)
 		{
@@ -1031,11 +1031,11 @@ class Input
 	 *
 	 * @return mixed The string or array with the converted entities
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		if (!$varValue)
 		{
@@ -1070,11 +1070,11 @@ class Input
 	 *
 	 * @return mixed The encoded string or array
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public static function encodeSpecialChars($varValue)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		if (!$varValue)
 		{
@@ -1169,7 +1169,7 @@ class Input
 			return $request->query->all()[$strKey] ?? null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class is deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class is deprecated and will no longer work in Contao 7. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return $_GET[$strKey] ?? null;
 	}
@@ -1201,7 +1201,7 @@ class Input
 			return $request->request->all()[$strKey] ?? null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class is deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class is deprecated and will no longer work in Contao 7. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return $_POST[$strKey] ?? null;
 	}
@@ -1233,7 +1233,7 @@ class Input
 			return $request->cookies->all()[$strKey] ?? null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_COOKIE with the "%s" class is deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_COOKIE with the "%s" class is deprecated and will no longer work in Contao 7. Make sure the request_stack has a request instead.', __CLASS__);
 
 		return $_COOKIE[$strKey] ?? null;
 	}

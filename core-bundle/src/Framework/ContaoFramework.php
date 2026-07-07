@@ -200,7 +200,7 @@ class ContaoFramework implements ResetInterface
             $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
+        // Deprecated since Contao 4.0, to be removed in Contao 7.0
         $GLOBALS['TL_LANGUAGE'] = $language;
     }
 

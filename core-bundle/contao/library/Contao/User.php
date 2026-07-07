@@ -120,7 +120,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Authentication hash
 	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	protected $strHash;
 
@@ -133,7 +133,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Cookie name
 	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	protected $strCookie;
 
@@ -302,11 +302,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 *
 	 * @return boolean True if the user is a member of the group
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public function isMemberOf($ids)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
 
 		// Filter non-numeric values
 		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
