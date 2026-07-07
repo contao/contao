@@ -111,7 +111,7 @@ callbacks:
             dataContainer: Contao\DataContainer
 
     list.label.label:
-        return_type: array
+        return_type: Contao\CoreBundle\DataContainer\RecordLabel
         arguments:
             recordData: array
             currentLabel: string

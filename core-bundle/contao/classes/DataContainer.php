@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -1316,7 +1317,7 @@ abstract class DataContainer extends Backend
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
 			$this->strField = $k;
-			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
+			$args[$k] = StringUtil::specialchars($valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this));
 		}
 
 		// Render the label
@@ -1333,6 +1334,7 @@ abstract class DataContainer extends Backend
 		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
+		$showColumns = ($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED));
 
 		// Execute label_callback
 		if (\is_array($labelConfig['label_callback'] ?? null) || \is_callable($labelConfig['label_callback'] ?? null))
@@ -1359,18 +1361,43 @@ abstract class DataContainer extends Backend
 					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
+
+			$label = RecordLabel::fromCallback($label, $showColumns);
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('plain.svg') . ' ' . $label;
+			$label = RecordLabel::fromHtml(Image::getHtml('plain.svg') . ' ' . $label);
 		}
-
-		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+		else
 		{
-			return \is_array($label) ? $label : $args;
+			$label = RecordLabel::fromHtml($label);
 		}
 
-		return $label;
+		if ($showColumns)
+		{
+			if ($label->htmlColumns)
+			{
+				return $label->htmlColumns;
+			}
+
+			if ($label->columns)
+			{
+				return array_map(static fn ($column) => StringUtil::specialchars($column), $label->columns);
+			}
+
+			return $args;
+		}
+
+		if ($label->htmlPreview || $label->state)
+		{
+			return array(
+				$label->htmlLabel ?? StringUtil::specialchars($label->label),
+				$label->htmlPreview,
+				$label->state
+			);
+		}
+
+		return $label->htmlLabel ?? StringUtil::specialchars($label->label);
 	}
 
 	protected function markAsCopy(string $label, string $value): string

@@ -86,7 +86,7 @@ class Form extends Hybrid
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['form'][0] . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}

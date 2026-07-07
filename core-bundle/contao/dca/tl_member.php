@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\Database;
 use Contao\DataContainer;
@@ -352,7 +353,7 @@ class tl_member extends Backend
 	 * @param DataContainer $dc
 	 * @param array         $args
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
@@ -378,7 +379,7 @@ class tl_member extends Backend
 			Image::getUrl($icon . '--disabled')
 		);
 
-		return $args;
+		return RecordLabel::fromHtml($args);
 	}
 
 	/**

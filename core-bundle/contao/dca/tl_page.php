@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
@@ -971,11 +972,11 @@ class tl_page extends Backend
 	 * @param boolean       $blnProtected
 	 * @param boolean       $isVisibleRootTrailPage
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
-		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage);
+		return RecordLabel::fromHtml(Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage));
 	}
 
 	/**
