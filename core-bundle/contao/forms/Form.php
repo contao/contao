@@ -520,14 +520,16 @@ class Form extends Hybrid
 				$form = $dom->createElement('form');
 				$dom->appendChild($form);
 
-				foreach ($fields as $field) {
+				foreach ($fields as $field)
+				{
 					$fieldElement = $dom->createElement('field');
 
 					$nameElement = $dom->createElement('name');
 					$nameElement->textContent = $field['name'];
 					$fieldElement->appendChild($nameElement);
 
-					foreach ($field['values'] as $value) {
+					foreach ($field['values'] as $value)
+					{
 						$valueElement = $dom->createElement('value');
 						$valueElement->textContent = $value;
 						$fieldElement->appendChild($valueElement);
