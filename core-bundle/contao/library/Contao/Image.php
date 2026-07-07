@@ -163,27 +163,18 @@ class Image
 		if (isset($attributesObject['width']))
 		{
 			$defaultSize['width'] = $attributesObject['width'];
-
-			// Unset the width attribute, otherwise it would be added twice
-			// (once in {width} and once in {attributes})
 			unset($attributesObject['width']);
 		}
 
 		if (isset($attributesObject['height']))
 		{
 			$defaultSize['height'] = $attributesObject['height'];
-
-			// Unset the height attribute, otherwise it would be added twice
-			// (once in {height} and once in {attributes})
 			unset($attributesObject['height']);
 		}
 
 		if (isset($attributesObject['alt']))
 		{
 			$alt = $attributesObject['alt'];
-
-			// Unset the alt attribute, otherwise it would be added twice
-			// (once in {alt} and once in {attributes})
 			unset($attributesObject['alt']);
 		}
 
@@ -246,7 +237,7 @@ class Image
 		{
 			$darkVariant = substr($src, 0, -4) . '--dark.svg';
 
-			$sources = (null !== ($darkIcon = ($icons[$darkVariant] ?? null))) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
+			$sources = null !== ($darkIcon = ($icons[$darkVariant] ?? null)) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
 
 			return self::$htmlTemplateCache[$cacheKey] = array(
 				$getImageMarkup($sources),
