@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\ApiPlatform\State;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 /**
- * @implements ProviderInterface<DataContainerRecord>
+ * @implements ProviderInterface<array|object|null>
  */
 final class DataContainerStateProvider implements ProviderInterface
 {
@@ -30,18 +30,18 @@ final class DataContainerStateProvider implements ProviderInterface
             return null;
         }
 
-        if ($operation instanceof GetCollection) {
+        if ($operation instanceof CollectionOperationInterface) {
             // TODO: load the records from $table and hydrate DataContainerRecord objects.
             return [];
         }
 
-        if ($operation instanceof Get) {
+        if ($operation instanceof Get || 'GET' === $operation->getMethod()) {
             // TODO: load a single record from $table using $uriVariables['id'].
             // TODO: hydrate and return a DataContainerRecord.
             return new DataContainerRecord($table, [], $uriVariables['id'] ?? null);
         }
 
-        return null;
+        return $context['mcp_data'] ?? null;
     }
 
     private function getTable(Operation $operation): string|null
