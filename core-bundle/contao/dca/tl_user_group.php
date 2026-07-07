@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -282,7 +283,7 @@ class tl_user_group extends Backend
 	 * @param array  $row
 	 * @param string $label
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label)
 	{
@@ -295,13 +296,13 @@ class tl_user_group extends Backend
 			$image .= '--disabled';
 		}
 
-		return sprintf(
+		return RecordLabel::fromHtml(sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
 			Image::getUrl($image),
 			Image::getUrl($icon),
 			Image::getUrl($icon . '--disabled'),
 			$label
-		);
+		));
 	}
 
 	/**

@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -248,15 +249,13 @@ class tl_newsletter extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
 	public function listNewsletters($arrRow)
 	{
-		return array(
-			'<strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']),
-			(!$arrRow['sendText'] ? StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>',
-			($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished',
-		);
+		return RecordLabel::fromHtml('<strong>' . StringUtil::specialchars($arrRow['subject']) . '</strong> - ' . StringUtil::specialchars(($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']))
+			->setHtmlPreview((!$arrRow['sendText'] ? StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . StringUtil::specialchars($arrRow['text']) . '</pre>')
+			->setState(($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished');
 	}
 
 	/**

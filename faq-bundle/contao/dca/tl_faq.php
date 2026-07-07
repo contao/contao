@@ -12,10 +12,12 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FaqCategoryModel;
+use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
@@ -355,12 +357,13 @@ class tl_faq extends Backend
 	 * @param array  $arrRow
 	 * @param string $label
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
-	public function listQuestions($arrRow, $label): array
+	public function listQuestions($arrRow): RecordLabel
 	{
-		$key = $arrRow['published'] ? 'published' : 'unpublished';
-
-		return array($arrRow['question'], $label, $key);
+		return (new RecordLabel($arrRow['question']))
+			->setHtmlPreview('<h2>' . StringUtil::specialchars($arrRow['question']) . '</h2>' . $arrRow['answer'])
+			->setState($arrRow['published'] ? 'published' : 'unpublished')
+		;
 	}
 }

@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -192,7 +193,7 @@ class tl_theme extends Backend
 	 * @param array  $row
 	 * @param string $label
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function addPreviewImage($row, $label)
 	{
@@ -207,7 +208,7 @@ class tl_theme extends Backend
 			}
 		}
 
-		return $label;
+		return RecordLabel::fromHtml($label);
 	}
 
 	/**
