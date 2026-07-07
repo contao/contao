@@ -46,6 +46,7 @@ final class RecordLabel implements \Stringable
 
         if (!$asColumns) {
             $label = new self(((array) $callbackReturnValue)[0]);
+
             if (\is_array($callbackReturnValue)) {
                 $label->htmlPreview = $callbackReturnValue[1] ?? null;
                 $label->state = $callbackReturnValue[2] ?? null;
@@ -53,6 +54,7 @@ final class RecordLabel implements \Stringable
         } else {
             $callbackReturnValue = StringUtil::decodeEntities($callbackReturnValue);
             $label = new self(implode(', ', (array) $callbackReturnValue));
+
             if (\is_array($callbackReturnValue)) {
                 $label->columns = $callbackReturnValue;
             }
