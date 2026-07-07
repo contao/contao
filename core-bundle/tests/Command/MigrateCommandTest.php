@@ -15,295 +15,183 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\MigrateCommand;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
-use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Migration\CommandCompiler;
+use Contao\CoreBundle\Migration\DatabaseMigrationHashMismatchException;
+use Contao\CoreBundle\Migration\DatabaseMigrationResult;
+use Contao\CoreBundle\Migration\DatabaseMigrationRunner;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\MigrationConfiguration;
+use Contao\CoreBundle\Migration\MigrationExecutionMode;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\CoreBundle\Migration\SchemaUpdateMode;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
+use Contao\CoreBundle\Migration\WarningMode;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver;
-use Doctrine\DBAL\Driver\AbstractMySQLDriver;
-use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
-use Symfony\Component\Console\Terminal;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class MigrateCommandTest extends TestCase
 {
-    protected function tearDown(): void
+    public function testMapsInteractiveTxtStateToAskModes(): void
     {
-        $this->resetStaticProperties([Terminal::class]);
+        $captured = null;
+        $command = $this->createStubCommand(
+            static function (MigrationConfiguration $configuration) use (&$captured): DatabaseMigrationResult {
+                $captured = $configuration;
 
-        parent::tearDown();
-    }
-
-    public function testAbortsEarlyIfThereAreNoMigrations(): void
-    {
-        $backupManager = $this->createBackupManager(false);
-
-        $command = $this->getCommand([], [], null, $backupManager);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
-        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-    }
-
-    public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
-    {
-        $backupManager = $this->createBackupManager(false);
-
-        $commandCompiler = $this->createMock(CommandCompiler::class);
-        $commandCompiler
-            ->expects($this->atLeastOnce())
-            ->method('compileCommands')
-            ->willReturnCallback(
-                static fn (bool $skipDropStatements = false): array => $skipDropStatements ? [] : ['DROP QUERY'],
-            )
-        ;
-
-        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([], ['interactive' => false]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
-        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-    }
-
-    public function testExecutesBackupIfPendingSchemaDiff(): void
-    {
-        $backupManager = $this->createBackupManager(true);
-
-        $commandCompiler = $this->createMock(CommandCompiler::class);
-        $commandCompiler
-            ->expects($this->atLeastOnce())
-            ->method('compileCommands')
-            ->willReturn(['QUERY'])
-        ;
-
-        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([], ['interactive' => false]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertMatchesRegularExpression('/Creating a database dump/', $display);
-        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-    }
-
-    public function testAbortsEarlyIfTheBackupFails(): void
-    {
-        $backupManager = $this->createBackupManager(true);
-        $backupManager
-            ->expects($this->once())
-            ->method('create')
-            ->willThrowException(new BackupManagerException('Something went terribly wrong.'))
-        ;
-
-        $command = $this->getCommand(
-            [['Migration 1', 'Migration 2']],
-            [],
-            null,
-            $backupManager,
+                return DatabaseMigrationResult::success();
+            },
         );
 
         $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(1, $code);
-        $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
-    }
-
-    #[DataProvider('getOutputFormats')]
-    public function testExecutesWithoutPendingMigrations(string $format): void
-    {
-        $command = $this->getCommand();
-        $tester = new CommandTester($command);
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
+        $code = $tester->execute([], ['interactive' => true]);
 
         $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-                $this->jsonArrayFromNdjson($display),
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-        }
+        $this->assertInstanceOf(MigrationConfiguration::class, $captured);
+        $this->assertSame(WarningMode::Ask, $captured->getWarningMode());
+        $this->assertSame(MigrationExecutionMode::Ask, $captured->getMigrationExecutionMode());
+        $this->assertSame(SchemaUpdateMode::Ask, $captured->getSchemaUpdateMode());
+        $this->assertFalse($captured->shouldSkipDropStatementsForBackup());
+        $this->assertTrue($captured->shouldSkipDropStatementsForSchemaWarnings());
+        $this->assertTrue($captured->shouldCreateBackup());
     }
 
-    #[DataProvider('getOutputFormatsAndBackup')]
-    public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
+    public function testMapsNonInteractiveStateToDeterministicModes(): void
     {
-        $command = $this->getCommand(
-            [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            null,
-            $this->createBackupManager($backupsEnabled),
+        $captured = null;
+        $command = $this->createStubCommand(
+            static function (MigrationConfiguration $configuration) use (&$captured): DatabaseMigrationResult {
+                $captured = $configuration;
+
+                return DatabaseMigrationResult::success();
+            },
         );
 
         $tester = new CommandTester($command);
-        $tester->setInputs(['y']);
-
-        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
+        $code = $tester->execute(['--no-backup' => true, '--with-deletes' => true], ['interactive' => false]);
 
         $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $expected = [];
-
-            if ($backupsEnabled) {
-                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'name' => 'valid_backup_filename__20211101141254.sql'];
-            }
-
-            $expected = [
-                ...$expected,
-                ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
-                ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
-                ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-            ];
-
-            $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
-        } else {
-            if ($backupsEnabled) {
-                $this->assertStringContainsString('Creating a database dump', $display);
-            }
-
-            $this->assertStringContainsString('Migration 1', $display);
-            $this->assertStringContainsString('Migration 2', $display);
-            $this->assertStringContainsString('Result 1', $display);
-            $this->assertStringContainsString('Result 2', $display);
-            $this->assertStringContainsString('Executed 2 migrations', $display);
-            $this->assertStringContainsString('All migrations completed', $display);
-        }
+        $this->assertInstanceOf(MigrationConfiguration::class, $captured);
+        $this->assertSame(WarningMode::Continue, $captured->getWarningMode());
+        $this->assertSame(MigrationExecutionMode::Execute, $captured->getMigrationExecutionMode());
+        $this->assertSame(SchemaUpdateMode::WithDeletes, $captured->getSchemaUpdateMode());
+        $this->assertFalse($captured->shouldSkipDropStatementsForBackup());
+        $this->assertFalse($captured->shouldSkipDropStatementsForSchemaWarnings());
+        $this->assertFalse($captured->shouldCreateBackup());
     }
 
-    #[DataProvider('getOutputFormats')]
-    public function testExecutesSchemaDiff(string $format): void
+    #[DataProvider('provideInvalidOptionCombinations')]
+    public function testRejectsInvalidOptionCombinations(array $arguments, string $expectedMessage): void
     {
-        $returnedCommands = [
-            [
-                'First call QUERY 1',
-                'First call QUERY 2',
-            ],
-            [
-                'Second call QUERY 1',
-                'Second call QUERY 2',
-                'DROP QUERY',
-            ],
-            [],
-        ];
+        $command = $this->createStubCommand();
+        $tester = new CommandTester($command);
 
-        $returnedCommandsWithoutDrops = [
-            [
-                'First call QUERY 1',
-                'First call QUERY 2',
-            ],
-            [
-                'Second call QUERY 1',
-                'Second call QUERY 2',
-            ],
-            [],
-        ];
+        $this->expectException(InvalidOptionException::class);
+        $this->expectExceptionMessage($expectedMessage);
 
-        $commandCompiler = $this->createMock(CommandCompiler::class);
-        $commandCompiler
-            ->expects($this->atLeastOnce())
-            ->method('compileCommands')
-            ->willReturnCallback(
-                static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
-                    return $doNotDropColumns ? array_shift($returnedCommandsWithoutDrops) : array_shift($returnedCommands);
-                },
-            )
-        ;
+        $tester->execute($arguments, ['interactive' => false]);
+    }
 
-        $command = $this->getCommand([], [], $commandCompiler);
+    public function testRejectsNdjsonInInteractiveNonDryRunMode(): void
+    {
+        $command = $this->createStubCommand();
+        $tester = new CommandTester($command);
+
+        $this->expectException(InvalidOptionException::class);
+        $this->expectExceptionMessage('Use --no-interaction or --dry-run together with --format=ndjson');
+
+        $tester->execute(['--format' => 'ndjson'], ['interactive' => true]);
+    }
+
+    public function testMapsExitCodeFromRunnerResult(): void
+    {
+        $successCommand = $this->createStubCommand(static fn (): DatabaseMigrationResult => DatabaseMigrationResult::success());
+        $successTester = new CommandTester($successCommand);
+
+        $this->assertSame(0, $successTester->execute([], ['interactive' => false]));
+
+        $failureCommand = $this->createStubCommand(static fn (): DatabaseMigrationResult => DatabaseMigrationResult::failure());
+        $failureTester = new CommandTester($failureCommand);
+
+        $this->assertSame(1, $failureTester->execute([], ['interactive' => false]));
+    }
+
+    public function testPrintsFinalSuccessMessageOnlyForNormalTxtAndDryRunRuns(): void
+    {
+        $command = $this->createStubCommand(static fn (): DatabaseMigrationResult => DatabaseMigrationResult::success());
 
         $tester = new CommandTester($command);
-        $tester->setInputs(['yes', 'yes']);
+        $this->assertSame(0, $tester->execute([], ['interactive' => false]));
+        $this->assertStringContainsString('All migrations completed.', $tester->getDisplay());
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--dry-run' => true], ['interactive' => false]));
+        $this->assertStringContainsString('All migrations completed.', $tester->getDisplay());
 
-        $this->assertSame(0, $code);
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--migrations-only' => true], ['interactive' => false]));
+        $this->assertStringNotContainsString('All migrations completed.', $tester->getDisplay());
 
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f'],
-                    ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
-                    ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
-                    ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
-                    ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '151d946b476547549d3d45acf8e74d3e57094153179ccabe921bc4dcd7a057da'],
-                    ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
-                    ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
-                    ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
-                    ['type' => 'schema-result', 'command' => 'Second call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-                $this->jsonArrayFromNdjson($display),
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
-            $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
-            $this->assertMatchesRegularExpression('/Second call QUERY 1/', $display);
-            $this->assertMatchesRegularExpression('/Second call QUERY 2/', $display);
-            $this->assertMatchesRegularExpression('/Executed 2 SQL queries/', $display);
-            $this->assertDoesNotMatchRegularExpression('/Executed 3 SQL queries/', $display);
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-        }
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--schema-only' => true], ['interactive' => false]));
+        $this->assertStringNotContainsString('All migrations completed.', $tester->getDisplay());
+
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--format' => 'ndjson'], ['interactive' => false]));
+        $this->assertStringNotContainsString('All migrations completed.', $tester->getDisplay());
     }
 
-    #[DataProvider('getOutputFormats')]
-    public function testDoesNotExecuteWithDryRun(string $format): void
+    public function testConvertsHashMismatchToInvalidOptionException(): void
     {
-        $commandCompiler = $this->createMock(CommandCompiler::class);
-        $commandCompiler
-            ->expects($this->once())
-            ->method('compileCommands')
-            ->willReturn(
-                [
-                    'First call QUERY 1',
-                    'First call QUERY 2',
-                ],
-            )
-        ;
+        $command = $this->createStubCommand(
+            static fn (): DatabaseMigrationResult => throw new DatabaseMigrationHashMismatchException('Specified hash "x" does not match the actual hash "y"'),
+        );
+        $tester = new CommandTester($command);
 
+        $this->expectException(InvalidOptionException::class);
+        $this->expectExceptionMessage('Specified hash "x" does not match the actual hash "y"');
+
+        $tester->execute(['--hash' => 'x'], ['interactive' => false]);
+    }
+
+    public function testInteractiveTxtWarningPromptAnswerNoAbortsBeforeSchemaExecution(): void
+    {
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchOne')
-            ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
-                    'SELECT @@sql_mode' => 'TRADITIONAL',
-                    'SELECT @@version' => '8.0.0',
-                    default => false,
-                },
-            )
+            ->willReturnCallback(static fn (string $query): int|string|false => match ($query) {
+                'SELECT @@sql_mode' => 'TRADITIONAL',
+                'SELECT @@version' => '8.0.0',
+                'SELECT @@innodb_strict_mode' => 1,
+                default => false,
+            })
+        ;
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(false)
+        ;
+
+        $connection
+            ->method('fetchAllAssociative')
+            ->willReturn([])
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn([])
+        ;
+
+        $connection
+            ->method('getServerVersion')
+            ->willReturn('8.0.0')
         ;
 
         $connection
@@ -312,155 +200,101 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySQLPlatform())
+        ;
+
+        $connection
             ->expects($this->never())
             ->method('executeQuery')
         ;
 
-        $command = $this->getCommand(
-            [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            $commandCompiler,
-            null,
-            $connection,
+        $command = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler(
+                    ['ALTER TABLE tl_test ADD foo INT NULL'],
+                    ['ALTER TABLE tl_test ADD foo INT NULL'],
+                    $this->createSchemaWithBigTable(),
+                ),
+                $connection,
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
         );
 
         $tester = new CommandTester($command);
+        $tester->setInputs(['no']);
 
-        // No --no-backup here because --dry-run should automatically disable backups
-        $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    [
-                        'type' => 'migration-pending',
-                        'names' => ['Migration 1', 'Migration 2'],
-                        'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd',
-                    ],
-                    [
-                        'type' => 'schema-pending',
-                        'commands' => ['First call QUERY 1', 'First call QUERY 2'],
-                        'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f',
-                    ],
-                ],
-                $this->jsonArrayFromNdjson($display),
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/Migration 1/', $display);
-            $this->assertMatchesRegularExpression('/Migration 2/', $display);
-            $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
-            $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
-
-            $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
-            $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
-            $this->assertDoesNotMatchRegularExpression('/Executed 2 SQL queries/', $display);
-
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-        }
-    }
-
-    public function testAbortsIfAnswerIsNo(): void
-    {
-        $command = $this->getCommand(
-            [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-        );
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(['n']);
-
-        $code = $tester->execute(['--no-backup' => true]);
+        $code = $tester->execute(['--no-backup' => true], ['interactive' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
-        $this->assertMatchesRegularExpression('/Migration 1/', $display);
-        $this->assertMatchesRegularExpression('/Migration 2/', $display);
-        $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
-        $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
-        $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
+        $this->assertStringContainsString('Continue regardless of the warnings?', $display);
+        $this->assertStringContainsString('The row size of table tl_test is too large', $display);
+        $this->assertStringNotContainsString('Execute database migrations', $display);
     }
 
-    #[DataProvider('getOutputFormats')]
-    public function testDoesNotAbortIfMigrationFails(string $format): void
+    public function testNonInteractiveNdjsonWarningsEmitWarningEventsButNoSummary(): void
     {
-        $command = $this->getCommand(
-            [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]],
+        $command = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler(
+                    ['ALTER TABLE tl_test ADD foo INT NULL'],
+                    ['ALTER TABLE tl_test ADD foo INT NULL'],
+                    $this->createSchemaWithBigTable(),
+                ),
+                $this->createConnection(),
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
         );
 
         $tester = new CommandTester($command);
-        $tester->setInputs(['y']);
-
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
+        $code = $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
 
         $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
-                    ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => false],
-                    ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-                $this->jsonArrayFromNdjson($display),
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/Migration 1/', $display);
-            $this->assertMatchesRegularExpression('/Migration 2/', $display);
-            $this->assertMatchesRegularExpression('/Result 1/', $display);
-            $this->assertMatchesRegularExpression('/Migration failed/', $display);
-            $this->assertMatchesRegularExpression('/Result 2/', $display);
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-        }
+        $events = $this->jsonArrayFromNdjson($tester->getDisplay());
+        $this->assertSame(1, array_reduce($events, static fn (int $count, array $event): int => $count + ('warning' === $event['type'] ? 1 : 0), 0));
+        $this->assertNotContains('warning-summary', array_column($events, 'type'));
     }
 
-    #[DataProvider('getOutputFormats')]
-    public function testAbortsOnFatalError(string $format): void
+    public function testNdjsonSuccessfulSchemaDiffPreservesOldEventSequence(): void
     {
-        $commandCompiler = $this->createMock(CommandCompiler::class);
-        $commandCompiler
-            ->expects($this->atLeastOnce())
-            ->method('compileCommands')
-            ->willThrowException(new \Exception('Fatal'))
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('getParams')
+            ->willReturn([])
         ;
 
-        $command = $this->getCommand([], [], $commandCompiler);
-        $tester = new CommandTester($command);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(static fn (string $query): int|string|false => match ($query) {
+                'SELECT @@sql_mode' => 'TRADITIONAL',
+                'SELECT @@version' => '8.0.0',
+                'SELECT @@innodb_strict_mode' => 1,
+                default => false,
+            })
+        ;
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(false)
+        ;
 
-        if ('ndjson' !== $format) {
-            $this->expectException(\Exception::class);
-        }
+        $connection
+            ->method('fetchAllAssociative')
+            ->willReturn([])
+        ;
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(1, $code);
-
-        $json = $this->jsonArrayFromNdjson($display)[1];
-
-        $this->assertSame('error', $json['type']);
-        $this->assertSame('Fatal', $json['message']);
-    }
-
-    #[DataProvider('getOutputFormats')]
-    public function testAbortsOnWrongServerVersion(string $format): void
-    {
-        $connection = $this->createDefaultConnection();
         $connection
             ->method('getServerVersion')
-            ->willReturn('8.0.29')
+            ->willReturn('8.0.0')
         ;
 
         $connection
             ->method('getDriver')
-            ->willReturn($this->createStub(Driver::class))
+            ->willReturn(new PdoDriver())
         ;
 
         $connection
@@ -469,364 +303,354 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection
-            ->method('getParams')
-            ->willReturn(['serverVersion' => '5.7.39'])
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->with('ALTER TABLE tl_test ADD foo INT NULL')
+            ->willReturn($this->createStub(Result::class))
         ;
 
-        $command = $this->getCommand([], [], null, null, $connection);
-        $tester = new CommandTester($command);
-        $errorMessage = 'Wrong database version configured! You have version 8.0.29 but the database connection is configured to 5.7.39.';
-
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame(1, $code);
-
-        if ('ndjson' === $format) {
-            $json = $this->jsonArrayFromNdjson($display)[0];
-
-            $this->assertSame('problem', $json['type']);
-            $this->assertSame($errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $json['message'])));
-        } else {
-            $this->assertSame('[ERROR] '.$errorMessage, trim(preg_replace('/\s*\n\s*/', ' ', $display)));
-        }
-    }
-
-    #[DataProvider('provideInvalidSqlModes')]
-    public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
-    {
-        $connection = $this->createDefaultConnection($sqlMode, $driver);
-        $command = $this->getCommand(connection: $connection);
-
-        $tester = new CommandTester($command);
-        $tester->execute(['--no-backup' => true]);
-
-        $display = $tester->getDisplay();
-
-        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $display);
-        $this->assertStringContainsString(\sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
-    }
-
-    #[DataProvider('provideBadConfigurations')]
-    public function testOutputsConfigurationErrors(array $configuration, array|string $expectedMessages): void
-    {
-        $connection = $this->createStub(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->willReturnMap([['SELECT @@version', $configuration['version'] ?? '10.10.0-MariaDB-foo-bar']])
-        ;
-
-        $connection
-            ->method('getParams')
-            ->willReturn(['defaultTableOptions' => $configuration['defaultTableOptions'] ?? []])
-        ;
-
-        $connection
-            ->method('fetchAssociative')
-            ->willReturnCallback(
-                static fn (string $query): array|false => match ($query) {
-                    \sprintf("SHOW COLLATION LIKE '%s'", $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
-                    "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $configuration['innodb_large_prefix'] ?? false,
-                    "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $configuration['innodb_file_per_table'] ?? false,
-                    "SHOW VARIABLES LIKE 'innodb_file_format'" => $configuration['innodb_file_format'] ?? false,
-                    default => false,
-                },
-            )
-        ;
-
-        $connection
-            ->method('fetchAllAssociative')
-            ->willReturnMap([['SHOW ENGINES', $configuration['engines'] ?? []]])
-        ;
-
-        $command = $this->getCommand(connection: $connection);
-
-        $tester = new CommandTester($command);
-        $tester->execute(['--no-backup' => true]);
-
-        $display = $tester->getDisplay();
-
-        foreach ((array) $expectedMessages as $expectedMessage) {
-            $this->assertStringContainsString($expectedMessage, $display);
-        }
-    }
-
-    public static function provideBadConfigurations(): iterable
-    {
-        yield 'database version too old' => [
-            [
-                'version' => '5.0.10',
-            ],
-            'Your database version is not supported!',
-        ];
-
-        yield 'unsupported collation' => [
-            [
-                'defaultTableOptions' => [
-                    'collate' => 'foo',
-                ],
-            ],
-            'The configured collation is not supported!',
-        ];
-
-        yield 'unsupported engine' => [
-            [
-                'defaultTableOptions' => [
-                    'engine' => 'MyISAM',
-                ],
-                'engines' => [
-                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
-                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
-                ],
-            ],
-            'The configured database engine is not supported!',
-        ];
-
-        yield 'invalid combination of engine and collation' => [
-            [
-                'defaultTableOptions' => [
-                    'collate' => 'utf8mb4_general_ci',
-                    'engine' => 'MyISAM',
-                ],
-                'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
-                ],
-                'engines' => [
-                    ['Engine' => 'MyISAM', 'Comment' => 'Non-transactional engine with good performance and small data footprint'],
-                ],
-            ],
-            'Invalid combination of database engine and collation!',
-        ];
-
-        yield 'not using innodb_large_prefix' => [
-            [
-                'version' => '5.7.0',
-                'defaultTableOptions' => [
-                    'collate' => 'utf8mb4_general_ci',
-                    'engine' => 'InnoDB',
-                ],
-                'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
-                ],
-                'engines' => [
-                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
-                ],
-                'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'OFF',
-                ],
-            ],
-            'The "innodb_large_prefix" option is not enabled!',
-        ];
-
-        yield 'bad file format setting' => [
-            [
-                'version' => '5.7.0',
-                'defaultTableOptions' => [
-                    'collate' => 'utf8mb4_general_ci',
-                    'engine' => 'InnoDB',
-                ],
-                'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
-                ],
-                'engines' => [
-                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
-                ],
-                'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
-                ],
-                'innodb_file_format' => [
-                    'Variable_name' => 'innodb_file_format', 'Value' => 'snapper',
-                ],
-            ],
-            'InnoDB is not configured properly!',
-        ];
-
-        yield 'bad file per table setting' => [
-            [
-                'version' => '5.7.0',
-                'defaultTableOptions' => [
-                    'collate' => 'utf8mb4_general_ci',
-                    'engine' => 'InnoDB',
-                ],
-                'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
-                ],
-                'engines' => [
-                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
-                ],
-                'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
-                ],
-                'innodb_file_format' => [
-                    'Variable_name' => 'innodb_file_format', 'Value' => 'barracuda',
-                ],
-                'innodb_file_per_table' => [
-                    'Variable_name' => 'innodb_file_per_table', 'Value' => '2',
-                ],
-            ],
-            'InnoDB is not configured properly!',
-        ];
-
-        yield 'multiple' => [
-            [
-                'defaultTableOptions' => [
-                    'collate' => 'foo',
-                    'engine' => 'MyISAM',
-                ],
-                'engines' => [
-                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
-                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
-                ],
-            ],
-            [
-                'The configured collation is not supported!',
-                'The configured database engine is not supported!',
-            ],
-        ];
-    }
-
-    #[DataProvider('provideInvalidSqlModes')]
-    public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
-    {
-        $connection = $this->createDefaultConnection($sqlMode, $driver);
-        $command = $this->getCommand(connection: $connection);
-
-        $tester = new CommandTester($command);
-        $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
-
-        $display = $tester->getDisplay();
-        $json = $this->jsonArrayFromNdjson($display)[1];
-
-        $this->assertSame('warning', $json['type']);
-
-        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $json['message']);
-        $this->assertStringContainsString(\sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
-    }
-
-    public static function getOutputFormats(): iterable
-    {
-        yield ['txt'];
-        yield ['ndjson'];
-    }
-
-    public static function getOutputFormatsAndBackup(): iterable
-    {
-        yield 'txt and backups enabled' => ['txt', true];
-        yield 'txt and backups disabled' => ['txt', false];
-        yield 'ndjson and backups enabled' => ['ndjson', true];
-        yield 'ndjson and backups disabled' => ['ndjson', false];
-    }
-
-    public static function provideInvalidSqlModes(): iterable
-    {
-        yield 'empty sql_mode, pdo driver' => [
-            '', new PdoDriver(), 1002,
-        ];
-
-        yield 'empty sql_mode, mysqli driver' => [
-            '', new MysqliDriver(), 3,
-        ];
-
-        yield 'unrelated values, pdo driver' => [
-            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', new PdoDriver(), 1002,
-        ];
-
-        yield 'unrelated values, mysqli driver' => [
-            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', new MysqliDriver(), 3,
-        ];
-    }
-
-    /**
-     * @param array<array<string>>              $pendingMigrations
-     * @param array<array<MigrationResult>>     $migrationResults
-     * @param (CommandCompiler&MockObject)|null $commandCompiler
-     */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
-    {
-        $migrations = $this->createStub(MigrationCollection::class);
-        $migrations
-            ->method('hasPending')
-            ->willReturn((bool) \count($pendingMigrations))
-        ;
-
-        // Add empty pending migrations after mocking the hasPending() method!
-        $pendingMigrations[] = [];
-        $pendingMigrations[] = [];
-        $pendingMigrations[] = [];
-
-        $migrations
-            ->method('getPending')
-            ->willReturn(...$pendingMigrations)
-        ;
-
-        $migrations
-            ->method('getPendingNames')
-            ->willReturn(...$pendingMigrations)
-        ;
-
-        $migrationResults[] = [];
-
-        $migrations
-            ->method('run')
-            ->willReturn(...$migrationResults)
-        ;
-
-        $commandCompiler ??= $this->createStub(CommandCompiler::class);
-        $commandCompiler
-            ->method('compileTargetSchema')
-            ->willReturn(new Schema())
-        ;
-
-        return new MigrateCommand(
-            $commandCompiler,
-            $connection ?? $this->createDefaultConnection(),
-            $migrations,
-            $backupManager ?? $this->createBackupManager(false),
-            $this->createStub(MysqlInnodbRowSizeCalculator::class),
+        $command = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler(['ALTER TABLE tl_test ADD foo INT NULL'], ['ALTER TABLE tl_test ADD foo INT NULL']),
+                $connection,
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
         );
+
+        $tester = new CommandTester($command);
+        $code = $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
+
+        $this->assertSame(0, $code);
+        $events = $this->jsonArrayFromNdjson($tester->getDisplay());
+        $this->assertSame(['migration-pending', 'schema-pending', 'schema-execute', 'schema-result', 'schema-pending', 'migration-pending'], array_column($events, 'type'));
+        $this->assertSame([], $events[0]['names']);
+        $this->assertArrayHasKey('hash', $events[0]);
+        $this->assertSame(['ALTER TABLE tl_test ADD foo INT NULL'], $events[1]['commands']);
+        $this->assertArrayHasKey('hash', $events[1]);
+        $this->assertSame('ALTER TABLE tl_test ADD foo INT NULL', $events[2]['command']);
+        $this->assertSame('ALTER TABLE tl_test ADD foo INT NULL', $events[3]['command']);
+        $this->assertTrue($events[3]['isSuccessful']);
+        $this->assertSame(['ALTER TABLE tl_test ADD foo INT NULL'], $events[4]['commands']);
+        $this->assertSame([], $events[5]['names']);
     }
 
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&Stub
+    public function testTxtAndNdjsonConfigurationErrorsHaveStableShape(): void
     {
-        $connection = $this->createStub(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
-                    'SELECT @@sql_mode' => $sqlMode,
-                    'SELECT @@version' => '8.0.0',
-                    default => false,
-                },
-            )
-        ;
+        $txtCommand = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler([], []),
+                $this->createConnection('TRADITIONAL', '5.0.10'),
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
+        );
 
-        $connection
-            ->method('getDriver')
-            ->willReturn($driver ?? new PdoDriver())
-        ;
+        $txtTester = new CommandTester($txtCommand);
+        $this->assertSame(1, $txtTester->execute(['--no-backup' => true], ['interactive' => false]));
+        $this->assertStringContainsString('Your database version is not supported!', $txtTester->getDisplay());
+        $this->assertStringContainsString('The database server is not configured properly.', $txtTester->getDisplay());
 
-        return $connection;
+        $ndjsonCommand = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler([], []),
+                $this->createConnection('TRADITIONAL', '5.0.10'),
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
+        );
+
+        $ndjsonTester = new CommandTester($ndjsonCommand);
+        $this->assertSame(1, $ndjsonTester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]));
+        $events = $this->jsonArrayFromNdjson($ndjsonTester->getDisplay());
+        $this->assertCount(1, $events);
+        $this->assertSame('problem', $events[0]['type']);
+        $this->assertArrayHasKey('message', $events[0]);
+        $this->assertArrayNotHasKey('severity', $events[0]);
     }
 
-    private function createBackupManager(bool $backupsEnabled): BackupManager&MockObject
+    public function testMigrationsOnlyBackupSkipForDropOnlySchemaChanges(): void
     {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
-            ->expects($backupsEnabled ? $this->once() : $this->never())
             ->method('createCreateConfig')
             ->willReturn(new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql')))
         ;
 
         $backupManager
-            ->expects($backupsEnabled ? $this->once() : $this->never())
+            ->expects($this->never())
             ->method('create')
+        ;
+
+        $commandCompiler = $this->createCommandCompiler(['DROP TABLE tl_test'], []);
+
+        $command = $this->createCommand(
+            $this->createRunner(
+                $commandCompiler,
+                $this->createConnection(),
+                $this->createMigrationCollection([]),
+                $backupManager,
+                $this->createRowSizeCalculator(),
+            ),
+        );
+
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--migrations-only' => true], ['interactive' => false]));
+        $this->assertStringContainsString('Database dump skipped because there are no migrations to execute.', $tester->getDisplay());
+    }
+
+    public function testSchemaOnlyDropOnlyCommandsPrintZeroSqlQueries(): void
+    {
+        $commandCompiler = $this->createCommandCompiler(['DROP TABLE tl_test'], []);
+
+        $command = $this->createCommand(
+            $this->createRunner(
+                $commandCompiler,
+                $this->createConnection(),
+                $this->createMigrationCollection([]),
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
+        );
+
+        $tester = new CommandTester($command);
+        $this->assertSame(0, $tester->execute(['--schema-only' => true, '--no-backup' => true], ['interactive' => false]));
+        $this->assertStringContainsString('Executed 0 SQL queries.', $tester->getDisplay());
+    }
+
+    public function testUnexpectedPendingMigrationTxtRestartFormatting(): void
+    {
+        $migrations = $this->createStub(MigrationCollection::class);
+        $migrations
+            ->method('hasPending')
+            ->willReturn(true)
+        ;
+
+        $migrations
+            ->method('getPendingNames')
+            ->willReturnOnConsecutiveCalls(['Migration 1', 'Migration 2'], [])
+        ;
+        $migrations
+            ->method('run')
+            ->willReturnCallback(
+                static function (): \Generator {
+                    yield new MigrationResult(true, 'Result 1');
+
+                    throw new UnexpectedPendingMigrationException('Expected "Foo" got "Bar".');
+                },
+            )
+        ;
+
+        $command = $this->createCommand(
+            $this->createRunner(
+                $this->createCommandCompiler([], []),
+                $this->createConnection(),
+                $migrations,
+                $this->createBackupManager(),
+                $this->createRowSizeCalculator(),
+            ),
+        );
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--migrations-only' => true, '--no-backup' => true], ['interactive' => false]);
+
+        $display = $tester->getDisplay();
+
+        $this->assertStringContainsString('Executed 1 migrations.', $display);
+        $this->assertStringContainsString('Expected "Foo" got "Bar".', $display);
+        $this->assertStringContainsString('Restarting migration process...', $display);
+    }
+
+    public static function provideInvalidOptionCombinations(): iterable
+    {
+        yield 'unsupported format' => [
+            ['--format' => 'xml'],
+            'Unsupported format "xml".',
+        ];
+
+        yield 'migrations only with schema only' => [
+            ['--migrations-only' => true, '--schema-only' => true],
+            '--migrations-only cannot be combined with --schema-only',
+        ];
+
+        yield 'migrations only with deletes' => [
+            ['--migrations-only' => true, '--with-deletes' => true],
+            '--migrations-only cannot be combined with --with-deletes',
+        ];
+    }
+
+    private function createCommand(DatabaseMigrationRunner $runner): MigrateCommand
+    {
+        return new MigrateCommand($runner);
+    }
+
+    private function createStubCommand(\Closure|null $callback = null): MigrateCommand
+    {
+        $runner = $this->createStub(DatabaseMigrationRunner::class);
+        $runner
+            ->method('run')
+            ->willReturnCallback($callback ?? DatabaseMigrationResult::success(...))
+        ;
+
+        return $this->createCommand($runner);
+    }
+
+    private function createRunner(CommandCompiler $commandCompiler, Connection $connection, MigrationCollection $migrations, BackupManager $backupManager, MysqlInnodbRowSizeCalculator $rowSizeCalculator): DatabaseMigrationRunner
+    {
+        return new DatabaseMigrationRunner($commandCompiler, $connection, $migrations, $backupManager, $rowSizeCalculator);
+    }
+
+    private function createMigrationCollection(array $pendingNames): MigrationCollection
+    {
+        $migrations = $this->createStub(MigrationCollection::class);
+        $migrations
+            ->method('hasPending')
+            ->willReturn([] !== $pendingNames)
+        ;
+
+        $migrations
+            ->method('getPendingNames')
+            ->willReturn($pendingNames)
+        ;
+
+        $migrations
+            ->method('run')
+            ->willReturn([new MigrationResult(true, 'Result 1')])
+        ;
+
+        return $migrations;
+    }
+
+    private function createBackupManager(): BackupManager
+    {
+        $backupManager = $this->createStub(BackupManager::class);
+        $backupManager
+            ->method('createCreateConfig')
+            ->willReturn(new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql')))
+        ;
+
+        $backupManager
+            ->method('create')
+            ->willReturnCallback(
+                static function (): void {
+                },
+            )
         ;
 
         return $backupManager;
     }
 
+    private function createRowSizeCalculator(): MysqlInnodbRowSizeCalculator
+    {
+        $calculator = $this->createStub(MysqlInnodbRowSizeCalculator::class);
+        $calculator
+            ->method('getMysqlRowSize')
+            ->willReturn(1000)
+        ;
+
+        $calculator
+            ->method('getMysqlRowSizeLimit')
+            ->willReturn(100)
+        ;
+
+        $calculator
+            ->method('getInnodbRowSize')
+            ->willReturn(1000)
+        ;
+
+        $calculator
+            ->method('getInnodbRowSizeLimit')
+            ->willReturn(100)
+        ;
+
+        return $calculator;
+    }
+
+    private function createCommandCompiler(array $commandsWithDeletes, array $commandsWithoutDeletes, Schema|null $schema = null): CommandCompiler
+    {
+        $commandCompiler = $this->createStub(CommandCompiler::class);
+        $commandCompiler
+            ->method('compileTargetSchema')
+            ->willReturn($schema ?? new Schema())
+        ;
+
+        $commandCompiler
+            ->method('compileCommands')
+            ->willReturnCallback(
+                static fn (bool $skipDropStatements = false): array => $skipDropStatements ? $commandsWithoutDeletes : $commandsWithDeletes,
+            )
+        ;
+
+        return $commandCompiler;
+    }
+
+    private function createConnection(string $sqlMode = 'TRADITIONAL', string $serverVersion = '8.0.0'): Connection
+    {
+        $connection = $this->createStub(Connection::class);
+        $connection
+            ->method('getParams')
+            ->willReturn([])
+        ;
+
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(static fn (string $query): int|string|false => match ($query) {
+                'SELECT @@sql_mode' => $sqlMode,
+                'SELECT @@version' => $serverVersion,
+                'SELECT @@innodb_strict_mode' => 1,
+                default => false,
+            })
+        ;
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(false)
+        ;
+
+        $connection
+            ->method('fetchAllAssociative')
+            ->willReturn([])
+        ;
+
+        $connection
+            ->method('getServerVersion')
+            ->willReturn($serverVersion)
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn(new PdoDriver())
+        ;
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySQLPlatform())
+        ;
+
+        $connection
+            ->method('executeQuery')
+            ->willReturn($this->createStub(Result::class))
+        ;
+
+        return $connection;
+    }
+
+    private function createSchemaWithBigTable(): Schema
+    {
+        $schema = new Schema();
+        $table = $schema->createTable('tl_test');
+        $table->addOption('engine', 'InnoDB');
+
+        return $schema;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function jsonArrayFromNdjson(string $ndjson): array
     {
-        return array_map(static fn (string $line) => json_decode($line, true, 512, JSON_THROW_ON_ERROR), explode("\n", trim($ndjson)));
+        return array_map(static fn (string $line): array => json_decode($line, true, 512, JSON_THROW_ON_ERROR), explode("\n", trim($ndjson)));
     }
 }

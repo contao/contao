@@ -12,16 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Doctrine\Backup\BackupManager;
-use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
-use Contao\CoreBundle\Migration\CommandCompiler;
-use Contao\CoreBundle\Migration\MigrationCollection;
-use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Connection\StaticServerVersionProvider;
-use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
-use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Schema\Table;
+use Contao\CoreBundle\Command\Migration\ConsoleDatabaseMigrationObserver;
+use Contao\CoreBundle\Migration\DatabaseMigrationEvent;
+use Contao\CoreBundle\Migration\DatabaseMigrationEventType;
+use Contao\CoreBundle\Migration\DatabaseMigrationHashMismatchException;
+use Contao\CoreBundle\Migration\DatabaseMigrationRunner;
+use Contao\CoreBundle\Migration\MigrationConfiguration;
+use Contao\CoreBundle\Migration\MigrationExecutionMode;
+use Contao\CoreBundle\Migration\SchemaUpdateMode;
+use Contao\CoreBundle\Migration\WarningMode;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -36,15 +35,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class MigrateCommand extends Command
 {
-    private SymfonyStyle|null $io = null;
-
-    public function __construct(
-        private readonly CommandCompiler $commandCompiler,
-        private readonly Connection $connection,
-        private readonly MigrationCollection $migrations,
-        private readonly BackupManager $backupManager,
-        private readonly MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-    ) {
+    public function __construct(private readonly DatabaseMigrationRunner $runner)
+    {
         parent::__construct();
     }
 
@@ -63,691 +55,110 @@ class MigrateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $format = (string) $input->getOption('format');
 
-        $asJson = 'ndjson' === $input->getOption('format');
+        if (!\in_array($format, ['txt', 'ndjson'], true)) {
+            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $format));
+        }
+
+        $dryRun = (bool) $input->getOption('dry-run');
+        $interactive = $input->isInteractive();
+        $asJson = 'ndjson' === $format;
+
+        if ($asJson && !$dryRun && $interactive) {
+            throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
+        }
+
+        if ($input->getOption('migrations-only') && $input->getOption('schema-only')) {
+            throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
+        }
+
+        if ($input->getOption('migrations-only') && $input->getOption('with-deletes')) {
+            throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
+        }
+
+        $io = new SymfonyStyle($input, $output);
+        $observer = new ConsoleDatabaseMigrationObserver(
+            $io,
+            $asJson,
+            (bool) $input->getOption('with-deletes'),
+        );
+        $configuration = $this->createConfiguration($input, $dryRun, $interactive);
 
         try {
-            if ($errors = $this->compileConfigurationErrors()) {
-                if ($asJson) {
-                    foreach ($errors as $message) {
-                        $this->writeNdjson('problem', ['message' => $message]);
-                    }
-                } else {
-                    foreach ($errors as $error) {
-                        $this->io->block($error, '!', 'fg=yellow', ' ', true);
-                    }
-
-                    $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
-                }
-
-                return Command::FAILURE;
-            }
-
-            if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
-                return Command::FAILURE;
-            }
-
-            return $this->executeCommand($input);
-        } catch (\Throwable $exception) {
+            $result = $this->runner->run($configuration, $observer);
+        } catch (DatabaseMigrationHashMismatchException $exception) {
             if (!$asJson) {
-                throw $exception;
+                throw new InvalidOptionException($exception->getMessage(), 0, $exception);
             }
 
-            $this->writeNdjson('error', [
-                'message' => $exception->getMessage(),
-                'code' => $exception->getCode(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => $exception->getTraceAsString(),
-            ]);
-        }
-
-        return Command::FAILURE;
-    }
-
-    private function backup(InputInterface $input): bool
-    {
-        $asJson = 'ndjson' === $input->getOption('format');
-        $skipDropStatements = !$input->isInteractive() && !$input->getOption('with-deletes');
-
-        // Return early if there is no work to be done
-        if (!$this->hasWorkToDo($skipDropStatements)) {
-            if (!$asJson) {
-                $this->io->info('Database dump skipped because there are no migrations to execute.');
-            }
-
-            return true;
-        }
-
-        $config = $this->backupManager->createCreateConfig();
-
-        if (!$asJson) {
-            $this->io->info(\sprintf(
-                'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilename(),
-            ));
-        }
-
-        try {
-            $this->backupManager->create($config);
-
-            if ($asJson) {
-                $this->writeNdjson('backup-result', $config->getBackup()->toArray());
-            }
-
-            return true;
-        } catch (\Throwable $exception) {
-            if ($asJson) {
-                $this->writeNdjson('error', [
+            $observer->notify(new DatabaseMigrationEvent(
+                DatabaseMigrationEventType::Error,
+                [
                     'message' => $exception->getMessage(),
                     'code' => $exception->getCode(),
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'trace' => $exception->getTraceAsString(),
-                ]);
-            } else {
-                $this->io->error($exception->getMessage());
+                ],
+            ));
+
+            return Command::FAILURE;
+        } catch (\Throwable $exception) {
+            if (!$asJson) {
+                throw $exception;
             }
 
-            return false;
-        }
-    }
+            $observer->notify(new DatabaseMigrationEvent(
+                DatabaseMigrationEventType::Error,
+                [
+                    'message' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTraceAsString(),
+                ],
+            ));
 
-    private function executeCommand(InputInterface $input): int
-    {
-        $dryRun = (bool) $input->getOption('dry-run');
-        $asJson = 'ndjson' === $input->getOption('format');
-        $specifiedHash = $input->getOption('hash');
-
-        if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
-            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $input->getOption('format')));
-        }
-
-        if ($asJson && !$dryRun && $input->isInteractive()) {
-            throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
-        }
-
-        if (!$this->validateDatabaseVersion($asJson)) {
-            return 1;
-        }
-
-        if ($input->getOption('migrations-only')) {
-            if ($input->getOption('schema-only')) {
-                throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
-            }
-
-            if ($input->getOption('with-deletes')) {
-                throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
-            }
-
-            return $this->executeMigrations($dryRun, $asJson, $specifiedHash) ? 0 : 1;
-        }
-
-        if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
-        }
-
-        if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return Command::FAILURE;
         }
 
-        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
-            return Command::FAILURE;
+        if ($result->isSuccessful()) {
+            if (!$asJson && !$input->getOption('migrations-only') && !$input->getOption('schema-only')) {
+                $io->success('All migrations completed.');
+            }
+
+            return Command::SUCCESS;
         }
 
-        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
-            return Command::FAILURE;
-        }
-
-        if (!$asJson) {
-            $this->io->success('All migrations completed.');
-        }
-
-        return Command::SUCCESS;
+        return Command::FAILURE;
     }
 
-    private function hasWorkToDo(bool $skipDropStatements = false): bool
+    private function createConfiguration(InputInterface $input, bool $dryRun, bool $interactive): MigrationConfiguration
     {
-        // There are some pending migrations
-        if ($this->migrations->hasPending()) {
-            return true;
-        }
-
-        return [] !== $this->commandCompiler->compileCommands($skipDropStatements);
-    }
-
-    private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
-    {
-        $loopControl = 19;
-
-        while (true) {
-            $first = true;
-            $migrationLabels = [];
-
-            foreach ($this->migrations->getPendingNames() as $migration) {
-                if ($first) {
-                    if (!$asJson) {
-                        $this->io->section('Pending migrations');
-                    }
-
-                    $first = false;
-                }
-
-                $migrationLabels[] = $migration;
-
-                if (!$asJson) {
-                    $this->io->writeln(' * '.$migration);
-                }
-            }
-
-            $actualHash = hash('sha256', json_encode($migrationLabels, JSON_THROW_ON_ERROR));
-
-            if ($asJson) {
-                $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
-            }
-
-            if ($first || $dryRun) {
-                break;
-            }
-
-            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
-                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
-            }
-
-            if (!$asJson) {
-                if (!$this->io->confirm('Execute the listed migrations?')) {
-                    return false;
-                }
-
-                $this->io->section('Execute migrations');
-            }
-
-            $count = 0;
-
-            try {
-                foreach ($this->migrations->run($migrationLabels) as $result) {
-                    ++$count;
-
-                    if ($asJson) {
-                        $this->writeNdjson('migration-result', [
-                            'message' => $result->getMessage(),
-                            'isSuccessful' => $result->isSuccessful(),
-                        ]);
-                    } else {
-                        $this->io->writeln(' * '.$result->getMessage());
-
-                        if (!$result->isSuccessful()) {
-                            $this->io->error('Migration failed');
-                        }
-                    }
-                }
-
-                if (!$asJson) {
-                    $this->io->success("Executed $count migrations.");
-                }
-            } catch (UnexpectedPendingMigrationException $exception) {
-                if ($asJson) {
-                    $this->writeNdjson('migration-result', [
-                        'message' => $exception->getMessage(),
-                        'isSuccessful' => false,
-                    ]);
-                } else {
-                    $this->io->success("Executed $count migrations.");
-                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
-                }
-            }
-
-            if (null !== $specifiedHash) {
-                // Do not run the schema update after migrations got executed if a hash was specified,
-                // because that hash could never match both, migrations and schema updates
-                $dryRun = true;
-
-                // Do not run the update recursive if a hash was specified
-                break;
-            }
-
-            if ($loopControl-- < 1) {
-                if ($asJson) {
-                    $this->writeNdjson('error', [
-                        'message' => 'The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
-                        'isSuccessful' => false,
-                    ]);
-                } else {
-                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the shouldRun() method of the migration(s) listed above.');
-                }
-
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string|null $specifiedHash = null): bool
-    {
-        if ($warnings = [...$this->compileConfigurationWarnings(), ...$this->compileSchemaWarnings($withDeletesOption)]) {
-            if ($asJson) {
-                foreach ($warnings as $message) {
-                    $this->writeNdjson('warning', ['message' => $message]);
-                }
-            } else {
-                $this->io->warning(implode("\n\n", $warnings));
-
-                if (!$this->io->confirm('Continue regardless of the warnings?')) {
-                    return false;
-                }
-            }
-        }
-
-        $lastCommands = [];
-
-        while (true) {
-            $commands = $this->commandCompiler->compileCommands();
-
-            $hasNewCommands = [] !== array_diff($commands, $lastCommands);
-            $lastCommands = $commands;
-
-            // Backwards compatibility with doctrine/dbal < 4.5.0, see
-            // https://github.com/doctrine/dbal/pull/7302
-            $sortedCommands = $commands;
-            sort($sortedCommands);
-
-            $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
-
-            if ($asJson) {
-                $this->writeNdjson('schema-pending', [
-                    'commands' => $commands,
-                    'hash' => $commandsHash,
-                ]);
-            }
-
-            if (!$hasNewCommands) {
-                return true;
-            }
-
-            if (!$asJson) {
-                $this->io->section("Pending database migrations ($commandsHash)");
-                $this->io->listing($commands);
-            }
-
-            if ($dryRun) {
-                return true;
-            }
-
-            if (null !== $specifiedHash && $specifiedHash !== $commandsHash) {
-                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
-            }
-
-            $options = $withDeletesOption
-                ? ['yes, with deletes', 'no']
-                : ['yes', 'yes, with deletes', 'no'];
-
-            if ($asJson) {
-                $answer = $options[0];
-            } else {
-                $answer = $this->io->choice('Execute the listed database updates?', $options, $options[0]);
-            }
-
-            if ('no' === $answer) {
-                return false;
-            }
-
-            if (!$asJson) {
-                $this->io->section('Execute database migrations');
-            }
-
-            $count = 0;
-
-            // If deletes should not be processed, recompile the commands without DROP statements
-            if ('yes, with deletes' !== $answer) {
-                $commands = $this->commandCompiler->compileCommands(true);
-            }
-
-            do {
-                $commandExecuted = false;
-                $exceptions = [];
-
-                foreach ($commands as $key => $command) {
-                    if ($asJson) {
-                        $this->writeNdjson('schema-execute', ['command' => $command]);
-                    } else {
-                        $this->io->write(' * '.$command);
-                    }
-
-                    try {
-                        try {
-                            $this->connection->executeQuery($command);
-                        } catch (\Throwable $e) {
-                            $this->fixFailedSqlCommand($command, $e);
-                        }
-
-                        ++$count;
-                        $commandExecuted = true;
-
-                        unset($commands[$key]);
-
-                        if ($asJson) {
-                            $this->writeNdjson('schema-result', [
-                                'command' => $command,
-                                'isSuccessful' => true,
-                            ]);
-                        } else {
-                            $this->io->writeln('');
-                        }
-                    } catch (\Throwable $e) {
-                        $exceptions[] = $e;
-
-                        if ($asJson) {
-                            $this->writeNdjson('schema-result', [
-                                'command' => $command,
-                                'isSuccessful' => false,
-                                'message' => $e->getMessage(),
-                            ]);
-                        } else {
-                            $this->io->writeln('......FAILED');
-                        }
-                    }
-                }
-            } while ($commandExecuted);
-
-            if (!$asJson) {
-                $this->io->success('Executed '.$count.' SQL queries.');
-
-                foreach ($exceptions as $exception) {
-                    $this->io->error($exception->getMessage());
-                }
-            }
-
-            if ($exceptions) {
-                return false;
-            }
-
-            // Do not run the update recursive if a hash was specified
-            if (null !== $specifiedHash) {
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * MySQL can run into the error "1118 (42000): Row size too large" when adding or
-     * deleting columns. In MariaDB since version 10.4.0 this can also happen if a
-     * larger number of columns got deleted in the past because of the "Instant DROP
-     * COLUMN" feature. If we encounter such an error, we retry the affected query
-     * with the InnoDB strict mode disabled. Additionally, we optimize the table to
-     * prevent future errors due to the "Instant DROP COLUMN" feature. This approach
-     * involuntarily enables using too many or too large columns. To mitigate that,
-     * the migrate command shows a warning in these cases.
-     *
-     * @see self::compileTableWarnings()
-     */
-    private function fixFailedSqlCommand(string $command, \Throwable $exception): void
-    {
-        if (
-            !$exception instanceof DriverException
-            || 1118 !== $exception->getCode()
-            || !str_contains($exception->getMessage(), 'Row size too large')
-            || !str_starts_with($command, 'ALTER TABLE ')
-            || 1 !== (int) $this->connection->fetchOne('SELECT @@innodb_strict_mode')
-        ) {
-            throw $exception;
-        }
-
-        $this->connection->executeQuery('SET SESSION innodb_strict_mode = 0');
-
-        try {
-            $this->connection->executeQuery($command);
-
-            $table = explode(' ', substr($command, 12), 2)[0];
-
-            $this->connection->executeQuery("OPTIMIZE TABLE $table");
-        } finally {
-            $this->connection->executeQuery('SET SESSION innodb_strict_mode = 1');
-        }
-    }
-
-    private function writeNdjson(string $type, array $data): void
-    {
-        // Make sure $type is the first in array but always wins
-        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function compileConfigurationErrors(): array
-    {
-        $errors = [];
-
-        // Check if the database version is too old
-        [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
-
-        if (version_compare($version, '5.1.0', '<')) {
-            $errors[] = <<<EOF
-                Your database version is not supported!
-                Contao requires at least MySQL 5.1.0 but you have version $version. Please update your database version.
-                EOF;
-
-            return $errors;
-        }
-
-        $options = $this->connection->getParams()['defaultTableOptions'] ?? [];
-
-        // Check the collation if the user has configured it
-        if (null !== $collate = $options['collate'] ?? null) {
-            $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
-
-            if (false === $row) {
-                $errors[] = <<<EOF
-                    The configured collation is not supported!
-                    The configured collation "$collate" is not available on your server. Please install it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
-
-                    dbal:
-                        connections:
-                            default:
-                                default_table_options:
-                                    charset: utf8
-                                    collation: utf8_unicode_ci
-                    EOF;
-            }
-        }
-
-        // Check the engine if the user has configured it
-        if (null !== $engine = $options['engine'] ?? null) {
-            $engineFound = false;
-            $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
-
-            foreach ($rows as $row) {
-                if ($engine === $row['Engine']) {
-                    $engineFound = true;
-                    break;
-                }
-            }
-
-            if (!$engineFound) {
-                $errors[] = <<<EOF
-                    The configured database engine is not supported!
-                    The configured database engine "$engine" is not available on your server. Please install it (recommended) or configure a different database engine in the "config/config.yaml" file.
-
-                    dbal:
-                        connections:
-                            default:
-                                default_table_options:
-                                    engine: MyISAM
-                                    row_format: ~
-                    EOF;
-            }
-        }
-
-        // Check if utf8mb4 can be used if the user has configured it
-        if ($engine && $collate && str_starts_with($collate, 'utf8mb4')) {
-            if ('innodb' !== strtolower($engine)) {
-                $errors[] = <<<EOF
-                    Invalid combination of database engine and collation!
-                    The configured database engine "$engine" does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the "config/config.yaml" file.
-
-                    dbal:
-                        connections:
-                            default:
-                                default_table_options:
-                                    charset: utf8
-                                    collation: utf8_unicode_ci
-                    EOF;
-
-                return $errors;
-            }
-
-            $largePrefixSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")['Value'] ?? '';
-
-            // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if ('' === $largePrefixSetting) {
-                return $errors;
-            }
-
-            // As there is no reliable way to get the vendor (see #84), we are guessing based
-            // on the version number. The check will not be run as of MySQL 8 and MariaDB
-            // 10.3, so this should be safe.
-            $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
-
-            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
-            if (version_compare($version, $vok, '>=')) {
-                return $errors;
-            }
-
-            // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $largePrefixSetting), ['1', 'on'], true)) {
-                $errors[] = <<<'EOF'
-                    The "innodb_large_prefix" option is not enabled!
-                    The "innodb_large_prefix" option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the "config/config.yaml" file.
-
-                    dbal:
-                        connections:
-                            default:
-                                default_table_options:
-                                    charset: utf8
-                                    collation: utf8_unicode_ci
-                    EOF;
-            }
-
-            $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")['Value'] ?? '';
-            $filePerTableSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")['Value'] ?? null;
-
-            if (
-                // The InnoDB file format is not Barracuda
-                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting))
-                // The innodb_file_per_table option is disabled
-                || (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
-            ) {
-                $errors[] = <<<'EOF'
-                    InnoDB is not configured properly!
-                    Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the "Barracuda" file format and the "innodb_file_per_table" option.
-
-                    innodb_large_prefix = 1
-                    innodb_file_format = Barracuda
-                    innodb_file_per_table = 1
-                    EOF;
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function compileConfigurationWarnings(): array
-    {
-        $warnings = [];
-
-        // Suggest running in strict mode
-        $sqlMode = $this->connection->fetchOne('SELECT @@sql_mode');
-
-        if (!array_intersect(explode(',', strtoupper($sqlMode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
-            $initOptionsKey = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
-
-            $warnings[] = <<<EOF
-                Running MySQL in non-strict mode can cause corrupt or truncated data.
-                Please enable the strict mode either in your "my.cnf" file or configure the connection options in the "config/config.yaml" as follows:
-
-                dbal:
-                    connections:
-                        default:
-                            options:
-                                $initOptionsKey: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
-                EOF;
-        }
-
-        return $warnings;
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function compileSchemaWarnings(bool $withDeletesOption): array
-    {
-        $warnings = [];
-        $schema = $this->commandCompiler->compileTargetSchema(!$withDeletesOption);
-
-        foreach ($schema->getTables() as $table) {
-            $warnings = [...$warnings, ...$this->compileTableWarnings($table)];
-        }
-
-        return $warnings;
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function compileTableWarnings(Table $table): array
-    {
-        $warnings = [];
-
-        if ($table->hasOption('engine') && 'innodb' !== strtolower($table->getOption('engine'))) {
-            return $warnings;
-        }
-
-        $mysqlSize = $this->rowSizeCalculator->getMysqlRowSize($table);
-        $mysqlLimit = $this->rowSizeCalculator->getMysqlRowSizeLimit();
-        $innodbSize = $this->rowSizeCalculator->getInnodbRowSize($table);
-        $innodbLimit = $this->rowSizeCalculator->getInnodbRowSizeLimit();
-
-        if ($mysqlSize > $mysqlLimit || $innodbSize > $innodbLimit) {
-            $warnings[] = "The row size of table {$table->getName()} is too large, try changing or deleting some columns:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
-        }
-
-        return $warnings;
-    }
-
-    private function validateDatabaseVersion(bool $asJson): bool
-    {
-        $version = $this->connection->getServerVersion();
-        $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
-        $currentPlatform = $this->connection->getDatabasePlatform();
-
-        if ($correctPlatform::class === $currentPlatform::class) {
-            return true;
-        }
-
-        $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
-
-        if (!$currentVersion || !$version) {
-            return true;
-        }
-
-        $message = <<<EOF
-            Wrong database version configured!
-            You have version $version but the database connection is configured to $currentVersion.
-            EOF;
-
-        if ($asJson) {
-            $this->writeNdjson('problem', ['message' => $message]);
-        } else {
-            $this->io->error($message);
-        }
-
-        return false;
+        $schemaOnly = (bool) $input->getOption('schema-only');
+        $migrationsOnly = (bool) $input->getOption('migrations-only');
+        $withDeletes = (bool) $input->getOption('with-deletes');
+
+        $warningMode = $interactive && !$dryRun ? WarningMode::Ask : WarningMode::Continue;
+        $migrationExecutionMode = $schemaOnly
+            ? MigrationExecutionMode::Skip
+            : ($interactive && !$dryRun ? MigrationExecutionMode::Ask : MigrationExecutionMode::Execute);
+        $schemaUpdateMode = $migrationsOnly
+            ? SchemaUpdateMode::Skip
+            : ($interactive && !$dryRun ? SchemaUpdateMode::Ask : ($withDeletes ? SchemaUpdateMode::WithDeletes : SchemaUpdateMode::WithoutDeletes));
+
+        return MigrationConfiguration::create()
+            ->withDryRun($dryRun)
+            ->withCreateBackup(!$dryRun && !$input->getOption('no-backup'))
+            ->withSchemaOnly($schemaOnly)
+            ->withMigrationsOnly($migrationsOnly)
+            ->withBackupSkipDropStatements(!$interactive && !$withDeletes)
+            ->withSchemaWarningSkipDropStatements(!$withDeletes)
+            ->withWarningMode($warningMode)
+            ->withMigrationExecutionMode($migrationExecutionMode)
+            ->withSchemaUpdateMode($schemaUpdateMode)
+            ->withHash($input->getOption('hash') ? (string) $input->getOption('hash') : null)
+        ;
     }
 }
