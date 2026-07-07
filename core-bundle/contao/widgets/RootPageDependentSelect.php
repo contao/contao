@@ -82,7 +82,7 @@ class RootPageDependentSelect extends SelectMenu
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($option['value']),
 					$this->isSelected($option),
-					Input::encodeInput($option['label'], InputEncodingMode::sanitizeHtml),
+					System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $option['label']),
 				);
 			}
 			else
@@ -106,7 +106,7 @@ class RootPageDependentSelect extends SelectMenu
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($optgroup['value']),
 						$this->isSelected($optgroup),
-						Input::encodeInput($optgroup['label'], InputEncodingMode::sanitizeHtml),
+						System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $optgroup['label']),
 					);
 				}
 

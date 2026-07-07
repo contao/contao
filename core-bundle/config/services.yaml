@@ -441,6 +441,7 @@ services:
 
     contao.html_sanitizer:
         class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        public: true
         arguments:
             - '@contao.framework'
         tags:
