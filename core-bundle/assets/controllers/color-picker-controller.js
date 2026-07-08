@@ -11,6 +11,9 @@ export default class extends ColorPicker {
 
         super.connect();
 
+        // Reapply the button target to the element as it got replaced by not using `useAsButton` - see #9985
+        this.picker.getRoot().root.setAttribute(`data-${this.identifier}-target`, 'button');
+
         if (hexValueLoaded) {
             this.inputTarget.value = this.inputTarget.value.substring(1);
         }
