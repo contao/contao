@@ -408,7 +408,6 @@ class Newsletter extends Backend
 	 * @param array        $arrRecipient
 	 * @param string       $text
 	 * @param string       $html
-
 	 *
 	 * @return boolean
 	 */
