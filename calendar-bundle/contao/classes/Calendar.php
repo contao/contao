@@ -10,12 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 /**
  * Provide methods regarding calendars.
  */

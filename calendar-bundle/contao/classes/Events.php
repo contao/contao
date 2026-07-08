@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to get all events of a certain period from the database.
