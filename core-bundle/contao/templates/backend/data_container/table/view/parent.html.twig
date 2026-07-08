@@ -52,7 +52,7 @@
                     {% for record in records %}
                         <li{{ attrs().set('data-id', record.id, is_sortable) }}>
                             {% if record.group_header is defined %}
-                                <div class="tl_content_header">{{ record.group_header|raw }}</div>
+                                <div class="tl_content_header">{{ record.group_header }}</div>
                             {% endif %}
 
                             {% set record_attributes = attrs()
@@ -69,52 +69,55 @@
                                 .set('data-action', 'click->contao--check-all#toggleInput')
                             %}
                             <div{{ record_attributes }}>
-                                <div class="inside hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                                <div
+                                    class="inside hover-div"
+                                    data-controller="contao--deeplink contao--operations-menu"
+                                    data-action="contextmenu->contao--operations-menu#open"
+                                    data-contao--operations-menu-record-id-value="{{ record.id }}"
+                                    data-contao--operations-menu-record-table-value="{{ table_name }}"
+                                    data-contao--operations-menu-primary-only-value="{{ primary_only ? 'true' : 'false' }}"
+                                >
                                     {# Right column #}
                                     <div class="tl_content_right" data-turbo="true">
                                         {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
                                     </div>
 
                                     {# Record #}
-                                    {% if record.legacy_data is defined %}
-                                        {{ record.legacy_data|raw }}
-                                    {% else %}
-                                        {% if display_grid %}
-                                            {# Record displayed as box with optional preview #}
-                                            {% set record_label_attributes = attrs()
-                                                .addClass('cte_type')
-                                                .addClass('draggable', record.allow_dragging)
-                                                .addClass(record.state, record.state)
-                                            %}
-                                            <div{{ record_label_attributes }}>
-                                                {% block label %}
-                                                    {% if record.allow_dragging %}
-                                                        <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
-                                                            {{ backend_icon('drag.svg', record.drag_handle_label) }}
-                                                        </button>
-                                                        <div>{{ record.label|raw }}</div>
-                                                    {% else %}
-                                                        {{ record.label|raw }}
-                                                    {% endif %}
-                                                {% endblock %}
-                                            </div>
+                                    {% if display_grid %}
+                                        {# Record displayed as box with optional preview #}
+                                        {% set record_label_attributes = attrs()
+                                            .addClass('cte_type')
+                                            .addClass('draggable', record.allow_dragging)
+                                            .addClass(record.state, record.state)
+                                        %}
+                                        <div{{ record_label_attributes }}>
+                                            {% block label %}
+                                                {% if record.allow_dragging %}
+                                                    <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" data-contao--sortable-target="primaryHandle">
+                                                        {{ backend_icon('drag.svg', record.drag_handle_label) }}
+                                                    </button>
+                                                    <div>{{ record.label|raw }}</div>
+                                                {% else %}
+                                                    {{ record.label|raw }}
+                                                {% endif %}
+                                            {% endblock %}
+                                        </div>
 
-                                            {% if record.preview %}
-                                                <div class="cte_content" data-contao--limit-height-target="node">
-                                                    <div class="cte_preview" style="contain:paint">{{ record.preview|raw }}</div>
-                                                </div>
-                                            {% endif %}
-                                        {% else %}
-                                            {# Record displayed flat #}
-                                            {% set record_label_attributes = attrs()
-                                                .addClass('tl_content_left')
-                                                .addClass('draggable', record.allow_dragging)
-                                                .addClass(record.state, record.state)
-                                            %}
-                                            <div{{ record_label_attributes }}>
-                                                {{ block('label') }}
+                                        {% if record.preview %}
+                                            <div class="cte_content" data-contao--limit-height-target="node">
+                                                <div class="cte_preview" style="contain:paint">{{ record.preview|raw }}</div>
                                             </div>
                                         {% endif %}
+                                    {% else %}
+                                        {# Record displayed flat #}
+                                        {% set record_label_attributes = attrs()
+                                            .addClass('tl_content_left')
+                                            .addClass('draggable', record.allow_dragging)
+                                            .addClass(record.state, record.state)
+                                        %}
+                                        <div{{ record_label_attributes }}>
+                                            {{ block('label') }}
+                                        </div>
                                     {% endif %}
                                 </div>
                             </div>

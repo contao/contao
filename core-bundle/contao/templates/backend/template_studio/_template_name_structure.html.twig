@@ -7,7 +7,7 @@
         {% endwith %}
         <div class="extension">.{{ extension }}</div>
     </div>
-    {% if namespace starts with 'Contao_Global' %}
+    {% if namespace starts with 'Contao_User' %}
         {% set namespace_info = 'User namespace (/templates)' %}
     {% elseif namespace starts with 'Contao_App' %}
         {% set namespace_info = 'App namespace (/contao/templates)' %}

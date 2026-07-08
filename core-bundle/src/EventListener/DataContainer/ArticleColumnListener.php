@@ -46,7 +46,11 @@ class ArticleColumnListener
             return $this->getPageOptions((int) $currentRecord['pid']);
         }
 
-        // Show all sections (e.g. "override all" mode)
+        if (!\in_array($this->requestStack->getCurrentRequest()?->query->get('act'), ['editAll', 'overrideAll'], true)) {
+            return [];
+        }
+
+        // Show all sections in "override all" and "edit all" mode
         $selectedIds = $this->requestStack->getSession()->all()['CURRENT']['IDS'] ?? [];
 
         if ([] === $selectedIds) {
@@ -93,21 +97,13 @@ class ArticleColumnListener
     private function getSlots(string $template): array
     {
         try {
-            $slots = $this->inspector
+            return $this->inspector
                 ->inspectTemplate("@Contao/$template.html.twig")
                 ->getSlots()
             ;
         } catch (InspectionException) {
-            $slots = [];
+            return [];
         }
-
-        $options = [];
-
-        foreach ($slots as $slot) {
-            $options[$slot] = "{% slot $slot %}";
-        }
-
-        return $options;
     }
 
     private function getLayoutSections(LayoutModel $layoutModel): array

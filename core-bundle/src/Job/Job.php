@@ -282,10 +282,8 @@ final class Job
     {
         $clone = clone $this;
 
-        foreach ($clone->children as $existingChild) {
-            if ($existingChild->getUuid() === $child->getUuid()) {
-                return $clone;
-            }
+        if (array_any($clone->children, static fn ($existingChild) => $existingChild->getUuid() === $child->getUuid())) {
+            return $clone;
         }
 
         $clone->children[] = $child->withParent($this);
@@ -346,6 +344,14 @@ final class Job
         return $array;
     }
 
+    /**
+     * Returns a stable fingerprint of the mutable job state.
+     */
+    public function getStateFingerprint(): string
+    {
+        return hash('xxh3', json_encode($this->getMutableState(), JSON_THROW_ON_ERROR));
+    }
+
     public function markFailed(array $errors): self
     {
         $clone = clone $this;
@@ -359,5 +365,18 @@ final class Job
     public function markFailedBecauseRequiresCLI(): self
     {
         return $this->markFailed([self::ERROR_REQUIRES_CLI]);
+    }
+
+    private function getMutableState(): array
+    {
+        return [
+            'status' => $this->getStatus()->value,
+            'progress' => round($this->getProgress(), 2),
+            'isPublic' => $this->isPublic(),
+            'metadata' => $this->getMetadata(),
+            'errors' => $this->getErrors(),
+            'warnings' => $this->getWarnings(),
+            'children' => array_map(static fn (self $child): string => $child->getStateFingerprint(), $this->getChildren()),
+        ];
     }
 }

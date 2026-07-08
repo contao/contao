@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,7 +49,7 @@ class ModuleNewsArchive extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -88,8 +89,6 @@ class ModuleNewsArchive extends ModuleNews
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$limit = null;
 		$offset = 0;
 		$intBegin = 0;
@@ -118,6 +117,8 @@ class ModuleNewsArchive extends ModuleNews
 					break;
 			}
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Create the date object
 		try
@@ -185,7 +186,7 @@ class ModuleNewsArchive extends ModuleNews
 				$offset = $pagination->getOffset();
 
 				// Add the pagination menu
-				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+				$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 			}
 		}
 

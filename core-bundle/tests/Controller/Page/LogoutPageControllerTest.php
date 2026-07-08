@@ -63,10 +63,12 @@ class LogoutPageControllerTest extends TestCase
     public function testRedirectsGuestToTheJumpToPage(): void
     {
         $forwardPageModel = $this->createClassWithPropertiesStub(PageModel::class);
-
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['redirectBack' => false, 'jumpTo' => 42]);
-        $pageModel
-            ->method('getRelated')
+
+        $pageAdapter = $this->createAdapterMock(['findById']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findById')
             ->willReturn($forwardPageModel)
         ;
 
@@ -77,6 +79,7 @@ class LogoutPageControllerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $pageAdapter,
             System::class => $systemAdapter,
         ]);
 
@@ -133,6 +136,7 @@ class LogoutPageControllerTest extends TestCase
             ->method('getToken')
             ->willReturn($token)
         ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('security.token_storage', $tokenStorage);
@@ -157,10 +161,12 @@ class LogoutPageControllerTest extends TestCase
     public function testRedirectsMemberToTheLogoutUrlWithRedirectJumpTo(): void
     {
         $forwardPageModel = $this->createClassWithPropertiesStub(PageModel::class);
-
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['redirectBack' => false, 'jumpTo' => 42]);
-        $pageModel
-            ->method('getRelated')
+
+        $pageAdapter = $this->createAdapterMock(['findById']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findById')
             ->willReturn($forwardPageModel)
         ;
 
@@ -171,6 +177,7 @@ class LogoutPageControllerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $pageAdapter,
             System::class => $systemAdapter,
         ]);
 

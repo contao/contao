@@ -57,7 +57,7 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getResponseContext')
             ->willReturn($responseContext)
         ;
@@ -73,7 +73,7 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
         ];
 
         $listener = new AddFeedsFromLayoutListener($this->createContaoFrameworkStub($adapters), $urlGenerator, $responseContextAccessor);
-        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel, $responseContext));
+        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel));
 
         $this->assertSame(' type="rss" rel="alternate" href="http://localhost/events.xml" title="Future events"', implode('', $htmlHeadBag->getLinkTags()));
 
@@ -93,8 +93,9 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getResponseContext')
+            ->willReturn(new ResponseContext())
         ;
 
         $htmlHeadBag = new HtmlHeadBag();
@@ -108,7 +109,7 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
         $currentPage = $this->createStub(PageModel::class);
 
         $listener = new AddFeedsFromLayoutListener($this->createContaoFrameworkStub(), $urlGenerator, $responseContextAccessor);
-        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel, $responseContext));
+        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel));
 
         $this->assertSame([], $htmlHeadBag->getLinkTags());
     }
@@ -123,8 +124,9 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getResponseContext')
+            ->willReturn(new ResponseContext())
         ;
 
         $htmlHeadBag = new HtmlHeadBag();
@@ -145,7 +147,7 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
         ];
 
         $listener = new AddFeedsFromLayoutListener($this->createContaoFrameworkStub($adapters), $urlGenerator, $responseContextAccessor);
-        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel, $responseContext));
+        $listener->onLayoutEvent(new LayoutEvent(new LayoutTemplate('<template>', static fn () => new Response('<content>')), $currentPage, $layoutModel));
 
         $this->assertSame([], $htmlHeadBag->getLinkTags());
     }
@@ -160,7 +162,7 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getResponseContext')
             ->willReturn(null)
         ;
@@ -176,7 +178,6 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
                 new LayoutTemplate('<template>', static fn () => new Response('<content>')),
                 $this->createStub(PageModel::class),
                 $this->createStub(LayoutModel::class),
-                null,
             ),
         );
 

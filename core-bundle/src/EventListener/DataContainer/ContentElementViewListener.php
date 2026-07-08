@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -24,12 +25,14 @@ use Contao\Image;
 use Contao\MemberGroupModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ContentElementViewListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly TranslatorInterface $translator,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -50,7 +53,7 @@ class ContentElementViewListener
     }
 
     #[AsCallback('tl_content', 'list.label.label')]
-    public function generateLabel(array $row, string $label, DC_Table $dc): array|string
+    public function generateLabel(array $row, string $label, DC_Table $dc): RecordLabel
     {
         if ('tl_theme' !== $dc->parentTable) {
             return $this->generateGridLabel($row);
@@ -69,9 +72,9 @@ class ContentElementViewListener
         return 'type' === $field ? $row['type'] : $group;
     }
 
-    private function generateGridLabel(array $row): array
+    private function generateGridLabel(array $row): RecordLabel
     {
-        $type = $this->generateContentTypeLabel($row);
+        $label = $this->generateContentTypeLabel($row);
 
         $objModel = $this->framework->createInstance(ContentModel::class);
         $objModel->setRow($row);
@@ -79,14 +82,14 @@ class ContentElementViewListener
         try {
             $preview = StringUtil::insertTagToSrc($this->framework->getAdapter(Controller::class)->getContentElement($objModel));
         } catch (\Throwable $exception) {
-            $preview = '<p class="tl_error">'.StringUtil::specialchars($exception->getMessage()).'</p>';
+            $preview = $this->twig->createTemplate('<p class="tl_error">{{ message }}</p>')->render(['message' => $exception->getMessage()]);
         }
 
         if (!empty($row['sectionHeadline'])) {
             $sectionHeadline = StringUtil::deserialize($row['sectionHeadline'], true);
 
             if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit'])) {
-                $preview = '<'.$sectionHeadline['unit'].'>'.$sectionHeadline['value'].'</'.$sectionHeadline['unit'].'>'.$preview;
+                $preview = $this->twig->createTemplate('<{{ unit }}>{{ value }}</{{ unit }}>')->render($sectionHeadline).$preview;
             }
         }
 
@@ -95,10 +98,13 @@ class ContentElementViewListener
             $preview = '';
         }
 
-        return [$type, $preview, $row['invisible'] ?? null ? 'unpublished' : 'published'];
+        $label->htmlPreview = $preview;
+        $label->state = $row['invisible'] ?? null ? 'unpublished' : 'published';
+
+        return $label;
     }
 
-    private function generateContentTypeLabel(array $row): string
+    private function generateContentTypeLabel(array $row): RecordLabel
     {
         $transId = "CTE.$row[type].0";
         $label = $this->translator->trans($transId, [], 'contao_default');
@@ -109,7 +115,7 @@ class ContentElementViewListener
 
         // Add the ID of the aliased element
         if ('alias' === $row['type']) {
-            $label .= ' ID '.($row['cteAlias'] ?? 0);
+            $label .= ' ID '.(int) ($row['cteAlias'] ?? 0);
         }
 
         // Add the headline level (see #5858)
@@ -119,7 +125,7 @@ class ContentElementViewListener
 
         // Show the title
         if ($row['title'] ?? null) {
-            $label = $row['title'].' <span class="tl_gray">['.$label.']</span>';
+            $label = $this->twig->createTemplate('{{ title }} <span class="tl_gray">[{{ label }}]</span>')->render(['title' => $row['title'], 'label' => $label]);
         }
 
         // Add the protection status
@@ -141,17 +147,17 @@ class ContentElementViewListener
             }
 
             $label = $this->framework->getAdapter(Image::class)->getHtml('protected.svg').' '.$label;
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.protected', [], 'contao_default').($groupNames ? ': '.implode(', ', $groupNames) : '').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.protected'|trans({}, 'contao_default') }}{{ group_names ? ': ' ~ group_names|join(', ') : '' }})</span>")->render(['group_names' => $groupNames]);
         }
 
         if (($row['start'] ?? null) && ($row['stop'] ?? null)) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFromTo', [Date::parse(Config::get('datimFormat'), $row['start']), Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showFromTo'|trans([from, to], 'contao_default') }})</span>")->render(['from' => Date::parse(Config::get('datimFormat'), $row['start']), 'to' => Date::parse(Config::get('datimFormat'), $row['stop'])]);
         } elseif ($row['start'] ?? null) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFrom', [Date::parse(Config::get('datimFormat'), $row['start'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showFrom'|trans([from], 'contao_default') }})</span>")->render(['from' => Date::parse(Config::get('datimFormat'), $row['start'])]);
         } elseif ($row['stop'] ?? null) {
-            $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showTo', [Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
+            $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showTo'|trans([to], 'contao_default') }})</span>")->render(['to' => Date::parse(Config::get('datimFormat'), $row['stop'])]);
         }
 
-        return $label;
+        return RecordLabel::fromHtml($label);
     }
 }

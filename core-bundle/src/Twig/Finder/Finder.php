@@ -156,7 +156,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 return $matches[1];
             }
 
-            return $this->translator->trans('MSC.global', [], 'contao_default');
+            return $this->translator->trans('MSC.user', [], 'contao_default');
         };
 
         $getCustomLabel = function (string $identifier, array $sourceLabels): string|null {

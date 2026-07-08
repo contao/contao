@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="jobs.type_label.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
-        <target>Reconstruire l'index de recherche du back-office</target>
+        <target>Reconstruire l&apos;index de recherche du back-office</target>
       </trans-unit>
       <trans-unit id="jobs.type_label.crawl">
         <source>Crawling the website</source>

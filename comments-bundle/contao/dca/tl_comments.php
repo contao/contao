@@ -11,11 +11,11 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Comments;
-use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
@@ -131,14 +131,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'member' => array
@@ -251,24 +251,6 @@ class tl_comments extends Backend
 	}
 
 	/**
-	 * Check whether the user is allowed to edit a comment
-	 *
-	 * @param integer $intParent
-	 * @param string  $strSource
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-	 *             vote on the ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT security attribute instead
-	 */
-	protected function isAllowedToEditComment($intParent, $strSource)
-	{
-		trigger_deprecation('contao/comments-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.', __METHOD__, ContaoCommentsPermissions::class);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT, array('source' => $strSource, 'parent' => $intParent));
-	}
-
-	/**
 	 * Send out the new comment notifications
 	 *
 	 * @param mixed $varValue
@@ -290,12 +272,12 @@ class tl_comments extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listComments($arrRow)
 	{
 		$router = System::getContainer()->get('router');
-		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
+		$title = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent']);
 		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&amp;popup=1&amp;nb=1\' }); return false;"';
 
 		switch ($arrRow['source'])
@@ -373,11 +355,11 @@ class tl_comments extends Backend
 
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
-		return '
-<div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+		return RecordLabel::fromHtml('
+<div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialchars($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="cte_preview">
 ' . $arrRow['comment'] . '
-</div>' . "\n    ";
+</div>' . "\n    ");
 	}
 
 	/**

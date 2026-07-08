@@ -215,6 +215,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
+                $extensionConfigs = $this->addDefaultVersionStrategy($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     if ($container->hasParameter('secret')) {
@@ -255,16 +256,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
-        // Do not add PDO options if the constant does not exist
-        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+        if (!class_exists(Mysql::class)) {
             return $extensionConfigs;
         }
 
-        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[$key])) {
+        if (isset($options[Mysql::ATTR_MULTI_STATEMENTS])) {
             return $extensionConfigs;
         }
 
@@ -278,7 +277,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            $key => false,
+                            Mysql::ATTR_MULTI_STATEMENTS => false,
                         ],
                     ],
                 ],
@@ -529,10 +528,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
-                return $extensionConfigs;
-            }
+        if (array_any($extensionConfigs, static fn ($extensionConfig) => isset($extensionConfig['clickjacking']['paths']['^/.*']))) {
+            return $extensionConfigs;
         }
 
         $extensionConfigs[] = [
@@ -627,5 +624,22 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function encodeUrlParameter(string $parameter): string
     {
         return str_replace('%', '%%', rawurlencode($parameter));
+    }
+
+    private function addDefaultVersionStrategy(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['assets']['version_strategy']) || isset($config['assets']['json_manifest_path'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'assets' => [
+                'version_strategy' => 'contao.asset.mtime_version_strategy',
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 }

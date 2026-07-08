@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -130,7 +131,7 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
-    public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
+    public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): RecordLabel
     {
         if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             foreach ($args as &$arg) {
@@ -140,7 +141,7 @@ class PreviewLinkListener
             unset($arg);
         }
 
-        return $args;
+        return RecordLabel::fromHtml($args);
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]

@@ -40,8 +40,6 @@ class FormAltcha extends Widget
 	public function __construct($arrAttributes=null)
 	{
 		parent::__construct($arrAttributes);
-
-		$this->useRawRequestData = true;
 	}
 
 	/**

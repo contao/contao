@@ -17,6 +17,7 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
+use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
@@ -109,8 +110,13 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         }
 
         $path = Path::makeAbsolute($path, $this->projectDir);
+        $source = @file_get_contents($path);
 
-        return new Source(file_get_contents($path), $templateName, $path);
+        if (false === $source) {
+            throw new LoaderError(\sprintf('Could not get contents of "%s"', $path));
+        }
+
+        return new Source($source, $templateName, $path);
     }
 
     /**
@@ -417,7 +423,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             $themeSlugs[] = (string) $slug;
         }
 
-        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
+        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_User'];
 
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {

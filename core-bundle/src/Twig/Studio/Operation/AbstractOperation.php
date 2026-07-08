@@ -103,14 +103,14 @@ abstract class AbstractOperation extends AbstractController implements Operation
     protected function userTemplateExists(OperationContext $context, bool $exclusive = false): bool
     {
         // Check if the first template in the chain is a custom template from the
-        // Contao_Global or any theme namespace.
+        // Contao_User or any theme namespace.
         $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()];
         $first = $chains[array_key_first($chains)];
         $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
 
         $userTemplateExists = match ($context->isThemeContext()) {
             true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
-            false => 'Contao_Global' === $namespace,
+            false => 'Contao_User' === $namespace,
         };
 
         return $userTemplateExists && (!$exclusive || 1 === \count($chains));

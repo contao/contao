@@ -110,7 +110,7 @@ class SaveOperationTest extends AbstractOperationTestCase
         $templateInformation = new TemplateInformation(
             new Source(
                 '<code>',
-                '@Contao_Global/content_element/existing_user_template.html.twig',
+                '@Contao_User/content_element/existing_user_template.html.twig',
                 '<path_to>/content_element/existing_user_template.html.twig',
             ),
         );
@@ -124,7 +124,7 @@ class SaveOperationTest extends AbstractOperationTestCase
                     new TemplateInformation(
                         new Source(
                             '<code>',
-                            '@Contao_Global/content_element/existing_user_template.html.twig',
+                            '@Contao_User/content_element/existing_user_template.html.twig',
                             '<path_to>/content_element/existing_user_template.html.twig',
                         ),
                     ),

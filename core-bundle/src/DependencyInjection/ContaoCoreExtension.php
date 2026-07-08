@@ -225,6 +225,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
+
+        if (false === $config['auto_refresh_template_hierarchy'] || (null === $config['auto_refresh_template_hierarchy'] && !$container->getParameter('kernel.debug'))) {
+            $container->removeDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener');
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
@@ -278,8 +282,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             if ([] === $config['messenger']['web_worker']['transports']) {
                 $container->removeDefinition('contao.messenger.web_worker');
             } else {
-                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
-                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+                $definition->setArgument('$transports', $config['messenger']['web_worker']['transports']);
+                $definition->setArgument('$gracePeriod', $config['messenger']['web_worker']['grace_period']);
             }
         }
 

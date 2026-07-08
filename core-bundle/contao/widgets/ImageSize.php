@@ -193,7 +193,7 @@ class ImageSize extends Widget
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->optionSelected($arrOption['value'], $this->varValue[2] ?? null),
-					$arrOption['label'] ?? null
+					StringUtil::specialchars($arrOption['label'] ?? ''),
 				);
 
 				$arrValues[] = $arrOption['value'];
@@ -208,7 +208,7 @@ class ImageSize extends Widget
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
-						$arrOptgroup['label'] ?? null
+						StringUtil::specialchars($arrOptgroup['label'] ?? ''),
 					);
 
 					$arrValues[] = $arrOptgroup['value'] ?? '';

@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
@@ -111,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false, 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false, 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'name' => array
 		(
@@ -126,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'unique'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'unique'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'language' => array
@@ -193,7 +194,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength'), 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'pwChange' => array
@@ -239,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'themes' => array
 		(
 			'inputType'               => 'checkbox',
-			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
+			'options'                 => array('elements', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
@@ -327,6 +328,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'cud' => array
 		(
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'cud',
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
@@ -486,7 +488,7 @@ class tl_user extends Backend
 	 * @param DataContainer $dc
 	 * @param array         $args
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
@@ -512,7 +514,7 @@ class tl_user extends Backend
 			Image::getUrl($icon . '--disabled')
 		);
 
-		return $args;
+		return RecordLabel::fromHtml($args);
 	}
 
 	/**
@@ -597,11 +599,9 @@ class tl_user extends Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getModules(DataContainer $dc)
+	public function getModules()
 	{
 		$arrModules = array();
 
@@ -621,15 +621,6 @@ class tl_user extends Backend
 			}
 
 			$arrModules[$k] = array_keys($v);
-		}
-
-		$modules = StringUtil::deserialize($dc->activeRecord->modules);
-
-		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
-		{
-			unset($arrModules['design'][$key]);
-			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;

@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_order'] = array
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'ascending', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'ascending', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_moderate'] = array
@@ -67,5 +67,5 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 		return Controller::getTemplateGroup('com_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );

@@ -7,7 +7,6 @@
             .set('src', this.src)
             .set('id', "ctrl_#{this.id}")
             .addClass('submit')
-            .addClass(this.class|default)
             .set('title', this.slabel)
             .set('alt', this.slabel)
             .mergeWith(getAttributes.invoke())
@@ -17,7 +16,6 @@
             .set('type', 'submit')
             .set('id', "ctrl_#{this.id}")
             .addClass('submit')
-            .addClass(this.class|default)
             .mergeWith(getAttributes.invoke())
         }}>{{ this.slabel }}</button>
     {% endif %}

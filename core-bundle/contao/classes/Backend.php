@@ -158,7 +158,7 @@ abstract class Backend extends Controller
 
 		if ($addRequestToken)
 		{
-			$strRequest .= ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$strRequest .= ($strRequest ? '&' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		return parent::addToUrl($strRequest, $blnAddRef, $arrUnset);
@@ -372,6 +372,13 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
+			// Render the new breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
+
+			// Render the headline, which will be set as the page title in BackendMain::run()
 			$this->Template->headline = '';
 
 			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
@@ -380,12 +387,6 @@ abstract class Backend extends Controller
 			}
 
 			$do = Input::get('do');
-
-			// Only render the breadcrumb for DC_Table (see #9514)
-			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
-			{
-				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
-			}
 
 			// Add the current action
 			if (Input::get('id'))
@@ -509,7 +510,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -530,7 +531,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=0')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -582,7 +583,7 @@ abstract class Backend extends Controller
 		// Add the breadcrumb link if you have access to that page
 		if ($objUser->hasAccess($row['id'], 'pagemounts'))
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
+			$label = '<a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $row['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
 		else
 		{
@@ -686,7 +687,7 @@ abstract class Backend extends Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -706,7 +707,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=' . $strPath)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 
@@ -762,7 +763,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function getDcaPickerWizard($extras, $table, $field, $inputName)
+	public static function getDcaPickerWizard($extras, $table, $field, $inputName, $title = null)
 	{
 		$context = 'link';
 		$extras = \is_array($extras) ? $extras : array();
@@ -781,21 +782,13 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
-  <script>
-    $("pp_' . $inputName . '").addEvent("click", function(e) {
-      e.preventDefault();
-      Backend.openModalSelector({
-        "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
-        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
-        "callback": function(picker, value) {
-          $("ctrl_' . $inputName . '").value = value.join(",");
-          $("ctrl_' . $inputName . '").fireEvent("change");
-        }.bind(this)
-      });
-    });
-  </script>';
+		return \sprintf(
+			' <a href="%s" id="pp_%s" class="picker-wizard" data-controller="contao--modal-selector" data-contao--modal-selector-title-value="%s" data-action="contao--modal-selector#dcapicker">%s</a>',
+			StringUtil::ampersand($factory->getUrl($context, $extras)),
+			$inputName,
+			StringUtil::specialchars($title ?? $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? ''),
+			Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']),
+		);
 	}
 
 	/**

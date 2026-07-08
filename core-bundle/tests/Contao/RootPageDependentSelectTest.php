@@ -84,11 +84,11 @@ class RootPageDependentSelectTest extends TestCase
         $expectedOutput = <<<'OUTPUT'
             <div class="tl_select_wrapper" data-controller="contao--choices">
                 <select
-                    name="rootPageDependentModules[]"
+                    name="rootPageDependentModules[1]"
                     id="ctrl_rootPageDependentModules-1"
                     class="tl_select"
                     data-action="focus->contao--scroll-offset#store">
-                    <option value="">Choose module for "Root Page 1"</option>
+                    <option value="">Choose module for &#34;Root Page 1&#34;</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
                     <option value="30">Module-30</option>
@@ -96,11 +96,11 @@ class RootPageDependentSelectTest extends TestCase
             </div>
             <div class="tl_select_wrapper" data-controller="contao--choices">
                 <select
-                    name="rootPageDependentModules[]"
+                    name="rootPageDependentModules[2]"
                     id="ctrl_rootPageDependentModules-2"
                     class="tl_select"
                     data-action="focus->contao--scroll-offset#store">
-                    <option value="">Choose module for "Root Page 2"</option>
+                    <option value="">Choose module for &#34;Root Page 2&#34;</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
                     <option value="30">Module-30</option>
@@ -108,14 +108,133 @@ class RootPageDependentSelectTest extends TestCase
             </div>
             <div class="tl_select_wrapper" data-controller="contao--choices">
                 <select
-                    name="rootPageDependentModules[]"
+                    name="rootPageDependentModules[3]"
                     id="ctrl_rootPageDependentModules-3"
                     class="tl_select"
                     data-action="focus->contao--scroll-offset#store">
-                    <option value="">Choose module for "Root Page 3"</option>
+                    <option value="">Choose module for &#34;Root Page 3&#34;</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
                     <option value="30">Module-30</option>
+                </select>
+            </div>
+            OUTPUT;
+
+        $minifiedExpectedOutput = preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $expectedOutput);
+
+        $this->assertSame($minifiedExpectedOutput, $widget->generate());
+    }
+
+    public function testRendersMultipleSelectsWithContentElements(): void
+    {
+        $rootPages = [
+            $this->mockPageModel(['id' => 1, 'title' => 'Root Page 1', 'language' => 'en']),
+            $this->mockPageModel(['id' => 2, 'title' => 'Root Page 2', 'language' => 'de']),
+            $this->mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
+        ];
+
+        $pageAdapter = $this->createAdapterMock(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('root', ['order' => 'sorting'])
+            ->willReturn(new Collection($rootPages, 'tl_page'))
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_tl_module')
+            ->willReturn('Choose module for "%s"')
+        ;
+
+        $requestStack = new RequestStack([new Request()]);
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
+        $container->set('translator', $translator);
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
+
+        $fieldConfig = [
+            'name' => 'rootPageDependentModules',
+            'options' => [
+                'MSC.mw_elements' => [
+                    'content-10' => 'Element-10',
+                    'content-20' => 'Element-20',
+                    'content-30' => 'Element-30',
+                ],
+                'MSC.mw_modules' => [
+                    '10' => 'Module-10',
+                    '20' => 'Module-20',
+                    '30' => 'Module-30',
+                ],
+            ],
+            'eval' => [
+                'includeBlankOption' => true,
+            ],
+        ];
+
+        $widget = new RootPageDependentSelect(RootPageDependentSelect::getAttributesFromDca($fieldConfig, $fieldConfig['name']));
+
+        $expectedOutput = <<<'OUTPUT'
+            <div class="tl_select_wrapper" data-controller="contao--choices">
+                <select
+                    name="rootPageDependentModules[1]"
+                    id="ctrl_rootPageDependentModules-1"
+                    class="tl_select"
+                    data-action="focus->contao--scroll-offset#store">
+                    <option value="">Choose module for &#34;Root Page 1&#34;</option>
+                    <optgroup label="MSC.mw_elements">
+                        <option value="content-10">Element-10</option>
+                        <option value="content-20">Element-20</option>
+                        <option value="content-30">Element-30</option>
+                    </optgroup>
+                    <optgroup label="MSC.mw_modules">
+                        <option value="10">Module-10</option>
+                        <option value="20">Module-20</option>
+                        <option value="30">Module-30</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="tl_select_wrapper" data-controller="contao--choices">
+                <select
+                    name="rootPageDependentModules[2]"
+                    id="ctrl_rootPageDependentModules-2"
+                    class="tl_select"
+                    data-action="focus->contao--scroll-offset#store">
+                    <option value="">Choose module for &#34;Root Page 2&#34;</option>
+                    <optgroup label="MSC.mw_elements">
+                        <option value="content-10">Element-10</option>
+                        <option value="content-20">Element-20</option>
+                        <option value="content-30">Element-30</option>
+                    </optgroup>
+                    <optgroup label="MSC.mw_modules">
+                        <option value="10">Module-10</option>
+                        <option value="20">Module-20</option>
+                        <option value="30">Module-30</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="tl_select_wrapper" data-controller="contao--choices">
+                <select
+                    name="rootPageDependentModules[3]"
+                    id="ctrl_rootPageDependentModules-3"
+                    class="tl_select"
+                    data-action="focus->contao--scroll-offset#store">
+                    <option value="">Choose module for &#34;Root Page 3&#34;</option>
+                    <optgroup label="MSC.mw_elements">
+                        <option value="content-10">Element-10</option>
+                        <option value="content-20">Element-20</option>
+                        <option value="content-30">Element-30</option>
+                    </optgroup>
+                    <optgroup label="MSC.mw_modules">
+                        <option value="10">Module-10</option>
+                        <option value="20">Module-20</option>
+                        <option value="30">Module-30</option>
+                    </optgroup>
                 </select>
             </div>
             OUTPUT;

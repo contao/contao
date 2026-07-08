@@ -310,6 +310,11 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null, $intLevel=1)
 	{
+		if ($blnEncodeAmpersands)
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', \sprintf('Using "%s" with the $blnEncodeAmpersands set to true is deprecated and will not work anymore in Contao 7.', __METHOD__));
+		}
+
 		$container = static::getContainer();
 		$return = null;
 		$request = $container->get('request_stack')->getCurrentRequest();
@@ -327,7 +332,7 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1);
+				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1, loadLabels: false);
 
 				if ($trail[\count($trail) - $intLevel - 1]['url'] ?? null)
 				{

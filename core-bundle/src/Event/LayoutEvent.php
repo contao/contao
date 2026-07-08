@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -27,7 +26,6 @@ class LayoutEvent extends Event
         private readonly LayoutTemplate $template,
         private readonly PageModel $page,
         private readonly LayoutModel|null $layout,
-        private readonly ResponseContext|null $responseContext,
     ) {
     }
 
@@ -44,10 +42,5 @@ class LayoutEvent extends Event
     public function getLayout(): LayoutModel|null
     {
         return $this->layout;
-    }
-
-    public function getResponseContext(): ResponseContext|null
-    {
-        return $this->responseContext;
     }
 }

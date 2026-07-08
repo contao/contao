@@ -8,7 +8,16 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['content', 'themeSelector', 'tabs', 'editor', 'editorAnnotations', 'nameNode', 'filter'];
+    static targets = [
+        'content',
+        'themeSelector',
+        'tabs',
+        'editor',
+        'editorAnnotations',
+        'nameNode',
+        'nameFilter',
+        'userFilter',
+    ];
 
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
@@ -76,13 +85,17 @@ export default class extends Controller {
         this.contentTarget.requestFullscreen();
     }
 
-    filter(event) {
-        const term = event.target.value;
+    filter() {
+        const term = this.nameFilterTarget.value.trim().toLowerCase();
 
-        this.filterTarget.classList.toggle('active', term);
+        this.nameFilterTarget.classList.toggle('active', term);
 
         for (const nameTarget of this.nameNodeTargets) {
-            nameTarget.classList.toggle('invisible', !nameTarget.dataset.name.includes(term));
+            nameTarget.classList.toggle(
+                'invisible',
+                !nameTarget.dataset.name.toLowerCase().includes(term) ||
+                    (!nameTarget.querySelector('span.user') && this.userFilterTarget.checked),
+            );
         }
     }
 

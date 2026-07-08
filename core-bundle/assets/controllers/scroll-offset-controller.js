@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    #autoFocus = false;
+    #pendingAutoFocus = null;
 
     static targets = ['scrollTo', 'autoFocus', 'widgetError'];
 
@@ -29,6 +29,9 @@ export default class extends Controller {
     }
 
     async restore() {
+        // Scrolls to a pending autofocus if one exists and resets the guard
+        if (this.#scrollToAutoFocusTarget()) return;
+
         if (!this.offset) return;
 
         // Execute scroll restore after Turbo scrolled to top
@@ -51,7 +54,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.#autoFocus) return;
+        if (this.#pendingAutoFocus) return;
 
         const input = this.autoFocusTarget;
 
@@ -66,13 +69,8 @@ export default class extends Controller {
             return;
         }
 
-        this.#autoFocus = true;
-        input.focus();
-
-        requestAnimationFrame(() => {
-            const len = input.value.length;
-            input.setSelectionRange(len, len);
-        });
+        // Save the pendingAutoFocus that will be executed in the #restore method on turbo:render
+        this.#pendingAutoFocus = input;
     }
 
     widgetErrorTargetConnected() {
@@ -108,5 +106,24 @@ export default class extends Controller {
         } else {
             window.sessionStorage.setItem(this.sessionKeyValue, String(value));
         }
+    }
+
+    #scrollToAutoFocusTarget() {
+        if (!this.#pendingAutoFocus) {
+            return false;
+        }
+
+        const input = this.#pendingAutoFocus;
+
+        queueMicrotask(() => {
+            // Do prevent scroll to allow turbo to handle it (see #8934)
+            input.focus({ preventScroll: true });
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
+
+        this.#pendingAutoFocus = null;
+
+        return true;
     }
 }

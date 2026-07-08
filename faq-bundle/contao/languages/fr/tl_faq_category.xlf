@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.1">
         <source>Please enter the category headline.</source>
-        <target>Saisir l'en-tête de la catégorie.</target>
+        <target>Saisir l&apos;en-tête de la catégorie.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.0">
         <source>Redirect page</source>

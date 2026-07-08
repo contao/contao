@@ -22,6 +22,9 @@
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Shrani</target>
@@ -179,7 +182,7 @@
         <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">
         <source>This template overwrites all previously defined content because it does not extend %previous%.</source>

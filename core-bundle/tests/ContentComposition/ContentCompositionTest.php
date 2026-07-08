@@ -18,6 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
@@ -53,6 +56,12 @@ class ContentCompositionTest extends TestCase
             ->willReturn('page/foo')
         ;
 
+        $responseContextFactory = $this->createStub(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->method('createContaoWebpageResponseContext')
+            ->willReturn(new ResponseContext())
+        ;
+
         $contentComposition = new ContentComposition(
             $this->createStub(ContaoFramework::class),
             $this->createStub(LoggerInterface::class),
@@ -65,6 +74,8 @@ class ContentCompositionTest extends TestCase
             $this->createStub(LocaleAwareInterface::class),
             $pageRegistry,
             $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(ResponseContextAccessor::class),
+            $responseContextFactory,
         );
 
         $builder = $contentComposition->createContentCompositionBuilder($page);

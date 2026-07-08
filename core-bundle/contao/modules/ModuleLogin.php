@@ -63,7 +63,7 @@ class ModuleLogin extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -111,8 +111,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$security = $container->get('security.helper');
@@ -121,6 +119,7 @@ class ModuleLogin extends Module
 		$lastUsername = '';
 		$isRemembered = $security->isGranted('IS_REMEMBERED');
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
 		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));

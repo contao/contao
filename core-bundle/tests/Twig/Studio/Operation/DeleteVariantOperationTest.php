@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractDeleteVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Doctrine\DBAL\Connection;
@@ -13,11 +14,17 @@ use Symfony\Component\HttpFoundation\Request;
 class DeleteVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
-    public function testCanExecute(OperationContext $context, bool $canExecute): void
+    public function testCanExecute(OperationContext $context, bool $canExecute, array $chain): void
     {
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getInheritanceChains')
+            ->willReturn([$context->getIdentifier() => $chain])
+        ;
+
         $this->assertSame(
             $canExecute,
-            $this->getDeleteVariantOperation()->canExecute($context),
+            $this->getDeleteVariantOperation(null, $filesystemLoader)->canExecute($context),
         );
     }
 
@@ -26,36 +33,72 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
         yield 'arbitrary identifier' => [
             static::getOperationContext('bar/foo'),
             false,
+            [
+                '/templates/bar/foo.html.twig' => '@Contao_User/bar/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
+            ],
         ];
 
         yield 'identifier matching the prefix' => [
             static::getOperationContext('prefix/foo'),
             false,
+            [
+                '/templates/prefix/foo.html.twig' => '@Contao_User/prefix/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
+            ],
         ];
 
         yield 'matching variant identifier' => [
             static::getOperationContext('prefix/foo/my_variant'),
             true,
+            [
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_User/prefix/foo/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
+            ],
         ];
 
         yield 'matching nested variant identifier' => [
             static::getOperationContext('prefix/foo/bar/my_variant'),
             true,
+            [
+                '/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_User/prefix/foo/bar/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/bar/my_variant.html.twig',
+            ],
         ];
 
         yield 'arbitrary identifier in theme context' => [
             static::getOperationContext('bar/foo', 'theme'),
             false,
+            [
+                '/templates/bar/foo.html.twig' => '@Contao_User/bar/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
+            ],
         ];
 
         yield 'identifier matching the prefix in theme context' => [
             static::getOperationContext('prefix/foo', 'theme'),
             false,
+            [
+                '/templates/prefix/foo.html.twig' => '@Contao_User/prefix/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
+            ],
         ];
 
         yield 'matching variant identifier in theme context' => [
             static::getOperationContext('prefix/foo/my_variant', 'theme'),
             false,
+            [
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_User/prefix/foo/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
+            ],
+        ];
+
+        yield 'no root template' => [
+            static::getOperationContext('bar/foo', 'theme'),
+            false,
+            [
+                '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
+            ],
         ];
     }
 
@@ -93,7 +136,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             )
         ;
 
-        $operation = $this->getDeleteVariantOperation($connection, true);
+        $operation = $this->getDeleteVariantOperation($connection, null, true);
 
         $operation->execute(
             new Request(request: ['confirm_delete' => true]),
@@ -101,7 +144,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
         );
     }
 
-    private function getDeleteVariantOperation(Connection|null $connection = null, bool $shouldSetDatabaseValueToDefaultWhenMigrating = false): AbstractDeleteVariantOperation
+    private function getDeleteVariantOperation(Connection|null $connection = null, ContaoFilesystemLoader|null $loader = null, bool $shouldSetDatabaseValueToDefaultWhenMigrating = false): AbstractDeleteVariantOperation
     {
         $operation = new class($shouldSetDatabaseValueToDefaultWhenMigrating) extends AbstractDeleteVariantOperation {
             public function __construct(private readonly bool $shouldSetDatabaseValueToDefaultWhenMigrating)
@@ -124,7 +167,7 @@ class DeleteVariantOperationTest extends AbstractOperationTestCase
             }
         };
 
-        $container = $this->getContainer();
+        $container = $this->getContainer($loader);
         $container->set('database_connection', $connection);
 
         $operation->setContainer($container);

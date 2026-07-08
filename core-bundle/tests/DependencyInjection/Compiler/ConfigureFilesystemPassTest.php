@@ -20,6 +20,8 @@ use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Cmf\Component\Routing\ChainRouter;
@@ -115,6 +117,11 @@ class ConfigureFilesystemPassTest extends TestCase
                 'contao.upload_path' => 'files',
             ]),
         );
+
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
 
         $container->setDefinition('contao.filesystem.file_download_helper', new Definition(FileDownloadHelper::class)
             ->setArguments([

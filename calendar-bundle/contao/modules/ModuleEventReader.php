@@ -54,7 +54,7 @@ class ModuleEventReader extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -80,8 +80,6 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$this->Template->event = '';
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
@@ -205,6 +203,7 @@ class ModuleEventReader extends Events
 			$objEvent->cssClass .= ' current';
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $intStartTime, $intEndTime, $span);
 
 		$until = '';

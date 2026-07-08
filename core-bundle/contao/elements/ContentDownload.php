@@ -106,8 +106,7 @@ class ContentDownload extends ContentElement
 		}
 		else
 		{
-			global $objPage;
-
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);
 
 			if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
@@ -140,7 +139,7 @@ class ContentDownload extends ContentElement
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
 
-		$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
+		$strHref .= (str_contains($strHref, '?') ? '&' : '?') . 'file=' . System::urlEncode($objFile->value) . '&cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
 		$this->Template->title = StringUtil::specialchars($this->titleText);
@@ -170,7 +169,9 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
+			if (($layoutId = $objPage?->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
