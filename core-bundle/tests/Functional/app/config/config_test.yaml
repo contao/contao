@@ -54,6 +54,7 @@ doctrine:
         auto_mapping: true
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
+        enable_native_lazy_objects: true
 
 contao:
     cron:

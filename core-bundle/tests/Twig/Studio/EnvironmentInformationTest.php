@@ -82,7 +82,7 @@ class EnvironmentInformationTest extends TestCase
                 'filters' => ['filter'],
                 'tests' => ['test'],
             ],
-            (new EnvironmentInformation($environment))->getData(),
+            new EnvironmentInformation($environment)->getData(),
         );
     }
 }

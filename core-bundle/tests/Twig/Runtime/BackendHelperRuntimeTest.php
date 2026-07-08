@@ -20,47 +20,60 @@ use Contao\Image;
 
 class BackendHelperRuntimeTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        parent::tearDown();
+    }
+
     public function testDelegatesCallsForIcon(): void
     {
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
+
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('icon.svg', 'alt', 'foo="bar"')
+            ->with('icon.svg', 'alt', $attributes)
             ->willReturn('icon HTML')
         ;
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->icon(
-            'icon.svg', 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->icon(
+            'icon.svg', 'alt', $attributes,
         ));
     }
 
     public function testReturnsDefaultIconForNoMimeType(): void
     {
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
+
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('plain.svg', 'alt', 'foo="bar"')
+            ->with('plain.svg', 'alt', $attributes)
             ->willReturn('icon HTML')
         ;
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $this->createStub(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $this->createStub(FilesystemItem::class), 'alt', $attributes,
         ));
     }
 
     public function testReturnsIconForMimeType(): void
     {
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
+
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('image.svg', 'alt', 'foo="bar"')
+            ->with('image.svg', 'alt', $attributes)
             ->willReturn('icon HTML')
         ;
 
@@ -75,20 +88,20 @@ class BackendHelperRuntimeTest extends TestCase
 
         $GLOBALS['TL_MIME'] = ['jpg' => ['image/jpeg', 'image.svg']];
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $fileitem, 'alt', $attributes,
         ));
-
-        unset($GLOBALS['TL_MIME']);
     }
 
     public function testReturnsDefaultIconForMissingRegisteredMimeType(): void
     {
+        $attributes = new HtmlAttributes()->set('foo', 'bar');
+
         $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('plain.svg', 'alt', 'foo="bar"')
+            ->with('plain.svg', 'alt', $attributes)
             ->willReturn('icon HTML')
         ;
 
@@ -101,8 +114,8 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('image/jpeg')
         ;
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $fileitem, 'alt', $attributes,
         ));
     }
 }

@@ -113,7 +113,7 @@ class StringUtilFlag
     public function utf8Romanize(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         return $result
-            ->withValue((new UnicodeString($result->getValue()))->ascii()->toString())
+            ->withValue(new UnicodeString($result->getValue())->ascii()->toString())
             ->withOutputType(OutputType::html === $result->getOutputType() ? OutputType::html : OutputType::text)
         ;
     }

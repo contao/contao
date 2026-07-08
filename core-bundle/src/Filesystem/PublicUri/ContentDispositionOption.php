@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Filesystem\PublicUri;
 
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
-final class ContentDispositionOption implements OptionsInterface, ContentDispositionAware
+final class ContentDispositionOption
 {
     /**
      * @phpstan-var HeaderUtils::DISPOSITION_INLINE|HeaderUtils::DISPOSITION_ATTACHMENT

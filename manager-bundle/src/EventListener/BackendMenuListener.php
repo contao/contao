@@ -92,7 +92,7 @@ class BackendMenuListener
         $tree->addChild($debug);
 
         // The last two items are "submenu" and "burger", so make this the third to last
-        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
+        new MenuManipulator()->moveToPosition($debug, $tree->count() - 3);
     }
 
     /**

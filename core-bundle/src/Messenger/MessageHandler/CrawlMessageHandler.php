@@ -20,7 +20,6 @@ use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 use Monolog\Handler\GroupHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -75,14 +74,20 @@ class CrawlMessageHandler
             );
         }
 
+        $logger = $this->createLogger($job, $message->subscribers);
+
         $escargot = $escargot
             ->withMaxDurationInSeconds(20) // This we can improve in the future. It's only needed in the "web" scope
             ->withConcurrency($this->concurrency)
             ->withMaxDepth($message->maxDepth)
-            ->withLogger($this->createLogger($job, $message->subscribers))
+            ->withLogger($logger)
         ;
 
         $escargot->crawl();
+
+        // We need to free up the resources of the logger's handlers, otherwise there
+        // will be a dangling file pointer
+        $logger->close();
 
         // Commit the result on the lazy queue
         $queue->commit($escargotJobId);
@@ -110,7 +115,7 @@ class CrawlMessageHandler
      *
      * @param array<string> $activeSubscribers
      */
-    private function createLogger(Job $job, array $activeSubscribers): LoggerInterface
+    private function createLogger(Job $job, array $activeSubscribers): Logger
     {
         $handlers = [];
 
@@ -160,17 +165,21 @@ class CrawlMessageHandler
     private function finishJob(Job $job, array $activeSubscribers): void
     {
         if ($this->fs->exists($this->getDebugLogPath($job))) {
-            $this->jobs->addAttachment($job, 'debug_log.csv', fopen($this->getDebugLogPath($job), 'r'));
+            $fh = fopen($this->getDebugLogPath($job), 'r');
+            $this->jobs->addAttachment($job, 'debug_log.csv', $fh);
+            fclose($fh);
         }
 
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
-            if (!$this->fs->exists($this->getSubscriberLogFilePath($job, $subscriber->getName()))) {
+            $logFile = $this->getSubscriberLogFilePath($job, $subscriber->getName());
+
+            if (!$this->fs->exists($logFile)) {
                 continue;
             }
 
-            $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', fopen(
-                $this->getSubscriberLogFilePath($job, $subscriber->getName()), 'r'),
-            );
+            $fh = fopen($logFile, 'r');
+            $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', $fh);
+            fclose($fh);
         }
 
         // Now that we have attached the files to the job (and thus they have been copied

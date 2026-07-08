@@ -60,22 +60,6 @@ class PageRegistryTest extends TestCase
         $this->assertSame('/.+?', $route->getRequirement('parameters'));
     }
 
-    public function testReturnsUnparameteredPageRouteForForwardPages(): void
-    {
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
-            'type' => 'forward',
-            'alias' => 'bar',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.baz',
-        ]);
-
-        $registry = new PageRegistry($this->createStub(Connection::class));
-        $route = $registry->getRoute($pageModel);
-
-        $this->assertSame('/foo/bar.baz', $route->getPath());
-        $this->assertNull($route->getDefault('parameters'));
-    }
-
     public function testReturnsParameteredPageRouteIfTheAlwaysForwardOptionIsSet(): void
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [

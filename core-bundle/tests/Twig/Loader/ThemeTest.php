@@ -83,13 +83,13 @@ class ThemeTest extends TestCase
 
     public function testGetFromSlug(): void
     {
-        $this->assertSame('@Contao_Theme_foo_bar', (new ThemeNamespace())->getFromSlug('foo_bar'));
+        $this->assertSame('@Contao_Theme_foo_bar', new ThemeNamespace()->getFromSlug('foo_bar'));
     }
 
     #[DataProvider('provideNamespaces')]
     public function testMatchThemeNamespace(string $name, string|null $expectedSlug): void
     {
-        $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));
+        $this->assertSame($expectedSlug, new ThemeNamespace()->match($name));
     }
 
     public static function provideNamespaces(): iterable

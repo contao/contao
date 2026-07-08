@@ -108,7 +108,6 @@ use Contao\TextField;
 use Contao\Theme;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
-use Contao\TrblField;
 use Contao\Upload;
 use Contao\UserGroupModel;
 use Contao\UserModel;
@@ -149,12 +148,6 @@ $GLOBALS['BE_MOD'] = array
 			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
-		),
-		'tpl_editor' => array
-		(
-			'tables'      => array('tl_templates'),
-			'new_tpl'     => array('tl_templates', 'addNewTemplate'),
-			'compare'     => array('tl_templates', 'compareTemplate')
 		)
 	),
 
@@ -309,7 +302,6 @@ $GLOBALS['BE_FFL'] = array
 	'radio'                   => RadioButton::class,
 	'radioTable'              => RadioTable::class,
 	'inputUnit'               => InputUnit::class,
-	'trbl'                    => TrblField::class,
 	'chmod'                   => ChmodTable::class,
 	'cud'                     => CudTable::class,
 	'picker'                  => Picker::class,

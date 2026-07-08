@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -124,7 +124,7 @@ trait VirtualFilesystemDecoratorTrait
         return $this->inner->resolveUuid($uuid);
     }
 
-    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
+    public function generatePublicUri(Uuid|string $location, Options|null $options = null): UriInterface|null
     {
         return $this->inner->generatePublicUri($location, $options);
     }

@@ -20,11 +20,10 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
-use Contao\LayoutModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $this->loadDataContainer('tl_page');
 
@@ -39,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'permissions'                 => array(),
 		'onload_callback' => array
 		(
 			array('tl_article', 'adjustDca'),
@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
-			'panelLayout'             => 'filter;search',
+			'panelLayout'             => 'search,filter',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -101,28 +101,28 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_page.title',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'alias' => array
 		(
@@ -133,46 +133,46 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				array('tl_article', 'generateAlias')
 			),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'author' => array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'inColumn' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
-			'sql'                     => "varchar(32) NOT NULL default 'main'"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'main')
 		),
 		'showTeaser' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'teaserCssID' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'teaser' => array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
 			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'printable' => array
 		(
@@ -180,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'options'                 => array('print', 'facebook', 'twitter'),
 			'eval'                    => array('multiple'=>true),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_article'],
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'customTpl' => array
 		(
@@ -189,14 +189,14 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 				return Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'protected' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'groups' => array
 		(
@@ -204,14 +204,14 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'cssID' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'published' => array
 		(
@@ -219,19 +219,19 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		)
 	)
 );
@@ -347,76 +347,6 @@ class tl_article extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return all active layout sections as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getActiveLayoutSections(DataContainer $dc)
-	{
-		// Show only active sections
-		if ($dc->activeRecord->pid ?? null)
-		{
-			$arrSections = array();
-			$objPage = PageModel::findWithDetails($dc->activeRecord->pid);
-
-			// Get the layout sections
-			if ($objPage->layout)
-			{
-				$objLayout = LayoutModel::findById($objPage->layout);
-
-				if ($objLayout === null)
-				{
-					return array();
-				}
-
-				$arrModules = StringUtil::deserialize($objLayout->modules);
-
-				if (empty($arrModules) || !is_array($arrModules))
-				{
-					return array();
-				}
-
-				// Find all sections with an article module (see #6094)
-				foreach ($arrModules as $arrModule)
-				{
-					if ($arrModule['mod'] == 0 && ($arrModule['enable'] ?? null))
-					{
-						$arrSections[] = $arrModule['col'];
-					}
-				}
-			}
-		}
-
-		// Show all sections (e.g. "override all" mode)
-		else
-		{
-			$arrSections = array('header', 'left', 'right', 'main', 'footer');
-			$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
-
-			while ($objLayout->next())
-			{
-				$arrCustom = StringUtil::deserialize($objLayout->sections);
-
-				// Add the custom layout sections
-				if (!empty($arrCustom) && is_array($arrCustom))
-				{
-					foreach ($arrCustom as $v)
-					{
-						if (!empty($v['id']))
-						{
-							$arrSections[] = $v['id'];
-						}
-					}
-				}
-			}
-		}
-
-		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
 	/**

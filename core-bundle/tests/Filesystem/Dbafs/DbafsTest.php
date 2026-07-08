@@ -22,6 +22,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -245,8 +246,9 @@ class DbafsTest extends TestCase
             return $column;
         };
 
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
+            ->expects($this->once())
             ->method('listTableColumns')
             ->with('tl_files')
             ->willReturn(
@@ -568,7 +570,7 @@ class DbafsTest extends TestCase
     {
         $getFilesystem = static function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+                new MountManager(self::createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
                 new DbafsManager(new EventDispatcher()),
             );
 
@@ -1383,7 +1385,7 @@ class DbafsTest extends TestCase
 
     private function getMountManagerWithRootAdapter(): MountManager
     {
-        return (new MountManager())->mount(new InMemoryFilesystemAdapter());
+        return new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter());
     }
 
     private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs
@@ -1393,8 +1395,7 @@ class DbafsTest extends TestCase
         if ($connection instanceof Stub) {
             $connection
                 ->method('quoteIdentifier')
-                ->with('tl_files')
-                ->willReturn('tl_files')
+                ->willReturnArgument(0)
             ;
         }
 

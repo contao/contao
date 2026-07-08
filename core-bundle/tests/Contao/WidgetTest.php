@@ -186,7 +186,7 @@ class WidgetTest extends TestCase
         }
 
         if (isset($parameters[2])) {
-            $widget = (new \ReflectionClass(TextField::class))->newInstanceWithoutConstructor();
+            $widget = new \ReflectionClass(TextField::class)->newInstanceWithoutConstructor();
             $widget->addAttributes($attrs);
             $this->assertSame($parameters[2], $widget->value);
         }
@@ -253,9 +253,22 @@ class WidgetTest extends TestCase
 
         yield [
             [
-                ['eval' => ['basicEntities' => true]],
+                ['eval' => ['basicEntities' => true, 'allowHtml' => true]],
                 'name',
                 '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
+            ],
+            [
+                'basicEntities' => true,
+                'allowHtml' => true,
+                'value' => '[&],[lt],[gt],[nbsp],[-],[lsqb],[rsqb]',
+            ],
+        ];
+
+        yield [
+            [
+                ['eval' => ['basicEntities' => true]],
+                'name',
+                "&,<,>,\u{A0},\u{AD},[,]",
             ],
             [
                 'basicEntities' => true,

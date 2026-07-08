@@ -1,0 +1,51 @@
+fieldset.tl_checkbox_container,
+fieldset.tl_radio_container {
+    border: 0;
+    margin: 15px 0 0;
+    padding: 0;
+}
+
+fieldset.tl_checkbox_container > span,
+fieldset.tl_radio_container > span,
+.tl_checkbox_single_container > span {
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
+    column-gap: 3px;
+}
+
+fieldset.tl_checkbox_wizard .sortable > span,
+fieldset.tl_radio_container .sortable > span {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    column-gap: 3px;
+}
+
+fieldset.tl_checkbox_container legend,
+fieldset.tl_radio_container legend {
+    margin-bottom: 1px;
+    font-weight: 600;
+}
+
+@media (resolution >= 2dppx) {
+    fieldset.tl_checkbox_container legend,
+    fieldset.tl_radio_container legend {
+        font-weight: 500;
+    }
+}
+
+fieldset.tl_checkbox_container .check-all {
+    color: var(--gray);
+}
+
+fieldset.tl_checkbox_container button {
+    vertical-align: middle;
+}
+
+fieldset.checkbox_container,
+fieldset.radio_container {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}

@@ -38,7 +38,6 @@ class RowWizard extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 
 		System::loadLanguageFile('default');
 	}
@@ -136,6 +135,11 @@ class RowWizard extends Widget
 					$varValue[$i][$key] = $widget->value;
 				}
 			}
+
+			if (\in_array('enable', $this->actions))
+			{
+				$varValue[$i]['enable'] = $this->getPost($this->strId . '[' . $i . '][enable]');
+			}
 		}
 
 		if ($this->hasErrors())
@@ -148,15 +152,19 @@ class RowWizard extends Widget
 
 	public function generate(): string
 	{
+		$valuesEmpty = false;
+
 		// Make sure there is at least an empty array
 		if (!\is_array($this->varValue) || array() === $this->varValue)
 		{
 			$this->varValue = array(array(''));
+			$valuesEmpty = true;
 		}
 
 		// Populate the rows if the initial count has not been reached
 		if (null !== $this->min)
 		{
+			$valuesEmpty = false;
 			$rowCount = \count($this->varValue);
 
 			while ($rowCount < $this->min)
@@ -182,7 +190,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -192,7 +200,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -237,6 +245,7 @@ class RowWizard extends Widget
 			'max_rows' => $this->max,
 			'sortable' => $this->sortable,
 			'actions' => $this->actions,
+			'values_empty' => $valuesEmpty,
 		));
 	}
 
@@ -276,14 +285,12 @@ class RowWizard extends Widget
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
+		$data['id'] = $data['name'];
 
-		if (\in_array($data['type'] ?? null, array('checkbox', 'label'), true))
+		if ($data['dcaPicker'] ?? null)
 		{
-			$data['id'] = $data['name'];
-		}
-		else
-		{
-			$data['id'] .= '_' . $increment;
+			$data['wizard'] = ($data['wizard'] ?? '') . Backend::getDcaPickerWizard($data['dcaPicker'], $this->strTable, $this->strField, $data['name'], $data['label'] ?? null);
+			$data['cell_class'] = trim(($data['cell_class'] ?? '') . ' wizard');
 		}
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);

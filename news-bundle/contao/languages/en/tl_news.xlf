@@ -212,6 +212,9 @@
       <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news.versions.1">
+        <source>Show the versions of news item ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
       </trans-unit>

@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class CsvImportControllerTest extends TestCase
 {
@@ -34,7 +35,16 @@ class CsvImportControllerTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithFixtures());
+        $twig = $this->createStub(Environment::class);
+        $twig
+            ->method('render')
+            ->willReturn('<content>')
+        ;
+
+        $container = $this->getContainerWithFixtures();
+        $container->set('twig', $twig);
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -57,14 +67,7 @@ class CsvImportControllerTest extends TestCase
             ->getContent()
         ;
 
-        $expect = <<<'EOF'
-            <form id="tl_csv_import_lw">
-              <div class="uploader"></div>
-            </form>
-
-            EOF;
-
-        $this->assertSame($expect, $html);
+        $this->assertSame('<content>', $html);
     }
 
     public function testImportsTheListWizardData(): void
@@ -104,14 +107,7 @@ class CsvImportControllerTest extends TestCase
             ->getContent()
         ;
 
-        $expect = <<<'EOF'
-            <form id="tl_csv_import_tw">
-              <div class="uploader"></div>
-            </form>
-
-            EOF;
-
-        $this->assertSame($expect, $html);
+        $this->assertSame('<content>', $html);
     }
 
     public function testImportsTheTableWizardData(): void
@@ -151,14 +147,7 @@ class CsvImportControllerTest extends TestCase
             ->getContent()
         ;
 
-        $expect = <<<'EOF'
-            <form id="tl_csv_import_ow">
-              <div class="uploader"></div>
-            </form>
-
-            EOF;
-
-        $this->assertSame($expect, $html);
+        $this->assertSame('<content>', $html);
     }
 
     public function testImportsTheOptionWizardData(): void

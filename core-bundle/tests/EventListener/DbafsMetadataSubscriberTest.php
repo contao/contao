@@ -106,7 +106,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->assertSame(
             ['fr', 'de'],
-            (new \ReflectionClass(MetadataBag::class))
+            new \ReflectionClass(MetadataBag::class)
                 ->getProperty('defaultLocales')
                 ->getValue($localizedMetadata),
         );

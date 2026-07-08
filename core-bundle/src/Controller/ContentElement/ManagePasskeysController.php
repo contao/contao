@@ -46,7 +46,7 @@ class ManagePasskeysController extends AbstractContentElementController
 
         if ($request->query->get('edit_new_passkey') && $this->uriSigner->checkRequest($request)) {
             if ($credential = $this->credentialRepo->getLastForUser($user)) {
-                $template->edit_passkey_id = $credential->getId();
+                $template->set('edit_passkey_id', $credential->getId());
             }
         }
 
@@ -81,9 +81,13 @@ class ManagePasskeysController extends AbstractContentElementController
             return new RedirectResponse($this->generateContentUrl($page));
         }
 
-        $template->credentials = $this->credentialRepo->getAllForUser($user);
-        $template->edit_passkey_id ??= $request->query->get('edit_passkey');
-        $template->redirect = $this->uriSigner->sign($this->generateContentUrl($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
+        $template->set('credentials', $this->credentialRepo->getAllForUser($user));
+
+        if (!$template->has('edit_passkey_id')) {
+            $template->set('edit_passkey_id', $request->query->get('edit_passkey'));
+        }
+
+        $template->set('redirect', $this->uriSigner->sign($this->generateContentUrl($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL)));
 
         return $template->getResponse();
     }

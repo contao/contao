@@ -34,7 +34,15 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, ResetInterface
 {
+    /**
+     * @var array<int, array<int>>
+     */
     private array $pagemountsCache = [];
+
+    /**
+     * @var array<int, array<int>>
+     */
+    private array $pagemountTrailCache = [];
 
     /**
      * @var array<int, string|false>
@@ -115,22 +123,17 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         }
 
         // To create a record, both hierarchy and edit permissions must be available.
-        foreach ($pageIds as $pageId) {
-            if (
-                $this->canEdit($action, $token, $pageId)
-                && $this->canChangeHierarchy($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource())
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($pageIds, fn ($pageId) => $this->canEdit($action, $token, $pageId)
+            && $this->canChangeHierarchy($action, $token, $pageId)
+            && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()));
     }
 
     private function canRead(ReadAction $action, TokenInterface $token): bool
     {
-        return $this->canAccessPage($token, $this->getCurrentPageId($action), false);
+        $pageId = $this->getCurrentPageId($action);
+
+        return $this->canAccessPage($token, $pageId, false)
+            || ('tl_page' === $action->getDataSource() && \in_array($pageId, $this->getPagemountTrail($token), true));
     }
 
     private function canUpdate(UpdateAction $action, TokenInterface $token): bool
@@ -205,6 +208,28 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         return $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page', false, $user->pagemounts);
     }
 
+    private function getPagemountTrail(TokenInterface $token): array
+    {
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return [];
+        }
+
+        if (isset($this->pagemountTrailCache[$user->id])) {
+            return $this->pagemountTrailCache[$user->id];
+        }
+
+        $database = $this->framework->createInstance(Database::class);
+        $trails = $this->pagemountTrailCache[$user->id] = [];
+
+        foreach ($user->pagemounts as $pageId) {
+            $trails[] = $database->getParentRecords($pageId, 'tl_page');
+        }
+
+        return $this->pagemountTrailCache[$user->id] = array_map(intval(...), array_unique(array_merge(...$trails)));
+    }
+
     private function getCurrentPageId(DeleteAction|ReadAction|UpdateAction $action): int
     {
         return match ($action->getDataSource()) {
@@ -252,7 +277,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private function getPageType(int $id): string
     {
         if (!isset($this->pageTypeCache[$id])) {
-            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$id]);
+            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id = ?', [$id]);
         }
 
         if (false === $this->pageTypeCache[$id]) {

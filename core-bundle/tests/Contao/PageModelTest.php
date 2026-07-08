@@ -67,8 +67,8 @@ class PageModelTest extends TestCase
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
-        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
+        new Filesystem()->mkdir($this->getTempDir().'/languages/en');
+        new Filesystem()->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
     }
@@ -499,7 +499,7 @@ class PageModelTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property = new \ReflectionClass($database)->getProperty('objInstance');
         $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());

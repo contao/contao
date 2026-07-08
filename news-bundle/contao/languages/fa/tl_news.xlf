@@ -281,6 +281,10 @@
         <source>Show the details of news item ID %s</source>
         <target>نمایش جزئیات آیتم خبر شناسه %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.versions.1">
+        <source>Show the versions of news item ID %s</source>
+        <target>نمایش نسخه‌های خبر با شناسهٔ %s</target>
+      </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>ویرایش آیتم خبر شناسه %s</target>
@@ -318,10 +322,12 @@
         <target>انتشار آیتم خبر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
+        <source>Unpublish</source>
+        <target>لغو انتشار</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
-        <source>Unpublish</source>
+        <source>Publish</source>
+        <target>انتشار</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -337,13 +343,19 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.3">
         <source>Unfeature</source>
+        <target>لغو ویژه‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.4">
         <source>Feature</source>
+        <target>ویژه‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>جاگذاری در این بایگانی اخبار</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>اخبار</target>
       </trans-unit>
     </body>
   </file>

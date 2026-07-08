@@ -44,7 +44,7 @@ class ForeignKeyParser
         // names such as "group"
         if ($isIdentifier($columnExpression)) {
             $columnName = $columnExpression;
-            $columnExpression = $this->connection->quoteIdentifier($columnExpression);
+            $columnExpression = $this->connection->quoteSingleIdentifier($columnExpression);
 
             $expression = new ForeignKeyExpression($tableExpression, $columnExpression);
             $expression = $expression->withColumnName($columnName);

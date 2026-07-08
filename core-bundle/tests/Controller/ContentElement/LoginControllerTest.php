@@ -182,7 +182,11 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testUsesRedirectBackTargetPathFromPostRequest(): void
     {
-        $request = Request::create('https://target-path-post-test.com/login', 'POST', ['_target_path' => base64_encode('post_target_path')]);
+        $request = Request::create(
+            'https://target-path-post-test.com/login',
+            'POST',
+            ['_target_path' => base64_encode('post_target_path'), 'FORM_SUBMIT' => 'tl_login_42'],
+        );
 
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
@@ -200,6 +204,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(ContaoFramework::class),
             ),
             [
+                'id' => 42,
                 'type' => 'login',
                 'redirectBack' => 1,
             ],

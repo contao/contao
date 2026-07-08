@@ -55,13 +55,7 @@ class Picker implements PickerInterface
 
     public function getCurrentProvider(): PickerProviderInterface|null
     {
-        foreach ($this->providers as $provider) {
-            if ($provider->isCurrent($this->config)) {
-                return $provider;
-            }
-        }
-
-        return null;
+        return array_find($this->providers, fn ($provider) => $provider->isCurrent($this->config));
     }
 
     public function getCurrentUrl(): string|null

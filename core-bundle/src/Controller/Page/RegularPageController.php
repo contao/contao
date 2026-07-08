@@ -12,15 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\Page;
 
-use Contao\CoreBundle\Twig\LayoutTemplate;
-use Contao\LayoutModel;
-use Symfony\Component\HttpFoundation\Request;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
+use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegularPageController extends AbstractLayoutPageController
+/**
+ * @internal
+ */
+#[AsPage]
+class RegularPageController extends AbstractPageController
 {
-    protected function getResponse(LayoutTemplate $template, LayoutModel $model, Request $request): Response
+    public function __invoke(PageModel $pageModel): Response
     {
-        return $template->getResponse();
+        return $this->renderPage($pageModel);
     }
 }

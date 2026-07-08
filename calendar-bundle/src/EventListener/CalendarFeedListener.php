@@ -109,7 +109,7 @@ class CalendarFeedListener
 
         $item = new Item();
         $item->setTitle(html_entity_decode($title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['begin']));
+        $item->setLastModified(new \DateTime()->setTimestamp($calendarEvent['begin']));
 
         try {
             $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
@@ -174,7 +174,7 @@ class CalendarFeedListener
     private function getAuthor(array $calendarEvent): AuthorInterface|null
     {
         if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($calendarEvent['author'])) {
-            return (new Author())->setName($authorModel->name);
+            return new Author()->setName($authorModel->name);
         }
 
         return null;
@@ -225,7 +225,7 @@ class CalendarFeedListener
                 $fileSize = $file->exists() ? $file->filesize : null;
             }
 
-            $media = (new Media())->setUrl($fileUrl)->setType($file->mime);
+            $media = new Media()->setUrl($fileUrl)->setType($file->mime);
 
             if ($fileSize) {
                 $media->setLength($fileSize);

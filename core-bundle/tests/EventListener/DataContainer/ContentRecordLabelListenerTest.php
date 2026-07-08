@@ -41,8 +41,7 @@ class ContentRecordLabelListenerTest extends TestCase
         $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
-            ->with('CTE.foo.0', 'contao_default')
-            ->willReturn(true)
+            ->willReturnMap([['CTE.foo.0', 'contao_default', true]])
         ;
 
         $translator = $this->createMock(TranslatorStub::class);

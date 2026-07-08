@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -25,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -37,7 +39,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }
@@ -81,6 +83,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
             $this->vfs,
             $router ?? $this->createStub(RouterInterface::class),
             $messageBus ?? $this->createStub(MessageBusInterface::class),
+            $this->createStub(UriSigner::class),
             $clock,
         );
     }

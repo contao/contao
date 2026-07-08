@@ -18,6 +18,9 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
 
 /**
  * Content element "player".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\PlayerController instead.
  */
 class ContentPlayer extends ContentElement
 {
@@ -92,8 +95,6 @@ class ContentPlayer extends ContentElement
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$this->Template->poster = false;
 
 		// Optional poster
@@ -120,6 +121,8 @@ class ContentPlayer extends ContentElement
 
 			$arrFiles = array('m4a'=>null, 'mp3'=>null, 'wma'=>null, 'mpeg'=>null, 'wav'=>null, 'ogg'=>null);
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);

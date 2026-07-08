@@ -48,39 +48,6 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
-	 * Find a particular template file and return its path
-	 *
-	 * @param string $strTemplate The name of the template
-	 *
-	 * @return string The path to the template file
-	 *
-	 * @throws \RuntimeException If the template group folder is insecure
-	 */
-	public static function getTemplate($strTemplate)
-	{
-		$strTemplate = basename($strTemplate);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		// Check for a theme folder
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
-		{
-			global $objPage;
-
-			if ($objPage->templateGroup ?? null)
-			{
-				if (Validator::isInsecurePath($objPage->templateGroup))
-				{
-					throw new \RuntimeException('Invalid path ' . $objPage->templateGroup);
-				}
-
-				return TemplateLoader::getPath($strTemplate, 'html5', $objPage->templateGroup);
-			}
-		}
-
-		return TemplateLoader::getPath($strTemplate, 'html5');
-	}
-
-	/**
 	 * Return all template files of a particular group as array
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
@@ -129,9 +96,6 @@ abstract class Controller extends System
 				array_keys($templateHierarchy->getInheritanceChains()),
 				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
 			),
-			// Merge with the templates from the TemplateLoader for backwards
-			// compatibility in case someone has added templates manually
-			TemplateLoader::getPrefixedFiles($strPrefix),
 		);
 
 		foreach ($prefixedFiles as $strTemplate)
@@ -183,7 +147,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['user'] ?? 'user';
 			}
 		}
 
@@ -195,7 +159,7 @@ abstract class Controller extends System
 
 			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
 			{
-				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['user'];
 			}
 		}
 
@@ -444,8 +408,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
-		global $objPage;
-
 		if (\is_object($varId))
 		{
 			$objRow = $varId;
@@ -457,6 +419,7 @@ abstract class Controller extends System
 				return '';
 			}
 
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
@@ -840,8 +803,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts && !System::getContainer()->getParameter('kernel.debug');
 
@@ -1063,7 +1025,7 @@ abstract class Controller extends System
 		// Merge the request string to be added
 		if ($strRequest)
 		{
-			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
+			parse_str(str_replace('&', '&', $strRequest), $newPairs);
 			$pairs = array_merge($pairs, $newPairs);
 		}
 
@@ -1071,7 +1033,7 @@ abstract class Controller extends System
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 		}
 
 		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
@@ -1093,7 +1055,7 @@ abstract class Controller extends System
 	 */
 	public static function redirect($strLocation, $intStatus=303): never
 	{
-		$strLocation = str_replace('&amp;', '&', $strLocation);
+		$strLocation = str_replace('&', '&', $strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
@@ -1438,7 +1400,7 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
@@ -1463,7 +1425,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 

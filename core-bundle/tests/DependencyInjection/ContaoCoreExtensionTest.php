@@ -25,7 +25,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
-use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -76,34 +75,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
         $this->assertSame(32, $events['kernel.request'][0][1]);
-    }
-
-    public function testRegistersTheMakeResponsePrivateListenerAtTheEnd(): void
-    {
-        $container = $this->getContainerBuilder();
-
-        $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getMethod('makeResponsePrivate')->getAttributes()[0];
-        $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
-
-        $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
-        $attribute = (new \ReflectionClass($mergeHeadersListenerDefinition->getClass()))->getAttributes()[0];
-        $mergeHeadersListenerPriority = $attribute->getArguments()['priority'];
-
-        // Ensure that the listener is registered after the MergeHeaderListener
-        $this->assertTrue($makeResponsePrivatePriority < $mergeHeadersListenerPriority);
-
-        $clearSessionDataListenerDefinition = $container->getDefinition('contao.listener.clear_session_data');
-        $attribute = (new \ReflectionClass($clearSessionDataListenerDefinition->getClass()))->getAttributes()[0];
-        $clearSessionDataListenerPriority = $attribute->getArguments()['priority'];
-
-        // Ensure that the listener is registered after the ClearSessionDataListener
-        $this->assertTrue($makeResponsePrivatePriority < $clearSessionDataListenerPriority);
-
-        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
-
-        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
-        $this->assertTrue($makeResponsePrivatePriority < (int) $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheSecurityTokenCheckerWithRoleHierarchyVoter(): void
@@ -467,13 +438,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testConfiguresTheSearchIndexListenerCorrectly(): void
     {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.charset' => 'UTF-8',
-            ]),
-        );
-
+        $container = $this->getContainerBuilder();
         $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
@@ -533,19 +498,13 @@ class ContaoCoreExtensionTest extends TestCase
     #[DataProvider('provideComposerJsonContent')]
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.charset' => 'UTF-8',
-            ]),
-        );
-
+        $container = $this->getContainerBuilder();
         $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($composerJsonFilePath, json_encode($composerJson, JSON_THROW_ON_ERROR));
 
-        (new ContaoCoreExtension())->load([], $container);
+        new ContaoCoreExtension()->load([], $container);
 
         $filesystem->remove($composerJsonFilePath);
 
@@ -569,12 +528,12 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        (new ContaoCoreExtension())->load([], $container);
+        new ContaoCoreExtension()->load([], $container);
 
         $icons = $container->getParameter('contao.backend.icons');
 
-        $this->assertArrayHasKey('save.svg', $icons);
-        $this->assertSame('/system/themes/flexible/icons/help.svg', $icons['help.svg']['path']);
+        $this->assertArrayHasKey('help.svg', $icons);
+        $this->assertMatchesRegularExpression('~^/bundles/contaocore/icons/help\.[a-f0-9]{8}\.svg$~', $icons['help.svg']['path']);
         $this->assertSame('14', $icons['help.svg']['width']);
         $this->assertSame('14', $icons['help.svg']['height']);
     }
@@ -672,7 +631,7 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($dbafsDefinition)
         ;
 
-        (new ContaoCoreExtension())->configureFilesystem($config);
+        new ContaoCoreExtension()->configureFilesystem($config);
     }
 
     public function testHstsSecurityConfiguration(): void
@@ -683,7 +642,7 @@ class ContaoCoreExtensionTest extends TestCase
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(31536000, $listener->getArgument(1));
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'security' => [
@@ -700,7 +659,7 @@ class ContaoCoreExtensionTest extends TestCase
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(500, $listener->getArgument(1));
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'security' => [
@@ -728,7 +687,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'backend_search' => [
@@ -776,7 +735,7 @@ class ContaoCoreExtensionTest extends TestCase
             $processor->getArgument(0),
         );
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'csp' => [
@@ -928,6 +887,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'methods' => ['GET'],
                     'contentComposition' => true,
                     'urlSuffix' => 'html',
+                    'template' => null,
                 ],
             )
         ;
@@ -994,7 +954,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily'),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1021,7 +981,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1059,7 +1019,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1084,7 +1044,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[$attributeClass][0](
             $definition,
             $attribute,
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1093,6 +1053,33 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];
         yield 'callback' => [AsCallback::class];
+    }
+
+    #[DataProvider('autoRefreshTemplateHierarchy')]
+    public function testRemovesAutoRefreshTemplateHierarchyListener(bool|null $refresh, bool $isDebug, bool $expected): void
+    {
+        $container = $this->getContainerBuilder();
+        $container->setParameter('kernel.debug', $isDebug);
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'auto_refresh_template_hierarchy' => $refresh,
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertSame($expected, $container->hasDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener'));
+    }
+
+    public static function autoRefreshTemplateHierarchy(): iterable
+    {
+        yield 'automatically enable for dev' => [null, true, true];
+        yield 'automatically disable for prod' => [null, false, false];
+        yield 'force enable for prod' => [true, false, true];
+        yield 'force disable for dev' => [false, true, false];
     }
 
     private function getContainerBuilder(array|null $params = null): ContainerBuilder

@@ -41,7 +41,7 @@ class SealReindexProviderTest extends TestCase
             ->method('updateIndex')
         ;
 
-        $reindexConfig = (new SealReindexConfig())->withIndex('non_matching_index');
+        $reindexConfig = new SealReindexConfig()->withIndex('non_matching_index');
 
         $provider = new SealReindexProvider(
             [$internalProvider],

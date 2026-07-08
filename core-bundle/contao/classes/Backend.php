@@ -36,48 +36,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return the current theme as string
-	 *
-	 * @return string The name of the theme
-	 */
-	public static function getTheme()
-	{
-		$theme = Config::get('backendTheme');
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
-		{
-			return $theme;
-		}
-
-		return 'flexible';
-	}
-
-	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 */
-	public static function getThemes()
-	{
-		$arrReturn = array();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = Folder::scan($projectDir . '/system/themes');
-
-		foreach ($arrThemes as $strTheme)
-		{
-			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
-			{
-				continue;
-			}
-
-			$arrReturn[$strTheme] = $strTheme;
-		}
-
-		return $arrReturn;
-	}
-
-	/**
 	 * Return the TinyMCE language
 	 *
 	 * @return string
@@ -200,7 +158,7 @@ abstract class Backend extends Controller
 
 		if ($addRequestToken)
 		{
-			$strRequest .= ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$strRequest .= ($strRequest ? '&' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		return parent::addToUrl($strRequest, $blnAddRef, $arrUnset);
@@ -414,6 +372,13 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
+			// Render the new breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
+
+			// Render the headline, which will be set as the page title in BackendMain::run()
 			$this->Template->headline = '';
 
 			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
@@ -798,7 +763,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function getDcaPickerWizard($extras, $table, $field, $inputName)
+	public static function getDcaPickerWizard($extras, $table, $field, $inputName, $title = null)
 	{
 		$context = 'link';
 		$extras = \is_array($extras) ? $extras : array();
@@ -817,21 +782,13 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
-  <script>
-    $("pp_' . $inputName . '").addEvent("click", function(e) {
-      e.preventDefault();
-      Backend.openModalSelector({
-        "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
-        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
-        "callback": function(picker, value) {
-          $("ctrl_' . $inputName . '").value = value.join(",");
-          $("ctrl_' . $inputName . '").fireEvent("change");
-        }.bind(this)
-      });
-    });
-  </script>';
+		return \sprintf(
+			' <a href="%s" id="pp_%s" class="picker-wizard" data-controller="contao--modal-selector" data-contao--modal-selector-title-value="%s" data-action="contao--modal-selector#dcapicker">%s</a>',
+			StringUtil::ampersand($factory->getUrl($context, $extras)),
+			$inputName,
+			StringUtil::specialchars($title ?? $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? ''),
+			Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']),
+		);
 	}
 
 	/**

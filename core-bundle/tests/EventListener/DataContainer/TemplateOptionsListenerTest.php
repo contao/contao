@@ -66,7 +66,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame(
             [
                 '' => 'content_element/foo [App]',
-                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+                'content_element/foo/variant' => 'content_element/foo/variant [User]',
             ],
             $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type'])),
         );
@@ -127,13 +127,15 @@ class TemplateOptionsListenerTest extends TestCase
             ;
         }
 
-        $connection = $this->createStub(Connection::class);
+        $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->atLeastOnce())
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
         $connection
+            ->expects($this->atLeastOnce())
             ->method('executeQuery')
             ->with(
                 \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
@@ -154,7 +156,7 @@ class TemplateOptionsListenerTest extends TestCase
             'foo_element_type',
             [
                 '' => 'content_element/foo [App]',
-                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+                'content_element/foo/variant' => 'content_element/foo/variant [User]',
             ],
         ];
 
@@ -177,8 +179,7 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_text_', [], 'ce_text')
-            ->willReturn(['' => '[result from legacy class]'])
+            ->willReturnMap([['ce_text_', [], 'ce_text', ['' => '[result from legacy class]']]])
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
@@ -199,8 +200,7 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_custom_', [], 'ce_custom')
-            ->willReturn(['' => '[result from legacy class]'])
+            ->willReturnMap([['ce_custom_', [], 'ce_custom', ['' => '[result from legacy class]']]])
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
@@ -224,7 +224,7 @@ class TemplateOptionsListenerTest extends TestCase
                     '/templates/content_element/foo.html.twig' => '@Contao_App/content_element/foo.html.twig',
                 ],
                 'content_element/foo/variant' => [
-                    '/templates/content_element/foo/variant.html.twig' => '@Contao_Global/content_element/foo/variant.html.twig',
+                    '/templates/content_element/foo/variant.html.twig' => '@Contao_User/content_element/foo/variant.html.twig',
                 ],
                 'frontend_module/_partial' => [
                     '/templates/frontend_module/_partial.html.twig' => '@Contao_App/frontend_module/_partial.html.twig',

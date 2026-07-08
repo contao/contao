@@ -285,9 +285,6 @@ class FinderTest extends TestCase
             ->willReturnCallback(
                 static function (string|null $themeSlug): array {
                     $chains = [
-                        'ce_html' => [
-                            '/templates/ce_html.html5' => '@Contao_ContaoCoreBundle/ce_html.html5',
-                        ],
                         'ce_table' => [
                             '/app/templates/ce_table.html.twig' => '@Contao_App/ce_table.html.twig',
                         ],
@@ -341,7 +338,7 @@ class FinderTest extends TestCase
 
                     return match ($id) {
                         'MSC.templatesTheme' => \sprintf('Theme %s', $parameters[0]),
-                        'MSC.global' => 'Global',
+                        'MSC.user' => 'User',
                         default => throw new \LogicException('Unsupported translation id.'),
                     };
                 },
@@ -365,6 +362,6 @@ class FinderTest extends TestCase
             ->willReturn($catalogue)
         ;
 
-        return (new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator))->create();
+        return new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator)->create();
     }
 }

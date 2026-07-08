@@ -26,7 +26,7 @@ class TrackFieldsListenerTest extends TestCase
 
         $this->assertSame(
             'name,textTrackLanguage,textTrackType,protected,syncExclude;meta',
-            (new TrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc),
+            new TrackFieldsListener()->addTextTrackFields(self::PALETTE, $dc),
         );
     }
 
@@ -34,6 +34,6 @@ class TrackFieldsListenerTest extends TestCase
     {
         $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 'bar.baz']);
 
-        $this->assertSame(self::PALETTE, (new TrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, new TrackFieldsListener()->addTextTrackFields(self::PALETTE, $dc));
     }
 }

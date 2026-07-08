@@ -189,6 +189,9 @@
         <source>Show the details of image size ID %s</source>
         <target>Zobrazit podrobnosti k obrázkovým rozměrům ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.versions.1">
+        <source>Show the versions of image size ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
         <target>Upravit obrázkové rozměry ID %s</target>
@@ -212,6 +215,10 @@
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>Smazat obrázkové rozměry ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Velikost obrázku</target>
       </trans-unit>
     </body>
   </file>

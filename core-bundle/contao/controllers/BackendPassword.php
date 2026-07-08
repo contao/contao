@@ -129,7 +129,6 @@ class BackendPassword extends Backend
 			$this->reload();
 		}
 
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->messages = Message::generate();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);

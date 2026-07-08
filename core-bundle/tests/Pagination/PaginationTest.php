@@ -24,7 +24,7 @@ class PaginationTest extends TestCase
     {
         $request = Request::create('/foobar?page=2&lorem=ipsum');
 
-        $pagination = new Pagination((new PaginationConfig('page', 100, 5))->withRequest($request)->withPageRange(10));
+        $pagination = new Pagination(new PaginationConfig('page', 100, 5)->withRequest($request)->withPageRange(10));
 
         $this->assertSame(2, $pagination->getCurrent());
         $this->assertSame(20, $pagination->getPageCount());
@@ -46,28 +46,28 @@ class PaginationTest extends TestCase
 
         $request = Request::create('/foobar?page=20');
 
-        new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request));
+        new Pagination(new PaginationConfig('page', 10, 5)->withRequest($request));
     }
 
     public function testDoesNotThrowOutOfRangeException(): void
     {
         $request = Request::create('/foobar?page=20');
 
-        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withIgnoreOutOfBounds());
+        $pagination = new Pagination(new PaginationConfig('page', 10, 5)->withRequest($request)->withIgnoreOutOfBounds());
 
         $this->assertSame(2, $pagination->getCurrent());
     }
 
     public function testDoesNotShowFirstLastPrevNext(): void
     {
-        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withPageRange(10));
+        $pagination = new Pagination(new PaginationConfig('page', 10, 5)->withPageRange(10));
 
         $this->assertNull($pagination->getFirst());
         $this->assertNull($pagination->getPrevious());
 
         $request = Request::create('/foobar?page=2');
 
-        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withPageRange(10));
+        $pagination = new Pagination(new PaginationConfig('page', 10, 5)->withRequest($request)->withPageRange(10));
 
         $this->assertNull($pagination->getNext());
         $this->assertNull($pagination->getLast());
@@ -77,7 +77,7 @@ class PaginationTest extends TestCase
     {
         $request = Request::create('/foobar?page=2');
 
-        $config = (new PaginationConfig('page', 100, 5))
+        $config = new PaginationConfig('page', 100, 5)
             ->withRequest($request)
             ->withPageRange(10)
             ->withCurrentPage(3)

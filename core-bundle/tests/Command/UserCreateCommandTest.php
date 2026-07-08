@@ -65,7 +65,7 @@ class UserCreateCommandTest extends TestCase
 
         $command->getHelperSet()->set($question, 'question');
 
-        $code = (new CommandTester($command))->execute(['--name' => 'John Doe', '--password' => '12345678']);
+        $code = new CommandTester($command)->execute(['--name' => 'John Doe', '--password' => '12345678']);
 
         $this->assertSame(0, $code);
     }
@@ -82,7 +82,7 @@ class UserCreateCommandTest extends TestCase
 
         $command->getHelperSet()->set($question, 'question');
 
-        $code = (new CommandTester($command))->execute(['--username' => 'j.doe', '--password' => '12345678']);
+        $code = new CommandTester($command)->execute(['--username' => 'j.doe', '--password' => '12345678']);
 
         $this->assertSame(0, $code);
     }
@@ -99,7 +99,7 @@ class UserCreateCommandTest extends TestCase
 
         $command->getHelperSet()->set($question, 'question');
 
-        $code = (new CommandTester($command))->execute(['--username' => 'j.doe', '--name' => 'John Doe']);
+        $code = new CommandTester($command)->execute(['--username' => 'j.doe', '--name' => 'John Doe']);
 
         $this->assertSame(0, $code);
     }
@@ -110,13 +110,13 @@ class UserCreateCommandTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        (new CommandTester($command))->execute(['--username' => 'j.doe', '--name' => 'John Doe', '--password' => '12345678', '--email' => 'test@example']);
+        new CommandTester($command)->execute(['--username' => 'j.doe', '--name' => 'John Doe', '--password' => '12345678', '--email' => 'test@example']);
     }
 
     public function testFailsWithoutParametersIfNotInteractive(): void
     {
         $command = $this->getCommand();
-        $code = (new CommandTester($command))->execute(['--username' => 'foobar'], ['interactive' => false]);
+        $code = new CommandTester($command)->execute(['--username' => 'foobar'], ['interactive' => false]);
 
         $this->assertSame(1, $code);
     }
@@ -141,7 +141,7 @@ class UserCreateCommandTest extends TestCase
 
         $command = $this->getCommand($connection, $password);
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     public static function usernamePasswordProvider(): iterable
@@ -158,15 +158,13 @@ class UserCreateCommandTest extends TestCase
         $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
-            ->with($password)
-            ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
+            ->willReturnMap([[$password, '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ']])
         ;
 
         $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
-            ->with(BackendUser::class)
-            ->willReturn($passwordHasher)
+            ->willReturnMap([[BackendUser::class, $passwordHasher]])
         ;
 
         $userGroupModelAdapter = $this->createAdapterStub(['findAll']);

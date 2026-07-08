@@ -3,6 +3,7 @@ const TwigMode = ace.require('ace/mode/twig').Mode;
 const TextHighlightRules = ace.require('ace/mode/text_highlight_rules').TextHighlightRules;
 const HtmlHighlightRules = ace.require('ace/mode/html_highlight_rules').HtmlHighlightRules;
 const MatchingBraceOutdent = ace.require('ace/mode/matching_brace_outdent').MatchingBraceOutdent;
+
 import TwigFolding from './twig-folding';
 
 function createContaoTwigHighlightRules(type, environment) {
@@ -100,7 +101,7 @@ function createContaoTwigHighlightRules(type, environment) {
                 },
                 {
                     // |<filter>
-                    token: (operator, whitespace, filter) => {
+                    token: (_operator, _whitespace, filter) => {
                         const isDangerous = filter === 'raw';
                         return [
                             'keyword.operator.other',
@@ -147,7 +148,7 @@ function createContaoTwigHighlightRules(type, environment) {
                 },
                 {
                     token: 'paren.lparen',
-                    regex: /[\[({]/,
+                    regex: /[[({]/,
                 },
                 {
                     token: 'paren.rparen',

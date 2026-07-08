@@ -55,7 +55,7 @@ class ClearCachePhpunitExtension implements Extension
 
     public function clear(): void
     {
-        (new Filesystem())->remove([
+        new Filesystem()->remove([
             __DIR__.'/../var/cache',
             __DIR__.'/../../var/cache',
             __DIR__.'/../../core-bundle/var/cache',

@@ -16,13 +16,12 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -266,25 +265,37 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->migrations->run() as $result) {
-                ++$count;
+            try {
+                foreach ($this->migrations->run($migrationLabels) as $result) {
+                    ++$count;
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-result', [
-                        'message' => $result->getMessage(),
-                        'isSuccessful' => $result->isSuccessful(),
-                    ]);
-                } else {
-                    $this->io->writeln(' * '.$result->getMessage());
+                    if ($asJson) {
+                        $this->writeNdjson('migration-result', [
+                            'message' => $result->getMessage(),
+                            'isSuccessful' => $result->isSuccessful(),
+                        ]);
+                    } else {
+                        $this->io->writeln(' * '.$result->getMessage());
 
-                    if (!$result->isSuccessful()) {
-                        $this->io->error('Migration failed');
+                        if (!$result->isSuccessful()) {
+                            $this->io->error('Migration failed');
+                        }
                     }
                 }
-            }
 
-            if (!$asJson) {
-                $this->io->success('Executed '.$count.' migrations.');
+                if (!$asJson) {
+                    $this->io->success("Executed $count migrations.");
+                }
+            } catch (UnexpectedPendingMigrationException $exception) {
+                if ($asJson) {
+                    $this->writeNdjson('migration-result', [
+                        'message' => $exception->getMessage(),
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->success("Executed $count migrations.");
+                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
+                }
             }
 
             if (null !== $specifiedHash) {
@@ -337,6 +348,8 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
+            // Backwards compatibility with doctrine/dbal < 4.5.0, see
+            // https://github.com/doctrine/dbal/pull/7302
             $sortedCommands = $commands;
             sort($sortedCommands);
 
@@ -710,33 +723,8 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // Backwards compatibility for doctrine/dbal 3.x
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            /** @phpstan-ignore method.notFound */
-            $driverConnection = $this->connection->getWrappedConnection();
-
-            /** @phpstan-ignore class.notFound */
-            if (!$driverConnection instanceof ServerInfoAwareConnection) {
-                return true;
-            }
-
-            $driver = $this->connection->getDriver();
-
-            /** @phpstan-ignore class.notFound */
-            if (!$driver instanceof VersionAwarePlatformDriver) {
-                return true;
-            }
-
-            /** @phpstan-ignore class.notFound */
-            $version = $driverConnection->getServerVersion();
-
-            /** @phpstan-ignore class.notFound */
-            $correctPlatform = $driver->createDatabasePlatformForVersion($version);
-        } else {
-            $version = $this->connection->getServerVersion();
-            $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
-        }
-
+        $version = $this->connection->getServerVersion();
+        $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
         $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {

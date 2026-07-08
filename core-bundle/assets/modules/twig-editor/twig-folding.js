@@ -10,10 +10,10 @@ const TwigFoldMode = function () {
 oop.inherits(TwigFoldMode, BaseFoldMode);
 
 (function () {
-    this.foldingStartMarker = /\{%[\-~\s]*(block)[^%]*%}/;
-    this.foldingStopMarker = /\{%[\-~\s]*(endblock)[^%]*%}/;
+    this.foldingStartMarker = /\{%[-~\s]*(block)[^%]*%}/;
+    this.foldingStopMarker = /\{%[-~\s]*(endblock)[^%]*%}/;
 
-    this.getFoldWidget = function (session, foldStyle, row) {
+    this.getFoldWidget = function (session, _foldStyle, row) {
         const line = session.getLine(row);
         const isStart = this.foldingStartMarker.test(line);
         const isEnd = this.foldingStopMarker.test(line);
@@ -23,7 +23,7 @@ oop.inherits(TwigFoldMode, BaseFoldMode);
         }
     };
 
-    this.getFoldWidgetRange = function (session, foldStyle, row) {
+    this.getFoldWidgetRange = function (session, _foldStyle, row) {
         const matchStart = this.foldingStartMarker.exec(session.getLine(row));
 
         if (matchStart) {

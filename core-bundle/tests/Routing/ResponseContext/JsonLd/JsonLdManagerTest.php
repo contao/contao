@@ -17,6 +17,9 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
 use Spatie\SchemaOrg\ImageObject;
+use Spatie\SchemaOrg\MultiTypedEntity;
+use Spatie\SchemaOrg\Museum;
+use Spatie\SchemaOrg\TouristAttraction;
 
 class JsonLdManagerTest extends TestCase
 {
@@ -52,7 +55,7 @@ class JsonLdManagerTest extends TestCase
         $this->assertSame('', $schemaManager->collectFinalScriptFromGraphs());
 
         $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
-        $graph->add((new ImageObject())->name('Name')->caption('Caption'));
+        $graph->add(new ImageObject()->name('Name')->caption('Caption'));
 
         $this->assertSame(
             <<<'JSONLD'
@@ -79,7 +82,7 @@ class JsonLdManagerTest extends TestCase
         $this->assertSame('', $schemaManager->collectFinalScriptFromGraphs());
 
         $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
-        $graph->add((new ImageObject())->name('Name')->caption('Caption'));
+        $graph->add(new ImageObject()->name('Name')->caption('Caption'));
 
         $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO);
         $graph->set(new ContaoPageSchema('title', 42, false, false, [], false));
@@ -142,6 +145,20 @@ class JsonLdManagerTest extends TestCase
             '@type' => 'Foobar',
             'name' => 'Name',
         ]);
+    }
+
+    public function testCreateSchemaOrgTypeFromArrayWithArrayType(): void
+    {
+        $schemaManager = new JsonLdManager(new ResponseContext());
+
+        $type = $schemaManager->createSchemaOrgTypeFromArray([
+            '@type' => ['TouristAttraction', 'Museum'],
+            'name' => 'Name',
+        ]);
+
+        $this->assertInstanceOf(MultiTypedEntity::class, $type);
+        $this->assertTrue($type->has(TouristAttraction::class));
+        $this->assertTrue($type->has(Museum::class));
     }
 
     public function testCreateSchemaOrgTypeFromArrayWithValidType(): void

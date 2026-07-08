@@ -43,7 +43,7 @@ class HyperlinkController extends AbstractContentElementController
         // Link title
         $titleText = $this->insertTagParser->replaceInline($model->titleText ?? '');
 
-        $linkAttributes = (new HtmlAttributes())
+        $linkAttributes = new HtmlAttributes()
             ->set('href', $href)
             ->setIfExists('title', $titleText)
             ->setIfExists('data-lightbox', $model->rel)

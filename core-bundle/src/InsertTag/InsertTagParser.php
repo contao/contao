@@ -58,7 +58,7 @@ class InsertTagParser implements ResetInterface
 
     private const MAX_RECURSION = 64;
 
-    private static int $recursionCount = 0;
+    private array $recursionTrace = [];
 
     /**
      * @var array<string, InsertTagSubscription>
@@ -76,7 +76,7 @@ class InsertTagParser implements ResetInterface
     private array $blockSubscriptionEndTags = [];
 
     /**
-     * @var array<string, \Closure(InsertTagFlag, InsertTagResult):InsertTagResult>
+     * @var array<string, \Closure(InsertTagFlag, InsertTagResult): InsertTagResult>
      */
     private array $flagCallbacks = [];
 
@@ -314,7 +314,7 @@ class InsertTagParser implements ResetInterface
 
     public function reset(): void
     {
-        self::$recursionCount = 0;
+        $this->recursionTrace = [];
         InsertTags::reset();
     }
 
@@ -362,7 +362,7 @@ class InsertTagParser implements ResetInterface
         foreach ($replaced as $result) {
             if ($result->getExpiresAt()) {
                 $this->subrequestCacheSubscriber?->addToCurrentStrategy(
-                    (new Response())->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - (new \DateTimeImmutable())->getTimestamp()),
+                    new Response()->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - new \DateTimeImmutable()->getTimestamp()),
                 );
             }
 
@@ -457,11 +457,11 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if (self::$recursionCount >= self::MAX_RECURSION) {
-            throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached', self::MAX_RECURSION));
+        if (\count($this->recursionTrace) >= self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
-        ++self::$recursionCount;
+        $this->recursionTrace[] = $tag->serialize();
 
         try {
             $result = $subscription->service->{$subscription->method}($tag);
@@ -494,7 +494,7 @@ class InsertTagParser implements ResetInterface
 
             return $result;
         } finally {
-            --self::$recursionCount;
+            array_pop($this->recursionTrace);
         }
     }
 
@@ -560,17 +560,38 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if (self::$recursionCount > self::MAX_RECURSION) {
-            throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached', self::MAX_RECURSION));
+        if (\count($this->recursionTrace) > self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
-        ++self::$recursionCount;
+        $this->recursionTrace[] = $tag->serialize();
 
         try {
             return $subscription->service->{$subscription->method}($tag, $content);
         } finally {
-            --self::$recursionCount;
+            array_pop($this->recursionTrace);
         }
+    }
+
+    private static function formatRecursionTrace(array $trace): string
+    {
+        if (!$trace) {
+            return '';
+        }
+
+        $seen = [];
+
+        foreach ($trace as $index => $entry) {
+            if (isset($seen[$entry])) {
+                $trace = [...\array_slice($trace, 0, $index + 1), '... (repeats)'];
+
+                break;
+            }
+
+            $seen[$entry] = $index;
+        }
+
+        return implode(' -> ', $trace);
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag

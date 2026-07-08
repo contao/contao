@@ -48,8 +48,3 @@ monolog:
         deprecation:
             type: 'null'
             channels: [deprecation]
-
-# FOS HttpCache configuration
-fos_http_cache:
-    invalidation:
-        enabled: false

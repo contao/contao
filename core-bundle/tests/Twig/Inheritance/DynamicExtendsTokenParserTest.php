@@ -66,8 +66,8 @@ class DynamicExtendsTokenParserTest extends TestCase
             '/path/to/the/template.html.twig',
         );
 
-        $tokenStream = (new Lexer($environment))->tokenize($source);
-        $parentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
+        $tokenStream = new Lexer($environment)->tokenize($source);
+        $parentNode = new Parser($environment)->parse($tokenStream)->getNode('parent');
 
         foreach ($expectedStrings as $expectedString) {
             $this->assertStringContainsString($expectedString, (string) $parentNode);
@@ -110,8 +110,9 @@ class DynamicExtendsTokenParserTest extends TestCase
 
     public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
+            ->expects($this->once())
             ->method('getAllDynamicParentsByThemeSlug')
             ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
@@ -123,7 +124,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         // Use a conditional expression here, so that we can test rethrowing exceptions
         // in case the parent node is not an ArrayExpression
         $source = new Source("{% extends true ? '@Contao/foo' : '' %}", 'template.html.twig');
-        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $tokenStream = new Lexer($environment)->tokenize($source);
         $parser = new Parser($environment);
 
         $this->expectException(LoaderError::class);
@@ -147,7 +148,7 @@ class DynamicExtendsTokenParserTest extends TestCase
             '/path/to/the/template.html.twig',
         );
 
-        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $tokenStream = new Lexer($environment)->tokenize($source);
         $parser = new Parser($environment);
 
         $this->expectException(SyntaxError::class);

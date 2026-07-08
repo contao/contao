@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -43,7 +44,7 @@ class PageRoute extends Route implements RouteObjectInterface
         $pageModel->loadDetails();
 
         $defaults = [
-            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_controller' => RegularPageController::class,
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
             '_format' => 'html',

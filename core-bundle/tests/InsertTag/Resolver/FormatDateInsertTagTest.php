@@ -23,8 +23,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Date;
 use Contao\InsertTags;
 use Contao\PageModel;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,13 +31,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class FormatDateInsertTagTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
-
-        parent::tearDown();
-    }
-
     #[DataProvider('getConvertedInsertTags')]
     public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
@@ -49,7 +40,7 @@ class FormatDateInsertTagTest extends TestCase
             $this->createStub(ContaoFramework::class),
             $this->createStub(LoggerInterface::class),
             $this->createStub(FragmentHandler::class),
-            (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
+            new \ReflectionClass(InsertTags::class)->newInstanceWithoutConstructor(),
         );
 
         /** @var ResolvedInsertTag $tag */

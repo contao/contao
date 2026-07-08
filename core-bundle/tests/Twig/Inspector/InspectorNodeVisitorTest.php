@@ -60,7 +60,7 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
+        new InspectorNodeVisitor($storage, $environment)->leaveNode($moduleNode, $environment);
 
         $data = $storage->get('path/to/template.html.twig');
         $this->assertSame($expectedName, $data['parent']);
@@ -84,7 +84,7 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
+        new InspectorNodeVisitor($storage, $environment)->leaveNode($moduleNode, $environment);
 
         $data = $storage->get('path/to/template.html.twig');
         $this->assertSame($expectedName, $data['uses'][0][0] ?? null);

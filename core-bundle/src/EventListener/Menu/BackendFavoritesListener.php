@@ -115,7 +115,7 @@ class BackendFavoritesListener
         $event->getTree()->addChild($tree);
 
         // Move the favorites menu to the top
-        (new MenuManipulator())->moveToFirstPosition($tree);
+        new MenuManipulator()->moveToFirstPosition($tree);
     }
 
     private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, int $user, int $pid = 0): void

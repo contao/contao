@@ -3,8 +3,8 @@ import * as extCodeLens from 'ace-builds/src-noconflict/ext-code_lens';
 import * as extLanguageTools from 'ace-builds/src-noconflict/ext-language_tools';
 import * as extWhitespace from 'ace-builds/src-noconflict/ext-whitespace';
 import 'ace-builds/src-noconflict/mode-twig';
-import themeDark from '!!css-loader!../../styles/twig-editor/contao-twig-dark.pcss';
-import themeLight from '!!css-loader!../../styles/twig-editor/contao-twig-light.pcss';
+import themeDark from '!!css-loader!../../styles/components/twig-editor/contao-twig-dark.pcss';
+import themeLight from '!!css-loader!../../styles/components/twig-editor/contao-twig-light.pcss';
 import PhpMode from 'ace-builds/src-noconflict/mode-php';
 import ContaoTwigMode from './contao-twig-mode';
 import { analyzeBlocks, analyzeReferences } from './token-analyzer';
@@ -52,7 +52,7 @@ export class TwigEditor {
         this.editor.commands.addCommand({
             name: 'lens:block-info',
             readOnly: true,
-            exec: (editor, args) => {
+            exec: (_editor, args) => {
                 this._element.dispatchEvent(
                     new CustomEvent('twig-editor:lens:block-info', {
                         bubbles: true,
@@ -68,7 +68,7 @@ export class TwigEditor {
         this.editor.commands.addCommand({
             name: 'lens:follow',
             readOnly: true,
-            exec: (editor, args) => {
+            exec: (_editor, args) => {
                 this._element.dispatchEvent(
                     new CustomEvent('twig-editor:lens:follow', {
                         bubbles: true,
@@ -93,7 +93,7 @@ export class TwigEditor {
         element.classList.add('hidden');
 
         const shadowRoot = this._host.attachShadow({ mode: 'open' });
-        const target = element.cloneNode();
+        const target = element.cloneNode(true);
 
         shadowRoot.appendChild(target);
 
@@ -177,7 +177,7 @@ export class TwigEditor {
             extLanguageTools.snippetCompleter,
             {
                 id: 'contaoTwigCompleter',
-                getCompletions: (editor, session, pos, prefix, callback) => {
+                getCompletions: (editor, _session, _pos, _prefix, callback) => {
                     callback(null, TwigEditor.autocompleteDataByEditorId.get(editor.id));
                 },
             },

@@ -16,6 +16,9 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
 
 /**
  * Content element "YouTube".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\VideoController instead.
  */
 class ContentYouTube extends ContentElement
 {
@@ -126,7 +129,7 @@ class ContentYouTube extends ContentElement
 
 		if (!empty($params))
 		{
-			$url .= '?' . implode('&amp;', $params);
+			$url .= '?' . implode('&', $params);
 		}
 
 		// Add a splash image

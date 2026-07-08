@@ -130,6 +130,14 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->scalarNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(static fn ($v) => null !== $v && !\is_bool($v))
+                        ->thenInvalid('Must be boolean or null.')
+                    ->end()
+                ->end()
             ->end()
         ;
 
@@ -141,7 +149,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addMessengerNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('messenger'))
+        return new TreeBuilder('messenger')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
@@ -186,13 +194,29 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('options')
-                                ->info('messenger:consume options. Make sure to always include "--time-limit=60".')
-                                ->example(['--sleep=5', '--time-limit=60'])
+                                ->info('messenger:consume options. Make sure to always include "--time-limit=55".')
+                                ->example(['--sleep=5', '--time-limit=55'])
                                 ->scalarPrototype()->end()
-                                ->defaultValue(['--time-limit=60'])
+                                ->defaultValue(['--time-limit=55'])
                                 ->validate()
-                                    ->ifTrue(static fn (array $options) => !\in_array('--time-limit=60', $options, true))
-                                    ->thenInvalid('Custom messenger:consume options must include "--time-limit=60".')
+                                    ->ifTrue(
+                                        static function (array $options): bool {
+                                            $timeLimitCount = 0;
+
+                                            foreach ($options as $option) {
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches)) {
+                                                    ++$timeLimitCount;
+
+                                                    if ($timeLimitCount > 1 || (int) $matches[1] > 60) {
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+
+                                            return 1 !== $timeLimitCount;
+                                        },
+                                    )
+                                    ->thenInvalid('Custom messenger:consume options must include exactly one "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')
@@ -228,7 +252,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addImageNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('image'))
+        return new TreeBuilder('image')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -405,17 +429,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                     ->example(['+heic', '-svgz'])
                     ->validate()
-                        ->ifTrue(
-                            static function (array $extensions): bool {
-                                foreach ($extensions as $extension) {
-                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
-                                        return true;
-                                    }
-                                }
-
-                                return false;
-                            },
-                        )
+                        ->ifTrue(static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)))
                         ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
                     ->end()
                     ->validate()
@@ -463,7 +477,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('preserve_metadata_fields')
                     ->info('Which metadata fields to preserve when resizing images.')
                     ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
-                    ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
+                    ->defaultValue(new ResizeOptions()->getPreserveCopyrightMetadata())
                     ->useAttributeAsKey('format')
                     ->arrayPrototype()
                         ->beforeNormalization()->castToArray()->end()
@@ -479,7 +493,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addImagineOptionsNode(bool $withDefaults): ArrayNodeDefinition
     {
-        $node = (new TreeBuilder('imagine_options'))
+        $node = new TreeBuilder('imagine_options')
             ->getRootNode()
             ->children()
                 ->integerNode('jpeg_quality')
@@ -560,7 +574,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addIntlNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('intl'))
+        return new TreeBuilder('intl')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -622,17 +636,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([])
                     ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
-                        ->ifTrue(
-                            static function (array $countries): bool {
-                                foreach ($countries as $country) {
-                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
-                                        return true;
-                                    }
-                                }
-
-                                return false;
-                            },
-                        )
+                        ->ifTrue(static fn (array $countries): bool => array_any($countries, static fn ($country) => !preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)))
                         ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
@@ -645,7 +649,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addSecurityNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('security'))
+        return new TreeBuilder('security')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -675,7 +679,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addSearchNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('search'))
+        return new TreeBuilder('search')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -719,7 +723,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addBackendSearchNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('backend_search'))
+        return new TreeBuilder('backend_search')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->canBeEnabled()
@@ -740,24 +744,14 @@ class Configuration implements ConfigurationInterface
      */
     private function addCrawlNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('crawl'))
+        return new TreeBuilder('crawl')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('additional_uris')
                     ->info('Additional URIs to crawl. By default, only the ones defined in the root pages are crawled.')
                     ->validate()
-                    ->ifTrue(
-                        static function (array $uris): bool {
-                            foreach ($uris as $uri) {
-                                if (!preg_match('@^https?://@', $uri)) {
-                                    return true;
-                                }
-                            }
-
-                            return false;
-                        },
-                    )
+                    ->ifTrue(static fn (array $uris): bool => array_any($uris, static fn ($uri) => !preg_match('@^https?://@', $uri)))
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
                     ->prototype('scalar')->end()
@@ -777,7 +771,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addMailerNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('mailer'))
+        return new TreeBuilder('mailer')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -806,7 +800,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addBackendNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('backend'))
+        return new TreeBuilder('backend')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -871,7 +865,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addInsertTagsNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('insert_tags'))
+        return new TreeBuilder('insert_tags')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -890,7 +884,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addBackupNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('backup'))
+        return new TreeBuilder('backup')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -931,7 +925,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addSanitizerNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('sanitizer'))
+        return new TreeBuilder('sanitizer')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -961,7 +955,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addCronNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('cron'))
+        return new TreeBuilder('cron')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -979,7 +973,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addCspNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('csp'))
+        return new TreeBuilder('csp')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -1034,7 +1028,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addAltchaNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('altcha'))
+        return new TreeBuilder('altcha')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
@@ -1062,7 +1056,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addTemplateStudioNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('template_studio'))
+        return new TreeBuilder('template_studio')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->canBeDisabled()

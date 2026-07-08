@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -144,32 +143,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame('@Contao_Theme_my_theme/text.html.twig', $source->getName());
         $this->assertSame(Path::join($projectDir, 'templates/my/theme/text.html.twig'), Path::normalize($source->getPath()));
         $this->assertStringContainsString('<theme>', $source->getCode());
-    }
-
-    public function testGetsSourceContextFromHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/foo.html5');
-
-        $this->assertSame('@Contao/foo.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/foo.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names must end up as tokens separated by \n');
-    }
-
-    public function testGetsSourceContextFromNestedHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/bar.html5');
-
-        $this->assertSame('@Contao/bar.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/bar.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names including those of parent templates must end up as tokens separated by \n');
     }
 
     public function testExists(): void
@@ -338,10 +311,10 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $defaultChains = [
             'text' => [
-                Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                Path::join($projectDir, 'templates/text.html.twig') => '@Contao_User/text.html.twig',
                 Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
             ],
-            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_User/my/theme/text.html.twig'],
             'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
         ];
@@ -361,10 +334,10 @@ class ContaoFilesystemLoaderTest extends TestCase
             [
                 'text' => [
                     Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
-                    Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                    Path::join($projectDir, 'templates/text.html.twig') => '@Contao_User/text.html.twig',
                     Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 ],
-                'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+                'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_User/my/theme/text.html.twig'],
                 'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
                 'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
             ],
@@ -388,7 +361,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -406,13 +378,12 @@ class ContaoFilesystemLoaderTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn([
+            ->willReturnMap([['templates', [
                 'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
                 'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
                 'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
                 'App' => Path::join($projectDir, 'contao/templates'),
-            ])
+            ]]])
         ;
 
         $themePaths = [
@@ -436,7 +407,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             $projectDir,
         );
@@ -444,13 +414,13 @@ class ContaoFilesystemLoaderTest extends TestCase
         $expectedChains = [
             'text' => [
                 $themePath = Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
-                $globalPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                $userPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_User/text.html.twig',
                 $appPath = Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 $barPath = Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
                 $fooPath = Path::join($projectDir, 'system/modules/foo/templates/any/text.html.twig') => '@Contao_foo/text.html.twig',
                 $corePath = Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
             ],
-            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Global/my/theme/text.html.twig'],
+            'my/theme/text' => [Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_User/my/theme/text.html.twig'],
             'bar' => [Path::join($projectDir, 'contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
         ];
@@ -471,34 +441,34 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         // Get first
         $this->assertSame(
-            '@Contao_Global/text.html.twig',
+            '@Contao_User/text.html.twig',
             $loader->getFirst('text'),
             'get first template in chain',
         );
 
         // Next element by path
         $this->assertSame(
-            '@Contao_Global/text.html.twig',
+            '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $themePath, 'my_theme'),
-            'chain: theme -> global',
+            'chain: theme -> user',
         );
 
         $this->assertSame(
-            '@Contao_Global/text.html.twig',
+            '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
-            'chain: root -> global (using short name)',
+            'chain: root -> user (using short name)',
         );
 
         $this->assertSame(
-            '@Contao_Global/text.html.twig',
+            '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text', 'other/template.html.twig'),
-            'chain: root -> global (using identifier)',
+            'chain: root -> user (using identifier)',
         );
 
         $this->assertSame(
             '@Contao_App/text.html.twig',
-            $loader->getDynamicParent('text.html.twig', $globalPath),
-            'chain: global -> app',
+            $loader->getDynamicParent('text.html.twig', $userPath),
+            'chain: user -> app',
         );
 
         $this->assertSame(
@@ -580,7 +550,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -609,17 +578,15 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $templateLocator1
             ->method('findTemplates')
-            ->with('/templates')
-            ->willReturn([
+            ->willReturnMap([['/templates', [
                 'foo.html.twig' => '/templates/foo.html.twig',
-            ])
+            ]]])
         ;
 
         $loader1 = new ContaoFilesystemLoader(
             $cacheAdapter,
             $templateLocator1,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -649,13 +616,12 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator2,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
 
         $this->assertSame(
-            ['foo' => ['/templates/foo.html.twig' => '@Contao_Global/foo.html.twig']],
+            ['foo' => ['/templates/foo.html.twig' => '@Contao_User/foo.html.twig']],
             $loader2->getInheritanceChains(),
             'hierarchy is restored from cache without any filesystem access',
         );
@@ -686,7 +652,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -694,7 +659,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame(
             [
                 2025 => '@Contao_Theme_2025/1.html.twig',
-                '' => '@Contao_Global/1.html.twig',
+                '' => '@Contao_User/1.html.twig',
             ],
             $loader->getAllFirstByThemeSlug('1'),
         );
@@ -739,7 +704,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             '/',
         );
@@ -771,8 +735,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn($paths)
+            ->willReturnMap([['templates', $paths]])
         ;
 
         $templateLocator = new TemplateLocator(
@@ -786,7 +749,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );

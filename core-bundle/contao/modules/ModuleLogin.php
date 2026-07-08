@@ -24,6 +24,9 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
 
 /**
  * Front end module "login".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\LoginController instead.
  */
 class ModuleLogin extends Module
 {
@@ -74,7 +77,7 @@ class ModuleLogin extends Module
 
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request?->isMethod('POST'))
+		if ($request?->isMethod('POST') && $request->request->get('FORM_SUBMIT') === 'tl_login_' . $this->id)
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
@@ -108,8 +111,6 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$security = $container->get('security.helper');
@@ -118,6 +119,7 @@ class ModuleLogin extends Module
 		$lastUsername = '';
 		$isRemembered = $security->isGranted('IS_REMEMBERED');
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
 		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));

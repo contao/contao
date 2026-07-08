@@ -27,7 +27,6 @@ use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -454,28 +453,10 @@ class MigrateCommandTest extends TestCase
     public function testAbortsOnWrongServerVersion(string $format): void
     {
         $connection = $this->createDefaultConnection();
-
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            /** @phpstan-ignore class.notFound */
-            $driverConnection = $this->createStub(ServerInfoAwareConnection::class);
-
-            /** @phpstan-ignore class.notFound, phpunit.mockMethod */
-            $driverConnection
-                ->method('getServerVersion')
-                ->willReturn('8.0.29')
-            ;
-
-            /** @phpstan-ignore phpunit.mockMethod */
-            $connection
-                ->method('getWrappedConnection')
-                ->willReturn($driverConnection)
-            ;
-        } else {
-            $connection
-                ->method('getServerVersion')
-                ->willReturn('8.0.29')
-            ;
-        }
+        $connection
+            ->method('getServerVersion')
+            ->willReturn('8.0.29')
+        ;
 
         $connection
             ->method('getDriver')
@@ -532,8 +513,7 @@ class MigrateCommandTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
-            ->willReturn($configuration['version'] ?? '10.10.0-MariaDB-foo-bar')
+            ->willReturnMap([['SELECT @@version', $configuration['version'] ?? '10.10.0-MariaDB-foo-bar']])
         ;
 
         $connection
@@ -556,8 +536,7 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('fetchAllAssociative')
-            ->with('SHOW ENGINES')
-            ->willReturn($configuration['engines'] ?? [])
+            ->willReturnMap([['SHOW ENGINES', $configuration['engines'] ?? []]])
         ;
 
         $command = $this->getCommand(connection: $connection);

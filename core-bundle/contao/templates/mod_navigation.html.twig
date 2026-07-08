@@ -1,0 +1,22 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'block'])
+    .addStyle(style|default)
+    .setIfExists('aria-label', ariaLabel)
+    .mergeWith(wrapperAttributes|default)
+%}
+
+<!-- indexer::stop -->
+<nav{{ wrapperAttributes }}>
+
+    {% if headline %}
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
+    {% endif %}
+
+    <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>
+
+    {{ items|raw }}
+
+    <span id="{{ skipId }}" class="invisible"></span>
+
+</nav>
+<!-- indexer::continue -->

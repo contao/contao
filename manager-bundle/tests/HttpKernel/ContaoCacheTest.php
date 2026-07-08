@@ -89,7 +89,7 @@ class ContaoCacheTest extends ContaoTestCase
 
     public function testDoesNotDispatchTerminateEventOnCacheHit(): void
     {
-        $response = (new Response())->setSharedMaxAge(500);
+        $response = new Response()->setSharedMaxAge(500);
 
         $kernel = $this->createMock(ContaoKernel::class);
         $kernel

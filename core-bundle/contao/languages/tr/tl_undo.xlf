@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.jumpToParent.0">
         <source>Show origin</source>
+        <target>Kaynağı görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>

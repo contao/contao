@@ -88,7 +88,7 @@ class PreviewFactory
             throw new \InvalidArgumentException();
         }
 
-        if (!(new Filesystem())->exists($path)) {
+        if (!new Filesystem()->exists($path)) {
             throw new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $path));
         }
 
@@ -105,7 +105,7 @@ class PreviewFactory
         }
 
         if (!is_dir(\dirname($targetPath))) {
-            (new Filesystem())->mkdir(\dirname($targetPath));
+            new Filesystem()->mkdir(\dirname($targetPath));
         }
 
         $header = $this->getHeader($path);
@@ -397,7 +397,7 @@ class PreviewFactory
                 return null;
             }
 
-            $lastName = pathinfo((new Filesystem())->readlink($filesFound["$fileName-last"]), PATHINFO_FILENAME);
+            $lastName = pathinfo(new Filesystem()->readlink($filesFound["$fileName-last"]), PATHINFO_FILENAME);
             $lastFound = $fileName.$this->getPageSuffix($page - 1);
 
             if ($lastName !== $lastFound) {
@@ -468,6 +468,6 @@ class PreviewFactory
             $linkToPath = Path::makeRelative($linkToPath, \dirname($linkPath));
         }
 
-        (new Filesystem())->symlink($linkToPath, $linkPath);
+        new Filesystem()->symlink($linkToPath, $linkPath);
     }
 }

@@ -35,7 +35,7 @@ class SystemLoggerTest extends TestCase
             ->with($message, $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action)))
         ;
 
-        (new SystemLogger($logger, $action))->{$method}($message);
+        new SystemLogger($logger, $action)->{$method}($message);
     }
 
     public static function psrLogActionsProvider(): iterable
@@ -69,7 +69,7 @@ class SystemLoggerTest extends TestCase
             )
         ;
 
-        (new SystemLogger($logger, $action))->log($level, $message);
+        new SystemLogger($logger, $action)->log($level, $message);
     }
 
     /**

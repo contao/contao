@@ -15,12 +15,12 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: [5.3, 5.6, 5.x]
+                contao: [5.3, 5.7, main]
         steps:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, sodium, zlib
                   ini-values: memory_limit=1G
                   coverage: none
@@ -36,7 +36,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat

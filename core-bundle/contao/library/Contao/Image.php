@@ -16,55 +16,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
-	private static array $deprecated = array
-	(
-		'alias',
-		'copychilds',
-		'copychilds_',
-		'filemanager',
-		'folMinus',
-		'folPlus',
-		'header',
-		'header_',
-		'important',
-		'manager',
-		'pickfile',
-		'settings',
-		'unpublished',
-	);
-
-	private static array $disabled = array
-	(
-		'admin_',
-		'admin_two_factor_',
-		'article_',
-		'children_',
-		'copy_',
-		'cut_',
-		'delete_',
-		'diff_',
-		'diffTemplate_',
-		'edit_',
-		'editor_',
-		'featured_',
-		'group_',
-		'layout_',
-		'member_',
-		'member_two_factor_',
-		'mgroup_',
-		'modules_',
-		'parent_',
-		'pasteafter_',
-		'pasteinto_',
-		'share_',
-		'sizes_',
-		'su_',
-		'theme_export_',
-		'user_',
-		'user_two_factor_',
-		'visible_',
-	);
-
 	private static array $htmlTemplateCache = array();
 
 	/**
@@ -95,15 +46,6 @@ class Image
 
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
-		if (\in_array($filename, self::$deprecated))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6.');
-		}
-		elseif (\in_array($filename, self::$disabled))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
-		}
-
 		// Use path from icon manifest
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
@@ -112,16 +54,7 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		$theme = Backend::getTheme();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		// Prefer SVG icons
-		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-		{
-			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-		}
-
-		return 'system/themes/' . $theme . '/images/' . $src;
+		return 'bundles/contaocore/icons/' . $src;
 	}
 
 	/**
@@ -148,9 +81,9 @@ class Image
 	/**
 	 * Generate an image tag and return it as string
 	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
+	 * @param string                $src        The image path
+	 * @param string                $alt        An optional alt attribute
+	 * @param string|HtmlAttributes $attributes A string of other attributes
 	 *
 	 * @return string The image HTML tag
 	 */
@@ -158,7 +91,9 @@ class Image
 	{
 		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
-		$attributesObject = new HtmlAttributes($attributes);
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
 		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
@@ -172,7 +107,9 @@ class Image
 				if (isset($darkAttributes[$icon]))
 				{
 					$pathinfo = pathinfo($darkAttributes[$icon]);
-					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+					$fileName = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+
+					$darkAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
 				}
 			}
 
@@ -182,8 +119,20 @@ class Image
 
 		if (str_contains($template, '{lightAttributes}'))
 		{
+			$lightAttributes = new HtmlAttributes($attributesObject);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($lightAttributes[$icon]))
+				{
+					$fileName = pathinfo($lightAttributes[$icon], PATHINFO_BASENAME);
+
+					$lightAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
+				}
+			}
+
 			$search[] = '{lightAttributes}';
-			$replace[] = (new HtmlAttributes($attributesObject))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+			$replace[] = $lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
 		}
 
 		return str_replace($search, $replace, $template);

@@ -243,7 +243,6 @@ class UserCreateCommand extends Command
             'username' => $username,
             'password' => $hash,
             'language' => $language,
-            'backendTheme' => 'flexible',
             'admin' => $isAdmin,
             'pwChange' => $pwChange,
             'dateAdded' => $time,

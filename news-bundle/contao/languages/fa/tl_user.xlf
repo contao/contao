@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more news archives.</source>
         <target>اینجا می‌توانید دسترسی به یک یا چند بایگانی خبر را واگذار نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newp.0">
-        <source>News archive permissions</source>
-        <target>مجوزهای بایگانی خبر</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news archive permissions.</source>
-        <target>اینجا می‌توانید مجوزهای بایگانی اخبار را تعریف نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>مجوزهای اخبار</target>

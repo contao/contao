@@ -31,7 +31,7 @@ class ModuleMaintenance extends BackendModule
 		System::loadLanguageFile('tl_maintenance');
 
 		$this->Template->content = '';
-		$this->Template->href = $this->getReferer(true);
+		$this->Template->href = $this->getReferer();
 		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 

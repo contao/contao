@@ -37,7 +37,7 @@ class ImaginePreviewProviderTest extends TestCase
 
     public function testGetFileHeaderSize(): void
     {
-        $this->assertSame(0, (new FallbackPreviewProvider())->getFileHeaderSize());
+        $this->assertSame(0, new FallbackPreviewProvider()->getFileHeaderSize());
     }
 
     public function testGeneratePreviews(): void

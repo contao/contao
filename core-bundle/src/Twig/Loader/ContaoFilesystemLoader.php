@@ -12,13 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
+use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
@@ -40,6 +39,9 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     private string|false|null $currentThemeSlug = null;
 
     /**
+     * The list of all identifiers mapped to a chain of template candidates (<absolute
+     * path> => <template logical name>) or null if not yet built.
+     *
      * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
@@ -61,7 +63,6 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly ContaoFramework $framework,
         private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
     ) {
@@ -109,37 +110,13 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         }
 
         $path = Path::makeAbsolute($path, $this->projectDir);
+        $source = @file_get_contents($path);
 
-        // The Contao PHP templates will still be rendered by the Contao framework via a
-        // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
-        // and parser and just keep the block names. At some point we may transpile the
-        // source to valid Twig instead and drop the proxy.
-        if ('html5' !== Path::getExtension($path, true)) {
-            return new Source(file_get_contents($path), $templateName, $path);
+        if (false === $source) {
+            throw new LoaderError(\sprintf('Could not get contents of "%s"', $path));
         }
 
-        $getExtendedTemplate = static function ($path): string|null {
-            if (1 === preg_match('/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i', (string) file_get_contents($path), $match)) {
-                return $match[1];
-            }
-
-            return null;
-        };
-
-        // Use the default path of the template if it extends itself
-        if (($extendedTemplate = $getExtendedTemplate($path)) && "@Contao/$extendedTemplate.html5" === $name) {
-            $this->framework->initialize();
-            $path = $this->framework->getAdapter(TemplateLoader::class)->getDefaultPath($extendedTemplate, 'html5');
-        }
-
-        // Look up the blocks of the parent template if present
-        if (($extendedTemplate = $getExtendedTemplate($path)) && "@Contao/$extendedTemplate.html5" !== $name) {
-            return new Source($this->getSourceContext("@Contao/$extendedTemplate.html5")->getCode(), $templateName, $path);
-        }
-
-        preg_match_all('/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i', (string) file_get_contents($path), $matches);
-
-        return new Source(implode("\n", $matches[1]), $templateName, $path);
+        return new Source($source, $templateName, $path);
     }
 
     /**
@@ -195,13 +172,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // Check hierarchy
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
-        foreach (array_keys($chain) as $path) {
-            if ($isExpired($path, $time)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all(array_keys($chain), static fn ($path) => !$isExpired($path, $time));
     }
 
     /**
@@ -313,7 +284,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *   [
      *     'foo' => [
      *       '/path/to/foo.html.twig' => '@Some/foo.html.twig',
-     *       '/other/path/to/foo.html5' => '@Other/foo.html5',
+     *       '/other/path/to/foo.html.twig' => '@Other/foo.html.twig',
      *     ],
      *   ]
      *
@@ -323,16 +294,23 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     {
         $this->ensureHierarchyIsBuilt();
 
-        $chains = [];
+        if (true === $themeSlug) {
+            return $this->inheritanceChains;
+        }
+
+        $chains = $this->inheritanceChains;
 
         foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
-                if (true !== $themeSlug && null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
-                    continue;
+                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
+                    unset($chains[$identifier][$path]);
                 }
+            }
 
-                $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
+            // Remove empty chains completely
+            if (empty($chains[$identifier])) {
+                unset($chains[$identifier]);
             }
         }
 
@@ -385,11 +363,40 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             return;
         }
 
+        // Store paths relative to the project dir (see #5826)
+        $makePathsRelative = function (array $inheritanceChains) {
+            $chains = [];
+
+            foreach ($inheritanceChains as $identifier => $chain) {
+                foreach ($chain as $path => $name) {
+                    $chains[$identifier][Path::makeRelative($path, $this->projectDir)] = $name;
+                }
+            }
+
+            return $chains;
+        };
+
+        // Restore paths to absolute paths - as used everywhere in the application - to
+        // make lookup fast
+        $makePathsAbsolute = function (array $inheritanceChains) {
+            $chains = [];
+
+            foreach ($inheritanceChains as $identifier => $chain) {
+                foreach ($chain as $path => $name) {
+                    $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
+                }
+            }
+
+            return $chains;
+        };
+
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
         // Restore hierarchy and theme slugs from cache
         if ($useCacheForLookup && $hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
-            [$this->inheritanceChains, $this->themeSlugs] = $hierarchy;
+            [$inheritanceChains, $this->themeSlugs] = $hierarchy;
+
+            $this->inheritanceChains = $makePathsAbsolute($inheritanceChains);
 
             return;
         }
@@ -398,7 +405,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         [$this->inheritanceChains, $this->themeSlugs] = $this->buildInheritanceChains();
 
         // Persist
-        $hierarchyItem->set([$this->inheritanceChains, $this->themeSlugs]);
+        $hierarchyItem->set([$makePathsRelative($this->inheritanceChains), $this->themeSlugs]);
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -416,7 +423,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             $themeSlugs[] = (string) $slug;
         }
 
-        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
+        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_User'];
 
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {
@@ -447,27 +454,23 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         foreach ($templatesByNamespace as $namespace => $templates) {
             uksort(
                 $templates,
-                // Order by identifier (asc) and extension (desc). This way ".html.twig"
-                // templates come before ".html5" templates for the same identifier.
+                // Order by identifier (asc) and extension (desc)
                 static fn ($a, $b) => ContaoTwigUtil::getIdentifier((string) $a) <=> ContaoTwigUtil::getIdentifier((string) $b) ?:
                     Path::getExtension((string) $b, true) <=> Path::getExtension((string) $a, true),
             );
 
             foreach ($templates as $shortName => $path) {
                 $identifier = ContaoTwigUtil::getIdentifier((string) $shortName);
-
-                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
-                    ? 'html.twig/html5'
-                    : $extension;
+                $type = ContaoTwigUtil::getExtension($path);
 
                 // Make sure all files grouped under a certain identifier share the same type
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
                     $typeByIdentifier[$identifier] = $type;
                 } elseif ($type !== $existingType) {
-                    throw new \OutOfBoundsException(\sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
+                    throw new \OutOfBoundsException(\sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
                 }
 
-                $hierarchy[$identifier][Path::makeRelative($path, $this->projectDir)] = "@$namespace/$shortName";
+                $hierarchy[$identifier][$path] = "@$namespace/$shortName";
             }
         }
 
@@ -505,7 +508,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 // Either the namespace must match, or - in case of the default namespace
                 // ("@Contao") - the first non-theme element is used.
                 if (('Contao' === $namespace && !$this->themeNamespace->match($candidateTemplateName)) || str_starts_with($candidateTemplateName, "@$namespace/")) {
-                    return $candidatePath;
+                    return Path::makeRelative($candidatePath, $this->projectDir);
                 }
             }
 

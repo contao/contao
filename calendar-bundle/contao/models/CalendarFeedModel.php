@@ -72,6 +72,8 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
  * @method static integer countByMaxItems($val, array $opt=array())
  * @method static integer countByFeedBase($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
  */
 class CalendarFeedModel extends Model
 {

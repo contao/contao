@@ -34,7 +34,7 @@ class FigureRendererRuntimeTest extends TestCase
 
         $this->assertSame(
             $figure,
-            (new FigureRuntime($figureRenderer))->buildFigure('123', '_my_size', ['foo' => 'bar']),
+            new FigureRuntime($figureRenderer)->buildFigure('123', '_my_size', ['foo' => 'bar']),
         );
     }
 
@@ -69,6 +69,6 @@ class FigureRendererRuntimeTest extends TestCase
 
         $this->expectUserDeprecationMessageMatches('/Using the "contao_figure" Twig function is deprecated/');
 
-        (new FigureRuntime($figureRenderer))->renderFigure(1, null);
+        new FigureRuntime($figureRenderer)->renderFigure(1, null);
     }
 }

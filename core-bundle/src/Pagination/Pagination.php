@@ -30,7 +30,7 @@ class Pagination implements PaginationInterface
 
     public function __construct(private readonly PaginationConfig $config)
     {
-        $this->pageCount = $config->getPerPage() > 0 ? (int) ceil($config->getTotal() / $config->getPerPage()) : 0;
+        $this->pageCount = $config->getPerPage() > 0 ? max(1, (int) ceil($config->getTotal() / $config->getPerPage())) : 1;
 
         $currentPage = $config->getCurrentPage() ?? $this->config->getRequest()?->query->getInt($this->getQueryParameterName(), 1) ?? 1;
 
@@ -124,7 +124,7 @@ class Pagination implements PaginationInterface
         $params = $this->config->getRequest()?->query->all() ?? [];
         $params[$this->getQueryParameterName()] = $page;
 
-        return (string) (new Uri($this->config->getRequest()?->getRequestUri() ?? ''))->withQuery(http_build_query($params));
+        return (string) new Uri($this->config->getRequest()?->getRequestUri() ?? '')->withQuery(http_build_query($params));
     }
 
     public function getQueryParameterName(): string

@@ -1,0 +1,267 @@
+#header {
+    min-height: 44px;
+    text-align: left;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--content-border);
+}
+
+#home {
+    position: absolute;
+}
+
+#home {
+    display: block;
+    height: 16px;
+    padding: 12px 12px 12px 42px;
+    background: url("../../icons/logo.svg") no-repeat 10px center;
+}
+
+#home .app-title {
+    font-size: 17px;
+    color: var(--text);
+}
+
+#header .inner {
+    position: relative;
+    margin: 0 auto;
+    padding-block: 2px;
+    max-width: var(--backend-width, none);
+}
+
+@media (resolution >= 2dppx) {
+    #home a {
+        font-weight: 300;
+    }
+}
+
+#tmenu {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3px;
+    margin-right: 6px;
+}
+
+#tmenu li {
+    position: relative;
+}
+
+#tmenu a,
+#tmenu .profile button {
+    margin: 5px 0;
+    padding: 8px 12px;
+    display: inline-block;
+    border-radius: 20px;
+}
+
+#tmenu sup {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    font-size: 0.6rem;
+    color: var(--white);
+    background: var(--red);
+    padding: 2px 4px;
+    border-radius: var(--border-radius);
+    text-indent: 0;
+    font-weight: 400;
+}
+
+#tmenu .burger {
+    display: none;
+}
+
+#tmenu .burger button {
+    margin-block: 5px;
+    padding: 3px 8px 4px;
+    background: none;
+    border: 0;
+    border-radius: 20px;
+}
+
+#tmenu .burger svg {
+    margin-bottom: -1px;
+    vertical-align: middle;
+}
+
+#tmenu {
+    :is(.profile, .color-scheme) {
+        button {
+            position: relative;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border: none;
+        }
+    }
+
+    .profile button {
+        padding-right: 26px;
+        background: var(--icon-chevron-down) right 9px top 9px no-repeat;
+    }
+}
+
+@media (resolution >= 2dppx) {
+    #tmenu .profile button {
+        font-weight: 300;
+    }
+}
+
+#tmenu a,
+#tmenu .profile button,
+#tmenu .burger button {
+    color: var(--text);
+    transition: background-color 0.3s ease;
+}
+
+#tmenu a:hover,
+#tmenu a.hover,
+#tmenu li:hover .profile button,
+#tmenu .active .profile button,
+#tmenu .burger button:hover {
+    background-color: var(--nav-bg-hover);
+}
+
+#tmenu ul.menu_level_1 {
+    min-width: 150px;
+    position: absolute;
+    right: 6px;
+    margin-top: 5px;
+    background: var(--content-bg);
+    border: 1px solid var(--content-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+    z-index: 4; /* Above .jump-targets */
+    color: var(--text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+#tmenu ul.menu_level_1 li {
+    :is(a, button) {
+        display: block;
+        color: inherit;
+        margin-block: 0;
+        padding: 6px 20px 6px 40px;
+        white-space: nowrap;
+        border-radius: 0;
+
+        &:hover {
+            background-color: var(--nav-bg-hover);
+        }
+    }
+
+    button {
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+    }
+}
+
+#tmenu ul.menu_level_1 .info {
+    color: var(--info);
+    padding: 15px 20px 7px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+#tmenu ul.menu_level_1 strong {
+    color: var(--text);
+    display: block;
+}
+
+#tmenu ul.menu_level_1::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    right: 9px;
+    top: -14px;
+    border: 7px solid transparent;
+    border-bottom-color: var(--content-bg);
+}
+
+#tmenu ul.menu_level_1::after {
+    content: "";
+    display: block;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    top: -6px;
+    right: 11px;
+    border-top: 1px solid var(--content-border);
+    border-right: 1px solid var(--content-border);
+    transform: rotateZ(-45deg);
+}
+
+#tmenu ul.menu_level_1 {
+    .separator {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+    }
+
+    .last {
+        padding-bottom: 8px;
+    }
+}
+
+#tmenu {
+    .icon-alert,
+    .icon-favorite,
+    .icon-manual,
+    .icon-jobs {
+        width: 16px;
+        margin-bottom: -2px;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+    }
+}
+
+#tmenu .icon-alert {
+    background: var(--icon-alert) center center no-repeat;
+}
+
+#tmenu .icon-favorite {
+    background: var(--icon-favorite) center center no-repeat;
+}
+
+#tmenu .icon-favorite--active {
+    background: var(--icon-favorite-active) center center no-repeat;
+}
+
+#tmenu .icon-manual {
+    background: var(--icon-manual) center center no-repeat;
+}
+
+#tmenu .icon-jobs {
+    background: var(--icon-jobs) center center no-repeat;
+}
+
+#tmenu .icon-profile {
+    background: var(--icon-profile) 20px center no-repeat;
+}
+
+#tmenu .icon-security {
+    background: var(--icon-security) 20px center no-repeat;
+}
+
+#tmenu .icon-color-scheme {
+    background: var(--icon-color-scheme) 20px center no-repeat;
+}
+
+#tmenu .icon-favorites {
+    background: var(--icon-favorites) 20px center no-repeat;
+}
+
+#tmenu .icon-logout {
+    background: var(--icon-logout) 20px center no-repeat;
+}

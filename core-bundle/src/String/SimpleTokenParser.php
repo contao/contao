@@ -141,7 +141,7 @@ class SimpleTokenParser implements LoggerAwareInterface
         $tokens = [];
 
         try {
-            $tokenStream = (new Lexer())->tokenize($expression);
+            $tokenStream = new Lexer()->tokenize($expression);
 
             while (!$tokenStream->isEOF()) {
                 $tokens[] = $tokenStream->current;

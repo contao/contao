@@ -36,7 +36,7 @@ class ConfigurationTest extends TestCase
     public function testAddsTheImagineService(): void
     {
         $params = [];
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertNull($configuration['image']['imagine_service']);
 
@@ -48,7 +48,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
@@ -65,7 +65,7 @@ class ConfigurationTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public function testReplacesAllImageExtensions(): void
@@ -80,7 +80,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
@@ -97,7 +97,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
@@ -114,7 +114,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
@@ -122,17 +122,25 @@ class ConfigurationTest extends TestCase
     #[DataProvider('getPaths')]
     public function testResolvesThePaths(string $unix, string $windows): void
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $targetDir = $windows;
+            $path = 'C:/Temp/contao';
+        } else {
+            $targetDir = $unix;
+            $path = '/tmp/contao';
+        }
+
         $params = [
             [
                 'image' => [
-                    'target_dir' => $windows,
+                    'target_dir' => $targetDir,
                 ],
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
+        $this->assertSame($path, $configuration['image']['target_dir']);
     }
 
     public static function getPaths(): iterable
@@ -158,7 +166,7 @@ class ConfigurationTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public static function getInvalidUploadPaths(): iterable
@@ -194,7 +202,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessageMatches('/The image size name "123" cannot contain only digits/');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     #[DataProvider('getReservedImageSizeNames')]
@@ -213,7 +221,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessageMatches('/"'.$name.'" is a reserved image size name/');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public static function getReservedImageSizeNames(): iterable
@@ -245,7 +253,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additional_uris": All provided additional URIs must start with either http:// or https://.');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public function testAllowsOnlySnakeCaseKeys(): void
@@ -272,7 +280,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessageMatches('/The attribute name "data-App Name" must be a valid HTML attribute name./');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public function testFailsOnInvalidBackupKeepIntervals(): void
@@ -290,7 +298,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration for path "contao.backup.keep_intervals": ["foobar"]');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public function testMessengerConfiguration(): void
@@ -315,7 +323,7 @@ class ConfigurationTest extends TestCase
                         ],
                         [
                             'transports' => ['prio_normal'],
-                            'options' => ['--sleep=10', '--time-limit=60'],
+                            'options' => ['--sleep=10', '--time-limit=55'],
                             'autoscale' => [
                                 'desired_size' => 10,
                                 'max' => 20,
@@ -323,7 +331,7 @@ class ConfigurationTest extends TestCase
                         ],
                         [
                             'transports' => ['prio_high'],
-                            'options' => ['--sleep=5', '--time-limit=60'],
+                            'options' => ['--sleep=5', '--time-limit=55'],
                             'autoscale' => [
                                 'desired_size' => 5,
                                 'max' => 30,
@@ -335,14 +343,14 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame(
             [
                 'workers' => [
                     [
                         'transports' => ['prio_low'],
-                        'options' => ['--time-limit=60'],
+                        'options' => ['--time-limit=55'],
                         'autoscale' => [
                             'enabled' => false,
                             'min' => 1,
@@ -350,7 +358,7 @@ class ConfigurationTest extends TestCase
                     ],
                     [
                         'transports' => ['prio_normal'],
-                        'options' => ['--sleep=10', '--time-limit=60'],
+                        'options' => ['--sleep=10', '--time-limit=55'],
                         'autoscale' => [
                             'desired_size' => 10,
                             'max' => 20,
@@ -360,7 +368,7 @@ class ConfigurationTest extends TestCase
                     ],
                     [
                         'transports' => ['prio_high'],
-                        'options' => ['--sleep=5', '--time-limit=60'],
+                        'options' => ['--sleep=5', '--time-limit=55'],
                         'autoscale' => [
                             'desired_size' => 5,
                             'max' => 30,
@@ -378,13 +386,13 @@ class ConfigurationTest extends TestCase
         );
 
         try {
-            (new Processor())->processConfiguration($this->configuration, [
+            new Processor()->processConfiguration($this->configuration, [
                 [
                     'messenger' => [
                         'workers' => [
                             [
                                 'transports' => ['prio_normal'],
-                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'options' => ['--sleep=10', '--time-limit=55'],
                                 'autoscale' => [
                                     'enabled' => true,
                                 ],
@@ -401,13 +409,13 @@ class ConfigurationTest extends TestCase
         }
 
         try {
-            (new Processor())->processConfiguration($this->configuration, [
+            new Processor()->processConfiguration($this->configuration, [
                 [
                     'messenger' => [
                         'workers' => [
                             [
                                 'transports' => ['prio_normal'],
-                                'options' => ['--sleep=10', '--time-limit=60'],
+                                'options' => ['--sleep=10', '--time-limit=55'],
                                 'autoscale' => [
                                     'enabled' => true,
                                     'desired_size' => 10,
@@ -440,7 +448,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration for path "contao.messenger.web_worker.grace_period": Must be a valid string for \DateInterval(). "nonsense" given.');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     #[DataProvider('invalidAllowedInlineStylesRegexProvider')]
@@ -459,7 +467,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage($exceptionMessage);
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public static function invalidAllowedInlineStylesRegexProvider(): iterable
@@ -478,7 +486,7 @@ class ConfigurationTest extends TestCase
     #[DataProvider('cronConfigurationProvider')]
     public function testValidCronConfiguration(array $params, bool|string $expected): void
     {
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertSame($expected, $configuration['cron']['web_listener']);
     }
@@ -496,7 +504,7 @@ class ConfigurationTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The value "foobar" is not allowed for path "contao.cron.web_listener". Permissible values: "auto", true, false');
 
-        (new Processor())->processConfiguration($this->configuration, $params);
+        new Processor()->processConfiguration($this->configuration, $params);
     }
 
     public static function cronConfigurationProvider(): iterable
@@ -530,7 +538,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
         $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
@@ -545,7 +553,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $configuration = new Processor()->processConfiguration($this->configuration, $params);
 
         $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
         $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);

@@ -133,7 +133,7 @@ class Locales
             $locales[$localeId] = $label;
         }
 
-        (new \Collator($displayLocale))->asort($locales);
+        new \Collator($displayLocale)->asort($locales);
 
         return $locales;
     }

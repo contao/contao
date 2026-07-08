@@ -61,7 +61,7 @@ class ContaoCoreBundleTest extends TestCase
 
         $this->assertNull($request->getMimeType('turbo_stream'));
 
-        (new ContaoCoreBundle())->boot();
+        new ContaoCoreBundle()->boot();
 
         $this->assertSame('text/vnd.turbo-stream.html', $request->getMimeType('turbo_stream'));
     }

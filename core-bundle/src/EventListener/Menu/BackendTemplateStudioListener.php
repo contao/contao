@@ -72,6 +72,6 @@ class BackendTemplateStudioListener
         $categoryNode->addChild($templateStudioNode);
 
         // Add the node before the legacy templates module.
-        (new MenuManipulator())->moveToPosition($templateStudioNode, 1);
+        new MenuManipulator()->moveToPosition($templateStudioNode, 1);
     }
 }

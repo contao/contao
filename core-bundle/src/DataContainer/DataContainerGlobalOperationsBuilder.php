@@ -17,13 +17,14 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ *
  * @internal
  */
 class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperationsBuilder
@@ -70,7 +71,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         if (null === $href) {
-            $href = $this->framework->getAdapter(System::class)->getReferer(true);
+            $href = $this->framework->getAdapter(System::class)->getReferer();
         } elseif (str_contains($href, '=') && !str_contains($href, '?')) {
             $href = $this->urlGenerator->generate('contao_backend').'?'.$href;
         }
@@ -79,7 +80,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'href' => $href,
             'label' => $this->translator->trans('MSC.backBT', [], 'contao_default'),
             'title' => $this->translator->trans('MSC.backBTTitle', [], 'contao_default'),
-            'attributes' => (new HtmlAttributes())->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
+            'attributes' => new HtmlAttributes()->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
             'primary' => true,
         ]);
 
@@ -90,9 +91,19 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $this->ensureInitialized();
 
+        $buttonAttributes = new HtmlAttributes()
+            ->addClass('header_filter_toggle')
+            ->set('title', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#tl_content_filter')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('DCA.toggleFilter.2', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent contao--operations-menu#close')
+        ;
+
         $this->append([
-            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent contao--operations-menu#close" title="'.StringUtil::specialchars($this->translator->trans('DCA.toggleFilter.1', [], 'contao_default')).'"><span data-contao--toggle-state-target="label">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'</span><sup data-contao--element-count-target="count"></sup></button>',
-            'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
+            'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', $buttonAttributes),
+            'listAttributes' => new HtmlAttributes()->set('style', 'display: none;'),
             'primary' => true,
         ]);
 
@@ -106,7 +117,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->append([
             'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', true, [], false),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
-            'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
+            'attributes' => new HtmlAttributes()->addClass('header_clipboard')->set('accesskey', 'x'),
             'method' => 'POST',
             'primary' => true,
         ]);
@@ -128,7 +139,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $label,
             'title' => $title,
             'icon' => $GLOBALS['TL_DCA'][$this->table]['list']['operations']['new']['icon'] ?? null,
-            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null))->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+            'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null)->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
         ]);
@@ -171,6 +182,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         return $this;
     }
 
+    /**
+     * @return Operation|null
+     */
     private function generateOperation(string $name, array $operation, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, null, $dataContainer);
@@ -199,13 +213,13 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $config['attributes']->addClass($name);
 
         return [
-            'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'] ?? null,
             'iconAttributes' => $config['iconAttributes'],
+            'href' => $href,
             'primary' => $config['primary'] ?? ('all' === $name ? true : null),
         ];
     }

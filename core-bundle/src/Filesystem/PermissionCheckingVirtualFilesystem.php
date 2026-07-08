@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -166,7 +166,7 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         $this->inner->setExtraMetadata($location, $metadata);
     }
 
-    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
+    public function generatePublicUri(Uuid|string $location, Options|null $options = null): UriInterface|null
     {
         $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $location);
 
@@ -184,7 +184,7 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
             return;
         }
 
-        $permission = array_flip((new \ReflectionClass(ContaoCorePermissions::class))->getConstants())[$attribute];
+        $permission = array_flip(new \ReflectionClass(ContaoCorePermissions::class)->getConstants())[$attribute];
         $action = strtolower(str_replace('_', ' ', substr($permission, 9)));
 
         $exception = new AccessDeniedException(\sprintf('Access denied to %s at location "%s".', $action, $location));

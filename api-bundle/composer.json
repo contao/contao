@@ -1,0 +1,65 @@
+{
+    "name": "contao/api-bundle",
+    "description": "Provides API functionality for Contao",
+    "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
+        }
+    ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/api-bundle",
+        "docs": "https://docs.contao.org"
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://to.contao.org/donate"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "api-platform/core": "^4.3",
+        "contao/core-bundle": "self.version",
+        "opis/json-schema": "^2.6",
+        "symfony/http-kernel": "^7.4",
+        "symfony/serializer": "^7.4"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "self.version",
+        "phpunit/phpunit": "^12.4",
+        "symfony/http-client": "^7.4"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\ApiBundle\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "6.1-dev"
+        },
+        "contao-manager-plugin": "Contao\\ApiBundle\\ContaoManager\\Plugin"
+    }
+}

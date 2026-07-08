@@ -27,7 +27,7 @@ class NodeTest extends TestCase
         $this->assertNull($default->value);
         $this->assertEmpty($default->children);
 
-        $node = (new Node($default, Node::TYPE_CODE))->setTag('tag')->setValue('value');
+        $node = new Node($default, Node::TYPE_CODE)->setTag('tag')->setValue('value');
 
         $this->assertSame($default, $node->parent);
         $this->assertSame(Node::TYPE_CODE, $node->type);
@@ -41,8 +41,8 @@ class NodeTest extends TestCase
 
         $this->assertNull($node->getFirstChildValue());
 
-        $node->children[] = (new Node())->setValue('v1');
-        $node->children[] = (new Node())->setValue('v2');
+        $node->children[] = new Node()->setValue('v1');
+        $node->children[] = new Node()->setValue('v2');
 
         $this->assertSame('v1', $node->getFirstChildValue());
     }

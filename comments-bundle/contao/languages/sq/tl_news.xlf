@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news.noComments.0">
         <source>Disable comments</source>
-        <target>ç'aktivizo komentet</target>
+        <target>ç&apos;aktivizo komentet</target>
       </trans-unit>
       <trans-unit id="tl_news.noComments.1">
         <source>Do not allow comments for this particular news item.</source>

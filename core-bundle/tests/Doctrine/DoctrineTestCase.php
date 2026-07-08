@@ -130,6 +130,7 @@ abstract class DoctrineTestCase extends TestCase
         $config->setProxyDir(sys_get_temp_dir());
         $config->setProxyNamespace('ContaoTests\Doctrine');
         $config->setMetadataDriverImpl($driverChain);
+        $config->enableNativeLazyObjects(true);
 
         return new EntityManager(DriverManager::getConnection($params), $config);
     }

@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -267,16 +268,19 @@ class PageRegular extends Frontend
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}
 
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
+
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
+		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
+		$this->Template->class = htmlspecialchars(trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Additional meta tags
 		$this->Template->metaTags = $headBag->getMetaTags();
+		$this->Template->linkTags = $headBag->getLinkTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);
@@ -726,7 +730,9 @@ class PageRegular extends Frontend
 			// Add a nonce to the <script> tags since we consider this safe user input.
 			// Do NOT copy the str_replace() into your own code unless you know what you are doing!
 			// It will defeat the purpose of CSP.
-			if ($nonce = $this->Template->nonce('script-src'))
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+			if ($responseContext?->has(CspHandler::class) && ($nonce = $responseContext->get(CspHandler::class)->getNonce('script-src')))
 			{
 				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
 			}

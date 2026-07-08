@@ -372,11 +372,11 @@ class PictureFactoryTest extends TestCase
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
     {
-        $pictureConfig = (new PictureConfiguration())
+        $pictureConfig = new PictureConfiguration()
             ->setSize(
-                (new PictureConfigurationItem())
+                new PictureConfigurationItem()
                     ->setResizeConfig(
-                        (new ResizeConfiguration())
+                        new ResizeConfiguration()
                             ->setWidth(100)
                             ->setHeight(200)
                             ->setMode(ResizeConfiguration::MODE_BOX)
@@ -386,9 +386,9 @@ class PictureFactoryTest extends TestCase
                     ->setSizes('100vw'),
             )
             ->setSizeItems([
-                (new PictureConfigurationItem())
+                new PictureConfigurationItem()
                     ->setResizeConfig(
-                        (new ResizeConfiguration())
+                        new ResizeConfiguration()
                             ->setWidth(50)
                             ->setHeight(50)
                             ->setMode(ResizeConfiguration::MODE_CROP)
@@ -704,25 +704,25 @@ class PictureFactoryTest extends TestCase
     public static function getResizeOptionsScenarios(): iterable
     {
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            new ResizeOptions()->setSkipIfDimensionsMatch(true),
             'size_skip',
             true,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (2)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            new ResizeOptions()->setSkipIfDimensionsMatch(true),
             'size_noskip',
             true,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (3)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            new ResizeOptions()->setSkipIfDimensionsMatch(false),
             'size_skip',
             false,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (4)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            new ResizeOptions()->setSkipIfDimensionsMatch(false),
             'size_noskip',
             false,
         ];

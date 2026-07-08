@@ -30,7 +30,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 {
     public function testInitializesTheStorage(): void
     {
-        $token = (new UriSafeTokenGenerator())->generateToken();
+        $token = new UriSafeTokenGenerator()->generateToken();
         $request = Request::create('https://foobar.com');
 
         $request->cookies = new InputBag([

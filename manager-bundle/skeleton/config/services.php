@@ -20,10 +20,8 @@ return static function (ContainerConfigurator $configurator) use ($container): v
     $originalDefinitions = $container->getDefinitions();
 
     // Don't do anything if there is a service definition for the App namespace
-    foreach ($originalDefinitions as $id => $definition) {
-        if (str_starts_with($id, 'App\\')) {
-            return;
-        }
+    if (array_any($originalDefinitions, static fn ($definition, $id) => str_starts_with($id, 'App\\'))) {
+        return;
     }
 
     $config = $configurator->services();

@@ -319,6 +319,16 @@ abstract class DataContainer extends Backend
 	protected $panelActive = false;
 
 	/**
+	 * Number of records rendered in the current tree view request.
+	 */
+	protected int $treeRecordCount = 0;
+
+	/**
+	 * Whether the tree record limit has been reached while trying to render another record.
+	 */
+	protected bool $treeRecordLimitReached = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -484,15 +494,6 @@ abstract class DataContainer extends Backend
 		{
 			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
-		}
-
-		// Use raw request if set globally but allow opting out setting useRawRequestData to false explicitly
-		$useRawGlobally = isset($GLOBALS['TL_DCA'][$this->strTable]['config']['useRawRequestData']) && $GLOBALS['TL_DCA'][$this->strTable]['config']['useRawRequestData'] === true;
-		$notRawForField = isset($arrData['eval']['useRawRequestData']) && $arrData['eval']['useRawRequestData'] === false;
-
-		if ($useRawGlobally && !$notRawForField)
-		{
-			$arrData['eval']['useRawRequestData'] = true;
 		}
 
 		$arrAttributes = $strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this);
@@ -703,7 +704,6 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
-			$objTemplate->theme = Backend::getTheme();
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
 			$objTemplate->aceType = Backend::getAceType($type);
 			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
@@ -782,7 +782,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&' : '') . 'act=edit&id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		return Backend::addToUrl($strRequest, true, $arrUnset);
@@ -847,8 +847,14 @@ abstract class DataContainer extends Backend
 				{
 					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
-			}
+			},
+			$this->shouldRenderPrimaryOperationsOnly()
 		);
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		return false;
 	}
 
 	/**
@@ -911,21 +917,25 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+		$dc->strTable = $strPtable;
+		$dc->intId = $arrRow['id'] ?? $this->intCurrentPid;
+
 		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithHeaderButtons(
 			$strPtable,
 			$arrRow,
-			$this,
-			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
+			$dc,
+			static function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
 				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{
 					$callback = System::importStatic($config['button_callback'][0]);
-					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 				elseif (\is_callable($config['button_callback'] ?? null))
 				{
-					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $dc));
 				}
 			}
 		);
@@ -1037,9 +1047,22 @@ abstract class DataContainer extends Backend
 	 */
 	protected function panel()
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? null))
+		$panelLayout = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '';
+
+		if (!$panelLayout)
 		{
 			return '';
+		}
+
+		$panels = StringUtil::trimsplit('[;,]', $panelLayout);
+
+		// Force consistent order in Contao 5.7+ because the filter panel has moved from the top to the right.
+		// Separating into rows using ";" has no meaning anymore and for UX purposes, we want consistency so
+		// the order should always be search,filter,sort,limit.
+		// But if any custom panels have been used, we do not interfere with the settings.
+		if (empty(array_diff($panels, array('search', 'filter', 'sort', 'limit'))))
+		{
+			$panelLayout = implode(',', array_values(array_intersect(array('search', 'filter', 'sort', 'limit'), $panels)));
 		}
 
 		// Reset all filters
@@ -1062,7 +1085,7 @@ abstract class DataContainer extends Backend
 
 		$intFilterPanel = 0;
 		$arrPanels = array();
-		$arrPanes = StringUtil::trimsplit(';', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '');
+		$arrPanes = StringUtil::trimsplit(';', $panelLayout);
 
 		foreach ($arrPanes as $strPanel)
 		{
@@ -1144,34 +1167,10 @@ abstract class DataContainer extends Backend
 			$this->reload();
 		}
 
-		$return = '';
-		$intTotal = \count($arrPanels);
-
-		for ($i=0; $i<$intTotal; $i++)
-		{
-			$return .= '
-<div class="tl_panel">
-  ' . $arrPanels[$i] . '
-</div>';
-		}
-
-		$submit = '
-<div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
-  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-</div>';
-
-		$return = '
-<form id="tl_content_filter" class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main" data-contao--toggle-state-target="controls" data-contao--element-count-target="parent">
-<button type="button" class="close" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['DCA']['toggleFilter'][2]) . '" aria-controls="tl_content_filter" data-action="contao--toggle-state#close">×</button>
-<div class="tl_formbody">
-  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-  ' . $return . '
-</div>' . $submit . '
-</form>';
-
-		return $return;
+		return System::getContainer()->get('twig')->render('@Contao/backend/data_container/panel.html.twig', array(
+			'panels' => $arrPanels,
+			'active' => $this->panelActive,
+		));
 	}
 
 	/**
@@ -1316,6 +1315,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
+			$this->strField = $k;
 			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
@@ -1500,6 +1500,50 @@ abstract class DataContainer extends Backend
 				unset(self::$arrCurrentRecordCache[$key]);
 			}
 		}
+	}
+
+	protected function canRenderTreeRecord(): bool
+	{
+		if ($this->treeRecordLimitReached)
+		{
+			return false;
+		}
+
+		$limit = $this->getTreeRecordLimit();
+
+		if ($limit < 1 || $this->treeRecordCount < $limit)
+		{
+			return true;
+		}
+
+		$this->treeRecordLimitReached = true;
+
+		return false;
+	}
+
+	protected function countTreeRecord(): void
+	{
+		if ($this->getTreeRecordLimit() > 0)
+		{
+			++$this->treeRecordCount;
+		}
+	}
+
+	protected function getTreeRecordLimit(): int
+	{
+		if (Input::get('act') == 'select')
+		{
+			return 0;
+		}
+
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? Config::get('maxResultsPerPage'));
+	}
+
+	protected function generateTreeRecordLimitNotice(): string
+	{
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	public function setPanelState(bool $state): void

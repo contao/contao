@@ -86,12 +86,6 @@ class RouteLoader implements RouteLoaderInterface
             return $path;
         }
 
-        if (file_exists($path = Path::join($this->projectDir, 'config/routes.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a routes.yml file is deprecated and will no longer work in Contao 6. Use a routes.yaml file instead.');
-
-            return $path;
-        }
-
         return null;
     }
 }

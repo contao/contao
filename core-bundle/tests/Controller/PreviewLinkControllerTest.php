@@ -41,7 +41,7 @@ class PreviewLinkControllerTest extends TestCase
 
         $response = $listener($request, 42);
 
-        $this->assertSame((string) (new Uri($url)), $response->getTargetUrl());
+        $this->assertSame((string) new Uri($url), $response->getTargetUrl());
     }
 
     public static function authenticateGuestProvider(): iterable

@@ -161,7 +161,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
 
     private function createMessage(Job|null $job = null): CrawlMessage
     {
-        return (new CrawlMessage(['subscriber-a'], 3, []))->setJobId($job?->getUuid() ?? 'i-do-not-exist');
+        return new CrawlMessage(['subscriber-a'], 3, [])->setJobId($job?->getUuid() ?? 'i-do-not-exist');
     }
 
     private function mockEscargotFactory(LazyQueue $lazyQueue): MockObject&Factory

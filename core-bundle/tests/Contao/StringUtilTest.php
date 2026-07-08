@@ -181,14 +181,17 @@ class StringUtilTest extends TestCase
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+            $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+            $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+            $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        }
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -509,6 +512,7 @@ class StringUtilTest extends TestCase
 
     public function testResolvesReferencesInArrays(): void
     {
+        /** @phpstan-var array $ref (signals PHPStan that the array shape may change) */
         $ref = ['a'];
 
         $array = [
@@ -533,12 +537,10 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],
@@ -590,10 +592,12 @@ class StringUtilTest extends TestCase
     }
 
     #[DataProvider('basicEntitiesProvider')]
-    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities, array|string $unicodeEntities): void
     {
         $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
         $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($unicodeEntities, false));
+        $this->assertSame($unicodeEntities, StringUtil::restoreBasicEntities($basicEntities, false));
     }
 
     public static function basicEntitiesProvider(): iterable
@@ -601,6 +605,7 @@ class StringUtilTest extends TestCase
         yield 'String value' => [
             'foo&amp;bar&ZeroWidthSpace;baz',
             'foo[&]bar[zwsp]baz',
+            "foo&bar\u{200B}baz",
         ];
 
         yield 'InputUnit field' => [
@@ -611,6 +616,10 @@ class StringUtilTest extends TestCase
             [
                 'unit' => 'h2',
                 'value' => '[lt]strong[gt] and [lsqb]-[rsqb]',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '<strong> and [-]',
             ],
         ];
 
@@ -635,9 +644,29 @@ class StringUtilTest extends TestCase
                     'value' => 'Con[-]tao',
                 ],
             ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => "10\u{A0}€",
+                ],
+                [
+                    'key' => 'name',
+                    'value' => "Con\u{AD}tao",
+                ],
+            ],
         ];
 
         yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
             [
                 [
                     'key' => 'sum',

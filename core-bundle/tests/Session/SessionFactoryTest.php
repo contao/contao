@@ -58,7 +58,7 @@ class SessionFactoryTest extends TestCase
             ->willReturn(Request::create('/contao'))
         ;
 
-        (new SessionFactory($inner, $requestStack, $scopeMatcher))->createSession();
+        new SessionFactory($inner, $requestStack, $scopeMatcher)->createSession();
     }
 
     public function testRegistersTheFrontendAndBackendPopupBag(): void
@@ -96,6 +96,6 @@ class SessionFactoryTest extends TestCase
             ->willReturn(Request::create('/contao?popup=1'))
         ;
 
-        (new SessionFactory($inner, $requestStack, $scopeMatcher))->createSession();
+        new SessionFactory($inner, $requestStack, $scopeMatcher)->createSession();
     }
 }

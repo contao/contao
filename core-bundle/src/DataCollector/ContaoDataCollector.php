@@ -203,12 +203,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
             if ('pdf' === $format) {
                 try {
-                    (new \Imagick(<<<'EOF'
+                    new \Imagick(<<<'EOF'
                         data:application/pdf,%PDF-1.0
                         1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/MediaBox[0 0 3 3]>>endobj
                         trailer<</Size 4/Root 1 0 R>>
                         EOF,
-                    ))->getImageWidth();
+                    )->getImageWidth();
                 } catch (\Throwable $exception) {
                     $info['supported'] = false;
                     $info['error'] = $exception->getMessage();
@@ -217,7 +217,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
+            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), new \Gmagick()->queryformats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GdImagine) {
@@ -237,7 +237,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'available' => $this->backendSearch?->isAvailable() ?? false,
             'requires_sqlite' => $this->backendSearchAdapter instanceof LoupeAdapter,
             'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], [...get_loaded_extensions(true), ...get_loaded_extensions()]),
-            'supervisor_supported' => Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders()),
+            // For performance, we reverse the array of default providers, so that the
+            // FlockProvider comes first, which serves as an early out when present.
+            'supervisor_supported' => Supervisor::canSuperviseWithProviders(array_reverse(Supervisor::getDefaultProviders())),
             'pnctl_disabled' => array_filter(explode(',', (string) \ini_get('disable_functions')), static fn (string $f) => str_starts_with($f, 'pnctl_')),
             'cron_running' => $this->cron->hasMinutelyCliCron(),
             'cli_workers_running' => $this->webWorker?->hasCliWorkersRunning() ?? false,

@@ -19,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_content'] =
     ],
     'fields' => [
         'id' => [
-            'sql' => 'int(10) unsigned NOT NULL auto_increment',
+            'sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true],
         ],
         'type' => [
             'filter' => true,
@@ -34,6 +34,9 @@ $GLOBALS['TL_DCA']['tl_content'] =
         'text_search_disabled_backend_search_enabled' => [
             'search' => false,
             'backendSearch' => true,
+        ],
+        'default' => [
+            'search' => true,
         ],
         'foo' => [
             'search' => true,

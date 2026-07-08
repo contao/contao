@@ -13,14 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValueFormatterTest extends TestCase
@@ -47,7 +48,7 @@ class ValueFormatterTest extends TestCase
                 ->expects($this->atLeastOnce())
                 ->method('parse')
                 ->willReturnMap(array_map(
-                    static fn ($v) => [$dca['eval']['rgxp'].'Format', $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
+                    static fn ($v) => [$dca['eval']['rgxp'].'Format', (int) $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
                     (array) ($rawValues ?? $value),
                 ))
             ;
@@ -64,6 +65,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -112,6 +114,48 @@ class ValueFormatterTest extends TestCase
             'foo,bar',
             ['eval' => ['multiple' => true]],
             'foo,bar',
+        ];
+
+        yield 'Serialized headline' => [
+            serialize(['unit' => 'h1', 'value' => 'foo']),
+            [],
+            'foo, h1',
+        ];
+
+        yield 'Serialized array (#1)' => [
+            serialize(['foo', 'bar']),
+            [],
+            'foo, bar',
+        ];
+
+        yield 'Serialized array (#2)' => [
+            serialize([['foo', 'bar', 'baz']]),
+            [],
+            '[foo, bar, baz]',
+        ];
+
+        yield 'Serialized array (#3)' => [
+            serialize(['foo' => 'bar']),
+            [],
+            'foo: bar',
+        ];
+
+        yield 'Serialized array (#4)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', 1, 2, 3]]),
+            [],
+            'foo: bar, bar: [baz, 1, 2, 3]',
+        ];
+
+        yield 'Serialized array (#5)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', [1, 2, 3]]]),
+            [],
+            'foo: bar, bar: [baz, [1, 2, 3]]',
+        ];
+
+        yield 'Serialized array (#6)' => [
+            serialize(['foo' => 'bar', 'bar' => ['foo' => 'bar', 'bar' => ['foo' => 'bar']]]),
+            [],
+            'foo: bar, bar: [foo: bar, bar: [foo: bar]]',
         ];
 
         yield 'Date' => [
@@ -225,6 +269,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 
@@ -329,6 +374,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -345,23 +391,42 @@ class ValueFormatterTest extends TestCase
 
         $configAdapter = $this->createAdapterStub(['get']);
         $dateAdapter = $this->createAdapterStub(['parse']);
+        $dcaExtractor = $this->createStub(DcaExtractor::class);
 
-        $framework = $this->createContaoFrameworkStub([
-            Date::class => $dateAdapter,
-            Config::class => $configAdapter,
-        ]);
+        $framework = $this->createContaoFrameworkStub(
+            [
+                Date::class => $dateAdapter,
+                Config::class => $configAdapter,
+            ],
+            [
+                DcaExtractor::class => $dcaExtractor,
+            ],
+        );
 
-        $connection = $this->mockConnection();
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT `name` FROM tl_foo WHERE id=?', [42])
+            ->with('SELECT `name` FROM tl_foo WHERE id = ?', [42])
             ->willReturn('bar')
+        ;
+
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->once())
+            ->method('parse')
+            ->willReturnCallback(static fn ($v) => new ForeignKeyExpression('tl_foo', '`name`')->withColumnName('name')->withKey('foo'))
         ;
 
         $valueFormatter = new ValueFormatter(
             $framework,
             $connection,
+            $foreignKeyParser,
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -373,6 +438,116 @@ class ValueFormatterTest extends TestCase
         );
 
         $this->assertSame('bar', $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testFormatListingWithForeignKeyUsesRelatedField(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [];
+
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
+
+        $dcaExtractor = $this->createMock(DcaExtractor::class);
+        $dcaExtractor
+            ->expects($this->once())
+            ->method('getRelations')
+            ->willReturn([
+                'foo' => ['field' => 'bar'],
+            ])
+        ;
+
+        $framework = $this->createContaoFrameworkStub(
+            [
+                Date::class => $dateAdapter,
+                Config::class => $configAdapter,
+            ],
+            [
+                DcaExtractor::class => $dcaExtractor,
+            ],
+        );
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT `name` FROM tl_foo WHERE bar = ?', [42])
+            ->willReturn('bar')
+        ;
+
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->once())
+            ->method('parse')
+            ->willReturnCallback(static fn ($v) => new ForeignKeyExpression('tl_foo', '`name`')->withColumnName('name')->withKey('foo'))
+        ;
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $connection,
+            $foreignKeyParser,
+            $this->createStub(TranslatorInterface::class),
+        );
+
+        $result = $valueFormatter->formatListing(
+            'tl_foo',
+            'foo:tl_foo.name',
+            ['foo' => 42],
+            $this->createStub(DataContainer::class),
+        );
+
+        $this->assertSame('bar', $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testFormatArrayValueIgnoresForeignKey(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [
+            'foreignKey' => 'tl_foo.name',
+        ];
+
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
+
+        $framework = $this->createContaoFrameworkStub([
+            Date::class => $dateAdapter,
+            Config::class => $configAdapter,
+        ]);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('fetchOne')
+        ;
+
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->never())
+            ->method('parse')
+        ;
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $connection,
+            $foreignKeyParser,
+            $this->createStub(TranslatorInterface::class),
+        );
+
+        $result = $valueFormatter->format(
+            'tl_foo',
+            'foo',
+            serialize(['value' => 'foo', 'unit' => 'h1']),
+            $this->createStub(DataContainer::class),
+        );
+
+        $this->assertSame('foo, h1', $result);
 
         unset($GLOBALS['TL_DCA']);
     }
@@ -393,6 +568,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -512,8 +688,7 @@ class ValueFormatterTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('dateFormat')
-            ->willReturn('Y-m-d')
+            ->willReturnMap([['dateFormat', 'Y-m-d']])
         ;
 
         $dateAdapter = $this->createAdapterStub(['parse']);
@@ -539,6 +714,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 
@@ -655,23 +831,5 @@ class ValueFormatterTest extends TestCase
                 ['value' => '176468900', 'label' => '1975'],
             ],
         ];
-    }
-
-    private function mockConnection(): Connection&MockObject
-    {
-        $databasePlatform = $this->createStub(AbstractPlatform::class);
-        $databasePlatform
-            ->method('quoteSingleIdentifier')
-            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('getDatabasePlatform')
-            ->willReturn($databasePlatform)
-        ;
-
-        return $connection;
     }
 }

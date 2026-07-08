@@ -26,8 +26,6 @@ use Contao\DcaLoader;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\HttpCache\CacheInvalidator;
@@ -42,11 +40,9 @@ class CacheTagManagerTest extends DoctrineTestCase
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         $this->resetStaticProperties([
-            [AnnotationRegistry::class, ['failedToAutoload']],
             Config::class,
             DcaExtractor::class,
             DcaLoader::class,
-            DocParser::class,
             System::class,
         ]);
 
@@ -98,7 +94,7 @@ class CacheTagManagerTest extends DoctrineTestCase
     public function testGetTagForEntityInstance(): void
     {
         $cacheTagManager = $this->getCacheTagManager($this->createStub(CacheInvalidator::class));
-        $post = (new BlogPost())->setId(5);
+        $post = new BlogPost()->setId(5);
 
         $this->assertSame('contao.db.tl_blog_post.5', $cacheTagManager->getTagForEntityInstance($post));
     }
@@ -173,12 +169,12 @@ class CacheTagManagerTest extends DoctrineTestCase
             ['contao.db.tl_page'],
         ];
 
-        $comment1 = (new Comment())->setId(11);
-        $comment2 = (new Comment())->setId(12);
-        $author = (new Author())->setId(100);
-        $tag = (new Tag())->setId(42);
+        $comment1 = new Comment()->setId(11);
+        $comment2 = new Comment()->setId(12);
+        $author = new Author()->setId(100);
+        $tag = new Tag()->setId(42);
 
-        $post = (new BlogPost())
+        $post = new BlogPost()
             ->setId(5)
             ->setAuthor($author)
             ->setComments(new ArrayCollection([$comment1, $comment2]))
@@ -254,7 +250,7 @@ class CacheTagManagerTest extends DoctrineTestCase
             ))
         ;
 
-        $post = (new BlogPost())->setId(1);
+        $post = new BlogPost()->setId(1);
 
         $page = new PageModel();
         $page->id = 2;
@@ -290,7 +286,7 @@ class CacheTagManagerTest extends DoctrineTestCase
             ))
         ;
 
-        $post = (new BlogPost())->setId(1);
+        $post = new BlogPost()->setId(1);
 
         $page = new PageModel();
         $page->id = 2;

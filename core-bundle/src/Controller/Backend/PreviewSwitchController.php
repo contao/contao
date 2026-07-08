@@ -38,7 +38,7 @@ use Twig\Error\Error as TwigError;
  * - Provide the member usernames for the datalist
  * - Process the switch action (i.e. log in a specific front end user)
  */
-#[Route('%contao.backend.route_prefix%/preview_switch', name: 'contao_backend_switch', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
+#[Route('%contao.backend.route_prefix%/preview_switch', name: 'contao_backend_switch', defaults: ['_scope' => 'backend', '_allow_preview' => true])]
 class PreviewSwitchController
 {
     public function __construct(
@@ -110,7 +110,6 @@ class PreviewSwitchController
 
         try {
             return $this->twig->render($template, [
-                'request_token' => $this->tokenManager->getDefaultTokenValue(),
                 'action' => $this->router->generate('contao_backend_switch'),
                 'canSwitchUser' => $canSwitchUser,
                 'user' => $frontendUsername,

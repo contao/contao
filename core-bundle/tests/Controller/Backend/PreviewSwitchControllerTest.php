@@ -68,8 +68,7 @@ class PreviewSwitchControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
-            ->willReturn($legacyTemplateExists)
+            ->willReturnMap([['@ContaoCore/Frontend/preview_toolbar_base.html.twig', $legacyTemplateExists]])
         ;
 
         $twig = $this->getTwigMock();
@@ -99,8 +98,7 @@ class PreviewSwitchControllerTest extends TestCase
 
         $request
             ->method('isMethod')
-            ->with('GET')
-            ->willReturn(true)
+            ->willReturnMap([['GET', true]])
         ;
 
         $response = $controller($request);
@@ -159,8 +157,7 @@ class PreviewSwitchControllerTest extends TestCase
 
         $request
             ->method('isMethod')
-            ->with('GET')
-            ->willReturn(true)
+            ->willReturnMap([['GET', true]])
         ;
 
         $controller($request);
@@ -234,8 +231,7 @@ class PreviewSwitchControllerTest extends TestCase
 
         $request
             ->method('isMethod')
-            ->with('GET')
-            ->willReturn(false)
+            ->willReturnMap([['GET', false]])
         ;
 
         $response = $controller($request);
@@ -343,8 +339,7 @@ class PreviewSwitchControllerTest extends TestCase
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
-            ->with('contao_backend_switch')
-            ->willReturn('/contao/preview_switch')
+            ->willReturnMap([['contao_backend_switch', '/contao/preview_switch']])
         ;
 
         return $router;

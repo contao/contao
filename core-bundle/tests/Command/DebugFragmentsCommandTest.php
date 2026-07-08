@@ -58,7 +58,7 @@ class DebugFragmentsCommandTest extends TestCase
             $fragmentsRegistry->add($id, $config);
 
             /** @var FragmentOptionsAwareInterface $instance */
-            $instance = (new \ReflectionClass($config->getController()))->newInstanceWithoutConstructor();
+            $instance = new \ReflectionClass($config->getController())->newInstanceWithoutConstructor();
 
             if ($instance instanceof FragmentOptionsAwareInterface) {
                 $instance->setFragmentOptions($options);

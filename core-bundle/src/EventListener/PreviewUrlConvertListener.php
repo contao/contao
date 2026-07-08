@@ -103,6 +103,6 @@ class PreviewUrlConvertListener
 
         $uri = new ControllerReference($defaults['_controller'], $defaults);
 
-        return (new FragmentUriGenerator($this->fragmentPath, $this->signer))->generate($uri, $request, true);
+        return new FragmentUriGenerator($this->fragmentPath, $this->signer)->generate($uri, $request, true);
     }
 }

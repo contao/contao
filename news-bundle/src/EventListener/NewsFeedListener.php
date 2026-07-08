@@ -83,7 +83,7 @@ class NewsFeedListener
 
         $item = new Item();
         $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $item->setLastModified((new \DateTime())->setTimestamp($article->date));
+        $item->setLastModified(new \DateTime()->setTimestamp($article->date));
         $item->setLink($this->urlGenerator->generate($article, [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($article, $item, $event));
         $item->setPublicId($item->getLink());
@@ -139,7 +139,7 @@ class NewsFeedListener
     private function getAuthor(NewsModel $article): AuthorInterface|null
     {
         if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($article->author)) {
-            return (new Author())->setName($authorModel->name);
+            return new Author()->setName($authorModel->name);
         }
 
         return null;
@@ -190,7 +190,7 @@ class NewsFeedListener
                 $fileSize = $file->exists() ? $file->filesize : null;
             }
 
-            $media = (new Media())->setUrl($fileUrl)->setType($file->mime);
+            $media = new Media()->setUrl($fileUrl)->setType($file->mime);
 
             if ($fileSize) {
                 $media->setLength($fileSize);

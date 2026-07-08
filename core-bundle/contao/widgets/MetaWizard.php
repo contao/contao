@@ -107,6 +107,11 @@ class MetaWizard extends Widget
 						$this->addError($errorMsg);
 						$this->arrFieldErrors[$lang][$kk] = true;
 					}
+
+					if ($this->metaFields[$kk]['basicEntities'] ?? false)
+					{
+						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->allowHtml);
+					}
 				}
 
 				$varInput[$k] = array_map('trim', $v);
@@ -183,9 +188,14 @@ class MetaWizard extends Widget
 			{
 				$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
+				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
+				{
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $this->allowHtml);
+				}
+
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{
-					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
+					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-controller="contao--textarea-autogrow" data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
 				}
 				else
 				{

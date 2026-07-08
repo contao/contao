@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -67,8 +66,8 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         $source = new Source($code, 'template.html.twig');
-        $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedTree = (string) (new Parser($environment))->parse($tokenStream);
+        $tokenStream = new Lexer($environment)->tokenize($source);
+        $serializedTree = (string) new Parser($environment)->parse($tokenStream);
 
         foreach ($expectedStrings as $expectedString) {
             $this->assertStringContainsString($expectedString, $serializedTree);
@@ -120,8 +119,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo.html.twig')
-            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig'])
+            ->willReturnMap([['foo.html.twig', ['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig']]])
         ;
 
         $filesystemLoader
@@ -139,7 +137,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addExtension(new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createStub(ContaoCsrfTokenManager::class),
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         ));
@@ -149,8 +146,9 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
+            ->expects($this->once())
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
@@ -162,7 +160,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         // Use a conditional expression here, so that we can test rethrowing exceptions
         // in case the parent node is not an ArrayExpression
         $source = new Source("{% include true ? '@Contao/foo' : '' %}", 'template.html.twig');
-        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $tokenStream = new Lexer($environment)->tokenize($source);
         $parser = new Parser($environment);
 
         $this->expectException(LoaderError::class);
@@ -177,7 +175,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($this->createStub(ContaoFilesystemLoader::class)));
 
-        $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
+        $tokenStream = new Lexer($environment)->tokenize(new Source($source, 'foo.html.twig'));
         $parser = new Parser($environment);
         $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
 

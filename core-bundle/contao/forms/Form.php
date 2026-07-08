@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\Palette;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
@@ -222,7 +223,6 @@ class Form extends Hybrid
 
 				$arrData = $objField->row();
 
-				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
 
 				// Submit buttons do not use the name attribute
@@ -232,9 +232,13 @@ class Form extends Hybrid
 				}
 
 				// Unset the default value depending on the field type (see #4722)
-				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? '')))
+				if (!empty($arrData['value']) && !(new Palette($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? ''))->hasField('value'))
 				{
 					$arrData['value'] = '';
+				}
+				elseif (!empty($arrData['value']) && \is_string($arrData['value']))
+				{
+					$arrData['value'] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($arrData['value']);
 				}
 
 				$objWidget = new $strClass($arrData);
@@ -270,7 +274,6 @@ class Form extends Hybrid
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
-						Input::setPost($objField->name, null); // see #5474
 					}
 				}
 
@@ -308,16 +311,19 @@ class Form extends Hybrid
 		// Remove any uploads, if form did not validate (#1185)
 		if (($doNotSubmit || $this->hasErrors()) && $hasUpload)
 		{
-			foreach ($arrFiles as $upload)
+			foreach ($arrFiles as $uploads)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				foreach ((array) $uploads as $upload)
 				{
-					$file->delete();
-				}
+					if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+					{
+						$file->delete();
+					}
 
-				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
-				{
-					unlink($upload['tmp_name']);
+					if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
+					{
+						unlink($upload['tmp_name']);
+					}
 				}
 			}
 		}
@@ -600,13 +606,10 @@ class Form extends Hybrid
 			{
 				foreach ($arrFiles as $k=>$v)
 				{
-					if (\array_key_exists('name', $v))
+					if (\array_key_exists('name', $v) && ($v['uploaded'] ?? null))
 					{
-						if ($v['uploaded'] ?? null)
-						{
-							$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
-							continue;
-						}
+						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
+						continue;
 					}
 
 					$arrSet[$k] = serialize(array_map(static function ($file) {
@@ -614,6 +617,8 @@ class Form extends Hybrid
 						{
 							return StringUtil::stripRootDir($file['tmp_name']);
 						}
+
+						return null;
 					}, $v));
 				}
 			}

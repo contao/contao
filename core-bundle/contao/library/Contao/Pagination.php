@@ -235,12 +235,12 @@ class Pagination
 		{
 			if (!str_contains($fragment, $this->strParameter . '='))
 			{
-				$this->strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
+				$this->strUrl .= (!$blnQuery ? '?' : '&') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
-		$this->strVarConnector = $blnQuery ? '&amp;' : '?';
+		$this->strVarConnector = $blnQuery ? '&' : '?';
 
 		// Return if there is only one page
 		if ($this->intTotalPages < 2 || $this->intRows < 1)
@@ -409,9 +409,9 @@ class Pagination
 	{
 		if ($intPage <= 1 && !$this->blnForceParam)
 		{
-			return StringUtil::ampersand($this->strUrl);
+			return $this->strUrl;
 		}
 
-		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
+		return $this->strUrl . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }

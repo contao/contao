@@ -225,27 +225,33 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 },
             );
         }
+
+        if (false === $config['auto_refresh_template_hierarchy'] || (null === $config['auto_refresh_template_hierarchy'] && !$container->getParameter('kernel.debug'))) {
+            $container->removeDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener');
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
     {
-        // User uploads
-        $filesStorageName = 'files';
-
         // TODO: Deprecate the "contao.upload_path" config key. In the next major
         // version, $uploadPath can then be replaced with "files" and the redundant
         // "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
+        // User uploads
         $config
             ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
-            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+            ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
+            ->setPublic(true)
         ;
 
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
         ;
+
+        $config->addVirtualFilesystem($readonlyFilesStorageName = "$filesStorageName#readonly", $uploadPath, true);
+        $config->addAssetPackage($readonlyFilesStorageName, $filesStorageName);
 
         // Backups
         $config
@@ -276,8 +282,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             if ([] === $config['messenger']['web_worker']['transports']) {
                 $container->removeDefinition('contao.messenger.web_worker');
             } else {
-                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
-                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+                $definition->setArgument('$transports', $config['messenger']['web_worker']['transports']);
+                $definition->setArgument('$gracePeriod', $config['messenger']['web_worker']['grace_period']);
             }
         }
 
@@ -399,7 +405,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $engine = $container->getDefinition('contao.search_backend.engine');
         $engine
-            ->setArgument(1, (new Definition(BackendSearch::class))
+            ->setArgument(1, new Definition(BackendSearch::class)
                 ->setFactory([null, 'getSearchEngineSchema'])
                 ->setArgument('$indexName', $indexName),
             )
@@ -627,14 +633,14 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function getBackendIcons(): array
     {
-        $basePath = Path::canonicalize(__DIR__.'/../../contao/themes/flexible/icons');
+        $basePath = Path::canonicalize(__DIR__.'/../../public/icons');
         $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
 
         $icons = [];
 
         foreach ($manifest as $name => $publicPath) {
             $svg = new \DOMDocument();
-            $svg->loadXML(file_get_contents(Path::join($basePath, $name)));
+            $svg->loadXML(file_get_contents(Path::join($basePath, basename($publicPath))));
 
             $icons[$name] = [
                 'path' => $publicPath,

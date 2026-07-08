@@ -140,12 +140,6 @@ class JwtManager
     {
         $cookies = $response->headers->getCookies();
 
-        foreach ($cookies as $cookie) {
-            if (self::COOKIE_NAME === $cookie->getName()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($cookies, static fn ($cookie) => self::COOKIE_NAME === $cookie->getName());
     }
 }

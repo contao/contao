@@ -36,7 +36,7 @@ class ContaoSetupCommand extends Command
     private readonly string|false $phpPath;
 
     /**
-     * @var \Closure(array<string>):Process
+     * @var \Closure(array<string>): Process
      */
     private readonly \Closure $createProcessHandler;
 
@@ -50,7 +50,7 @@ class ContaoSetupCommand extends Command
         \Closure|null $createProcessHandler = null,
     ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
-        $this->phpPath = (new PhpExecutableFinder())->find();
+        $this->phpPath = new PhpExecutableFinder()->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
         $this->createProcessHandler = $createProcessHandler ?? static fn (array $command) => new Process($command);

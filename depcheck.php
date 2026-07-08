@@ -18,15 +18,11 @@ use App\Messenger\UnionTypeMessage;
 use App\Model\FooModel;
 use AppBundle\AppBundle;
 use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
-use Doctrine\DBAL\Platforms\MySQL57Platform;
-use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
-return (new Configuration())
+return new Configuration()
     ->ignoreUnknownClasses([
         AppBundle::class,
         FooEntity::class,
@@ -37,17 +33,13 @@ return (new Configuration())
         LegacyModule::class,
         LoupeAdapter::class,
         Mysql::class,
-        MySQL57Platform::class,
-        SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',
-        ServerInfoAwareConnection::class,
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
-        VersionAwarePlatformDriver::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -101,6 +93,9 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('symfony/polyfill-intl-idn', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-mbstring', [ErrorType::UNUSED_DEPENDENCY])
 
+    // Allows us to use array_first/array_last in PHP <8.5.
+    ->ignoreErrorsOnPackage('symfony/polyfill-php85', [ErrorType::UNUSED_DEPENDENCY])
+
     // The rate limiter is required for the functional tests.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::UNUSED_DEPENDENCY])
 
@@ -114,6 +109,9 @@ return (new Configuration())
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
+
+    // The monorepo check requires this to be a prod dependency
+    ->ignoreErrorsOnPackage('symfony/twig-bridge', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
 
     // We only use the assets from the web-auth/webauthn-stimulus package.
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])

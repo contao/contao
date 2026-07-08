@@ -1,0 +1,50 @@
+.serp-preview {
+    max-width: 640px;
+    margin: 2px 0;
+    padding: 6px 9px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: var(--serp-preview);
+    background: var(--panel-bg);
+    border-radius: var(--border-radius);
+    line-height: 22px;
+
+    p {
+        margin: 0;
+    }
+
+    .title {
+        max-width: 550px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: "Google Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        white-space: nowrap;
+        margin: 5px 0;
+        font-size: 20px;
+        color: var(--serp-preview-title);
+    }
+
+    .url {
+        font-size: 0.75rem;
+    }
+
+    .tl_info {
+        background-color: transparent;
+    }
+
+    .robots {
+        display: none;
+        padding: 2px 1px 2px 21px;
+        background-position: 0 3px;
+    }
+
+    &.noindex {
+        > p {
+            display: none;
+        }
+
+        .robots {
+            display: block;
+        }
+    }
+}

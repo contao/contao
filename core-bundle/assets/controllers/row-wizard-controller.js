@@ -1,15 +1,28 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['body', 'row', 'copy', 'delete'];
+    #template;
+
+    static targets = ['body', 'row', 'copy', 'delete', 'ghost'];
 
     static values = {
         name: String,
         min: Number,
         max: Number,
+        empty: Boolean,
     };
 
     connect() {
+        this.#template = this.rowTargets[0].cloneNode(true);
+
+        if (this.hasGhostTarget) {
+            this.#buildGhostRow();
+        }
+
+        if (this.emptyValue) {
+            this.rowTargets[0].hidden = true;
+        }
+
         this.#updatePermissions();
     }
 
@@ -48,6 +61,24 @@ export default class extends Controller {
         });
     }
 
+    add() {
+        const firstRow = this.rowTargets[0];
+
+        if (firstRow.hidden) {
+            this.#enableRow(firstRow);
+            this.#focus(firstRow);
+            this.#updatePermissions();
+            return;
+        }
+
+        const newRow = this.#template.cloneNode(true);
+
+        this.#resetInputs(newRow);
+        this.bodyTarget.appendChild(newRow);
+        this.#focus(newRow);
+        this.#updatePermissions();
+    }
+
     delete(event) {
         if (!this.#deleteAllowed()) {
             return;
@@ -55,7 +86,7 @@ export default class extends Controller {
 
         const row = this.#getRow(event);
 
-        if (this.bodyTarget.children.length > 1) {
+        if (this.rowTargets.length > 1) {
             this.#focus(row.nextElementSibling) ||
                 this.#focus(row.previousElementSibling) ||
                 this.#focus(this.bodyTarget);
@@ -63,7 +94,8 @@ export default class extends Controller {
             row.remove();
         } else {
             this.#resetInputs(row);
-            this.#focus(row);
+            this.#disableRow(row);
+            this.#focus(this.bodyTarget);
         }
 
         this.#updatePermissions();
@@ -106,9 +138,9 @@ export default class extends Controller {
 
         this.bodyTarget
             .querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+                `[for^=${this.nameValue}\\[],[for^=opt_${this.nameValue}\\[],[name^=${this.nameValue}\\[]`,
             )
-            .forEach((el, i) => {
+            .forEach((el) => {
                 if (el.name) {
                     el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
                 }
@@ -120,7 +152,7 @@ export default class extends Controller {
                 if (el.getAttribute('for')) {
                     el.setAttribute(
                         'for',
-                        el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
+                        el.getAttribute('for').replace(new RegExp(`${this.nameValue}_`, 'g'), `${name}_`),
                     );
                 }
             });
@@ -130,42 +162,100 @@ export default class extends Controller {
     }
 
     updateSorting() {
+        const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
+
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+                `[for^=${this.nameValue}\\[], [for^=opt_${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
-                    el.name = el.name.replace(
-                        new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'),
-                        `${this.nameValue}[${i}]`,
-                    );
+                    el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(
-                        new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'),
-                        `${this.nameValue}_${i}$1`,
-                    );
+                    el.id = el.id.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute(
-                        'for',
-                        el
-                            .getAttribute('for')
-                            .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
-                    );
+                    el.setAttribute('for', el.getAttribute('for').replace(regexPattern, `${this.nameValue}[${i}]`));
                 }
+            }
+
+            const pickerScript = tr.querySelector('.selector_container > script');
+
+            if (pickerScript) {
+                const script = document.createElement('script');
+                script.textContent = pickerScript.textContent.replace(regexPattern, `${this.nameValue}[${i}]`);
+                pickerScript.parentNode.replaceChild(script, pickerScript);
             }
 
             for (const el of tr.querySelectorAll(`[data-controller="${this.identifier}"]`)) {
                 this.application.getControllerForElementAndIdentifier(el, this.identifier)?.updateNesting(i);
             }
         });
+
+        const optionsRegexPattern = new RegExp(`^${this.nameValue}_(default|group)_(\\d+)$`);
+
+        Array.from(this.bodyTarget.children).forEach((tr, i) => {
+            for (const el of tr.querySelectorAll(
+                `[for^=${this.nameValue}_default_], [for^=${this.nameValue}_group_], [id^=${this.nameValue}_default_], [id^=${this.nameValue}_group_]`,
+            )) {
+                if (el.id) {
+                    el.id = el.id.replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`);
+                }
+
+                if (el.getAttribute('for')) {
+                    el.setAttribute(
+                        'for',
+                        el.getAttribute('for').replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`),
+                    );
+                }
+            }
+        });
+    }
+
+    #buildGhostRow() {
+        const last = this.ghostTarget.querySelector('.tl_right');
+
+        for (const cell of this.#template.querySelectorAll('td:not(.tl_right)')) {
+            if (cell.querySelector('.drag-handle')) {
+                continue;
+            }
+
+            const ghostCell = cell.cloneNode(true);
+
+            for (const el of ghostCell.querySelectorAll('input, select, textarea, button, a')) {
+                el.disabled = true;
+                el.tabindex = -1;
+                el.removeAttribute('href');
+            }
+
+            this.ghostTarget.insertBefore(ghostCell, last);
+        }
+
+        this.#resetInputs(this.ghostTarget);
     }
 
     #getRow(event) {
         return event.target.closest(`*[data-${this.identifier}-target="row"]`);
+    }
+
+    #disableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
+        row.hidden = true;
+    }
+
+    #enableRow(row) {
+        if (!this.hasGhostTarget) {
+            return;
+        }
+
+        row.hidden = false;
+        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
     }
 
     #resetInputs(row) {
@@ -189,14 +279,16 @@ export default class extends Controller {
     }
 
     #deleteAllowed() {
-        return !(this.hasMinValue && this.bodyTarget.children.length === this.minValue);
+        return !(this.hasMinValue && this.rowTargets.length === this.minValue);
     }
 
     #copyAllowed() {
-        return !(this.hasMaxValue && this.bodyTarget.children.length === this.maxValue);
+        return !(this.hasMaxValue && this.rowTargets.length === this.maxValue);
     }
 
     #updatePermissions() {
+        this.element.dataset.rowsCount = this.rowTargets.filter((row) => !row.hidden).length;
+
         if (this.hasMinValue) {
             const enable = this.#deleteAllowed();
 
@@ -219,6 +311,8 @@ export default class extends Controller {
                     el.disabled = true;
                 }
             }
+
+            this.ghostTarget.hidden = !enable;
         }
     }
 }

@@ -2,7 +2,7 @@ import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
 import PasswordVisibility from '@stimulus-components/password-visibility';
-import WebAuthn from '@web-auth/webauthn-stimulus';
+import { WebauthnController } from '@web-auth/webauthn-stimulus';
 import TextareaAutogrow from 'stimulus-textarea-autogrow';
 
 import './scripts/mootao.js';
@@ -13,6 +13,11 @@ import './styles/backend.pcss';
 
 // Start the Stimulus application
 const application = Application.start();
+
+application.registerActionOption('macos', ({ value }) => {
+    return value === /^(Mac|iPhone|iPad)/.test(navigator.platform);
+});
+
 application.debug = process.env.NODE_ENV === 'development';
 application.register('contao--textarea-autogrow', TextareaAutogrow);
 
@@ -26,11 +31,12 @@ application.load(
             if (identifier) {
                 return definitionForModuleAndIdentifier(context(key), `contao--${identifier}`);
             }
+            return null;
         })
         .filter((value) => value),
 );
 
-application.register('contao--webauthn', WebAuthn);
+application.register('contao--webauthn', WebauthnController);
 application.register('contao--password-visibility', PasswordVisibility);
 
 document.documentElement.addEventListener('turbo:before-prefetch', (e) => {

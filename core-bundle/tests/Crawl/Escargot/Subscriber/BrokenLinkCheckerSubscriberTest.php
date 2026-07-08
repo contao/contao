@@ -106,7 +106,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
 
         yield 'Test skips URIs that were marked to be skipped by the data attribue' => [
-            (new CrawlUri(new Uri('https://github.com/foobar'), 1, false, new Uri('https://github.com')))->addTag(BrokenLinkCheckerSubscriber::TAG_SKIP),
+            new CrawlUri(new Uri('https://github.com/foobar'), 1, false, new Uri('https://github.com'))->addTag(BrokenLinkCheckerSubscriber::TAG_SKIP),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not check because it was marked to be skipped using the data-skip-broken-link-checker attribute.',

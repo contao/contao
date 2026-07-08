@@ -32,12 +32,12 @@ class ResizeImagesCommandTest extends TestCase
     {
         parent::setUp();
 
-        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'assets/images'));
+        new Filesystem()->mkdir(Path::join($this->getTempDir(), 'assets/images'));
     }
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'assets/images'));
 
         $this->resetStaticProperties([Process::class, Table::class, Terminal::class]);
 

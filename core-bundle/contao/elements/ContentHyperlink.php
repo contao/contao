@@ -16,6 +16,9 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
 
 /**
  * Front end content element "hyperlink".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\HyperlinkController instead.
  */
 class ContentHyperlink extends ContentElement
 {
@@ -33,10 +36,6 @@ class ContentHyperlink extends ContentElement
 		if (str_starts_with($this->url, 'mailto:'))
 		{
 			$this->url = StringUtil::encodeEmail($this->url);
-		}
-		else
-		{
-			$this->url = StringUtil::ampersand($this->url);
 		}
 
 		$embed = explode('%s', $this->embed);

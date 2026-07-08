@@ -17,6 +17,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -111,7 +112,6 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('resolveUuid')
-            ->with($this->defaultUuid)
             ->willReturn($path)
         ;
 
@@ -294,26 +294,22 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('match')
-            ->with('prefix/path')
-            ->willReturn(true)
+            ->willReturnMap([['prefix/path', true]])
         ;
 
         $dbafsManager
             ->method('fileExists')
-            ->with('prefix/path')
-            ->willReturn($resourceExists)
+            ->willReturnMap([['prefix/path', $resourceExists]])
         ;
 
         $dbafsManager
             ->method('directoryExists')
-            ->with('prefix/path')
-            ->willReturn($resourceExists)
+            ->willReturnMap([['prefix/path', $resourceExists]])
         ;
 
         $dbafsManager
             ->method('has')
-            ->with('prefix/path')
-            ->willReturn($resourceExists)
+            ->willReturnMap([['prefix/path', $resourceExists]])
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
@@ -567,8 +563,7 @@ class VirtualFilesystemTest extends TestCase
         $mountManager = $this->createStub(MountManager::class);
         $mountManager
             ->method('listContents')
-            ->with('prefix/foo/bar', $deep)
-            ->willReturn($this->getGenerator($listing))
+            ->willReturnMap([['prefix/foo/bar', $deep, $this->getGenerator($listing)]])
         ;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
@@ -917,7 +912,7 @@ class VirtualFilesystemTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
 
@@ -1014,7 +1009,7 @@ class VirtualFilesystemTest extends TestCase
      *
      * @return \Generator<T>
      */
-    private function getGenerator(array $array): \Generator
+    private function getGenerator(array $array): iterable
     {
         foreach ($array as $item) {
             yield $item;

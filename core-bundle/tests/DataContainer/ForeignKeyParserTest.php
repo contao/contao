@@ -71,7 +71,7 @@ class ForeignKeyParserTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($expectsQuotingCall ? $this->once() : $this->never())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnCallback(static fn ($v) => "`$v`")
         ;
 

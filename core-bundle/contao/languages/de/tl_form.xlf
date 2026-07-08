@@ -253,6 +253,10 @@
         <source>Show the details of form ID %s</source>
         <target>Details des Formulars ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_form.versions.1">
+        <source>Show the versions of form ID %s</source>
+        <target>Versionen des Formulars ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>Formular ID %s bearbeiten</target>
@@ -280,6 +284,10 @@
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Die verfügbaren Tabellen können in folgender DCA-Konfiguration festgelegt werden: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Formular</target>
       </trans-unit>
     </body>
   </file>

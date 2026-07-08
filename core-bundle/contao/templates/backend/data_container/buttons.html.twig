@@ -1,0 +1,44 @@
+{% set wrapper_attributes = attrs()
+    .addClass('tl_formbody_submit')
+    .addStyle({'text-align': 'right'}, right|default)
+    .set('data-controller', 'contao--sticky-observer')
+%}
+<div{{ wrapper_attributes }}>
+    <div class="tl_submit_container">
+        {% if buttons|length < 3 %}
+            {{ buttons|join(' ')|raw }}
+        {% else %}
+            {{ buttons[0]|raw }}
+            <div class="split-button">
+                {{ buttons[1]|raw }}
+                {% set button_attributes = attrs()
+                    .addClass('d-xl-none split-toggle')
+                    .set('type', 'button')
+                    .set('data-controller', 'contao--toggle-sender')
+                    .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '.tl_submit_container .split-container')
+                    .set('data-action', 'contao--toggle-sender#toggle:prevent')
+                %}
+                <button{{ button_attributes }} tabindex="-1">{{ backend_icon('navcol.svg') }}</button>
+                {% set list_attributes = attrs()
+                    .addClass(['split-container', 'invisible'])
+                    .set('data-controller', 'contao--toggle-receiver')
+                    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '.tl_submit_container .split-toggle')
+                    .set('data-contao--toggle-receiver-inactive-class', 'invisible')
+                    .set('data-action', [
+                            'focusin->contao--toggle-receiver#open',
+                            'focusout->contao--toggle-receiver#close',
+                            'click@document->contao--toggle-receiver#documentClick',
+                            'keydown.esc@document->contao--toggle-receiver#close',
+                        ]|join(' '),
+                    )
+                    .set('data-contao--toggle-receiver-close-delay-param', 300)
+                %}
+                <ul{{ list_attributes }}>
+                    {% for button in buttons|slice(2) %}
+                        <li>{{ button|raw }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>

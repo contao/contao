@@ -14,12 +14,17 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -27,6 +32,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
@@ -88,7 +94,7 @@ class ConfigureFilesystemPassTest extends TestCase
             ])
         ;
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
     }
 
     #[DataProvider('provideSymlinks')]
@@ -112,10 +118,25 @@ class ConfigureFilesystemPassTest extends TestCase
             ]),
         );
 
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
+
+        $container->setDefinition('contao.filesystem.file_download_helper', new Definition(FileDownloadHelper::class)
+            ->setArguments([
+                new Definition(UriSigner::class)->setArguments(['super-secret']),
+                new Definition(ChainRouter::class),
+                new Definition(Security::class)->setArguments([$container]),
+                new Reference('contao.filesystem.mount_manager'),
+            ])
+            ->setLazy(true),
+        );
+
         $container
             ->setDefinition(
                 $mountManagerId = 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = new Definition(MountManager::class),
+                $mountManagerDefinition = new Definition(MountManager::class)->addArgument(new Reference('contao.filesystem.file_download_helper')),
             )
             ->setPublic(true)
         ;
@@ -125,7 +146,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $publicUriProviderDefinition = new Definition(SymlinkedLocalFilesProvider::class),
         );
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
 
@@ -206,7 +227,7 @@ class ConfigureFilesystemPassTest extends TestCase
             new Definition(SymlinkedLocalFilesProvider::class),
         );
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
 

@@ -22,7 +22,7 @@ class ContaoLoginFactoryTest extends TestCase
 {
     public function testReturnsTheCorrectKey(): void
     {
-        $this->assertSame('contao-login', (new ContaoLoginFactory())->getKey());
+        $this->assertSame('contao-login', new ContaoLoginFactory()->getKey());
     }
 
     public function testConfiguresTheContainerServices(): void
@@ -51,7 +51,7 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertEquals(new Reference('contao.security.frontend_user_provider'), $arguments['index_0']);
         $this->assertEquals(new Reference('contao.security.authentication_success_handler'), $arguments['index_1']);
         $this->assertEquals(new Reference('contao.security.authentication_failure_handler'), $arguments['index_2']);
-        $this->assertEquals(new Reference('security.authenticator.two_factor.contao_frontend'), $arguments['index_11']);
+        $this->assertEquals(new Reference('security.authenticator.two_factor.contao_frontend'), $arguments['index_10']);
 
         $this->assertTrue($container->hasDefinition($twoFactorFirewallConfigId));
 

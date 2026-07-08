@@ -10,12 +10,18 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\ErrorPageController;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', PageError404::class, ErrorPageController::class);
+
 /**
  * Provide methods to handle an error 404 page.
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\Page\ErrorPageController instead.
  */
 class PageError404 extends Frontend
 {

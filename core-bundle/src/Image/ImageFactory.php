@@ -48,7 +48,7 @@ class ImageFactory implements ImageFactoryInterface
         private readonly array $validExtensions,
         private readonly string $uploadDir,
     ) {
-        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
+        $this->preserveMetadataFields = new ResizeOptions()->getPreserveCopyrightMetadata();
     }
 
     /**

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -126,8 +127,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByUuid']);
         $filesModelAdapter
             ->method('findByUuid')
-            ->with($uuid)
-            ->willReturn($model)
+            ->willReturnMap([[$uuid, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
@@ -164,8 +164,7 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findById']);
         $filesModelAdapter
             ->method('findById')
-            ->with(5)
-            ->willReturn($model)
+            ->willReturnMap([[5, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
@@ -399,14 +398,13 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($model)
+            ->willReturnMap([[$absoluteFilePath, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
@@ -446,26 +444,17 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
-            ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
-            ->willReturn($filesModel)
+            ->willReturnMap([['1d902bf1-2683-406e-b004-f0b59095e5a1', $filesModel]])
         ;
 
         $filesModelAdapter
             ->method('findById')
-            ->with(5)
-            ->willReturn($filesModel)
-        ;
-
-        $filesModelAdapter
-            ->method('findByUuid')
-            ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
-            ->willReturn($filesModel)
+            ->willReturnMap([[5, $filesModel]])
         ;
 
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($filesModel)
+            ->willReturnMap([[$absoluteFilePath, $filesModel]])
         ;
 
         $validatorAdapter = $this->createAdapterStub(['isUuid']);
@@ -512,14 +501,13 @@ class FigureBuilderTest extends TestCase
         $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
-            ->with($absoluteFilePath)
-            ->willReturn($model)
+            ->willReturnMap([[$absoluteFilePath, $model]])
         ;
 
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
@@ -532,7 +520,7 @@ class FigureBuilderTest extends TestCase
         $inMemoryAdapter = new InMemoryFilesystemAdapter();
         $inMemoryAdapter->write('foo.jpg', 'image-data', new FlysystemConfig());
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($inMemoryAdapter);
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
@@ -550,7 +538,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromStorageFailsWithUnreadableResource(): void
     {
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new InMemoryFilesystemAdapter());
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
@@ -1029,7 +1017,7 @@ class FigureBuilderTest extends TestCase
             $resource = $getFilesModel($resource[1], $resource[2] ?? null);
         }
 
-        (new DcaLoader('tl_files'))->load();
+        new DcaLoader('tl_files')->load();
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
 
         [$absoluteFilePath] = self::getTestFilePaths();

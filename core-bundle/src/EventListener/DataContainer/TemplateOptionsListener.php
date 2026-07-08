@@ -135,6 +135,8 @@ class TemplateOptionsListener
 
     /**
      * Uses the reflection API to return the default template from a legacy class.
+     *
+     * @param class-string $legacyProxyClass
      */
     private function getLegacyDefaultIdentifier(string|null $type, string|null $legacyProxyClass): string|null
     {
@@ -148,7 +150,7 @@ class TemplateOptionsListener
             return null;
         }
 
-        $properties = (new \ReflectionClass($class))->getDefaultProperties();
+        $properties = new \ReflectionClass($class)->getDefaultProperties();
 
         return $properties['strTemplate'] ?? null;
     }

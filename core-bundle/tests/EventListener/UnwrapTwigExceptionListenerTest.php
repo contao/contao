@@ -36,7 +36,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
             new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         );
 
-        (new UnwrapTwigExceptionListener())($event);
+        new UnwrapTwigExceptionListener()($event);
 
         $this->assertSame($exception, $event->getThrowable(), 'exception should be unwrapped');
     }
@@ -66,7 +66,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
             $throwable,
         );
 
-        (new UnwrapTwigExceptionListener())($event);
+        new UnwrapTwigExceptionListener()($event);
 
         $this->assertSame($throwable, $event->getThrowable(), 'throwable should be left untouched');
     }

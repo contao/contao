@@ -28,15 +28,15 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 	(
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true)
 		),
 		'termId' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true)
 		),
 		'relevance' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true)
 		)
 	)
 );

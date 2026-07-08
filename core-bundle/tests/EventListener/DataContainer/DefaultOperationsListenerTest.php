@@ -118,8 +118,8 @@ class DefaultOperationsListenerTest extends TestCase
 
         $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
-        $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
+        $this->assertOperation($operations['copy'], 'act=paste&mode=copy', 'copy.svg', true);
+        $this->assertOperation($operations['cut'], 'act=paste&mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
         $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
@@ -144,9 +144,9 @@ class DefaultOperationsListenerTest extends TestCase
 
         $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
-        $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
-        $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
+        $this->assertOperation($operations['copy'], 'act=paste&mode=copy', 'copy.svg', true);
+        $this->assertOperation($operations['copyChildren'], 'act=paste&mode=copy&children=1', 'copychildren.svg', true);
+        $this->assertOperation($operations['cut'], 'act=paste&mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
         $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
@@ -182,7 +182,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
-        $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=published', 'visible.svg', true);
+        $this->assertOperation($operations['toggle'], 'act=toggle&field=published', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
         $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
@@ -217,7 +217,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
-        $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=featured', 'visible.svg', true);
+        $this->assertOperation($operations['toggle'], 'act=toggle&field=featured', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
         $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }

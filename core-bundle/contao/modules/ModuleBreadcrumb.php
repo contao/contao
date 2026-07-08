@@ -52,7 +52,7 @@ class ModuleBreadcrumb extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$type = null;
 		$pageId = $objPage->id;
@@ -64,7 +64,9 @@ class ModuleBreadcrumb extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Get all pages up to the root page
-		$objPages = PageModel::findParentsById($objPage->pid);
+		$parents = array_reverse($objPage->trail);
+		array_shift($parents); // Remove current page
+		$objPages = PageModel::findMultipleByIds($parents);
 
 		if ($objPages !== null)
 		{
@@ -212,6 +214,7 @@ class ModuleBreadcrumb extends Module
 
 			$position = 0;
 			$htmlDecoder = $container->get('contao.string.html_decoder');
+			$insertTagParser = $container->get('contao.insert_tag.parser');
 
 			foreach ($items as $item)
 			{
@@ -225,8 +228,8 @@ class ModuleBreadcrumb extends Module
 					'@type' => 'ListItem',
 					'position' => ++$position,
 					'item' => array(
-						'@id' => $item['href'],
-						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
+						'@id' => $insertTagParser->replaceInline($item['href']),
+						'name' => $insertTagParser->replaceInline($htmlDecoder->inputEncodedToPlainText($item['link']))
 					)
 				);
 			}

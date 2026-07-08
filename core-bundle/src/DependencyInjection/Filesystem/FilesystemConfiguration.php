@@ -12,15 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Filesystem;
 
+use Contao\CoreBundle\Asset\Package\VirtualFilesystemStoragePackage;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
-use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 
@@ -29,10 +31,8 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    public function __construct(
-        private readonly ContainerBuilder $container,
-        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
-    ) {
+    public function __construct(private readonly ContainerBuilder $container)
+    {
     }
 
     public function getContainer(): ContainerBuilder
@@ -71,7 +71,7 @@ class FilesystemConfiguration
      * Mounts a new Flysystem adapter to the virtual filesystem.
      *
      * The $adapter and $options can be set analogous to the configuration of the
-     * Flysystem Symfony bundle. Alternatively you can pass in an id of an already
+     * Flysystem Symfony bundle. Alternatively, you can pass in an ID of an already
      * existing filesystem adapter service.
      *
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
@@ -79,31 +79,49 @@ class FilesystemConfiguration
      * The $mountPath must be a path relative to and inside the project root (e.g.
      * "files/foo" or "assets/images").
      *
-     * If you do not set a name, the id/alias for the adapter service will be derived
-     * from the mount path.
+     * If you do not provide a name, the ID/alias for the adapter service will be
+     * derived from the mount path.
      */
-    public function mountAdapter(string $adapter, array $options, string $mountPath, string|null $name = null): self
+    public function mountAdapter(string $adapterNameOrId, array $options, string $mountPath, string|null $name = null): self
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
-        $adapterId = "contao.filesystem.adapter.$name";
+        $contaoAdapterId = "contao.filesystem.adapter.$name";
 
-        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
-            // Native adapter
-            $this->container
-                ->setDefinition($adapterId, $adapterDefinition)
-                ->setPublic(false)
-            ;
+        if ($this->container->has($adapterNameOrId)) {
+            // Alias custom adapter service
+            $this->container->setAlias($contaoAdapterId, $adapterNameOrId);
         } else {
-            // Custom adapter
+            // Set default permissions
+            if (!isset($options['permissions'])) {
+                $options['permissions'] = [
+                    'file' => ['public' => 0644, 'private' => 0600],
+                    'dir' => ['public' => 0755, 'private' => 0700],
+                ];
+            }
+
+            // Unfortunately, the adapter definition builders are hardcoded in the Flysytem
+            // bundle class. By using reflection to call "createAdapterDefinition", we ensure
+            // the passed $options are handled the same way the extension does.
+            /** @var ExtensionInterface $flysystemExtension */
+            $flysystemExtension = $this->container->getExtension('flysystem');
+
+            $adapterId = new \ReflectionMethod(FlysystemExtension::class, 'createAdapterDefinition')
+                ->invoke($flysystemExtension, $this->container, $adapterNameOrId, "contao_vfs_$name", $options)
+            ;
+
+            if (null === $adapterId) {
+                throw new InvalidConfigurationException(\sprintf('The Flysystem adapter for the type "%s" could not be created.', $adapterNameOrId));
+            }
+
             $this->container
-                ->setAlias($adapterId, $adapter)
-                ->setPublic(false)
+                ->setAlias($contaoAdapterId, $adapterId)
+                ->setPublic(true)
             ;
         }
 
         $this->container
             ->getDefinition('contao.filesystem.mount_manager')
-            ->addMethodCall('mount', [new Reference($adapterId), $mountPath])
+            ->addMethodCall('mount', [new Reference($contaoAdapterId), $mountPath])
         ;
 
         return $this;
@@ -118,7 +136,7 @@ class FilesystemConfiguration
      * "files/foo" or "assets/images"); the $filesystemPath can either be absolute or
      * relative to the project root and may contain placeholders (%name%).
      *
-     * If you do not set a name, the id for the adapter service will be derived from
+     * If you do not set a name, the ID for the adapter service will be derived from
      * the mount path.
      */
     public function mountLocalAdapter(string $filesystemPath, string $mountPath, string|null $name = null): self
@@ -161,8 +179,8 @@ class FilesystemConfiguration
     /**
      * Registers a DBAFS service with the default implementation.
      *
-     * If you want to fine tune settings (e.g. adjust the bulk insert size or the
-     * maximum file size) add method calls to the definition returned by this method.
+     * If you want to fine-tune settings (e.g., adjust the bulk insert size or the
+     * maximum file size), add method calls to the definition returned by this method.
      *
      * @return Definition the newly created definition
      */
@@ -195,6 +213,34 @@ class FilesystemConfiguration
         // Register the DBAFS in the DbafsManager using the same prefix as the associated
         // virtual filesystem
         $this->registerDbafs($definition, $prefix);
+
+        return $definition;
+    }
+
+    /**
+     * Adds an asset package service able to serve the given VFS. The asset package will be
+     * registered under the package name "contao_vfs.<identifier>", where <identifier> is
+     * the given $identifier if defined or the $virtualFilesystemName else.
+     *
+     * @return Definition the newly created definition
+     */
+    public function addAssetPackage(string $virtualFilesystemName, string|null $identifier = null): Definition
+    {
+        if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
+        }
+
+        // Add the storage package service
+        $definition = new Definition(
+            VirtualFilesystemStoragePackage::class,
+            [new Reference($virtualFilesystem[0])],
+        );
+
+        $identifier ??= $virtualFilesystemName;
+
+        $definition->addTag('assets.package', ['package' => "contao_vfs.$identifier"]);
+
+        $this->container->setDefinition("contao.assets.package.vfs.$identifier", $definition);
 
         return $definition;
     }

@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more news archives.</source>
         <target>Ange vilka nyhetsarkiv som användaren ska ha tillgång till.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newp.0">
-        <source>News archive permissions</source>
-        <target>Nyhetsarkivbehörigheter</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news archive permissions.</source>
-        <target>Här kan du definiera nyhetsarkivets behörigheter.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Nyhetsrättigheter</target>

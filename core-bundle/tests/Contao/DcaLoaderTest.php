@@ -41,7 +41,7 @@ class DcaLoaderTest extends TestCase
     {
         // Loading this file twice would cause a "Cannot declare class …, because the
         // name is already in use" error
-        (new Filesystem())->dumpFile(
+        new Filesystem()->dumpFile(
             $this->getTempDir().'/var/cache/contao/dca/tl_foo.php',
             \sprintf(
                 <<<'EOD'
@@ -56,13 +56,13 @@ class DcaLoaderTest extends TestCase
         $firstException = $secondException = null;
 
         try {
-            (new DcaLoader('tl_foo'))->load();
+            new DcaLoader('tl_foo')->load();
         } catch (\Throwable $exception) {
             $firstException = $exception;
         }
 
         try {
-            (new DcaLoader('tl_foo'))->load();
+            new DcaLoader('tl_foo')->load();
         } catch (\Throwable $exception) {
             $secondException = $exception;
         }

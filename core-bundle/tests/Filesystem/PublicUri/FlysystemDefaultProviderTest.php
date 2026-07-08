@@ -24,8 +24,9 @@ class FlysystemDefaultProviderTest extends TestCase
 {
     public function testGetUri(): void
     {
-        $adapter = $this->createStub(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
+        $adapter = $this->createMock(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
         $adapter
+            ->expects($this->once())
             ->method('publicUrl')
             ->with('path/to/resource.txt')
             ->willReturn('https://some.bucket/some.key')

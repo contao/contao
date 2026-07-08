@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Filesystem;
 
+use Contao\CoreBundle\Asset\Package\VirtualFilesystemStoragePackage;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
@@ -21,7 +22,9 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use League\FlysystemBundle\Adapter\Builder\AdapterDefinitionBuilderInterface;
+use League\FlysystemBundle\Adapter\Builder\LocalAdapterDefinitionBuilder;
+use League\FlysystemBundle\DependencyInjection\FlysystemExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -78,14 +81,19 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
+
+        $config = new FilesystemConfiguration($container);
         $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
 
-        $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
+        $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
+        $this->assertTrue(($alias = $container->getAlias('contao.filesystem.adapter.foo'))->isPublic());
 
-        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.foo');
+        $adapterDefinition = $container->getDefinition((string) $alias);
         $this->assertSame(LocalFilesystemAdapter::class, $adapterDefinition->getClass());
-        $this->assertFalse($adapterDefinition->isPublic());
 
         $calls = $container->getDefinition('contao.filesystem.mount_manager')->getMethodCalls();
 
@@ -98,9 +106,10 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountCustomAdapter(): void
     {
         $container = $this->getContainerBuilder();
+        $container->setDefinition('custom_adapter_id', new Definition());
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
-        $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
+        $config = new FilesystemConfiguration($container);
+        $config->mountAdapter('custom_adapter_id', [], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
         $this->assertFalse($container->getAlias('contao.filesystem.adapter.foo')->isPublic());
@@ -117,6 +126,29 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountAdapterAutoGeneratesId(string $mountPath, string $expectedId): void
     {
         $container = $this->getContainerBuilder();
+
+        $fooAdapterDefinitionBuilder = $this->createStub(AdapterDefinitionBuilderInterface::class);
+        $fooAdapterDefinitionBuilder
+            ->method('getName')
+            ->willReturn('foo')
+        ;
+
+        $fooAdapterDefinitionBuilder
+            ->method('createAdapter')
+            ->willReturn('flysystem.adapter.foo')
+        ;
+
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder($fooAdapterDefinitionBuilder);
+
+        $container->registerExtension($flysystemExtension);
+
+        $fooAdapterBuilder = $this->createStub(AdapterDefinitionBuilderInterface::class);
+        $fooAdapterBuilder
+            ->method('createAdapter')
+            ->willReturn('flysystem.adaper.foo')
+        ;
+
         $config = new FilesystemConfiguration($container);
 
         $this->assertFalse($container->hasAlias($expectedId));
@@ -152,12 +184,17 @@ class FilesystemConfigurationTest extends TestCase
             'bar' => 'path/to/bar',
         ]);
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $flysystemExtension = new FlysystemExtension();
+        $flysystemExtension->addAdapterDefinitionBuilder(new LocalAdapterDefinitionBuilder());
+
+        $container->registerExtension($flysystemExtension);
+
+        $config = new FilesystemConfiguration($container);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
-        $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
+        $this->assertTrue($container->hasAlias('contao.filesystem.adapter.my_adapter'));
 
-        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.my_adapter');
+        $adapterDefinition = $container->getDefinition((string) $container->getAlias('contao.filesystem.adapter.my_adapter'));
 
         $this->assertSame(
             $expected,
@@ -257,6 +294,23 @@ class FilesystemConfigurationTest extends TestCase
         $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
+    }
+
+    public function testAddAssetPackage(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $config = new FilesystemConfiguration($container);
+        $config->addVirtualFilesystem('foo', 'some/prefix');
+
+        $definition = $config->addAssetPackage('foo');
+        $this->assertTrue($container->hasDefinition('contao.assets.package.vfs.foo'));
+
+        $package = $container->getDefinition('contao.assets.package.vfs.foo');
+        $this->assertSame(VirtualFilesystemStoragePackage::class, $package->getClass());
+        $this->assertSame('contao.filesystem.virtual.foo', (string) $package->getArgument(0));
+        $this->assertTrue($definition->hasTag('assets.package'));
+        $this->assertSame('contao_vfs.foo', $definition->getTag('assets.package')[0]['package']);
     }
 
     private function getContainerBuilder(array $parameters = []): ContainerBuilder

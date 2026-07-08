@@ -16,8 +16,6 @@ use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsLi
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Image;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
@@ -25,8 +23,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
-
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
         parent::tearDown();
     }
@@ -52,7 +48,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'eval' => [
                     'mandatory' => true,
                     'rgxp' => 'friendly',
-                    'decodeEntities' => true,
                     'tl_class' => 'w50',
                 ],
             ],
@@ -61,7 +56,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'eval' => [
                     'mandatory' => true,
                     'helpwizard' => true,
-                    'decodeEntities' => true,
                     'tl_class' => 'w50',
                 ],
                 'explanation' => 'dateFormat',
@@ -87,7 +81,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'eval' => [
                         'mandatory' => true,
                         'rgxp' => 'friendly',
-                        'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'helpwizard' => false,
@@ -100,7 +93,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'eval' => [
                         'mandatory' => true,
                         'helpwizard' => false,
-                        'decodeEntities' => true,
                         'tl_class' => 'w50',
                         'disabled' => true,
                         'chosen' => false,
@@ -126,13 +118,13 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->willReturn('<img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">')
+            ->willReturn('<img src="public/contaocore/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">')
         ;
 
         $listener = $this->createListener(null, $translator, [Image::class => $imageAdapter]);
 
         $this->assertSame(
-            ' <img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">',
+            ' <img src="public/contaocore/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">',
             $listener->renderHelpIcon(),
         );
     }

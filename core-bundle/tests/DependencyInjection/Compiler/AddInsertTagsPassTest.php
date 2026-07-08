@@ -97,7 +97,7 @@ class AddInsertTagsPassTest extends TestCase
     {
         yield [
             [
-                'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
+                'service_a' => new Definition(DateInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
             ],
             [
                 ['addSubscription', 'service_a', '__invoke', 'date', null, true, false],
@@ -106,7 +106,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'iflng'))),
+                'service_a' => new Definition(IfLanguageInsertTag::class)->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'iflng'))),
             ],
             [
                 ['addBlockSubscription', 'service_a', '__invoke', 'iflng', 'iflng', true, false],
@@ -115,7 +115,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag'))),
+                'service_a' => new Definition(PhpFunctionFlag::class)->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag'))),
             ],
             [
                 ['addFlagCallback', 'some_flag', 'service_a', '__invoke'],
@@ -124,12 +124,12 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
-                'service_b' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'iflng'))),
-                'service_c' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag'))),
-                'service_d' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('not_date', true, 1, '__invoke', false))),
-                'service_e' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('ifnlng', 'end_ifnlng', priority: -1))),
-                'service_f' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag', 0, '__invoke'))),
+                'service_a' => new Definition(DateInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
+                'service_b' => new Definition(IfLanguageInsertTag::class)->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'iflng'))),
+                'service_c' => new Definition(PhpFunctionFlag::class)->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag'))),
+                'service_d' => new Definition(DateInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('not_date', true, 1, '__invoke', false))),
+                'service_e' => new Definition(IfLanguageInsertTag::class)->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('ifnlng', 'end_ifnlng', priority: -1))),
+                'service_f' => new Definition(PhpFunctionFlag::class)->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('some_flag', 0, '__invoke'))),
             ],
             [
                 ['addSubscription', 'service_a', '__invoke', 'date', null, true, false],
@@ -143,7 +143,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('invalid-tag'))),
+                'service_a' => new Definition(DateInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('invalid-tag'))),
             ],
             [],
             new InvalidDefinitionException('Invalid insert tag name "invalid-tag"'),
@@ -151,7 +151,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'invalid-tag'))),
+                'service_a' => new Definition(IfLanguageInsertTag::class)->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('iflng', 'invalid-tag'))),
             ],
             [],
             new InvalidDefinitionException('Invalid insert tag end tag name "invalid-tag"'),
@@ -159,7 +159,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(PhpFunctionFlag::class))->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('invalid-flag'))),
+                'service_a' => new Definition(PhpFunctionFlag::class)->addTag('contao.insert_tag_flag', get_object_vars(new AsInsertTagFlag('invalid-flag'))),
             ],
             [],
             new InvalidDefinitionException('Invalid insert tag flag name "invalid-flag"'),
@@ -167,7 +167,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'notExists'))),
+                'service_a' => new Definition(DateInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'notExists'))),
             ],
             [],
             new InvalidDefinitionException('The contao.insert_tag definition for service "service_a" is invalid. The class "Contao\CoreBundle\InsertTag\Resolver\DateInsertTag" does not have a method "notExists".'),
@@ -175,7 +175,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'languageMatchesTranslatorLocale'))),
+                'service_a' => new Definition(IfLanguageInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date', method: 'languageMatchesTranslatorLocale'))),
             ],
             [],
             new InvalidDefinitionException('The contao.insert_tag definition for service "service_a" is invalid. The "Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag::languageMatchesTranslatorLocale" method exists but is not public.'),
@@ -183,7 +183,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(IfLanguageInsertTag::class))->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
+                'service_a' => new Definition(IfLanguageInsertTag::class)->addTag('contao.insert_tag', get_object_vars(new AsInsertTag('date'))),
             ],
             [],
             new InvalidDefinitionException('The "Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag::__invoke" method exists but has an invalid return type.'),
@@ -191,7 +191,7 @@ class AddInsertTagsPassTest extends TestCase
 
         yield [
             [
-                'service_a' => (new Definition(DateInsertTag::class))->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('foo', 'bar'))),
+                'service_a' => new Definition(DateInsertTag::class)->addTag('contao.block_insert_tag', get_object_vars(new AsBlockInsertTag('foo', 'bar'))),
             ],
             [],
             new InvalidDefinitionException('The "Contao\CoreBundle\InsertTag\Resolver\DateInsertTag::__invoke" method exists but has an invalid return type.'),

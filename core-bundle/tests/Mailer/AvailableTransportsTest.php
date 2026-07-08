@@ -15,18 +15,9 @@ namespace Contao\CoreBundle\Tests\Mailer;
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 
 class AvailableTransportsTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
-
-        parent::tearDown();
-    }
-
     public function testAddsTransports(): void
     {
         $availableTransports = new AvailableTransports();

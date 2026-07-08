@@ -105,7 +105,7 @@ class DefaultOperationsListener
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
-        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
         $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
@@ -129,7 +129,7 @@ class DefaultOperationsListener
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
                 $operations += [
                     'children' => [
-                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
+                        'href' => 'table='.$ctable.($ctable === $table ? '&ptable='.$table : ''),
                         'icon' => 'children.svg',
                         'prefetch' => true,
                         'attributes' => 'data-contao--deeplink-target="secondary"',
@@ -143,7 +143,7 @@ class DefaultOperationsListener
         if ($hasPtable || $isTreeMode) {
             if ($canCopy) {
                 $operations['copy'] = [
-                    'href' => 'act=paste&amp;mode=copy',
+                    'href' => 'act=paste&mode=copy',
                     'method' => 'POST',
                     'icon' => 'copy.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -152,7 +152,7 @@ class DefaultOperationsListener
 
                 if ($isTreeMode) {
                     $operations['copyChildren'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'href' => 'act=paste&mode=copy&children=1',
                         'method' => 'POST',
                         'icon' => 'copychildren.svg',
                         'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -163,7 +163,7 @@ class DefaultOperationsListener
 
             if ($canSort) {
                 $operations['cut'] = [
-                    'href' => 'act=paste&amp;mode=cut',
+                    'href' => 'act=paste&mode=cut',
                     'method' => 'POST',
                     'icon' => 'cut.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -191,7 +191,7 @@ class DefaultOperationsListener
 
         if ($canEdit && null !== ($toggleField = $this->getToggleField($table))) {
             $operations['toggle'] = [
-                'href' => 'act=toggle&amp;field='.$toggleField,
+                'href' => 'act=toggle&field='.$toggleField,
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
@@ -315,7 +315,7 @@ class DefaultOperationsListener
         return function (DataContainerOperation $operation) use (&$versionIds, $table): void {
             if (null === $versionIds) {
                 $versionIds = $this->connection->fetchFirstColumn(
-                    'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable=? GROUP BY pid HAVING total > 1',
+                    'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable = ? GROUP BY pid HAVING total > 1',
                     [$table],
                 );
             }

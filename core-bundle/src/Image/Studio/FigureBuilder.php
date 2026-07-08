@@ -753,7 +753,7 @@ class FigureBuilder
             ...$fileReferenceData,
         ];
 
-        return (new Metadata($data))->with($overwriteMetadata);
+        return new Metadata($data)->with($overwriteMetadata);
     }
 
     /**

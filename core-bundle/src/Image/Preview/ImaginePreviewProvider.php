@@ -106,7 +106,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            return \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
+            return \in_array(strtoupper($format), new \Gmagick()->queryformats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GdImagine) {

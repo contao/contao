@@ -24,25 +24,25 @@ class MakeServicesPublicPassTest extends TestCase
         $container = new ContainerBuilder();
 
         // Definitions
-        $container->setDefinition('assets.packages', (new Definition())->setPublic(false));
-        $container->setDefinition('debug.stopwatch', (new Definition())->setPublic(false));
-        $container->setDefinition('fragment.handler', (new Definition())->setPublic(false));
-        $container->setDefinition('monolog.logger.contao', (new Definition())->setPublic(false));
-        $container->setDefinition('security.authentication_utils', (new Definition())->setPublic(false));
-        $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
-        $container->setDefinition('security.authorization_checker', (new Definition())->setPublic(false));
-        $container->setDefinition('security.encoder_factory', (new Definition())->setPublic(false));
-        $container->setDefinition('security.firewall.map', (new Definition())->setPublic(false));
-        $container->setDefinition('security.helper', (new Definition())->setPublic(false));
-        $container->setDefinition('security.logout_url_generator', (new Definition())->setPublic(false));
-        $container->setDefinition('security.password_hasher_factory', (new Definition())->setPublic(false));
-        $container->setDefinition('security.token_storage', (new Definition())->setPublic(false));
-        $container->setDefinition('twig', (new Definition())->setPublic(false));
-        $container->setDefinition('uri_signer', (new Definition())->setPublic(false));
+        $container->setDefinition('assets.packages', new Definition()->setPublic(false));
+        $container->setDefinition('debug.stopwatch', new Definition()->setPublic(false));
+        $container->setDefinition('fragment.handler', new Definition()->setPublic(false));
+        $container->setDefinition('monolog.logger.contao', new Definition()->setPublic(false));
+        $container->setDefinition('security.authentication_utils', new Definition()->setPublic(false));
+        $container->setDefinition('security.authentication.trust_resolver', new Definition()->setPublic(false));
+        $container->setDefinition('security.authorization_checker', new Definition()->setPublic(false));
+        $container->setDefinition('security.encoder_factory', new Definition()->setPublic(false));
+        $container->setDefinition('security.firewall.map', new Definition()->setPublic(false));
+        $container->setDefinition('security.helper', new Definition()->setPublic(false));
+        $container->setDefinition('security.logout_url_generator', new Definition()->setPublic(false));
+        $container->setDefinition('security.password_hasher_factory', new Definition()->setPublic(false));
+        $container->setDefinition('security.token_storage', new Definition()->setPublic(false));
+        $container->setDefinition('twig', new Definition()->setPublic(false));
+        $container->setDefinition('uri_signer', new Definition()->setPublic(false));
 
         // Aliased definitions
-        $container->setDefinition('doctrine.dbal.default_connection', (new Definition())->setPublic(false));
-        $container->setDefinition('mailer.mailer', (new Definition())->setPublic(false));
+        $container->setDefinition('doctrine.dbal.default_connection', new Definition()->setPublic(false));
+        $container->setDefinition('mailer.mailer', new Definition()->setPublic(false));
 
         // Aliases
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');

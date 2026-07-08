@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more channels.</source>
         <target>Permite conceder acceso a uno o más canales.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsletterp.0">
-        <source>Channel permissions</source>
-        <target>Permisos de canal</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsletterp.1">
-        <source>Here you can define the channel permissions.</source>
-        <target>Permite definir los permisos para el canal.</target>
-      </trans-unit>
       <trans-unit id="tl_user.newsletter_legend">
         <source>Newsletter permissions</source>
         <target>Permisos de newsletter</target>

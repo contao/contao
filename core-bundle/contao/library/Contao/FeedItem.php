@@ -39,6 +39,8 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
  * @property integer $end         The end date
  * @property string  $author      The item author
  * @property string  $description The item description
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
  */
 class FeedItem
 {

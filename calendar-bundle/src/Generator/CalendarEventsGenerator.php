@@ -73,11 +73,17 @@ class CalendarEventsGenerator
                     }
 
                     $count = 0;
-                    $eventStartTime = (new \DateTime())->setTimestamp($eventModel->startTime);
-                    $eventEndTime = (new \DateTime())->setTimestamp($eventModel->endTime);
+                    $eventStartTime = new \DateTime()->setTimestamp($eventModel->startTime);
+                    $eventEndTime = new \DateTime()->setTimestamp($eventModel->endTime);
                     $modifier = '+ '.$repeat['value'].' '.$repeat['unit'];
+                    $rangeCount = $eventEndTime < $rangeStart || $eventStartTime > $rangeEnd ? 0 : 1;
 
                     while ($eventEndTime < $rangeEnd) {
+                        // If the range is open-ended, show infinitely repeating events only once (see #9730)
+                        if ($rangeCount > 0 && $rangeEnd->getTimestamp() >= min(4294967295, PHP_INT_MAX) && 0 === $eventModel->recurrences) {
+                            break;
+                        }
+
                         ++$count;
 
                         if (($eventModel->recurrences > 0 && $count > $eventModel->recurrences) || (null !== $recurrenceLimit && $count > $recurrenceLimit)) {
@@ -93,6 +99,7 @@ class CalendarEventsGenerator
                         }
 
                         $this->addEvent($events, $eventModel, $eventStartTime->getTimestamp(), $eventEndTime->getTimestamp(), $rangeEnd->getTimestamp(), $id, $noSpan);
+                        ++$rangeCount;
                     }
                 }
             }
@@ -265,8 +272,8 @@ class CalendarEventsGenerator
         }
 
         // Get today's start and end timestamp
-        $this->todayBegin ??= (new \DateTimeImmutable())->setTime(0, 0);
-        $this->todayEnd ??= (new \DateTimeImmutable())->setTime(23, 59, 59);
+        $this->todayBegin ??= new \DateTimeImmutable()->setTime(0, 0);
+        $this->todayEnd ??= new \DateTimeImmutable()->setTime(23, 59, 59);
 
         // Mark past and upcoming events (see #3692)
         if ($end < $this->todayBegin->getTimestamp()) {

@@ -126,7 +126,6 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%kernel.logs_dir%'
-            - '@contao.resource_finder'
             - '@event_dispatcher'
 
     contao.command.user_create:
