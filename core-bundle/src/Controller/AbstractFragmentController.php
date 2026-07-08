@@ -30,6 +30,7 @@ use Contao\Model;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -58,6 +59,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
+        $services['clock'] = ClockInterface::class;
 
         return $services;
     }

@@ -66,7 +66,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
         $this->assertMatchesRegularExpression('# public/assets +assets #', $display);
-        $this->assertMatchesRegularExpression('# system/logs +var/logs #', $display);
+        $this->assertMatchesRegularExpression('# system/logs +var/log #', $display);
 
         $this->assertFileExists(Path::join(self::getTempDir(), 'public/files/public'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/modules/foobar'));
@@ -79,14 +79,19 @@ class SymlinksCommandTest extends TestCase
 
         // Use \ as directory separator in $projectDir
         $projectDir = new \ReflectionProperty(SymlinksCommand::class, 'projectDir');
-        $projectDir->setValue($command, strtr($this->getTempDir(), '/', '\\'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $projectDir->setValue($command, strtr($this->getTempDir(), '/', '\\'));
+        } else {
+            $projectDir->setValue($command, $this->getTempDir());
+        }
 
         // Use / as directory separator in $path
         $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
-        $relativePath = $method->invoke($command, Path::join($this->getTempDir(), 'var/logs'));
+        $relativePath = $method->invoke($command, Path::join($this->getTempDir(), 'var/log'));
 
         // The path should be normalized and shortened
-        $this->assertSame('var/logs', $relativePath);
+        $this->assertSame('var/log', $relativePath);
     }
 
     private function getCommand(): SymlinksCommand
@@ -94,7 +99,7 @@ class SymlinksCommandTest extends TestCase
         return new SymlinksCommand(
             $this->getTempDir(),
             'files',
-            Path::join($this->getTempDir(), '/var/logs'),
+            Path::join($this->getTempDir(), '/var/log'),
             $this->createStub(EventDispatcherInterface::class),
         );
     }

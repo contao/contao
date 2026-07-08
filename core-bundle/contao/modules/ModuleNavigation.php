@@ -37,7 +37,7 @@ class ModuleNavigation extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -52,8 +52,6 @@ class ModuleNavigation extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		// Set the trail and level
 		if ($this->defineRoot && $this->rootPage > 0)
 		{
@@ -62,6 +60,7 @@ class ModuleNavigation extends Module
 		}
 		else
 		{
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$trail = $objPage->trail;
 			$level = ($this->levelOffset > 0) ? $this->levelOffset : 0;
 		}

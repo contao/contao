@@ -34,7 +34,7 @@ class CalendarCommentsVoter extends AbstractCommentsVoter
     protected function hasAccess(TokenInterface $token, string $source, int $parent): bool
     {
         $calendarId = $this->connection->fetchOne(
-            'SELECT pid FROM tl_calendar_events WHERE id=?',
+            'SELECT pid FROM tl_calendar_events WHERE id = ?',
             [$parent],
         );
 

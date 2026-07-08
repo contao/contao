@@ -36,7 +36,7 @@ class ContaoSetupCommand extends Command
     private readonly string|false $phpPath;
 
     /**
-     * @var \Closure(array<string>):Process
+     * @var \Closure(array<string>): Process
      */
     private readonly \Closure $createProcessHandler;
 

@@ -45,12 +45,12 @@ class ModuleBooknav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if (!$this->rootPage || !\in_array($this->rootPage, $objPage->trail))
 		{
@@ -83,7 +83,7 @@ class ModuleBooknav extends Module
 		$this->arrPages[$objTarget->id] = $objTarget;
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Upper page
 		if ($objPage->id != $objTarget->id)

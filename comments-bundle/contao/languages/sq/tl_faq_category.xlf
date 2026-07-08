@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Numri i komente në një faqe. Epeni 0 për ta ç'aktivizuar shfletimin e komenteve.</target>
+        <target>Numri i komente në një faqe. Epeni 0 për ta ç&apos;aktivizuar shfletimin e komenteve.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.0">
         <source>Moderate comments</source>

@@ -55,7 +55,7 @@ class AddFeedsFromLayoutListener
     #[AsEventListener]
     public function onLayoutEvent(LayoutEvent $event): void
     {
-        if (!($layout = $event->getLayout()) || !($responseContext = $event->getResponseContext())) {
+        if (!($layout = $event->getLayout()) || !($responseContext = $this->responseContextAccessor->getResponseContext())) {
             return;
         }
 

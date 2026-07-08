@@ -92,8 +92,6 @@ class InsertTags extends Controller
 	 */
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
-		global $objPage;
-
 		$container = System::getContainer();
 
 		// Preserve insert tags
@@ -130,6 +128,7 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)

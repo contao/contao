@@ -28,12 +28,12 @@
                 {% for row in rows %}
                     <tr>
                         {% if 'colspan' == row.0 %}
-                            <td colspan="2">{{ row.1|default|raw }}</td>
+                            <td colspan="2">{{ row.1|default|sanitize_html('contao') }}</td>
                         {% elseif 'headspan' == row.0 %}
-                            <td colspan="2" class="headline">{{ row.1|default|raw }}</td>
+                            <td colspan="2" class="headline">{{ row.1|default|sanitize_html('contao') }}</td>
                         {% else %}
-                            <td class="tl_label">{{ row.0|raw }}</td>
-                            <td>{{ row.1|default|raw }}</td>
+                            <td class="tl_label">{{ row.0|sanitize_html('contao') }}</td>
+                            <td>{{ row.1|default|sanitize_html('contao') }}</td>
                         {% endif %}
                     </tr>
                 {% endfor %}

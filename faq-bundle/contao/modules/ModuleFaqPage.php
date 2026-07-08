@@ -39,7 +39,7 @@ class ModuleFaqPage extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -76,10 +76,9 @@ class ModuleFaqPage extends Module
 			return;
 		}
 
-		global $objPage;
-
 		$tags = array();
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Add FAQs
 		foreach ($objFaqs as $objFaq)

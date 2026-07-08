@@ -65,7 +65,7 @@ class LabelListenerTest extends TestCase
         $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
-        $this->assertSame('<result>', $listener($row, '', $dc));
+        $this->assertSame('<result>', $listener($row, '', $dc)->htmlLabel);
     }
 
     public function testRendersUndoLabelForTabularRecords(): void
@@ -102,7 +102,7 @@ class LabelListenerTest extends TestCase
         $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
-        $this->assertSame('<result>', $listener($row, '', $dc));
+        $this->assertSame('<result>', $listener($row, '', $dc)->htmlLabel);
     }
 
     private function setupDataSet(): array

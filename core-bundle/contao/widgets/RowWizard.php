@@ -38,7 +38,6 @@ class RowWizard extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 
 		System::loadLanguageFile('default');
 	}
@@ -153,15 +152,19 @@ class RowWizard extends Widget
 
 	public function generate(): string
 	{
+		$valuesEmpty = false;
+
 		// Make sure there is at least an empty array
 		if (!\is_array($this->varValue) || array() === $this->varValue)
 		{
 			$this->varValue = array(array(''));
+			$valuesEmpty = true;
 		}
 
 		// Populate the rows if the initial count has not been reached
 		if (null !== $this->min)
 		{
+			$valuesEmpty = false;
 			$rowCount = \count($this->varValue);
 
 			while ($rowCount < $this->min)
@@ -242,6 +245,7 @@ class RowWizard extends Widget
 			'max_rows' => $this->max,
 			'sortable' => $this->sortable,
 			'actions' => $this->actions,
+			'values_empty' => $valuesEmpty,
 		));
 	}
 
@@ -282,6 +286,12 @@ class RowWizard extends Widget
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
 		$data['id'] = $data['name'];
+
+		if ($data['dcaPicker'] ?? null)
+		{
+			$data['wizard'] = ($data['wizard'] ?? '') . Backend::getDcaPickerWizard($data['dcaPicker'], $this->strTable, $this->strField, $data['name'], $data['label'] ?? null);
+			$data['cell_class'] = trim(($data['cell_class'] ?? '') . ' wizard');
+		}
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}

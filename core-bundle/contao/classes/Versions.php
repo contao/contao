@@ -558,13 +558,6 @@ class Versions extends Controller
 							$from[$k] = Date::parse(Config::get('datimFormat'), $from[$k] ?: '');
 						}
 
-						// Decode entities if the "decodeEntities" flag is not set (see #360)
-						if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['decodeEntities']))
-						{
-							$to[$k] = StringUtil::decodeEntities($to[$k]);
-							$from[$k] = StringUtil::decodeEntities($from[$k]);
-						}
-
 						// Convert strings into arrays
 						if (!\is_array($to[$k]))
 						{
@@ -658,7 +651,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . Backend::addToUrl('versions=1&popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
+<a href="' . StringUtil::ampersand(Backend::addToUrl('versions=1&popup=1')) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
 </div>
 </form>
 

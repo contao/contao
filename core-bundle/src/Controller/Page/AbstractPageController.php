@@ -18,7 +18,6 @@ use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\FrontendIndex;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -36,10 +35,10 @@ abstract class AbstractPageController extends AbstractController
         ];
     }
 
-    protected function renderPage(PageModel $pageModel, ResponseContext|null $responseContext = null): Response
+    protected function renderPage(PageModel $pageModel): Response
     {
         if ($this->container->get('contao.routing.page_registry')->getPageTemplate($pageModel)) {
-            return $this->handleModernLayout($pageModel, $responseContext);
+            return $this->handleModernLayout($pageModel);
         }
 
         $layoutModel = $this->getLayout($pageModel);
@@ -49,8 +48,8 @@ abstract class AbstractPageController extends AbstractController
         }
 
         return match ($layoutModel->type) {
-            'modern' => $this->handleModernLayout($pageModel, $responseContext),
-            'default' => $this->handleDefaultLayout($pageModel, $responseContext),
+            'modern' => $this->handleModernLayout($pageModel),
+            'default' => $this->handleDefaultLayout($pageModel),
             default => throw new \LogicException(\sprintf('Unknown layout type "%s"', $layoutModel->type)),
         };
     }
@@ -63,26 +62,16 @@ abstract class AbstractPageController extends AbstractController
         return $framework->getAdapter(LayoutModel::class)->findById($page->layout);
     }
 
-    protected function handleDefaultLayout(PageModel $pageModel, ResponseContext|null $responseContext): Response
+    protected function handleDefaultLayout(PageModel $pageModel): Response
     {
-        if ($responseContext) {
-            $this->container->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
-        }
-
         return $this->container->get('contao.framework')->createInstance(FrontendIndex::class)->renderLegacy($pageModel);
     }
 
-    protected function handleModernLayout(PageModel $pageModel, ResponseContext|null $responseContext): Response
+    protected function handleModernLayout(PageModel $pageModel): Response
     {
-        $responseContext ??= $this->container
-            ->get('contao.routing.response_context_factory')
-            ->createContaoWebpageResponseContext($pageModel)
-        ;
-
         $layoutTemplate = $this->container
             ->get('contao.content_composition')
             ->createContentCompositionBuilder($pageModel)
-            ->setResponseContext($responseContext)
             ->buildLayoutTemplate()
         ;
 

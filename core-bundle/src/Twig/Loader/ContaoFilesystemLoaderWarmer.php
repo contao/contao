@@ -19,9 +19,8 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
     /**
      * @internal
      */
-    public function __construct(
-        private readonly ContaoFilesystemLoader $loader,
-    ) {
+    public function __construct(private readonly ContaoFilesystemLoader $loader)
+    {
     }
 
     public function warmUp(string|null $cacheDir = null, string|null $buildDir = null): array

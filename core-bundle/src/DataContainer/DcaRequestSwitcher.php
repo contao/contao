@@ -34,7 +34,7 @@ class DcaRequestSwitcher implements ResetInterface
     /**
      * @template T of mixed
      *
-     * @param \Closure():T $callback
+     * @param \Closure(): T $callback
      *
      * @return T
      */

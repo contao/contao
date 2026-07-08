@@ -16,7 +16,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -69,18 +68,6 @@ class RecordPreviewListener
 
     private function compilePreview(DataContainer $dc, array $row): string
     {
-        if (DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? null)) {
-            $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
-
-            if (\is_array($callback)) {
-                return $this->framework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}($row);
-            }
-
-            if (\is_callable($callback)) {
-                return $callback($row);
-            }
-        }
-
         $preview = $dc->generateRecordLabel($row, $dc->table);
 
         return \is_array($preview) ? serialize($preview) : $preview;

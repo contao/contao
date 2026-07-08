@@ -446,7 +446,7 @@ class DataContainerCallbackPassTest extends TestCase
 
         $definition->addTag('contao.callback', [
             'table' => 'tl_content',
-            'target' => 'list.sorting.child_record_callback',
+            'target' => 'list.sorting.label_callback',
         ]);
 
         $container = $this->getContainerBuilder();
@@ -492,10 +492,10 @@ class DataContainerCallbackPassTest extends TestCase
                     ]],
                 ],
                 'tl_content' => [
-                    'list.sorting.child_record_callback' => [[
+                    'list.sorting.label_callback' => [[
                         [
                             'service' => 'test.callback_listener',
-                            'method' => 'onChildRecordCallback',
+                            'method' => 'onLabelCallback',
                             'closure' => null,
                             'singleton' => null,
                         ],

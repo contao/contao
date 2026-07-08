@@ -111,7 +111,7 @@ class ModuleWizard extends Widget
 
 			foreach ($slots as $slot)
 			{
-				$cols[$slot] = "{% slot $slot %}";
+				$cols[$slot] = $GLOBALS['TL_LANG']['COLS'][$slot] ?? $slot;
 			}
 		}
 		else

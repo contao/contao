@@ -17,6 +17,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
@@ -41,6 +43,8 @@ class ContentComposition
         private readonly LocaleAwareInterface $translator,
         private readonly PageRegistry $pageRegistry,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly CoreResponseContextFactory $responseContextFactory,
     ) {
     }
 
@@ -56,6 +60,8 @@ class ContentComposition
             $this->requestStack,
             $this->translator,
             $this->eventDispatcher,
+            $this->responseContextAccessor,
+            $this->responseContextFactory,
             $page,
         );
 

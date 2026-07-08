@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_module.news_archives.0">
         <source>News archives</source>
-        <target>Archives d'actualités</target>
+        <target>Archives d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_module.news_archives.1">
         <source>Please select one or more news archives.</source>
-        <target>Sélectionner une ou plusieurs archives d'actualités.</target>
+        <target>Sélectionner une ou plusieurs archives d&apos;actualités.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_featured.0">
         <source>Featured items</source>
@@ -23,31 +23,31 @@
       </trans-unit>
       <trans-unit id="tl_module.news_jumpToCurrent.1">
         <source>Here you can define what to display if no period is selected.</source>
-        <target>Définir ce qui doit être affiché si aucune période n'est sélectionnée.</target>
+        <target>Définir ce qui doit être affiché si aucune période n&apos;est sélectionnée.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.0">
         <source>News reader module</source>
-        <target>Module lecteur d'actualités</target>
+        <target>Module lecteur d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
         <source>Automatically switch to the newsreader if an item has been selected.</source>
-        <target>Basculer automatiquement vers le lecteur d'actualités si un élément a été sélectionné.</target>
+        <target>Basculer automatiquement vers le lecteur d&apos;actualités si un élément a été sélectionné.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>
-        <target>Modèle d'actualités</target>
+        <target>Modèle d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
         <source>Here you can select a news template.</source>
-        <target>Choisir un modèle d'actualités.</target>
+        <target>Choisir un modèle d&apos;actualités.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
-        <target>Format de l'archive</target>
+        <target>Format de l&apos;archive</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.1">
         <source>Here you can choose the news archive format.</source>
-        <target>Choisir le format de l'archive d'actualités.</target>
+        <target>Choisir le format de l&apos;archive d&apos;actualités.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_startDay.0">
         <source>Week start day</source>
@@ -63,27 +63,27 @@
       </trans-unit>
       <trans-unit id="tl_module.news_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Choisir l'ordre de tri.</target>
+        <target>Choisir l&apos;ordre de tri.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.0">
         <source>Show number of items</source>
-        <target>Afficher le nombre d'actualités</target>
+        <target>Afficher le nombre d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.1">
         <source>Show the number of news items of each month.</source>
-        <target>Afficher le nombre d'actualités de chaque mois.</target>
+        <target>Afficher le nombre d&apos;actualités de chaque mois.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
-        <target>Utiliser l'URL actuelle pour les liens canoniques</target>
+        <target>Utiliser l&apos;URL actuelle pour les liens canoniques</target>
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
-        <target>Conserver l'URL actuelle au lieu de la page de lecture configurée pour les liens canoniques.</target>
+        <target>Conserver l&apos;URL actuelle au lieu de la page de lecture configurée pour les liens canoniques.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_overview_legend">
         <source>Overview page</source>
-        <target>Page d'aperçu</target>
+        <target>Page d&apos;aperçu</target>
       </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>

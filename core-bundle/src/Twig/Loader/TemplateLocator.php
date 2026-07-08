@@ -141,10 +141,8 @@ class TemplateLocator
                 function (\SplFileInfo $info) use (&$namespaceRoots): bool {
                     $path = $info->getPathname();
 
-                    foreach ($namespaceRoots as $directory) {
-                        if (Path::isBasePath($directory, $path)) {
-                            return false;
-                        }
+                    if (array_any($namespaceRoots, static fn ($directory) => Path::isBasePath($directory, $path))) {
+                        return false;
                     }
 
                     if ($this->isNamespaceRoot($path)) {

@@ -21,19 +21,17 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 #[AsEventListener]
 class AutoRefreshTemplateHierarchyListener
 {
-    public function __construct(
-        private readonly ContaoFilesystemLoader $loader,
-        private readonly string $environment,
-    ) {
+    public function __construct(private readonly ContaoFilesystemLoader $loader)
+    {
     }
 
     /**
-     * Auto refresh template hierarchy in dev mode, so that added/removed files are
+     * Auto refresh template hierarchy, so that added/removed files are
      * immediately recognized.
      */
     public function __invoke(RequestEvent $event): void
     {
-        if ('dev' === $this->environment && $event->isMainRequest()) {
+        if ($event->isMainRequest()) {
             $this->loader->warmUp(true);
         }
     }

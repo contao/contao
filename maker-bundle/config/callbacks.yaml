@@ -83,10 +83,12 @@ callbacks:
             previousLabel: string
             nextLabel: string
 
-    list.sorting.child_record:
+    list.sorting.label:
         return_type: string
         arguments:
             recordData: array
+            label: string
+            dataContainer: Contao\DataContainer
 
     list.sorting.header:
         return_type: array
@@ -109,7 +111,7 @@ callbacks:
             dataContainer: Contao\DataContainer
 
     list.label.label:
-        return_type: array
+        return_type: Contao\CoreBundle\DataContainer\RecordLabel
         arguments:
             recordData: array
             currentLabel: string

@@ -83,7 +83,7 @@ class Document
             return;
         }
 
-        $uncompressed = unserialize(gzuncompress($data['compressed']));
+        $uncompressed = unserialize(gzuncompress($data['compressed']), ['allowed_classes' => false]);
 
         $this->uri = new Uri($uncompressed['uri']);
         $this->statusCode = $uncompressed['statusCode'];

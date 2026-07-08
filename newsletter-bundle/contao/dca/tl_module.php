@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
+	'eval'                    => array('style'=>'height:120px'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
+	'eval'                    => array('style'=>'height:120px'),
 	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 /**

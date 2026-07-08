@@ -187,7 +187,7 @@ class FigureRendererTest extends TestCase
         $this->assertNull($figureRenderer->render('invalid-resource', null));
     }
 
-    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@Contao/component/_figure.html.twig'): FigureRenderer
+    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@Contao/insert_tag/figure.html.twig'): FigureRenderer
     {
         $figure = new Figure($this->createStub(ImageResult::class));
 

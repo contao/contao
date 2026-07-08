@@ -261,7 +261,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     }
 
     /**
-     * @return (\Closure(array<string>):Process)
+     * @return \Closure(array<string>): Process
      */
     private function getCreateProcessHandler(array $processes, array|null $validateCommandArguments = null, &$invocationCount = null): callable
     {

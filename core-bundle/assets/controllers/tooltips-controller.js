@@ -32,6 +32,7 @@ export default class TooltipsController extends Controller {
         'input[title]',
         'time[title]',
         'span[title]',
+        'label.mw_enable',
     ];
 
     /**
@@ -196,20 +197,46 @@ export default class TooltipsController extends Controller {
      * Migrate legacy targets to proper controller targets.
      */
     static afterLoad(identifier) {
-        const targetSelectors = TooltipsController.elements;
+        const targetAttribute = `data-${identifier}-target`;
+        const targetSelector = Object.keys(TooltipsController.defaultOptionsMap).join(',');
+        const pendingNodes = new Set();
+        let flushQueued = false;
 
         const migrateTarget = (el) => {
-            for (const target of targetSelectors) {
-                if (!el.hasAttribute(`data-${identifier}-target`) && el.matches(target)) {
-                    el.setAttribute(`data-${identifier}-target`, 'tooltip');
-                }
-
-                for (const sel of el.querySelectorAll(target)) {
-                    if (!sel.hasAttribute(`data-${identifier}-target`)) {
-                        sel.setAttribute(`data-${identifier}-target`, 'tooltip');
-                    }
-                }
+            if (!el.hasAttribute(targetAttribute)) {
+                el.setAttribute(targetAttribute, 'tooltip');
             }
+        };
+
+        const migrateTargets = (el) => {
+            if (el.matches(targetSelector)) {
+                migrateTarget(el);
+            }
+
+            for (const target of el.querySelectorAll(targetSelector)) {
+                migrateTarget(target);
+            }
+        };
+
+        const flushPendingNodes = () => {
+            flushQueued = false;
+
+            for (const node of pendingNodes) {
+                migrateTargets(node);
+            }
+
+            pendingNodes.clear();
+        };
+
+        const queueMigrateTargets = (node) => {
+            pendingNodes.add(node);
+
+            if (flushQueued) {
+                return;
+            }
+
+            flushQueued = true;
+            requestAnimationFrame(flushPendingNodes);
         };
 
         new MutationObserver((mutationsList) => {
@@ -223,7 +250,7 @@ export default class TooltipsController extends Controller {
                         continue;
                     }
 
-                    migrateTarget(node);
+                    queueMigrateTargets(node);
                 }
             }
         }).observe(document, {
@@ -232,7 +259,7 @@ export default class TooltipsController extends Controller {
         });
 
         // Initially migrate all targets that are already in the DOM
-        for (const el of document.querySelectorAll(targetSelectors.join(','))) {
+        for (const el of document.querySelectorAll(targetSelector)) {
             migrateTarget(el);
         }
     }
