@@ -823,7 +823,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
+		$this->getNewPosition('new', Input::get('pid'), Input::get('mode'));
 
 		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -937,7 +937,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$db = Database::getInstance();
 
 		// Get the new position
-		$this->getNewPosition('cut', $intPid, $intMode == self::PASTE_INTO);
+		$this->getNewPosition('cut', $intPid, $intMode);
 
 		// Avoid circular references when there is no parent table or the table references itself
 		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
@@ -1106,7 +1106,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('copy', $intPid, $intMode == self::PASTE_INTO);
+		$this->getNewPosition('copy', $intPid, $intMode);
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -1426,10 +1426,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param string  $mode
 	 * @param integer $pid
-	 * @param boolean $insertInto
+	 * @param integer $insertMode
 	 */
-	protected function getNewPosition($mode, $pid=null, $insertInto=false)
+	protected function getNewPosition($mode, $pid=null, $insertMode=self::PASTE_AFTER)
 	{
+		if (!is_numeric($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-numeric value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = $insertMode ? self::PASTE_INTO : self::PASTE_AFTER;
+		}
+
+		if (!\is_int($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-integer value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = (int) $insertMode;
+		}
+
 		$db = Database::getInstance();
 
 		// If there is pid and sorting
@@ -1452,7 +1466,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
-				if ($insertInto && isset($session['filter'][$filter]['limit']))
+				if ($insertMode === self::PASTE_INTO && isset($session['filter'][$filter]['limit']))
 				{
 					$limit = substr($session['filter'][$filter]['limit'], 0, strpos($session['filter'][$filter]['limit'], ','));
 
@@ -1465,14 +1479,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($objInsertAfter->numRows)
 						{
-							$insertInto = false;
+							$insertMode = self::PASTE_AFTER;
 							$pid = $objInsertAfter->id;
 						}
 					}
 				}
 
-				// Insert the current record at the beginning when inserting into the parent record
-				if ($insertInto)
+				// Insert the current record at the beginning when inserting into the parent record (prepend)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$newPID = $pid;
 
@@ -1509,6 +1523,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$newSorting = $curSorting / 2;
 						}
+					}
+
+					// Else new sorting = 128
+					else
+					{
+						$newSorting = 128;
+					}
+				}
+
+				// Insert the current record at the end when inserting into the parent record (append)
+				elseif ($insertMode === self::PASTE_INTO_APPEND)
+				{
+					$newPID = $pid;
+
+					$objSorting = $db
+						->prepare("SELECT MAX(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
+						->execute($pid);
+
+					// Select sorting value of the last record
+					if ($objSorting->numRows)
+					{
+						$newSorting = $objSorting->sorting + 128;
 					}
 
 					// Else new sorting = 128
@@ -1613,7 +1649,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (is_numeric($pid))
 			{
 				// Insert the current record into the parent record
-				if ($insertInto)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$this->set['pid'] = $pid;
 				}
@@ -4423,18 +4459,44 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addPasteButton('pasteafter', $table, null);
 						}
 
-						// Copy/move multiple
-						elseif ($blnMultiboard)
+						// Copy/move
+						elseif ($blnMultiboard || $blnClipboard)
 						{
-							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']));
-						}
+							if ($blnMultiboard)
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&ptable=' . $this->strTable);
+							}
+							else
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id'] . '&ptable=' . $this->strTable);
+							}
 
-						// Paste buttons
-						elseif ($blnClipboard)
-						{
 							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']));
+							$recordOperations->addPasteButton('pasteafter', $table, $pasteAfterHref);
+
+							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
+							$data = array('pid' => $row[$i]['id'] ?? null);
+
+							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+							{
+								$data['ptable'] = $this->strTable;
+							}
+
+							$subject = new ReadAction($ctable, $data);
+
+							if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $ctable, $subject))
+							{
+								if ($ctable !== $this->strTable)
+								{
+									$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+								}
+							}
+							else
+							{
+								$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+							}
 						}
 
 						// Create new button

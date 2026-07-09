@@ -319,7 +319,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Allow falling back (= skip hashing) to the existing hash if useLastModified is
                 // enabled, and we already got an existing timestamp
-                $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
+                $fallback = $this->useLastModified && null !== $oldLastModified && $oldHash ? $oldHash : null;
 
                 $hashContext = new Context($fallback, $oldLastModified);
                 $this->hashGenerator->hashFileContent($this->filesystem, $path, $hashContext);

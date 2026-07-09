@@ -27,7 +27,6 @@ use Contao\Model\Collection;
  * @property string            $sortOrder
  * @property integer           $perPage
  * @property boolean           $moderate
- * @property boolean           $bbcode
  * @property boolean           $requireLogin
  * @property boolean           $disableCaptcha
  *
@@ -46,7 +45,6 @@ use Contao\Model\Collection;
  * @method static NewsArchiveModel|null findOneBySortOrder($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByPerPage($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByModerate($val, array $opt=array())
- * @method static NewsArchiveModel|null findOneByBbcode($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
@@ -61,7 +59,6 @@ use Contao\Model\Collection;
  * @method static Collection<NewsArchiveModel>|null findBySortOrder($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|null findByPerPage($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|null findByModerate($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|null findByBbcode($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|null findByRequireLogin($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|null findByDisableCaptcha($val, array $opt=array())
  * @method static Collection<NewsArchiveModel>|null findMultipleByIds($val, array $opt=array())
@@ -80,7 +77,6 @@ use Contao\Model\Collection;
  * @method static integer countBySortOrder($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
  * @method static integer countByModerate($val, array $opt=array())
- * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */

@@ -486,6 +486,8 @@ class Dbafs
 	 */
 	public static function syncFiles()
 	{
+		trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the VFS or the contao:filesync command instead.', __METHOD__);
+
 		@ini_set('max_execution_time', 0);
 
 		// Consider the suhosin.memory_limit (see #7035)
@@ -626,7 +628,7 @@ class Dbafs
 			}
 			else
 			{
-				// Check whether the MD5 hash has changed
+				// Check whether the XXH128 hash has changed
 				$strHash = (new File($strRelpath))->hash;
 				$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
@@ -794,7 +796,7 @@ class Dbafs
 			}
 		}
 
-		return md5(implode("\0", $arrHash));
+		return hash('xxh128', implode("\0", $arrHash));
 	}
 
 	/**

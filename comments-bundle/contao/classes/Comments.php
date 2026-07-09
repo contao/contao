@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
@@ -307,12 +306,6 @@ class Comments extends Frontend
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
 
-			// Parse BBCode
-			if ($objConfig->bbcode)
-			{
-				$strComment = $this->parseBbCode($strComment);
-			}
-
 			// Prevent cross-site request forgeries
 			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
@@ -407,18 +400,6 @@ class Comments extends Frontend
 
 			$this->reload();
 		}
-	}
-
-	/**
-	 * Replace bbcode and return the HTML string
-	 *
-	 * @param string $strComment
-	 *
-	 * @return string
-	 */
-	public function parseBbCode($strComment)
-	{
-		return (new BbCode())->toHtml($strComment);
 	}
 
 	/**
