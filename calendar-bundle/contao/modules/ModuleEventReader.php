@@ -54,7 +54,7 @@ class ModuleEventReader extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -483,7 +483,6 @@ class ModuleEventReader extends Events
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCalendar->requireLogin;
 		$objConfig->disableCaptcha = $objCalendar->disableCaptcha;
-		$objConfig->bbcode = $objCalendar->bbcode;
 		$objConfig->moderate = $objCalendar->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);

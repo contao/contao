@@ -510,7 +510,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -531,7 +531,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=0')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -583,7 +583,7 @@ abstract class Backend extends Controller
 		// Add the breadcrumb link if you have access to that page
 		if ($objUser->hasAccess($row['id'], 'pagemounts'))
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
+			$label = '<a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $row['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
 		else
 		{
@@ -687,7 +687,7 @@ abstract class Backend extends Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -707,7 +707,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=' . $strPath)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 

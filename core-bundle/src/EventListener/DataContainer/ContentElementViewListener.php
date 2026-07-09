@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -52,7 +53,7 @@ class ContentElementViewListener
     }
 
     #[AsCallback('tl_content', 'list.label.label')]
-    public function generateLabel(array $row, string $label, DC_Table $dc): array|string
+    public function generateLabel(array $row, string $label, DC_Table $dc): RecordLabel
     {
         if ('tl_theme' !== $dc->parentTable) {
             return $this->generateGridLabel($row);
@@ -71,9 +72,9 @@ class ContentElementViewListener
         return 'type' === $field ? $row['type'] : $group;
     }
 
-    private function generateGridLabel(array $row): array
+    private function generateGridLabel(array $row): RecordLabel
     {
-        $type = $this->generateContentTypeLabel($row);
+        $label = $this->generateContentTypeLabel($row);
 
         $objModel = $this->framework->createInstance(ContentModel::class);
         $objModel->setRow($row);
@@ -97,10 +98,13 @@ class ContentElementViewListener
             $preview = '';
         }
 
-        return [$type, $preview, $row['invisible'] ?? null ? 'unpublished' : 'published'];
+        $label->htmlPreview = $preview;
+        $label->state = $row['invisible'] ?? null ? 'unpublished' : 'published';
+
+        return $label;
     }
 
-    private function generateContentTypeLabel(array $row): string
+    private function generateContentTypeLabel(array $row): RecordLabel
     {
         $transId = "CTE.$row[type].0";
         $label = $this->translator->trans($transId, [], 'contao_default');
@@ -154,6 +158,6 @@ class ContentElementViewListener
             $label .= $this->twig->createTemplate(" <span class=\"tl_gray\">({{ 'MSC.showTo'|trans([to], 'contao_default') }})</span>")->render(['to' => Date::parse(Config::get('datimFormat'), $row['stop'])]);
         }
 
-        return $label;
+        return RecordLabel::fromHtml($label);
     }
 }

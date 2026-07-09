@@ -14,6 +14,7 @@ use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -634,7 +635,7 @@ class tl_calendar_events extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listEvents($arrRow, $label)
 	{
@@ -653,7 +654,7 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
-		return $label . ' <span class="label-info">[' . $date . ']</span>';
+		return RecordLabel::fromHtml($label . ' <span class="label-info">[' . StringUtil::specialchars($date) . ']</span>');
 	}
 
 	/**

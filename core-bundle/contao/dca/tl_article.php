@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
@@ -276,7 +277,7 @@ class tl_article extends Backend
 	 * @param array  $row
 	 * @param string $label
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label)
 	{
@@ -308,7 +309,7 @@ class tl_article extends Backend
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
 
-		return '<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label;
+		return RecordLabel::fromHtml('<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label);
 	}
 
 	/**
