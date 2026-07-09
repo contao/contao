@@ -32,7 +32,7 @@
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^3.6 || ^4.0",
-        "doctrine/doctrine-bundle": "^3.2",
+        "doctrine/doctrine-bundle": "^3.2.2",
         "friendsofsymfony/http-cache": "^3.0",
         "friendsofsymfony/http-cache-bundle": "^3.0",
         "nelmio/cors-bundle": "^2.0.1",

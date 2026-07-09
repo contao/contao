@@ -68,7 +68,7 @@
         "contao/manager-plugin": "^2.6.2",
         "doctrine/collections": "^2.1",
         "doctrine/dbal": "^4.3",
-        "doctrine/doctrine-bundle": "^3.2",
+        "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/orm": "^3.4",
         "doctrine/persistence": "^4.0",
         "dragonmantank/cron-expression": "^3.4",
