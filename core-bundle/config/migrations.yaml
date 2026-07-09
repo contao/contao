@@ -23,11 +23,12 @@ services:
             - '@database_connection'
             - '%contao.dns_mapping%'
 
-    contao.migration.version_600.dbafs_hashing_algorithm:
-        class: Contao\CoreBundle\Migration\Version600\DbafsHashingAlgorithmMigration
+    contao.migration.version_600.default_dbafs_hashing_algorithm:
+        class: Contao\CoreBundle\Migration\Version600\DefaultDbafsHashingAlgorithmMigration
         arguments:
             - '@database_connection'
-            - '@contao.filesystem.virtual.files'
+            - '@contao.filesystem.dbafs.files'
+            - 'md5'
 
     contao.migration.version_600.output_encoding:
         class: Contao\CoreBundle\Migration\Version600\OutputEncodingMigration

@@ -12,53 +12,52 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version600;
 
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Filesystem\Path;
 
-class DbafsHashingAlgorithmMigration extends AbstractMigration
+class AbstractDbafsHashingAlgorithmMigration extends AbstractMigration
 {
     public function __construct(
         private readonly Connection $connection,
-        private readonly VirtualFilesystemInterface $filesStorage,
+        private readonly Dbafs $dbafs,
+        private readonly string $oldHashingAlgorithm,
     ) {
     }
 
     public function shouldRun(): bool
     {
-        $md5HashGenerator = new HashGenerator('md5', false);
-        $xxh128HashGenerator = new HashGenerator('xxh128', false);
+        $dbafs = new \ReflectionClass(Dbafs::class);
 
-        $entries = $this->connection
-            ->executeQuery("SELECT path, hash FROM tl_files WHERE type='file'")
-            ->fetchAllKeyValue()
-        ;
+        $allHashesByPath = $dbafs->getMethod('getDatabaseEntries')->invoke($this->dbafs, [''], [])[1];
+        $storage = $dbafs->getProperty('filesystem')->getValue($this->dbafs);
+
+        $currentHashGenerator = $dbafs->getProperty('hashGenerator')->getValue($this->dbafs);
+        $previousHashGenerator = new HashGenerator($this->oldHashingAlgorithm, false);
 
         // Detect used hashing algorithm
-        foreach ($entries as $path => $hash) {
+        foreach ($allHashesByPath as $path => $hash) {
             // Do not run if any of the hashes was cleared before
             if (!$hash) {
                 return false;
             }
 
-            $path = Path::makeRelative($path, 'files');
-
-            if (!$this->filesStorage->fileExists($path, VirtualFilesystemInterface::BYPASS_DBAFS)) {
+            if (!$storage->fileExists($path, VirtualFilesystemInterface::BYPASS_DBAFS)) {
                 continue;
             }
 
             $context = new Context();
-            $xxh128HashGenerator->hashFileContent($this->filesStorage, $path, $context);
+            $currentHashGenerator->hashFileContent($storage, $path, $context);
 
             if ($context->getResult() === $hash) {
                 return false;
             }
 
-            $md5HashGenerator->hashFileContent($this->filesStorage, $path, $context);
+            $previousHashGenerator->hashFileContent($storage, $path, $context);
 
             if ($context->getResult() === $hash) {
                 return true;
@@ -67,7 +66,7 @@ class DbafsHashingAlgorithmMigration extends AbstractMigration
 
         // None of the hashes match: run the migration because the database needs to be
         // synced anyway.
-        return \count($entries) > 0;
+        return \count($allHashesByPath) > 0;
     }
 
     public function run(): MigrationResult
