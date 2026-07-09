@@ -224,11 +224,13 @@ class DcaUrlAnalyzer
             'treeSiblings' => null,
         ];
 
+        $mode = $this->findGet('mode');
+
         // For these actions the pid parameter refers to the insert position
         if (
             (
-                (string) DataContainer::PASTE_INTO === $this->findGet('mode')
-                || (string) DataContainer::PASTE_INTO_APPEND === $this->findGet('mode')
+                (string) DataContainer::PASTE_INTO === $mode
+                || (string) DataContainer::PASTE_INTO_APPEND === $mode
             )
             && \in_array($this->findGet('act'), ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)
         ) {
