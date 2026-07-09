@@ -367,7 +367,7 @@ class Comments extends Frontend
 				->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host'))))
 			;
 
-			if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+			if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
 			{
 				$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 			}
