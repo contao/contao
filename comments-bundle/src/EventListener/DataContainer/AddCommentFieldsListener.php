@@ -102,7 +102,7 @@ class AddCommentFieldsListener
             'inputType' => 'select',
             'options' => ['ascending', 'descending'],
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
-            'eval' => ['tl_class' => 'w50 clr'],
+            'eval' => ['tl_class' => 'w50'],
             'sql' => ['type' => 'string', 'length' => 32, 'default' => 'ascending'],
         ];
 
