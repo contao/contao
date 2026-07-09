@@ -19,8 +19,7 @@ class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
 {
     public function supportsAttribute(string $attribute): bool
     {
-        return str_starts_with($attribute, 'contao_user.calendarp')
-            || str_starts_with($attribute, 'contao_user.calendarfeedp');
+        return str_starts_with($attribute, 'contao_user.calendarp');
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -37,7 +36,6 @@ class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
 
         $table = match ($field) {
             'calendarp' => 'tl_calendar',
-            'calendarfeedp' => 'tl_calendar_feed',
             default => throw new \InvalidArgumentException('Invalid field '.$field),
         };
 
