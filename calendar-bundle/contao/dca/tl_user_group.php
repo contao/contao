@@ -28,14 +28,3 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendars'] = array
 	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
-
-// Backwards compatibility
-$GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeeds'] = array
-(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeeds'],
-	'inputType'               => 'checkbox',
-	'foreignKey'              => 'tl_calendar_feed.title',
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-);
