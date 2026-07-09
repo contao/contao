@@ -33,6 +33,10 @@ class AbstractDbafsHashingAlgorithmMigration extends AbstractMigration
     {
         $dbafs = new \ReflectionClass(Dbafs::class);
 
+        if (!$this->connection->createSchemaManager()->tablesExist([$dbafs->getProperty('table')->getValue($this->dbafs)])) {
+            return false;
+        }
+
         $allHashesByPath = $dbafs->getMethod('getDatabaseEntries')->invoke($this->dbafs, [''], [])[1];
         $storage = $dbafs->getProperty('filesystem')->getValue($this->dbafs);
 
