@@ -46,6 +46,7 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
     {
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
 
+        // Forward to the default translator
         if (null === $domain || !str_starts_with($domain, 'contao_')) {
             return $translated;
         }
