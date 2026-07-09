@@ -33,8 +33,13 @@ class DbafsHashingAlgorithmMigration extends AbstractMigration
         $md5HashGenerator = new HashGenerator('md5', false);
         $xxh128HashGenerator = new HashGenerator('xxh128', false);
 
+        $entries = $this->connection
+            ->executeQuery("SELECT path, hash FROM tl_files WHERE type='file'")
+            ->fetchAllKeyValue()
+        ;
+
         // Detect used hashing algorithm
-        foreach ($this->connection->executeQuery("SELECT path, hash FROM tl_files WHERE type='file'")->fetchAllKeyValue() as $path => $hash) {
+        foreach ($entries as $path => $hash) {
             // Do not run if any of the hashes was cleared before
             if (!$hash) {
                 return false;
@@ -62,7 +67,7 @@ class DbafsHashingAlgorithmMigration extends AbstractMigration
 
         // None of the hashes match: run the migration because the database needs to be
         // synced anyway.
-        return true;
+        return \count($entries) > 0;
     }
 
     public function run(): MigrationResult
