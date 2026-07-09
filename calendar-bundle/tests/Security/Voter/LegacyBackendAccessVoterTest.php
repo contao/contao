@@ -28,9 +28,6 @@ class LegacyBackendAccessVoterTest extends TestCase
         $this->assertTrue($voter->supportsAttribute('contao_user.calendarp'));
         $this->assertTrue($voter->supportsAttribute('contao_user.calendarp.create'));
         $this->assertTrue($voter->supportsAttribute('contao_user.calendarp.delete'));
-        $this->assertTrue($voter->supportsAttribute('contao_user.calendarfeedp'));
-        $this->assertTrue($voter->supportsAttribute('contao_user.calendarfeedp.create'));
-        $this->assertTrue($voter->supportsAttribute('contao_user.calendarfeedp.delete'));
         $this->assertFalse($voter->supportsAttribute('contao_user.foo'));
     }
 
@@ -105,62 +102,6 @@ class LegacyBackendAccessVoterTest extends TestCase
         yield [
             ['cud' => ['tl_calendar::delete']],
             'contao_user.calendarp.delete',
-            null,
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => []],
-            'contao_user.calendarfeedp',
-            null,
-            VoterInterface::ACCESS_DENIED,
-        ];
-
-        yield [
-            ['cud' => ['tl_calendar_feed::create']],
-            'contao_user.calendarfeedp',
-            null,
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => []],
-            'contao_user.calendarfeedp',
-            'create',
-            VoterInterface::ACCESS_DENIED,
-        ];
-
-        yield [
-            ['cud' => ['tl_calendar_feed::create']],
-            'contao_user.calendarfeedp',
-            'create',
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => ['tl_calendar_feed::create']],
-            'contao_user.calendarfeedp.create',
-            null,
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => []],
-            'contao_user.calendarfeedp',
-            'delete',
-            VoterInterface::ACCESS_DENIED,
-        ];
-
-        yield [
-            ['cud' => ['tl_calendar_feed::delete']],
-            'contao_user.calendarfeedp',
-            'delete',
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => ['tl_calendar_feed::delete']],
-            'contao_user.calendarfeedp.delete',
             null,
             VoterInterface::ACCESS_GRANTED,
         ];
