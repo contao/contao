@@ -226,7 +226,6 @@ class ModuleFaqReader extends Module
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCategory->requireLogin;
 		$objConfig->disableCaptcha = $objCategory->disableCaptcha;
-		$objConfig->bbcode = $objCategory->bbcode;
 		$objConfig->moderate = $objCategory->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);

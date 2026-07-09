@@ -81,7 +81,7 @@ class AddCommentFieldsListener
         }
 
         $GLOBALS['TL_DCA'][$table]['palettes']['__selector__'][] = 'allowComments';
-        $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha';
+        $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,requireLogin,disableCaptcha';
 
         $GLOBALS['TL_DCA'][$table]['fields']['allowComments'] = [
             'filter' => true,
@@ -113,12 +113,6 @@ class AddCommentFieldsListener
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = [
-            'inputType' => 'checkbox',
-            'eval' => ['tl_class' => 'w50'],
-            'sql' => ['type' => 'boolean', 'default' => false],
-        ];
-
-        $GLOBALS['TL_DCA'][$table]['fields']['bbcode'] = [
             'inputType' => 'checkbox',
             'eval' => ['tl_class' => 'w50'],
             'sql' => ['type' => 'boolean', 'default' => false],
