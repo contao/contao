@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Translation;
 
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -21,16 +22,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
- *
- * @phpstan-ignore class.extendsFinalByPhpDoc
  */
-class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
+class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, WarmableInterface, ResetInterface
 {
     private array $messages = [];
 
     public function __construct(private readonly TranslatorInterface&TranslatorBagInterface&LocaleAwareInterface $translator)
     {
-        parent::__construct($translator);
+    }
+
+    public function __call(string $method, array $arguments): mixed
+    {
+        return $this->translator->{$method}(...$arguments);
     }
 
     /**
@@ -43,7 +46,6 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     {
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
 
-        // Forward to the default translator
         if (null === $domain || !str_starts_with($domain, 'contao_')) {
             return $translated;
         }
@@ -68,6 +70,33 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         return $this->translator->getCatalogue($locale);
     }
 
+    public function getCatalogues(): array
+    {
+        if (method_exists($this->translator, 'getCatalogues')) {
+            return $this->translator->getCatalogues();
+        }
+
+        return [];
+    }
+
+    public function getFallbackLocales(): array
+    {
+        if (method_exists($this->translator, 'getFallbackLocales')) {
+            return $this->translator->getFallbackLocales();
+        }
+
+        return [];
+    }
+
+    public function getGlobalParameters(): array
+    {
+        if (method_exists($this->translator, 'getGlobalParameters')) {
+            return $this->translator->getGlobalParameters();
+        }
+
+        return [];
+    }
+
     /**
      * Merges the collected messages from the decorated translator.
      */
@@ -83,6 +112,15 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     public function reset(): void
     {
         $this->messages = [];
+    }
+
+    public function warmUp(string $cacheDir, string|null $buildDir = null): array
+    {
+        if ($this->translator instanceof WarmableInterface) {
+            return $this->translator->warmUp($cacheDir, $buildDir);
+        }
+
+        return [];
     }
 
     private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = []): void

@@ -27,8 +27,6 @@ framework:
     uid:
         default_uuid_version: 7
         time_based_uuid_version: 7
-    annotations:
-        enabled: false
     handle_all_throwables: true
 
 twig:
@@ -52,9 +50,6 @@ doctrine:
                 class: Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType
     orm:
         auto_mapping: true
-        auto_generate_proxy_classes: true
-        enable_lazy_ghost_objects: true
-        enable_native_lazy_objects: true
 
 contao:
     cron:

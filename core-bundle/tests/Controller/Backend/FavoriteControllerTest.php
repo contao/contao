@@ -74,7 +74,7 @@ class FavoriteControllerTest extends TestCase
         $queries = [[
             'SELECT id FROM tl_favorites WHERE url = :url AND user = :user',
             [
-                'url' => UrlUtil::getNormalizePathAndQuery($request->get('target_path')),
+                'url' => UrlUtil::getNormalizePathAndQuery(self::getTargetPath($request)),
                 'user' => 42,
             ],
             $currentId,
@@ -93,7 +93,7 @@ class FavoriteControllerTest extends TestCase
 
         $controller = new FavoriteController($framework, $connection);
 
-        $container = $this->getContainer($block, $parameters, $this->mockRouter(false === $currentId || $request->isMethod('POST') ? $request->get('target_path') : null));
+        $container = $this->getContainer($block, $parameters, $this->mockRouter(false === $currentId || $request->isMethod('POST') ? self::getTargetPath($request) : null));
         $controller->setContainer($container);
 
         $response = $controller($request);
@@ -228,6 +228,13 @@ class FavoriteControllerTest extends TestCase
         }
 
         return $request;
+    }
+
+    private static function getTargetPath(Request $request): string|null
+    {
+        return $request->request->get('target_path')
+            ?? $request->query->get('target_path')
+            ?? $request->attributes->get('target_path');
     }
 
     private function mockRouter(string|null $url): UrlGeneratorInterface&Stub

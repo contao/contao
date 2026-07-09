@@ -27,7 +27,6 @@ use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -221,18 +220,14 @@ class PreviewSwitchControllerTest extends TestCase
             $this->mockTranslator(),
         );
 
-        $request = $this->createStub(Request::class);
-        $request->request = new InputBag(['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar']);
-
-        $request
-            ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
-
-        $request
-            ->method('isMethod')
-            ->willReturnMap([['GET', false]])
-        ;
+        $request = new Request(
+            [],
+            ['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar'],
+            [],
+            [],
+            [],
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
+        );
 
         $response = $controller($request);
 
