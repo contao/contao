@@ -1595,7 +1595,7 @@ services:
     contao.url_highlight.html_highlighter:
         class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
         arguments:
-            - 'https'
+            - https
             - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
