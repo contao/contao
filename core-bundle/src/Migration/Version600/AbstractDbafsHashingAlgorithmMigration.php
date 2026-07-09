@@ -73,7 +73,10 @@ class AbstractDbafsHashingAlgorithmMigration extends AbstractMigration
     {
         // Remove all existing hashes - they will get recreated when syncing the
         // filesystem the next time
-        $this->connection->update('tl_files', ['hash' => '']);
+        $this->connection->update(
+            new \ReflectionProperty(Dbafs::class, 'table')->getValue($this->dbafs),
+            ['hash' => ''],
+        );
 
         return $this->createResult(true);
     }
