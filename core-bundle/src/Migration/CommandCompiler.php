@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
@@ -68,6 +69,15 @@ class CommandCompiler
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
     }
 
+    public function executeSqlCommand(string $command): void
+    {
+        try {
+            $this->connection->executeQuery($command);
+        } catch (\Throwable $exception) {
+            $this->fixFailedSqlCommand($command, $exception);
+        }
+    }
+
     /**
      * If tables or columns should be preserved, we copy the missing definitions over
      * to the $toSchema, so that no DROP commands will be issued in the diff.
@@ -105,6 +115,31 @@ class CommandCompiler
             ->getMethod('_addColumn')
             ->invoke($targetTable, $column)
         ;
+    }
+
+    private function fixFailedSqlCommand(string $command, \Throwable $exception): void
+    {
+        if (
+            !$exception instanceof DriverException
+            || 1118 !== $exception->getCode()
+            || !str_contains($exception->getMessage(), 'Row size too large')
+            || !str_starts_with($command, 'ALTER TABLE ')
+            || 1 !== (int) $this->connection->fetchOne('SELECT @@innodb_strict_mode')
+        ) {
+            throw $exception;
+        }
+
+        $this->connection->executeQuery('SET SESSION innodb_strict_mode = 0');
+
+        try {
+            $this->connection->executeQuery($command);
+
+            $table = explode(' ', substr($command, 12), 2)[0];
+
+            $this->connection->executeQuery("OPTIMIZE TABLE $table");
+        } finally {
+            $this->connection->executeQuery('SET SESSION innodb_strict_mode = 1');
+        }
     }
 
     /**

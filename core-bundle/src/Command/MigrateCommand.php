@@ -12,14 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Command\Migration\ConsoleDatabaseMigrationObserver;
-use Contao\CoreBundle\Migration\DatabaseMigrationEvent;
-use Contao\CoreBundle\Migration\DatabaseMigrationEventType;
-use Contao\CoreBundle\Migration\DatabaseMigrationHashMismatchException;
 use Contao\CoreBundle\Migration\DatabaseMigrationRunner;
 use Contao\CoreBundle\Migration\MigrationConfiguration;
 use Contao\CoreBundle\Migration\MigrationExecutionMode;
 use Contao\CoreBundle\Migration\SchemaUpdateMode;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Contao\CoreBundle\Migration\WarningMode;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,6 +32,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class MigrateCommand extends Command
 {
+    private SymfonyStyle|null $io = null;
+
     public function __construct(private readonly DatabaseMigrationRunner $runner)
     {
         parent::__construct();
@@ -55,6 +54,7 @@ class MigrateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->io = new SymfonyStyle($input, $output);
         $format = (string) $input->getOption('format');
 
         if (!\in_array($format, ['txt', 'ndjson'], true)) {
@@ -77,61 +77,388 @@ class MigrateCommand extends Command
             throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
         }
 
-        $io = new SymfonyStyle($input, $output);
-        $observer = new ConsoleDatabaseMigrationObserver(
-            $io,
-            $asJson,
-            (bool) $input->getOption('with-deletes'),
-        );
-        $configuration = $this->createConfiguration($input, $dryRun, $interactive);
-
         try {
-            $result = $this->runner->run($configuration, $observer);
-        } catch (DatabaseMigrationHashMismatchException $exception) {
-            if (!$asJson) {
-                throw new InvalidOptionException($exception->getMessage(), 0, $exception);
+            if ($errors = $this->runner->compileConfigurationErrors()) {
+                if ($asJson) {
+                    foreach ($errors as $message) {
+                        $this->writeNdjson('problem', ['message' => $message]);
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        $this->io->block($error, '!', 'fg=yellow', ' ', true);
+                    }
+
+                    $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
+                }
+
+                return Command::FAILURE;
             }
 
-            $observer->notify(new DatabaseMigrationEvent(
-                DatabaseMigrationEventType::Error,
-                [
-                    'message' => $exception->getMessage(),
-                    'code' => $exception->getCode(),
-                    'file' => $exception->getFile(),
-                    'line' => $exception->getLine(),
-                    'trace' => $exception->getTraceAsString(),
-                ],
-            ));
+            if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
+                return Command::FAILURE;
+            }
 
-            return Command::FAILURE;
+            $this->validateDatabaseVersion($asJson);
+
+            $configuration = $this->createConfiguration($input, $dryRun, $interactive);
+
+            return $this->executeCommand($input, $configuration, $asJson);
         } catch (\Throwable $exception) {
             if (!$asJson) {
                 throw $exception;
             }
 
-            $observer->notify(new DatabaseMigrationEvent(
-                DatabaseMigrationEventType::Error,
-                [
+            $this->writeNdjson('error', [
+                'message' => $exception->getMessage(),
+                'code' => $exception->getCode(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        }
+
+        return Command::FAILURE;
+    }
+
+    private function backup(InputInterface $input): bool
+    {
+        $asJson = 'ndjson' === $input->getOption('format');
+        $skipDropStatements = !$input->isInteractive() && !$input->getOption('with-deletes');
+
+        if (!$this->runner->hasWorkToDo($skipDropStatements)) {
+            if (!$asJson) {
+                $this->io->info('Database dump skipped because there are no migrations to execute.');
+            }
+
+            return true;
+        }
+
+        if (!$asJson) {
+            $this->io->info(\sprintf(
+                'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
+                $this->runner->getBackupFilename(),
+            ));
+        }
+
+        try {
+            $backup = $this->runner->createBackup();
+
+            if ($asJson) {
+                $this->writeNdjson('backup-result', $backup);
+            }
+
+            return true;
+        } catch (\Throwable $exception) {
+            if ($asJson) {
+                $this->writeNdjson('error', [
                     'message' => $exception->getMessage(),
                     'code' => $exception->getCode(),
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'trace' => $exception->getTraceAsString(),
-                ],
-            ));
+                ]);
+            } else {
+                $this->io->error($exception->getMessage());
+            }
 
+            return false;
+        }
+    }
+
+    private function executeCommand(InputInterface $input, MigrationConfiguration $configuration, bool $asJson): int
+    {
+        $dryRun = $configuration->isDryRun();
+        $specifiedHash = $configuration->getHash();
+
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
+        }
+
+        if ($input->getOption('migrations-only')) {
+            return $this->executeMigrations($dryRun, $asJson, $specifiedHash) ? 0 : 1;
+        }
+
+        if ($input->getOption('schema-only')) {
+            return $this->executeSchemaDiff($dryRun, $asJson, (bool) $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
+        }
+
+        if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return Command::FAILURE;
         }
 
-        if ($result->isSuccessful()) {
-            if (!$asJson && !$input->getOption('migrations-only') && !$input->getOption('schema-only')) {
-                $io->success('All migrations completed.');
-            }
-
-            return Command::SUCCESS;
+        if (!$this->executeSchemaDiff($dryRun, $asJson, (bool) $input->getOption('with-deletes'), $specifiedHash)) {
+            return Command::FAILURE;
         }
 
-        return Command::FAILURE;
+        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
+            return Command::FAILURE;
+        }
+
+        if (!$asJson) {
+            $this->io->success('All migrations completed.');
+        }
+
+        return Command::SUCCESS;
+    }
+
+    private function executeMigrations(bool &$dryRun, bool $asJson, string|null $specifiedHash = null): bool
+    {
+        $loopControl = 19;
+
+        while (true) {
+            $first = true;
+            $migrationLabels = [];
+
+            foreach ($this->runner->getPendingMigrationNames() as $migration) {
+                if ($first) {
+                    if (!$asJson) {
+                        $this->io->section('Pending migrations');
+                    }
+
+                    $first = false;
+                }
+
+                $migrationLabels[] = $migration;
+
+                if (!$asJson) {
+                    $this->io->writeln(' * '.$migration);
+                }
+            }
+
+            $actualHash = hash('sha256', json_encode($migrationLabels, JSON_THROW_ON_ERROR));
+
+            if ($asJson) {
+                $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
+            }
+
+            if ($first || $dryRun) {
+                break;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
+            }
+
+            if (!$asJson) {
+                if (!$this->io->confirm('Execute the listed migrations?')) {
+                    return false;
+                }
+
+                $this->io->section('Execute migrations');
+            }
+
+            $count = 0;
+
+            try {
+                foreach ($this->runner->runMigrations($migrationLabels) as $result) {
+                    ++$count;
+
+                    if ($asJson) {
+                        $this->writeNdjson('migration-result', [
+                            'message' => $result->getMessage(),
+                            'isSuccessful' => $result->isSuccessful(),
+                        ]);
+                    } else {
+                        $this->io->writeln(' * '.$result->getMessage());
+
+                        if (!$result->isSuccessful()) {
+                            $this->io->error('Migration failed');
+                        }
+                    }
+                }
+
+                if (!$asJson) {
+                    $this->io->success("Executed $count migrations.");
+                }
+            } catch (UnexpectedPendingMigrationException $exception) {
+                if ($asJson) {
+                    $this->writeNdjson('migration-result', [
+                        'message' => $exception->getMessage(),
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->success("Executed $count migrations.");
+                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
+                }
+            }
+
+            if (null !== $specifiedHash) {
+                $dryRun = true;
+                break;
+            }
+
+            if ($loopControl-- < 1) {
+                if ($asJson) {
+                    $this->writeNdjson('error', [
+                        'message' => 'The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations.',
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->error('The migrations were stopped after 19 iterations as a precaution. There is a high chance of an infinite loop of migrations. If this is not the case, please re-run the command. To troubleshoot this error, check the shouldRun() method of the migration(s) listed above.');
+                }
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string|null $specifiedHash = null): bool
+    {
+        $warnings = [...$this->runner->compileConfigurationWarnings(), ...$this->runner->compileSchemaWarnings($withDeletesOption)];
+
+        if ($warnings) {
+            if ($asJson) {
+                foreach ($warnings as $warning) {
+                    $this->writeNdjson('warning', ['message' => $warning]);
+                }
+            } else {
+                $this->io->warning(implode("\n\n", $warnings));
+
+                if (!$this->io->confirm('Continue regardless of the warnings?')) {
+                    return false;
+                }
+            }
+        }
+
+        $lastCommands = [];
+
+        while (true) {
+            $commands = $this->runner->compileSchemaCommands();
+            $hasNewCommands = [] !== array_diff($commands, $lastCommands);
+            $lastCommands = $commands;
+
+            $sortedCommands = $commands;
+            sort($sortedCommands);
+            $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
+
+            if ($asJson) {
+                $this->writeNdjson('schema-pending', [
+                    'commands' => $commands,
+                    'hash' => $commandsHash,
+                ]);
+            }
+
+            if (!$hasNewCommands) {
+                return true;
+            }
+
+            if (!$asJson) {
+                $this->io->section("Pending database migrations ($commandsHash)");
+                $this->io->listing($commands);
+            }
+
+            if ($dryRun) {
+                return true;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $commandsHash) {
+                throw new InvalidOptionException(\sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
+            }
+
+            $options = $withDeletesOption
+                ? ['yes, with deletes', 'no']
+                : ['yes', 'yes, with deletes', 'no'];
+
+            if ($asJson) {
+                $answer = $options[0];
+            } else {
+                $answer = $this->io->choice('Execute the listed database updates?', $options, $options[0]);
+            }
+
+            if ('no' === $answer) {
+                return false;
+            }
+
+            if (!$asJson) {
+                $this->io->section('Execute database migrations');
+            }
+
+            $count = 0;
+            $exceptions = [];
+
+            if ('yes, with deletes' !== $answer) {
+                $commands = $this->runner->compileSchemaCommands(true);
+            }
+
+            do {
+                $commandExecuted = false;
+
+                foreach ($commands as $key => $command) {
+                    if ($asJson) {
+                        $this->writeNdjson('schema-execute', ['command' => $command]);
+                    } else {
+                        $this->io->write(' * '.$command);
+                    }
+
+                    try {
+                        $this->runner->executeSqlCommand($command);
+
+                        ++$count;
+                        $commandExecuted = true;
+
+                        unset($commands[$key]);
+
+                        if ($asJson) {
+                            $this->writeNdjson('schema-result', [
+                                'command' => $command,
+                                'isSuccessful' => true,
+                            ]);
+                        } else {
+                            $this->io->writeln('');
+                        }
+                    } catch (\Throwable $exception) {
+                        $exceptions[] = $exception;
+
+                        if ($asJson) {
+                            $this->writeNdjson('schema-result', [
+                                'command' => $command,
+                                'isSuccessful' => false,
+                                'message' => $exception->getMessage(),
+                            ]);
+                        } else {
+                            $this->io->writeln('......FAILED');
+                        }
+                    }
+                }
+            } while ($commandExecuted);
+
+            if (!$asJson) {
+                $this->io->success('Executed '.$count.' SQL queries.');
+
+                foreach ($exceptions as $exception) {
+                    $this->io->error($exception->getMessage());
+                }
+            }
+
+            if ($exceptions) {
+                return false;
+            }
+
+            if (null !== $specifiedHash) {
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        $message = $this->runner->validateDatabaseVersion();
+
+        if (null === $message) {
+            return true;
+        }
+
+        if (!$asJson) {
+            $this->io->error($message);
+        } else {
+            $this->writeNdjson('problem', ['message' => $message, 'severity' => 'error']);
+        }
+
+        return false;
     }
 
     private function createConfiguration(InputInterface $input, bool $dryRun, bool $interactive): MigrationConfiguration
@@ -160,5 +487,21 @@ class MigrateCommand extends Command
             ->withSchemaUpdateMode($schemaUpdateMode)
             ->withHash($input->getOption('hash') ? (string) $input->getOption('hash') : null)
         ;
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private function writeNdjson(string $type, array $payload): void
+    {
+        $payload = ['type' => $type] + array_diff_key($payload, [
+            'severity' => true,
+            'started' => true,
+            'prompt' => true,
+            'unexpectedPending' => true,
+            'warnings' => true,
+        ]);
+
+        $this->io->writeln(json_encode($payload, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 }

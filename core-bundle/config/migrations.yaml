@@ -17,6 +17,12 @@ services:
             - '@database_connection'
             - '@contao.doctrine.schema_provider'
 
+    contao.migration.database_checks:
+        class: Contao\CoreBundle\Migration\DatabaseMigrationChecks
+        arguments:
+            - '@contao.migration.command_compiler'
+            - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
+
     contao.migration.database_runner:
         class: Contao\CoreBundle\Migration\DatabaseMigrationRunner
         arguments:
@@ -24,7 +30,7 @@ services:
             - '@database_connection'
             - '@contao.migration.collection'
             - '@contao.doctrine.backup_manager'
-            - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
+            - '@contao.migration.database_checks'
 
     contao.migration.environment.dns:
         class: Contao\CoreBundle\Migration\Environment\DnsMigration
