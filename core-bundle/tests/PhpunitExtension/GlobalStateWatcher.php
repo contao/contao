@@ -215,6 +215,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
                 'Symfony\Component\HttpClient\Response\MockResponse',
+                'Symfony\Polyfill\DeepClone\DeepClone',
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
