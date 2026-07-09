@@ -1544,7 +1544,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$newPID = $pid;
 
 					$objSorting = $db
-						->prepare("SELECT MAX(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
+						->prepare("SELECT MAX(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
 						->execute($pid);
 
 					// Select sorting value of the last record
