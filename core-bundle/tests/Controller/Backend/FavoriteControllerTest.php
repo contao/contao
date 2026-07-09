@@ -232,9 +232,9 @@ class FavoriteControllerTest extends TestCase
 
     private static function getTargetPath(Request $request): string|null
     {
-        return $request->request->get('target_path')
+        return $request->attributes->get('target_path')
             ?? $request->query->get('target_path')
-            ?? $request->attributes->get('target_path');
+            ?? $request->request->get('target_path');
     }
 
     private function mockRouter(string|null $url): UrlGeneratorInterface&Stub
