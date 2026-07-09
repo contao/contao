@@ -28,7 +28,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.filesystem.dbafs.files'
-            - 'md5'
+            - md5
 
     contao.migration.version_600.output_encoding:
         class: Contao\CoreBundle\Migration\Version600\OutputEncodingMigration
