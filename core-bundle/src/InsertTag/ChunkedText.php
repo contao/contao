@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @implements \IteratorAggregate<int, array{0: int, 1: string}>
+ * @implements \IteratorAggregate<int, array{0: self::TYPE_*, 1: string}>
  */
 final class ChunkedText implements \IteratorAggregate, \Stringable
 {
@@ -33,6 +33,23 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
     public function __toString(): string
     {
         return implode('', $this->chunks);
+    }
+
+    /**
+     * @param list<array{0: self::TYPE_*, 1: string}> $chunks
+     */
+    public static function fromTypedChunks(array $chunks): self
+    {
+        $indexedArray = [];
+
+        foreach ($chunks as [$type, $chunk]) {
+            if ((bool) (\count($indexedArray) % 2) === (self::TYPE_TEXT === $type)) {
+                $indexedArray[] = '';
+            }
+            $indexedArray[] = $chunk;
+        }
+
+        return new self($indexedArray);
     }
 
     /**
