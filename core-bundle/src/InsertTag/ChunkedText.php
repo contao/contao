@@ -37,6 +37,8 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
 
     /**
      * @param list<array{0: self::TYPE_*, 1: string}> $chunks
+     * 
+     * @internal
      */
     public static function fromTypedChunks(array $chunks): self
     {
