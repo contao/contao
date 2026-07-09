@@ -109,7 +109,7 @@
         "spatie/schema-org": "^3.10 || ^4.0",
         "spomky-labs/otphp": "^11.3",
         "symfony-cmf/routing": "^3.0",
-        "symfony-cmf/routing-bundle": "^3.0",
+        "symfony-cmf/routing-bundle": "^3.2",
         "symfony/asset": "^7.4 || ^8.0",
         "symfony/cache": "^7.4 || ^8.0",
         "symfony/cache-contracts": "^3.0",
