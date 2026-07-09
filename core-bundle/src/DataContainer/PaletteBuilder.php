@@ -20,6 +20,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
@@ -258,13 +259,13 @@ class PaletteBuilder
     private function getAdminFields(string $table): array
     {
         $adminFields = [];
-        $columns = $this->connection->createSchemaManager()->listTableColumns($table);
+        $columns = array_map(static fn (Column $column) => $column->getObjectName()->getIdentifier()->getValue(), $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($table));
 
-        if (\array_key_exists('pid', $columns)) {
+        if (\in_array('pid', $columns, true)) {
             $adminFields[] = 'pid';
         }
 
-        if (\array_key_exists('sorting', $columns)) {
+        if (\in_array('sorting', $columns, true)) {
             $adminFields[] = 'sorting';
         }
 
