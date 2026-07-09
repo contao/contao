@@ -224,7 +224,6 @@ class ModuleNewsReader extends ModuleNews
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objArchive->requireLogin;
 		$objConfig->disableCaptcha = $objArchive->disableCaptcha;
-		$objConfig->bbcode = $objArchive->bbcode;
 		$objConfig->moderate = $objArchive->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
