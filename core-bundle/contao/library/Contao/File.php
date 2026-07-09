@@ -42,7 +42,7 @@ use Symfony\Component\String\UnicodeString;
  * @property string   $path          The file path
  * @property string   $value         Alias of $path
  * @property string   $mime          The mime type
- * @property string   $hash          The MD5 checksum
+ * @property string   $hash          The XXH128 checksum
  * @property string   $ctime         The ctime
  * @property string   $mtime         The mtime
  * @property string   $atime         The atime
@@ -875,13 +875,13 @@ class File extends System
 	}
 
 	/**
-	 * Return the MD5 hash of the file
+	 * Return the XXH128 hash of the file
 	 *
-	 * @return string The MD5 hash
+	 * @return string The XXH128 hash
 	 */
 	protected function getHash()
 	{
-		return md5_file($this->strRootDir . '/' . $this->strFile);
+		return hash_file('xxh128', $this->strRootDir . '/' . $this->strFile);
 	}
 
 	/**
