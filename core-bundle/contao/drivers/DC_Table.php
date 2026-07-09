@@ -1401,7 +1401,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($limit > 0)
 					{
 						$objInsertAfter = $db
-							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 							->limit(1, $limit - 1)
 							->execute($pid);
 
