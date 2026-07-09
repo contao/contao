@@ -51,7 +51,7 @@ class ImagesController extends AbstractContentElementController
         ;
 
         // Sort elements; relay to client-side logic if list should be randomized
-        if ($sortMode = SortMode::tryFrom($model->sortBy)) {
+        if ($model->sortBy && $sortMode = SortMode::tryFrom($model->sortBy)) {
             $filesystemItems = $filesystemItems->sort($sortMode);
         }
 
@@ -71,7 +71,7 @@ class ImagesController extends AbstractContentElementController
             ->createFigureBuilder()
             ->setSize($model->size)
             ->setLightboxGroupIdentifier('lb'.$model->id)
-            ->enableLightbox($model->fullsize)
+            ->enableLightbox((bool) $model->fullsize)
         ;
 
         if ('image' === $model->type) {
