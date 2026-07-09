@@ -378,7 +378,6 @@ class Newsletter extends Backend
 
 		// TODO
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
