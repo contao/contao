@@ -18,7 +18,7 @@ export default class extends ColorPicker {
 
         this.picker.on('change', this.updateInteractionResult);
 
-        // Reapply the button target to the element as it got replaced by not using `useAsButton` - see #9985
+        // Reapply the button target to the element as it got replaced by not using `useAsButton` (see #9985)
         this.picker.getRoot().root.setAttribute(`data-${this.identifier}-target`, 'button');
 
         if (hexValueLoaded) {
@@ -44,7 +44,7 @@ export default class extends ColorPicker {
     }
 
     updateInteractionResult(color) {
-        // Updates the interactive result on change - see #9985
+        // Updates the interactive result on change (see #9985)
         this.picker.getRoot().interaction.result.value = color ? color.toHEXA().toString() : '';
     }
 }
