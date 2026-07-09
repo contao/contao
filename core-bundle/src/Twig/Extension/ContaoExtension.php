@@ -25,6 +25,7 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\AutolinkRuntime;
 use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
@@ -306,6 +307,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
+            ),
+            new TwigFilter(
+                'autolink_url',
+                [AutolinkRuntime::class, 'linkUrls'],
+                ['pre_escape' => 'html', 'is_safe' => ['html']],
             ),
         ];
     }
