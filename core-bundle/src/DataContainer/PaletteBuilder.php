@@ -63,10 +63,10 @@ class PaletteBuilder
 
                     // Overwrite the trigger
                     if ($request?->request->get('FORM_SUBMIT') === $table) {
-                        $key = 'editAll' === $request?->query->get('act') ? $name.'_'.$id : $name;
+                        $key = 'editAll' === $request->query->get('act') ? $name.'_'.$id : $name;
 
-                        if (null !== $request?->request->get($key)) {
-                            $trigger = $request?->request->get($key);
+                        if (null !== $request->request->get($key)) {
+                            $trigger = $request->request->get($key);
                         }
                     }
 
