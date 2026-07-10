@@ -13,6 +13,12 @@ services:
         arguments:
             - '%kernel.bundles%'
 
+    contao_comments.migration.decode_html_comments:
+        class: Contao\CommentsBundle\Migration\DecodeHtmlCommentsMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.string.html_decoder'
+
     contao_comments.security.calendar_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\CalendarCommentsVoter
         arguments:

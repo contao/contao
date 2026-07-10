@@ -176,6 +176,7 @@
         "twig/string-extra": "^3.0",
         "twig/twig": "^3.21",
         "ua-parser/uap-php": "^3.9",
+        "vstelmakh/url-highlight": "^3.2",
         "web-auth/webauthn-lib": "^5.0",
         "web-auth/webauthn-symfony-bundle": "^5.0",
         "webignition/robots-txt-file": "^3.0",
