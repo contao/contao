@@ -14,12 +14,12 @@ use Contao\CoreBundle\Controller\Page\RedirectPageController;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-trigger_deprecation('contao/core-bundle', '5.3', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', PageRedirect::class, RedirectPageController::class);
+trigger_deprecation('contao/core-bundle', '5.3', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', PageRedirect::class, RedirectPageController::class);
 
 /**
  * Provide methods to handle a redirect page.
  *
- * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
  *             use Contao\CoreBundle\Controller\Page\RedirectPageController instead.
  */
 class PageRedirect extends Frontend
@@ -58,7 +58,7 @@ class PageRedirect extends Frontend
 	 */
 	private function prepare($objPage)
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 6.0
+		// Deprecated since Contao 4.0, to be removed in Contao 7.0
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
 		$locale = str_replace('-', '_', $objPage->language);

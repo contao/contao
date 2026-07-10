@@ -62,7 +62,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7;
  *             use Twig templates instead
  */
 abstract class Template extends Controller

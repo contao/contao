@@ -184,7 +184,7 @@ class FilesystemConfiguration
      *
      * @return Definition the newly created definition
      */
-    public function addDefaultDbafs(string $virtualFilesystemName, string $table, string $hashFunction = 'md5', bool $useLastModified = true): Definition
+    public function addDefaultDbafs(string $virtualFilesystemName, string $table, string $hashFunction = 'xxh128', bool $useLastModified = true): Definition
     {
         if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
             throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));

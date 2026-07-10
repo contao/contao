@@ -26,7 +26,6 @@ use Contao\Model\Collection;
  * @property string            $sortOrder
  * @property integer           $perPage
  * @property boolean           $moderate
- * @property boolean           $bbcode
  * @property boolean           $requireLogin
  * @property boolean           $disableCaptcha
  *
@@ -44,7 +43,6 @@ use Contao\Model\Collection;
  * @method static CalendarModel|null findOneBySortOrder($val, array $opt=array())
  * @method static CalendarModel|null findOneByPerPage($val, array $opt=array())
  * @method static CalendarModel|null findOneByModerate($val, array $opt=array())
- * @method static CalendarModel|null findOneByBbcode($val, array $opt=array())
  * @method static CalendarModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static CalendarModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
@@ -58,7 +56,6 @@ use Contao\Model\Collection;
  * @method static Collection<CalendarModel>|null findBySortOrder($val, array $opt=array())
  * @method static Collection<CalendarModel>|null findByPerPage($val, array $opt=array())
  * @method static Collection<CalendarModel>|null findByModerate($val, array $opt=array())
- * @method static Collection<CalendarModel>|null findByBbcode($val, array $opt=array())
  * @method static Collection<CalendarModel>|null findByRequireLogin($val, array $opt=array())
  * @method static Collection<CalendarModel>|null findByDisableCaptcha($val, array $opt=array())
  * @method static Collection<CalendarModel>|null findMultipleByIds($val, array $opt=array())
@@ -76,7 +73,6 @@ use Contao\Model\Collection;
  * @method static integer countBySortOrder($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
  * @method static integer countByModerate($val, array $opt=array())
- * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */

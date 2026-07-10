@@ -329,7 +329,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Backwards compatibility
 			if (Input::get('childs') !== null)
 			{
-				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 7. Use the "children" parameter instead.');
 				$children = Input::get('childs');
 			}
 
@@ -571,7 +571,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 7.');
 
 			$operations->append(array('html' => $buttons), true);
 		}

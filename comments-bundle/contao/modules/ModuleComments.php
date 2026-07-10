@@ -15,7 +15,6 @@ namespace Contao;
  *
  * @property Comments $Comments
  * @property bool     $com_moderate
- * @property bool     $com_bbcode
  * @property bool     $com_disableCaptcha
  * @property bool     $com_requireLogin
  * @property string   $com_order
@@ -66,7 +65,6 @@ class ModuleComments extends Module
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $this->com_requireLogin;
 		$objConfig->disableCaptcha = $this->com_disableCaptcha;
-		$objConfig->bbcode = $this->com_bbcode;
 		$objConfig->moderate = $this->com_moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);

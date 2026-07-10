@@ -266,11 +266,11 @@ class Combiner extends System
 	 *
 	 * @return string The debug markup
 	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7.
 	 */
 	protected function getDebugMarkup($strUrl)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s::%s()" is deprecated and will no longer work in Contao 6.', __CLASS__, __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s::%s()" is deprecated and will no longer work in Contao 7.', __CLASS__, __METHOD__);
 
 		$return = $this->getFileUrls($strUrl);
 
