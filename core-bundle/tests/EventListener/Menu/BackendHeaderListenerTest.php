@@ -91,16 +91,17 @@ class BackendHeaderListenerTest extends TestCase
                 'class' => 'icon-manual',
                 'title' => 'MSC.manual',
                 'target' => '_blank',
+                'data-contao--tooltips-target' => 'tooltip',
             ],
             $children['manual']->getLinkAttributes(),
         );
 
         // Alerts
-        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
+        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false" data-contao--tooltips-target="tooltip">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
 
         // Submenu
-        $this->assertSame('<button id="profileButton" type="button" title="MSC.showProfile" data-controller="contao--toggle-sender" data-action="contao--toggle-sender#toggle:prevent" data-contao--toggle-sender-active-title-value="MSC.hideProfile" data-contao--toggle-sender-inactive-title-value="MSC.showProfile" data-contao--toggle-sender-contao--toggle-receiver-outlet="#profileMenu">foo</button>', $children['submenu']->getLabel());
+        $this->assertSame('<button id="profileButton" type="button" title="MSC.showProfile" data-controller="contao--toggle-sender" data-action="contao--toggle-sender#toggle:prevent" data-contao--toggle-sender-active-title-value="MSC.hideProfile" data-contao--toggle-sender-inactive-title-value="MSC.showProfile" data-contao--toggle-sender-contao--toggle-receiver-outlet="#profileMenu" data-contao--tooltips-target="tooltip">foo</button>', $children['submenu']->getLabel());
         $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
@@ -149,7 +150,7 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
-        $this->assertSame('<button id="burger" type="button" title="MSC.showMainNavigation" data-controller="contao--toggle-sender" data-action="contao--toggle-sender#toggle:prevent" data-contao--toggle-sender-active-title-value="MSC.hideMainNavigation" data-contao--toggle-sender-inactive-title-value="MSC.showMainNavigation" data-contao--toggle-sender-contao--toggle-receiver-outlet="#left"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame('<button id="burger" type="button" title="MSC.showMainNavigation" data-controller="contao--toggle-sender" data-action="contao--toggle-sender#toggle:prevent" data-contao--toggle-sender-active-title-value="MSC.hideMainNavigation" data-contao--toggle-sender-inactive-title-value="MSC.showMainNavigation" data-contao--toggle-sender-contao--toggle-receiver-outlet="#left" data-contao--tooltips-target="tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
