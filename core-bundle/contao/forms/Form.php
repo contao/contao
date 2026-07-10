@@ -480,7 +480,7 @@ class Form extends Hybrid
 			}
 
 			// Set the admin e-mail as "from" address
-			if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+			if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
 			{
 				$email->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 			}
