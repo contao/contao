@@ -93,6 +93,7 @@
                         {% set enable_label_attributes = attrs()
                             .set('for', "#{id}_#{loop.index0}_enable")
                             .set('data-action', 'click->contao--scroll-offset#store')
+                            .set('data-contao--tooltips-target', 'content')
                             .addClass('mw_enable')
                         %}
                         <label{{ enable_label_attributes }}>{{ 'MSC.mw_enable'|trans }}</label>
@@ -144,7 +145,7 @@
                     <td></td>
                 {% endif %}
                 {% for cell in footer %}
-                    <td><p class="tl_help tl_tip">{{ cell.description|default }}</td>
+                    <td><p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ cell.description|default }}</td>
                 {% endfor %}
                 <td></td>
             </tr>

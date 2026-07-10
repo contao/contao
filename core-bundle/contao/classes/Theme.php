@@ -129,7 +129,7 @@ class Theme extends Backend
 		// Return the form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" data-contao--tooltips-target="tooltip" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data" data-turbo="false">
 <div class="tl_formbody_edit">
@@ -140,7 +140,7 @@ class Theme extends Backend
 <div class="tl_tbox">
   <div class="widget">
     <h3>' . $GLOBALS['TL_LANG']['tl_theme']['source'][0] . '</h3>' . $objUploader->generateMarkup() . (isset($GLOBALS['TL_LANG']['tl_theme']['source'][1]) ? '
-    <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_theme']['source'][1] . '</p>' : '') . '
+    <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['tl_theme']['source'][1] . '</p>' : '') . '
   </div>
 </div>
 
@@ -168,7 +168,7 @@ class Theme extends Backend
 	{
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" data-contao--tooltips-target="tooltip" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
@@ -324,7 +324,7 @@ class Theme extends Backend
 			}
 
 			$return .= '</select>
-  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][1] ?? '') . '</p>
+  <p class="tl_help tl_tip" title="" data-contao--tooltips-target="content">' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][1] ?? '') . '</p>
 </div><div class="w50 widget"' . ($count ? ' style="display: none"' : '') . ' id="ctrl_example_website_import">
   <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][0] ?? '') . '</label></h3>
   <select name="example_website_import" class="tl_select">
@@ -332,7 +332,7 @@ class Theme extends Backend
     <option value="data">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data'] ?? '') . '</option>
     <option value="data_no_truncate">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data_no_truncate'] ?? '') . '</option>
   </select>
-  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
+  <p class="tl_help tl_tip" title="" data-contao--tooltips-target="content">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
 </div><br class="clr">';
 		}
 

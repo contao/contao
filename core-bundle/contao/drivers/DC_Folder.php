@@ -1890,7 +1890,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   <input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' . $options . '
 </fieldset>' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['all_fields'] . '</p>' : ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
-<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
+<p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
 </div>
 </div>
 </div>
@@ -2178,7 +2178,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   <input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' . $options . '
 </fieldset>' . ($blnIsError ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['all_fields'] . '</p>' : ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
-<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
+<p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
 </div>
 </div>
 </div>
@@ -2375,7 +2375,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   <div class="widget">
     <h3><label for="ctrl_source">' . $GLOBALS['TL_LANG']['tl_files']['editor'][0] . '</label></h3>
     <textarea name="source" id="ctrl_source" class="tl_textarea monospace' . (Config::get('useCE') ? ' noresize' : '') . '" rows="12" cols="80" style="height:400px" data-action="focus->contao--scroll-offset#store">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
-    <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['editor'][1] . '</p>' : '') . '
+    <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['tl_files']['editor'][1] . '</p>' : '') . '
   </div>
 </div>
 </div>

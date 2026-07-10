@@ -221,7 +221,7 @@ class FileUpload extends Backend
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;

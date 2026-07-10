@@ -321,7 +321,7 @@ class Pagination
 			}
 			else
 			{
-				$arrLinks[] = \sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
+				$arrLinks[] = \sprintf('<li><a href="%s" class="link" title="%s" data-contao--tooltips-target="tooltip">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
 			}
 		}
 

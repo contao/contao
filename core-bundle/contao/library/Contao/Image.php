@@ -95,8 +95,17 @@ class Image
 
 		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
+		$tooltipTarget = '';
+
+		if ('' !== $alt)
+		{
+			$attributesObject['data-contao--tooltips-target'] = 'tooltip';
+			// Only one image existing e.g. copy / delete without dark variant
+			$tooltipTarget = ' data-contao--tooltips-target="tooltip"';
+		}
+
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
-		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ?? $defaultSize['height'], StringUtil::specialchars($alt), $tooltipTarget . ($attributes ? ' ' . $attributes : ''));
 
 		if (str_contains($template, '{darkAttributes}'))
 		{

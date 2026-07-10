@@ -14,7 +14,6 @@
     .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -145,6 +144,10 @@
         {% endblock %}
 
     </div>
+    <div role="tooltip" id="tooltip" data-contao--tooltips-target="popup">
+        <div id="tooltip_content" data-contao--tooltips-target="popupContent"></div>
+        <div id="tooltip_arrow" data-contao--tooltips-target="popupArrow"></div>
+    </div>
 {% endblock %}
 
 {% if isPopup %}
@@ -158,6 +161,7 @@
 {% endif %}
 
 {{ mootools|default|raw }}
+
 
 </body>
 </html>

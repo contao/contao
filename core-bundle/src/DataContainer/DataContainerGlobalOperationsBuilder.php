@@ -98,6 +98,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#tl_content_filter')
             ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('DCA.toggleFilter.2', [], 'contao_default'))
             ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-contao--tooltips-target', 'tooltip')
             ->set('data-action', 'contao--toggle-sender#toggle:prevent contao--operations-menu#close')
         ;
 
