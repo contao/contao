@@ -26,6 +26,7 @@ class ChunkedTextTest extends TestCase
     public function testChunkTypes(): void
     {
         $chunkedText = new ChunkedText(['foo', '<raw>', 'bar', '', 'baz', '<raw2>', '', '<raw3>', '', '', '', '<raw4>']);
+
         $expected = [
             [ChunkedText::TYPE_TEXT, 'foo'],
             [ChunkedText::TYPE_RAW, '<raw>'],

@@ -48,6 +48,7 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
             if ((bool) (\count($indexedArray) % 2) === (self::TYPE_TEXT === $type)) {
                 $indexedArray[] = '';
             }
+
             $indexedArray[] = $chunk;
         }
 
