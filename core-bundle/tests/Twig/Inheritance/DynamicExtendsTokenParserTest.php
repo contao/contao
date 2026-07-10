@@ -121,7 +121,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
-        // Use a conditional expression here, so that we can test rethrowing exceptions
+        // Use a conditional expression here so that we can test rethrowing exceptions
         // in case the parent node is not an ArrayExpression
         $source = new Source("{% extends true ? '@Contao/foo' : '' %}", 'template.html.twig');
         $tokenStream = new Lexer($environment)->tokenize($source);

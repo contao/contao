@@ -138,11 +138,11 @@ abstract class ContentElementTestCase extends TestCase
     {
         $framework = $this->getDefaultFramework($nestedFragments);
 
-        // Setup Twig environment
+        // Set up Twig environment
         $loader = $this->getContaoFilesystemLoader();
         $environment = $this->getEnvironment($loader, $framework);
 
-        // Setup container with helper services
+        // Set up container with helper services
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')

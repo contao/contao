@@ -874,7 +874,7 @@ class Versions extends Controller
 	}
 
 	/**
-	 * Implode a multi-dimensional array recursively
+	 * Implode a multidimensional array recursively
 	 *
 	 * @param mixed   $var
 	 * @param boolean $binary

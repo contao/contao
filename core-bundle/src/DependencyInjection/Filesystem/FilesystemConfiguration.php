@@ -102,7 +102,6 @@ class FilesystemConfiguration
             // Unfortunately, the adapter definition builders are hardcoded in the Flysytem
             // bundle class. By using reflection to call "createAdapterDefinition", we ensure
             // the passed $options are handled the same way the extension does.
-            /** @var ExtensionInterface $flysystemExtension */
             $flysystemExtension = $this->container->getExtension('flysystem');
 
             $adapterId = new \ReflectionMethod(FlysystemExtension::class, 'createAdapterDefinition')
