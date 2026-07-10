@@ -27,6 +27,8 @@ return RectorConfig::configure()
     ->withPhpSets(php84: true)
     ->withSets([SetList::CONTAO])
     ->withPaths([
+        __DIR__.'/api-bundle/src',
+        __DIR__.'/api-bundle/tests',
         __DIR__.'/calendar-bundle/src',
         __DIR__.'/calendar-bundle/tests',
         __DIR__.'/comments-bundle/src',
@@ -41,6 +43,8 @@ return RectorConfig::configure()
         __DIR__.'/manager-bundle/bin',
         __DIR__.'/manager-bundle/src',
         __DIR__.'/manager-bundle/tests',
+        __DIR__.'/mcp-bundle/src',
+        __DIR__.'/mcp-bundle/tests',
         __DIR__.'/news-bundle/src',
         __DIR__.'/news-bundle/tests',
         __DIR__.'/newsletter-bundle/src',
@@ -74,5 +78,5 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withParallel()
-    ->withCache(sys_get_temp_dir().'/rector/contao60')
+    ->withCache(sys_get_temp_dir().'/rector/contao')
 ;

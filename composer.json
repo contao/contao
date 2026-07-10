@@ -39,6 +39,7 @@
         "ext-session": "*",
         "ext-zlib": "*",
         "composer-runtime-api": "^2.0.14",
+        "api-platform/core": "^4.3",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^3.0.4",
         "cmsig/seal": "^0.12.2",
@@ -92,6 +93,7 @@
         "nelmio/security-bundle": "^3.0",
         "nikic/php-parser": "^5.0",
         "nyholm/psr7": "^1.2",
+        "opis/json-schema": "^2.6",
         "paragonie/constant_time_encoding": "^2.8 || ^3.1",
         "php-feed-io/feed-io": "^6.0",
         "phpspec/php-diff": "^1.0",
@@ -156,6 +158,7 @@
         "symfony/security-core": "^7.4",
         "symfony/security-csrf": "^7.4",
         "symfony/security-http": "^7.4",
+        "symfony/serializer": "^7.4",
         "symfony/service-contracts": "^3.0",
         "symfony/stopwatch": "^7.4",
         "symfony/string": "^7.4",
@@ -192,6 +195,7 @@
         "symfony/browser-kit": "^7.4"
     },
     "replace": {
+        "contao/api-bundle": "self.version",
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
         "contao/core-bundle": "self.version",
@@ -200,6 +204,7 @@
         "contao/loupe-bridge": "self.version",
         "contao/maker-bundle": "self.version",
         "contao/manager-bundle": "self.version",
+        "contao/mcp-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
         "contao/test-case": "self.version"
@@ -217,6 +222,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Contao\\ApiBundle\\": "api-bundle/src/",
             "Contao\\CalendarBundle\\": "calendar-bundle/src/",
             "Contao\\CommentsBundle\\": "comments-bundle/src/",
             "Contao\\CoreBundle\\": "core-bundle/src/",
@@ -225,6 +231,7 @@
             "Contao\\LoupeBridge\\": "loupe-bridge/src/",
             "Contao\\MakerBundle\\": "maker-bundle/src/",
             "Contao\\ManagerBundle\\": "manager-bundle/src/",
+            "Contao\\McpBundle\\": "mcp-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
@@ -303,7 +310,11 @@
             "bin-links": false,
             "forward-command": false
         },
+        "branch-alias": {
+            "dev-main": "6.1-dev"
+        },
         "contao-manager-plugin": {
+            "contao/api-bundle": "Contao\\ApiBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
             "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
@@ -312,6 +323,7 @@
             "contao/loupe-bridge": "Contao\\LoupeBridge\\ContaoManager\\Plugin",
             "contao/maker-bundle": "Contao\\MakerBundle\\ContaoManager\\Plugin",
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
+            "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
         }
