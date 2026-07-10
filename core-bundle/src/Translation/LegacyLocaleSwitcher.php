@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  *
- * @deprecated Deprecated since Contao 4.0, to be removed in Contao 6.
+ * @deprecated Deprecated since Contao 4.0, to be removed in Contao 7.
  */
 class LegacyLocaleSwitcher implements LocaleAwareInterface
 {

@@ -32,12 +32,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', TwoFactorController::class, TwoFactorControllerContentElement::class);
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', TwoFactorController::class, TwoFactorControllerContentElement::class);
 
 /**
  * @internal
  *
- * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
  *             use Contao\CoreBundle\Controller\ContentElement\TwoFactorController instead.
  */
 #[AsFrontendModule(category: 'user', template: 'mod_two_factor')]

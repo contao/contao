@@ -31,7 +31,7 @@ class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
      */
     protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool
     {
-        trigger_deprecation('contao/core-bundle', '5.7', 'Checking access on "contao_user.formp" is deprecated and will no longer work in Contao 6. Vote on "contao_user.cud" instead.');
+        trigger_deprecation('contao/core-bundle', '5.7', 'Checking access on "contao_user.formp" is deprecated and will no longer work in Contao 7. Vote on "contao_user.cud" instead.');
 
         if (null === $subject) {
             return \count(preg_grep('/^tl_form::/', $user->cud)) > 0;

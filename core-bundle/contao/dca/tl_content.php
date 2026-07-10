@@ -873,11 +873,11 @@ class tl_content extends Backend
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 7.
 	 */
 	public function getContentElementGroup($element)
 	{
-		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
@@ -982,11 +982,11 @@ class tl_content extends Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 7.
 	 */
 	public function addCteType($arrRow)
 	{
-		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
 
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];

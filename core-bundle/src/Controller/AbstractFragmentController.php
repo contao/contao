@@ -107,7 +107,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * Calling getResponse() on the returned object will internally call render() with
      * the set parameters and return the response.
      *
-     * Note: The $fallbackTemplateName argument will be removed in Contao 6; always
+     * Note: The $fallbackTemplateName argument will be removed in Contao 7; always
      * set a template via the fragment options, instead.
      */
     protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
@@ -173,7 +173,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * @internal The addHeadlineToTemplate() method is considered internal in
-     *           Contao 5 and won't be accessible anymore in Contao 6. Headline
+     *           Contao 5 and won't be accessible anymore in Contao 7. Headline
      *           data is always added to the context of modern fragment
      *           templates.
      */
@@ -188,7 +188,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * @internal The addCssAttributesToTemplate() method is considered internal
-     *           in Contao 5 and won't be accessible anymore in Contao 6.
+     *           in Contao 5 and won't be accessible anymore in Contao 7.
      *           Attributes data is always added to the context of modern
      *           fragment templates.
      */
@@ -207,7 +207,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * @internal The addPropertiesToTemplate() method is considered internal in
-     *           Contao 5 and won't be accessible anymore in Contao 6. Custom
+     *           Contao 5 and won't be accessible anymore in Contao 7. Custom
      *           properties are always added to the context of modern fragment
      *           templates.
      */
@@ -222,7 +222,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * @internal The addSectionToTemplate() method is considered internal in
-     *           Contao 5 and won't be accessible anymore in Contao 6. Section
+     *           Contao 5 and won't be accessible anymore in Contao 7. Section
      *           data is always added to the context of modern fragment
      *           templates.
      */
@@ -237,7 +237,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * Returns the type from the class name.
      *
      * @internal The getType() method is considered internal in Contao 5 and
-     *           won't be accessible anymore in Contao 6. Retrieve the type
+     *           won't be accessible anymore in Contao 7. Retrieve the type
      *           from the fragment options instead.
      */
     protected function getType(): string
@@ -299,7 +299,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['class'];
 
         if (!\in_array($caller, [AbstractContentElementController::class, AbstractFrontendModuleController::class], true)) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and will not be accessible anymore in Contao 6.', $method);
+            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and will not be accessible anymore in Contao 7.', $method);
         }
     }
 

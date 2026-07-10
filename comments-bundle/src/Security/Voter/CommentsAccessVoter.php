@@ -62,7 +62,7 @@ class CommentsAccessVoter implements VoterInterface, CacheableVoterInterface
             }
         }
 
-        // TODO: in Contao 6, this should default to ACCESS_ABSTAIN if no voter denied
+        // TODO: in Contao 7, this should default to ACCESS_ABSTAIN if no voter denied
         return self::ACCESS_DENIED;
     }
 }
