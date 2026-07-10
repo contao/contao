@@ -1,266 +1,130 @@
 import { Controller } from '@hotwired/stimulus';
 import * as Position from '../modules/position';
 
-export default class TooltipsController extends Controller {
-    #tooltip = null;
-    #tooltipContainer = null;
-    #tooltipArrow = null;
+export default class extends Controller {
     #timer = null;
-    #activeTargets = new Set();
-    #removeClickTargetHandlerDelegates = new Map();
+    #current = null;
+    #targetSelector = null;
+    #contentTargetSelector = null;
 
-    static htmlElements = ['p.tl_tip'];
+    static targets = ['tooltip', 'content', 'popup', 'popupContent', 'popupArrow'];
 
-    static elements = [
-        'a img[alt]',
-        '.sgallery img[alt]',
-        'p.tl_tip',
-        '#home[title]',
-        '#tmenu a[title]',
-        '#tmenu button[title]',
-        'a[title][class^="group-"]',
-        'a[title].navigation',
-        'img[title].gimage',
-        'img[title]:not(.gimage)',
-        'a[title].picker-wizard',
-        'button img[alt]',
-        '.tl_panel button[title]',
-        '.jump-target-scroll button[title]',
-        'button[title].unselectable',
-        'button[title]:not(.unselectable)',
-        'a[title]:not(.picker-wizard)',
-        'input[title]',
-        'time[title]',
-        'span[title]',
-        'label.mw_enable',
-    ];
+    initialize() {
+        this.#contentTargetSelector = `[data-${this.identifier}-target~="content"]`;
+        this.#targetSelector = `[data-${this.identifier}-target~="tooltip"], ${this.#contentTargetSelector}`;
+    }
 
-    /**
-     * There is one controller handling multiple tooltip targets. The tooltip
-     * DOM element is shared across targets.
-     */
     connect() {
-        if (null === this.#tooltip) {
-            this.#createTipContainer();
-        }
+        this.element.addEventListener('mouseover', this.#show);
+        this.element.addEventListener('mouseout', this.#hide);
+        this.element.addEventListener('focusin', this.#show);
+        this.element.addEventListener('focusout', this.#hide);
+        this.element.addEventListener('touchend', this.#show);
+        this.element.addEventListener('click', this.#hide);
     }
 
     disconnect() {
-        this.#destroyTipContainer();
-    }
+        this.element.removeEventListener('mouseover', this.#show);
+        this.element.removeEventListener('mouseout', this.#hide);
+        this.element.removeEventListener('focusin', this.#show);
+        this.element.removeEventListener('focusout', this.#hide);
+        this.element.removeEventListener('touchend', this.#show);
+        this.element.removeEventListener('click', this.#hide);
 
-    tooltipTargetConnected(el) {
-        el.addEventListener('mouseenter', this.#showTooltip.bind(this, el, null, 1000));
-        el.addEventListener('touchend', this.#showTooltip.bind(this, el, null, 0));
-        el.addEventListener('mouseleave', this.#hideTooltip.bind(this, el));
-
-        const clickTarget = el.closest('button, a');
-
-        if (clickTarget) {
-            clickTarget.addEventListener('focus', this.#showTooltip.bind(this, el, clickTarget, 500));
-            clickTarget.addEventListener('blur', this.#hideTooltip.bind(this, el));
-
-            // In case the tooltip target is inside a link or button, also close it
-            // when a click happened
-            const handler = () => this.#hideTooltip(el);
-
-            clickTarget.addEventListener('click', handler);
-            this.#removeClickTargetHandlerDelegates.set(el, () => {
-                el.removeEventListener('click', handler);
-                el.removeEventListener('blur', this.#hideTooltip.bind(this));
-            });
-        } else {
-            el.addEventListener('focus', this.#showTooltip.bind(this, el, null, 500));
-            el.addEventListener('blur', this.#hideTooltip.bind(this, el));
-        }
+        this.#hide();
     }
 
     tooltipTargetDisconnected(el) {
-        el.removeEventListener('mouseenter', this.#showTooltip);
-        el.removeEventListener('focus', this.#showTooltip);
-        el.removeEventListener('touchend', this.#showTooltip);
-        el.removeEventListener('mouseleave', this.#hideTooltip);
-        el.removeEventListener('blur', this.#hideTooltip);
-
-        if (this.#activeTargets.has(el)) {
-            this.#hideTooltip(el);
-        }
-
-        if (this.#removeClickTargetHandlerDelegates.has(el)) {
-            this.#removeClickTargetHandlerDelegates.get(el)();
-            this.#removeClickTargetHandlerDelegates.delete(el);
+        if (el === this.#current) {
+            this.#hide();
         }
     }
 
-    touchStart(e) {
-        [...this.#activeTargets].filter((el) => !el.contains(e.target)).forEach(this.#hideTooltip.bind(this));
-    }
-
-    #includeHtml(el) {
-        for (const selector of TooltipsController.htmlElements) {
-            if (el.matches(selector)) {
-                return true;
-            }
+    contentTargetDisconnected(el) {
+        if (el === this.#current) {
+            this.#hide();
         }
-
-        return false;
     }
 
-    #createTipContainer() {
-        this.#tooltip = document.createElement('div');
-        this.#tooltip.setAttribute('role', 'tooltip');
-        this.#tooltip.id = 'tooltip';
-
-        this.#tooltipContainer = document.createElement('div');
-        this.#tooltipContainer.id = 'tooltip_content';
-
-        this.#tooltipArrow = document.createElement('div');
-        this.#tooltipArrow.id = 'tooltip_arrow';
-
-        this.#tooltip.appendChild(this.#tooltipContainer);
-        this.#tooltip.appendChild(this.#tooltipArrow);
-        document.body.appendChild(this.#tooltip);
-    }
-
-    #destroyTipContainer() {
-        this.#tooltip?.remove();
-        this.#tooltip = this.#tooltipContainer = this.#tooltipArrow = null;
-    }
-
-    #updateContent(el) {
-        let text;
-
-        if (this.#includeHtml(el)) {
-            text = el.innerHTML;
-        } else if (el instanceof HTMLImageElement) {
-            text = el.getAttribute('alt');
-            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-        } else {
-            text = el.getAttribute('title');
-            this.#migrateElementTitle(el, true);
-            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-        }
-
-        if (!text) {
+    #show = (event) => {
+        if (!(event.target instanceof Element)) {
             return;
         }
 
-        this.#tooltipContainer.innerHTML = text;
+        const el = event.target.closest(this.#targetSelector);
+
+        if (!el || el === this.#current) {
+            return;
+        }
+
+        this.#hide();
+
+        if (!this.#updateContent(el)) {
+            return;
+        }
+
+        this.#migrateElementTitle(el, true);
+        this.#current = el;
+
+        const delay = { mouseover: 1000, focusin: 500 }[event.type] ?? 0;
+
+        this.#timer = setTimeout(() => {
+            Position.compute(el, this.popupTarget, this.popupArrowTarget);
+            this.popupTarget.style.display = 'block';
+        }, delay);
+    };
+
+    #hide = (event = null) => {
+        if (this.#current === null) {
+            return;
+        }
+
+        // Ignore mouseout events that only move within the current element
+        if (event?.type === 'mouseout' && this.#current.contains(event.relatedTarget)) {
+            return;
+        }
+
+        clearTimeout(this.#timer);
+        this.#migrateElementTitle(this.#current, false);
+        this.#current = null;
+        this.popupTarget.style.display = 'none';
+    };
+
+    #updateContent(el) {
+        if (el.matches(this.#contentTargetSelector)) {
+            this.popupContentTarget.innerHTML = el.innerHTML;
+
+            return this.popupContentTarget.textContent.trim() !== '';
+        }
+
+        const text = this.#contentFor(el);
+        this.popupContentTarget.textContent = text;
+
+        return text !== '';
     }
 
-    #updatePosition(el) {
-        Position.compute(el, this.#tooltip, this.#tooltipArrow);
+    #contentFor(el) {
+        return (
+            el.getAttribute('data-tooltip') ??
+            el.getAttribute('aria-label') ??
+            el.getAttribute('title') ??
+            el.querySelector('img[alt]')?.getAttribute('alt') ??
+            (el instanceof HTMLImageElement ? el.getAttribute('alt') : null) ??
+            ''
+        );
     }
 
-    #migrateElementTitle(el, setTitle = false) {
+    #migrateElementTitle(el, setTitle) {
         if (!el) {
             return;
         }
 
-        const hasDataTitle = el.hasAttribute('data-original-title');
-
-        if (setTitle && !hasDataTitle) {
+        if (setTitle && el.hasAttribute('title')) {
             el.setAttribute('data-original-title', el.getAttribute('title'));
             el.removeAttribute('title');
-        } else if (hasDataTitle) {
-            if (!el.hasAttribute('title')) {
-                el.setAttribute('title', el.getAttribute('data-original-title'));
-            }
-
+        } else if (!setTitle && el.hasAttribute('data-original-title')) {
+            el.setAttribute('title', el.getAttribute('data-original-title'));
             el.removeAttribute('data-original-title');
-        }
-    }
-
-    #showTooltip(el, parentAnchor = null, delay = 0) {
-        this.#updateContent(el);
-
-        clearTimeout(this.#timer);
-        this.#tooltip.style.willChange = 'display,contents';
-
-        this.#timer = setTimeout(() => {
-            this.#activeTargets.add(el);
-            this.#updatePosition(parentAnchor ?? el);
-            this.#tooltip.style.display = 'block';
-            this.#tooltip.style.willChange = 'auto';
-        }, delay);
-    }
-
-    #hideTooltip(el) {
-        this.#migrateElementTitle(el);
-
-        clearTimeout(this.#timer);
-        this.#activeTargets.delete(el);
-        this.#tooltip.style.display = 'none';
-    }
-
-    /**
-     * Migrate legacy targets to proper controller targets.
-     */
-    static afterLoad(identifier) {
-        const targetAttribute = `data-${identifier}-target`;
-        const targetSelector = Object.keys(TooltipsController.defaultOptionsMap).join(',');
-        const pendingNodes = new Set();
-        let flushQueued = false;
-
-        const migrateTarget = (el) => {
-            if (!el.hasAttribute(targetAttribute)) {
-                el.setAttribute(targetAttribute, 'tooltip');
-            }
-        };
-
-        const migrateTargets = (el) => {
-            if (el.matches(targetSelector)) {
-                migrateTarget(el);
-            }
-
-            for (const target of el.querySelectorAll(targetSelector)) {
-                migrateTarget(target);
-            }
-        };
-
-        const flushPendingNodes = () => {
-            flushQueued = false;
-
-            for (const node of pendingNodes) {
-                migrateTargets(node);
-            }
-
-            pendingNodes.clear();
-        };
-
-        const queueMigrateTargets = (node) => {
-            pendingNodes.add(node);
-
-            if (flushQueued) {
-                return;
-            }
-
-            flushQueued = true;
-            requestAnimationFrame(flushPendingNodes);
-        };
-
-        new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type !== 'childList') {
-                    continue;
-                }
-
-                for (const node of mutation.addedNodes) {
-                    if (!(node instanceof HTMLElement)) {
-                        continue;
-                    }
-
-                    queueMigrateTargets(node);
-                }
-            }
-        }).observe(document, {
-            childList: true,
-            subtree: true,
-        });
-
-        // Initially migrate all targets that are already in the DOM
-        for (const el of document.querySelectorAll(targetSelector)) {
-            migrateTarget(el);
         }
     }
 }
