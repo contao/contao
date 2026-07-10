@@ -37,7 +37,7 @@ class DecodeHtmlCommentsMigration extends AbstractMigration
             return false;
         }
 
-        $count = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM tl_comments WHERE comment != \'\'');
+        $count = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM tl_comments WHERE comment != ''");
 
         return $count > 0;
     }
@@ -45,7 +45,7 @@ class DecodeHtmlCommentsMigration extends AbstractMigration
     public function run(): MigrationResult
     {
         $ids = [];
-        $comments = $this->connection->fetchAllKeyValue('SELECT id, comment FROM tl_comments WHERE comment != \'\'');
+        $comments = $this->connection->fetchAllKeyValue("SELECT id, comment FROM tl_comments WHERE comment != ''");
 
         foreach ($comments as $id => $comment) {
             $commentDecoded = $this->htmlDecoder->htmlToPlainText($comment, true);
