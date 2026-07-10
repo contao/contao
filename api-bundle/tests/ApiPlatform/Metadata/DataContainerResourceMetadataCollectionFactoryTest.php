@@ -16,6 +16,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\McpTool;
+use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -122,6 +124,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
+        $this->assertMcpOperations($resource, $expectedShortName, $expectedTable, $deletable);
 
         $operations = $resource->getOperations();
         $this->assertInstanceOf(Operations::class, $operations);
@@ -138,6 +141,43 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->assertOperation($operations['delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         } else {
             $this->assertArrayNotHasKey('delete', $operations);
+        }
+    }
+
+    private function assertMcpOperations(ApiResource $resource, string $expectedShortName, string $expectedTable, bool $deletable): void
+    {
+        $mcp = $resource->getMcp();
+        $this->assertIsArray($mcp);
+        $this->assertCount($deletable ? 5 : 4, $mcp);
+
+        $baseName = preg_replace('/^tl_/', '', $expectedTable) ?? $expectedTable;
+
+        $this->assertInstanceOf(McpToolCollection::class, $mcp[$baseName.'_get_collection']);
+        $this->assertSame($expectedShortName, $mcp[$baseName.'_get_collection']->getShortName());
+        $this->assertSame(DataContainerRecord::class, $mcp[$baseName.'_get_collection']->getClass());
+        $this->assertSame(DataContainerStateProvider::class, $mcp[$baseName.'_get_collection']->getProvider());
+        $this->assertSame(DataContainerStateProcessor::class, $mcp[$baseName.'_get_collection']->getProcessor());
+
+        foreach (['get', 'post', 'patch'] as $operationName) {
+            $operation = $mcp[$baseName.'_'.$operationName];
+
+            $this->assertInstanceOf(McpTool::class, $operation);
+            $this->assertSame($expectedShortName, $operation->getShortName());
+            $this->assertSame(DataContainerRecord::class, $operation->getClass());
+            $this->assertSame(DataContainerStateProvider::class, $operation->getProvider());
+            $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
+        }
+
+        if ($deletable) {
+            $delete = $mcp[$baseName.'_delete'];
+            $this->assertInstanceOf(McpTool::class, $delete);
+            $this->assertSame($expectedShortName, $delete->getShortName());
+            $this->assertSame(DataContainerRecord::class, $delete->getClass());
+            $this->assertSame(DataContainerStateProvider::class, $delete->getProvider());
+            $this->assertSame(DataContainerStateProcessor::class, $delete->getProcessor());
+            $this->assertFalse($delete->getStructuredContent());
+        } else {
+            $this->assertArrayNotHasKey($baseName.'_delete', $mcp);
         }
     }
 

@@ -141,6 +141,7 @@
         "symfony/intl": "^7.4",
         "symfony/mailer": "^7.4",
         "symfony/maker-bundle": "^1.1",
+        "symfony/mcp-bundle": "^0.10.0",
         "symfony/messenger": "^7.2",
         "symfony/mime": "^7.4",
         "symfony/monolog-bridge": "^7.4",

@@ -28,8 +28,11 @@
     ],
     "require": {
         "php": "^8.4",
+        "api-platform/mcp": "^4.3",
+        "contao/api-bundle": "self.version",
         "contao/core-bundle": "self.version",
-        "symfony/http-kernel": "^7.4"
+        "symfony/http-kernel": "^7.4",
+        "symfony/mcp-bundle": "^0.10.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
