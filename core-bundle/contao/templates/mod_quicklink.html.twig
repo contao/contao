@@ -8,7 +8,7 @@
             <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
             <div class="widget widget-select">
-                <select name="target" class="select" aria-label="{{ 'MSC.quicklinkTarget'|trans }}">
+                <select name="target" class="select" aria-label="{{ title }}">
                     <option value="">{{ title }}</option>
                     {% for item in items %}
                         <option value="{{ item.href }}" {% if item.active %} selected{% endif %}>{{ item.link }}</option>
