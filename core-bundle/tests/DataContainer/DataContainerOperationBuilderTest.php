@@ -17,6 +17,7 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
@@ -52,6 +53,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(Security::class),
             $this->createStub(UrlGeneratorInterface::class),
@@ -123,6 +125,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(Security::class),
             $this->createStub(UrlGeneratorInterface::class),
@@ -156,6 +159,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(Security::class),
             $this->createStub(UrlGeneratorInterface::class),

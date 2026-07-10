@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -57,17 +56,17 @@ class PaletteBuilder
 
             // Get selector values from DB
             if (null !== $currentRow) {
-                $inputAdapter = $this->framework->getAdapter(Input::class);
+                $request = $this->requestStack->getCurrentRequest();
 
                 foreach ($GLOBALS['TL_DCA'][$table]['palettes']['__selector__'] as $name) {
                     $trigger = $currentRow[$name] ?? null;
 
                     // Overwrite the trigger
-                    if ($inputAdapter->post('FORM_SUBMIT') === $table) {
-                        $key = 'editAll' === $inputAdapter->get('act') ? $name.'_'.$id : $name;
+                    if ($request?->request->get('FORM_SUBMIT') === $table) {
+                        $key = 'editAll' === $request?->query->get('act') ? $name.'_'.$id : $name;
 
-                        if (null !== $inputAdapter->post($key)) {
-                            $trigger = $inputAdapter->post($key);
+                        if (null !== $request?->request->get($key)) {
+                            $trigger = $request?->request->get($key);
                         }
                     }
 

@@ -16,13 +16,13 @@ use Contao\CoreBundle\DataContainer\PaletteBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
-use Contao\Input;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -72,19 +72,11 @@ class PaletteBuilderTest extends TestCase
             ->willReturnMap([[42, 'tl_foo', $currentRecord]])
         ;
 
-        $inputAdapter = $this->createAdapterStub(['get', 'post']);
-        $inputAdapter
-            ->method('get')
-            ->willReturnMap([['act', $editAll ? 'editAll' : 'edit']])
-        ;
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/?act='.($editAll ? 'editAll' : 'edit'), 'POST', $postData ?? []));
 
-        $inputAdapter
-            ->method('post')
-            ->willReturnCallback(static fn ($key) => $postData[$key] ?? null)
-        ;
-
-        $framework = $this->createContaoFrameworkStub([Input::class => $inputAdapter]);
-        $paletteBuilder = new PaletteBuilder($framework, $this->createStub(RequestStack::class), $this->createStub(Security::class), $this->createStub(Connection::class));
+        $framework = $this->createContaoFrameworkStub();
+        $paletteBuilder = new PaletteBuilder($framework, $requestStack, $this->createStub(Security::class), $this->createStub(Connection::class));
 
         $this->assertSame($expected, $paletteBuilder->getPalette('tl_foo', 42, $dataContainer));
 
