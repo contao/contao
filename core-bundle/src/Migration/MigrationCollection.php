@@ -62,7 +62,7 @@ class MigrationCollection
     public function run(array|null $pendingNames = null): iterable
     {
         if (null === $pendingNames) {
-            trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" with "pendingNames: null" is deprecated and will no longer work in Contao 6.', __METHOD__);
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" with "pendingNames: null" is deprecated and will no longer work in Contao 7.', __METHOD__);
         }
 
         foreach ($this->getPending() as $migration) {

@@ -125,7 +125,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $config['pretty_error_screens']);
         $container->setParameter('contao.error_level', $config['error_level']);
-        $container->setParameter('contao.locales', $config['locales']);
         $container->setParameter('contao.image.bypass_cache', $config['image']['bypass_cache']);
         $container->setParameter('contao.image.target_dir', $config['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);

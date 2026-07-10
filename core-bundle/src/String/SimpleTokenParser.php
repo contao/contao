@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\String;
 
 use Contao\Input;
+use Contao\StringUtil;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -33,11 +34,14 @@ class SimpleTokenParser implements LoggerAwareInterface
      * Parse simple tokens.
      *
      * @param array $tokens Key value pairs ([token => value, ...])
+     * @param bool  $asHtml Parse tags even if they are encoded as HTML entities
+     *                      and properly encode special characters in the
+     *                      replaced token values
      *
      * @throws \RuntimeException         If $subject cannot be parsed
      * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
      */
-    public function parse(string $subject, array $tokens, bool $allowHtml = true): string
+    public function parse(string $subject, array $tokens, bool $asHtml = true): string
     {
         // The last item is true if it is inside a matching if-tag
         $stack = [true];
@@ -47,7 +51,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         // Tokenize the string into tag and text blocks
         $tags = preg_split(
-            $allowHtml
+            $asHtml
                 ? '/((?:{|&#123;)(?:(?!&#12[35];)[^{}])+(?:}|&#125;))\n?/'
                 : '/({[^{}]+})\n?/',
             $subject,
@@ -59,7 +63,7 @@ class SimpleTokenParser implements LoggerAwareInterface
         $return = '';
 
         foreach ($tags as $tag) {
-            $decodedTag = $allowHtml
+            $decodedTag = $asHtml
                 ? html_entity_decode($tag, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')
                 : $tag;
 
@@ -86,7 +90,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 array_pop($stack);
                 array_pop($ifStack);
             } elseif ($current) {
-                $return .= $this->replaceTokens($tag, $tokens);
+                $return .= $this->replaceTokens($tag, $tokens, $asHtml);
             }
         }
 
@@ -97,19 +101,19 @@ class SimpleTokenParser implements LoggerAwareInterface
         return $return;
     }
 
-    private function replaceTokens(string $subject, array $data): string
+    private function replaceTokens(string $subject, array $data, bool $asHtml): string
     {
         // Replace tokens
         return preg_replace_callback(
             '/##([^#=!<>\s][^=!<>\s]*?)##/',
-            function (array $matches) use ($data) {
+            function (array $matches) use ($asHtml, $data) {
                 if (!\array_key_exists($matches[1], $data)) {
                     $this->logger?->log(LogLevel::INFO, \sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
 
                     return '##'.$matches[1].'##';
                 }
 
-                return Input::encodeInsertTags($data[$matches[1]]);
+                return Input::encodeInsertTags($asHtml ? StringUtil::specialchars($data[$matches[1]]) : $data[$matches[1]]);
             },
             $subject,
         );

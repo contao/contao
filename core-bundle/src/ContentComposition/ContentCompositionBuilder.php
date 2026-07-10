@@ -252,7 +252,7 @@ class ContentCompositionBuilder
             [$GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']] = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
         }
 
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
+        // Deprecated since Contao 4.0, to be removed in Contao 7.0
         $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($page->language ?? '');
 
         // Set locale

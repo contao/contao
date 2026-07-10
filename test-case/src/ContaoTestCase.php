@@ -132,12 +132,12 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return ContaoFramework&Stub
      *
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createContaoFrameworkMock() or createContaoFrameworkStub() instead.
      */
     protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
-        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockContaoFramework()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createContaoFrameworkMock()" or "ContaoTestCase::createContaoFrameworkStub()" instead.');
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockContaoFramework()" is deprecated and will no longer work in Contao 7. Use "ContaoTestCase::createContaoFrameworkMock()" or "ContaoTestCase::createContaoFrameworkStub()" instead.');
 
         return $this->createContaoFrameworkMock($adapters, $instances);
     }
@@ -175,12 +175,12 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return Adapter&MockObject
      *
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createAdapterMock() or createAdapterStub() instead.
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createAdapterMock()" or "ContaoTestCase::createAdapterStub()" instead.');
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockAdapter()" is deprecated and will no longer work in Contao 7. Use "ContaoTestCase::createAdapterMock()" or "ContaoTestCase::createAdapterStub()" instead.');
 
         return $this->createAdapterMock($methods);
     }
@@ -206,12 +206,12 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return Adapter&MockObject
      *
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createConfiguredAdapterMock() or createConfiguredAdapterStub() instead.
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
     {
-        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockConfiguredAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createConfiguredAdapterMock()" or "ContaoTestCase::createConfiguredAdapterStub()" instead.');
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockConfiguredAdapter()" is deprecated and will no longer work in Contao 7. Use "ContaoTestCase::createConfiguredAdapterMock()" or "ContaoTestCase::createConfiguredAdapterStub()" instead.');
 
         return $this->createConfiguredAdapterMock($configuration);
     }
@@ -259,12 +259,12 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      *
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createClassWithPropertiesMock() or createClassWithPropertiesStub() instead.
      */
     protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject|Stub
     {
-        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockClassWithProperties()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createClassWithPropertiesMock()" or "ContaoTestCase::createClassWithPropertiesStub()" instead.');
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockClassWithProperties()" is deprecated and will no longer work in Contao 7. Use "ContaoTestCase::createClassWithPropertiesMock()" or "ContaoTestCase::createClassWithPropertiesStub()" instead.');
 
         $classMethods = get_class_methods($class);
 
@@ -308,12 +308,12 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a token storage with a Contao user.
      *
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createTokenStorageStub() instead.
      */
     protected function mockTokenStorage(string $class): TokenStorageInterface&Stub
     {
-        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockTokenStorage()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createTokenStorageStub()" instead.');
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockTokenStorage()" is deprecated and will no longer work in Contao 7. Use "ContaoTestCase::createTokenStorageStub()" instead.');
 
         return $this->createTokenStorageStub($class);
     }

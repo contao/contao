@@ -38,6 +38,7 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
@@ -262,6 +263,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
                 ['needs_context' => true, 'preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'simple_token',
+                [SimpleTokenRuntime::class, 'parsePlain'],
+            ),
+            new TwigFilter(
+                'simple_token_html',
+                [SimpleTokenRuntime::class, 'parseHtml'],
+                ['preserves_safety' => ['html']],
             ),
             new TwigFilter(
                 'highlight',

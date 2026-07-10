@@ -137,6 +137,8 @@ class ContaoExtensionTest extends TestCase
             'e',
             'insert_tag',
             'insert_tag_raw',
+            'simple_token',
+            'simple_token_html',
             'highlight',
             'highlight_auto',
             'format_bytes',

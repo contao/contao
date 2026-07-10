@@ -1574,6 +1574,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.twig.simple_token_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime
+        arguments:
+            - '@contao.string.simple_token_parser'
+
     contao.twig.string_runtime:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
