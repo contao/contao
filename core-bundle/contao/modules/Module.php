@@ -84,7 +84,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $cssID
  * @property string  $hl
  *
- * @deprecated extending from Module is deprecated since Contao 6 and will no
+ * @deprecated extending from Module is deprecated since Contao 6.0 and will no
  *             longer work in Contao 7; use a fragment controller instead
  */
 abstract class Module extends Frontend
@@ -525,7 +525,7 @@ abstract class Module extends Frontend
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use a page type controller instead.
 	 */
 	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool

@@ -95,17 +95,39 @@ class Image
 
 		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
+		if (isset($attributesObject['width']))
+		{
+			$defaultSize['width'] = $attributesObject['width'];
+			unset($attributesObject['width']);
+		}
+
+		if (isset($attributesObject['height']))
+		{
+			$defaultSize['height'] = $attributesObject['height'];
+			unset($attributesObject['height']);
+		}
+
+		if (isset($attributesObject['alt']))
+		{
+			$alt = $attributesObject['alt'];
+			unset($attributesObject['alt']);
+		}
+
 		$tooltipTarget = '';
 
 		if ('' !== $alt)
 		{
 			$attributesObject['data-contao--tooltips-target'] = 'tooltip';
-			// Only one image existing e.g. copy / delete without dark variant
-			$tooltipTarget = ' data-contao--tooltips-target="tooltip"';
+
+			if (!$attributes instanceof HtmlAttributes)
+			{
+				// Only one image existing e.g. copy / delete without dark variant
+				$tooltipTarget = ' data-contao--tooltips-target="tooltip"';
+			}
 		}
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
-		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ?? $defaultSize['height'], StringUtil::specialchars($alt), $tooltipTarget . ($attributes ? ' ' . $attributes : ''));
+		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $tooltipTarget . ($attributes ? ' ' . $attributes : ''));
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
@@ -177,7 +199,7 @@ class Image
 		{
 			$darkVariant = substr($src, 0, -4) . '--dark.svg';
 
-			$sources = (null !== ($darkIcon = ($icons[$darkVariant] ?? null))) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
+			$sources = null !== ($darkIcon = ($icons[$darkVariant] ?? null)) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
 
 			return self::$htmlTemplateCache[$cacheKey] = array(
 				$getImageMarkup($sources),
