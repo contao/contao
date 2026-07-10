@@ -1598,6 +1598,12 @@
       <trans-unit id="MSC.version">
         <source>Version</source>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
       </trans-unit>
@@ -1864,6 +1870,9 @@
       </trans-unit>
       <trans-unit id="MSC.quicklink">
         <source>Quick link</source>
+      </trans-unit>
+      <trans-unit id="MSC.quicklinkTarget">
+        <source>Quick link target page</source>
       </trans-unit>
       <trans-unit id="MSC.lostPassword">
         <source>Forgot your password?</source>

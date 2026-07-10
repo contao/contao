@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
@@ -7,7 +8,7 @@
             <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
             <div class="widget widget-select">
-                <select name="target" class="select">
+                <select name="target" class="select" aria-label="{{ 'MSC.quicklinkTarget'|trans }}">
                     <option value="">{{ title }}</option>
                     {% for item in items %}
                         <option value="{{ item.href }}" {% if item.active %} selected{% endif %}>{{ item.link }}</option>
