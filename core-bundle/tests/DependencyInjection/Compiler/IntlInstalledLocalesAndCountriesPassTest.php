@@ -43,7 +43,6 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.intl.locales', new Definition(Locales::class, []));
-        $container->setParameter('contao.locales', []);
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.default_locale', 'en');
 

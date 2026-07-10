@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6.', Feed::class);
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 7.', Feed::class);
 
 /**
  * Creates RSS or Atom feeds
@@ -36,7 +36,7 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
  * @property string  $link        The feed link
  * @property integer $published   The publication date
  *
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7.
  */
 class Feed
 {
