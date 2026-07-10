@@ -441,6 +441,7 @@ services:
 
     contao.html_sanitizer:
         class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        public: true
         arguments:
             - '@contao.framework'
         tags:
@@ -1047,6 +1048,7 @@ services:
             - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
             - '@security.helper'
+            - '@contao.image.studio'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider

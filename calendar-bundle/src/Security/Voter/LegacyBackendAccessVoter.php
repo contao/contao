@@ -19,8 +19,7 @@ class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
 {
     public function supportsAttribute(string $attribute): bool
     {
-        return str_starts_with($attribute, 'contao_user.calendarp')
-            || str_starts_with($attribute, 'contao_user.calendarfeedp');
+        return str_starts_with($attribute, 'contao_user.calendarp');
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -33,11 +32,10 @@ class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
      */
     protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool
     {
-        trigger_deprecation('contao/calendar-bundle', '5.7', 'Checking access on "contao_user.'.$field.'" is deprecated and will no longer work in Contao 6. Vote on "contao_user.cud" instead.');
+        trigger_deprecation('contao/calendar-bundle', '5.7', 'Checking access on "contao_user.'.$field.'" is deprecated and will no longer work in Contao 7. Vote on "contao_user.cud" instead.');
 
         $table = match ($field) {
             'calendarp' => 'tl_calendar',
-            'calendarfeedp' => 'tl_calendar_feed',
             default => throw new \InvalidArgumentException('Invalid field '.$field),
         };
 

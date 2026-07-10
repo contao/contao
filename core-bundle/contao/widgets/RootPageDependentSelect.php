@@ -74,7 +74,7 @@ class RootPageDependentSelect extends SelectMenu
 					$option['label'] = \sprintf(
 						'%s <span class="label-info">[%s]</span>',
 						$option['label'],
-						$rootPage->title,
+						StringUtil::specialchars($rootPage->title),
 					);
 				}
 
@@ -82,7 +82,7 @@ class RootPageDependentSelect extends SelectMenu
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($option['value']),
 					$this->isSelected($option),
-					$option['label']
+					System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $option['label']),
 				);
 			}
 			else
@@ -98,7 +98,7 @@ class RootPageDependentSelect extends SelectMenu
 						$optgroup['label'] = \sprintf(
 							'%s <span class="label-info">[%s]</span>',
 							$optgroup['label'],
-							$rootPage->title,
+							StringUtil::specialchars($rootPage->title),
 						);
 					}
 
@@ -106,7 +106,7 @@ class RootPageDependentSelect extends SelectMenu
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($optgroup['value']),
 						$this->isSelected($optgroup),
-						$optgroup['label']
+						System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $optgroup['label']),
 					);
 				}
 

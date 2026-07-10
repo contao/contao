@@ -15,6 +15,7 @@ use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
@@ -271,12 +272,12 @@ class tl_comments extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listComments($arrRow)
 	{
 		$router = System::getContainer()->get('router');
-		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
+		$title = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent']);
 		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&amp;popup=1&amp;nb=1\' }); return false;"';
 
 		switch ($arrRow['source'])
@@ -354,11 +355,11 @@ class tl_comments extends Backend
 
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
-		return '
-<div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+		return RecordLabel::fromHtml('
+<div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialchars($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="cte_preview">
 ' . $arrRow['comment'] . '
-</div>' . "\n    ";
+</div>' . "\n    ");
 	}
 
 	/**

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Job\Jobs;
@@ -39,12 +40,12 @@ class JobsListener
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.label.label')]
-    public function onLabelCallback(array $row, string $label, DC_Table $dc, array $columns): array
+    public function onLabelCallback(array $row, string $label, DC_Table $dc, array $columns): RecordLabel
     {
         $job = $this->jobs->getByUuid($row['uuid']);
 
         if (!$job) {
-            return $columns;
+            return RecordLabel::fromHtml($columns);
         }
 
         $columns[2] = $this->twig->render('@Contao/backend/jobs/progress.html.twig', ['job' => $job]);
@@ -55,7 +56,7 @@ class JobsListener
             'attachments' => $this->jobs->getAttachments($job),
         ]);
 
-        return $columns;
+        return RecordLabel::fromHtml($columns);
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

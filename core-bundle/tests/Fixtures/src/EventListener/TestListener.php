@@ -49,7 +49,7 @@ class TestListener
     {
     }
 
-    public function onChildRecordCallback(): void
+    public function onLabelCallback(): void
     {
     }
 

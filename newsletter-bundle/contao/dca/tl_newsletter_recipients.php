@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -18,6 +19,7 @@ use Contao\Idna;
 use Contao\Image;
 use Contao\NewsletterDenyListModel;
 use Contao\NewsletterRecipientsModel;
+use Contao\StringUtil;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
@@ -219,7 +221,7 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @param array $row
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listRecipient($row)
 	{
@@ -227,11 +229,11 @@ class tl_newsletter_recipients extends Backend
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span class="label-info">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span class="label-info">(' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn']))) . ')</span>';
 		}
 		else
 		{
-			$label .= ' <span class="label-info">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
+			$label .= ' <span class="label-info">(' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually']) . ')</span>';
 		}
 
 		$icon = Image::getPath('member');
@@ -259,13 +261,13 @@ class tl_newsletter_recipients extends Backend
 			}
 		}
 
-		return sprintf(
+		return RecordLabel::fromHtml(sprintf(
 			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>' . "\n",
 			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,
 			$label
-		);
+		));
 	}
 
 	/**

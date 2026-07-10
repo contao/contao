@@ -43,7 +43,6 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.intl.locales', new Definition(Locales::class, []));
-        $container->setParameter('contao.locales', []);
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.default_locale', 'en');
 
@@ -60,6 +59,21 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         foreach ($availableLocales as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
+
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('de_DE', $availableLocales);
+        $this->assertContains('de_AT', $availableLocales);
+        $this->assertContains('de_CH', $availableLocales);
+        $this->assertContains('pt', $availableLocales);
+        $this->assertContains('pt_PT', $availableLocales);
+        $this->assertContains('pt_BR', $availableLocales);
+        $this->assertContains('en_AU', $availableLocales, 'Should contain de facto official countries');
+        $this->assertContains('zh_Hant', $availableLocales, 'Should contain official script variants');
+        $this->assertContains('zh_Hant_HK', $availableLocales, 'Should contain official script variant countries');
+
+        $this->assertNotContains('de_CA', $availableLocales, 'Should not contain spoken languages');
+        $this->assertNotContains('sl_AT', $availableLocales, 'Should not contain regional languages');
+        $this->assertNotContains('gsw', $availableLocales, 'Should not contain unofficial languages');
 
         $this->assertIsArray($enabledLocales);
         $this->assertNotEmpty($enabledLocales);

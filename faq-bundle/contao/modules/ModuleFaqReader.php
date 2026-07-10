@@ -48,7 +48,7 @@ class ModuleFaqReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -226,7 +226,6 @@ class ModuleFaqReader extends Module
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCategory->requireLogin;
 		$objConfig->disableCaptcha = $objCategory->disableCaptcha;
-		$objConfig->bbcode = $objCategory->bbcode;
 		$objConfig->moderate = $objCategory->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);

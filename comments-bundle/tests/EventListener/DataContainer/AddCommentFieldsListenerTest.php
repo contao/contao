@@ -87,7 +87,7 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
     {
         $palettes = '{foo_legend},bar';
         $expected = '{foo_legend},bar;{comments_legend:hide},allowComments';
-        $fields = 'allowComments,notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha';
+        $fields = 'allowComments,notify,sortOrder,perPage,moderate,requireLogin,disableCaptcha';
 
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA'][$table] = [

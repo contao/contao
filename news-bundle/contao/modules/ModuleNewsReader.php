@@ -53,7 +53,7 @@ class ModuleNewsReader extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -224,7 +224,6 @@ class ModuleNewsReader extends ModuleNews
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objArchive->requireLogin;
 		$objConfig->disableCaptcha = $objArchive->disableCaptcha;
-		$objConfig->bbcode = $objArchive->bbcode;
 		$objConfig->moderate = $objArchive->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);

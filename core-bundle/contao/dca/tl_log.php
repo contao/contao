@@ -9,6 +9,7 @@
  */
 
 use Contao\Backend;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
@@ -133,7 +134,7 @@ class tl_log extends Backend
 	 * @param array  $row
 	 * @param string $label
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function colorize($row, $label)
 	{
@@ -165,6 +166,6 @@ class tl_log extends Backend
 				break;
 		}
 
-		return '<div class="' . $class . '">' . $label . '</div>';
+		return RecordLabel::fromHtml('<div class="' . $class . '">' . $label . '</div>');
 	}
 }

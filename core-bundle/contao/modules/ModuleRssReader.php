@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 
-trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the feed reader module instead.', __CLASS__);
+trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s" is deprecated and will no longer work in Contao 7. Use the feed reader module instead.', __CLASS__);
 
 /**
  * Front end module "rss reader".
@@ -47,7 +47,7 @@ class ModuleRssReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}

@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 6. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 7. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -69,12 +69,6 @@ class Configuration implements ConfigurationInterface
                             },
                         )
                     ->end()
-                ->end()
-                ->arrayNode('locales')
-                    ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
-                    ->setDeprecated('contao/core-bundle', '4.12', 'Using contao.locales is deprecated. Please use contao.intl.enabled_locales instead.')
-                    ->prototype('scalar')->end()
-                    ->defaultValue([])
                 ->end()
                 ->booleanNode('pretty_error_screens')
                     ->info('Show customizable, pretty error screens instead of the default PHP error messages.')
@@ -379,33 +373,8 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->scalarNode('sizes')
                                         ->end()
-                                        ->enumNode('resizeMode')
-                                            ->setDeprecated('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.')
-                                            ->values([
-                                                ResizeConfiguration::MODE_CROP,
-                                                ResizeConfiguration::MODE_BOX,
-                                                ResizeConfiguration::MODE_PROPORTIONAL,
-                                            ])
-                                        ->end()
                                     ->end()
                                 ->end()
-                            ->end()
-                            ->enumNode('resizeMode')
-                                ->setDeprecated('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.')
-                                ->values([
-                                    ResizeConfiguration::MODE_CROP,
-                                    ResizeConfiguration::MODE_BOX,
-                                    ResizeConfiguration::MODE_PROPORTIONAL,
-                                ])
-                            ->end()
-                            ->scalarNode('cssClass')
-                                ->setDeprecated('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.')
-                            ->end()
-                            ->booleanNode('lazyLoading')
-                                ->setDeprecated('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.')
-                            ->end()
-                            ->booleanNode('skipIfDimensionsMatch')
-                                ->setDeprecated('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.')
                             ->end()
                         ->end()
                     ->end()
@@ -418,10 +387,6 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
-                ->end()
-                ->scalarNode('target_path')
-                    ->setDeprecated('contao/core-bundle', '4.9', 'Use the "contao.image.target_dir" parameter instead.')
-                    ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')

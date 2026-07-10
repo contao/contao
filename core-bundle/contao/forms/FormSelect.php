@@ -179,18 +179,13 @@ class FormSelect extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		$strClass = 'select';
-
-		if ($this->multiple)
-		{
-			$strClass = 'multiselect';
-		}
-
 		// Make sure there are no multiple options in single mode
-		elseif (\is_array($this->varValue))
+		if (!$this->multiple && \is_array($this->varValue))
 		{
 			$this->varValue = $this->varValue[0] ?? null;
 		}
+
+		$strClass = '';
 
 		// Chosen
 		if ($this->chosen)

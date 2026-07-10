@@ -43,7 +43,7 @@ class ModulePersonalData extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -64,10 +64,13 @@ class ModulePersonalData extends Module
 			return '';
 		}
 
-		// Always require full authentication if the module allows to set a new password
-		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
+		// The password can only be changed with the "change password" module (see #7443)
+		if (false !== $key = array_search('password', $this->editable))
+		{
+			unset($this->editable[$key]);
+		}
 
-		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		if ($this->reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}

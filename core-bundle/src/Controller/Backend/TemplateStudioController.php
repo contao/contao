@@ -561,7 +561,7 @@ class TemplateStudioController extends AbstractBackendController
     {
         $suppressedPrefixes = ['backend', 'frontend_preview', 'web_debug_toolbar'];
 
-        // TODO: In Contao 6, do not add theme paths in the ContaoFilesystemLoader to
+        // TODO: In Contao 7, do not add theme paths in the ContaoFilesystemLoader to
         // begin with and remove this logic to suppress them (see #7027).
         foreach (array_keys($this->getAvailableThemes()) as $slug) {
             $suppressedPrefixes[] = $this->themeNamespace->getPath((string) $slug);

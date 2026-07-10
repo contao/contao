@@ -34,7 +34,7 @@ export default class extends Controller {
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6.
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7.
      */
     fallbackHandleTargetConnected(el) {
         // No need to remove the class if a primaryHandleTarget exists (see #8859)

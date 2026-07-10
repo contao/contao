@@ -25,7 +25,6 @@ use Contao\Model\Collection;
  * @property string  $sortOrder
  * @property integer $perPage
  * @property boolean $moderate
- * @property boolean $bbcode
  * @property boolean $requireLogin
  * @property boolean $disableCaptcha
  *
@@ -42,7 +41,6 @@ use Contao\Model\Collection;
  * @method static FaqCategoryModel|null findOneBySortOrder($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByPerPage($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByModerate($val, array $opt=array())
- * @method static FaqCategoryModel|null findOneByBbcode($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
@@ -55,7 +53,6 @@ use Contao\Model\Collection;
  * @method static Collection<FaqCategoryModel>|null findBySortOrder($val, array $opt=array())
  * @method static Collection<FaqCategoryModel>|null findByPerPage($val, array $opt=array())
  * @method static Collection<FaqCategoryModel>|null findByModerate($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|null findByBbcode($val, array $opt=array())
  * @method static Collection<FaqCategoryModel>|null findByRequireLogin($val, array $opt=array())
  * @method static Collection<FaqCategoryModel>|null findByDisableCaptcha($val, array $opt=array())
  * @method static Collection<FaqCategoryModel>|null findMultipleByIds($val, array $opt=array())
@@ -72,7 +69,6 @@ use Contao\Model\Collection;
  * @method static integer countBySortOrder($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
  * @method static integer countByModerate($val, array $opt=array())
- * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */
