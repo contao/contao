@@ -34,7 +34,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
@@ -117,7 +116,6 @@ class ContaoCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new DataContainerCallbackPass());
-        $container->addCompilerPass(new TranslationDataCollectorPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());

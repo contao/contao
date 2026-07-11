@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE'),
+			'eval'                    => array('mandatory'=>true),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addReply' => array
@@ -289,7 +289,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -300,7 +300,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -311,7 +311,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->headline) . '</a>';
 				}
 				break;
 
@@ -322,7 +322,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->question) . '</a>';
 				}
 				break;
 
@@ -333,7 +333,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -358,7 +358,7 @@ class tl_comments extends Backend
 		return RecordLabel::fromHtml('
 <div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialchars($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="cte_preview">
-' . $arrRow['comment'] . '
+' . nl2br(StringUtil::specialchars($arrRow['comment'])) . '
 </div>' . "\n    ");
 	}
 
