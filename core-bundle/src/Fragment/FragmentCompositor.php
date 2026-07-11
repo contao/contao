@@ -20,6 +20,8 @@ class FragmentCompositor
 {
     private array $nestedByIdentifier = [];
 
+    private array $preload = [];
+
     /**
      * @internal Do not inherit from this class; decorate the "contao.fragment.compositor" service instead
      */
@@ -64,5 +66,21 @@ class FragmentCompositor
         }
 
         return $rendered;
+    }
+
+    /**
+     * @internal
+     */
+    public function addPreload(string $identifier): void
+    {
+        $this->preload[$identifier] = true;
+    }
+
+    /**
+     * @internal
+     */
+    public function shouldPreload(string $identifier): bool
+    {
+        return ($this->preload[$identifier] ?? null) === true;
     }
 }

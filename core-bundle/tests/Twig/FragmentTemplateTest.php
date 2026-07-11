@@ -95,6 +95,7 @@ class FragmentTemplateTest extends TestCase
             'cspInlineStyles',
             'nonce',
             'attr',
+            'attrs',
         ];
 
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();

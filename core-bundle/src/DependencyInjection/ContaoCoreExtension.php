@@ -251,8 +251,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             if ([] === $config['messenger']['web_worker']['transports']) {
                 $container->removeDefinition('contao.messenger.web_worker');
             } else {
-                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
-                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+                $definition->setArgument('$transports', $config['messenger']['web_worker']['transports']);
+                $definition->setArgument('$gracePeriod', $config['messenger']['web_worker']['grace_period']);
             }
         }
 

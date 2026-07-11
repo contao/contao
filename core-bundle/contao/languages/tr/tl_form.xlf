@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak benzersiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_form.raw.1">
         <source>The form data will be sent as plain text message with each field in a new line.</source>
-        <target>Form verileri düz metin iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
+        <target>Form verileri düz yazı iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
       </trans-unit>
       <trans-unit id="tl_form.xml.0">
         <source>XML file</source>

@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>
-        <target>Meer thema's in de Contao theme store vinden</target>
+        <target>Meer thema&apos;s in de Contao theme store vinden</target>
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.0">
         <source>Import</source>
@@ -168,10 +168,6 @@
       <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
         <target>Verwijder thema ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Bewerk style sheets van thema ID %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>

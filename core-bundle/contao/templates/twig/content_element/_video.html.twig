@@ -17,7 +17,7 @@
                 {{ block('splash_screen_component') }}
             {% else %}
                 {% block iframe %}
-                    {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
+                    {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin'})
                         .mergeWith(iframe_attrs|default)
                     %}
                     {% do csp_source('frame-src', iframe_attrs.src) %}

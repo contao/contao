@@ -16,6 +16,7 @@ use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
+use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -128,6 +129,13 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 class tl_newsletter_recipients extends Backend
 {
 	/**
+	 * Subscribed member start/stop dates cache, grouped by newsletter ID and member email.
+	 *
+	 * @var array<int, array<string, array<string, string>>
+	 */
+	private static array $subscribedMembers = array();
+
+	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
 	 * @param DataContainer $dc
@@ -209,6 +217,28 @@ class tl_newsletter_recipients extends Backend
 
 		$icon = Image::getPath('member');
 		$icond = Image::getPath('member_');
+
+		// Change icon according to start/stop of the associated member (#951)
+		if (!isset(self::$subscribedMembers[$row['pid']]))
+		{
+			self::$subscribedMembers[$row['pid']] = System::getContainer()
+				->get('database_connection')
+				->fetchAllAssociativeIndexed('SELECT r.email, m.start, m.stop FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=?', array($row['pid']));
+		}
+
+		if ($member = self::$subscribedMembers[$row['pid']][$row['email']] ?? null)
+		{
+			$time = Date::floorToMinute();
+
+			if ($member['start'] && $time < $member['start'])
+			{
+				$icon = $icond;
+			}
+			elseif ($member['stop'] && $time >= $member['stop'])
+			{
+				$icon = $icond;
+			}
+		}
 
 		return sprintf(
 			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",

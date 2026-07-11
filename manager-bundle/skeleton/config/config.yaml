@@ -70,7 +70,7 @@ contao:
                 transports:
                     - contao_prio_high
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=5
                 autoscale:
                     desired_size: 5
@@ -79,7 +79,7 @@ contao:
                 transports:
                     - contao_prio_normal
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=10
                 autoscale:
                     desired_size: 10
@@ -88,7 +88,7 @@ contao:
                 transports:
                     - contao_prio_low
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=20
                 autoscale:
                     desired_size: 20

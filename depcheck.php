@@ -17,6 +17,7 @@ use App\FrontendModule\LegacyModule;
 use App\Messenger\UnionTypeMessage;
 use App\Model\FooModel;
 use AppBundle\AppBundle;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
@@ -36,6 +37,7 @@ return (new Configuration())
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
+        Mysql::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -77,6 +79,9 @@ return (new Configuration())
     // These packages provide global functions if the PHP extensions are missing.
     ->ignoreErrorsOnPackage('symfony/polyfill-intl-idn', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-mbstring', [ErrorType::UNUSED_DEPENDENCY])
+
+    // Allows us to use the Pdo/Mysql class in PHP <8.4 (see #9736).
+    ->ignoreErrorsOnPackage('symfony/polyfill-php84', [ErrorType::UNUSED_DEPENDENCY])
 
     // The rate limiter is required for the functional tests.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::UNUSED_DEPENDENCY])

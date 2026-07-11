@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Migration;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Contao\CoreBundle\Tests\TestCase;
 
 class MigrationCollectionTest extends TestCase
@@ -41,7 +42,13 @@ class MigrationCollectionTest extends TestCase
     public function testRunMigrations(): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());
-        $results = $migrations->run();
+        $pendingMigrations = $migrations->getPendingNames();
+
+        if ($pendingMigrations instanceof \Traversable) {
+            $pendingMigrations = iterator_to_array($pendingMigrations);
+        }
+
+        $results = $migrations->run($pendingMigrations);
 
         if ($results instanceof \Traversable) {
             $results = iterator_to_array($results);
@@ -54,6 +61,55 @@ class MigrationCollectionTest extends TestCase
         $this->assertInstanceOf(MigrationResult::class, $results[1]);
         $this->assertFalse($results[1]->isSuccessful());
         $this->assertSame('failing', $results[1]->getMessage());
+    }
+
+    /**
+     * @dataProvider getUnexpectedPendingMigrations
+     */
+    public function testRunMigrationsUnexpectedPending(array $pendingNames, string|null $expectedExceptionMessage): void
+    {
+        $migrations = new MigrationCollection($this->getMigrationServices());
+
+        if (null !== $expectedExceptionMessage) {
+            $this->expectException(UnexpectedPendingMigrationException::class);
+            $this->expectExceptionMessage($expectedExceptionMessage);
+        }
+
+        $results = $migrations->run($pendingNames);
+
+        if ($results instanceof \Traversable) {
+            iterator_to_array($results);
+        }
+
+        $this->assertNull($expectedExceptionMessage);
+    }
+
+    public static function getUnexpectedPendingMigrations(): iterable
+    {
+        yield [
+            ['Successful Migration', 'Failing Migration', 'Inactive Migration'],
+            'Expected "Inactive Migration" got no migration.',
+        ];
+
+        yield [
+            ['Successful Migration'],
+            null,
+        ];
+
+        yield [
+            ['Failing Migration', 'Successful Migration'],
+            'Expected "Failing Migration" got "Successful Migration".',
+        ];
+
+        yield [
+            ['Successful Migration', 'Different Migration'],
+            'Expected "Different Migration" got "Failing Migration".',
+        ];
+
+        yield [
+            [],
+            null,
+        ];
     }
 
     public function getMigrationServices(): array

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
-        <target>Indirizzo e-mail dell'amministratore di sistema</target>
+        <target>Indirizzo e-mail dell&apos;amministratore di sistema</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxResultsPerPage.1">
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
-        <target>Questo limite viene utilizzato quando l'utente sceglie l'opzione &quot;mostra tutti i record&quot;</target>
+        <target>Questo limite viene utilizzato quando l&apos;utente sceglie l&apos;opzione &quot;mostra tutti i record&quot;</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
-        <target>Inserisci una lista dei tag consentiti. Gli altri tag verranno rimossi dall'input utente</target>
+        <target>Inserisci una lista dei tag consentiti. Gli altri tag verranno rimossi dall&apos;input utente</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
-        <target>Elenco degli attributi HTML consentiti che non saranno rimossi. Il nome del tag o dell'attributo &lt;code&gt;*&lt;/code&gt; sta per tutti i tag o attributi. I caratteri jolly possono essere usati per gli attributi con trattini come &lt;code&gt; data-*&lt;/code&gt;.</target>
+        <target>Elenco degli attributi HTML consentiti che non saranno rimossi. Il nome del tag o dell&apos;attributo &lt;code&gt;*&lt;/code&gt; sta per tutti i tag o attributi. I caratteri jolly possono essere usati per gli attributi con trattini come &lt;code&gt; data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
-        <target>Tipo di file validi per l'upload</target>
+        <target>Tipo di file validi per l&apos;upload</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.undoPeriod.1">
         <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>Inserisci l'arco di tempo in cui vengono memorizzati i livelli di annullamento in secondi (default: 24 ore = 86400 secondi).</target>
+        <target>Inserisci l&apos;arco di tempo in cui vengono memorizzati i livelli di annullamento in secondi (default: 24 ore = 86400 secondi).</target>
       </trans-unit>
       <trans-unit id="tl_settings.versionPeriod.0">
         <source>Storage time for versions</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.versionPeriod.1">
         <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>Inserisci l'arco di tempo in cui vengono memorizzate le diverse versioni in secondi (default: 90 giorni = 7776000 secondi).</target>
+        <target>Inserisci l&apos;arco di tempo in cui vengono memorizzate le diverse versioni in secondi (default: 90 giorni = 7776000 secondi).</target>
       </trans-unit>
       <trans-unit id="tl_settings.logPeriod.0">
         <source>Storage time for log entries</source>
@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.1">
         <source>Here you can select a user as the default owner of a page.</source>
-        <target>Una pagina appartiene allo stesso utente della pagina genitore. Tuttavia se non è stato assegnato nessun utente il proprietario della pagina diverrà l'utente di default. Se non è stato assegnato un utente e non esiste un utente di default non ci saranno restrizioni di accesso!</target>
+        <target>Una pagina appartiene allo stesso utente della pagina genitore. Tuttavia se non è stato assegnato nessun utente il proprietario della pagina diverrà l&apos;utente di default. Se non è stato assegnato un utente e non esiste un utente di default non ci saranno restrizioni di accesso!</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.0">
         <source>Default page group</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.configuredInApp">
         <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
-        <target>Questa impostazione è stata definita nella configurazione dell'app e non può più essere modificata qui.</target>
+        <target>Questa impostazione è stata definita nella configurazione dell&apos;app e non può più essere modificata qui.</target>
       </trans-unit>
     </body>
   </file>

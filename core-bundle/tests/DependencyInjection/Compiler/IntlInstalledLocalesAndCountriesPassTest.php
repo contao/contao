@@ -47,8 +47,8 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(2);
-        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(3);
+        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(1);
+        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(2);
 
         $this->assertIsArray($availableLocales);
         $this->assertNotEmpty($availableLocales);
@@ -57,6 +57,21 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         foreach ($availableLocales as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
         }
+
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('de_DE', $availableLocales);
+        $this->assertContains('de_AT', $availableLocales);
+        $this->assertContains('de_CH', $availableLocales);
+        $this->assertContains('pt', $availableLocales);
+        $this->assertContains('pt_PT', $availableLocales);
+        $this->assertContains('pt_BR', $availableLocales);
+        $this->assertContains('en_AU', $availableLocales, 'Should contain de facto official countries');
+        $this->assertContains('zh_Hant', $availableLocales, 'Should contain official script variants');
+        $this->assertContains('zh_Hant_HK', $availableLocales, 'Should contain official script variant countries');
+
+        $this->assertNotContains('de_CA', $availableLocales, 'Should not contain spoken languages');
+        $this->assertNotContains('sl_AT', $availableLocales, 'Should not contain regional languages');
+        $this->assertNotContains('gsw', $availableLocales, 'Should not contain unofficial languages');
 
         $this->assertIsArray($enabledLocales);
         $this->assertNotEmpty($enabledLocales);
@@ -75,7 +90,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(2);
+        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(1);
 
         $this->assertIsArray($availableCountries);
         $this->assertNotEmpty($availableCountries);

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.headline.1">
         <source>Please enter the category headline.</source>
-        <target>Saisir l'en-tête de la catégorie.</target>
+        <target>Saisir l&apos;en-tête de la catégorie.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.0">
         <source>Redirect page</source>
@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.children">
         <source>Edit the questions of category ID %s</source>
+        <target>Éditer les questions de la catégorie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>

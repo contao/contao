@@ -345,6 +345,14 @@ class PageModel extends Model
 		self::$suffixes = null;
 	}
 
+	public function setRow(array $arrData)
+	{
+		// Reset $blnDetailsLoaded (#8516)
+		$this->blnDetailsLoaded = false;
+
+		return parent::setRow($arrData);
+	}
+
 	/**
 	 * Find a published page by its ID
 	 *
@@ -871,7 +879,7 @@ class PageModel extends Model
 		parent::onRegister($registry);
 
 		// Register this model as being the fallback page for a given dns
-		if ($this->fallback && $this->type == 'root' && !$registry->isRegisteredAlias($this, 'contao.dns-fallback', $this->dns))
+		if ($this->fallback && $this->type == 'root' && null !== $this->dns && !$registry->isRegisteredAlias($this, 'contao.dns-fallback', $this->dns))
 		{
 			$registry->registerAlias($this, 'contao.dns-fallback', $this->dns);
 		}
@@ -1063,7 +1071,7 @@ class PageModel extends Model
 			{
 				System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
-				throw new NoRootPageFoundException('No root page found');
+				throw new NoRootPageFoundException('Page ID "' . $this->id . '" does not belong to a root page');
 			}
 		}
 

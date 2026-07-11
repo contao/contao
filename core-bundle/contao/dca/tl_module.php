@@ -367,7 +367,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'useCaption' => array
 		(
@@ -502,22 +502,16 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'reg_text' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback' => array
-			(
-				array('tl_module', 'getActivationDefault')
-			),
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'reg_password' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback'           => array
-			(
-				array('tl_module', 'getPasswordDefault')
-			),
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'data' => array
@@ -602,7 +596,7 @@ class tl_module extends Backend
 		{
 			if ($v['eval']['feEditable'] ?? null)
 			{
-				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
+				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0] ?? $k;
 			}
 		}
 
@@ -688,40 +682,6 @@ class tl_module extends Backend
 		}
 
 		return $group;
-	}
-
-	/**
-	 * Load the default activation text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getActivationDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Load the default password text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getPasswordDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
-		}
-
-		return $varValue;
 	}
 
 	/**

@@ -46,8 +46,9 @@ services:
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao_calendar.listener.sitemap:
         class: Contao\CalendarBundle\EventListener\SitemapListener
@@ -55,6 +56,11 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_calendar.migration.keep_canonical:
+        class: Contao\CalendarBundle\Migration\KeepCanonicalMigration
+        arguments:
+            - '@database_connection'
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider

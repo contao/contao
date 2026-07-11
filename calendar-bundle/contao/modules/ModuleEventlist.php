@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "event list".
@@ -92,8 +93,6 @@ class ModuleEventlist extends Events
 	{
 		global $objPage;
 
-		$blnClearInput = false;
-
 		$intYear = (int) Input::get('year');
 		$intMonth = (int) Input::get('month');
 		$intDay = (int) Input::get('day');
@@ -127,8 +126,6 @@ class ModuleEventlist extends Events
 					$intDay = date('Ymd');
 					break;
 			}
-
-			$blnClearInput = true;
 		}
 
 		$blnDynamicFormat = !$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year'));
@@ -308,6 +305,16 @@ class ModuleEventlist extends Events
 		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
+		// Track group index and group count (#6402)
+		$groupIndex = -1;
+		$eventIndex = 0;
+
+		/** @var array<int, int> $groupCounts */
+		$groupCounts = array();
+
+		/** @var list<string> $templates */
+		$templates = array();
+
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
 		{
@@ -328,7 +335,17 @@ class ModuleEventlist extends Events
 			{
 				$objTemplate->header = true;
 				$strDate = $event['firstDate'];
+				$eventIndex = 0;
+				++$groupIndex;
 			}
+
+			$groupCounts[$groupIndex] = ($groupCounts[$groupIndex] ?? 0) + 1;
+
+			$objTemplate->groupIndex = $eventIndex++;
+
+			$objTemplate->groupCount = static function () use (&$groupCounts, $groupIndex): int {
+				return $groupCounts[$groupIndex];
+			};
 
 			// Show the teaser text of redirect events (see #6315)
 			if (\is_bool($event['details']) && $event['source'] == 'default')
@@ -421,28 +438,29 @@ class ModuleEventlist extends Events
 				return $jsonLd;
 			};
 
-			$strEvents .= $objTemplate->parse();
+			$templates[] = $objTemplate;
 
 			++$eventCount;
 		}
 
 		// No events found
-		if (!$strEvents)
+		if (!$templates)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
+		}
+		else
+		{
+			$strEvents = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
 		}
 
 		// See #3672
 		$this->Template->headline = $this->headline;
 		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
+	}
 
-		// Clear the $_GET array (see #2445)
-		if ($blnClearInput)
-		{
-			Input::setGet('year', null);
-			Input::setGet('month', null);
-			Input::setGet('day', null);
-		}
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

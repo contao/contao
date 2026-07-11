@@ -168,10 +168,6 @@
         <source>Delete theme ID %s</source>
         <target>Izbriši temo z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Uredi slogovne predloge teme ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Uredi predstavitvene module (front end) teme z ID %s</target>

@@ -30,7 +30,7 @@
         <target>Contenido</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Por favor introduzca el contenido del boletín. Utillize los comodines &lt;em&gt;##email##&lt;/em&gt; para insertar el e-mail del recipiente. Generar los enlaces de baja de suscripción como &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Contenido de texto</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Aqui puede introducir el texto del boletín. Utilize el formato &lt;em&gt;##email##&lt;/em&gt; para insertar el e-mail del recipiente.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

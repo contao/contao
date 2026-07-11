@@ -122,7 +122,7 @@ class ModuleRegistration extends Module
 		{
 			$arrCaptcha = array
 			(
-				'id' => 'registration',
+				'id' => 'registration_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'type' => 'captcha',
 				'mandatory' => true,
@@ -184,7 +184,7 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))

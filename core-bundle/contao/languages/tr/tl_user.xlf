@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_user.showHelp.1">
         <source>Show a short explanation text below each input field.</source>
-        <target>Bu seçenek etkinleştirildiğinde, her giriş alanının altında kısa bir açıklama metni görüntülenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, her giriş alanının altında kısa bir açıklama yazısı görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.0">
         <source>Show thumbnail images</source>
@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
-        <target>Zengin metin düzenleyici kullanılsın</target>
+        <target>Zengin yazı düzenleyici kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.1">
         <source>Use the rich text editor to format text elements.</source>
-        <target>Bu seçenek etkinleştirildiğinde, metin bileşenlerini biçimlendirmek için zengin metin düzenleyici kullanılır.</target>
+        <target>Bu seçenek etkinleştirildiğinde, yazı bileşenlerini biçimlendirmek için zengin yazı düzenleyici kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_user.useCE.0">
         <source>Enable the code editor</source>

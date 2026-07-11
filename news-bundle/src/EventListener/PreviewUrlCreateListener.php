@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\NewsModel;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
@@ -25,9 +25,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsEventListener]
 class PreviewUrlCreateListener
 {
+    use DynamicPtableTrait;
+
     public function __construct(
-        private readonly RequestStack $requestStack,
         private readonly ContaoFramework $framework,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -40,34 +43,21 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
+        [$table, $id] = $this->dcaUrlAnalyzer->getCurrentTableId();
 
         // Return on the news archive list page
-        if ('tl_news' === $request->query->get('table') && !$request->query->has('act')) {
+        if (null === $id || !\in_array($table, ['tl_news', 'tl_content'], true)) {
             return;
         }
 
-        if ((!$id = $this->getId($event, $request)) || (!$newsModel = $this->getNewsModel($id))) {
+        if ('tl_content' === $table) {
+            [$table, $id] = $this->getParentTableAndId($this->connection, $table, $id);
+        }
+
+        if ('tl_news' !== $table) {
             return;
         }
 
-        $event->setQuery('news='.$newsModel->id);
-    }
-
-    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
-    {
-        // Overwrite the ID if the news settings are edited
-        if ('tl_news' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
-            return $request->query->get('id');
-        }
-
-        return $event->getId();
-    }
-
-    private function getNewsModel(int|string $id): NewsModel|null
-    {
-        return $this->framework->getAdapter(NewsModel::class)->findById($id);
+        $event->setQuery('news='.$id);
     }
 }

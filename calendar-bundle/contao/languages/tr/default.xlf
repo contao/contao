@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
-        <target>Bu etkinlik %s%s düzeninde yinelendi.</target>
+        <target>Bu etkinlik %s%s düzeninde yineleniyor.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>

@@ -45,7 +45,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class FigureBuilderTest extends TestCase
@@ -353,7 +352,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filePathOutsideUploadDir)
         ;
 
-        $studio = $this->mockStudioForImage($filePathOutsideUploadDir);
+        $studio = $this->mockStudioForImage($image);
 
         $this->getFigureBuilder($studio)->fromImage($image)->build();
     }
@@ -428,7 +427,7 @@ class FigureBuilderTest extends TestCase
             Validator::class => $validatorAdapter,
         ]);
 
-        $studio = $this->mockStudioForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($identifier instanceof ImageInterface ? $identifier : $absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
     }
@@ -732,7 +731,7 @@ class FigureBuilderTest extends TestCase
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -1457,7 +1456,7 @@ class FigureBuilderTest extends TestCase
         return $builder->build();
     }
 
-    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
+    private function mockStudioForImage(ImageInterface|string $expectedImage, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1465,7 +1464,7 @@ class FigureBuilderTest extends TestCase
         $studio
             ->expects($this->once())
             ->method('createImage')
-            ->with($expectedFilePath, $expectedSizeConfiguration, $resizeOptions)
+            ->with($expectedImage, $expectedSizeConfiguration, $resizeOptions)
             ->willReturn($image)
         ;
 

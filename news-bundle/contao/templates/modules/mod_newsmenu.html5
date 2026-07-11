@@ -33,7 +33,7 @@
         <?php foreach ($this->weeks as $class => $week): ?>
           <tr class="<?= $class ?>">
             <?php foreach ($week as $day): ?>
-              <?php if ($day['href']): ?>
+              <?php if ($day['href'] ?? false): ?>
                 <td class="<?= $day['class'] ?>"><a href="<?= $day['href'] ?>" title="<?= $day['title'] ?>"><?= $day['label'] ?></a></td>
               <?php else: ?>
                 <td class="<?= $day['class'] ?>"><?= $day['label'] ?></td>

@@ -2,7 +2,7 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
-        "@symfony/webpack-encore": "^5.1"
+        "@symfony/webpack-encore": "^6.0"
     },
     "scripts": {
         "dev-server": "encore dev-server",

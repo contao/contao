@@ -6,8 +6,8 @@
         <target>Indirizzo email</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
-        <target>Inserisci l'e-mail del destinatario.</target>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
+        <target>Inserisci l&apos;e-mail del destinatario.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate recipient</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.addedOn.1">
         <source>The date of subscription.</source>
-        <target>La data dell'iscrizione</target>
+        <target>La data dell&apos;iscrizione</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.ip.0">
         <source>IP address</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.ip.1">
         <source>The IP address of the subscriber.</source>
-        <target>L'indirizzo IP dell'abbonato</target>
+        <target>L&apos;indirizzo IP dell&apos;abbonato</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
         <source>Activation token</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
         <source>The activation token of the subscription.</source>
-        <target>Il token di attivazione del'iscrizione</target>
+        <target>Il token di attivazione del&apos;iscrizione</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email_legend">
         <source>E-mail address</source>

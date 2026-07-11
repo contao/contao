@@ -12,36 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener\DataContainer;
 
-use Contao\BackendUser;
 use Contao\NewsBundle\EventListener\DataContainer\PageListener;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Result;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PageListenerTest extends ContaoTestCase
 {
     public function testAdminHasAccessToAllArchives(): void
     {
         $archives = [
-            [
-                'id' => 42,
-                'title' => 'The answer to life, the universe and everything',
-            ],
-            [
-                'id' => 84,
-                'title' => 'Example news archive',
-            ],
+            42 => 'The answer to life, the universe and everything',
+            84 => 'Example news archive',
         ];
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn($archives)
-        ;
 
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
@@ -59,14 +44,9 @@ class PageListenerTest extends ContaoTestCase
         ;
 
         $queryBuilder
-            ->expects($this->never())
-            ->method('where')
-        ;
-
-        $queryBuilder
             ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
+            ->method('fetchAllKeyValue')
+            ->willReturn($archives)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -76,23 +56,18 @@ class PageListenerTest extends ContaoTestCase
             ->willReturn($queryBuilder)
         ;
 
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $security
-            ->expects($this->once())
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with('ROLE_ADMIN')
+            ->with(
+                ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE,
+                $this->callback(static fn (int $id): bool => \in_array($id, [42, 84], true)),
+            )
             ->willReturn(true)
         ;
 
-        $listener = new PageListener($connection, $security);
+        $listener = new PageListener($connection, $authorizationChecker);
 
         $this->assertSame(
             [
@@ -106,27 +81,9 @@ class PageListenerTest extends ContaoTestCase
     public function testEditorHasAccessToAllowedArchives(): void
     {
         $archives = [
-            [
-                'id' => 42,
-                'title' => 'The answer to life, the universe and everything',
-            ],
+            42 => 'The answer to life, the universe and everything',
+            84 => 'Example news archive',
         ];
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn($archives)
-        ;
-
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
-
-        $expr = $this->createMock(ExpressionBuilder::class);
-        $expr
-            ->expects($this->once())
-            ->method('in')
-            ->with('id', $user->news)
-        ;
 
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
@@ -145,14 +102,8 @@ class PageListenerTest extends ContaoTestCase
 
         $queryBuilder
             ->expects($this->once())
-            ->method('expr')
-            ->willReturn($expr)
-        ;
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
+            ->method('fetchAllKeyValue')
+            ->willReturn($archives)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -162,21 +113,24 @@ class PageListenerTest extends ContaoTestCase
             ->willReturn($queryBuilder)
         ;
 
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $security
-            ->expects($this->once())
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with('ROLE_ADMIN')
-            ->willReturn(false)
+            ->with(
+                ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE,
+                $this->callback(static fn (int $id): bool => \in_array($id, [42, 84], true)),
+            )
+            ->willReturnCallback(
+                static fn (string $attribute, int $id): bool => match ($id) {
+                    42 => true,
+                    84 => false,
+                    default => false,
+                },
+            )
         ;
 
-        $listener = new PageListener($connection, $security);
+        $listener = new PageListener($connection, $authorizationChecker);
 
         $this->assertSame([42 => 'The answer to life, the universe and everything'], $listener->getAllowedArchives());
     }

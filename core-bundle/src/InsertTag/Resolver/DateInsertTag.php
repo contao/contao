@@ -19,7 +19,7 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\Date;
 
-#[AsInsertTag('date', asFragment: true)]
+#[AsInsertTag('date')]
 class DateInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     private const MAPPER = [

@@ -16,7 +16,6 @@ use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator;
@@ -180,8 +179,6 @@ class CountriesTest extends TestCase
             ;
         }
 
-        $requestStack = $this->createMock(RequestStack::class);
-
-        return new Countries($translator, $requestStack, SymfonyCountries::getCountryCodes(), $configCountries, 'en');
+        return new Countries($translator, SymfonyCountries::getCountryCodes(), $configCountries);
     }
 }

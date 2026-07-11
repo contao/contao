@@ -29,12 +29,12 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $enabledLocales = $this->getEnabledLocales($container);
             $locales = array_values(array_unique([...$enabledLocales, ...$this->getDefaultLocales()]));
 
-            $definition->setArgument(2, $locales);
-            $definition->setArgument(3, $enabledLocales);
+            $definition->setArgument(1, $locales);
+            $definition->setArgument(2, $enabledLocales);
         }
 
         if ($container->has('contao.intl.countries')) {
-            $container->findDefinition('contao.intl.countries')->setArgument(2, SymfonyCountries::getCountryCodes());
+            $container->findDefinition('contao.intl.countries')->setArgument(1, SymfonyCountries::getCountryCodes());
         }
     }
 
@@ -75,31 +75,33 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
     {
         $allLocales = [];
         $resourceBundle = \ResourceBundle::create('supplementalData', 'ICUDATA', false);
+        $officialByLanguage = [];
+        $regionsByLanguage = [];
 
-        foreach ($resourceBundle['territoryInfo'] ?? [] as $data) {
+        foreach ($resourceBundle['territoryInfo'] ?? [] as $region => $data) {
             foreach ($data as $language => $info) {
-                if (\Locale::getDisplayName($language, 'en') === $language) {
-                    continue;
+                if (\in_array($info['officialStatus'] ?? null, ['official', 'official_regional'], true)) {
+                    $officialByLanguage[$language] = true;
                 }
 
-                if ('official_regional' === ($info['officialStatus'] ?? null)) {
-                    $allLocales[] = $language;
+                if (\in_array($info['officialStatus'] ?? null, ['official', 'de_facto_official'], true)) {
+                    $regionsByLanguage[$language][] = $region;
                 }
             }
         }
 
-        foreach ($resourceBundle['languageData'] ?? [] as $language => $data) {
+        foreach (iterator_to_array($resourceBundle['languageData'] ?? new \EmptyIterator()) + $officialByLanguage as $language => $data) {
             if (
-                (!$regions = $data['primary']['territories'] ?? null)
+                !($officialByLanguage[$language] ?? null)
                 || \Locale::getDisplayName($language, 'en') === $language
             ) {
                 continue;
             }
 
-            $scripts = $data['primary']['scripts'] ?? [];
+            $scripts = (array) ($data['primary']['scripts'] ?? []);
             $locales = [$language];
 
-            if (!\is_string($scripts) && \count($scripts) > 1) {
+            if (\count($scripts) > 1) {
                 foreach ($scripts as $script) {
                     $locales[] = "{$language}_$script";
                 }
@@ -108,7 +110,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             foreach ($locales as $locale) {
                 $allLocales[] = $locale;
 
-                foreach (\is_string($regions) ? [$regions] : $regions as $region) {
+                foreach ($regionsByLanguage[$language] ?? [] as $region) {
                     $allLocales[] = "{$locale}_$region";
                 }
             }

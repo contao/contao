@@ -30,7 +30,7 @@
         <target>Obsah</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Zadajte obsah správy. Ak chcete vložiť e-mail prijímateľa, môžete použiť &lt;em&gt;##email##&lt;/em&gt;. Odkaz na stránku, kde sa dá odhlásiť, vytvorte ako &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Textový obsah</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Prosím zadajte textový obsah správy. Použite skratky &lt;em&gt;##email##&lt;/em&gt; k vloženiu adresy prijímateľa. Vygenerujte odkaz na odhlásenie sa z odberu správ v tvare &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.sessionLabel">
         <source>Session data</source>
-        <target>Данные сесии</target>
+        <target>Данные сессии</target>
       </trans-unit>
       <trans-unit id="tl_user.htmlLabel">
         <source>Image cache</source>
@@ -351,7 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
-        <target>Данные сесии очищены</target>
+        <target>Данные сессии очищены</target>
       </trans-unit>
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>

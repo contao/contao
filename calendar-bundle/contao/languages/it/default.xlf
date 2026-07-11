@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>Non ci sono eventi per quest'anno.</target>
+        <target>Non ci sono eventi per quest&apos;anno.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
-        <target>Torna alla panoramica dell'evento</target>
+        <target>Torna alla panoramica dell&apos;evento</target>
       </trans-unit>
     </body>
   </file>

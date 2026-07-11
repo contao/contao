@@ -273,6 +273,7 @@ abstract class Widget extends Controller
 			case 'alt':
 			case 'style':
 			case 'accesskey':
+			case 'form':
 			case 'onblur':
 			case 'onchange':
 			case 'onclick':
@@ -1258,7 +1259,7 @@ abstract class Widget extends Controller
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
 		$arrAttributes['label'] = (($label = \is_array($arrData['label'] ?? null) ? $arrData['label'][0] : $arrData['label'] ?? null) !== null) ? $label : $strField;
-		$arrAttributes['description'] = $arrData['label'][1] ?? null;
+		$arrAttributes['description'] = \is_array($arrData['label'] ?? null) ? ($arrData['label'][1] ?? null) : null;
 		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
