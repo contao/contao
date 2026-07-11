@@ -20,8 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
-use Symfony\Component\HttpFoundation\HeaderBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -395,30 +393,19 @@ class PreviewToolbarListenerTest extends TestCase
         yield 'modern template' => [false, '@Contao/frontend_preview/toolbar_js.html.twig'];
     }
 
-    private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request&Stub
+    private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request
     {
-        $request = $this->createStub(Request::class);
-        $request->headers = new HeaderBag();
-        $request->attributes = new ParameterBag();
+        $request = Request::create('/');
 
         if ($isPreview) {
             $request->attributes->set('_preview', true);
         }
 
-        $request
-            ->method('isXmlHttpRequest')
-            ->willReturn($isXmlHttpRequest)
-        ;
+        $request->setRequestFormat($requestFormat);
 
-        $request
-            ->method('getRequestFormat')
-            ->willReturn($requestFormat)
-        ;
-
-        $request
-            ->method('getScriptName')
-            ->willReturn('preview.php')
-        ;
+        if ($isXmlHttpRequest) {
+            $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+        }
 
         if ($hasSession) {
             $request->setSession($this->createStub(Session::class));
