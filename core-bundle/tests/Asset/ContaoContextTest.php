@@ -82,11 +82,7 @@ class ContaoContextTest extends TestCase
     {
         $request = Request::create(
             \sprintf('https://example.com%s/index.php', $basePath),
-            'GET',
-            [],
-            [],
-            [],
-            [
+            server: [
                 'SCRIPT_FILENAME' => \sprintf('%s/index.php', $basePath),
                 'SCRIPT_NAME' => \sprintf('%s/index.php', $basePath),
             ],
@@ -118,11 +114,7 @@ class ContaoContextTest extends TestCase
     {
         $request = Request::create(
             'https://example.com/foo/index.php',
-            'GET',
-            [],
-            [],
-            [],
-            [
+            server: [
                 'SCRIPT_FILENAME' => '/foo/index.php',
                 'SCRIPT_NAME' => '/foo/index.php',
             ],

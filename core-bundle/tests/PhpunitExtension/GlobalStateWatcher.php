@@ -215,7 +215,6 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
                 'Symfony\Component\HttpClient\Response\MockResponse',
-                'Symfony\Polyfill\DeepClone\DeepClone',
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
@@ -223,6 +222,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\Uid\Ulid',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
+                'Symfony\Polyfill\DeepClone\DeepClone',
                 'Webmozart\PathUtil\\',
             ] as $ignorePrefix) {
                 if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {

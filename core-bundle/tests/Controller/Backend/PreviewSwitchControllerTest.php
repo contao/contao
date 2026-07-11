@@ -221,12 +221,8 @@ class PreviewSwitchControllerTest extends TestCase
         );
 
         $request = new Request(
-            [],
-            ['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar'],
-            [],
-            [],
-            [],
-            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
+            request: ['FORM_SUBMIT' => 'tl_switch', 'user' => 'foobar'],
+            server: ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
         );
 
         $response = $controller($request);
