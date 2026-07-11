@@ -243,7 +243,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@router'
-            - '@contao.translation.translator'
+            - '@translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
@@ -553,7 +553,7 @@ services:
         arguments:
             - '@database_connection'
             - '@event_dispatcher'
-            - '@contao.translation.translator'
+            - '@translator'
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
@@ -1383,14 +1383,6 @@ services:
         arguments:
             - 48
 
-    contao.translation.data_collector_translator:
-        class: Contao\CoreBundle\Translation\DataCollectorTranslator
-        autoconfigure: false
-        arguments:
-            - '@contao.translation.data_collector_translator.inner'
-        tags:
-            - { name: kernel.reset, method: reset }
-
     contao.translation.legacy_locale_switcher:
         class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
         arguments:
@@ -1400,6 +1392,7 @@ services:
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator
+        decoration_priority: 1
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
