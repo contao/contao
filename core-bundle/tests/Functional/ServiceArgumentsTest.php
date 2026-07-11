@@ -103,6 +103,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         $this->assertContains(\Closure::class, $typeNames, \sprintf('Argument %s of %s should be \Closure but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         break;
 
+                    case 'service':
+                        $this->assertTrue(is_a($argument->getValue()['class'], implode('|', $typeNames), true), \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, implode('|', $typeNames), $argument->getValue()['class']));
+                        break;
+
                     case 'tagged_iterator':
                         if (\in_array('iterable', $typeNames, true)) {
                             $this->assertContains('iterable', $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));

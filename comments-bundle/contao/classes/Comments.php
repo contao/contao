@@ -301,13 +301,10 @@ class Comments extends Frontend
 			}
 
 			// Do not parse any tags in the comment
-			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
+			$strComment = trim($arrWidgets['comment']->value);
 
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
-
-			// Prevent cross-site request forgeries
-			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
 			$intMember = 0;
 
@@ -328,7 +325,7 @@ class Comments extends Frontend
 				'email'     => $arrWidgets['email']->value,
 				'website'   => $strWebsite,
 				'member'    => $intMember,
-				'comment'   => $this->convertLineFeeds($strComment),
+				'comment'   => $strComment,
 				'ip'        => Environment::get('ip'),
 				'date'      => $time,
 				'published' => ($objConfig->moderate ? '' : 1)
@@ -358,10 +355,6 @@ class Comments extends Frontend
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
-
-			// Convert the comment to plain text
-			$strComment = strip_tags($strComment);
-			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
 			$objEmail->text = \sprintf(
@@ -400,34 +393,6 @@ class Comments extends Frontend
 
 			$this->reload();
 		}
-	}
-
-	/**
-	 * Convert line feeds to <br /> tags
-	 *
-	 * @param string $strComment
-	 *
-	 * @return string
-	 */
-	public function convertLineFeeds($strComment)
-	{
-		$strComment = preg_replace('/\r?\n/', '<br>', $strComment);
-
-		// Use paragraphs to generate new lines
-		if (strncmp('<p>', $strComment, 3) !== 0)
-		{
-			$strComment = '<p>' . $strComment . '</p>';
-		}
-
-		$arrReplace = array
-		(
-			'@<br>\s?<br>\s?@' => "</p>\n<p>", // Convert two linebreaks into a new paragraph
-			'@\s?<br></p>@'    => '</p>',      // Remove BR tags before closing P tags
-			'@<p><div@'        => '<div',      // Do not nest DIVs inside paragraphs
-			'@</div></p>@'     => '</div>'     // Do not nest DIVs inside paragraphs
-		);
-
-		return preg_replace(array_keys($arrReplace), array_values($arrReplace), $strComment);
 	}
 
 	/**

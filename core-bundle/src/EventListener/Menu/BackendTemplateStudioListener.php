@@ -67,7 +67,7 @@ class BackendTemplateStudioListener
             ->setLinkAttribute('class', 'navigation template-studio')
             ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
             ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-            ->setCurrent(TemplateStudioController::class === $request->get('_controller'))
+            ->setCurrent(TemplateStudioController::class === $request->attributes->get('_controller'))
         ;
 
         $categoryNode->addChild($templateStudioNode);

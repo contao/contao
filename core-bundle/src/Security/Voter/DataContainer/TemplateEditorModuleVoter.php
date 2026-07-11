@@ -19,6 +19,7 @@ use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
 /**
  * @internal
@@ -39,7 +40,7 @@ class TemplateEditorModuleVoter implements CacheableVoterInterface
         return \in_array($subjectType, [CreateAction::class, UpdateAction::class], true);
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, mixed $subject, array $attributes, Vote|null $vote = null): int
     {
         if (!$subject instanceof CreateAction && !$subject instanceof UpdateAction) {
             return self::ACCESS_ABSTAIN;
