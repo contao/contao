@@ -15,12 +15,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', PageLogout::class, LogoutPageController::class);
+trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', PageLogout::class, LogoutPageController::class);
 
 /**
  * Provide methods to handle a logout page.
  *
- * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
  *             use Contao\CoreBundle\Controller\Page\LogoutPageController instead.
  */
 class PageLogout extends Frontend

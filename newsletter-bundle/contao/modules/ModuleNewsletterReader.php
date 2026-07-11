@@ -115,13 +115,6 @@ class ModuleNewsletterReader extends Module
 			$strContent = str_ireplace(' align="center"', '', $objNewsletter->content);
 		}
 
-		// Parse simple tokens and insert tags
-		$strContent = System::getContainer()->get('contao.insert_tag.parser')->replace($strContent);
-		$strContent = System::getContainer()->get('contao.string.simple_token_parser')->parse($strContent, array());
-
-		// Encode e-mail addresses
-		$strContent = StringUtil::encodeEmail($strContent);
-
 		$this->Template->content = $strContent;
 		$this->Template->subject = $objNewsletter->subject;
 

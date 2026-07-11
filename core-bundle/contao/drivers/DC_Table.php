@@ -480,7 +480,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Backwards compatibility
 			if (Input::get('childs') !== null)
 			{
-				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 7. Use the "children" parameter instead.');
 				$children = Input::get('childs');
 			}
 
@@ -823,7 +823,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
+		$this->getNewPosition('new', Input::get('pid'), Input::get('mode'));
 
 		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -937,7 +937,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$db = Database::getInstance();
 
 		// Get the new position
-		$this->getNewPosition('cut', $intPid, $intMode == self::PASTE_INTO);
+		$this->getNewPosition('cut', $intPid, $intMode);
 
 		// Avoid circular references when there is no parent table or the table references itself
 		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
@@ -1106,7 +1106,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('copy', $intPid, $intMode == self::PASTE_INTO);
+		$this->getNewPosition('copy', $intPid, $intMode);
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -1221,12 +1221,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use copyChildren() instead.
 	 */
 	protected function copyChilds($table, $insertID, $id, $parentId)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "copyChildren()" instead.', __METHOD__);
 		$this->copyChildren($table, $insertID, $id, $parentId);
 	}
 
@@ -1250,7 +1250,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Backwards compatibility
 		if (Input::get('childs') !== null)
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 7. Use the "children" parameter instead.');
 			$children = Input::get('childs');
 		}
 
@@ -1426,10 +1426,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @param string  $mode
 	 * @param integer $pid
-	 * @param boolean $insertInto
+	 * @param integer $insertMode
 	 */
-	protected function getNewPosition($mode, $pid=null, $insertInto=false)
+	protected function getNewPosition($mode, $pid=null, $insertMode=self::PASTE_AFTER)
 	{
+		if (!is_numeric($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-numeric value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = $insertMode ? self::PASTE_INTO : self::PASTE_AFTER;
+		}
+
+		if (!\is_int($insertMode))
+		{
+			trigger_deprecation('contao/core-bundle', '6.0', 'Passing a non-integer value for "$insertMode" to "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
+			$insertMode = (int) $insertMode;
+		}
+
 		$db = Database::getInstance();
 
 		// If there is pid and sorting
@@ -1452,32 +1466,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session = $objSession->all();
 
 				// Consider the pagination menu when inserting at the top (see #7895)
-				if ($insertInto && isset($session['filter'][$filter]['limit']))
+				if ($insertMode === self::PASTE_INTO && isset($session['filter'][$filter]['limit']))
 				{
 					$limit = substr($session['filter'][$filter]['limit'], 0, strpos($session['filter'][$filter]['limit'], ','));
 
 					if ($limit > 0)
 					{
 						$objInsertAfter = $db
-							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 							->limit(1, $limit - 1)
 							->execute($pid);
 
 						if ($objInsertAfter->numRows)
 						{
-							$insertInto = false;
+							$insertMode = self::PASTE_AFTER;
 							$pid = $objInsertAfter->id;
 						}
 					}
 				}
 
-				// Insert the current record at the beginning when inserting into the parent record
-				if ($insertInto)
+				// Insert the current record at the beginning when inserting into the parent record (prepend)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$newPID = $pid;
 
 					$objSorting = $db
-						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
+						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
 						->execute($pid);
 
 					// Select sorting value of the first record
@@ -1489,7 +1503,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
 							$objNewSorting = $db
-								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 								->execute($pid);
 
 							$count = 2;
@@ -1518,6 +1532,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
+				// Insert the current record at the end when inserting into the parent record (append)
+				elseif ($insertMode === self::PASTE_INTO_APPEND)
+				{
+					$newPID = $pid;
+
+					$objSorting = $db
+						->prepare("SELECT MAX(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
+						->execute($pid);
+
+					// Select sorting value of the last record
+					if ($objSorting->numRows)
+					{
+						$newSorting = $objSorting->sorting + 128;
+					}
+
+					// Else new sorting = 128
+					else
+					{
+						$newSorting = 128;
+					}
+				}
+
 				// Else insert the current record after the parent record
 				elseif ($pid > 0)
 				{
@@ -1536,7 +1572,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (is_numeric($newPID) || $newPID === null)
 						{
 							$objNextSorting = $db
-								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
+								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " AND sorting>?")
 								->execute($newPID, $curSorting);
 
 							// Select sorting value of the next record
@@ -1550,7 +1586,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									$count = 1;
 
 									$objNewSorting = $db
-										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 										->execute($newPID);
 
 									while ($objNewSorting->next())
@@ -1613,7 +1649,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (is_numeric($pid))
 			{
 				// Insert the current record into the parent record
-				if ($insertInto)
+				if ($insertMode === self::PASTE_INTO)
 				{
 					$this->set['pid'] = $pid;
 				}
@@ -1902,12 +1938,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use deleteChildren() instead.
 	 */
 	protected function deleteChilds($table, $id, &$delete)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "deleteChildren()" instead.', __METHOD__);
 		$this->deleteChildren($table, $id, $delete);
 	}
 
@@ -3482,7 +3518,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 7.');
 
 			$operations->append(array('html' => $buttons), true);
 		}
@@ -4173,7 +4209,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 7.');
 
 			$operations->append(array('html' => $buttons), true);
 		}
@@ -4423,18 +4459,44 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addPasteButton('pasteafter', $table, null);
 						}
 
-						// Copy/move multiple
-						elseif ($blnMultiboard)
+						// Copy/move
+						elseif ($blnMultiboard || $blnClipboard)
 						{
-							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']));
-						}
+							if ($blnMultiboard)
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&ptable=' . $this->strTable);
+							}
+							else
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id'] . '&ptable=' . $this->strTable);
+							}
 
-						// Paste buttons
-						elseif ($blnClipboard)
-						{
 							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']));
+							$recordOperations->addPasteButton('pasteafter', $table, $pasteAfterHref);
+
+							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
+							$data = array('pid' => $row[$i]['id'] ?? null);
+
+							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+							{
+								$data['ptable'] = $this->strTable;
+							}
+
+							$subject = new ReadAction($ctable, $data);
+
+							if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $ctable, $subject))
+							{
+								if ($ctable !== $this->strTable)
+								{
+									$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+								}
+							}
+							else
+							{
+								$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
+							}
 						}
 
 						// Create new button
@@ -4653,7 +4715,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 7.');
 
 			$operations->append(array('html' => $buttons), true);
 		}
@@ -5593,11 +5655,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6. Use ValueFormatter::formatGroup() instead.
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7. Use ValueFormatter::formatGroup() instead.
 	 */
 	protected function formatCurrentValue($field, $value, $mode)
 	{
-		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "ValueFormatter::formatGroup()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "ValueFormatter::formatGroup()" instead.', __METHOD__);
 
 		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 

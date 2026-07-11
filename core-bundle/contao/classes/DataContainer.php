@@ -170,9 +170,14 @@ abstract class DataContainer extends Backend
 	public const PASTE_AFTER = 1;
 
 	/**
-	 * Paste into the parent
+	 * Paste into the parent at the top
 	 */
 	public const PASTE_INTO = 2;
+
+	/**
+	 * Paste into the parent at the end
+	 */
+	public const PASTE_INTO_APPEND = 3;
 
 	/**
 	 * Current ID
@@ -261,7 +266,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Active record
 	 * @var Model|object|null
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7;
 	 *             use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.
 	 */
 	protected $objActiveRecord;
@@ -340,7 +345,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record is deprecated and will be removed in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record is deprecated and will be removed in Contao 7.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -361,7 +366,7 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones is deprecated and will no longer work in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones is deprecated and will no longer work in Contao 7.');
 				$this->$strKey = $varValue;
 				break;
 		}
@@ -397,7 +402,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record is deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record is deprecated and will be removed in Contao 7. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -761,12 +766,12 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7;
 	 *             use the "contao.data_container.palette_builder" service instead.
 	 */
 	protected function combiner($names)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
 
 		return System::getContainer()
 			->get('contao.data_container.palette_builder')
@@ -837,7 +842,7 @@ abstract class DataContainer extends Backend
 			$arrRow,
 			$this,
 			function (DataContainerOperation $config) use ($arrRow, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext) {
-				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 7.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{
@@ -866,7 +871,7 @@ abstract class DataContainer extends Backend
 	protected function generateGlobalButtons(/* DataContainerGlobalOperationsBuilder $operations */)
 	{
 		$legacyCallback = function (DataContainerOperation $config) {
-			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 7.');
 
 			if (!\is_array($config['button_callback'] ?? null) && !\is_callable($config['button_callback'] ?? null))
 			{
@@ -900,7 +905,7 @@ abstract class DataContainer extends Backend
 			return null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without a DataContainerGlobalOperationsBuilder object is deprecated and will no longer work in Contao 6.');
+		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without a DataContainerGlobalOperationsBuilder object is deprecated and will no longer work in Contao 7.');
 
 		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 		$operations->addGlobalButtons($this, $legacyCallback);
@@ -927,7 +932,7 @@ abstract class DataContainer extends Backend
 			$arrRow,
 			$dc,
 			static function (DataContainerOperation $config) use ($arrRow, $strPtable, $dc) {
-				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 7.');
 
 				if (\is_array($config['button_callback'] ?? null))
 				{

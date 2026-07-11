@@ -483,7 +483,6 @@ class ModuleEventReader extends Events
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCalendar->requireLogin;
 		$objConfig->disableCaptcha = $objCalendar->disableCaptcha;
-		$objConfig->bbcode = $objCalendar->bbcode;
 		$objConfig->moderate = $objCalendar->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);

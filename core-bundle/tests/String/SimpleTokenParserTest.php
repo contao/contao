@@ -25,10 +25,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 class SimpleTokenParserTest extends TestCase
 {
     #[DataProvider('parseSimpleTokensProvider')]
-    public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
+    public function testParsesSimpleTokens(string $string, array $tokens, string $expected, string|null $expectedPlain = null): void
     {
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
-        $this->assertSame($expected, $this->getParser()->parse($string, $tokens, false));
+        $this->assertSame($expectedPlain ?? $expected, $this->getParser()->parse($string, $tokens, false));
     }
 
     public static function parseSimpleTokensProvider(): iterable
@@ -150,6 +150,7 @@ class SimpleTokenParserTest extends TestCase
         yield 'Test if-tags insertion not evaluated' => [
             '##token##',
             ['token' => '{if token=="foo"}'],
+            '&#123;if token==&quot;foo&quot;&#125;',
             '&#123;if token=="foo"&#125;',
         ];
 
@@ -162,6 +163,7 @@ class SimpleTokenParserTest extends TestCase
         yield 'Test if-tags insertion not evaluated with multiple tokens' => [
             '##token1####token2####token3##',
             ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
+            '&#123;if token==&quot;foo&quot;&#125;',
             '&#123;if token=="foo"&#125;',
         ];
 
@@ -497,7 +499,7 @@ class SimpleTokenParserTest extends TestCase
     #[DataProvider('parseSimpleTokensDoesntExecutePhpInToken')]
     public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
     {
-        $this->assertSame($tokens['foo'], $this->getParser()->parse('##foo##', $tokens));
+        $this->assertSame($tokens['foo'], $this->getParser()->parse('##foo##', $tokens, false));
     }
 
     public static function parseSimpleTokensDoesntExecutePhpInToken(): iterable
@@ -519,7 +521,7 @@ class SimpleTokenParserTest extends TestCase
         ];
 
         $this->assertSame(
-            'This is <?php echo "I am evil";?> evil',
+            'This is &lt;?php echo &quot;I am evil&quot;;?&gt; evil',
             $this->getParser()->parse('This is ##open####open2####close## evil', $data),
         );
     }

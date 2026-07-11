@@ -1398,6 +1398,11 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
+    contao.twig.autolink_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\AutolinkRuntime
+        arguments:
+            - '@contao.url_highlight'
+
     contao.twig.backend_helper_runtime:
         class: Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime
         arguments:
@@ -1562,6 +1567,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.twig.simple_token_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime
+        arguments:
+            - '@contao.string.simple_token_parser'
+
     contao.twig.string_runtime:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
@@ -1572,6 +1582,19 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.url_highlight:
+        class: VStelmakh\UrlHighlight\UrlHighlight
+        arguments:
+            - ~
+            - '@contao.url_highlight.html_highlighter'
+            - !service { class: VStelmakh\UrlHighlight\Encoder\HtmlSpecialcharsEncoder }
+
+    contao.url_highlight.html_highlighter:
+        class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
+        arguments:
+            - https
+            - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
         class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser

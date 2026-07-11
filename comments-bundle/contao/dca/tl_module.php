@@ -14,7 +14,7 @@ use Contao\System;
 System::loadLanguageFile('tl_content');
 
 // Add palettes to tl_module
-$GLOBALS['TL_DCA']['tl_module']['palettes']['comments'] = '{title_legend},name,headline,type;{comment_legend},com_order,perPage,com_moderate,com_bbcode,com_protected,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['comments'] = '{title_legend},name,headline,type;{comment_legend},com_order,perPage,com_moderate,com_protected,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_order'] = array
@@ -30,14 +30,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_order'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['com_moderate'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_moderate'],
-	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type'=>'boolean', 'default'=>false)
-);
-
-$GLOBALS['TL_DCA']['tl_module']['fields']['com_bbcode'] = array
-(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_bbcode'],
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type'=>'boolean', 'default'=>false)

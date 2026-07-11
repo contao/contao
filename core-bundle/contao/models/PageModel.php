@@ -502,12 +502,12 @@ class PageModel extends Model
 	 *
 	 * @return PageModel|null The model or null if there is no 401 page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find401ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_401'");
@@ -534,12 +534,12 @@ class PageModel extends Model
 	 *
 	 * @return PageModel|null The model or null if there is no 403 page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find403ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
@@ -566,12 +566,12 @@ class PageModel extends Model
 	 *
 	 * @return PageModel|null The model or null if there is no 404 page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the contao.routing.page_finder service instead.
 	 */
 	public static function find404ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
@@ -1142,12 +1142,12 @@ class PageModel extends Model
 	 *
 	 * @return string A URL that can be used in the front end
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the content URL generator instead.
 	 */
 	public function getFrontendUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
 
@@ -1191,12 +1191,12 @@ class PageModel extends Model
 	 *
 	 * @return string An absolute URL that can be used in the front end
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the content URL generator instead.
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
 
@@ -1240,12 +1240,12 @@ class PageModel extends Model
 	 *
 	 * @return string The front end preview URL
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the content URL generator instead
 	 */
 	public function getPreviewUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the contao_backend_preview route instead.', __METHOD__);
 
 		$container = System::getContainer();
 
