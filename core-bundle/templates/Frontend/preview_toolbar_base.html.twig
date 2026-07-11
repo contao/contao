@@ -1,6 +1,6 @@
 {% trans_default_domain 'contao_default' %}
 <div class="cto-toolbar__open">
-    <a href="#" title="{{ 'MSC.openToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
+    <a href="#" title="{{ 'MSC.openToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg.twig', { fill: '#fff' }) }}</a>
 </div>
 <div
     class="cto-toolbar__inside"

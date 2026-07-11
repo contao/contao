@@ -30,7 +30,7 @@
         <target>Obsah v HTML</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Zde můžete zadat obsah v HTML Vašeho Zpravodaje. Použijte link &lt;em&gt;##email##&lt;/em&gt; pro vložení mailové adresy příjemce.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Textový obsah</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Zde můžete zadat textový obsah Vašeho Zpravodaje. Použijte link &lt;em&gt;##email##&lt;/em&gt; pro vložení mailové adresy příjemce.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

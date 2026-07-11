@@ -31,6 +31,11 @@ if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 4);
 }
 
+// System maintenance mode comes first as it has to work even if the vendor directory does not exist
+if ('contao:cron' === ($_SERVER['argv'][1] ?? null) && file_exists($projectDir.'/var/maintenance.html')) {
+    exit;
+}
+
 require $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();

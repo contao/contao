@@ -25,6 +25,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Contao\Template;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Psr\Log\LoggerInterface;
@@ -569,5 +570,24 @@ class TemplateTest extends TestCase
         $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
 
         $this->assertSame(\sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testOnceHelperExecutesCodeOnce(): void
+    {
+        $invocationCount = 0;
+
+        $expensiveFunction = static function () use (&$invocationCount) {
+            ++$invocationCount;
+
+            return false;
+        };
+
+        $template = new FrontendTemplate();
+        $template->hasFoo = Template::once($expensiveFunction);
+
+        $this->assertFalse($template->hasFoo, 'first call');
+        $this->assertFalse($template->hasFoo, 'second call');
+
+        $this->assertSame(1, $invocationCount);
     }
 }

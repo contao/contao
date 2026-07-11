@@ -28,7 +28,7 @@
         <target>محتوای اچ‌تی‌ام‌ال</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>اینجا می‌توانید محتوای اچ‌تی‌ام‌ال خبرنامه را وارد نمایید. از &lt;em&gt;##email##&lt;/em&gt; برای جایگذاری در نشانی ایمیل گیرنده استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -36,7 +36,7 @@
         <target>محتوای متنی</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>اینجا می‌توانید محتوای متنی خبرنامه را وارد نمایید. از &lt;em&gt;##email##&lt;/em&gt; برای جایگذاری در نشانی ایمیل گیرنده استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

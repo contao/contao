@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_member.website.1">
         <source>Here you can enter a web address.</source>
-        <target>Inserisci l'URL di un sito web.</target>
+        <target>Inserisci l&apos;URL di un sito web.</target>
       </trans-unit>
       <trans-unit id="tl_member.language.0">
         <source>Language</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups.1">
         <source>Here you can assign the member to one or more groups.</source>
-        <target>Assegna l'utente ad uno o più gruppi.</target>
+        <target>Assegna l&apos;utente ad uno o più gruppi.</target>
       </trans-unit>
       <trans-unit id="tl_member.login.0">
         <source>Allow login</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_member.homeDir.1">
         <source>Please select a folder from the files directory.</source>
-        <target>Seleziona la cartella home dell'utente.</target>
+        <target>Seleziona la cartella home dell&apos;utente.</target>
       </trans-unit>
       <trans-unit id="tl_member.disable.0">
         <source>Deactivate</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_member.disable.1">
         <source>Temporarily disable the account.</source>
-        <target>Se scegliete questa opzione, l'utente corrente verrà disabilitato. L'utente non potrà più accedere al sistema.</target>
+        <target>Se scegliete questa opzione, l&apos;utente corrente verrà disabilitato. L&apos;utente non potrà più accedere al sistema.</target>
       </trans-unit>
       <trans-unit id="tl_member.start.0">
         <source>Activate on</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_member.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se desideri impedire che l'account sia attivo prima di una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Se desideri impedire che l&apos;account sia attivo prima di una determinata data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
@@ -191,11 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi impedire che l'account sia attivo dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Se vuoi impedire che l&apos;account sia attivo dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
-        <target>Utilizzare l'autenticazione a due fattori</target>
+        <target>Utilizzare l&apos;autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>

@@ -13,6 +13,7 @@ services:
             - '@contao.assets.files_context'
             - '@contao_news.feed_specification'
             - '%kernel.charset%'
+            - '%kernel.debug%'
 
     contao_news.feed_specification:
         class: FeedIo\Specification
@@ -91,6 +92,13 @@ services:
 
     contao_news.migration.feed:
         class: Contao\NewsBundle\Migration\FeedMigration
+        arguments:
+            - '@database_connection'
+            - '@filesystem'
+            - '%contao.web_dir%'
+
+    contao_news.migration.keep_canonical:
+        class: Contao\NewsBundle\Migration\KeepCanonicalMigration
         arguments:
             - '@database_connection'
 

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>L'alias du formulaire est une référence unique qui remplace l'ID du formulaire.</target>
+        <target>L&apos;alias du formulaire est une référence unique qui remplace l&apos;ID du formulaire.</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_form.confirmation.1">
         <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
-        <target>Vous pouvez saisir ici le message de confirmation qui s'affichera après l'envoi du formulaire. Vous pouvez utiliser les données du formulaire soumises comme simples jetons, par exemple &lt;code&gt;##field_name##&lt;/code&gt;. Le message de confirmation est également disponible sous la forme d'une balise d'insertion  &lt;code&gt;{{form_confirmation}}&lt;/code&gt;.</target>
+        <target>Vous pouvez saisir ici le message de confirmation qui s&apos;affichera après l&apos;envoi du formulaire. Vous pouvez utiliser les données du formulaire soumises comme simples jetons, par exemple &lt;code&gt;##field_name##&lt;/code&gt;. Le message de confirmation est également disponible sous la forme d&apos;une balise d&apos;insertion  &lt;code&gt;{{form_confirmation}}&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
-        <target>Envoi d'e-mail</target>
+        <target>Envoi d&apos;e-mail</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_form.subject.1">
         <source>Please enter the e-mail subject.</source>
-        <target>Saisir le sujet de l'e-mail.</target>
+        <target>Saisir le sujet de l&apos;e-mail.</target>
       </trans-unit>
       <trans-unit id="tl_form.format.0">
         <source>Data format</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_form.xml.1">
         <source>The form data will be attached to the e-mail as an XML file.</source>
-        <target>Les données du formulaire seront attachées à l'e-mail sous forme de fichier XML.</target>
+        <target>Les données du formulaire seront attachées à l&apos;e-mail sous forme de fichier XML.</target>
       </trans-unit>
       <trans-unit id="tl_form.csv.0">
         <source>CSV file</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form.csv.1">
         <source>The form data will be attached to the e-mail as a CSV file.</source>
-        <target>Les données du formulaire seront attachées à l'e-mail sous forme de fichier CSV (valeurs séparées par des virgules).</target>
+        <target>Les données du formulaire seront attachées à l&apos;e-mail sous forme de fichier CSV (valeurs séparées par des virgules).</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
-        <target>Les données du formulaire seront jointes à l'e-mail sous forme de fichier CSV lisible par Microsoft Excel.</target>
+        <target>Les données du formulaire seront jointes à l&apos;e-mail sous forme de fichier CSV lisible par Microsoft Excel.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmtpy.1">
         <source>Hide empty fields in the e-mail.</source>
-        <target>Ne pas inclure dans l'e-mail les champs non renseignés.</target>
+        <target>Ne pas inclure dans l&apos;e-mail les champs non renseignés.</target>
       </trans-unit>
       <trans-unit id="tl_form.storeValues.0">
         <source>Store data</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_form.novalidate.1">
         <source>Add the &lt;em&gt;novalidate&lt;/em&gt; attribute to the form tag.</source>
-        <target>Ajouter l'attribut &lt;em&gt;novalidate&lt;/em&gt; à la balise form.</target>
+        <target>Ajouter l&apos;attribut &lt;em&gt;novalidate&lt;/em&gt; à la balise form.</target>
       </trans-unit>
       <trans-unit id="tl_form.attributes.0">
         <source>CSS ID/class</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_form.formID.1">
         <source>The form ID is required to trigger a Contao module.</source>
-        <target>L'ID de formulaire est nécessaire pour déclencher l'exécution d'un module Contao.</target>
+        <target>L&apos;ID de formulaire est nécessaire pour déclencher l&apos;exécution d&apos;un module Contao.</target>
       </trans-unit>
       <trans-unit id="tl_form.allowTags.0">
         <source>Allow HTML tags</source>

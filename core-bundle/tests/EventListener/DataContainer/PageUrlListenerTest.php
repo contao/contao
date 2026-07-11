@@ -1135,6 +1135,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 2,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1143,6 +1144,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 3,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'bar',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1151,6 +1153,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 4,
                 'pid' => 3,
+                'type' => 'regular',
                 'alias' => 'bar/foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1167,6 +1170,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 6,
                 'pid' => 5,
+                'type' => 'regular',
                 'alias' => 'bar/foo',
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
@@ -1238,6 +1242,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 2,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1246,6 +1251,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 3,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => '',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1254,6 +1260,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 4,
                 'pid' => 3,
+                'type' => 'regular',
                 'alias' => 'foo/bar',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1270,6 +1277,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 6,
                 'pid' => 5,
+                'type' => 'regular',
                 'alias' => '',
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',
@@ -1437,6 +1445,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 2,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1499,6 +1508,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 2,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1507,6 +1517,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 3,
                 'pid' => 1,
+                'type' => 'regular',
                 'alias' => 'bar',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1515,6 +1526,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 4,
                 'pid' => 3,
+                'type' => 'regular',
                 'alias' => 'bar/foo',
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
@@ -1531,6 +1543,7 @@ class PageUrlListenerTest extends TestCase
             [
                 'id' => 6,
                 'pid' => 5,
+                'type' => 'regular',
                 'alias' => 'bar/foo',
                 'urlPrefix' => 'de',
                 'urlSuffix' => '.html',

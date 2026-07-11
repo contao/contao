@@ -28,7 +28,7 @@
         <target>Conteúdo HTML</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Favor inserir o conteúdo da newsletter. Use o curinga &lt;em&gt;##email##&lt;/em&gt; para inserir o e-mail do destinatário. Gere um link de cancelamento de assinatura deste modo: &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -36,7 +36,7 @@
         <target>Conteúdo em texto</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Por favor insira o texto do conteúdo da newsletter. Use o wildcard &lt;em&gt;##email##&lt;/em&gt; para inserir o endereço de email do destinatário. Gerar links para desinscrição como &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

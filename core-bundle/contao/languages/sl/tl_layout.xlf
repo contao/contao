@@ -177,6 +177,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
+        <target>Doda osnovno oblikovanje elementov obrazca in gumbov.</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
@@ -395,6 +396,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>Feeds</source>
+        <target>Viri (feeds)</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>

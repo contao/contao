@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
+use Contao\StringUtil;
+
 /**
  * @implements \IteratorAggregate<string, string>
- * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
+ * @implements \ArrayAccess<string, \Stringable|bool|float|int|string|null>
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
@@ -26,7 +28,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private bool $doubleEncoding = false;
 
     /**
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function __construct(self|iterable|string|null $attributes = null)
     {
@@ -49,7 +51,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
     {
@@ -58,11 +60,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, \Stringable|bool|int|string|null $value): void {
+        $mergeSet = function (string $name, \Stringable|bool|float|int|string|null $value): void {
             if ('class' === $name) {
-                $this->addClass($value);
+                $this->addClass((string) $value);
             } elseif ('style' === $name) {
-                $this->addStyle($value);
+                $this->addStyle((string) $value);
             } else {
                 $this->set($name, $value);
             }
@@ -94,10 +96,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, \Stringable|bool|int|string|null $value = true, mixed $condition = true): self
+    public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;
+        }
+
+        if (\is_float($value)) {
+            try {
+                $value = StringUtil::numberToString($value);
+            } catch (\InvalidArgumentException) {
+                $value = false;
+            }
         }
 
         $name = strtolower($name);
@@ -128,7 +138,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * Set the property $name to $value if the value is truthy.
      */
-    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
+    public function setIfExists(string $name, \Stringable|bool|float|int|string|null $value): self
     {
         if ($this->test($value)) {
             $this->set($name, $value);
@@ -505,7 +515,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             :                                       # Colon
         /ixs';
 
-        preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+        $stylesDecoded = $styles;
+
+        if (false === $this->doubleEncoding) {
+            $stylesDecoded = html_entity_decode($stylesDecoded, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+        }
+
+        preg_match_all($declarationRegex, $stylesDecoded, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         $result = [];
 
@@ -521,6 +537,15 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                     default => "$property: $value;",
                 };
             }
+        }
+
+        if (false === $this->doubleEncoding && $stylesDecoded !== $styles) {
+            array_walk_recursive(
+                $result,
+                static function (&$value): void {
+                    $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+                },
+            );
         }
 
         return $result;

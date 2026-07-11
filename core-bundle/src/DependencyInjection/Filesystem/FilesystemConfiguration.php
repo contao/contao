@@ -87,6 +87,7 @@ class FilesystemConfiguration
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
+        // TODO: Fix compatibility with league/flysystem-bundle 3.7
         if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
             // Native adapter
             $this->container

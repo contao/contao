@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_log.action.1">
         <source>Category of the action</source>
-        <target>Categoria dell'azione</target>
+        <target>Categoria dell&apos;azione</target>
       </trans-unit>
       <trans-unit id="tl_log.username.0">
         <source>User</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_log.username.1">
         <source>Name of the authenticated user</source>
-        <target>Nome dell'utente collegato.</target>
+        <target>Nome dell&apos;utente collegato.</target>
       </trans-unit>
       <trans-unit id="tl_log.text.0">
         <source>Details</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
-        <target>L'URI della richiesta</target>
+        <target>L&apos;URI della richiesta</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>

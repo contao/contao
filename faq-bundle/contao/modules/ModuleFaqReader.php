@@ -125,7 +125,7 @@ class ModuleFaqReader extends Module
 		$this->Template->question = $objFaq->question;
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
-		$this->Template->before = false;
+		$this->Template->addBefore = false;
 
 		// Add image
 		if ($objFaq->addImage)

@@ -856,7 +856,7 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = false;
-        $page->rootSorting = array_reduce((array) $language, static fn ($c, $i) => $c + \ord($i), 0);
+        $page->rootSorting = array_reduce(str_split($language), static fn ($c, $i) => $c + \ord($i), 0);
 
         $page
             ->method('loadDetails')
