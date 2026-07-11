@@ -172,28 +172,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    /**
-     * @param list<string> $files
-     */
-    private function loadRouteCollection(LoaderResolverInterface $resolver, array $files): RouteCollection|null
-    {
-        foreach ($files as $file) {
-            $loader = $resolver->resolve($file);
-
-            if (false === $loader) {
-                continue;
-            }
-
-            $routes = $loader->load($file);
-
-            if ($routes instanceof RouteCollection) {
-                return $routes;
-            }
-        }
-
-        return null;
-    }
-
     public function getApiFeatures(): array
     {
         return [
@@ -276,6 +254,28 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
+    }
+
+    /**
+     * @param list<string> $files
+     */
+    private function loadRouteCollection(LoaderResolverInterface $resolver, array $files): RouteCollection|null
+    {
+        foreach ($files as $file) {
+            $loader = $resolver->resolve($file);
+
+            if (false === $loader) {
+                continue;
+            }
+
+            $routes = $loader->load($file);
+
+            if ($routes instanceof RouteCollection) {
+                return $routes;
+            }
+        }
+
+        return null;
     }
 
     /**
