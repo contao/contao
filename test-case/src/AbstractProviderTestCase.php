@@ -10,9 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
+namespace Contao\TestCase;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -20,7 +19,7 @@ use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Tools\DsnParser;
 
-abstract class AbstractProviderTestCase extends TestCase
+abstract class AbstractProviderTestCase extends ContaoTestCase
 {
     /**
      * @param array<Table>                                    $tables

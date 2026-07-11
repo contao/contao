@@ -12,6 +12,7 @@
     "require": {
         "php": "^8.4",
         "contao/core-bundle": "self.version",
+        "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^12.4",
         "symfony/yaml": "^7.4 || ^8.0"
     },
