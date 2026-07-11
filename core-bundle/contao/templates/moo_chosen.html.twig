@@ -1,0 +1,12 @@
+{% use '@Contao/component/_stylesheet.html.twig' %}
+
+{% add 'moo_chosen' to stylesheets %}
+    {% with {file: 'assets/chosen/css/chosen.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+{% endadd %}
+
+<script src="{{ asset('js/chosen.min.js', 'contao-components/chosen') }}"></script>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+    window.addEvent('domready', function() {
+        $$('select.tl_chosen').chosen();
+    });
+</script>

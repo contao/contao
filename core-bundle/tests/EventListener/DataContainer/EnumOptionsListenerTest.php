@@ -37,7 +37,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
@@ -58,7 +58,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame(
@@ -78,7 +78,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
@@ -95,7 +95,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
@@ -157,7 +157,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame(

@@ -49,23 +49,53 @@ class UserPasswordCommandTest extends TestCase
 
     public function testTakesAPasswordAsArgument(): void
     {
-        $command = $this->getCommand();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_user',
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'pwChange' => 0,
+                ],
+                ['username' => 'foobar'],
+            )
+            ->willReturn(1)
+        ;
+
+        $command = $this->getCommand($connection);
 
         $input = [
             'username' => 'foobar',
             '--password' => '12345678',
         ];
 
-        $code = (new CommandTester($command))->execute($input);
+        $code = new CommandTester($command)->execute($input);
 
         $this->assertSame(0, $code);
     }
 
     public function testAsksForThePasswordIfNotGiven(): void
     {
-        $command = $this->getCommand();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_user',
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'pwChange' => 0,
+                ],
+                ['username' => 'foobar'],
+            )
+            ->willReturn(1)
+        ;
 
-        $question = $this->createMock(QuestionHelper::class);
+        $command = $this->getCommand($connection);
+
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('12345678')
@@ -73,7 +103,7 @@ class UserPasswordCommandTest extends TestCase
 
         $command->getHelperSet()->set($question, 'question');
 
-        $code = (new CommandTester($command))->execute(['username' => 'foobar']);
+        $code = new CommandTester($command)->execute(['username' => 'foobar']);
 
         $this->assertSame(0, $code);
     }
@@ -82,7 +112,7 @@ class UserPasswordCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturnOnConsecutiveCalls('12345678', '87654321')
@@ -93,7 +123,7 @@ class UserPasswordCommandTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('The passwords do not match.');
 
-        (new CommandTester($command))->execute(['username' => 'foobar']);
+        new CommandTester($command)->execute(['username' => 'foobar']);
     }
 
     public function testFailsWithoutUsername(): void
@@ -103,13 +133,13 @@ class UserPasswordCommandTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please provide the username as argument.');
 
-        (new CommandTester($command))->execute([]);
+        new CommandTester($command)->execute([]);
     }
 
     public function testFailsWithoutPasswordIfNotInteractive(): void
     {
         $command = $this->getCommand();
-        $code = (new CommandTester($command))->execute(['username' => 'foobar'], ['interactive' => false]);
+        $code = new CommandTester($command)->execute(['username' => 'foobar'], ['interactive' => false]);
 
         $this->assertSame(1, $code);
     }
@@ -128,7 +158,7 @@ class UserPasswordCommandTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     public function testHandlesACustomMinimumPasswordLength(): void
@@ -145,7 +175,7 @@ class UserPasswordCommandTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 16 characters long.');
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     public function testFailsIfTheUsernameIsUnknown(): void
@@ -167,7 +197,7 @@ class UserPasswordCommandTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid username: foobar');
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     #[DataProvider('usernamePasswordProvider')]
@@ -195,7 +225,7 @@ class UserPasswordCommandTest extends TestCase
 
         $command = $this->getCommand($connection, $password);
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     public static function usernamePasswordProvider(): iterable
@@ -232,29 +262,27 @@ class UserPasswordCommandTest extends TestCase
 
         $command = $this->getCommand($connection, $password);
 
-        (new CommandTester($command))->execute($input, ['interactive' => false]);
+        new CommandTester($command)->execute($input, ['interactive' => false]);
     }
 
     private function getCommand(Connection|null $connection = null, string|null $password = null): UserPasswordCommand
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
         $password ??= '12345678';
 
-        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
-            ->with($password)
-            ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
+            ->willReturnMap([[$password, '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ']])
         ;
 
-        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
-            ->with(BackendUser::class)
-            ->willReturn($passwordHasher)
+            ->willReturnMap([[BackendUser::class, $passwordHasher]])
         ;
 
-        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $passwordHasherFactory);
+        $command = new UserPasswordCommand($this->createContaoFrameworkStub(), $connection, $passwordHasherFactory);
         $command->setApplication(new Application());
 
         return $command;

@@ -1,9 +1,0 @@
-
-<script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
-  (function() {
-    var p = document.querySelector('p.error') || document.querySelector('p.confirm');
-    if (p) {
-      p.scrollIntoView();
-    }
-  })();
-</script>

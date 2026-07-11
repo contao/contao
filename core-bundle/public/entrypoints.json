@@ -2,10 +2,43 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/contaocore/backend.e4deb0fa.css"
+        "/bundles/contaocore/backend.e31c0fa0.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.232edeb1.js"
+        "/bundles/contaocore/backend.07344f6c.js"
+      ]
+    },
+    "navigation": {
+      "css": [
+        "/bundles/contaocore/navigation.c572a459.css"
+      ],
+      "js": [
+        "/bundles/contaocore/navigation.85a29788.js"
+      ]
+    },
+    "passkey_login": {
+      "js": [
+        "/bundles/contaocore/passkey_login.b50772ea.js"
+      ]
+    },
+    "passkey_create": {
+      "js": [
+        "/bundles/contaocore/passkey_create.4dd30716.js"
+      ]
+    },
+    "login": {
+      "css": [
+        "/bundles/contaocore/login.9aa5247e.css"
+      ]
+    },
+    "tinymce": {
+      "css": [
+        "/bundles/contaocore/tinymce.84b1625a.css"
+      ]
+    },
+    "tinymce-dark": {
+      "css": [
+        "/bundles/contaocore/tinymce-dark.fbda69ff.css"
       ]
     }
   }

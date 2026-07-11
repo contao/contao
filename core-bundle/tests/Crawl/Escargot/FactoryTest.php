@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\ScopingHttpClient;
@@ -31,19 +32,19 @@ class FactoryTest extends TestCase
 {
     public function testHandlesSubscribersCorrectly(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $subscriber2 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber2 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber2
             ->method('getName')
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -56,24 +57,23 @@ class FactoryTest extends TestCase
 
     public function testBuildsUriCollectionsCorrectly(): void
     {
-        $rootPage = $this->createMock(PageModel::class);
+        $rootPage = $this->createStub(PageModel::class);
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage])
         ;
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://contao.org')
+            ->willReturnMap([[$rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://contao.org']])
         ;
 
         $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://example.com'],
@@ -92,13 +92,16 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithNewJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -115,13 +118,16 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -170,30 +176,30 @@ class FactoryTest extends TestCase
         $mockClient = new MockHttpClient($expectedRequests);
         $clientFactory = static fn (array $defaultOptions) => $mockClient;
 
-        $rootPage1 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.org']);
-        $rootPage2 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.de']);
+        $rootPage1 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.org']);
+        $rootPage2 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.de']);
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willReturnCallback(static fn (PageModel $rootPage) => 'https://'.$rootPage->dns)
         ;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage1, $rootPage2])
         ;
 
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
         $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://www.foreign-domain.com'],
@@ -213,5 +219,109 @@ class FactoryTest extends TestCase
 
         $this->assertSame(3, $mockClient->getRequestsCount());
         $this->assertInstanceOf(ScopingHttpClient::class, $escargot->getClient());
+    }
+
+    public function testDoesNotScopeWithoutConfidentialData(): void
+    {
+        $options = ['headers' => ['Accept-Language' => 'de']];
+
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (): MockHttpClient => $mockClient;
+
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
+        $subscriber1
+            ->method('getName')
+            ->willReturn('subscriber-1')
+        ;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], $options, $clientFactory);
+        $factory->addSubscriber($subscriber1);
+
+        $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
+        $escargot = $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-1']);
+
+        $this->assertSame($mockClient, $escargot->getClient());
+    }
+
+    #[DataProvider('provideConfidentialOptions')]
+    public function testStripsConfidentialOptionsFromExternalDomainOptions(array $confidentialOptions): void
+    {
+        $options = null;
+
+        $clientFactory = static function (array $defaultOptions) use (&$options): MockHttpClient {
+            $options = $defaultOptions;
+
+            return new MockHttpClient();
+        };
+
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
+        $subscriber1
+            ->method('getName')
+            ->willReturn('subscriber-1')
+        ;
+
+        $factory = new Factory(
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([PageModel::class => $this->createAdapterStub(['findPublishedRootPages'])]),
+            $this->createStub(ContentUrlGenerator::class),
+            new RequestStack(),
+            [],
+            $confidentialOptions,
+            $clientFactory,
+        );
+
+        $factory->addSubscriber($subscriber1);
+
+        $queue = new InMemoryQueue();
+        $jobId = $queue->createJobId(new BaseUriCollection([new Uri('https://contao.org')]));
+
+        $factory->createFromJobId($jobId, $queue, ['subscriber-1']);
+
+        $this->assertIsArray($options);
+        $this->assertSame(Factory::USER_AGENT, $options['headers']['user-agent']);
+        $this->assertSame(10, $options['max_duration']);
+
+        foreach (array_keys($options) as $key) {
+            $this->assertStringStartsNotWith('auth_', (string) $key);
+        }
+
+        foreach (array_keys($options['headers']) as $header) {
+            $this->assertNotContains(
+                strtolower((string) $header),
+                ['authorization', 'cookie'],
+            );
+        }
+    }
+
+    public static function provideConfidentialOptions(): iterable
+    {
+        yield 'auth_basic' => [['auth_basic' => 'username:password']];
+
+        yield 'auth_bearer' => [['auth_bearer' => 'token']];
+
+        yield 'auth_wildcard' => [['auth_foo' => 'bar']];
+
+        yield 'authorization' => [['headers' => ['Authorization' => 'Bearer token']]];
+
+        yield 'authorization (lowercase)' => [['headers' => ['authorization' => 'Bearer token']]];
+
+        yield 'authorization (uppercase)' => [['headers' => ['AUTHORIZATION' => 'Bearer token']]];
+
+        yield 'session cookie' => [['headers' => ['Cookie' => 'Confidential']]];
+
+        yield 'session cookie (lowercase)' => [['headers' => ['cookie' => 'Confidential']]];
+
+        yield 'session cookie (uppercase)' => [['headers' => ['COOKIE' => 'Confidential']]];
+
+        yield 'strips only confidential options' => [
+            [
+                'auth_basic' => 'username:password',
+                'headers' => [
+                    'User-Agent' => Factory::USER_AGENT,
+                    'Cookie' => 'Confidential',
+                    'Authorization' => 'Bearer token',
+                ],
+            ],
+        ];
     }
 }

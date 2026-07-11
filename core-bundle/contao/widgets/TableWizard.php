@@ -119,7 +119,7 @@ class TableWizard extends Widget
 			for ($j=0, $d=\count($this->varValue[$i]); $j<$d; $j++)
 			{
 				$return .= '
-      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea noresize" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . self::specialcharsValue($this->varValue[$i][$j] ?? '') . '</textarea></td>';
+      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . self::specialcharsValue($this->varValue[$i][$j] ?? '') . '</textarea></td>';
 			}
 
 			$return .= '
@@ -130,7 +130,7 @@ class TableWizard extends Widget
 			{
 				if ($button == 'rdrag')
 				{
-					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
+					$return .= ' <button type="button" class="drag-handle">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				else
 				{

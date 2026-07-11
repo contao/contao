@@ -10,15 +10,13 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -27,11 +25,10 @@ use Contao\DC_Table;
 use Contao\Email;
 use Contao\Environment;
 use Contao\Idna;
-use Contao\Image;
 use Contao\Input;
-use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
@@ -42,10 +39,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'enableVersioning'            => true,
 		'closed'                      => true,
 		'notCopyable'                 => true,
-		'onload_callback' => array
-		(
-			array('tl_comments', 'checkPermission')
-		),
 		'onsubmit_callback' => array
 		(
 			array('tl_comments', 'notifyOfReply')
@@ -72,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'comment',
 			'limitHeight'             => 104
 		),
@@ -82,33 +75,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_comments', 'listComments')
 		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'prefetch'            => true,
-				'icon'                => 'edit.svg',
-				'attributes'          => 'data-contao--deeplink-target="primary"',
-				'primary'             => true,
-				'button_callback'     => array('tl_comments', 'editComment')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
-				'button_callback'     => array('tl_comments', 'deleteComment')
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=published',
-				'icon'                => 'visible.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_comments', 'toggleIcon')
-			),
-			'show'
-		)
 	),
 
 	// Palettes
@@ -129,22 +95,22 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'source' => array
 		(
 			'filter'                  => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'parent' => array
 		(
 			'filter'                  => true,
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'date' => array
 		(
@@ -152,50 +118,50 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'name' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'email' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'member' => array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
 			'eval'                    => array('chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'comment' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE'),
-			'sql'                     => "text NULL"
+			'eval'                    => array('mandatory'=>true),
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addReply' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'author' => array
 		(
@@ -203,7 +169,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'reply' => array
@@ -211,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'published' => array
 		(
@@ -224,19 +190,19 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				array('tl_comments', 'sendNotifications')
 			),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'ip' => array
 		(
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'notified' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'notifiedReply' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		)
 	)
 );
@@ -248,73 +214,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
  */
 class tl_comments extends Backend
 {
-	/**
-	 * Check permissions to edit table tl_comments
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		switch (Input::get('act'))
-		{
-			case 'select':
-			case 'show':
-				// Allow
-				break;
-
-			case 'edit':
-			case 'delete':
-			case 'toggle':
-				$objComment = Database::getInstance()
-					->prepare("SELECT id, parent, source FROM tl_comments WHERE id=?")
-					->limit(1)
-					->execute(Input::get('id'));
-
-				if ($objComment->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid comment ID ' . Input::get('id') . '.');
-				}
-
-				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' comment ID ' . Input::get('id') . ' (parent element: ' . $objComment->source . ' ID ' . $objComment->parent . ').');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-				$session = $objSession->all();
-
-				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))
-				{
-					break;
-				}
-
-				$objComment = Database::getInstance()->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
-
-				while ($objComment->next())
-				{
-					if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source) && ($key = array_search($objComment->id, $session['CURRENT']['IDS'])) !== false)
-					{
-						unset($session['CURRENT']['IDS'][$key]);
-					}
-				}
-
-				$session['CURRENT']['IDS'] = array_values($session['CURRENT']['IDS']);
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Notify subscribers of a reply
 	 *
@@ -352,113 +251,6 @@ class tl_comments extends Backend
 	}
 
 	/**
-	 * Check whether the user is allowed to edit a comment
-	 *
-	 * @param integer $intParent
-	 * @param string  $strSource
-	 *
-	 * @return boolean
-	 */
-	protected function isAllowedToEditComment($intParent, $strSource)
-	{
-		if (BackendUser::getInstance()->isAdmin)
-		{
-			return true;
-		}
-
-		static $cache = array();
-
-		$strKey = __METHOD__ . '-' . $strSource . '-' . $intParent;
-
-		// Load cached result
-		if (isset($cache[$strKey]))
-		{
-			return $cache[$strKey];
-		}
-
-		// Order deny,allow
-		$cache[$strKey] = false;
-		$security = System::getContainer()->get('security.helper');
-
-		switch ($strSource)
-		{
-			case 'tl_content':
-				$objPage = Database::getInstance()
-					->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=(SELECT pid FROM tl_content WHERE id=?))")
-					->limit(1)
-					->execute($intParent);
-
-				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
-				{
-					$cache[$strKey] = true;
-				}
-				break;
-
-			case 'tl_page':
-				$objPage = Database::getInstance()
-					->prepare("SELECT * FROM tl_page WHERE id=?")
-					->limit(1)
-					->execute($intParent);
-
-				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
-				{
-					$cache[$strKey] = true;
-				}
-				break;
-
-			case 'tl_news':
-				$objArchive = Database::getInstance()
-					->prepare("SELECT pid FROM tl_news WHERE id=?")
-					->limit(1)
-					->execute($intParent);
-
-				// Do not check the access to the news module (see #5174)
-				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
-				{
-					$cache[$strKey] = true;
-				}
-				break;
-
-			case 'tl_calendar_events':
-				$objCalendar = Database::getInstance()
-					->prepare("SELECT pid FROM tl_calendar_events WHERE id=?")
-					->limit(1)
-					->execute($intParent);
-
-				// Do not check the access to the calendar module (see #5174)
-				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
-				{
-					$cache[$strKey] = true;
-				}
-				break;
-
-			case 'tl_faq':
-				// Do not check access to the FAQ module (see #5174)
-				$cache[$strKey] = true;
-				break;
-
-			default:
-				// HOOK: support custom modules
-				if (isset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']) && is_array($GLOBALS['TL_HOOKS']['isAllowedToEditComment']))
-				{
-					foreach ($GLOBALS['TL_HOOKS']['isAllowedToEditComment'] as $callback)
-					{
-						if (System::importStatic($callback[0])->{$callback[1]}($intParent, $strSource) === true)
-						{
-							$cache[$strKey] = true;
-							break;
-						}
-					}
-				}
-				break;
-		}
-
-		return $cache[$strKey];
-	}
-
-	/**
 	 * Send out the new comment notifications
 	 *
 	 * @param mixed $varValue
@@ -480,12 +272,13 @@ class tl_comments extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listComments($arrRow)
 	{
 		$router = System::getContainer()->get('router');
-		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
+		$title = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent']);
+		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&amp;popup=1&amp;nb=1\' }); return false;"';
 
 		switch ($arrRow['source'])
 		{
@@ -496,7 +289,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -507,7 +300,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -518,7 +311,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->headline) . '</a>';
 				}
 				break;
 
@@ -529,7 +322,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->question) . '</a>';
 				}
 				break;
 
@@ -540,7 +333,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -562,82 +355,11 @@ class tl_comments extends Backend
 
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
-		return '
-<div class="cte_type ' . $key . '"><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . ($arrRow['website'] ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+		return RecordLabel::fromHtml('
+<div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialchars($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="cte_preview">
-' . $arrRow['comment'] . '
-</div>' . "\n    ";
-	}
-
-	/**
-	 * Return the edit comment button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editComment($row, $href, $label, $title, $icon, $attributes)
-	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete comment button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteComment($row, $href, $label, $title, $icon, $attributes)
-	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
-		{
-			return '';
-		}
-
-		$href .= '&amp;id=' . $row['id'];
-
-		if (!$row['published'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		if (!$this->isAllowedToEditComment($row['parent'], $row['source']))
-		{
-			return Image::getHtml($icon) . ' ';
-		}
-
-		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
-
-		return '<a href="' . $this->addToUrl($href) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $row['published'] ? $title : $titleDisabled, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '" data-alt="' . StringUtil::specialchars($title) . '" data-alt-disabled="' . StringUtil::specialchars($titleDisabled) . '"') . '</a> ';
+' . nl2br(StringUtil::specialchars($arrRow['comment'])) . '
+</div>' . "\n    ");
 	}
 
 	/**

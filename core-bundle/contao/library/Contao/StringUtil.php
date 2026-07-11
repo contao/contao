@@ -208,15 +208,28 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
-		if ((string) $strString === '')
+		$replace = static function (&$value) use ($strQuoteStyle) {
+			if (\is_string($value))
+			{
+				$value = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $value);
+				$value = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $value);
+				$value = html_entity_decode($value, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+			}
+
+			// Cast the value to string (backwards compatibility)
+			$value = (string) $value;
+		};
+
+		if (\is_array($strString))
 		{
-			return '';
+			array_walk_recursive($strString, $replace);
+		}
+		else
+		{
+			$replace($strString);
 		}
 
-		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
-		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
-
-		return html_entity_decode($strString, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+		return $strString;
 	}
 
 	/**
@@ -226,12 +239,19 @@ class StringUtil
 	 *
 	 * @return string|array The string with the tags in square brackets
 	 */
-	public static function convertBasicEntities($strBuffer)
+	public static function convertBasicEntities($strBuffer, $blnForHtml=true)
 	{
-		$replace = static function (&$value) {
+		$from = $blnForHtml
+			? array('&lsqb;', '&rsqb;', '&lsqb;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;')
+			: array('[', ']', '[lsqb[rsqb]', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}")
+		;
+
+		$to = array('[lsqb]', '[rsqb]', '[lsqb]', '[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]');
+
+		$replace = static function (&$value) use ($from, $to) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $value);
+				$value = str_replace($from, $to, $value);
 			}
 		};
 
@@ -254,12 +274,19 @@ class StringUtil
 	 *
 	 * @return string|array The string with the original entities
 	 */
-	public static function restoreBasicEntities($strBuffer)
+	public static function restoreBasicEntities($strBuffer, $blnForHtml=true)
 	{
-		$replace = static function (&$value) {
+		$from = array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]');
+
+		$to = $blnForHtml
+			? array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;')
+			: array('&', '&', '<', '>', "\u{A0}", "\u{AD}", "\u{200B}", '[', ']')
+		;
+
+		$replace = static function (&$value) use ($from, $to) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $value);
+				$value = str_replace($from, $to, $value);
 			}
 		};
 
@@ -518,6 +545,29 @@ class StringUtil
 	public static function binToUuid($data)
 	{
 		return implode('-', unpack('H8time_low/H4time_mid/H4time_high/H4clock_seq/H12node', $data));
+	}
+
+	/**
+	 * Converts binary UUIDs to string if detected.
+	 * Also supports serialized arrays (e.g. from the fileTree widget).
+	 */
+	public static function ensureStringUuids(mixed $data): mixed
+	{
+		if (!\is_string($data) && !\is_array($data))
+		{
+			return $data;
+		}
+
+		$deserialized = self::deserialize($data);
+
+		if (\is_array($deserialized))
+		{
+			$deserialized = array_map(static fn (mixed $v) => Validator::isBinaryUuid($v) ? self::binToUuid($v) : $v, $deserialized);
+
+			return \is_string($data) ? serialize($deserialized) : $deserialized;
+		}
+
+		return Validator::isBinaryUuid($data) ? self::binToUuid($data) : $data;
 	}
 
 	/**
@@ -851,7 +901,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		if ($blnStripInsertTags)
 		{
@@ -870,7 +920,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
 
@@ -897,7 +947,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=true)
 	{
 		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
 
@@ -996,7 +1046,7 @@ class StringUtil
 	 * @param mixed   $varValue      The serialized string
 	 * @param boolean $blnForceArray True to always return an array
 	 *
-	 * @return mixed The unserialized array or the unprocessed input value
+	 * @return ($blnForceArray is true ? array : mixed) The unserialized array or the unprocessed input value
 	 */
 	public static function deserialize($varValue, $blnForceArray=false)
 	{
@@ -1171,7 +1221,7 @@ class StringUtil
 
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
-			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', is_nan($number) ? 'NAN' : $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');

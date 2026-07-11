@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
@@ -27,10 +30,116 @@ use League\Flysystem\FilesystemReader;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class MountManagerTest extends TestCase
 {
+    public function testGetReturnsNullIfFileDoesNotExist(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(false)
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('mimeType')
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $this->assertNull($manager->get('foo/bar/test.zip'));
+    }
+
+    public function testGetBuildsItemAndLoadsMissingMetadataLazily(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('mimeType')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('lastModified')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, 123450, null))
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('fileSize')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', 1024, null, null, null))
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $item = $manager->get('foo/bar/test.zip');
+
+        $this->assertSame('foo/bar/test.zip', $item->getPath());
+        $this->assertTrue($item->isFile());
+
+        $this->assertSame('application/zip', $item->getMimeType());
+        $this->assertSame(1024, $item->getFileSize());
+        $this->assertSame(123450, $item->getLastModified());
+    }
+
+    public function testGetDoesNotLoadLazyMetadataIfMimeTypeAlreadyProvidedIt(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('mimeType')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', 1024, null, 123450, 'application/zip'))
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('lastModified')
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('fileSize')
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $item = $manager->get('foo/bar/test.zip');
+
+        $this->assertInstanceOf(FilesystemItem::class, $item);
+        $this->assertSame('foo/bar/test.zip', $item->getPath());
+        $this->assertSame('application/zip', $item->getMimeType());
+        $this->assertSame(1024, $item->getFileSize());
+        $this->assertSame(123450, $item->getLastModified());
+    }
+
     public function testMountAdapters(): void
     {
         $manager = $this->getMountManagerWithRootAdapter($rootAdapter = new InMemoryFilesystemAdapter());
@@ -354,7 +463,7 @@ class MountManagerTest extends TestCase
 
     public function testFileExistsToleratesNonExistingMountPoints(): void
     {
-        $this->assertFalse((new MountManager())->fileExists('foo'));
+        $this->assertFalse(new MountManager($this->createStub(FileDownloadHelper::class))->fileExists('foo'));
     }
 
     #[DataProvider('provideListings')]
@@ -487,7 +596,7 @@ class MountManagerTest extends TestCase
     public function testSetsLazyMetadataIfAdapterDidNotProvideDetailsWhenListing(): void
     {
         // Mock an adapter that does not set metadata when listing
-        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter = $this->createStub(FilesystemAdapter::class);
         $adapter
             ->method('listContents')
             ->willReturnCallback(
@@ -509,11 +618,10 @@ class MountManagerTest extends TestCase
 
         $adapter
             ->method('mimeType')
-            ->with('bar/test.zip')
-            ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
+            ->willReturnMap([['bar/test.zip', new FileAttributes('bar/test.zip', null, null, null, 'application/zip')]])
         ;
 
-        $mountManager = new MountManager([]);
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter, 'foo');
 
         $item = iterator_to_array($mountManager->listContents('foo/bar'))[0];
@@ -532,7 +640,7 @@ class MountManagerTest extends TestCase
 
         $adapter2 = new InMemoryFilesystemAdapter();
 
-        $manager = new MountManager();
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
         $manager->mount($adapter1, 'foo');
         $manager->mount($adapter2, 'bar');
 
@@ -575,14 +683,14 @@ class MountManagerTest extends TestCase
 
     public function testGeneratePublicUri(): void
     {
-        $fooAdapter = $this->createMock(FilesystemAdapter::class);
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
 
         $publicUriProvider1 = $this->createMock(PublicUriProviderInterface::class);
         $publicUriProvider1
             ->expects($this->exactly(2))
             ->method('getUri')
             ->willReturnCallback(
-                function (FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options) use ($fooAdapter): UriInterface|null {
+                function (FilesystemAdapter $adapter, string $adapterPath, Options|null $options) use ($fooAdapter): UriInterface|null {
                     if ('bar/baz.jpg' !== $adapterPath) {
                         return null;
                     }
@@ -595,7 +703,7 @@ class MountManagerTest extends TestCase
             )
         ;
 
-        $options = $this->createMock(OptionsInterface::class);
+        $options = $this->createStub(Options::class);
 
         $publicUriProvider2 = $this->createMock(PublicUriProviderInterface::class);
         $publicUriProvider2
@@ -605,7 +713,7 @@ class MountManagerTest extends TestCase
             ->willReturn(new Uri('https://some-service.org/user42/other.jpg'))
         ;
 
-        $mountManager = new MountManager([$publicUriProvider1, $publicUriProvider2]);
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class), [$publicUriProvider1, $publicUriProvider2]);
         $mountManager->mount($fooAdapter, 'foo');
 
         $this->assertSame(
@@ -619,12 +727,88 @@ class MountManagerTest extends TestCase
         );
     }
 
-    private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
+    public function testGeneratePublicUriReturnsNullIfNoProviderAndNoTemporaryAccessOption(): void
     {
-        return (new MountManager())->mount($adapter);
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
+
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
+        $fileDownloadHelper
+            ->expects($this->never())
+            ->method('generateUrl')
+        ;
+
+        $publicUriProvider = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'bar/baz.jpg', null)
+            ->willReturn(null)
+        ;
+
+        $mountManager = new MountManager($fileDownloadHelper, [$publicUriProvider]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertNull($mountManager->generatePublicUri('foo/bar/baz.jpg'));
     }
 
-    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
+    #[DataProvider('provideTemporaryPublicUriDispositions')]
+    public function testGeneratePublicUriFallsBackToTemporaryPublicUriWithDisposition(string $expectedDisposition, ContentDispositionOption|null $contentDispositionOption = null): void
+    {
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
+        $temporaryAccessOption = TemporaryAccessOption::createFromContent(60, ['foo' => 'bar']);
+
+        $options = Options::create();
+        $options = $options->withSetting(Options::OPTION_TEMPORARY_ACCESS_INFORMATION, $temporaryAccessOption);
+
+        if ($contentDispositionOption) {
+            $options = $options->withSetting(Options::OPTION_CONTENT_DISPOSITION_TYPE, $contentDispositionOption);
+        }
+
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
+        $fileDownloadHelper
+            ->expects($this->once())
+            ->method('generateUrl')
+            ->with('foo/bar/baz.jpg', $temporaryAccessOption, null, $expectedDisposition)
+            ->willReturn('https://example.com/not-relevant-for-this-test')
+        ;
+
+        $publicUriProvider = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'bar/baz.jpg', $options)
+            ->willReturn(null)
+        ;
+
+        $mountManager = new MountManager($fileDownloadHelper, [$publicUriProvider]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertSame('https://example.com/not-relevant-for-this-test', (string) $mountManager->generatePublicUri('foo/bar/baz.jpg', $options));
+    }
+
+    public static function provideTemporaryPublicUriDispositions(): iterable
+    {
+        yield 'Default disposition inline' => [
+            HeaderUtils::DISPOSITION_INLINE,
+        ];
+
+        yield 'Explicit disposition inline' => [
+            HeaderUtils::DISPOSITION_INLINE,
+            new ContentDispositionOption(true),
+        ];
+
+        yield 'Explicit disposition attachment' => [
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            new ContentDispositionOption(false),
+        ];
+    }
+
+    private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
+    {
+        return new MountManager($this->createStub(FileDownloadHelper::class))->mount($adapter);
+    }
+
+    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
         $adapter
@@ -635,7 +819,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

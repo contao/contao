@@ -21,8 +21,8 @@ class BackendMenuEventTest extends TestCase
 {
     public function testReturnsTheMenuItemFactory(): void
     {
-        $factory = $this->createMock(FactoryInterface::class);
-        $tree = $this->createMock(ItemInterface::class);
+        $factory = $this->createStub(FactoryInterface::class);
+        $tree = $this->createStub(ItemInterface::class);
         $event = new MenuEvent($factory, $tree);
 
         $this->assertSame($factory, $event->getFactory());
@@ -30,8 +30,8 @@ class BackendMenuEventTest extends TestCase
 
     public function testReturnsTheMenuItemTree(): void
     {
-        $factory = $this->createMock(FactoryInterface::class);
-        $tree = $this->createMock(ItemInterface::class);
+        $factory = $this->createStub(FactoryInterface::class);
+        $tree = $this->createStub(ItemInterface::class);
         $event = new MenuEvent($factory, $tree);
 
         $this->assertSame($tree, $event->getTree());

@@ -1,0 +1,31 @@
+{% if sources|default %}
+    <picture>
+        {% for source in sources %}
+            <source{{ attrs()
+                .set('srcset', source.srcset)
+                .setIfExists('sizes', source.sizes|default)
+                .setIfExists('media', source.media|default)
+                .setIfExists('type', source.type|default)
+                .setIfExists('width', (source.width|default and source.height|default) ? source.width : null)
+            .setIfExists('height', (source.width|default and source.height|default) ? source.height : null)
+            }}>
+        {% endfor %}
+{% endif %}
+
+<img{{ attrs()
+    .set('src', img.src)
+    .set('srcset', img.srcset, img.srcset != img.src)
+    .setIfExists('sizes', img.sizes|default)
+    .setIfExists('width', (img.width|default and img.height|default) ? img.width : null)
+    .setIfExists('height', (img.width|default and img.height|default) ? img.height : null)
+    .set('alt', alt|default|insert_tag)
+    .set('loading', img.loading|default, img.loading|default)
+    .setIfExists('title', title|default|insert_tag)
+    .addClass(class|default)
+    .addClass(img.class|default)
+    .mergeWith(attributes|default)
+}}>
+
+{% if sources|default %}
+    </picture>
+{% endif %}

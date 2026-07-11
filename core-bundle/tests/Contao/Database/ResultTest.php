@@ -205,15 +205,22 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param array<array<string, string>> $data
+     * @param list<array<string, string>> $data
      *
      * @return array<Result|object>
      */
     private function createResults(array $data): array
     {
+        $result = new ArrayResult(
+            array_keys($data[0] ?? []),
+            // Remove all keys because ArrayResult incorrectly expects list<list<mixed>> even
+            // though it handles list<array<mixed>> just fine as well.
+            array_map(array_values(...), $data),
+        );
+
         return [
             new Result(
-                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                new DoctrineResult($result, $this->createStub(Connection::class)),
                 'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),

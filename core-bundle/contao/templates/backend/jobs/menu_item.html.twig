@@ -1,0 +1,25 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set controller_attributes = attrs()
+    .set('data-controller', 'contao--jobs')
+    .set('data-contao--jobs-pending-jobs-url-value', path('_contao_jobs_pending.stream'))
+    .set('data-contao--jobs-default-interval-value', 5000)
+    .set('data-contao--jobs-maximum-interval-value', 60000)
+    .set('data-contao--jobs-enabled-value', has_pending_jobs)
+    .set('data-contao--jobs-all-jobs-processed-message-value', 'jobs.all_jobs_processed'|trans({}, 'contao_jobs'))
+    .set('data-action', 'contao--watch-pending-jobs@document->contao--jobs#enable')
+    .mergeWith(controller_attributes|default)
+%}
+<div{{ controller_attributes }}>
+    {% set menu_item_attributes = attrs()
+        .set('href', jobs_link)
+        .set('title', 'MSC.jobs'|trans)
+        .set('class', 'icon-jobs')
+        .set('data-turbo-prefetch', false)
+        .mergeWith(menu_item_attributes|default) %}
+    <a{{ menu_item_attributes }}>{{ 'MSC.jobs'|trans }}</a>
+    <sup data-contao--jobs-target="count"></sup>
+
+    {# Overlay with job details - this will get populated when polling #}
+    <div id="running-jobs"></div>
+</div>

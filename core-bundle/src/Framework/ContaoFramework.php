@@ -22,16 +22,12 @@ use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @internal Do not use this class in your code; use the "contao.framework" service instead
- */
 class ContaoFramework implements ResetInterface
 {
     private static bool $initialized = false;
@@ -46,6 +42,9 @@ class ContaoFramework implements ResetInterface
 
     private array $hookListeners = [];
 
+    /**
+     * @internal Do not use this class in your code; use the "contao.framework" service instead
+     */
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly string $projectDir,
@@ -114,7 +113,7 @@ class ContaoFramework implements ResetInterface
      *
      * @return T
      */
-    public function createInstance(string $class, array $args = [])
+    public function createInstance(string $class, array $args = []): object|null
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
             return \call_user_func_array([$class, 'getInstance'], $args);
@@ -171,7 +170,6 @@ class ContaoFramework implements ResetInterface
         $this->registerHookListeners();
 
         Input::initialize();
-        TemplateLoader::initialize();
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
@@ -185,7 +183,6 @@ class ContaoFramework implements ResetInterface
         static $basicClasses = [
             'System',
             'Config',
-            'TemplateLoader',
         ];
 
         foreach ($basicClasses as $class) {
@@ -203,7 +200,7 @@ class ContaoFramework implements ResetInterface
             $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
+        // Deprecated since Contao 4.0, to be removed in Contao 7.0
         $GLOBALS['TL_LANGUAGE'] = $language;
     }
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\DirectoryFilterVirtualFilesystem;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -27,10 +28,10 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
 {
     public function testFiltersStorage(): void
     {
-        $mountManager = new MountManager([]);
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount(new InMemoryFilesystemAdapter());
 
-        $baseStorage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), '');
+        $baseStorage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), '');
         $baseStorage->createDirectory('images');
         $baseStorage->createDirectory('images/photos');
         $baseStorage->createDirectory('images/photos/foo');
@@ -137,7 +138,7 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
     #[DataProvider('provideIllegalOperations')]
     public function testDeniesAccess(string $operation, array $arguments, string $expectedExceptionMessage): void
     {
-        $filterStorage = new DirectoryFilterVirtualFilesystem($this->createMock(VirtualFilesystemInterface::class), [
+        $filterStorage = new DirectoryFilterVirtualFilesystem($this->createStub(VirtualFilesystemInterface::class), [
             'foo',
             'bar/baz',
         ]);
@@ -148,7 +149,7 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
         $filterStorage->$operation(...$arguments);
     }
 
-    public static function provideIllegalOperations(): \Generator
+    public static function provideIllegalOperations(): iterable
     {
         yield 'create file in root' => [
             'write', ['file', ''],

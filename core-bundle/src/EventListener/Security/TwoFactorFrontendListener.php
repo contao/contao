@@ -78,8 +78,10 @@ class TwoFactorFrontendListener
                 throw new ForwardPageNotFoundException('No two-factor authentication page found');
             }
 
+            $currentPage = $request->attributes->get('pageModel');
+
             // Redirect to two-factor page
-            if ($rootPage->id !== $twoFactorPage->id) {
+            if ($currentPage?->id !== $twoFactorPage->id) {
                 $event->setResponse(new RedirectResponse($this->urlGenerator->generate($twoFactorPage, [], UrlGeneratorInterface::ABSOLUTE_URL)));
             }
 

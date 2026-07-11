@@ -9,12 +9,12 @@ export default class extends Controller {
     connect() {
         // Create a div to apply the editor to
         this.container = document.createElement('div');
-        this.container.id = this.element.id + '_div';
+        this.container.id = `${this.element.id}_div`;
         this.container.className = this.element.className;
         this.element.parentNode.insertBefore(this.container, this.element.nextSibling);
 
         // Hide the textarea
-        this.element.style['display'] = 'none';
+        this.element.style.display = 'none';
 
         // Instantiate the editor
         this.editor = ace.edit(this.container);

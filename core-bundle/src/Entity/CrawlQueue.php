@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'tl_crawl_queue')]
 #[Entity]
-#[Index(columns: ['job_id'], name: 'job_id')]
-#[Index(columns: ['uri_hash'], name: 'uri_hash')]
-#[Index(columns: ['processed'], name: 'processed')]
+#[Index(name: 'job_id', columns: ['job_id'])]
+#[Index(name: 'uri_hash', columns: ['uri_hash'])]
+#[Index(name: 'processed', columns: ['processed'])]
 class CrawlQueue
 {
     #[Id]

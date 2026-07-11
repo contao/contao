@@ -71,6 +71,7 @@ tl_news:
       author: 1
       date: 1539616560
       time: 1539616560
+      teaser: ''
       source: default
       published: 1
 

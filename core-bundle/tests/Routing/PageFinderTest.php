@@ -32,12 +32,12 @@ class PageFinderTest extends TestCase
         ;
 
         $pageFinder = new PageFinder(
-            $this->mockContaoFramework(),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
@@ -47,17 +47,16 @@ class PageFinderTest extends TestCase
 
     public function testGetCurrentPageFromRequestStack(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
-            $this->mockContaoFramework(),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
@@ -66,7 +65,7 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostReturnsNullIfRoutingHasNoPageModel(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -80,16 +79,16 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostReturnsNullIfRoutingThrowsException(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
         ;
 
-        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
+        $requestMatcher = $this->createStub(RequestMatcherInterface::class);
         $requestMatcher
             ->method('matchRequest')
-            ->willThrowException($this->createMock(ExceptionInterface::class))
+            ->willThrowException($this->createStub(ExceptionInterface::class))
         ;
 
         $pageFinder = new PageFinder($framework, $requestMatcher, new RequestStack());
@@ -100,9 +99,9 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostReturnsMatchedRootPage(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -116,16 +115,16 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostQueriesForRootPage(): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'root']);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
 
-        $regularPage = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
+        $regularPage = $this->createClassWithPropertiesMock(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
         $regularPage
             ->expects($this->once())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findPublishedById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -133,7 +132,7 @@ class PageFinderTest extends TestCase
             ->willReturn($rootPage)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkMock([PageModel::class => $pageAdapter]);
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -147,10 +146,10 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForRequestCreatesNewRequest(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
         $request = new Request();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -172,16 +171,16 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForRequestWillUseExistingPageModel(): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'root']);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
 
-        $regularPage = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
+        $regularPage = $this->createClassWithPropertiesMock(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
         $regularPage
             ->expects($this->once())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findPublishedById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -189,7 +188,7 @@ class PageFinderTest extends TestCase
             ->willReturn($rootPage)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkMock([PageModel::class => $pageAdapter]);
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -206,9 +205,9 @@ class PageFinderTest extends TestCase
 
     public function testDoesNotPrependTheProtocolIfTheHostnameIsEmpty(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')

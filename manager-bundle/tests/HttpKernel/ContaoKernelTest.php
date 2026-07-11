@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use App\Entity\FooEntity;
+use App\EventListener\InvalidListener;
+use App\EventListener\ValidListener;
+use App\FrontendModule\LegacyModule;
+use App\Messenger\UnionTypeMessage;
+use App\Model\FooModel;
 use AppBundle\AppBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManager\Plugin as ManagerPlugin;
@@ -27,11 +33,15 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +78,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testResetsTheBundleLoaderOnShutdown(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -83,7 +93,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testDoesNotResetsTheBundleLoaderOnShutdownIfKernelIsNotBooted(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -158,7 +168,7 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame(
-            Path::normalize($kernel->getProjectDir()).'/var/logs',
+            Path::normalize($kernel->getProjectDir()).'/var/log',
             Path::normalize($kernel->getLogDir()),
         );
     }
@@ -191,13 +201,13 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $files = [];
 
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $container
             ->method('fileExists')
             ->willReturnCallback(static fn (string $path) => \in_array(basename($path), $expectedResult, true))
         ;
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -270,11 +280,105 @@ class ContaoKernelTest extends ContaoTestCase
         ];
     }
 
-    public function testRegisterContainerConfigurationLoadsPlugins(): void
+    public function testAutowiresSrcFiles(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Entity/FooEntity.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/InvalidListener.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/ValidListener.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/FrontendModule/LegacyModule.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Messenger/UnionTypeMessage.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Model/FooModel.php';
+
+        $projectDir = __DIR__.'/../Fixtures/HttpKernel/AutowireSrc';
+        $container = new ContainerBuilder(new ParameterBag(['kernel.project_dir' => $projectDir]));
+
+        $locator = $this->createStub(FileLocatorInterface::class);
+        $locator
+            ->method('locate')
+            ->willReturnArgument(0)
+        ;
+
+        $innerLoader = new PhpFileLoader($container, $locator);
 
         $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->exactly(2))
+            ->method('load')
+            ->willReturnCallback(
+                function ($resource) use ($container, $innerLoader) {
+                    if ($resource instanceof \Closure) {
+                        return $resource($container, 'prod');
+                    }
+
+                    $this->assertSame(Path::join(__DIR__, '../../skeleton/config/services.php'), $resource);
+
+                    return $innerLoader->load($resource);
+                },
+            )
+        ;
+
+        $kernel = $this->getKernel($projectDir);
+        $kernel->registerContainerConfiguration($loader);
+
+        $this->assertFalse($container->hasDefinition(FooEntity::class));
+        $this->assertFalse($container->hasDefinition(InvalidListener::class));
+        $this->assertTrue($container->hasDefinition(ValidListener::class));
+        $this->assertFalse($container->hasDefinition(LegacyModule::class));
+        $this->assertTrue($container->hasDefinition(UnionTypeMessage::class));
+        $this->assertFalse($container->hasDefinition(FooModel::class));
+    }
+
+    public function testDoesNotAutowireSrcFilesIfAppNamespaceIsRegistered(): void
+    {
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Entity/FooEntity.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/InvalidListener.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/ValidListener.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/FrontendModule/LegacyModule.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Messenger/UnionTypeMessage.php';
+        include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Model/FooModel.php';
+
+        $projectDir = __DIR__.'/../Fixtures/HttpKernel/AutowireSrc';
+        $container = new ContainerBuilder(new ParameterBag(['kernel.project_dir' => $projectDir]));
+
+        // Create a fake definition to stop services.php from loading anything
+        $container->setDefinition('App\\Foobar', new Definition());
+
+        $locator = $this->createStub(FileLocatorInterface::class);
+        $locator
+            ->method('locate')
+            ->willReturnArgument(0)
+        ;
+
+        $innerLoader = new PhpFileLoader($container, $locator);
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->exactly(2))
+            ->method('load')
+            ->willReturnCallback(
+                function ($resource) use ($container, $innerLoader) {
+                    if ($resource instanceof \Closure) {
+                        return $resource($container, 'prod');
+                    }
+
+                    $this->assertSame(Path::join(__DIR__, '../../skeleton/config/services.php'), $resource);
+
+                    return $innerLoader->load($resource);
+                },
+            )
+        ;
+
+        $kernel = $this->getKernel($projectDir);
+        $kernel->registerContainerConfiguration($loader);
+
+        $this->assertSame(['service_container', 'App\\Foobar'], array_keys($container->getDefinitions()));
+    }
+
+    public function testRegisterContainerConfigurationLoadsPlugins(): void
+    {
+        $container = $this->createStub(ContainerBuilder::class);
+
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -439,7 +543,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     private function getKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
         $pluginLoader
             ->method('getInstancesOf')
             ->willReturn([])

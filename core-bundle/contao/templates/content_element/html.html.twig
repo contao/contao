@@ -1,0 +1,9 @@
+{% if as_editor_view %}
+    {% block editor_view %}
+        <pre>{{ html }}</pre>
+    {% endblock %}
+{% else %}
+    {% block html %}
+        {{- html|default|sanitize_html('contao')|insert_tag_raw -}}
+    {% endblock %}
+{% endif %}

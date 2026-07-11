@@ -50,7 +50,7 @@ class PictureFactoryTest extends TestCase
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -155,13 +155,13 @@ class PictureFactoryTest extends TestCase
             ]),
         ];
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => $imageSizeModel]);
 
         $imageSizeItemProperties = [
             'width' => 50,
@@ -173,21 +173,21 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
+        $imageSizeItemModel = $this->createClassWithPropertiesStub(ImageSizeItemModel::class, $imageSizeItemProperties);
         $imageSizeItemModel
             ->method('row')
             ->willReturn($imageSizeItemProperties)
         ;
 
         $collection = new Collection([$imageSizeItemModel], 'tl_image_size_item');
-        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => $collection]);
+        $imageSizeItemAdapter = $this->createConfiguredAdapterStub(['findVisibleByPid' => $collection]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
@@ -200,7 +200,7 @@ class PictureFactoryTest extends TestCase
     public function testCorrectlyHandlesEmptyImageFormats(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -220,7 +220,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($imageMock)
@@ -238,21 +238,21 @@ class PictureFactoryTest extends TestCase
             'formats' => '',
         ];
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
-        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => $imageSizeModel]);
+        $imageSizeItemAdapter = $this->createConfiguredAdapterStub(['findVisibleByPid' => null]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $pictureFactory->create($path, 1);
@@ -296,7 +296,7 @@ class PictureFactoryTest extends TestCase
             ],
         ];
 
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -372,11 +372,11 @@ class PictureFactoryTest extends TestCase
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
     {
-        $pictureConfig = (new PictureConfiguration())
+        $pictureConfig = new PictureConfiguration()
             ->setSize(
-                (new PictureConfigurationItem())
+                new PictureConfigurationItem()
                     ->setResizeConfig(
-                        (new ResizeConfiguration())
+                        new ResizeConfiguration()
                             ->setWidth(100)
                             ->setHeight(200)
                             ->setMode(ResizeConfiguration::MODE_BOX)
@@ -386,9 +386,9 @@ class PictureFactoryTest extends TestCase
                     ->setSizes('100vw'),
             )
             ->setSizeItems([
-                (new PictureConfigurationItem())
+                new PictureConfigurationItem()
                     ->setResizeConfig(
-                        (new ResizeConfiguration())
+                        new ResizeConfiguration()
                             ->setWidth(50)
                             ->setHeight(50)
                             ->setMode(ResizeConfiguration::MODE_CROP)
@@ -400,7 +400,7 @@ class PictureFactoryTest extends TestCase
             ])
         ;
 
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -435,7 +435,7 @@ class PictureFactoryTest extends TestCase
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -491,7 +491,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $this->expectUserDeprecationMessageMatches('/legacy resize mode "left_top" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/legacy resize mode "left_top" is deprecated/');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
@@ -505,7 +505,7 @@ class PictureFactoryTest extends TestCase
     {
         $defaultDensities = '';
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -587,7 +587,7 @@ class PictureFactoryTest extends TestCase
     {
         $defaultDensities = '';
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -662,7 +662,7 @@ class PictureFactoryTest extends TestCase
     public function testCreatesAPictureWithResizeOptions(ResizeOptions|null $resizeOptions, PictureConfiguration|string|null $size, bool $expected): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -704,25 +704,25 @@ class PictureFactoryTest extends TestCase
     public static function getResizeOptionsScenarios(): iterable
     {
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            new ResizeOptions()->setSkipIfDimensionsMatch(true),
             'size_skip',
             true,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (2)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            new ResizeOptions()->setSkipIfDimensionsMatch(true),
             'size_noskip',
             true,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (3)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            new ResizeOptions()->setSkipIfDimensionsMatch(false),
             'size_skip',
             false,
         ];
 
         yield 'Prefer skipIfDimensionsMatch from explicitly set options (4)' => [
-            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            new ResizeOptions()->setSkipIfDimensionsMatch(false),
             'size_noskip',
             false,
         ];
@@ -755,8 +755,8 @@ class PictureFactoryTest extends TestCase
     #[DataProvider('getAspectRatios')]
     public function testSetHasSingleAspectRatioAttribute(bool $expected, int $imgWidth, int $imgHeight, int $sourceWidth, int $sourceHeight): void
     {
-        $imageMock = $this->createMock(ImageInterface::class);
-        $pictureConfig = $this->createMock(PictureConfiguration::class);
+        $imageMock = $this->createStub(ImageInterface::class);
+        $pictureConfig = $this->createStub(PictureConfiguration::class);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -812,9 +812,9 @@ class PictureFactoryTest extends TestCase
 
     private function getPictureFactory(PictureGeneratorInterface|null $pictureGenerator = null, ImageFactoryInterface|null $imageFactory = null, ContaoFramework|null $framework = null): PictureFactory
     {
-        $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
-        $imageFactory ??= $this->createMock(ImageFactoryInterface::class);
-        $framework ??= $this->createMock(ContaoFramework::class);
+        $pictureGenerator ??= $this->createStub(PictureGeneratorInterface::class);
+        $imageFactory ??= $this->createStub(ImageFactoryInterface::class);
+        $framework ??= $this->createStub(ContaoFramework::class);
 
         return new PictureFactory($pictureGenerator, $imageFactory, $framework, false, []);
     }

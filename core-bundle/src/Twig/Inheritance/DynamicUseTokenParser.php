@@ -30,7 +30,7 @@ use Twig\TokenParser\UseTokenParser;
  *
  * @see UseTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicUseTokenParser extends AbstractTokenParser
 {
@@ -40,7 +40,7 @@ final class DynamicUseTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): Node
     {
-        $templateExpression = $this->parser->getExpressionParser()->parseExpression();
+        $templateExpression = $this->parser->parseExpression();
         $stream = $this->parser->getStream();
 
         if (!$templateExpression instanceof ConstantExpression) {

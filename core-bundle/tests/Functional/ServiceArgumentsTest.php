@@ -103,6 +103,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         $this->assertContains(\Closure::class, $typeNames, \sprintf('Argument %s of %s should be \Closure but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         break;
 
+                    case 'service':
+                        $this->assertTrue(is_a($argument->getValue()['class'], implode('|', $typeNames), true), \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, implode('|', $typeNames), $argument->getValue()['class']));
+                        break;
+
                     case 'tagged_iterator':
                         if (\in_array('iterable', $typeNames, true)) {
                             $this->assertContains('iterable', $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
@@ -116,6 +120,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                     case 'tagged_locator':
                     case 'service_locator':
                         $this->assertContainsInstanceOf(PsrContainerInterface::class, $typeNames, \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, PsrContainerInterface::class, implode('|', $typeNames)));
+                        break;
+
+                    case 'abstract':
+                        // noop
                         break;
 
                     default:
@@ -229,7 +237,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
         // Only warn about missing types if the constructor is in a Contao class
         if (
             !str_starts_with($class, 'Contao\\')
-            || !str_starts_with((new \ReflectionMethod($class, '__construct'))->class, 'Contao\\')
+            || !str_starts_with(new \ReflectionMethod($class, '__construct')->class, 'Contao\\')
         ) {
             return;
         }
@@ -243,15 +251,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
     private function assertContainsInstanceOf(string $class, array $typeNames, string $message = ''): void
     {
-        $found = false;
-
-        foreach ($typeNames as $typeName) {
-            if (is_a($class, $typeName, true)) {
-                $found = true;
-                break;
-            }
-        }
-
-        $this->assertTrue($found, $message);
+        $this->assertTrue(array_any($typeNames, static fn ($typeName) => is_a($class, $typeName, true)), $message);
     }
 }

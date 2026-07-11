@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Twig;
 
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @experimental
- */
 final class ContaoTwigUtil
 {
     /**
@@ -40,7 +37,7 @@ final class ContaoTwigUtil
      */
     public static function getIdentifier(string $name): string
     {
-        preg_match('/^(?:@[^\/]+\/)?(.*?)\.(?:(?:[^.]+\.)?twig|html5)$/', $name, $matches);
+        preg_match('/^(?:@[^\/]+\/)?(.*?)\.(?:[^.]+\.)?twig$/', $name, $matches);
 
         return $matches[1] ?? $name;
     }
@@ -51,6 +48,8 @@ final class ContaoTwigUtil
      */
     public static function isLegacyTemplate(string $logicalName): bool
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Calling ContaoTwigUtil::isLegacyTemplate() is deprecated and will no longer work in Contao 7.');
+
         if (null === $parts = self::parseContaoName($logicalName)) {
             return false;
         }

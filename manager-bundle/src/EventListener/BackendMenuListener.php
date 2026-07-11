@@ -71,7 +71,6 @@ class BackendMenuListener
             'do' => 'debug',
             'key' => $this->debug ? 'disable' : 'enable',
             'referer' => base64_encode($request->server->get('QUERY_STRING', '')),
-            'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
         $class = 'icon-debug';
@@ -93,7 +92,7 @@ class BackendMenuListener
         $tree->addChild($debug);
 
         // The last two items are "submenu" and "burger", so make this the third to last
-        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
+        new MenuManipulator()->moveToPosition($debug, $tree->count() - 3);
     }
 
     /**

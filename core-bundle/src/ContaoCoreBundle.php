@@ -30,10 +30,10 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
@@ -61,7 +61,7 @@ class ContaoCoreBundle extends Bundle
 
     public function boot(): void
     {
-        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+        new Request()->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
     }
 
     public function getContainerExtension(): ContaoCoreExtension
@@ -116,7 +116,6 @@ class ContaoCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new DataContainerCallbackPass());
-        $container->addCompilerPass(new TranslationDataCollectorPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
         $container->addCompilerPass(new SearchIndexerPass()); // Must be before the CrawlerPass
         $container->addCompilerPass(new CrawlerPass());
@@ -130,6 +129,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
+        $container->addCompilerPass(new RegisterTwigExtensionsPass());
     }
 
     public static function getVersion(): string

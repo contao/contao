@@ -32,7 +32,7 @@ class WidgetTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
+        $container->set('contao.routing.scope_matcher', $this->createStub(ScopeMatcher::class));
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'gif', 'png']);
 
@@ -47,7 +47,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @param array<string>|string $value
+     * @param array<string|array>|string $value
      */
     #[DataProvider('postProvider')]
     public function testReadsThePostData(string $key, string $input, array|string $value, string|null $expected = null): void
@@ -56,7 +56,7 @@ class WidgetTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->createMock(Widget::class);
+        $widget = $this->createStub(Widget::class);
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
@@ -186,7 +186,7 @@ class WidgetTest extends TestCase
         }
 
         if (isset($parameters[2])) {
-            $widget = (new \ReflectionClass(TextField::class))->newInstanceWithoutConstructor();
+            $widget = new \ReflectionClass(TextField::class)->newInstanceWithoutConstructor();
             $widget->addAttributes($attrs);
             $this->assertSame($parameters[2], $widget->value);
         }
@@ -245,9 +245,22 @@ class WidgetTest extends TestCase
         ];
 
         yield [
-            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;'],
+            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;'],
             [
-                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
+            ],
+        ];
+
+        yield [
+            [
+                ['eval' => ['basicEntities' => true, 'allowHtml' => true]],
+                'name',
+                '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
+            ],
+            [
+                'basicEntities' => true,
+                'allowHtml' => true,
+                'value' => '[&],[lt],[gt],[nbsp],[-],[lsqb],[rsqb]',
             ],
         ];
 
@@ -255,11 +268,11 @@ class WidgetTest extends TestCase
             [
                 ['eval' => ['basicEntities' => true]],
                 'name',
-                '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                "&,<,>,\u{A0},\u{AD},[,]",
             ],
             [
                 'basicEntities' => true,
-                'value' => '[&],[lt],[gt],[nbsp],[-]',
+                'value' => '[&],[lt],[gt],[nbsp],[-],[lsqb],[rsqb]',
             ],
         ];
     }

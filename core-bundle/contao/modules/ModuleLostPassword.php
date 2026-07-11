@@ -37,7 +37,7 @@ class ModuleLostPassword extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -222,7 +222,7 @@ class ModuleLostPassword extends Module
 		// Fallback to default if the class is not defined
 		if (!class_exists($strClass))
 		{
-			$strClass = 'FormPassword';
+			$strClass = FormPassword::class;
 		}
 
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));

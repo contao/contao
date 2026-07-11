@@ -13,6 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ModuleFaqReader
@@ -45,7 +48,7 @@ class ModuleFaqReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -71,8 +74,6 @@ class ModuleFaqReader extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
 			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
@@ -121,10 +122,18 @@ class ModuleFaqReader extends Module
 			}
 		}
 
+		// Update the JSON+LD "searchIndexer" setting
+		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+		if ($objFaq->searchIndexer)
+		{
+			$pageSchema['searchIndexer'] = $objFaq->searchIndexer;
+		}
+
 		$this->Template->question = $objFaq->question;
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
-		$this->Template->before = false;
+		$this->Template->addBefore = false;
 
 		// Add image
 		if ($objFaq->addImage)
@@ -156,6 +165,7 @@ class ModuleFaqReader extends Module
 			$strAuthor = $objAuthor->name;
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$this->Template->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 		// Tag the FAQ (see #2137)
@@ -216,9 +226,13 @@ class ModuleFaqReader extends Module
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCategory->requireLogin;
 		$objConfig->disableCaptcha = $objCategory->disableCaptcha;
-		$objConfig->bbcode = $objCategory->bbcode;
 		$objConfig->moderate = $objCategory->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

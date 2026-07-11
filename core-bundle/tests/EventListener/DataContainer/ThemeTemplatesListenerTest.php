@@ -39,16 +39,16 @@ class ThemeTemplatesListenerTest extends TestCase
     {
         $themeNamespace = $this->createMock(ThemeNamespace::class);
         $themeNamespace
+            ->expects($this->once())
             ->method('generateSlug')
             ->with('<bad-path>')
             ->willThrowException(new InvalidThemePathException('<bad-path>', ['.', '_']))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default')
-            ->willReturn('<message>')
+            ->willReturnMap([['ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default', '<message>']])
         ;
 
         $listener = $this->getListener(null, $themeNamespace, $translator);
@@ -62,9 +62,9 @@ class ThemeTemplatesListenerTest extends TestCase
     private function getListener(ContaoFilesystemLoader|null $filesystemLoader = null, ThemeNamespace|null $themeNamespace = null, TranslatorInterface|null $translator = null): ThemeTemplatesListener
     {
         return new ThemeTemplatesListener(
-            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
-            $themeNamespace ?? $this->createMock(ThemeNamespace::class),
-            $translator ?? $this->createMock(TranslatorInterface::class),
+            $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
+            $themeNamespace ?? $this->createStub(ThemeNamespace::class),
+            $translator ?? $this->createStub(TranslatorInterface::class),
         );
     }
 }

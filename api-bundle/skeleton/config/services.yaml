@@ -1,0 +1,48 @@
+services:
+    # Merge Contao resources into API Platform's discovered resource names so the
+    # entrypoint, docs and metadata pipeline can see DataContainerRecord.
+    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory:
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+
+    # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
+    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
+        decorates: api_platform.metadata.resource.metadata_collection_factory
+        arguments:
+            $decorated: '@.inner'
+            $framework: '@contao.framework'
+            $resourceFinder: '@contao.resource_finder'
+            $dataContainerApiPrefix: '%contao_api.data_container_api_prefix%'
+
+    # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
+    # and add them as shared components so they only exist once in the spec.
+    Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory:
+        decorates: api_platform.openapi.factory
+        arguments:
+            $decorated: '@.inner'
+            $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
+            $apiPrefix: '%contao_api.api_prefix%'
+
+    Contao\ApiBundle\Schema\DataContainerSchemaFactory:
+        arguments:
+            $framework: '@contao.framework'
+
+    # Serialize DataContainerRecord payloads and handle reads/writes through
+    # API Platform's serializer and state layers. The metadata factory points
+    # every Contao DCA-backed resource at these shared services.
+    Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer:
+        tags:
+            - { name: serializer.normalizer }
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider: ~
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor: ~
+
+    Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator:
+        arguments:
+            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
+            $validator: '@Opis\JsonSchema\Validator'
+        tags:
+            - { name: validator.constraint_validator }
+
+    Opis\JsonSchema\Validator: ~

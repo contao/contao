@@ -32,9 +32,9 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $storage->initialize(['contao_csrf_token' => 'foo']);
 
         $tokenManager = new ContaoCsrfTokenManager(
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             'csrf_',
-            $this->createMock(TokenGeneratorInterface::class),
+            $this->createStub(TokenGeneratorInterface::class),
             $storage,
             '',
             'contao_csrf_token',
@@ -50,10 +50,10 @@ class ContaoCsrfTokenManagerTest extends TestCase
     public function testGetDefaultTokenValueFailsIfTokenNameIsNotSet(): void
     {
         $tokenManager = new ContaoCsrfTokenManager(
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             'csrf_',
-            $this->createMock(TokenGeneratorInterface::class),
-            $this->createMock(TokenStorageInterface::class),
+            $this->createStub(TokenGeneratorInterface::class),
+            $this->createStub(TokenStorageInterface::class),
             '',
         );
 
@@ -66,10 +66,10 @@ class ContaoCsrfTokenManagerTest extends TestCase
     public function testCanSkipTokenValidationForEmptySession(): void
     {
         $tokenManager = new ContaoCsrfTokenManager(
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             'csrf_',
-            $this->createMock(TokenGeneratorInterface::class),
-            $this->createMock(TokenStorageInterface::class),
+            $this->createStub(TokenGeneratorInterface::class),
+            $this->createStub(TokenStorageInterface::class),
             null,
             'contao_csrf_token',
         );

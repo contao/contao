@@ -36,7 +36,7 @@ class OptInToken implements OptInTokenInterface
 
     public function isValid(): bool
     {
-        return !$this->model->invalidatedThrough && $this->model->createdOn > strtotime('-24 hours');
+        return !$this->model->invalidatedThrough && $this->model->removeOn > time();
     }
 
     public function confirm(): void

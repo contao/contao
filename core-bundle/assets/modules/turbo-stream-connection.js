@@ -11,15 +11,16 @@ export class TurboStreamConnection {
      *
      * @returns {Promise<TurboStreamResult>}
      */
-    async get(url, query_params = null, abortPending = false) {
+    async get(url, query_params = null, abortPending = false, requestHeaders = {}) {
         if (abortPending) {
             this.abortPending();
         }
 
-        let params = {
+        const params = {
             method: 'get',
             headers: {
                 Accept: 'text/vnd.turbo-stream.html',
+                ...requestHeaders,
             },
             signal: this._abortController.signal,
         };
@@ -46,6 +47,16 @@ export class TurboStreamConnection {
             return new TurboStreamResult('error', response);
         }
 
+        // No content is a valid outcome for polling endpoints that have no
+        // relevant updates to stream.
+        if (204 === response.status) {
+            return new TurboStreamResult('ok', response);
+        }
+
+        if (304 === response.status) {
+            return new TurboStreamResult('ok', response);
+        }
+
         if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
             if (window.console) {
                 console.error(`The Turbo stream response from "${url}" has an unprocessable format.`);
@@ -70,7 +81,7 @@ export class TurboStreamConnection {
             return url;
         }
 
-        let pairs = [];
+        const pairs = [];
 
         for (const [key, value] of Object.entries(query_params)) {
             if (!Array.isArray(value)) {
@@ -78,10 +89,12 @@ export class TurboStreamConnection {
                 continue;
             }
 
-            value.forEach((value) => pairs.push([key + '[]', value]));
+            for (const value1 of value) {
+                pairs.push([`${key}[]`, value1]);
+            }
         }
 
-        return url + '?' + new URLSearchParams(pairs).toString();
+        return `${url}?${new URLSearchParams(pairs).toString()}`;
     }
 }
 

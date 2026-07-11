@@ -1,0 +1,109 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CalendarBundle\Tests\Security\Voter;
+
+use Contao\BackendUser;
+use Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter;
+use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+
+class LegacyBackendAccessVoterTest extends ContaoTestCase
+{
+    public function testSupports(): void
+    {
+        $voter = new LegacyBackendAccessVoter();
+
+        $this->assertTrue($voter->supportsAttribute('contao_user.calendarp'));
+        $this->assertTrue($voter->supportsAttribute('contao_user.calendarp.create'));
+        $this->assertTrue($voter->supportsAttribute('contao_user.calendarp.delete'));
+        $this->assertFalse($voter->supportsAttribute('contao_user.foo'));
+    }
+
+    #[DataProvider('userDataProvider')]
+    public function testHasAccess(array $userData, string $attribute, string|null $subject, int $expected): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, $userData);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $voter = new LegacyBackendAccessVoter();
+
+        $this->assertSame($expected, $voter->vote($token, $subject, [$attribute]));
+    }
+
+    public static function userDataProvider(): iterable
+    {
+        yield [
+            ['cud' => []],
+            'contao_user.calendarp',
+            null,
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield [
+            ['cud' => ['tl_calendar::create']],
+            'contao_user.calendarp',
+            null,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => []],
+            'contao_user.calendarp',
+            'create',
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield [
+            ['cud' => ['tl_calendar::create']],
+            'contao_user.calendarp',
+            'create',
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => ['tl_calendar::create']],
+            'contao_user.calendarp.create',
+            null,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => []],
+            'contao_user.calendarp',
+            'delete',
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield [
+            ['cud' => ['tl_calendar::delete']],
+            'contao_user.calendarp',
+            'delete',
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => ['tl_calendar::delete']],
+            'contao_user.calendarp.delete',
+            null,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+    }
+}

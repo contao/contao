@@ -35,12 +35,12 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findById']);
-        $userModel = $this->mockClassWithProperties(UserModel::class, [
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
 
+        $userModelAdapter = $this->createAdapterMock(['findById']);
         $userModelAdapter
             ->expects($this->once())
             ->method('findById')
@@ -48,10 +48,10 @@ class LabelListenerTest extends TestCase
             ->willReturn($userModel)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
-            Image::class => $this->mockAdapter(['getHtml']),
+        $framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->createAdapterStub(['getHtml']),
             UserModel::class => $userModelAdapter,
         ]);
 
@@ -62,22 +62,22 @@ class LabelListenerTest extends TestCase
             ->willReturn($row['preview'])
         ;
 
-        $dc = $this->createMock(DC_Table::class);
+        $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
-        $this->assertSame('<result>', $listener($row, '', $dc));
+        $this->assertSame('<result>', $listener($row, '', $dc)->htmlLabel);
     }
 
     public function testRendersUndoLabelForTabularRecords(): void
     {
         $row = $this->setupTabularDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findById']);
-        $userModel = $this->mockClassWithProperties(UserModel::class, [
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
 
+        $userModelAdapter = $this->createAdapterMock(['findById']);
         $userModelAdapter
             ->expects($this->once())
             ->method('findById')
@@ -85,10 +85,10 @@ class LabelListenerTest extends TestCase
             ->willReturn($userModel)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
-            Image::class => $this->mockAdapter(['getHtml']),
+        $framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->createAdapterStub(['getHtml']),
             UserModel::class => $userModelAdapter,
         ]);
 
@@ -99,10 +99,10 @@ class LabelListenerTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        $dc = $this->createMock(DC_Table::class);
+        $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
-        $this->assertSame('<result>', $listener($row, '', $dc));
+        $this->assertSame('<result>', $listener($row, '', $dc)->htmlLabel);
     }
 
     private function setupDataSet(): array

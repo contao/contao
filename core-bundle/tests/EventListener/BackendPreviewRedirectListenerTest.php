@@ -33,7 +33,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
         $request->server->set('SCRIPT_FILENAME', 'index.php');
         $request->server->set('REQUEST_URI', '/path/to/contao/public/contao/preview?page=1');
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -54,7 +54,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
     public function testDoesNotRedirectUponSubrequests(): void
     {
         $request = new Request();
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -72,7 +72,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
     public function testDoesNotRedirectIfNoPreview(): void
     {
         $request = new Request();
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -92,7 +92,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_preview', false);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -113,7 +113,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
         $request->attributes->set('_preview', true);
         $request->attributes->set('_allow_preview', true);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

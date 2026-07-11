@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #pendingAutoFocus = null;
+
     static targets = ['scrollTo', 'autoFocus', 'widgetError'];
 
     static values = {
@@ -18,63 +20,6 @@ export default class extends Controller {
         },
     };
 
-    // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
-    static afterLoad(identifier, application) {
-        const loadFallback = () => {
-            return new Promise((resolve, reject) => {
-                const controller = application.getControllerForElementAndIdentifier(
-                    document.documentElement,
-                    identifier,
-                );
-
-                if (controller) {
-                    resolve(controller);
-                    return;
-                }
-
-                const { controllerAttribute } = application.schema;
-
-                document.documentElement.setAttribute(
-                    controllerAttribute,
-                    `${document.documentElement.getAttribute(controllerAttribute) || ''} ${identifier}`,
-                );
-
-                setTimeout(() => {
-                    const controller = application.getControllerForElementAndIdentifier(
-                        document.documentElement,
-                        identifier,
-                    );
-
-                    (controller && resolve(controller)) || reject(controller);
-                }, 100);
-            });
-        };
-
-        if (window.Backend && !window.Backend.initScrollOffset) {
-            window.Backend.initScrollOffset = () => {
-                if (window.console) {
-                    console.warn(
-                        'Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.',
-                    );
-                }
-
-                loadFallback();
-            };
-        }
-
-        if (window.Backend && !window.Backend.getScrollOffset) {
-            window.Backend.getScrollOffset = () => {
-                if (window.console) {
-                    console.warn(
-                        'Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.',
-                    );
-                }
-
-                loadFallback().then((controller) => controller.discard());
-            };
-        }
-    }
-
     initialize() {
         this.store = this.store.bind(this);
     }
@@ -84,6 +29,9 @@ export default class extends Controller {
     }
 
     async restore() {
+        // Scrolls to a pending autofocus if one exists and resets the guard
+        if (this.#scrollToAutoFocusTarget()) return;
+
         if (!this.offset) return;
 
         // Execute scroll restore after Turbo scrolled to top
@@ -106,7 +54,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.autoFocus) return;
+        if (this.#pendingAutoFocus) return;
 
         const input = this.autoFocusTarget;
 
@@ -121,8 +69,8 @@ export default class extends Controller {
             return;
         }
 
-        this.autoFocus = true;
-        input.focus();
+        // Save the pendingAutoFocus that will be executed in the #restore method on turbo:render
+        this.#pendingAutoFocus = input;
     }
 
     widgetErrorTargetConnected() {
@@ -149,7 +97,7 @@ export default class extends Controller {
     get offset() {
         const value = window.sessionStorage.getItem(this.sessionKeyValue);
 
-        return value ? parseInt(value) : null;
+        return value ? Number.parseInt(value, 10) : null;
     }
 
     set offset(value) {
@@ -158,5 +106,24 @@ export default class extends Controller {
         } else {
             window.sessionStorage.setItem(this.sessionKeyValue, String(value));
         }
+    }
+
+    #scrollToAutoFocusTarget() {
+        if (!this.#pendingAutoFocus) {
+            return false;
+        }
+
+        const input = this.#pendingAutoFocus;
+
+        queueMicrotask(() => {
+            // Do prevent scroll to allow turbo to handle it (see #8934)
+            input.focus({ preventScroll: true });
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
+
+        this.#pendingAutoFocus = null;
+
+        return true;
     }
 }

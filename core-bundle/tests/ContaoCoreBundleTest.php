@@ -30,10 +30,10 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
@@ -60,7 +60,7 @@ class ContaoCoreBundleTest extends TestCase
 
         $this->assertNull($request->getMimeType('turbo_stream'));
 
-        (new ContaoCoreBundle())->boot();
+        new ContaoCoreBundle()->boot();
 
         $this->assertSame('text/vnd.turbo-stream.html', $request->getMimeType('turbo_stream'));
     }
@@ -78,7 +78,6 @@ class ContaoCoreBundleTest extends TestCase
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
             DataContainerCallbackPass::class,
-            TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
             SearchIndexerPass::class,
             CrawlerPass::class,
@@ -92,6 +91,7 @@ class ContaoCoreBundleTest extends TestCase
             ConfigureFilesystemPass::class,
             AddInsertTagsPass::class,
             AccessDecisionStrategyPass::class,
+            RegisterTwigExtensionsPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

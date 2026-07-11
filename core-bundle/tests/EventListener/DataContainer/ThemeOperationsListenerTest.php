@@ -33,7 +33,7 @@ class ThemeOperationsListenerTest extends TestCase
             ->willReturn($isGranted)
         ;
 
-        $operation = new DataContainerOperation('foo', ['href' => $href], [], $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('foo', ['href' => $href], [], $this->createStub(DataContainer::class));
 
         $listener = new ThemeOperationsListener($security);
         $listener($operation);
@@ -47,6 +47,18 @@ class ThemeOperationsListenerTest extends TestCase
 
     public static function themeOperationsProvider(): iterable
     {
+        yield [
+            'table=tl_content',
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS,
+            true,
+        ];
+
+        yield [
+            'table=tl_content',
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS,
+            false,
+        ];
+
         yield [
             'table=tl_module',
             ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES,

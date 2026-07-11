@@ -44,13 +44,13 @@ class PageModelTest extends TestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -63,12 +63,12 @@ class PageModelTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
-        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
+        new Filesystem()->mkdir($this->getTempDir().'/languages/en');
+        new Filesystem()->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
     }
@@ -110,7 +110,7 @@ class PageModelTest extends TestCase
 
     public function testFindByPk(): void
     {
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
@@ -140,7 +140,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('execute')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(new Result($rootData, ''))
         ;
 
@@ -155,13 +155,13 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('prepare')
-            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id != ?')
             ->willReturn($aliasStatement)
         ;
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
+        $sourcePage = $this->createClassWithPropertiesStub(PageModel::class, $page);
         $result = PageModel::findSimilarByAlias($sourcePage);
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -282,7 +282,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+        $sourcePage = $this->createClassWithPropertiesMock(PageModel::class, [
             'id' => 1,
             'alias' => '',
         ]);
@@ -305,7 +305,7 @@ class PageModelTest extends TestCase
 
         $numberOfParents = \count($parents);
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnCallback(
@@ -375,7 +375,7 @@ class PageModelTest extends TestCase
             \define('TL_MODE', 'BE');
         }
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))
@@ -435,7 +435,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -456,7 +456,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -479,7 +479,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -499,7 +499,7 @@ class PageModelTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property = new \ReflectionClass($database)->getProperty('objInstance');
         $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());

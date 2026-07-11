@@ -9,7 +9,6 @@ export default class extends Controller {
         toggleAction: String,
         loadAction: String,
         requestToken: String,
-        refererId: String,
         expand: String,
         collapse: String,
         expandAll: String,
@@ -58,9 +57,9 @@ export default class extends Controller {
             el.title = this.collapseValue;
         }
 
-        el.getElements('img')?.forEach((image) => {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.collapseValue;
-        });
+        }
     }
 
     collapseToggler(el) {
@@ -70,9 +69,9 @@ export default class extends Controller {
             el.title = this.expandValue;
         }
 
-        el.getElements('img')?.forEach((image) => {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.expandValue;
-        });
+        }
     }
 
     loadToggler(el, enabled) {
@@ -91,9 +90,6 @@ export default class extends Controller {
         this.loadToggler(el, true);
 
         const url = new URL(location.href);
-        const search = url.searchParams;
-        search.set('ref', this.refererIdValue);
-        url.search = search.toString();
 
         const response = await fetch(url, {
             method: 'POST',
@@ -121,16 +117,16 @@ export default class extends Controller {
             li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child');
 
             const ul = document.createElement('ul');
-            ul.classList.add('level_' + level);
+            ul.classList.add(`level_${level}`);
             ul.innerHTML = txt;
             li.append(ul);
 
             if (this.modeValue === 5) {
                 el.closest('li').after(li);
             } else {
-                let isFolder = false,
-                    parent = el.closest('li'),
-                    next;
+                let isFolder = false;
+                let parent = el.closest('li');
+                let next;
 
                 while (typeOf(parent) === 'element' && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
                     parent = next;
@@ -162,16 +158,27 @@ export default class extends Controller {
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
             this.updateAllState(href, 0);
-            this.toggleTargets.forEach((el) => this.collapseToggler(el));
-            this.childTargets.forEach((item) => (item.style.display = 'none'));
+
+            for (const el of this.toggleTargets) {
+                this.collapseToggler(el);
+            }
+
+            for (const item of this.childTargets) {
+                item.style.display = 'none';
+            }
         } else {
-            this.childTargets.forEach((el) => el.remove());
-            this.toggleTargets.forEach((el) => this.loadToggler(el, true));
+            for (const el of this.childTargets) {
+                el.remove();
+            }
+
+            for (const el of this.toggleTargets) {
+                this.loadToggler(el, true);
+            }
 
             await this.updateAllState(href, 1);
             const promises = [];
 
-            this.toggleTargets.forEach((el) => {
+            for (const el of this.toggleTargets) {
                 promises.push(
                     this.fetchChild(
                         el,
@@ -180,7 +187,7 @@ export default class extends Controller {
                         el.getAttribute(`data-${this.identifier}-folder-param`),
                     ),
                 );
-            });
+            }
 
             await Promise.all(promises);
         }
@@ -192,7 +199,7 @@ export default class extends Controller {
         this.updateOperation(event);
     }
 
-    async updateState(el, id, state) {
+    async updateState(_el, id, state) {
         await fetch(location.href, {
             method: 'POST',
             headers: {
@@ -217,12 +224,14 @@ export default class extends Controller {
             return;
         }
 
-        if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
-            this.operationTarget.innerText = this.collapseAllValue;
-            this.operationTarget.title = this.collapseAllTitleValue;
-        } else {
-            this.operationTarget.innerText = this.expandAllValue;
-            this.operationTarget.title = this.expandAllTitleValue;
+        for (const operationTarget of this.operationTargets) {
+            if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
+                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.title = this.collapseAllTitleValue;
+            } else {
+                operationTarget.innerText = this.expandAllValue;
+                operationTarget.title = this.expandAllTitleValue;
+            }
         }
     }
 

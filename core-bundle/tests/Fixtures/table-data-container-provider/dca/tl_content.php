@@ -19,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_content'] =
     ],
     'fields' => [
         'id' => [
-            'sql' => 'int(10) unsigned NOT NULL auto_increment',
+            'sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true],
         ],
         'type' => [
             'filter' => true,
@@ -27,6 +27,41 @@ $GLOBALS['TL_DCA']['tl_content'] =
         ],
         'text' => [
             'search' => true,
+        ],
+        'text_search_disabled' => [
+            'search' => false,
+        ],
+        'text_search_disabled_backend_search_enabled' => [
+            'search' => false,
+            'backendSearch' => true,
+        ],
+        'default' => [
+            'search' => true,
+        ],
+        'foo' => [
+            'search' => true,
+            'targetColumn' => 'jsonData',
+        ],
+        'moo' => [
+            'search' => true,
+            'targetColumn' => 'jsonData',
+        ],
+        'lorem' => [
+            'search' => true,
+            'targetColumn' => 'emptyTarget',
+        ],
+        'ipsum' => [
+            'search' => true,
+            'targetColumn' => 'invalidTarget',
+        ],
+        'jsonData' => [
+            'virtualTarget' => true,
+        ],
+        'emptyTarget' => [
+            'virtualTarget' => true,
+        ],
+        'invalidTarget' => [
+            'virtualTarget' => true,
         ],
     ],
 ];

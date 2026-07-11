@@ -68,7 +68,6 @@ class InstallCommand extends Command
             'system/cache',
             'system/config',
             'system/modules',
-            'system/themes',
             'system/tmp',
             'templates',
             '%s/share',

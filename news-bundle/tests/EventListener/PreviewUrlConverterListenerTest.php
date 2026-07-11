@@ -30,10 +30,10 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -44,7 +44,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             ->willReturn('http://localhost/news/james-wilson-returns.html')
         ;
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($framework, $urlGenerator);
@@ -55,7 +55,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -81,7 +81,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -105,10 +105,10 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_PORT', 80);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator

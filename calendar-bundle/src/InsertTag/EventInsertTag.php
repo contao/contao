@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\InsertTag;
 
 use Contao\CalendarEventsModel;
-use Contao\CalendarFeedModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
@@ -33,7 +32,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[AsInsertTag('event_url')]
 #[AsInsertTag('event_title')]
 #[AsInsertTag('event_teaser')]
-#[AsInsertTag('calendar_feed')]
 class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     public function __construct(
@@ -44,28 +42,11 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        if ('calendar_feed' === $insertTag->getName()) {
-            return $this->replaceCalendarFeedInsertTag($insertTag->getParameters()->get(0));
-        }
-
         return $this->replaceEventInsertTag(
             $insertTag->getName(),
             $insertTag->getParameters()->get(0),
             \array_slice($insertTag->getParameters()->all(), 1),
         );
-    }
-
-    private function replaceCalendarFeedInsertTag(string $feedId): InsertTagResult
-    {
-        $this->framework->initialize();
-
-        $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
-
-        if (!$feed = $adapter->findById($feedId)) {
-            return new InsertTagResult('');
-        }
-
-        return new InsertTagResult(\sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias), OutputType::url);
     }
 
     private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $arguments): InsertTagResult

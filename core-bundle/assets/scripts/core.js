@@ -1,3 +1,5 @@
+import * as Icon from "../modules/icon";
+
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -16,7 +18,7 @@ window.AjaxRequest =
 	 */
 	toggleNavigation: function(el, id, url) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id),
@@ -52,7 +54,7 @@ window.AjaxRequest =
 	 */
 	toggleStructure: function(el, id, level, mode) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -118,11 +120,6 @@ window.AjaxRequest =
 					}
 				}
 
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
 
@@ -149,7 +146,7 @@ window.AjaxRequest =
 	 */
 	toggleFileManager: function(el, id, folder, level) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -194,11 +191,6 @@ window.AjaxRequest =
 				}).inject(li, 'bottom');
 
 				li.inject($(el).getParent('li'), 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
 
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
@@ -280,11 +272,6 @@ window.AjaxRequest =
 				el.value = 1;
 				el.checked = 'checked';
 
-				// Update the referer ID
-				div.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				updateVersionNumber(txt);
 
 				AjaxRequest.hideBox();
@@ -316,7 +303,7 @@ window.AjaxRequest =
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div, next, pa, title;
+			div, next, pa, label;
 
 		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -330,7 +317,7 @@ window.AjaxRequest =
 					img = next.getFirst('div.list_icon');
 				}
 			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
-				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
+				img = el.getParent('td').getPrevious('td').getElement('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}
@@ -358,7 +345,10 @@ window.AjaxRequest =
 							}
 
 							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+
+							if (newSrc) {
+								img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+							}
 						}
 					})
 				}
@@ -383,20 +373,26 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
-			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
+			image.alt = label = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
-		if (!published && $(el).get('data-title')) {
-			el.title = title = $(el).get('data-title');
-		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = title = $(el).get('data-title-disabled');
+		if (el.title && !published && $(el).get('data-title')) {
+			el.title = label = $(el).get('data-title');
+		} else if (el.title && published && $(el).get('data-title-disabled')) {
+			el.title = label = $(el).get('data-title-disabled');
 		}
 
-		if (title) {
+		if (!published && $(el).get('data-label')) {
+			label = $(el).get('data-label');
+		} else if (published && $(el).get('data-label-disabled')) {
+			label = $(el).get('data-label-disabled');
+		}
+
+		if (label) {
 			el.childNodes.forEach((child) => {
 				if (child instanceof Text && child.nodeValue.trim()) {
-					child.replaceWith(new Text(title));
+					child.replaceWith(new Text(label));
 				}
 			});
 		}
@@ -463,7 +459,6 @@ window.AjaxRequest =
 		overlay.set({
 			'styles': {
 				'display': 'block',
-				'top': scroll.y + 'px'
 			}
 		});
 
@@ -522,7 +517,7 @@ window.Backend =
 	 * The theme path
 	 * @member {string}
 	 */
-	themePath: Contao.script_url + 'system/themes/' + Contao.theme + '/',
+	themePath: Contao.script_url + 'bundles/contaocore/',
 
 	/**
 	 * Open a modal window
@@ -536,7 +531,6 @@ window.Backend =
 			'width': width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -559,7 +553,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -584,7 +577,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -611,7 +603,6 @@ window.Backend =
 		var M = new SimpleModal({
 			'width': opt.width,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() {
 				document.body.setStyle('overflow', 'hidden');
@@ -730,6 +721,8 @@ window.Backend =
 	 * @param {string} [id] The ID of the target element
 	 */
 	toggleCheckboxes: function(el, id) {
+		console.warn('Backend.toggleCheckboxes() is deprecated. Please use the Stimulus controllers instead.');
+
 		var items = $$('input'),
 			status = $(el).checked ? 'checked' : '';
 
@@ -751,6 +744,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	toggleCheckboxGroup: function(el, id) {
+		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
+
 		var cls = $(el).className,
 			status = $(el).checked ? 'checked' : '';
 
@@ -775,6 +770,8 @@ window.Backend =
 	 * @param {string} cls The CSS class name
 	 */
 	toggleCheckboxElements: function(el, cls) {
+		console.warn('Backend.toggleCheckboxElements() is deprecated. Please use the Stimulus controllers instead.');
+
 		var status = $(el).checked ? 'checked' : '';
 
 		$$('.' + cls).each(function(checkbox) {
@@ -795,6 +792,8 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the Stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -889,6 +888,8 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the Stimulus controllers instead.');
+
 		var list = new Sortables($(id), {
 			constrain: true,
 			opacity: 0.6
@@ -912,7 +913,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: '&times;',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
@@ -924,7 +925,7 @@ window.Backend =
 			} else {
 				new Element('button', {
 					type: 'button',
-					html: '&times',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					disabled: true
 				}).inject(el, 'after');
 			}
@@ -963,7 +964,7 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				x: cloneBase.getPosition(cloneBase.getOffsetParent()).x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 
@@ -1079,6 +1080,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
+		console.warn('Backend.listWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var ul = $(id),
 			makeSortable = function(ul) {
 				new Sortables(ul, {
@@ -1381,6 +1384,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
+		console.warn('Backend.optionsWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1485,6 +1490,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1582,6 +1589,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	checkboxWizard: function(id) {
+		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var container = $(id).getElement('.sortable'),
 			makeSortable = function(container) {
 				new Sortables(container, {
@@ -1653,97 +1662,6 @@ window.Backend =
 			update();
 			select.addEvent('change', update);
 			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
-	 * Allow toggling checkboxes or radio buttons by clicking a row
-	 *
-	 * @author Kamil Kuzminski
-	 */
-	enableToggleSelect: function() {
-		var container = $('tl_listing'),
-			shiftToggle = function(el) {
-				thisIndex = checkboxes.indexOf(el);
-				startIndex = checkboxes.indexOf(start);
-				from = Math.min(thisIndex, startIndex);
-				to = Math.max(thisIndex, startIndex);
-				status = !!checkboxes[startIndex].checked;
-
-				for (from; from<=to; from++) {
-					checkboxes[from].checked = status;
-				}
-			},
-			clickEvent = function(e) {
-				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
-					return;
-				}
-
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
-					limitToggler = $(e.target).getParent('.limit_toggler');
-
-				if (!input || input.get('disabled') || limitToggler !== null) {
-					return;
-				}
-
-				// Radio buttons
-				if (input.type == 'radio') {
-					if (!input.checked) {
-						input.checked = 'checked';
-					}
-
-					return;
-				}
-
-				// Checkboxes
-				if (e.shift && start) {
-					shiftToggle(input);
-				} else {
-					input.checked = input.checked ? '' : 'checked';
-
-					if (input.get('onclick') == 'Backend.toggleCheckboxes(this)') {
-						Backend.toggleCheckboxes(input); // see #6399
-					}
-				}
-
-				start = input;
-			},
-			checkboxes = [], start, thisIndex, startIndex, status, from, to;
-
-		if (container) {
-			checkboxes = container.getElements('input[type="checkbox"]');
-		}
-
-		// Row click
-		$$('.toggle_select').each(function(el) {
-			var boundEvent = el.retrieve('boundEvent');
-
-			if (boundEvent) {
-				el.removeEvent('click', boundEvent);
-			}
-
-			// Do not propagate the form field click events
-			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
-				i.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			boundEvent = clickEvent.bind(el);
-
-			el.addEvent('click', boundEvent);
-			el.store('boundEvent', boundEvent);
-		});
-
-		// Checkbox click
-		checkboxes.each(function(el) {
-			el.addEvent('click', function(e) {
-				if (e.shift && start) {
-					shiftToggle(this);
-				}
-
-				start = this;
-			});
 		});
 	},
 
@@ -1967,294 +1885,6 @@ window.Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
-	},
-
-	/**
-	 * Crawl the website
-	 */
-	crawl: function() {
-		var timeout = 2000,
-			crawl = $('tl_crawl'),
-			progressBar = crawl.getElement('div.progress-bar'),
-			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results'),
-			debugLog = crawl.getElement('p.debug-log');
-
-		function updateData(response) {
-			var total = response.total,
-				done = total - response.pending,
-				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
-				result;
-
-			// Initialize the status bar at 10%
-			if (done < 1 && percentage < 1) {
-				done = 1;
-				percentage = 10;
-				total = 10;
-			}
-
-			progressBar.setStyle('width', percentage + '%');
-			progressBar.set('html', percentage + '%');
-			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + total);
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (!response.finished) {
-				return;
-			}
-
-			progressBar.removeClass('running').addClass('finished');
-			results.removeClass('running').addClass('finished');
-
-			for (result in response.results) {
-				if (response.results.hasOwnProperty(result)) {
-					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
-						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
-						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
-						subscriberResults = response.results[result],
-						subscriberSummary = subscriberResults.summary;
-
-					if (subscriberResults.warning) {
-						warning.set('html', subscriberResults.warning);
-					}
-
-					if (subscriberResults.hasLog) {
-						log.setStyle('display', 'block');
-					}
-
-					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-					summary.set('html', subscriberSummary);
-				}
-			}
-		}
-
-		function execRequest(onlyStatusUpdate = false) {
-			new Request({
-				url: window.location.href,
-				headers: {
-					'Only-Status-Update': onlyStatusUpdate
-				},
-				onSuccess: function(responseText) {
-					var response = JSON.decode(responseText);
-
-					updateData(response);
-
-					if (!response.finished) {
-						setTimeout(execRequest, timeout);
-					}
-				}
-			}).send();
-		}
-
-		execRequest(true);
-	}
-};
-
-window.Theme =
-{
-	/**
-	 * Check for WebKit
-	 * @member {boolean}
- 	 */
-	isWebkit: (Browser.chrome || Browser.safari || navigator.userAgent.match(/(?:webkit|khtml)/i)),
-
-	/**
-	 * Stop the propagation of click events of certain elements
-	 */
-	stopClickPropagation: function() {
-		// Do not propagate the click events of the icons
-		$$('.picker_selector').each(function(ul) {
-			ul.getElements('a').each(function(el) {
-				el.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-		});
-
-		// Do not propagate the click events of the checkboxes
-		$$('.picker_selector,.click2edit').each(function(ul) {
-			ul.getElements('input[type="checkbox"]').each(function(el) {
-				el.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-		});
-	},
-
-	/**
-	 * Set up the textarea resizing
-	 */
-	setupTextareaResizing: function() {
-		$$('.tl_textarea').each(function(el) {
-			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
-			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
-
-			// Set up the dummy element
-			var dummy = new Element('div', {
-				html: 'X',
-				styles: {
-					'position':'absolute',
-					'top':0,
-					'left':'-999em',
-					'overflow-x':'hidden'
-				}
-			}).setStyles(
-				el.getStyles('font-size', 'font-family', 'width', 'line-height')
-			).inject(document.body);
-
-			// Also consider the box-sizing
-			if (el.getStyle('-moz-box-sizing') == 'border-box' || el.getStyle('-webkit-box-sizing') == 'border-box' || el.getStyle('box-sizing') == 'border-box') {
-				dummy.setStyles({
-					'padding': el.getStyle('padding'),
-					'border': el.getStyle('border-left')
-				});
-			}
-
-			// Single line height
-			var line = Math.max(dummy.clientHeight, 30);
-
-			// Respond to the "input" event
-			el.addEvent('input', function() {
-				dummy.set('html', this.get('value')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;')
-					.replace(/\n|\r\n/g, '<br>X'));
-				var height = Math.max(line, dummy.getSize().y);
-				if (this.clientHeight != height) this.tween('height', height);
-			}).set('tween', { 'duration':100 }).setStyle('height', line + 'px');
-
-			// Fire the event
-			el.fireEvent('input');
-			el.store('autogrow', true);
-		});
-	},
-
-	/**
-	 * Set up the menu toggle
-	 */
-	setupMenuToggle: function() {
-		var burger = $('burger');
-		if (!burger) return;
-
-		burger
-			.addEvent('click', function() {
-				document.body.toggleClass('show-navigation');
-				burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
-			})
-			.addEvent('keydown', function(e) {
-				if (e.event.keyCode == 27) {
-					document.body.removeClass('show-navigation');
-				}
-			})
-		;
-
-		if (window.matchMedia) {
-			var matchMedia = window.matchMedia('(max-width:991px)');
-			var setAriaControls = function() {
-				if (matchMedia.matches) {
-					burger.setAttribute('aria-controls', 'left')
-					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
-				} else {
-					burger.removeAttribute('aria-controls');
-					burger.removeAttribute('aria-expanded');
-				}
-			};
-			matchMedia.addEventListener('change', setAriaControls);
-			setAriaControls();
-		}
-	},
-
-	/**
-	 * Set up the profile toggle
-	 */
-	setupProfileToggle: function() {
-		if (window.console) {
-			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
-		}
-
-		var tmenu = $('tmenu');
-		if (!tmenu) return;
-
-		var li = tmenu.getElement('.submenu'),
-			button = li.getFirst('span').getFirst('button'),
-			menu = li.getFirst('ul');
-		if (!li || !button || !menu) return;
-
-		button.setAttribute('aria-controls', 'tmenu__profile');
-		button.setAttribute('aria-expanded', 'false');
-
-		menu.id = 'tmenu__profile';
-
-		button.addEvent('click', function(e) {
-			if (li.hasClass('active')) {
-				li.removeClass('active');
-				button.setAttribute('aria-expanded', 'false');
-			} else {
-				li.addClass('active');
-				button.setAttribute('aria-expanded', 'true');
-			}
-			e.stopPropagation();
-		});
-
-		$(document.body).addEvent('click', function() {
-			if (li.hasClass('active')) {
-				li.removeClass('active');
-			}
-		});
-	},
-
-	/**
-	 * Set up the split button toggle
-	 */
-	setupSplitButtonToggle: function() {
-		var toggle = $('sbtog');
-		if (!toggle) return;
-
-		var ul = toggle.getParent('.split-button').getElement('ul'),
-			tab, timer;
-
-		toggle.addEvent('click', function(e) {
-			tab = false;
-			ul.toggleClass('invisible');
-			toggle.toggleClass('active');
-			e.stopPropagation();
-		});
-
-		$(document.body).addEvent('click', function() {
-			tab = false;
-			ul.addClass('invisible');
-			toggle.removeClass('active');
-		});
-
-		$(document.body).addEvent('keydown', function(e) {
-			tab = (e.event.keyCode == 9);
-		});
-
-		[toggle].append(ul.getElements('button')).each(function(el) {
-			el.addEvent('focus', function() {
-				if (!tab) return;
-				ul.removeClass('invisible');
-				toggle.addClass('active');
-				clearTimeout(timer);
-			});
-
-			el.addEvent('blur', function() {
-				if (!tab) return;
-				timer = setTimeout(function() {
-					ul.addClass('invisible');
-					toggle.removeClass('active');
-				}, 100);
-			});
-		});
-
-		toggle.set('tabindex', '-1');
 	}
 };
 
@@ -2268,25 +1898,9 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
-	Backend.enableToggleSelect();
-
-	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
-	Theme.setupSplitButtonToggle();
 });
 
 // Resize the table wizard
 window.addEvent('resize', function() {
 	Backend.tableWizardSetWidth();
-});
-
-// Re-apply certain changes upon ajax_change
-window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
-	Backend.enableToggleSelect();
-
-	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 });

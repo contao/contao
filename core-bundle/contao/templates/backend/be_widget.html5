@@ -1,3 +1,0 @@
-
-  <h3><?= $this->generateLabel().$this->xlabel ?></h3>
-  <?= $this->generateWithError(true) ?>

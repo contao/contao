@@ -11,7 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Figure;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -42,7 +46,7 @@ class ModuleSearch extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -57,23 +61,36 @@ class ModuleSearch extends Module
 	 */
 	protected function compile()
 	{
+		$paginationRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		// Trigger the search module from a custom form
 		if (Input::get('keywords') === null && Input::post('FORM_SUBMIT') == 'tl_search')
 		{
-			Input::setGet('keywords', Input::post('keywords'));
-			Input::setGet('query_type', Input::post('query_type'));
-			Input::setGet('per_page', Input::post('per_page'));
+			$strKeywords = Input::post('keywords');
+			$strQueryType = Input::post('query_type');
+			$per_page = Input::post('per_page');
+
+			$paginationRequest = $paginationRequest->duplicate();
+			$paginationRequest->query->set('keywords', $strKeywords);
+			$paginationRequest->query->set('query_type', $strQueryType ?: null);
+			$paginationRequest->query->set('per_page', $per_page ?: null);
+		}
+		else
+		{
+			$strKeywords = Input::get('keywords');
+			$strQueryType = Input::get('query_type');
+			$per_page = Input::get('per_page');
 		}
 
 		$blnFuzzy = $this->fuzzy;
-		$strQueryType = Input::get('query_type') ?: $this->queryType;
+		$strQueryType = $strQueryType ?: $this->queryType;
 
-		if (\is_array(Input::get('keywords')))
+		if (\is_array($strKeywords))
 		{
 			throw new BadRequestHttpException('Expected string, got array');
 		}
 
-		$strKeywords = trim(Input::get('keywords'));
+		$strKeywords = trim($strKeywords);
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
@@ -120,8 +137,7 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
-				global $objPage;
-
+				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
@@ -183,33 +199,33 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$from = 1;
+			$from = 0;
 			$to = $count;
 
 			// Pagination
 			if ($this->perPage > 0)
 			{
-				$id = 'page_s' . $this->id;
-				$page = (int) (Input::get($id) ?? 1);
-				$per_page = (int) Input::get('per_page') ?: $this->perPage;
+				$param = 'page_s' . $this->id;
+				$per_page = (int) $per_page ?: $this->perPage;
 
-				// Do not index or cache the page if the page number is outside the range
-				if ($page < 1 || $page > max(ceil($count/$per_page), 1))
+				try
 				{
-					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create((new PaginationConfig($param, $count, $per_page))->withRequest($paginationRequest));
+				}
+				catch (PageOutOfRangeException $e)
+				{
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 				}
 
-				$from = (($page - 1) * $per_page) + 1;
-				$to = (($from + $per_page) > $count) ? $count : ($from + $per_page - 1);
+				list($from, $to) = $pagination->getIndexRange();
 
 				// Pagination menu
-				if ($to < $count || $from > 1)
+				if ($pagination->getPageCount() > 1)
 				{
-					$objPagination = new Pagination($count, $per_page, Config::get('maxPaginationLinks'), $id);
-					$this->Template->pagination = $objPagination->generate("\n  ");
+					$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 				}
 
-				$this->Template->page = $page;
+				$this->Template->page = $pagination->getCurrent();
 			}
 
 			$contextLength = 48;
@@ -227,7 +243,7 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
-			$arrResult = $objResult->getResults($to-$from+1, $from-1);
+			$arrResult = $objResult->getResults($to - $from, $from);
 
 			// Get the results
 			foreach (array_keys($arrResult) as $i)
@@ -257,7 +273,7 @@ class ModuleSearch extends Module
 				// Shorten the context and highlight all keywords
 				if (!empty($arrContext))
 				{
-					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength));
+					$objTemplate->context = StringUtil::specialchars(trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength)));
 					$objTemplate->context = preg_replace('((?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$))ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
@@ -268,7 +284,7 @@ class ModuleSearch extends Module
 				$this->Template->results .= $objTemplate->parse();
 			}
 
-			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
+			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from + 1, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 		}
 	}
@@ -291,26 +307,31 @@ class ModuleSearch extends Module
 				continue;
 			}
 
-			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
-
-			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
-
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
 				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
 				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
 			)));
 
-			$figure = $figureBuilder
-				->setSize($this->imgSize)
-				->setMetadata($figureMeta)
-				->setLinkHref($result['url'])
-				->buildIfResourceExists();
+			$figure = $this->buildFigureFromId($v['https://schema.org/primaryImageOfPage']['@id'] ?? null, $result['url'], $figureMeta);
 
-			if (null === $figure)
+			if (!$figure)
 			{
-				continue;
+				$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
+				$figure = System::getContainer()
+					->get('contao.image.studio')
+					->createFigureBuilder()
+					->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls)
+					->setSize($this->imgSize)
+					->setMetadata($figureMeta)
+					->setLinkHref($result['url'])
+					->buildIfResourceExists();
+
+				if (null === $figure)
+				{
+					continue;
+				}
 			}
 
 			$template->hasImage = true;
@@ -319,5 +340,29 @@ class ModuleSearch extends Module
 
 			return;
 		}
+	}
+
+	private function buildFigureFromId(string|null $id, string $url, Metadata $metadata): Figure|null
+	{
+		if (!$id || !str_starts_with($id, '#/schema/image/'))
+		{
+			return null;
+		}
+
+		$uuid = substr($id, \strlen('#/schema/image/'));
+
+		if (!Validator::isStringUuid($uuid))
+		{
+			return null;
+		}
+
+		return System::getContainer()
+			->get('contao.image.studio')
+			->createFigureBuilder()
+			->fromUuid($uuid)
+			->setSize($this->imgSize)
+			->setMetadata($metadata)
+			->setLinkHref($url)
+			->buildIfResourceExists();
 	}
 }

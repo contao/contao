@@ -25,7 +25,6 @@ use Contao\Model\Collection;
  * @property string  $sortOrder
  * @property integer $perPage
  * @property boolean $moderate
- * @property boolean $bbcode
  * @property boolean $requireLogin
  * @property boolean $disableCaptcha
  *
@@ -42,25 +41,23 @@ use Contao\Model\Collection;
  * @method static FaqCategoryModel|null findOneBySortOrder($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByPerPage($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByModerate($val, array $opt=array())
- * @method static FaqCategoryModel|null findOneByBbcode($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByTitle($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByHeadline($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByJumpTo($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByAllowComments($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByNotify($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findBySortOrder($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByPerPage($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByModerate($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByBbcode($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByRequireLogin($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findByDisableCaptcha($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<FaqCategoryModel>|FaqCategoryModel[]|null findAll(array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByTitle($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByHeadline($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByJumpTo($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByAllowComments($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByNotify($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByPerPage($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByModerate($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByRequireLogin($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findByDisableCaptcha($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<FaqCategoryModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -72,7 +69,6 @@ use Contao\Model\Collection;
  * @method static integer countBySortOrder($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
  * @method static integer countByModerate($val, array $opt=array())
- * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */

@@ -40,18 +40,18 @@ use Contao\Model\Collection;
  * @method static CommentsNotifyModel|null findOneByActive($val, array $opt=array())
  * @method static CommentsNotifyModel|null findOneByTokenRemove($val, array $opt=array())
  *
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findBySource($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByParent($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByName($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByEmail($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByUrl($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByAddedOn($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByActive($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findByTokenRemove($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null findAll(array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findBySource($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByParent($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByName($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByEmail($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByUrl($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByAddedOn($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByActive($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findByTokenRemove($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<CommentsNotifyModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -96,7 +96,7 @@ class CommentsNotifyModel extends Model
 	 * @param integer $intParent  The parent ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null A collection of models or null if there are no active subscriptions
+	 * @return Collection<CommentsNotifyModel>|null A collection of models or null if there are no active subscriptions
 	 */
 	public static function findActiveBySourceAndParent($strSource, $intParent, array $arrOptions=array())
 	{
@@ -106,19 +106,19 @@ class CommentsNotifyModel extends Model
 	}
 
 	/**
-	 * Find subscriptions that have not been activated for more than 24 hours
+	 * Find subscriptions that have not been confirmed while the opt-in token was valid
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<CommentsNotifyModel>|CommentsNotifyModel[]|null A collection of models or null if there are no expired subscriptions
+	 * @return Collection<CommentsNotifyModel>|null A collection of models or null if there are no expired subscriptions
 	 */
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'com-%')")
-								 ->execute(strtotime('-24 hours'));
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'com-%')")
+								 ->execute(time());
 
 		if ($objResult->numRows < 1)
 		{

@@ -1,0 +1,47 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    {% for category in faq %}
+        <article>
+            <h2>{{ category.headline }}</h2>
+
+            {% for faq in category.items %}
+                <section>
+                    <h3 id="{{ faq.alias }}">{{ faq.question }}</h3>
+
+                    <div class="ce_text block">
+                        {% if not faq.addBefore %}
+                            {{ faq.answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                        {% endif %}
+
+                        {% if faq.addImage %}
+                            {{ include('@Contao/image.html.twig', faq|map(v => v), false) }}
+                        {% endif %}
+
+                        {% if faq.addBefore %}
+                            {{ faq.answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                        {% endif %}
+                    </div>
+
+                    {% if faq.enclosure %}
+                        <ul class="enclosure">
+                            {% for enclosure in faq.enclosure %}
+                                <li class="download-element ext-{{ enclosure.extension }}">
+                                    <a href="{{ enclosure.href }}" title="{{ enclosure.title }}">{{ enclosure.link }} <span class="size">({{ enclosure.filesize }})</span></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <p class="info">{{ faq.info }}</p>
+                </section>
+            {% endfor %}
+
+            <p class="toplink"><a href="{{ request }}#top">{{ topLink }}</a></p>
+        </article>
+    {% endfor %}
+
+{% endblock %}
+
+{% do add_schema_org(getSchemaOrgData.invoke()|default(null)) %}

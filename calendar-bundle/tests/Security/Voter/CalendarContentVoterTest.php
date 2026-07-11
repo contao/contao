@@ -19,18 +19,18 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class CalendarContentVoterTest extends TestCase
+class CalendarContentVoterTest extends ContaoTestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new CalendarContentVoter($this->createMock(AccessDecisionManagerInterface::class), $this->createMock(Connection::class));
+        $voter = new CalendarContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -44,7 +44,7 @@ class CalendarContentVoterTest extends TestCase
     #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $events): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionMap = [[$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
@@ -67,7 +67,7 @@ class CalendarContentVoterTest extends TestCase
                 $parent = array_pop($records);
 
                 $fetchAssociativeMap[] = [
-                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    'SELECT id, pid, ptable FROM tl_content WHERE id = ?',
                     [(int) end($records)['pid']],
                     [],
                     $parent,
@@ -75,7 +75,7 @@ class CalendarContentVoterTest extends TestCase
             }
 
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                'SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = :id'.str_repeat(' UNION SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = @pid AND ptable = :ptable', 9),
                 ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
@@ -86,7 +86,7 @@ class CalendarContentVoterTest extends TestCase
 
         foreach ($events as $id => $pid) {
             $fetchOneMap[] = [
-                'SELECT pid FROM tl_calendar_events WHERE id=?',
+                'SELECT pid FROM tl_calendar_events WHERE id = ?',
                 [$id],
                 [],
                 $pid,
@@ -201,7 +201,7 @@ class CalendarContentVoterTest extends TestCase
 
     public function testIgnoresOtherParentTables(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
@@ -211,7 +211,7 @@ class CalendarContentVoterTest extends TestCase
 
         $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
 
-        $voter = new CalendarContentVoter($accessDecisionManager, $this->createMock(Connection::class));
+        $voter = new CalendarContentVoter($accessDecisionManager, $this->createStub(Connection::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);

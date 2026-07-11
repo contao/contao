@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Nastavte stránky svého webu (webů)</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Studio předloh</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Přidat nebo upravit předlohy Twigu</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Předlohy</target>
@@ -154,6 +162,14 @@
         <source>Restore deleted records</source>
         <target>Obnovení smazaných záznamů.</target>
       </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Úpravy na pozadí</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Přehled systémových úloh na pozadí</target>
+      </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
         <target>Uživatelský profil</target>
@@ -193,6 +209,10 @@
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
         <target>Muduly frontendu</target>
+      </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Elementy pro vytváření obsahu</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
@@ -307,7 +327,7 @@
         <target>Osobní data</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Vytvoří formulář pro editaci osobních dat užibatele.</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

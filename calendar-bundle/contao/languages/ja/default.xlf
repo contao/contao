@@ -89,6 +89,14 @@
         <source>Back to the event overview</source>
         <target>イベントの概要に戻る</target>
       </trans-unit>
+      <trans-unit id="PTY.calendar_feed.0">
+        <source>Calendar feed</source>
+        <target>カレンダーのフィード</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>カレンダーからRSS、Atom、JSONのフィードを作成します。</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

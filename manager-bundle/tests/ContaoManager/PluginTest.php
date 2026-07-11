@@ -19,7 +19,6 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
-use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -27,6 +26,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -72,7 +72,6 @@ class PluginTest extends ContaoTestCase
     {
         $plugin = new Plugin();
 
-        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
         $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
@@ -311,7 +310,7 @@ class PluginTest extends ContaoTestCase
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands(),
+                new Plugin()->getApiCommands(),
             );
         }
     }
@@ -338,7 +337,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures(),
+            new Plugin()->getApiFeatures(),
         );
     }
 
@@ -346,7 +345,7 @@ class PluginTest extends ContaoTestCase
     {
         $container = $this->getContainer();
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -357,7 +356,7 @@ class PluginTest extends ContaoTestCase
     {
         $container = $this->getContainer();
 
-        (new Plugin())->getExtensionConfig('contao', [], $container);
+        new Plugin()->getExtensionConfig('contao', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -370,7 +369,7 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -398,7 +397,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -469,7 +468,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -500,7 +499,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                Mysql::ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
@@ -509,7 +508,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -533,7 +532,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
@@ -562,7 +561,7 @@ class PluginTest extends ContaoTestCase
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         error_reporting($er);
 
@@ -578,7 +577,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                Mysql::ATTR_MULTI_STATEMENTS => true,
                                 1002 => '',
                             ],
                         ],
@@ -588,7 +587,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
@@ -622,17 +621,19 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
 
     public static function provideDatabaseDrivers(): iterable
     {
+        $key = Mysql::ATTR_MULTI_STATEMENTS;
+
         yield 'pdo with driver' => [
             [
                 'driver' => 'mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -640,7 +641,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias mysql2' => [
             [
                 'driver' => 'mysql2',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -648,7 +649,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias pdo_mysql' => [
             [
                 'driver' => 'pdo_mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -656,7 +657,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url' => [
             [
                 'url' => 'mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -664,7 +665,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias mysql2' => [
             [
                 'url' => 'mysql2://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -672,7 +673,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias pdo_mysql' => [
             [
                 'url' => 'pdo-mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -700,7 +701,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'options' => [Mysql::ATTR_MULTI_STATEMENTS => false],
                             'default_table_options' => [
                                 'charset' => 'utf8mb4',
                                 'collate' => 'utf8mb4_unicode_ci',
@@ -730,7 +731,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -773,12 +774,12 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', 'mail');
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
-    public function testAddsDefaultMailer(): void
+    public function testAddsDefaultMailerAndMtimeVersionStrategy(): void
     {
         $expect = [
             [
@@ -786,20 +787,28 @@ class PluginTest extends ContaoTestCase
                     'dsn' => '%env(MAILER_DSN)%',
                 ],
             ],
+            [
+                'assets' => [
+                    'version_strategy' => 'contao.asset.mtime_version_strategy',
+                ],
+            ],
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', [], $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', [], $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testDoesNotAddDefaultMailerIfDefined(): void
+    public function testDoesNotAddDefaultMailerOrMitmeVersionStrategy(): void
     {
         $extensionConfigs = [
             [
                 'mailer' => [
                     'dsn' => 'smtp://localhost',
+                ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
                 ],
             ],
         ];
@@ -807,7 +816,7 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
 
@@ -818,13 +827,16 @@ class PluginTest extends ContaoTestCase
                         'default' => 'smtp://localhost',
                     ],
                 ],
+                'assets' => [
+                    'json_manifest_path' => '/foo/manifest.json',
+                ],
             ],
         ];
 
         $expect = $extensionConfigs;
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -840,7 +852,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', $port);
         $container->setParameter('mailer_encryption', $encryption);
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -969,7 +981,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
 
         $expectedConfigs = [
             [
@@ -1005,7 +1017,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
@@ -1042,7 +1054,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                Mysql::ATTR_MULTI_STATEMENTS => false,
                                 1002 => '',
                             ],
                         ],
@@ -1255,7 +1267,7 @@ class PluginTest extends ContaoTestCase
 
     private function getContainer(): PluginContainerBuilder
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
 
         $container = new PluginContainerBuilder($pluginLoader, []);
         $container->setParameter('database_host', 'localhost');

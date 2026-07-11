@@ -20,6 +20,8 @@ class FragmentCompositor
 {
     private array $nestedByIdentifier = [];
 
+    private array $preload = [];
+
     /**
      * @internal Do not inherit from this class; decorate the "contao.fragment.compositor" service instead
      */
@@ -57,12 +59,28 @@ class FragmentCompositor
                 continue;
             }
 
-            $contentElementReference = new ContentElementReference($child, 'main', [], !Registry::getInstance()->isRegistered($child));
+            $contentElementReference = new ContentElementReference($child, 'main', [], $child->isModified() || !Registry::getInstance()->isRegistered($child));
             $contentElementReference->setNestedFragments($this->getNestedFragments(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id));
 
             $rendered[] = $contentElementReference;
         }
 
         return $rendered;
+    }
+
+    /**
+     * @internal
+     */
+    public function addPreload(string $identifier): void
+    {
+        $this->preload[$identifier] = true;
+    }
+
+    /**
+     * @internal
+     */
+    public function shouldPreload(string $identifier): bool
+    {
+        return true === ($this->preload[$identifier] ?? null);
     }
 }

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Provide methods to manage back end controllers.
@@ -32,48 +33,6 @@ abstract class Backend extends Controller
 	{
 		parent::__construct();
 		$this->import(Database::class, 'Database'); // backwards compatibility
-	}
-
-	/**
-	 * Return the current theme as string
-	 *
-	 * @return string The name of the theme
-	 */
-	public static function getTheme()
-	{
-		$theme = Config::get('backendTheme');
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
-		{
-			return $theme;
-		}
-
-		return 'flexible';
-	}
-
-	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 */
-	public static function getThemes()
-	{
-		$arrReturn = array();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = Folder::scan($projectDir . '/system/themes');
-
-		foreach ($arrThemes as $strTheme)
-		{
-			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
-			{
-				continue;
-			}
-
-			$arrReturn[$strTheme] = $strTheme;
-		}
-
-		return $arrReturn;
 	}
 
 	/**
@@ -199,7 +158,7 @@ abstract class Backend extends Controller
 
 		if ($addRequestToken)
 		{
-			$strRequest .= ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$strRequest .= ($strRequest ? '&' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		return parent::addToUrl($strRequest, $blnAddRef, $arrUnset);
@@ -337,6 +296,9 @@ abstract class Backend extends Controller
 
 			$this->Template->main .= $response;
 
+			$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module));
+			$this->Template->headline = \sprintf('<span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$module][0]));
+
 			// Add the name of the parent element
 			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
@@ -345,13 +307,15 @@ abstract class Backend extends Controller
 					->limit(1)
 					->execute(Input::get('id'));
 
+				$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module, 'table'=>$strTable, 'id'=>Input::get('id')));
+
 				if ($objRow->title)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->title . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->title));
 				}
 				elseif ($objRow->name)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->name . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->name));
 				}
 			}
 
@@ -407,9 +371,14 @@ abstract class Backend extends Controller
 			}
 
 			$container = System::getContainer();
-			$request = $container->get('request_stack')->getCurrentRequest();
-			$trail = array();
 
+			// Render the new breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
+
+			// Render the headline, which will be set as the page title in BackendMain::run()
 			$this->Template->headline = '';
 
 			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
@@ -420,21 +389,7 @@ abstract class Backend extends Controller
 			$do = Input::get('do');
 
 			// Add the current action
-			if ($act == 'editAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
-				}
-			}
-			elseif ($act == 'overrideAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
-				}
-			}
-			elseif (Input::get('id'))
+			if (Input::get('id'))
 			{
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
@@ -480,11 +435,20 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$container = System::getContainer();
+		$objSession = $container->get('request_stack')->getSession()->getBag('contao_backend');
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Set a new node
 		if (Input::get('pn') !== null)
 		{
+			// Check the request token
+			if ((!$request || $request->isMethodSafe()) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
+			{
+				$container->get('request_stack')->getSession()->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
+				Controller::redirect($container->get('router')->generate('contao_backend_confirm'));
+			}
+
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('pn', true)))
 			{
@@ -546,7 +510,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -567,7 +531,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=0')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -619,7 +583,7 @@ abstract class Backend extends Controller
 		// Add the breadcrumb link if you have access to that page
 		if ($objUser->hasAccess($row['id'], 'pagemounts'))
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
+			$label = '<a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $row['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
 		else
 		{
@@ -723,7 +687,7 @@ abstract class Backend extends Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=')) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -743,7 +707,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=' . $strPath)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 
@@ -799,7 +763,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function getDcaPickerWizard($extras, $table, $field, $inputName)
+	public static function getDcaPickerWizard($extras, $table, $field, $inputName, $title = null)
 	{
 		$context = 'link';
 		$extras = \is_array($extras) ? $extras : array();
@@ -818,21 +782,13 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
-  <script>
-    $("pp_' . $inputName . '").addEvent("click", function(e) {
-      e.preventDefault();
-      Backend.openModalSelector({
-        "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
-        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
-        "callback": function(picker, value) {
-          $("ctrl_' . $inputName . '").value = value.join(",");
-          $("ctrl_' . $inputName . '").fireEvent("change");
-        }.bind(this)
-      });
-    });
-  </script>';
+		return \sprintf(
+			' <a href="%s" id="pp_%s" class="picker-wizard" data-controller="contao--modal-selector" data-contao--modal-selector-title-value="%s" data-action="contao--modal-selector#dcapicker">%s</a>',
+			StringUtil::ampersand($factory->getUrl($context, $extras)),
+			$inputName,
+			StringUtil::specialchars($title ?? $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? ''),
+			Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']),
+		);
 	}
 
 	/**
@@ -841,9 +797,14 @@ abstract class Backend extends Controller
 	 * @param string $inputName
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
+	 *             use the Stimulus controller instead.
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the Stimulus controller instead.', __METHOD__);
+
 		return ' <button type="button" class="image-button" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg', $GLOBALS['TL_LANG']['MSC']['showPassword']) . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {

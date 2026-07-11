@@ -81,8 +81,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customTpl          A custom template name
  * @property string        $slabel             The submit button label
  * @property boolean       $preserveTags       Preserve HTML tags
- * @property boolean       $decodeEntities     Decode HTML entities
- * @property boolean       $useRawRequestData  Use the raw request data from the Symfony request
  * @property integer       $minlength          The minimum length
  * @property integer       $maxlength          The maximum length
  * @property integer       $minval             The minimum value
@@ -103,7 +101,6 @@ use Doctrine\DBAL\Types\Types;
 abstract class Widget extends Controller
 {
 	use TemplateInheritance;
-	use TemplateTrait;
 
 	/**
 	 * Id
@@ -273,6 +270,7 @@ abstract class Widget extends Controller
 			case 'alt':
 			case 'style':
 			case 'accesskey':
+			case 'form':
 			case 'onblur':
 			case 'onchange':
 			case 'onclick':
@@ -322,7 +320,6 @@ abstract class Widget extends Controller
 			case 'trailingSlash':
 			case 'spaceToUnderscore':
 			case 'doNotTrim':
-			case 'useRawRequestData':
 				$this->arrConfiguration[$strKey] = (bool) $varValue;
 				break;
 
@@ -373,7 +370,7 @@ abstract class Widget extends Controller
 
 				if ($this->basicEntities)
 				{
-					return StringUtil::restoreBasicEntities($this->varValue);
+					return StringUtil::restoreBasicEntities($this->varValue, $this->allowHtml);
 				}
 
 				return $this->varValue;
@@ -435,40 +432,30 @@ abstract class Widget extends Controller
 		switch ($strKey)
 		{
 			case 'id':
-				return isset($this->strId);
-
 			case 'name':
-				return isset($this->strName);
-
 			case 'label':
-				return isset($this->strLabel);
-
 			case 'value':
-				return isset($this->varValue);
-
 			case 'class':
-				return isset($this->strClass);
-
 			case 'template':
-				return isset($this->strTemplate);
-
 			case 'wizard':
-				return isset($this->strWizard);
+			case 'forAttribute':
+			case 'dataContainer':
+				return true;
 
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
-
-			case 'forAttribute':
-				return isset($this->blnForAttribute);
-
-			case 'dataContainer':
-				return isset($this->objDca);
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
 
 			default:
-				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
+				if (isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]))
+				{
+					return true;
+				}
+
+				// If the magic getter returns a value it "is set" by definition
+				return null !== $this->__get($strKey);
 		}
 	}
 
@@ -557,7 +544,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? \sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', $this->arrErrors[$intIndex]) : '';
+		return $this->hasErrors() ? \sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', StringUtil::specialchars($this->arrErrors[$intIndex])) : '';
 	}
 
 	/**
@@ -757,23 +744,19 @@ abstract class Widget extends Controller
 			return ($this->inputCallback)();
 		}
 
-		if ($this->useRawRequestData === true)
+		// Support arrays (thanks to Andreas Schempp)
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
+
+		if (!$this->allowHtml || $this->preserveTags)
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			return $request->request->get($strKey);
+			$varValue = $request->request->all()[array_shift($arrParts)] ?? null;
 		}
-
-		$strMethod = $this->allowHtml ? 'postHtml' : 'post';
-
-		if ($this->preserveTags)
+		else
 		{
-			$strMethod = 'postRaw';
+			$varValue = Input::postHtml(array_shift($arrParts), true);
 		}
-
-		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
-		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
 		{
@@ -805,6 +788,15 @@ abstract class Widget extends Controller
 			}
 
 			return $varInput;
+		}
+
+		// Ensure UTF-8 string
+		if (\is_string($varInput) && 1 !== preg_match('//u', $varInput))
+		{
+			$subBefore = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+			$varInput = mb_convert_encoding($varInput, 'UTF-8', 'UTF-8');
+			mb_substitute_character($subBefore);
 		}
 
 		if (!$this->doNotTrim && \is_string($varInput))
@@ -982,11 +974,7 @@ abstract class Widget extends Controller
 
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
-
-					if ($this->decodeEntities)
-					{
-						$varInput = StringUtil::decodeEntities($varInput);
-					}
+					$varInput = StringUtil::decodeEntities($varInput);
 
 					if (!Validator::isUrl($varInput))
 					{
@@ -1260,15 +1248,10 @@ abstract class Widget extends Controller
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
 		$arrAttributes['label'] = (($label = \is_array($arrData['label'] ?? null) ? $arrData['label'][0] : $arrData['label'] ?? null) !== null) ? $label : $strField;
-		$arrAttributes['description'] = $arrData['label'][1] ?? null;
+		$arrAttributes['description'] = \is_array($arrData['label'] ?? null) ? ($arrData['label'][1] ?? null) : null;
 		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
-
-		if ($arrData['eval']['basicEntities'] ?? null)
-		{
-			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
-		}
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
@@ -1294,10 +1277,9 @@ abstract class Widget extends Controller
 			$arrAttributes['allowHtml'] = 'ace|html' === $rte || str_starts_with($rte, 'tiny');
 		}
 
-		// Decode entities if HTML is allowed
-		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
+		if ($arrData['eval']['basicEntities'] ?? null)
 		{
-			$arrAttributes['decodeEntities'] = true;
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value'], $arrAttributes['allowHtml']);
 		}
 
 		// Add Ajax event
@@ -1320,9 +1302,9 @@ abstract class Widget extends Controller
 		// Foreign key
 		elseif (isset($arrData['foreignKey']))
 		{
-			$arrKey = explode('.', $arrData['foreignKey'], 2);
+			$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($arrData['foreignKey']);
 			$strField = Database::quoteIdentifier($arrData['relation']['field'] ?? 'id');
-			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $fk->getColumnExpression() . " AS value FROM " . $fk->getTableName() . " WHERE tstamp>0 ORDER BY value");
 
 			$arrData['options'] = array();
 
@@ -1403,9 +1385,9 @@ abstract class Widget extends Controller
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
+			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['platformOptions']['unique']))
 			{
-				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
+				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'];
 			}
 		}
 

@@ -25,7 +25,7 @@ class MemberGroupsListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
-            ->with('SELECT id, name FROM tl_member_group WHERE tstamp>0 ORDER BY name')
+            ->with('SELECT id, name FROM tl_member_group WHERE tstamp > 0 ORDER BY name')
             ->willReturn([['id' => 1, 'name' => 'Group 1']])
         ;
 

@@ -2,44 +2,37 @@ name: Coverage
 
 on:
     pull_request: ~
-    push:
-        branches:
-            - 5.x
-        tags:
-            - '*'
+    push: ~
 
-permissions: read-all
-
-defaults:
-    run:
-        # Simulate an interactive terminal with color support
-        shell: script -q -e -c "export TERM=xterm; bash {0}"
+permissions:
+    contents: read
 
 jobs:
     coverage:
         name: Codecov
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v4
+              uses: codecov/codecov-action@v7
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true

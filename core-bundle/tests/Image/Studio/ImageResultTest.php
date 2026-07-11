@@ -28,6 +28,7 @@ use Contao\Image\Resizer;
 use Contao\Image\ResizerInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -38,7 +39,7 @@ class ImageResultTest extends TestCase
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
-        $picture = $this->createMock(PictureInterface::class);
+        $picture = $this->createStub(PictureInterface::class);
         $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->mockLocator($pictureFactory);
         $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage, $sizeConfiguration);
@@ -113,7 +114,7 @@ class ImageResultTest extends TestCase
         $projectDir = '/project/dir';
         $staticUrl = 'https://static.url';
 
-        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem = $this->createStub(Filesystem::class);
         $filesystem
             ->method('exists')
             ->willReturn(true)
@@ -122,7 +123,7 @@ class ImageResultTest extends TestCase
         $img = [
             'src' => new Image(
                 $filePathOrImage,
-                $this->createMock(ImagineInterface::class),
+                $this->createStub(ImagineInterface::class),
                 $filesystem,
             ),
         ];
@@ -145,7 +146,7 @@ class ImageResultTest extends TestCase
     public function testGetOriginalDimensionsFromPathResource(): void
     {
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $dimensions = $this->createStub(ImageDimensions::class);
 
         $image = $this->createMock(ImageInterface::class);
         $image
@@ -180,7 +181,7 @@ class ImageResultTest extends TestCase
 
     public function testGetOriginalDimensionsFromImageResource(): void
     {
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $dimensions = $this->createStub(ImageDimensions::class);
 
         $image = $this->createMock(ImageInterface::class);
         $image
@@ -228,7 +229,7 @@ class ImageResultTest extends TestCase
 
     public function testCreatesIfDeferredWithNoDeferredImages(): void
     {
-        $imagine = $this->createMock(ImagineInterface::class);
+        $imagine = $this->createStub(ImagineInterface::class);
 
         $img = ['src' => new Image('/project/dir/assets/image0.jpg', $imagine, $this->mockFilesystem())];
         $deferredImages = [];
@@ -245,8 +246,8 @@ class ImageResultTest extends TestCase
 
     public function testCreatesIfDeferredWithDeferredImages(): void
     {
-        $imagine = $this->createMock(ImagineInterface::class);
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $imagine = $this->createStub(ImagineInterface::class);
+        $dimensions = $this->createStub(ImageDimensions::class);
 
         $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
         $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
@@ -283,8 +284,8 @@ class ImageResultTest extends TestCase
 
     public function testCreatesIfDeferredWithBothDeferredAndNotDeferredImages(): void
     {
-        $imagine = $this->createMock(ImagineInterface::class);
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $imagine = $this->createStub(ImagineInterface::class);
+        $dimensions = $this->createStub(ImageDimensions::class);
 
         $image = new Image('/project/dir/assets/image0.jpg', $imagine, $this->mockFilesystem());
         $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
@@ -319,8 +320,8 @@ class ImageResultTest extends TestCase
 
     public function testCreatesIfDeferredElementsWithoutSrcOrSrcsetKey(): void
     {
-        $imagine = $this->createMock(ImagineInterface::class);
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $imagine = $this->createStub(ImagineInterface::class);
+        $dimensions = $this->createStub(ImageDimensions::class);
 
         $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
         $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
@@ -365,18 +366,18 @@ class ImageResultTest extends TestCase
             ->expects($this->once())
             ->method('getImg')
             ->with()
-            ->willReturn(['src' => $this->createMock(DeferredImageInterface::class)])
+            ->willReturn(['src' => $this->createStub(DeferredImageInterface::class)])
         ;
 
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory = $this->createStub(PictureFactoryInterface::class);
         $pictureFactory
             ->method('create')
             ->willReturn($picture)
         ;
 
-        $nonDeferredResizer = $this->createMock(Resizer::class);
+        $nonDeferredResizer = $this->createStub(Resizer::class);
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
@@ -410,15 +411,15 @@ class ImageResultTest extends TestCase
             ->willReturn([])
         ;
 
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory = $this->createStub(PictureFactoryInterface::class);
         $pictureFactory
             ->method('create')
             ->willReturn($picture)
         ;
 
-        $nonDeferredResizer = $this->createMock(Resizer::class);
+        $nonDeferredResizer = $this->createStub(Resizer::class);
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
@@ -444,7 +445,7 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    private function mockPictureFactoryWithImgAndSources(array $img, array $sources): PictureFactoryInterface&MockObject
+    private function mockPictureFactoryWithImgAndSources(array $img, array $sources): PictureFactoryInterface&Stub
     {
         $picture = $this->createMock(PictureInterface::class);
         $picture
@@ -461,7 +462,7 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory = $this->createStub(PictureFactoryInterface::class);
         $pictureFactory
             ->method('create')
             ->willReturn($picture)
@@ -470,13 +471,13 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null, ResizerInterface|null $resizer = null): ContainerInterface&MockObject
+    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null, ResizerInterface|null $resizer = null): ContainerInterface&Stub
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $context = null;
 
         if (null !== $staticUrl) {
-            $context = $this->createMock(ContaoContext::class);
+            $context = $this->createStub(ContaoContext::class);
             $context
                 ->method('getStaticUrl')
                 ->willReturn($staticUrl)
@@ -517,9 +518,9 @@ class ImageResultTest extends TestCase
         return $deferredResizer;
     }
 
-    private function mockFilesystem(): Filesystem&MockObject
+    private function mockFilesystem(): Filesystem&Stub
     {
-        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem = $this->createStub(Filesystem::class);
         $filesystem
             ->method('exists')
             ->willReturn(true)

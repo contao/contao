@@ -52,10 +52,9 @@ class MessageCatalogueTest extends TestCase
             ->willReturn(['foobar', 'bazfoo'])
         ;
 
-        $finder = $this->createMock(Finder::class);
+        $finder = $this->createStub(Finder::class);
         $finder
             ->method('name')
-            ->with('/\.(php|xlf)$/')
             ->willReturn($finder)
         ;
 
@@ -70,11 +69,10 @@ class MessageCatalogueTest extends TestCase
             ]))
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('findIn')
-            ->with('languages/en')
-            ->willReturn($finder)
+            ->willReturnMap([['languages/en', $finder]])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue, $resourceFinder);
@@ -236,15 +234,15 @@ class MessageCatalogueTest extends TestCase
     #[DataProvider('getCompletelyForwardedMethods')]
     public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
-        $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
+        $params = array_map($this->createStub(...), $paramMockClasses);
         $return = null;
 
         if (\is_string($returnMockClassOrClasses)) {
-            $return = $this->createMock($returnMockClassOrClasses);
+            $return = $this->createStub($returnMockClassOrClasses);
         }
 
         if (\is_array($returnMockClassOrClasses)) {
-            $return = array_map(fn (string $class) => $this->createMock($class), $returnMockClassOrClasses);
+            $return = array_map($this->createStub(...), $returnMockClassOrClasses);
         }
 
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
@@ -352,15 +350,15 @@ class MessageCatalogueTest extends TestCase
     private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
     {
         if (!$catalogue) {
-            $catalogue = $this->createMock(MessageCatalogueInterface::class);
+            $catalogue = $this->createStub(MessageCatalogueInterface::class);
             $catalogue
                 ->method('getLocale')
                 ->willReturn('en')
             ;
         }
 
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
-        $resourceFinder ??= $this->createMock(ResourceFinder::class);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
+        $resourceFinder ??= $this->createStub(ResourceFinder::class);
 
         return new MessageCatalogue($catalogue, $framework, $resourceFinder);
     }

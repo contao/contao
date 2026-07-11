@@ -10,12 +10,17 @@
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
+use Contao\NewsletterDenyListModel;
+use Contao\NewsletterRecipientsModel;
+use Contao\StringUtil;
+use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -49,18 +54,35 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
-			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
+		),
+		'label' => array
+		(
+			'fields'                  => array('email'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter_recipients', 'listRecipient')
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'import' => array
 			(
 				'href'                => 'key=import',
 				'class'               => 'header_css_import'
 			),
+		),
+		'operations' => array
+		(
+			'-',
+			'block' => array
+			(
+				'href'                => 'key=block',
+				'icon'                => 'bundles/contaonewsletter/block.svg',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['tl_newsletter_recipients']['blockConfirm'] ?? null) . '\'))return false"'
+			)
 		)
 	),
 
@@ -75,17 +97,17 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'email' => array
 		(
@@ -93,13 +115,13 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
 				array('tl_newsletter_recipients', 'checkDenyList')
 			),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>false),
 		),
 		'active' => array
 		(
@@ -107,7 +129,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'addedOn' => array
 		(
@@ -115,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		)
 	)
 );
@@ -127,6 +149,13 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
  */
 class tl_newsletter_recipients extends Backend
 {
+	/**
+	 * Subscribed member start/stop dates cache, grouped by newsletter ID and member email.
+	 *
+	 * @var array<int, array<string, array<string, string>>
+	 */
+	private static array $subscribedMembers = array();
+
 	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
@@ -192,7 +221,7 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @param array $row
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listRecipient($row)
 	{
@@ -200,22 +229,69 @@ class tl_newsletter_recipients extends Backend
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span class="label-info">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span class="label-info">(' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn']))) . ')</span>';
 		}
 		else
 		{
-			$label .= ' <span class="label-info">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
+			$label .= ' <span class="label-info">(' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually']) . ')</span>';
 		}
 
 		$icon = Image::getPath('member');
-		$icond = Image::getPath('member_');
+		$icond = Image::getPath('member--disabled');
 
-		return sprintf(
-			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
+		// Change icon according to start/stop of the associated member (#951)
+		if (!isset(self::$subscribedMembers[$row['pid']]))
+		{
+			self::$subscribedMembers[$row['pid']] = System::getContainer()
+				->get('database_connection')
+				->fetchAllAssociativeIndexed('SELECT r.email, m.start, m.stop FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=?', array($row['pid']));
+		}
+
+		if ($member = self::$subscribedMembers[$row['pid']][$row['email']] ?? null)
+		{
+			$time = Date::floorToMinute();
+
+			if ($member['start'] && $time < $member['start'])
+			{
+				$icon = $icond;
+			}
+			elseif ($member['stop'] && $time >= $member['stop'])
+			{
+				$icon = $icond;
+			}
+		}
+
+		return RecordLabel::fromHtml(sprintf(
+			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>' . "\n",
 			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,
 			$label
-		);
+		));
+	}
+
+	/**
+	 * Add a recipient to the deny list
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function blockRecipient(DataContainer $dc): void
+	{
+		$referer = $this->getReferer();
+
+		$objRecipient = NewsletterRecipientsModel::findById($dc->id);
+		$hashedEmail = md5($objRecipient->email);
+
+		if (!NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid))
+		{
+			$objDenyList = new NewsletterDenyListModel();
+			$objDenyList->pid = $objRecipient->pid;
+			$objDenyList->hash = $hashedEmail;
+			$objDenyList->save();
+		}
+
+		$objRecipient->delete();
+
+		$this->redirect($referer);
 	}
 }

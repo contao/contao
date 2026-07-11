@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "newsletter reader".
@@ -43,7 +44,7 @@ class ModuleNewsletterReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -114,13 +115,6 @@ class ModuleNewsletterReader extends Module
 			$strContent = str_ireplace(' align="center"', '', $objNewsletter->content);
 		}
 
-		// Parse simple tokens and insert tags
-		$strContent = System::getContainer()->get('contao.insert_tag.parser')->replace($strContent);
-		$strContent = System::getContainer()->get('contao.string.simple_token_parser')->parse($strContent, array());
-
-		// Encode e-mail addresses
-		$strContent = StringUtil::encodeEmail($strContent);
-
 		$this->Template->content = $strContent;
 		$this->Template->subject = $objNewsletter->subject;
 
@@ -130,5 +124,10 @@ class ModuleNewsletterReader extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_newsletter.' . $objNewsletter->id));
 		}
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

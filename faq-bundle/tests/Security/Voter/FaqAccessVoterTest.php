@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FaqAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
         // never grant access (see #6201).
@@ -58,7 +58,7 @@ class FaqAccessVoterTest extends AbstractAccessVoterTestCase
 
     public function testDeniesUpdateActionToNewParent(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager

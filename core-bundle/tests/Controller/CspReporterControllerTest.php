@@ -31,10 +31,10 @@ class CspReporterControllerTest extends TestCase
         $content = json_encode(['csp-report' => []]);
         $request = Request::create('https://www.example.org/_contao/csp/report/1', content: $content);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->cspReportLog = false;
 
-        $adapter = $this->mockAdapter(['findWithDetails']);
+        $adapter = $this->createAdapterMock(['findWithDetails']);
         $adapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -42,8 +42,8 @@ class CspReporterControllerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $logFormatter = $this->createMock(LogFormatterInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
+        $logFormatter = $this->createStub(LogFormatterInterface::class);
         $nelmioLogger = new Logger($logger, $logFormatter, 'notice');
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -52,7 +52,7 @@ class CspReporterControllerTest extends TestCase
             ->method('dispatch')
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $inner = new ContentSecurityPolicyController($nelmioLogger, $eventDispatcher, new Filter());
 
         $this->expectException(NotFoundHttpException::class);
@@ -66,10 +66,10 @@ class CspReporterControllerTest extends TestCase
         $content = json_encode(['csp-report' => []]);
         $request = Request::create('https://www.example.org/_contao/csp/report/1', content: $content);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->cspReportLog = true;
 
-        $adapter = $this->mockAdapter(['findWithDetails']);
+        $adapter = $this->createAdapterMock(['findWithDetails']);
         $adapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -84,7 +84,7 @@ class CspReporterControllerTest extends TestCase
             ->willReturn('')
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
         $nelmioLogger = new Logger($logger, $logFormatter, 'notice');
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -93,7 +93,7 @@ class CspReporterControllerTest extends TestCase
             ->method('dispatch')
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $inner = new ContentSecurityPolicyController($nelmioLogger, $eventDispatcher, new Filter());
 
         $controller = new CspReporterController($framework, $inner);

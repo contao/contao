@@ -52,8 +52,8 @@ class DebugPagesCommandTest extends TestCase
 
     public function testNameAndArguments(): void
     {
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
         $command = new DebugPagesCommand($framework, $pageRegistry);
 
         $this->assertSame('debug:pages', $command->getName());
@@ -64,13 +64,13 @@ class DebugPagesCommandTest extends TestCase
     #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
@@ -81,8 +81,8 @@ class DebugPagesCommandTest extends TestCase
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
-        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
+        new Filesystem()->mkdir($this->getTempDir().'/languages/en');
+        new Filesystem()->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
 
@@ -98,7 +98,7 @@ class DebugPagesCommandTest extends TestCase
             ->willReturnCallback(static fn (PageModel $pageModel): bool => 'regular' === $pageModel->type)
         ;
 
-        $command = new DebugPagesCommand($this->mockContaoFramework(), $pageRegistry);
+        $command = new DebugPagesCommand($this->createContaoFrameworkStub(), $pageRegistry);
 
         $GLOBALS['TL_PTY'] = $legacyPages;
 

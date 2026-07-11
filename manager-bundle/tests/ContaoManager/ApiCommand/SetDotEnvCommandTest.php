@@ -36,7 +36,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/.env.local';
 
-        $application = $this->createMock(Application::class);
+        $application = $this->createStub(Application::class);
         $application
             ->method('getProjectDir')
             ->willReturn($this->tempdir)
@@ -50,15 +50,6 @@ class SetDotEnvCommandTest extends ContaoTestCase
         parent::tearDown();
 
         $this->filesystem->remove($this->tempdir);
-    }
-
-    public function testHasCorrectNameAndArguments(): void
-    {
-        $this->assertSame('dot-env:set', $this->command->getName());
-        $this->assertTrue($this->command->getDefinition()->hasArgument('key'));
-        $this->assertTrue($this->command->getDefinition()->getArgument('key')->isRequired());
-        $this->assertTrue($this->command->getDefinition()->hasArgument('value'));
-        $this->assertTrue($this->command->getDefinition()->getArgument('value')->isRequired());
     }
 
     public function testCreatesDotEnvFileIfItDoesNotExist(): void

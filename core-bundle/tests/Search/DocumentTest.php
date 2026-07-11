@@ -16,11 +16,82 @@ use Contao\CoreBundle\Search\Document;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
+    public function testSerializeAndUnserialize(): void
+    {
+        $html = file_get_contents(__DIR__.'/../Fixtures/Functional/Search/site.html');
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response($html, 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+
+        $serialized = serialize($document);
+
+        // Assert compression
+        $this->assertTrue(\strlen($serialized) < \strlen($html));
+
+        $document = unserialize($serialized);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+    }
+
+    #[DataProvider('searchableContentProvider')]
+    public function testSearchableContent(string $fixture, string $expectedResult, bool $allowProtected = false): void
+    {
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response(file_get_contents(__DIR__.'/../Fixtures/Functional/Search/'.$fixture), 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+        $this->assertSame($expectedResult, $document->getSearchableContent($allowProtected));
+    }
+
+    public static function searchableContentProvider(): iterable
+    {
+        yield 'Test extracting from site.html' => [
+            'site.html',
+            'This is just some content to test search indexing!',
+        ];
+
+        yield 'Test extracting from site.html with protected content allowed' => [
+            'site.html',
+            'This is just some content to test search indexing! This is protected content!',
+            true,
+        ];
+    }
+
+    public function testFetchingDocumentCrawlerReturnsNewInstance(): void
+    {
+        $html = '<body><style>body { background: grey; }</style></body>';
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response($html, 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $crawler = $document->getContentCrawler();
+        $this->assertStringContainsString($html, $crawler->html());
+
+        // Simulate some listener doing something with the document crawler and remove
+        // all <style> tags
+        $crawler->filterXPath('//style')->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)));
+
+        // Assert that our crawler indeed removed the style tags
+        $this->assertStringContainsString('<body></body>', $crawler->html());
+
+        // Now some other listener gets the crawler again, this must be untouched
+        $crawler = $document->getContentCrawler();
+        $this->assertStringContainsString($html, $crawler->html());
+    }
+
     public function testCreatesADocumentFromRequestAndResponse(): void
     {
         $request = Request::create('https://example.com/foo?bar=baz');
@@ -223,14 +294,14 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with no context filter provided' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","title":"Welcome to the official Contao Demo Site","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","title":"Welcome to the official Contao Demo Site","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>',
             [
                 [
                     '@context' => 'https://schema.contao.org/',
                     '@type' => 'https://schema.contao.org/Page',
                     'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
                     'https://schema.contao.org/pageId' => 2,
-                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/searchIndexer' => '',
                     'https://schema.contao.org/protected' => false,
                     'https://schema.contao.org/groups' => [],
                     'https://schema.contao.org/fePreview' => false,
@@ -240,7 +311,7 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with no context filter provided prefix context' => [
-            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:searchIndexer":"","contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
             [
                 [
                     '@context' => [
@@ -249,7 +320,7 @@ class DocumentTest extends TestCase
                     '@type' => 'https://schema.contao.org/Page',
                     'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
                     'https://schema.contao.org/pageId' => 2,
-                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/searchIndexer' => '',
                     'https://schema.contao.org/protected' => false,
                     'https://schema.contao.org/groups' => [],
                     'https://schema.contao.org/fePreview' => false,

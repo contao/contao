@@ -1,0 +1,57 @@
+/* Submit buttons */
+.tl_submit {
+    height: 30px;
+    padding: 7px 12px;
+    border: 1px solid var(--form-border);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    cursor: pointer;
+    background: var(--form-button);
+    transition: background 0.2s ease;
+}
+
+.tl_submit:hover {
+    color: inherit;
+    background-color: var(--form-button-hover);
+}
+
+.tl_submit:active {
+    color: var(--form-button-active);
+}
+
+.tl_submit:disabled {
+    color: var(--gray);
+    background: var(--form-button-disabled) !important;
+    border-color: var(--form-border-disabled);
+    cursor: not-allowed;
+}
+
+.tl_panel .tl_submit,
+.tl_version_panel .tl_submit,
+.tl_formbody_submit .tl_submit {
+    background: var(--form-bg);
+}
+
+.tl_panel .tl_submit:hover,
+.tl_version_panel .tl_submit:hover,
+.tl_formbody_submit .tl_submit:hover {
+    background: var(--form-bg-hover);
+}
+
+a.tl_submit {
+    display: inline-block;
+}
+
+/* Split buttons */
+.split-button {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+.split-button ul,
+.split-button li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}

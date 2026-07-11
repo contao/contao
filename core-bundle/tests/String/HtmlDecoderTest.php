@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -37,7 +38,7 @@ class HtmlDecoderTest extends TestCase
     {
         parent::setUp();
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('hasFrontendUser')
             ->willReturn(false)
@@ -45,7 +46,7 @@ class HtmlDecoderTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
 
         System::setContainer($container);
     }
@@ -62,8 +63,8 @@ class HtmlDecoderTest extends TestCase
     #[DataProvider('getInputEncodedToPlainText')]
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, true));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
+        $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
 
         $htmlDecoder = new HtmlDecoder($parser);
@@ -98,14 +99,16 @@ class HtmlDecoderTest extends TestCase
     #[DataProvider('getHtmlToPlainText')]
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, true));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
+        $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
         $htmlDecoder = new HtmlDecoder($parser);
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
+
+        Config::set('allowedTags', '<script><style>'.Config::get('allowedTags'));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
@@ -122,6 +125,8 @@ class HtmlDecoderTest extends TestCase
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
         yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
         yield [" \t\r\n<br>foo \t<br>\r\n \r\n\t<br> bar <br>\t\r\n", "foo\nbar"];
+        yield ['<script>foo</script>', ''];
+        yield ['<style>foo</style>', ''];
 
         yield [
             '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p><div><div><div>single newline',
@@ -131,12 +136,15 @@ class HtmlDecoderTest extends TestCase
 
     private function createDateInsertTag(): DateInsertTag
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturnCallback(static fn (string $argument) => $argument)
         ;
 
-        return new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        return new DateInsertTag(
+            $this->createContaoFrameworkStub([Date::class => $dateAdapter]),
+            $this->createStub(PageFinder::class),
+        );
     }
 }

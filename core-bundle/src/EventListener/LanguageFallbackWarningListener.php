@@ -52,8 +52,22 @@ class LanguageFallbackWarningListener
     public function getMessages(): string
     {
         $time = Date::floorToMinute();
-        $records = $this->connection->fetchAllAssociative("SELECT fallback, dns FROM tl_page WHERE type='root' AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY dns");
         $roots = [];
+
+        $records = $this->connection->fetchAllAssociative(
+            <<<SQL
+                SELECT
+                    fallback,
+                    dns
+                FROM tl_page
+                WHERE
+                    type = 'root'
+                    AND published = 1
+                    AND (start = '' OR start <= $time)
+                    AND (stop = '' OR stop > $time)
+                ORDER BY dns
+                SQL,
+        );
 
         foreach ($records as $root) {
             $dns = $root['dns'] ?: '*';

@@ -38,9 +38,6 @@ class AddAssetsPackagesPassTest extends TestCase
         $fs->mkdir(static::getTempDir().'/ManifestJsonBundle/Resources/public');
         $fs->touch(static::getTempDir().'/ManifestJsonBundle/Resources/public/manifest.json');
 
-        $fs->mkdir(static::getTempDir().'/ThemeBundle/contao/themes/flexible');
-        $fs->touch(static::getTempDir().'/ThemeBundle/contao/themes/flexible/manifest.json');
-
         $fs->mkdir(static::getTempDir().'/RootPublicBundle/public');
     }
 
@@ -72,14 +69,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass->process($container);
 
         $calls = $container->getDefinition('assets.packages')->getMethodCalls();
-        $found = false;
-
-        foreach ($calls as $call) {
-            if ('addPackage' === $call[0] && 'bar_foo' === $call[1][0]) {
-                $found = true;
-                break;
-            }
-        }
+        $found = array_any($calls, static fn ($call) => 'addPackage' === $call[0] && 'bar_foo' === $call[1][0]);
 
         $this->assertFalse($found);
     }
@@ -93,14 +83,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass->process($container);
 
         $calls = $container->getDefinition('assets.packages')->getMethodCalls();
-        $found = false;
-
-        foreach ($calls as $call) {
-            if ('addPackage' === $call[0] && 'foo_bar' === $call[1][0]) {
-                $found = true;
-                break;
-            }
-        }
+        $found = array_any($calls, static fn ($call) => 'addPackage' === $call[0] && 'foo_bar' === $call[1][0]);
 
         $this->assertTrue($found);
         $this->assertTrue($container->hasDefinition('assets._package_foo_bar'));
@@ -208,29 +191,6 @@ class AddAssetsPackagesPassTest extends TestCase
         $actualVersion = $container->getDefinition('assets._version_contao-components/contao')->getArgument(0);
 
         $this->assertSame($expectedVersion, $actualVersion);
-    }
-
-    public function testRegistersTheThemes(): void
-    {
-        $bundlePath = Path::normalize(static::getTempDir()).'/ThemeBundle';
-        $container = $this->getContainerWithAssets('ThemeBundle', 'Foo\Bar\ThemeBundle', $bundlePath);
-
-        $pass = new AddAssetsPackagesPass();
-        $pass->process($container);
-
-        $this->assertTrue($container->hasDefinition('assets._package_system/themes/flexible'));
-
-        $service = $container->getDefinition('assets._package_system/themes/flexible');
-
-        $this->assertSame('system/themes/flexible', $service->getArgument(0));
-        $this->assertSame('assets._version_system/themes/flexible', (string) $service->getArgument(1));
-        $this->assertTrue($container->hasDefinition('assets._version_system/themes/flexible'));
-
-        $definition = $container->getDefinition('assets._version_system/themes/flexible');
-
-        $this->assertInstanceOf(ChildDefinition::class, $definition);
-        $this->assertSame('assets.json_manifest_version_strategy', $definition->getParent());
-        $this->assertSame($bundlePath.'/contao/themes/flexible/manifest.json', $definition->getArgument(0));
     }
 
     private function getContainerWithAssets(string $name, string $class, string $path): ContainerBuilder

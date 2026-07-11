@@ -29,7 +29,7 @@ class FilesystemItemTest extends TestCase
     public function testSetAndGetAttributes(): void
     {
         $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
-        $storage = $this->createMock(VirtualFilesystemInterface::class);
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
 
         $fileItem = new FilesystemItem(
             true,

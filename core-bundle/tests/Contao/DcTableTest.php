@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -35,7 +36,7 @@ class DcTableTest extends TestCase
     #[DataProvider('getPalette')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class is deprecated/');
 
         $result = $this->createMock(Result::class);
         $result
@@ -59,9 +60,19 @@ class DcTableTest extends TestCase
             ->willReturn(true)
         ;
 
+        $virtualFieldsHandler = $this->createMock(VirtualFieldsHandler::class);
+        $virtualFieldsHandler
+            ->expects($this->once())
+            ->method('expandFields')
+            ->willReturnCallback(
+                static fn (array $record) => $record,
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('security.helper', $security);
+        $container->set('contao.data_container.virtual_fields_handler', $virtualFieldsHandler);
 
         System::setContainer($container);
 

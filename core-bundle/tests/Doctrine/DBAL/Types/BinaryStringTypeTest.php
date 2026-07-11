@@ -84,11 +84,6 @@ class BinaryStringTypeTest extends TestCase
 
     public function testReturnsTheCorrectName(): void
     {
-        $this->assertSame(BinaryStringType::NAME, $this->type->getName());
-    }
-
-    public function testRequiresAnSqlCommentHintForTheCustomType(): void
-    {
-        $this->assertTrue($this->type->requiresSQLCommentHint($this->createMock(MySQLPlatform::class)));
+        $this->assertSame(BinaryStringType::NAME, Type::getTypeRegistry()->lookupName($this->type));
     }
 }

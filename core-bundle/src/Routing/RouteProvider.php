@@ -100,7 +100,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $routes = [];
 
         $models = $pages->getModels();
-        $models = array_filter($models, fn (PageModel $page): bool => $this->pageRegistry->isRoutable($page));
+        $models = array_filter($models, $this->pageRegistry->isRoutable(...));
 
         $this->addRoutesForPages($models, $routes);
         $this->sortRoutes($routes);
@@ -261,13 +261,13 @@ class RouteProvider extends AbstractPageRouteProvider
         $models = [];
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
+        $pages = $pageModel->findBy(["(tl_page.type = 'root' AND (tl_page.dns = ? OR tl_page.dns = ''))"], $httpHost);
 
         if ($pages instanceof Collection) {
             $models = $pages->getModels();
         }
 
-        $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
+        $pages = $pageModel->findBy(['tl_page.alias = ? OR tl_page.alias = ?'], ['index', '/']);
 
         if ($pages instanceof Collection) {
             foreach ($pages as $page) {

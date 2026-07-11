@@ -38,4 +38,13 @@ class ReindexConfigTest extends TestCase
         $config = $config->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['42']]));
         $this->assertSame(['foo' => ['42']], $config->getLimitedDocumentIds()->toArray());
     }
+
+    public function testRequiresJob(): void
+    {
+        $config = new ReindexConfig();
+        $this->assertFalse($config->requiresJob());
+
+        $config = $config->withRequireJob(true);
+        $this->assertTrue($config->requiresJob());
+    }
 }

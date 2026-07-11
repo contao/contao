@@ -34,7 +34,7 @@ class ProviderDelegatingVoterTest extends TestCase
         ;
 
         $voter = new ProviderDelegatingVoter([$provider]);
-        $result = $voter->vote($this->createMock(TokenInterface::class), $subject, $attributes);
+        $result = $voter->vote($this->createStub(TokenInterface::class), $subject, $attributes);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
@@ -57,7 +57,7 @@ class ProviderDelegatingVoterTest extends TestCase
 
         $voter = new ProviderDelegatingVoter([$provider]);
         $result = $voter->vote(
-            $this->createMock(TokenInterface::class),
+            $this->createStub(TokenInterface::class),
             new Document('id', 'type', 'searchable content'),
             [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT],
         );

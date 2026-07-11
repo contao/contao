@@ -9,20 +9,22 @@
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Extend default palette
 PaletteManipulator::create()
 	->addLegend('feed_legend', 'modules_legend', PaletteManipulator::POSITION_BEFORE)
 	->addField('calendarfeeds', 'feed_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_layout')
+	->applyToPalette('modern', 'tl_layout')
 ;
 
 // Extend fields
 $GLOBALS['TL_DCA']['tl_layout']['fields']['calendarfeeds'] = array
 (
 	'inputType'         => 'checkbox',
-	'foreignKey'        => 'tl_calendar_feed.title',
+	'foreignKey'        => 'tl_page.title',
 	'eval'              => array('multiple'=>true),
-	'sql'               => "blob NULL",
+	'sql'               => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'          => array('type'=>'hasMany', 'load'=>'lazy')
 );

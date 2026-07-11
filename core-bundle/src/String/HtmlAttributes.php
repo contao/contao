@@ -12,21 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
+use Contao\StringUtil;
+
 /**
  * @implements \IteratorAggregate<string, string>
- * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
+ * @implements \ArrayAccess<string, \Stringable|bool|float|int|string|null>
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
+    private const ESCAPED_VALUE_CACHE_LIMIT = 4096;
+
+    private const VALIDATED_NAME_CACHE_LIMIT = 256;
+
     /**
      * @var array<array-key, string>
      */
     private array $attributes = [];
 
-    private bool $doubleEncoding = false;
-
     /**
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function __construct(self|iterable|string|null $attributes = null)
     {
@@ -49,7 +53,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
     {
@@ -57,21 +61,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, \Stringable|bool|int|string|null $value): void {
-            if ('class' === $name) {
-                $this->addClass($value);
-            } elseif ('style' === $name) {
-                $this->addStyle($value);
-            } else {
-                $this->set($name, $value);
+        if ($attributes instanceof self) {
+            foreach ($attributes->attributes as $name => $value) {
+                $this->mergeAttribute((string) $name, $value, true);
             }
-        };
+
+            return $this;
+        }
 
         if (\is_string($attributes)) {
             foreach ($this->parseString($attributes) as $name => $value) {
                 try {
-                    $mergeSet($name, $value);
+                    $this->mergeAttribute($name, $value);
                 } catch (\InvalidArgumentException) {
                     // Skip invalid attributes
                 }
@@ -81,7 +82,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         foreach ($attributes as $name => $value) {
-            $mergeSet((string) $name, $value);
+            $this->mergeAttribute((string) $name, $value);
         }
 
         return $this;
@@ -94,16 +95,34 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, \Stringable|bool|int|string|null $value = true, mixed $condition = true): self
+    public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
+        static $validatedNames = [];
+
         if (!$this->test($condition)) {
             return $this;
         }
 
+        if (\is_float($value)) {
+            try {
+                $value = StringUtil::numberToString($value);
+            } catch (\InvalidArgumentException) {
+                $value = false;
+            }
+        }
+
         $name = strtolower($name);
 
-        if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
-            throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+        if (!isset($validatedNames[$name])) {
+            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
+                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            }
+
+            $validatedNames[$name] = true;
+
+            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
+                unset($validatedNames[array_key_first($validatedNames)]);
+            }
         }
 
         // Unset if value is set to false
@@ -113,7 +132,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        $this->attributes[$name] = true === $value ? '' : (string) $value;
+        $normalizedValue = true === $value ? '' : (string) $value;
+
+        if (($this->attributes[$name] ?? null) === $normalizedValue) {
+            return $this;
+        }
+
+        $this->attributes[$name] = $normalizedValue;
 
         // Normalize class names and style attributes
         if ('class' === $name) {
@@ -128,7 +153,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * Set the property $name to $value if the value is truthy.
      */
-    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
+    public function setIfExists(string $name, \Stringable|bool|float|int|string|null $value): self
     {
         if ($this->test($value)) {
             $this->set($name, $value);
@@ -222,7 +247,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<int|string, string> $styles
+     * @param string|list<string>|array<string, string|int|float|bool|null> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -230,14 +255,25 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
+        $stylesToRemove = [];
+
         if (\is_array($styles)) {
             foreach ($styles as $prop => $value) {
                 if (\is_string($prop)) {
-                    $styles[$prop] = "$prop:$value";
+                    if ('' === (string) $value) {
+                        $stylesToRemove[] = $prop;
+                        unset($styles[$prop]);
+                    } else {
+                        $styles[$prop] = "$prop:$value";
+                    }
                 }
             }
 
             $styles = implode(';', $styles);
+        }
+
+        if ($stylesToRemove) {
+            $this->removeStyle($stylesToRemove);
         }
 
         $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
@@ -294,9 +330,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
+     */
     public function setDoubleEncoding(bool $doubleEncoding): self
     {
-        $this->doubleEncoding = $doubleEncoding;
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is a no-op and will no longer exist in Contao 7.', __METHOD__);
 
         return $this;
     }
@@ -310,7 +349,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         $attributes = [];
 
-        foreach ($this->getIterator() as $name => $value) {
+        foreach ($this->attributes as $name => $value) {
+            $name = (string) $name;
+
             // Special case if the attribute name starts with an equals sign and the previous
             // attribute was a boolean attribute
             if ('=' === $name[0] && !str_ends_with($attributes[\count($attributes) - 1] ?? '"', '"')) {
@@ -385,6 +426,19 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return array_filter(preg_split('/\s+/', $value));
     }
 
+    private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
+    {
+        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addClass((string) $value);
+        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
+            $this->addStyle((string) $value);
+        } elseif ($trusted) {
+            $this->attributes[$name] = (string) $value;
+        } else {
+            $this->set($name, $value);
+        }
+    }
+
     /**
      * Parse attributes from an attribute string like 'foo="bar" baz="42'.
      *
@@ -437,13 +491,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function escapeValue(string $name, string $value): string
     {
+        static $escapedValues = [];
+
         if (!preg_match('//u', $value) || str_contains($value, "\x00")) {
             throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
+        $cacheKey = $value;
 
-        return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+        if (isset($escapedValues[$cacheKey])) {
+            return $escapedValues[$cacheKey];
+        }
+
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+        $value = str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
+
+        $escapedValues[$cacheKey] = $value;
+
+        if (\count($escapedValues) > self::ESCAPED_VALUE_CACHE_LIMIT) {
+            unset($escapedValues[array_key_first($escapedValues)]);
+        }
+
+        return $value;
     }
 
     /**
@@ -503,7 +572,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 // Spacing according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration
                 $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
                 $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
-                $result[$this->decodeStyleProperty($match[1])][] = "$property: $value;";
+                $propertyDecoded = $this->decodeStyleProperty($match[1]);
+
+                $result[$propertyDecoded][] = match (true) {
+                    '' === $value && !str_starts_with($propertyDecoded, '--') => '',
+                    default => "$property: $value;",
+                };
             }
         }
 
@@ -536,6 +610,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         // Serialize styles according to
         // https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block
-        return implode(' ', array_merge(...array_values($styles)));
+        return implode(' ', array_filter(array_merge(...array_values($styles))));
     }
 }

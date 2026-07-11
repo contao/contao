@@ -45,11 +45,19 @@ class ContentProxy extends ContentElement
 				throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 			}
 
-			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement));
+			$this->reference = new ContentElementReference($objElement, $strColumn, array(), $objElement->isModified() || !Registry::getInstance()->isRegistered($objElement));
 			$this->reference->setNestedFragments($nestedFragments);
 		}
 
 		$this->strColumn = $strColumn;
+		$this->objModel = $this->reference->attributes['contentModel'] ?? null;
+
+		if (\is_int($this->objModel))
+		{
+			$this->objModel = ContentModel::findById($this->objModel);
+		}
+
+		$this->arrData = $this->objModel?->row() ?? array();
 
 		// Do not call parent constructor
 	}
@@ -81,12 +89,12 @@ class ContentProxy extends ContentElement
 
 	public function __get($strKey)
 	{
-		return $this->reference->attributes['templateProperties'][$strKey] ?? null;
+		return $this->reference->attributes['templateProperties'][$strKey] ?? $this->arrData[$strKey] ?? null;
 	}
 
 	public function __isset($strKey)
 	{
-		return isset($this->reference->attributes['templateProperties'][$strKey]);
+		return isset($this->reference->attributes['templateProperties'][$strKey]) || isset($this->arrData[$strKey]);
 	}
 
 	/**

@@ -31,12 +31,6 @@ class FrontendUser extends User
 	protected $strTable = 'tl_member';
 
 	/**
-	 * Name of the current cookie
-	 * @var string
-	 */
-	protected $strCookie = 'FE_USER_AUTH';
-
-	/**
 	 * Group login page
 	 * @var string
 	 */
@@ -62,7 +56,6 @@ class FrontendUser extends User
 		parent::__construct();
 
 		$this->strIp = Environment::get('ip');
-		$this->strHash = Input::cookie($this->strCookie);
 	}
 
 	/**

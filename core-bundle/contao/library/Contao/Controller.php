@@ -48,39 +48,6 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
-	 * Find a particular template file and return its path
-	 *
-	 * @param string $strTemplate The name of the template
-	 *
-	 * @return string The path to the template file
-	 *
-	 * @throws \RuntimeException If the template group folder is insecure
-	 */
-	public static function getTemplate($strTemplate)
-	{
-		$strTemplate = basename($strTemplate);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		// Check for a theme folder
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
-		{
-			global $objPage;
-
-			if ($objPage->templateGroup ?? null)
-			{
-				if (Validator::isInsecurePath($objPage->templateGroup))
-				{
-					throw new \RuntimeException('Invalid path ' . $objPage->templateGroup);
-				}
-
-				return TemplateLoader::getPath($strTemplate, 'html5', $objPage->templateGroup);
-			}
-		}
-
-		return TemplateLoader::getPath($strTemplate, 'html5');
-	}
-
-	/**
 	 * Return all template files of a particular group as array
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
@@ -129,9 +96,6 @@ abstract class Controller extends System
 				array_keys($templateHierarchy->getInheritanceChains()),
 				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
 			),
-			// Merge with the templates from the TemplateLoader for backwards
-			// compatibility in case someone has added templates manually
-			TemplateLoader::getPrefixedFiles($strPrefix),
 		);
 
 		foreach ($prefixedFiles as $strTemplate)
@@ -183,7 +147,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['user'] ?? 'user';
 			}
 		}
 
@@ -195,7 +159,7 @@ abstract class Controller extends System
 
 			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
 			{
-				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['user'];
 			}
 		}
 
@@ -277,12 +241,13 @@ abstract class Controller extends System
 	/**
 	 * Generate a front end module and return it as string
 	 *
-	 * @param mixed  $intId     A module ID or a Model object
-	 * @param string $strColumn The name of the column
+	 * @param mixed  $intId                       A module ID or a Model object
+	 * @param string $strColumn                   The name of the column
+	 * @param array  $arrPreloadedContentElements
 	 *
 	 * @return string The module HTML markup
 	 */
-	public static function getFrontendModule($intId, $strColumn='main')
+	public static function getFrontendModule($intId, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
 		if (!\is_object($intId) && !\strlen($intId))
 		{
@@ -353,7 +318,7 @@ abstract class Controller extends System
 
 			while ($objArticles->next())
 			{
-				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn);
+				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn, $arrPreloadedContentElements);
 			}
 
 			return $return;
@@ -412,9 +377,14 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objRow->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -428,17 +398,16 @@ abstract class Controller extends System
 	/**
 	 * Generate an article and return it as string
 	 *
-	 * @param mixed   $varId          The article ID or a Model object
-	 * @param boolean $blnMultiMode   If true, only teasers will be shown
-	 * @param boolean $blnIsInsertTag If true, there will be no page relation
-	 * @param string  $strColumn      The name of the column
+	 * @param mixed   $varId                       The article ID or a Model object
+	 * @param boolean $blnMultiMode                If true, only teasers will be shown
+	 * @param boolean $blnIsInsertTag              If true, there will be no page relation
+	 * @param string  $strColumn                   The name of the column
+	 * @param array   $arrPreloadedContentElements
 	 *
 	 * @return string|boolean The article HTML markup or false
 	 */
-	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
-		global $objPage;
-
 		if (\is_object($varId))
 		{
 			$objRow = $varId;
@@ -450,6 +419,7 @@ abstract class Controller extends System
 				return '';
 			}
 
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
@@ -485,12 +455,19 @@ abstract class Controller extends System
 		}
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
+		$objArticle->setPreloadedContentElements($arrPreloadedContentElements);
+
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objArticle->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -561,7 +538,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		$objRow = $objRow->cloneDetached();
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
 		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
@@ -573,20 +549,31 @@ abstract class Controller extends System
 		$isContentProxy = is_a($strClass, ContentProxy::class, true);
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if ($isContentProxy && $contentElementReference)
+		if ($isContentProxy)
 		{
-			$objElement = new $strClass($contentElementReference, $strColumn);
-		}
-		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
-		{
-			$objElement = new $strClass(
-				$objRow,
-				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
-			);
+			if ($contentElementReference)
+			{
+				$objElement = new $strClass($contentElementReference, $strColumn);
+			}
+			elseif ($objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+			{
+				$objElement = new $strClass(
+					$objRow,
+					$strColumn,
+					$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
+				);
+			}
+			else
+			{
+				$objElement = new $strClass($objRow, $strColumn);
+			}
 		}
 		else
 		{
+			// TODO: only cloneDetached() in Contao 5.6 if classes are not empty
+			$objRow = $objRow->cloneDetached();
+			$objRow->typePrefix = 'ce_';
+
 			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
 			{
 				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
@@ -607,9 +594,14 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objRow->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -811,10 +803,9 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
-		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
+		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts && !System::getContainer()->getParameter('kernel.debug');
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
@@ -998,7 +989,7 @@ abstract class Controller extends System
 	 * Add a request string to the current URL
 	 *
 	 * @param string  $strRequest The string to be added
-	 * @param boolean $blnAddRef  Add the referer ID
+	 * @param boolean $blnAddRef  Not used anymore
 	 * @param array   $arrUnset   An optional array of keys to unset
 	 *
 	 * @return string The new URL
@@ -1023,8 +1014,8 @@ abstract class Controller extends System
 			$pairs = static::$arrQueryCache[$cacheKey];
 		}
 
-		// Remove the request token and referer ID
-		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+		// Remove the request token
+		unset($pairs['rt'], $pairs['revise']);
 
 		foreach ($arrUnset as $key)
 		{
@@ -1038,17 +1029,11 @@ abstract class Controller extends System
 			$pairs = array_merge($pairs, $newPairs);
 		}
 
-		// Add the referer ID
-		if ($request->query->has('ref') || ($strRequest && $blnAddRef))
-		{
-			$pairs['ref'] = $request->attributes->get('_contao_referer_id');
-		}
-
 		$uri = '';
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 		}
 
 		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
@@ -1145,12 +1130,12 @@ abstract class Controller extends System
 	 *
 	 * @throws AccessDeniedException
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the Symfony BinaryFileResponse instead.
 	 */
 	public static function sendFileToBrowser($strFile, $inline=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the Symfony BinaryFileResponse instead.', __METHOD__);
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1225,12 +1210,12 @@ abstract class Controller extends System
 	 *
 	 * @return string The URL of the target page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{
@@ -1415,7 +1400,7 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
@@ -1440,7 +1425,7 @@ abstract class Controller extends System
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= ((str_contains($strHref, '?')) ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path);
+				$strHref .= ((str_contains($strHref, '?')) ? '&' : '?') . 'file=' . System::urlEncode($objFiles->path);
 
 				$arrMeta = Frontend::getMetaData($objFiles->meta, $objPage->language);
 

@@ -10,16 +10,16 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "contao/core-bundle": "self.version",
-        "phpunit/phpunit": "^11.5",
-        "symfony/yaml": "^6.4 || ^7.0"
+        "phpunit/phpunit": "^12.4",
+        "symfony/yaml": "^7.4 || ^8.0"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "doctrine/dbal": "^3.6",
-        "doctrine/orm": "^2.17",
-        "symfony/http-client": "^6.4 || ^7.0"
+        "doctrine/dbal": "^3.6 || ^4.0",
+        "doctrine/orm": "^2.17 || ^3.0",
+        "symfony/http-client": "^7.4 || ^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -30,6 +30,11 @@
         "allow-plugins": {
             "contao-components/installer": true,
             "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "6.1-dev"
         }
     }
 }

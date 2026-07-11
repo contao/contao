@@ -256,11 +256,6 @@ class Combiner extends System
 	 */
 	public function getCombinedFile($strUrl=null)
 	{
-		if (System::getContainer()->getParameter('kernel.debug'))
-		{
-			return $this->getDebugMarkup($strUrl);
-		}
-
 		return $this->getCombinedFileUrl($strUrl);
 	}
 
@@ -270,9 +265,13 @@ class Combiner extends System
 	 * @param string $strUrl An optional URL to prepend
 	 *
 	 * @return string The debug markup
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7.
 	 */
 	protected function getDebugMarkup($strUrl)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s::%s()" is deprecated and will no longer work in Contao 7.', __CLASS__, __METHOD__);
+
 		$return = $this->getFileUrls($strUrl);
 
 		foreach ($return as $k=>$v)
@@ -408,6 +407,7 @@ class Combiner extends System
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setOutputStyle($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
+			$objCompiler->setCharset(false);
 
 			if ($blnDebug)
 			{

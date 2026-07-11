@@ -21,34 +21,35 @@ class SitemapEventTest extends TestCase
     public function testAddingUrlsToExistingUrlSet(): void
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
-        $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $urlSet = $sitemap->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
         $sitemap->appendChild($urlSet);
 
         $event = new SitemapEvent($sitemap, new Request(), []);
         $event->addUrlToDefaultUrlSet('https://contao.org');
 
-        $this->assertStringContainsString('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org</loc></url></urlset>', (string) $event->getDocument()->saveXML());
+        $this->assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org</loc></url></urlset>', (string) $event->getDocument()->saveXML());
     }
 
     public function testAddingUrlsToExistingUrlSetDoesNotFailIfThereIsNoUrlSet(): void
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->preserveWhiteSpace = false;
+
         $event = new SitemapEvent($sitemap, new Request(), []);
         $event->addUrlToDefaultUrlSet('https://contao.org');
 
-        $this->assertStringNotContainsString('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org</loc></url></urlset>', (string) $event->getDocument()->saveXML());
+        $this->assertStringNotContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org</loc></url></urlset>', (string) $event->getDocument()->saveXML());
     }
 
     public function testEncodesTheUrl(): void
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
-        $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $urlSet = $sitemap->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
         $sitemap->appendChild($urlSet);
 
         $event = new SitemapEvent($sitemap, new Request(), []);
         $event->addUrlToDefaultUrlSet('https://contao.org?foo=bar&bar=baz');
 
-        $this->assertStringContainsString('<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org?foo=bar&amp;bar=baz</loc></url></urlset>', (string) $event->getDocument()->saveXML());
+        $this->assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://contao.org?foo=bar&amp;bar=baz</loc></url></urlset>', (string) $event->getDocument()->saveXML());
     }
 }

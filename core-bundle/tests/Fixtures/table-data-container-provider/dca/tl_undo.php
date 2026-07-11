@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_undo'] =
 
     'fields' => [
         'id' => [
-            'sql' => 'int(10) unsigned NOT NULL auto_increment',
+            'sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true],
         ],
         'data' => [
             'search' => true,

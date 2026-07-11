@@ -92,8 +92,6 @@ class InsertTags extends Controller
 	 */
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
-		global $objPage;
-
 		$container = System::getContainer();
 
 		// Preserve insert tags
@@ -130,7 +128,7 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
-		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)
@@ -186,7 +184,7 @@ class InsertTags extends Controller
 			{
 				if (($elements[1] ?? null) == 'referer' || str_starts_with($elements[0], 'cache_'))
 				{
-					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments have been deprecated and will no longer work in Contao 6. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
+					trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments are deprecated and will no longer work in Contao 7. Use {{fragment::*}} instead.');
 
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
 
@@ -213,7 +211,7 @@ class InsertTags extends Controller
 
 			if (strtolower($elements[0]) !== $elements[0])
 			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 7. Use "%s" instead.', $elements[0], strtolower($elements[0]));
 			}
 
 			// Replace the tag
@@ -225,7 +223,7 @@ class InsertTags extends Controller
 					{
 						if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 						{
-							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTag::class);
+							trigger_deprecation('contao/core-bundle', '5.2', 'Using the "replaceInsertTags" hook is deprecated and will no longer work in Contao 7. Use the "%s" attribute instead.', AsInsertTag::class);
 
 							foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 							{
@@ -260,7 +258,7 @@ class InsertTags extends Controller
 					switch ($flag)
 					{
 						case 'flatten':
-							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" has been deprecated and will no longer work in Contao 6. Use a proper insert tag instead.');
+							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|flatten" is deprecated and will no longer work in Contao 7. Use a proper insert tag instead.');
 
 							if (\is_array($arrCache[$strTag]))
 							{
@@ -270,7 +268,7 @@ class InsertTags extends Controller
 							break;
 
 						case 'refresh':
-							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|refresh" has been deprecated and has no effect anymore.');
+							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|refresh" is deprecated and has no effect anymore.');
 
 							// ignore
 							break;
@@ -285,7 +283,7 @@ class InsertTags extends Controller
 							// HOOK: pass unknown flags to callback functions
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
-								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+								trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 7. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
@@ -336,7 +334,7 @@ class InsertTags extends Controller
 	 */
 	public function encodeHtmlAttributes($html)
 	{
-		if (!str_contains($html, '{{') && !str_contains($html, '}}'))
+		if (0 === preg_match('/\{\{|\}\}|\[\{\]|\[\}\]/', $html))
 		{
 			return $html;
 		}
@@ -372,7 +370,7 @@ class InsertTags extends Controller
 
 		while (preg_match($tagRegEx, $html, $matches, PREG_OFFSET_CAPTURE, $offset))
 		{
-			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
+			$htmlResult .= str_replace(array('[{]', '[}]'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $offset, $matches[0][1] - $offset));
 
 			// Skip comments
 			if (\in_array($matches[0][0], array('<!--', '<!', '</', '<?'), true))
@@ -382,7 +380,7 @@ class InsertTags extends Controller
 				$offset = $commentClosePos ? $commentClosePos + \strlen($commentCloseString) : \strlen($html);
 
 				// Encode insert tags in comments
-				$htmlResult .= str_replace(array('{{', '}}'), array('[{]', '[}]'), substr($html, $matches[0][1], $offset - $matches[0][1]));
+				$htmlResult .= str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $matches[0][1], $offset - $matches[0][1]));
 				continue;
 			}
 
@@ -410,7 +408,7 @@ class InsertTags extends Controller
 			}
 		}
 
-		$htmlResult .= substr($html, $offset);
+		$htmlResult .= str_replace(array('[{]', '[}]'), array('&#123;&#123;', '&#125;&#125;'), substr($html, $offset));
 
 		return $htmlResult;
 	}
@@ -476,7 +474,7 @@ class InsertTags extends Controller
 			if ($intLastOpen !== false && ($intLastClose === false || $intLastClose < $intLastOpen))
 			{
 				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
-				$matches[0][0] = str_replace(array('{{', '}}'), array('[{]', '[}]'), $matches[0][0]);
+				$matches[0][0] = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $matches[0][0]);
 			}
 			elseif ($intLastOpen === false && $intLastClose !== false)
 			{

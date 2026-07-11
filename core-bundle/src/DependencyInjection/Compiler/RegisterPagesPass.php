@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
-use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -79,6 +79,14 @@ class RegisterPagesPass implements CompilerPassInterface
                 $config = $this->getRouteConfig($reference, $definition, $attributes);
                 $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
                 $command?->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
+
+                // Handle custom 404 controllers for our Route404Provider
+                if ('error_404' === $type) {
+                    $container
+                        ->getDefinition('contao.routing.route_404_provider')
+                        ->setArgument(3, $this->getControllerName($reference, $definition, $attributes))
+                    ;
+                }
             }
         }
     }
@@ -92,7 +100,7 @@ class RegisterPagesPass implements CompilerPassInterface
         $pathRegex = null;
 
         if (\is_string($path) && str_starts_with($path, '/')) {
-            $compiledRoute = (new Route($path, $defaults, $attributes['requirements'] ?? [], $attributes['options'] ?? []))->compile();
+            $compiledRoute = new Route($path, $defaults, $attributes['requirements'] ?? [], $attributes['options'] ?? [])->compile();
             $pathRegex = $compiledRoute->getRegex();
         }
 
@@ -104,6 +112,7 @@ class RegisterPagesPass implements CompilerPassInterface
             $attributes['options'] ?? [],
             $defaults,
             $attributes['methods'] ?? [],
+            $attributes['template'] ?? null,
         ]);
     }
 
@@ -122,7 +131,7 @@ class RegisterPagesPass implements CompilerPassInterface
         if (isset($attributes['method'])) {
             $definition->setPublic(true);
 
-            return $controller.':'.$attributes['method'];
+            return $controller.'::'.$attributes['method'];
         }
 
         if (($class = $definition->getClass()) && method_exists($class, '__invoke')) {
@@ -131,7 +140,7 @@ class RegisterPagesPass implements CompilerPassInterface
             return $controller;
         }
 
-        return FrontendIndex::class.'::renderPage';
+        return RegularPageController::class;
     }
 
     private function getPageType(string $className, array $attributes): string

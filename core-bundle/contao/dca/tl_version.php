@@ -8,6 +8,16 @@
  * @license LGPL-3.0-or-later
  */
 
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 $GLOBALS['TL_DCA']['tl_version'] = array
 (
 	// Config
@@ -30,47 +40,47 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'version' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL default 1"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>1)
 		),
 		'fromTable' => array
 		(
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'userid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'username' => array
 		(
-			'sql'                     => "varchar(64) NULL"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
 		),
 		'description' => array
 		(
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'editUrl' => array
 		(
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'active' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'data' => array
 		(
-			'sql'                     => "mediumblob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		)
 	)
 );

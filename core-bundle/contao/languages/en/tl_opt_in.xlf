@@ -20,10 +20,10 @@
       <trans-unit id="tl_opt_in.emailText">
         <source>E-mail text</source>
       </trans-unit>
-      <trans-unit id="tl_opt_in.show">
+      <trans-unit id="tl_opt_in.show.1">
         <source>Show the details of token ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_opt_in.resend">
+      <trans-unit id="tl_opt_in.resend.1">
         <source>Resend token ID %s</source>
       </trans-unit>
     </body>

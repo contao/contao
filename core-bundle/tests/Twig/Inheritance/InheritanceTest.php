@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
@@ -37,7 +36,7 @@ class InheritanceTest extends TestCase
     public function testInheritsMultipleTimes(): void
     {
         $environment = $this->getDemoEnvironment();
-        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This & that']);
 
         // Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<global><app><bar><foo>Content: This &amp; that</foo></bar></app></global>';
@@ -47,7 +46,7 @@ class InheritanceTest extends TestCase
 
     public function testInheritsMultipleTimesWithTheme(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/my/theme';
 
         $pageFinder = $this->createMock(PageFinder::class);
@@ -58,7 +57,7 @@ class InheritanceTest extends TestCase
         ;
 
         $environment = $this->getDemoEnvironment(pageFinder: $pageFinder);
-        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This & that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
@@ -83,7 +82,7 @@ class InheritanceTest extends TestCase
         $file2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates/text.json.twig');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig/html5" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
+        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
 
         $this->getDemoEnvironment(['InvalidBundle2' => $bundlePath]);
     }
@@ -102,17 +101,16 @@ class InheritanceTest extends TestCase
             $paths['App'] = Path::join($projectDir, 'contao/templates');
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn(['templates/my/theme'])
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn($paths)
+            ->willReturnMap([['templates', $paths]])
         ;
 
         $themeNamespace = new ThemeNamespace();
@@ -122,8 +120,7 @@ class InheritanceTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );
 
@@ -132,9 +129,8 @@ class InheritanceTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

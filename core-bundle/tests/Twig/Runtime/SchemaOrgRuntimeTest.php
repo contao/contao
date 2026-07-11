@@ -26,7 +26,7 @@ class SchemaOrgRuntimeTest extends TestCase
         $manager = new JsonLdManager($context);
         $context->add($manager);
 
-        $accessor = $this->createMock(ResponseContextAccessor::class);
+        $accessor = $this->createStub(ResponseContextAccessor::class);
         $accessor
             ->method('getResponseContext')
             ->willReturn($context)
@@ -64,7 +64,7 @@ class SchemaOrgRuntimeTest extends TestCase
             ->willReturn(null)
         ;
 
-        (new SchemaOrgRuntime($accessor))->add(['foo']);
+        new SchemaOrgRuntime($accessor)->add(['foo']);
     }
 
     public function testToleratesMissingJsonLdManager(): void
@@ -76,6 +76,6 @@ class SchemaOrgRuntimeTest extends TestCase
             ->willReturn(new ResponseContext())
         ;
 
-        (new SchemaOrgRuntime($accessor))->add(['foo']);
+        new SchemaOrgRuntime($accessor)->add(['foo']);
     }
 }

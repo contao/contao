@@ -63,7 +63,7 @@ class CalendarContentVoter extends AbstractDynamicPtableVoter
     private function getCalendarId(int $eventId): int
     {
         if (!isset($this->calendars[$eventId])) {
-            $this->calendars[$eventId] = (int) $this->connection->fetchOne('SELECT pid FROM tl_calendar_events WHERE id=?', [$eventId]);
+            $this->calendars[$eventId] = (int) $this->connection->fetchOne('SELECT pid FROM tl_calendar_events WHERE id = ?', [$eventId]);
         }
 
         return $this->calendars[$eventId];

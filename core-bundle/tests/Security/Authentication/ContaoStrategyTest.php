@@ -30,10 +30,10 @@ class ContaoStrategyTest extends TestCase
             $this->mockAccessDecisionStrategy(true),
             $this->mockAccessDecisionStrategy(false),
             new RequestStack(),
-            $this->createMock(FirewallMapInterface::class),
+            $this->createStub(FirewallMapInterface::class),
         );
 
-        $accessDecisionManager->decide($this->createMock(\Traversable::class));
+        $accessDecisionManager->decide($this->createStub(\Traversable::class));
     }
 
     public function testUsesDefaultDecisionStrategyIfNoRequestAvailable(): void
@@ -42,31 +42,29 @@ class ContaoStrategyTest extends TestCase
             $this->mockAccessDecisionStrategy(true),
             $this->mockAccessDecisionStrategy(false),
             new RequestStack(),
-            $this->mockFirewallMap(null),
+            $this->createStub(FirewallMap::class),
         );
 
-        $accessDecisionManager->decide($this->createMock(\Traversable::class));
+        $accessDecisionManager->decide($this->createStub(\Traversable::class));
     }
 
     public function testUsesDefaultDecisionStrategyIfFirewallMapHasNoConfig(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(true),
             $this->mockAccessDecisionStrategy(false),
             $requestStack,
-            $this->mockFirewallMap(null),
+            $this->createStub(FirewallMap::class),
         );
 
-        $accessDecisionManager->decide($this->createMock(\Traversable::class));
+        $accessDecisionManager->decide($this->createStub(\Traversable::class));
     }
 
     public function testUsesPriorityStrategyIfContaoFrontendRequest(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
+        $requestStack = new RequestStack([new Request([], [], ['_scope' => 'frontend'])]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(false),
@@ -75,13 +73,12 @@ class ContaoStrategyTest extends TestCase
             $this->mockFirewallMap('contao_frontend'),
         );
 
-        $accessDecisionManager->decide($this->createMock(\Traversable::class));
+        $accessDecisionManager->decide($this->createStub(\Traversable::class));
     }
 
     public function testUsesPriorityStrategyIfContaoBackendRequest(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
+        $requestStack = new RequestStack([new Request([], [], ['_scope' => 'backend'])]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(false),
@@ -90,7 +87,7 @@ class ContaoStrategyTest extends TestCase
             $this->mockFirewallMap('contao_backend'),
         );
 
-        $accessDecisionManager->decide($this->createMock(\Traversable::class));
+        $accessDecisionManager->decide($this->createStub(\Traversable::class));
     }
 
     private function mockAccessDecisionStrategy(bool $shouldBeCalled): AccessDecisionStrategyInterface&MockObject
@@ -105,22 +102,14 @@ class ContaoStrategyTest extends TestCase
         return $manager;
     }
 
-    private function mockFirewallMap(string|null $context): FirewallMap&MockObject
+    private function mockFirewallMap(string $context): FirewallMap&MockObject
     {
         $map = $this->createMock(FirewallMap::class);
-
-        if (null === $context) {
-            $map
-                ->method('getFirewallConfig')
-                ->willReturn(null)
-            ;
-        } else {
-            $map
-                ->expects($this->once())
-                ->method('getFirewallConfig')
-                ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
-            ;
-        }
+        $map
+            ->expects($this->once())
+            ->method('getFirewallConfig')
+            ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
+        ;
 
         return $map;
     }

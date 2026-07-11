@@ -24,6 +24,6 @@ use Symfony\Component\Console\Application;
 $command = new RunTestsIsolatedCommand(dirname(__DIR__, 3));
 
 $application = new Application();
-$application->add($command);
+$application->addCommand($command);
 $application->setDefaultCommand($command->getName(), true);
 $application->run();

@@ -31,7 +31,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('script-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -51,7 +51,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('script-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -73,7 +73,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('style-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -96,7 +96,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('script-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -125,7 +125,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('style-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor
@@ -156,7 +156,7 @@ class CspRuntimeTest extends TestCase
         $directives->setDirective('style-src', "'self'");
 
         $cspHandler = new CspHandler($directives);
-        $responseContext = (new ResponseContext())->add($cspHandler);
+        $responseContext = new ResponseContext()->add($cspHandler);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseContextAccessor

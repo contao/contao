@@ -59,6 +59,11 @@ class FigureBuilder
     private FilesModel|null $filesModel = null;
 
     /**
+     * The image resource, if given.
+     */
+    private ImageInterface|null $image = null;
+
+    /**
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
@@ -292,6 +297,8 @@ class FigureBuilder
      */
     public function fromImage(ImageInterface $image): self
     {
+        $this->image = $image;
+
         return $this->fromPath($image->getPath());
     }
 
@@ -657,7 +664,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get('contao.image.studio')
-            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
+            ->createImage($settings->image ?? $settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
         // Define the values via closure to make their evaluation lazy
@@ -746,7 +753,7 @@ class FigureBuilder
             ...$fileReferenceData,
         ];
 
-        return (new Metadata($data))->with($overwriteMetadata);
+        return new Metadata($data)->with($overwriteMetadata);
     }
 
     /**
@@ -797,18 +804,28 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            if (Path::isAbsolute($target)) {
-                $filePath = Path::canonicalize($target);
-            } else {
-                // URL relative to the project directory
-                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            // Check if target is an absolute filesystem path to an existing resource
+            if (Path::isAbsolute($target) && is_file($target)) {
+                return [Path::canonicalize($target), null];
             }
 
-            if (!is_file($filePath)) {
-                $filePath = null;
+            $filePath = urldecode($target);
+
+            // Check if target references a resource relative to the project dir
+            $projectPath = Path::join($this->projectDir, $filePath);
+
+            if (is_file($projectPath)) {
+                return [$projectPath, null];
             }
 
-            return [$filePath, null];
+            // Check if target references a resource relative to the public dir
+            $publicPath = Path::join($this->webDir, $filePath);
+
+            if (is_file($publicPath)) {
+                return [null, $target];
+            }
+
+            return [null, null];
         };
 
         // Use explicitly set href (1) or lightbox resource (2), fall back to using

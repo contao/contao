@@ -14,7 +14,10 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -51,7 +54,7 @@ class ModuleEventReader extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -77,8 +80,6 @@ class ModuleEventReader extends Events
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$this->Template->event = '';
 
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
@@ -161,6 +162,14 @@ class ModuleEventReader extends Events
 			}
 		}
 
+		// Update the JSON+LD "searchIndexer" setting
+		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+		if ($objEvent->searchIndexer)
+		{
+			$pageSchema['searchIndexer'] = $objEvent->searchIndexer;
+		}
+
 		$intStartTime = $objEvent->startTime;
 		$intEndTime = $objEvent->endTime;
 		$span = Calendar::calculateSpan($intStartTime, $intEndTime);
@@ -194,6 +203,7 @@ class ModuleEventReader extends Events
 			$objEvent->cssClass .= ' current';
 		}
 
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $intStartTime, $intEndTime, $span);
 
 		$until = '';
@@ -249,7 +259,7 @@ class ModuleEventReader extends Events
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
-		$objTemplate->details = '';
+		$objTemplate->details = Template::once(static fn (): string => '');
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 
@@ -263,7 +273,7 @@ class ModuleEventReader extends Events
 		// Display the "read more" button for external/article links
 		if ($objEvent->source != 'default')
 		{
-			$objTemplate->hasDetails = true;
+			$objTemplate->hasDetails = Template::once(static fn (): bool => true);
 			$objTemplate->hasReader = false;
 		}
 
@@ -272,7 +282,7 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = Template::once(function () use ($id) {
+			$objTemplate->details = Template::once(function () use ($id): string {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -287,7 +297,7 @@ class ModuleEventReader extends Events
 				return $strDetails;
 			});
 
-			$objTemplate->hasDetails = Template::once(static function () use ($id) {
+			$objTemplate->hasDetails = Template::once(static function () use ($id): bool {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			});
 		}
@@ -473,7 +483,6 @@ class ModuleEventReader extends Events
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCalendar->requireLogin;
 		$objConfig->disableCaptcha = $objCalendar->disableCaptcha;
-		$objConfig->bbcode = $objCalendar->bbcode;
 		$objConfig->moderate = $objCalendar->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
@@ -518,5 +527,10 @@ class ModuleEventReader extends Events
 		}
 
 		return array($strDate, $strTime);
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

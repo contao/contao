@@ -12,7 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
@@ -458,6 +460,11 @@ class Versions extends Controller
 				$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
 				$arrFields = $objDcaExtractor->getFields();
 
+				// Expand virtual fields
+				$virtualFieldsHandler = System::getContainer()->get('contao.data_container.virtual_fields_handler');
+				$to = $virtualFieldsHandler->expandFields($to, $this->strTable);
+				$from = $virtualFieldsHandler->expandFields($from, $this->strTable);
+
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)
 				{
@@ -551,13 +558,6 @@ class Versions extends Controller
 							$from[$k] = Date::parse(Config::get('datimFormat'), $from[$k] ?: '');
 						}
 
-						// Decode entities if the "decodeEntities" flag is not set (see #360)
-						if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['decodeEntities']))
-						{
-							$to[$k] = StringUtil::decodeEntities($to[$k]);
-							$from[$k] = StringUtil::decodeEntities($from[$k]);
-						}
-
 						// Convert strings into arrays
 						if (!\is_array($to[$k]))
 						{
@@ -609,9 +609,9 @@ class Versions extends Controller
 		$objTemplate->to = $intTo;
 		$objTemplate->from = $intFrom;
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
@@ -651,7 +651,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
+<a href="' . StringUtil::ampersand(Backend::addToUrl('versions=1&popup=1')) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
 </div>
 </form>
 
@@ -677,13 +677,14 @@ class Versions extends Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
-		$intLast   = ceil($objTotal->count / 15);
-		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
-		$intOffset = ($intPage - 1) * 15;
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
+			(new PaginationConfig('vp', $objTotal->count, 15))->withIgnoreOutOfBounds()
+		);
+
+		$intOffset = $pagination->getOffset();
 
 		// Create the pagination menu
-		$objPagination = new Pagination($objTotal->count, 15, 7, 'vp', new BackendTemplate('be_pagination'));
-		$objTemplate->pagination = $objPagination->generate();
+		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
@@ -692,6 +693,8 @@ class Versions extends Controller
 
 		$security = System::getContainer()->get('security.helper');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$urlGenerator = System::getContainer()->get('router');
+		$translator = System::getContainer()->get('translator');
 
 		while ($objVersions->next())
 		{
@@ -718,7 +721,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
+				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), ltrim($arrRow['editUrl'], '/'));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -740,13 +743,44 @@ class Versions extends Controller
 			{
 				// Probably a disabled module
 				unset($arrVersions[$k]);
+				continue;
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
 				unset($arrVersions[$k]);
+				continue;
 			}
+
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize('tl_version');
+
+			if ($arrVersions[$k]['deleted'] ?? null)
+			{
+				$operations->append(array(
+					'label' => $translator->trans('MSC.restore', array(), 'contao_default'),
+					'href' => $urlGenerator->generate('contao_backend', array('do' => 'undo')),
+					'icon' => 'undo.svg',
+					'attribtues' => new HtmlAttributes('data-contao--deeplink-target="primary"'),
+				));
+			}
+			else
+			{
+				$operations->append(array(
+					'label' => $translator->trans('MSC.editElement', array(), 'contao_default'),
+					'href' => $v['editUrl'] ?? null,
+					'icon' => ($v['editUrl'] ?? null) ? 'edit.svg' : 'edit--disabled.svg',
+				));
+
+				$operations->append(array(
+					'label' => $translator->trans('MSC.showDifferences', array(), 'contao_default'),
+					'href' => $v['to'] > 1 ? $v['editUrl'] . '&from=' . $v['from'] . '&to=' . $v['to'] . '&versions=1' ?? null : null,
+					'icon' => $v['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'" . $translator->trans('MSC.recordOfTable', array($v['pid'], $v['fromTable']), 'contao_default') . "',url:`\${this.href}&popup=1`});return false"),
+				));
+			}
+
+			$arrVersions[$k]['operations'] = $operations;
 		}
 
 		$objTemplate->versions = $arrVersions;
@@ -769,7 +803,7 @@ class Versions extends Controller
 
 		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
-		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+		unset($pairs['rt'], $pairs['revise']);
 
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')

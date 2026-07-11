@@ -18,6 +18,7 @@ use Contao\StringUtil;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MemberGroupVoter implements VoterInterface, CacheableVoterInterface
@@ -32,7 +33,7 @@ class MemberGroupVoter implements VoterInterface, CacheableVoterInterface
         return true;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
         if (!array_filter($attributes, $this->supportsAttribute(...))) {
             return self::ACCESS_ABSTAIN;

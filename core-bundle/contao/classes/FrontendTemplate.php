@@ -25,8 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends Template
 {
-	use FrontendTemplateTrait;
-
 	/**
 	 * Unused route parameters check
 	 * @var boolean
@@ -114,22 +112,13 @@ class FrontendTemplate extends Template
 			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Minify the markup
 		if ($objPage !== null && $objPage->minifyMarkup)
 		{
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
-
-		// Replace literal insert tags (see #670, #3249)
-		$this->strBuffer = preg_replace_callback(
-			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
-			static function ($matches) {
-				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
-			},
-			$this->strBuffer
-		);
 	}
 
 	/**
@@ -141,7 +130,7 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Do not cache the response if caching was not configured
 		if ($objPage->cache < 1 && $objPage->clientCache < 1)

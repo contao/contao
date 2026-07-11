@@ -9,6 +9,7 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +39,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
             'name' => $this->getName(),
             'context' => $context,
-            'translation_key' => "message.$name.success",
+            'translation_key' => "template_studio.message.$name.success",
             'success' => true,
         ]);
     }
@@ -50,7 +51,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
             'name' => $this->getName(),
             'context' => $context,
-            'translation_key' => $customTranslation ?? "message.$name.error",
+            'translation_key' => $customTranslation ?? "template_studio.message.$name.error",
             'success' => false,
         ]);
     }
@@ -64,6 +65,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
         $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
         $services['contao.twig.finder_factory'] = FinderFactory::class;
+        $services['contao.twig.studio.cache_invalidator'] = CacheInvalidator::class;
 
         return $services;
     }
@@ -93,22 +95,33 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->container->get('contao.twig.finder_factory')->create();
     }
 
-    protected function userTemplateExists(OperationContext $context): bool
-    {
-        // Check if the first template in the chain is a custom template from the
-        // Contao_Global or any theme namespace.
-        $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug());
-        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
-
-        return match ($context->isThemeContext()) {
-            true => str_starts_with($namespace, 'Contao_Theme_'),
-            false => 'Contao_Global' === $namespace,
-        };
-    }
-
-    protected function getName(): string
+    public function getName(): string
     {
         return $this->name;
+    }
+
+    protected function userTemplateExists(OperationContext $context, bool $exclusive = false): bool
+    {
+        // Check if the first template in the chain is a custom template from the
+        // Contao_User or any theme namespace.
+        $chains = $this->getContaoFilesystemLoader()->getInheritanceChains($context->getThemeSlug())[$context->getIdentifier()];
+        $first = $chains[array_key_first($chains)];
+        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
+
+        $userTemplateExists = match ($context->isThemeContext()) {
+            true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
+            false => 'Contao_User' === $namespace,
+        };
+
+        return $userTemplateExists && (!$exclusive || 1 === \count($chains));
+    }
+
+    protected function invalidateTemplateCache(OperationContext $context): void
+    {
+        $this->container
+            ->get('contao.twig.studio.cache_invalidator')
+            ->invalidateCache($context->getIdentifier(), $context->getThemeSlug())
+        ;
     }
 
     protected function refreshTemplateHierarchy(): void

@@ -22,38 +22,22 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentOperationListenerTest extends TestCase
 {
-    private TranslatorInterface&MockObject $translator;
-
-    private ContaoFramework&MockObject $framework;
-
-    private Connection&MockObject $connection;
-
-    private Security&MockObject $security;
+    private ContaoFramework&Stub $framework;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->translator = $this->createMock(TranslatorInterface::class);
-
-        $this->framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
+        $this->framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
         ]);
-
-        $this->connection = $this->createMock(Connection::class);
-        $this->connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
-        ;
-
-        $this->security = $this->createMock(Security::class);
     }
 
     protected function tearDown(): void
@@ -65,16 +49,28 @@ class JumpToParentOperationListenerTest extends TestCase
 
     public function testRenderJumpToParentButtonForDynamicParentTable(): void
     {
-        $this->connection
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->willReturn('Show origin of Content element ID 42')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_news WHERE id = :id', ['id' => 24])
             ->willReturn('1')
         ;
 
-        $this->setTranslatorMessage('Show origin of Content element ID 42');
-
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(ContaoCorePermissions::DC_PREFIX.'tl_content', $this->isInstanceOf(CreateAction::class))
@@ -82,27 +78,39 @@ class JumpToParentOperationListenerTest extends TestCase
         ;
 
         $row = $this->setupForDataSetWithDynamicParent();
-        $operation = new DataContainerOperation('jumpToParent', [], $row, $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('jumpToParent', [], $row, $this->createStub(DataContainer::class));
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
 
         $this->assertSame('Show origin of Content element ID 42', $operation['title']);
-        $this->assertSame(" onclick=\"Backend.openModalIframe({'title':'Show origin of Content element ID 42','url': this.href });return false\"", $operation['attributes']);
+        $this->assertSame(' onclick="Backend.openModalIframe({&apos;title&apos;:&apos;Show origin of Content element ID 42&apos;,&apos;url&apos;: this.href });return false"', (string) $operation['attributes']);
     }
 
     public function testRenderJumpToParentButtonForDirectParent(): void
     {
-        $this->connection
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->willReturn('Go to parent of tl_form_field ID 42')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_form WHERE id = :id', ['id' => 1])
             ->willReturn('1')
         ;
 
-        $this->setTranslatorMessage('Go to parent of tl_form_field ID 42');
-
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(ContaoCorePermissions::DC_PREFIX.'tl_form_field', $this->isInstanceOf(CreateAction::class))
@@ -110,25 +118,38 @@ class JumpToParentOperationListenerTest extends TestCase
         ;
 
         $row = $this->setupForDataSetWithDirectParent();
-        $operation = new DataContainerOperation('jumpToParent', [], $row, $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('jumpToParent', [], $row, $this->createStub(DataContainer::class));
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
 
         $this->assertSame('Go to parent of tl_form_field ID 42', $operation['title']);
-        $this->assertSame(" onclick=\"Backend.openModalIframe({'title':'Go to parent of tl_form_field ID 42','url': this.href });return false\"", $operation['attributes']);
+        $this->assertSame(' onclick="Backend.openModalIframe({&apos;title&apos;:&apos;Go to parent of tl_form_field ID 42&apos;,&apos;url&apos;: this.href });return false"', (string) $operation['attributes']);
     }
 
     public function testRendersDisabledJumpToParentButtonWhenParentHasBeenDeleted(): void
     {
-        $this->connection
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_news WHERE id = :id', ['id' => 24])
             ->willReturn('0')
         ;
 
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->never())
             ->method('isGranted')
         ;
@@ -149,27 +170,38 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
     }
 
     public function testRendersDisabledJumpToParentButtonIfNoBackEndModuleWasFound(): void
     {
-        $this->connection
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_form WHERE id = :id', ['id' => 1])
             ->willReturn('1')
         ;
 
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(ContaoCorePermissions::DC_PREFIX.'tl_form_field', $this->isInstanceOf(CreateAction::class))
             ->willReturn(true)
         ;
-
-        $this->setTranslatorMessage('Go to parent of tl_form_field ID 42');
 
         $row = $this->setupForDataSetWithDirectParent();
 
@@ -188,13 +220,22 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
     }
 
     public function testRendersDisabledJumpToParentButton(): void
     {
-        $this->security
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $connection = $this->createStub(Connection::class);
+
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->never())
             ->method('isGranted')
         ;
@@ -213,20 +254,33 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
     }
 
     public function testDisablesButtonIfAccessToOriginalRecordIsNotGranted(): void
     {
-        $this->connection
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('fetchOne')
             ->with('SELECT COUNT(*) FROM tl_form WHERE id = :id', ['id' => 1])
             ->willReturn('1')
         ;
 
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(ContaoCorePermissions::DC_PREFIX.'tl_form_field', $this->isInstanceOf(CreateAction::class))
@@ -247,7 +301,7 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new JumpToParentOperationListener($this->framework, $this->connection, $this->translator, $this->security);
+        $listener = new JumpToParentOperationListener($this->framework, $connection, $translator, $security);
         $listener($operation);
     }
 
@@ -323,17 +377,5 @@ class JumpToParentOperationListenerTest extends TestCase
                 ],
             ]),
         ];
-    }
-
-    private function setTranslatorMessage(string $message): void
-    {
-        $translationsMap = [
-            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, $message],
-        ];
-
-        $this->translator
-            ->method('trans')
-            ->willReturnMap($translationsMap)
-        ;
     }
 }

@@ -21,6 +21,7 @@ use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -29,6 +30,7 @@ use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class BackupManagerTest extends ContaoTestCase
 {
@@ -39,8 +41,8 @@ class BackupManagerTest extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
+            $this->createStub(DbafsManager::class),
         );
     }
 
@@ -111,7 +113,7 @@ class BackupManagerTest extends ContaoTestCase
         $backup = Backup::createNew(\DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-03T13:36:00+00:00'));
 
         $manager = $this->getBackupManager($connection, $dumper);
-        $config = (new CreateConfig($backup))->withGzCompression(false);
+        $config = new CreateConfig($backup)->withGzCompression(false);
         $manager->create($config);
 
         $this->assertSame(
@@ -230,8 +232,9 @@ class BackupManagerTest extends ContaoTestCase
     {
         $this->vfs->write($config->getBackup()->getFilename(), $backupContent);
 
-        $connection = $this->mockConnection();
         $matcher = $this->exactly(3);
+
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($matcher)
             ->method('executeQuery')
@@ -295,7 +298,7 @@ class BackupManagerTest extends ContaoTestCase
                 BACKUP,
         );
 
-        $connection = $this->mockConnection();
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -347,7 +350,7 @@ class BackupManagerTest extends ContaoTestCase
                 -- BEGIN STRUCTURE tl_article
                 DROP TABLE IF EXISTS `tl_article`;
                 BACKUP,
-            (new RestoreConfig($backup))->withIgnoreOriginCheck(true),
+            new RestoreConfig($backup)->withIgnoreOriginCheck(true),
             [
                 'SET NAMES utf8;',
                 'SET FOREIGN_KEY_CHECKS = 0;',
@@ -374,9 +377,9 @@ class BackupManagerTest extends ContaoTestCase
         return $dumper;
     }
 
-    private function mockConnection(): Connection&MockObject
+    private function mockConnection(): Connection&Stub
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('transactional')
             ->willReturnCallback(static fn (\Closure $closure) => $closure())
@@ -387,8 +390,8 @@ class BackupManagerTest extends ContaoTestCase
 
     private function getBackupManager(Connection|null $connection = null, DumperInterface|null $dumper = null, RetentionPolicyInterface|null $retentionPolicy = null): BackupManager
     {
-        $connection ??= $this->createMock(Connection::class);
-        $dumper ??= $this->createMock(DumperInterface::class);
+        $connection ??= $this->createStub(Connection::class);
+        $dumper ??= $this->createStub(DumperInterface::class);
         $retentionPolicy ??= new RetentionPolicy(5);
 
         return new BackupManager($connection, $dumper, $this->vfs, ['foobar'], $retentionPolicy);

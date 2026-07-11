@@ -81,6 +81,12 @@
         <source>Front end</source>
         <target>Front-end</target>
       </trans-unit>
+      <trans-unit id="tl_log.show.1">
+        <source>Show the details of log entry ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_log.delete.1">
+        <source>Delete log entry ID %s</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

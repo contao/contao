@@ -52,7 +52,7 @@ class MetadataBagTest extends TestCase
 
     public function testEmpty(): void
     {
-        $this->assertTrue((new MetadataBag([]))->empty());
+        $this->assertTrue(new MetadataBag([])->empty());
     }
 
     public function testGetNoDefault(): void

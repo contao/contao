@@ -102,7 +102,7 @@ final class GlobalStateWatcher implements Extension
             'toFile' => 'after',
         ];
 
-        return (new Differ(new StrictUnifiedDiffOutputBuilder($options)))->diff($before, $after);
+        return new Differ(new StrictUnifiedDiffOutputBuilder($options))->diff($before, $after);
     }
 
     private function buildGlobalKeys(): string
@@ -206,6 +206,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
                 'Symfony\Component\Clock\Clock',
+                'Symfony\Component\Config\Resource\ClassExistenceResource',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
                 'Symfony\Component\Console\Terminal',
@@ -216,9 +217,12 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\HttpClient\Response\MockResponse',
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
+                'Symfony\Component\Process\Process',
                 'Symfony\Component\String\\',
+                'Symfony\Component\Uid\Ulid',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
+                'Symfony\Polyfill\DeepClone\DeepClone',
                 'Webmozart\PathUtil\\',
             ] as $ignorePrefix) {
                 if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {
@@ -226,7 +230,7 @@ final class GlobalStateWatcher implements Extension
                 }
             }
 
-            foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+            foreach (new \ReflectionClass($class)->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
                 if (!$property->isInitialized()) {
                     continue;
                 }
@@ -241,7 +245,7 @@ final class GlobalStateWatcher implements Extension
 
                 $value = $property->getValue();
 
-                if ($value === $property->getDefaultValue()) {
+                if ($property->hasDefaultValue() && $value === $property->getDefaultValue()) {
                     continue;
                 }
 

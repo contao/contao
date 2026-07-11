@@ -1,0 +1,34 @@
+/* Colors */
+.tl_gray {
+    color: var(--gray);
+}
+
+.tl_green {
+    color: var(--green);
+}
+
+.tl_red {
+    color: var(--red);
+}
+
+.tl_blue {
+    color: var(--blue);
+}
+
+.tl_orange {
+    color: var(--orange);
+}
+
+span.mandatory {
+    color: var(--red);
+}
+
+/* Row highlighting */
+.hover-div:hover,
+.hover-row:hover td,
+.hover-div.hover,
+.hover-row.hover td,
+.hover-div:has(input.tl_tree_checkbox:checked, input.tl_tree_radio:checked),
+.hover-row:has(input.tl_tree_checkbox:checked, input.tl_tree_radio:checked) td {
+    background-color: var(--hover-row) !important;
+}

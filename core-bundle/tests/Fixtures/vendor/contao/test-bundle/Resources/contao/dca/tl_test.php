@@ -1,6 +1,7 @@
 <?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
 
 use Contao\DC_Table;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
@@ -14,6 +15,13 @@ $GLOBALS['TL_DCA']['tl_test'] = [
     'fields' => [
         'id' => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
+        ],
+        'virtualField' => [
+            'targetColumn' => 'virtualTarget',
+        ],
+        'virtualTarget' => [
+            'virtualTarget' => true,
+            'sql' => ['type' => 'json', 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false],
         ],
     ],
 ];

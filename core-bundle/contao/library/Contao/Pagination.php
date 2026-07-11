@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Framework\Adapter;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "contao.pagination.factory" instead.', Pagination::class);
+
 /**
  * Provide methods to render a pagination menu.
  */
@@ -233,12 +235,12 @@ class Pagination
 		{
 			if (!str_contains($fragment, $this->strParameter . '='))
 			{
-				$this->strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
+				$this->strUrl .= (!$blnQuery ? '?' : '&') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
-		$this->strVarConnector = $blnQuery ? '&amp;' : '?';
+		$this->strVarConnector = $blnQuery ? '&' : '?';
 
 		// Return if there is only one page
 		if ($this->intTotalPages < 2 || $this->intRows < 1)
@@ -407,9 +409,9 @@ class Pagination
 	{
 		if ($intPage <= 1 && !$this->blnForceParam)
 		{
-			return StringUtil::ampersand($this->strUrl);
+			return $this->strUrl;
 		}
 
-		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
+		return $this->strUrl . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }

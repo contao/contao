@@ -32,7 +32,7 @@ class ImageSizesEventTest extends TestCase
 
     public function testSupportsReadingTheUserObject(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $event = new ImageSizesEvent([1], $user);
 
         $this->assertSame($user, $event->getUser());

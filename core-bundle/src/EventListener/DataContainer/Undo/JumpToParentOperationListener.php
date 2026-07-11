@@ -104,7 +104,7 @@ class JumpToParentOperationListener
             $params['id'] = $parent['id'];
         }
 
-        return http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986);
+        return http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     private function getModuleForTable(string $table): array|null
@@ -137,9 +137,7 @@ class JumpToParentOperationListener
     {
         $count = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
-            [
-                'id' => $parent['id'],
-            ],
+            ['id' => $parent['id']],
         );
 
         return (int) $count > 0;

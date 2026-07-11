@@ -32,4 +32,6 @@ interface ProviderInterface
     public function supportsType(string $type): bool;
 
     public function isDocumentGranted(TokenInterface $token, Document $document): bool;
+
+    public function convertTypeToVisibleType(string $type): string;
 }

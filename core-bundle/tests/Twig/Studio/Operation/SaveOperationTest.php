@@ -25,7 +25,7 @@ class SaveOperationTest extends AbstractOperationTestCase
         );
     }
 
-    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate', validateArgumentCount: false)]
     public function testFailToSaveUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -34,7 +34,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -65,7 +65,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->with($path, '<updated code>')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -94,7 +94,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createStub(Environment::class);
 
         $operation = $this->getSaveOperation($storage, $twig);
         $context = $this->getOperationContext('content_element/existing_user_template');
@@ -110,12 +110,12 @@ class SaveOperationTest extends AbstractOperationTestCase
         $templateInformation = new TemplateInformation(
             new Source(
                 '<code>',
-                '@Contao_Global/content_element/existing_user_template.html.twig',
+                '@Contao_User/content_element/existing_user_template.html.twig',
                 '<path_to>/content_element/existing_user_template.html.twig',
             ),
         );
 
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnMap([
@@ -124,7 +124,7 @@ class SaveOperationTest extends AbstractOperationTestCase
                     new TemplateInformation(
                         new Source(
                             '<code>',
-                            '@Contao_Global/content_element/existing_user_template.html.twig',
+                            '@Contao_User/content_element/existing_user_template.html.twig',
                             '<path_to>/content_element/existing_user_template.html.twig',
                         ),
                     ),

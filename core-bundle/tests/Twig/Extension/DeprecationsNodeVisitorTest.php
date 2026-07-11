@@ -12,14 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -27,7 +26,7 @@ class DeprecationsNodeVisitorTest extends TestCase
 {
     public function testHashHighPriority(): void
     {
-        $this->assertSame(10, (new DeprecationsNodeVisitor())->getPriority());
+        $this->assertSame(10, new DeprecationsNodeVisitor()->getPriority());
     }
 
     public function testTriggersInsertTagDeprecation(): void
@@ -49,10 +48,9 @@ class DeprecationsNodeVisitorTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

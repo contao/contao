@@ -26,6 +26,7 @@ class FlysystemDefaultProviderTest extends TestCase
     {
         $adapter = $this->createMock(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
         $adapter
+            ->expects($this->once())
             ->method('publicUrl')
             ->with('path/to/resource.txt')
             ->willReturn('https://some.bucket/some.key')
@@ -42,7 +43,7 @@ class FlysystemDefaultProviderTest extends TestCase
         $provider = new FlysystemDefaultProvider();
 
         $uri = $provider->getUri(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'path/to/resource.txt',
             null,
         );

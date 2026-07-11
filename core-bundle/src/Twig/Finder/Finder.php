@@ -15,13 +15,10 @@ namespace Contao\CoreBundle\Twig\Finder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @experimental
- *
  * @implements \IteratorAggregate<string, string>
  */
 final class Finder implements \IteratorAggregate, \Countable
@@ -142,11 +139,13 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns the result as template options.
+     * Returns the result as template options. When searching with an exact
+     * identifier, this identifier becomes the default option (key = ""). Set
+     * $baseIdentifierAsDefaultOption to false, if the key should still be set.
      *
      * @return array<string, string>
      */
-    public function asTemplateOptions(): array
+    public function asTemplateOptions(bool $baseIdentifierAsDefaultOption = true): array
     {
         $getSourceLabel = function (string $name): string {
             if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
@@ -157,7 +156,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 return $matches[1];
             }
 
-            return $this->translator->trans('MSC.global', [], 'contao_default');
+            return $this->translator->trans('MSC.user', [], 'contao_default');
         };
 
         $getCustomLabel = function (string $identifier, array $sourceLabels): string|null {
@@ -183,7 +182,7 @@ final class Finder implements \IteratorAggregate, \Countable
 
         foreach ($this->asIdentifierList() as $identifier) {
             $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
-            $key = $identifier !== $this->identifier ? $identifier : '';
+            $key = !$baseIdentifierAsDefaultOption || $identifier !== $this->identifier ? $identifier : '';
 
             $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }
@@ -212,20 +211,6 @@ final class Finder implements \IteratorAggregate, \Countable
      */
     public function getIterator(): \Generator
     {
-        // Only include chains that contain at least one non-legacy template
-        $chains = array_filter(
-            $this->filesystem->getInheritanceChains($this->themeSlug),
-            static function (array $chain) {
-                foreach (array_keys($chain) as $path) {
-                    if ('html5' !== Path::getExtension($path, true)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            },
-        );
-
         $this->sources = [];
 
         $matchIdentifier = function (string $identifier): bool {
@@ -240,7 +225,7 @@ final class Finder implements \IteratorAggregate, \Countable
             return str_starts_with($identifier, "$this->identifier/");
         };
 
-        foreach ($chains as $identifier => $chain) {
+        foreach ($this->filesystem->getInheritanceChains($this->themeSlug) as $identifier => $chain) {
             if ($this->identifier && !$matchIdentifier($identifier)) {
                 continue;
             }

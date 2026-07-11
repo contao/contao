@@ -1,6 +1,0 @@
-
-<div id="tl_buttons">
-  <a href="<?= $this->href ?>" class="header_back" title="<?= $this->title ?>"><?= $this->button ?></a>
-</div>
-
-<?= $this->content ?>

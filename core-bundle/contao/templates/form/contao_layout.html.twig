@@ -1,0 +1,39 @@
+{% trans_default_domain 'contao_default' %}
+{% use 'form_div_layout.html.twig' %}
+
+{# Misc #}
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <p class="error">
+            {%- for error in errors -%}
+                {%- if translation_domain is same as(false) -%}
+                    {{ error.message }}
+                {% else %}
+                    {{ error.message|trans }}
+                {% endif %}
+                {% if not loop.last %}
+                    <br />
+                {% endif %}
+            {%- endfor -%}
+        </p>
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{# Labels #}
+{%- block form_label -%}
+    {%- if required -%}
+        {% set label_attr = label_attr|merge({class: 'mandatory'}) %}
+    {%- endif -%}
+
+    {{ parent() }}
+{%- endblock form_label -%}
+
+{%- block form_label_content -%}
+    {%- if required|default -%}
+        <span class="invisible">{{ 'MSC.mandatory'|trans }} </span>
+    {%- endif -%}
+
+    {{ parent() }}
+
+    {%- if required|default -%} <span class="mandatory">*</span>{%- endif -%}
+{%- endblock form_label_content -%}

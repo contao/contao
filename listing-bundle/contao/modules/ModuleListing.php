@@ -12,6 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 
 /**
  * Provide methods to render content element "listing".
@@ -56,7 +59,7 @@ class ModuleListing extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -147,14 +150,7 @@ class ModuleListing extends Module
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
-		$page = (int) (Input::get($id) ?? 1);
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
-
-		// Thanks to Hagen Klemp (see #4485)
-		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
-		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-		}
 
 		// Get the selected records
 		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map(array(Database::class, 'quoteIdentifier'), $arrFields));
@@ -221,11 +217,17 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, ($page - 1) * $per_page);
-		}
-		elseif ($this->perPage)
-		{
-			$objDataStmt->limit($this->perPage, ($page - 1) * $per_page);
+			try
+			{
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
+				$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
+			}
+
+			$objDataStmt->limit($per_page, $pagination->getOffset());
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);
@@ -238,13 +240,13 @@ class ModuleListing extends Module
 		{
 			if ($fragment && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
-				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
+				$strUrl .= (!$blnQuery ? '?' : '&') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
 		$this->Template->url = $strUrl;
-		$strVarConnector = $blnQuery ? '&amp;' : '?';
+		$strVarConnector = $blnQuery ? '&' : '?';
 
 		// Prepare the data arrays
 		$arrTh = array();
@@ -278,7 +280,7 @@ class ModuleListing extends Module
 			$arrTh[] = array
 			(
 				'link' => $strField,
-				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
+				'href' => ($strUrl . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&sort=' . $sort,
 				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class
 			);
@@ -325,13 +327,9 @@ class ModuleListing extends Module
 		$this->Template->thead = $arrTh;
 		$this->Template->tbody = $arrTd;
 
-		// Pagination
-		$objPagination = new Pagination($objTotal->count, $per_page, Config::get('maxPaginationLinks'), $id);
-		$this->Template->pagination = $objPagination->generate("\n  ");
+		// Template variables
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
-
-		// Template variables
 		$this->Template->details = (bool) $this->list_info;
 		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
 		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
@@ -416,7 +414,7 @@ class ModuleListing extends Module
 			return '';
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Array
 		if (\is_array($value))

@@ -18,13 +18,13 @@ namespace Contao\CoreBundle\Framework;
  *
  * @template T
  * @mixin T
- *
- * @internal Do not use this class in your code; use ContaoFramework::getAdapter() instead
  */
 class Adapter
 {
     /**
      * @param class-string<T> $class
+     *
+     * @internal Do not use this class in your code; use ContaoFramework::getAdapter() instead
      */
     public function __construct(private readonly string $class)
     {

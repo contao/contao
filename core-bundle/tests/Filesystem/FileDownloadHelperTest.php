@@ -16,18 +16,24 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FileDownloadHelperTest extends TestCase
 {
@@ -47,13 +53,191 @@ class FileDownloadHelperTest extends TestCase
         parent::tearDown();
     }
 
+    public function testHandleRequestRejectsInvalidSignature(): void
+    {
+        $helper = new FileDownloadHelper(
+            $this->mockUriSigner(false),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(MountManager::class),
+        );
+
+        $response = $helper->handleRequest(Request::create('https://example.com/?token='), 'files/my_file.txt');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame('The provided file URL is not valid.', $response->getContent());
+    }
+
+    public function testHandleRequestRejectsInvalidToken(): void
+    {
+        $helper = new FileDownloadHelper(
+            $this->mockUriSigner(true),
+            $this->createStub(RouterInterface::class),
+            $this->mockSecurity($this->createStub(TokenInterface::class)),
+            $this->createStub(MountManager::class),
+        );
+
+        $request = Request::create('https://example.com/?token=incorrect');
+        $response = $helper->handleRequest($request, 'files/my_file.txt');
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame('The provided token is not valid.', $response->getContent());
+    }
+
+    public function testHandleRequestReturns404IfFileDoesNotExist(): void
+    {
+        $mountManager = $this->createMock(MountManager::class);
+        $mountManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('files/missing.txt')
+            ->willReturn(null)
+        ;
+
+        $helper = new FileDownloadHelper(
+            $this->mockUriSigner(true),
+            $this->createStub(RouterInterface::class),
+            $this->mockSecurity(),
+            $mountManager,
+        );
+
+        $response = $helper->handleRequest(Request::create('https://example.com/'), 'files/missing.txt');
+
+        $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $this->assertSame('The requested resource does not exist.', $response->getContent());
+    }
+
+    public function testHandleRequestStreamsFileAndSetsHeaders(): void
+    {
+        $file = $this->createMock(FilesystemItem::class);
+        $file
+            ->expects($this->once())
+            ->method('getPath')
+            ->willReturn('files/my_file.txt')
+        ;
+
+        $file
+            ->expects($this->once())
+            ->method('getMimeType')
+            ->willReturn('text/plain')
+        ;
+
+        $stream = fopen('php://temp', 'w+');
+        fwrite($stream, 'foo');
+        rewind($stream);
+
+        $mountManager = $this->createMock(MountManager::class);
+        $mountManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('files/my_file.txt')
+            ->willReturn($file)
+        ;
+
+        $mountManager
+            ->expects($this->once())
+            ->method('readStream')
+            ->with('files/my_file.txt')
+            ->willReturn($stream)
+        ;
+
+        $helper = new FileDownloadHelper(
+            $this->mockUriSigner(true),
+            $this->createStub(RouterInterface::class),
+            $this->mockSecurity(),
+            $mountManager,
+        );
+
+        $request = Request::create('https://example.com/?d=attachment&f=custom_name.txt');
+        $response = $helper->handleRequest($request, 'files/my_file.txt');
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/plain', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename=custom_name.txt', $response->headers->get('Content-Disposition'));
+        $this->assertSame('foo', $this->getResponseContent($response));
+    }
+
+    public function testGenerateUrlRejectsInvalidDisposition(): void
+    {
+        $helper = new FileDownloadHelper(
+            new UriSigner('secret'),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(MountManager::class),
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The disposition must be either "attachment" or "inline".');
+
+        $helper->generateUrl('files/my_file.txt', new TemporaryAccessOption(60, 'hash'), null, 'invalid');
+    }
+
+    public function testGenerateUrlGeneratesSignedUrlWithExpectedParametersWhenAnonymous(): void
+    {
+        $signer = new UriSigner('secret');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with(
+                'contao_file_stream',
+                $this->callback(
+                    // No token when anonymous and no filename
+                    static fn (array $params): bool => 'files/my_file.txt' === ($params['path'] ?? null)
+                    && HeaderUtils::DISPOSITION_INLINE === ($params['d'] ?? null)
+                    && 'content-hash' === ($params['ctx'] ?? null)
+                    && !isset($params['t']),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL,
+            )
+            ->willReturnCallback(static fn (string $_route, array $params): string => 'https://example.com/_file_stream/'.$params['path'].'?'.http_build_query($params))
+        ;
+
+        $helper = new FileDownloadHelper(
+            $signer,
+            $router,
+            $this->mockSecurity(),
+            $this->createStub(MountManager::class),
+        );
+
+        $url = $helper->generateUrl(
+            'files/my_file.txt',
+            new TemporaryAccessOption(60, 'content-hash'),
+        );
+
+        $this->assertStringContainsString('path=files%2Fmy_file.txt', $url);
+        $this->assertStringContainsString('d=inline', $url);
+        $this->assertStringContainsString('ctx=content-hash', $url);
+
+        $this->assertTrue($signer->checkRequest(Request::create($url)));
+    }
+
+    public function testGenerateUrlThrowsIfFileNameIsInvalid(): void
+    {
+        $helper = new FileDownloadHelper(
+            new UriSigner('secret'),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(MountManager::class),
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $helper->generateUrl(
+            'files/my_file.txt',
+            new TemporaryAccessOption(60, 'hash'),
+            'résumé.pdf',
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+        );
+    }
+
     #[DataProvider('provideInlineContext')]
-    public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
+    public function testGenerateAndHandleInlineUrl(array|null $context): void
     {
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateInlineUrl('https://example.com/', 'my_file.txt', $context);
-
-        $this->assertSame($expectedUrl, $url);
 
         $onProcess = function (FilesystemItem $item, array $resolvedContext) use ($context): Response|null {
             $this->assertSame('my_file.txt', $item->getPath());
@@ -76,22 +260,18 @@ class FileDownloadHelperTest extends TestCase
     {
         yield 'without context' => [
             null,
-            'https://example.com/?_hash=EJ5W%2FRitv01mjcHnPITlKLKolvtEm2O%2BEa3Dq2jekXk%3D&p=my_file.txt',
         ];
 
         yield 'with context' => [
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=eHSjRLDzC%2BNi9w%2BnpBMHNNy1Hfg3XNNz0SvzMNUEO6k%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&p=my_file.txt',
         ];
     }
 
     #[DataProvider('provideDownloadContext')]
-    public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
+    public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context): void
     {
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.txt', $fileName, $context);
-
-        $this->assertSame($expectedUrl, $url);
 
         $onProcess = function (FilesystemItem $item, array $resolvedContext) use ($context): Response|null {
             $this->assertSame('my_file.txt', $item->getPath());
@@ -113,10 +293,10 @@ class FileDownloadHelperTest extends TestCase
     {
         $adapter = new LocalFilesystemAdapter(Path::canonicalize(__DIR__.'/../Fixtures/files/data'));
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter);
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
 
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
@@ -147,7 +327,7 @@ class FileDownloadHelperTest extends TestCase
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt');
 
-        $this->assertSame('https://example.com/path?_hash=TUK%2BRJDS6D7dOg8zPyttlPmt0mMRi3bx17OHbD8NIro%3D&d=attachment&foo=bar&p=my_file.txt', $url);
+        $this->assertTrue(str_ends_with($url, '&d=attachment&foo=bar&p=my_file.txt'));
     }
 
     public static function provideDownloadContext(): iterable
@@ -155,26 +335,45 @@ class FileDownloadHelperTest extends TestCase
         yield 'without filename or context' => [
             null,
             null,
-            'https://example.com/?_hash=3JBfgZdT%2FVdQWC3Xez3i6FA4egPMsOEZBPwLQIu9rbI%3D&d=attachment&p=my_file.txt',
         ];
 
         yield 'with filename' => [
             'custom_name.txt',
             null,
-            'https://example.com/?_hash=layVAUuHQtmig0aouIJcfJAxxhzdkZyGKjMzy3RofJ4%3D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
 
         yield 'with context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
 
         yield 'with filename and context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
+    }
+
+    private function mockUriSigner(bool $checkRequestResult): UriSigner
+    {
+        $signer = $this->createMock(UriSigner::class);
+        $signer
+            ->expects($this->once())
+            ->method('checkRequest')
+            ->willReturn($checkRequestResult)
+        ;
+
+        return $signer;
+    }
+
+    private function mockSecurity(TokenInterface|null $token = null): Security
+    {
+        $security = $this->createStub(Security::class);
+        $security
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        return $security;
     }
 
     private function getInMemoryStorage(): VirtualFilesystem
@@ -183,10 +382,10 @@ class FileDownloadHelperTest extends TestCase
         $adapter->write('my_file.txt', 'foo', new Config());
         $adapter->write('my_file.unknown', 'foo', new Config());
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter);
 
-        return new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        return new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
     }
 
     private function getResponseContent(Response $response): string
@@ -200,6 +399,11 @@ class FileDownloadHelperTest extends TestCase
 
     private function getFileDownloadHelper(): FileDownloadHelper
     {
-        return new FileDownloadHelper(new UriSigner('secret'));
+        return new FileDownloadHelper(
+            new UriSigner('secret'),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(MountManager::class),
+        );
     }
 }

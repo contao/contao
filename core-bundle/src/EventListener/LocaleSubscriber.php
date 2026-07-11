@@ -29,7 +29,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     private readonly array $availableLocales;
 
     public function __construct(
-        private readonly LocaleAwareInterface $translator,
+        private readonly LocaleAwareInterface $localeSwitcher,
         private readonly ScopeMatcher $scopeMatcher,
         Locales $locales,
     ) {
@@ -54,7 +54,7 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     public function setTranslatorLocale(RequestEvent $event): void
     {
-        $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
+        $this->localeSwitcher->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
     }
 
     public static function getSubscribedEvents(): array

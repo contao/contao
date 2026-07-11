@@ -27,7 +27,7 @@ class RuntimeThemeDependentExpressionTest extends TestCase
             '' => '@Contao_ContaoCoreBundle/element.html.twig',
         ]);
 
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
         $expression->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
@@ -43,7 +43,7 @@ class RuntimeThemeDependentExpressionTest extends TestCase
             '' => '@Contao_ContaoCoreBundle/element.html.twig',
         ]);
 
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
         $expression->compile($compiler);
 
         $expectedSource = <<<'SOURCE'

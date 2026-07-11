@@ -21,12 +21,12 @@ use Contao\Model\Collection;
  * @property integer           $jumpTo
  * @property boolean           $protected
  * @property string|array|null $groups
+ * @property string            $jsonLdType
  * @property boolean           $allowComments
  * @property string            $notify
  * @property string            $sortOrder
  * @property integer           $perPage
  * @property boolean           $moderate
- * @property boolean           $bbcode
  * @property boolean           $requireLogin
  * @property boolean           $disableCaptcha
  *
@@ -39,31 +39,31 @@ use Contao\Model\Collection;
  * @method static NewsArchiveModel|null findOneByJumpTo($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByProtected($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByGroups($val, array $opt=array())
+ * @method static NewsArchiveModel|null findOneByJsonLdType($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByAllowComments($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByNotify($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneBySortOrder($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByPerPage($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByModerate($val, array $opt=array())
- * @method static NewsArchiveModel|null findOneByBbcode($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByTitle($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByJumpTo($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByProtected($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByGroups($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByAllowComments($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByNotify($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findBySortOrder($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByPerPage($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByModerate($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByBbcode($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByRequireLogin($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findByDisableCaptcha($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<NewsArchiveModel>|NewsArchiveModel[]|null findAll(array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByTitle($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByJumpTo($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByProtected($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByGroups($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByJsonLdType($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByAllowComments($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByNotify($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByPerPage($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByModerate($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByRequireLogin($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findByDisableCaptcha($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<NewsArchiveModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -71,12 +71,12 @@ use Contao\Model\Collection;
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
+ * @method static integer countByJsonLdType($val, array $opt=array())
  * @method static integer countByAllowComments($val, array $opt=array())
  * @method static integer countByNotify($val, array $opt=array())
  * @method static integer countBySortOrder($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
  * @method static integer countByModerate($val, array $opt=array())
- * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */

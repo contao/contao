@@ -194,7 +194,7 @@ class TextField extends Widget
 				$this->strId . '_' . $i,
 				$this->size,
 				self::specialcharsValue(@$this->varValue[$i]), // see #4979
-				$blnPlaceholderArray && isset($this->arrAttributes['placeholder'][$i]) ? ' placeholder="' . $this->arrAttributes['placeholder'][$i] . '"' : '',
+				$blnPlaceholderArray && isset($this->arrAttributes['placeholder'][$i]) ? ' placeholder="' . StringUtil::specialcharsAttribute($this->arrAttributes['placeholder'][$i]) . '"' : '',
 				$this->getAttributes($blnPlaceholderArray ? array('placeholder') : array())
 			);
 		}

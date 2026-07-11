@@ -36,13 +36,13 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -55,12 +55,12 @@ class ModuleTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
-        (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
+        new Filesystem()->mkdir($this->getTempDir().'/languages/en');
+        new Filesystem()->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_page.php', '<?php $GLOBALS["TL_DCA"]["tl_page"] = [];');
 
         System::setContainer($container);
 
@@ -90,13 +90,13 @@ class ModuleTest extends TestCase
             ['id' => 3, 'alias' => 'alias3'],
         ];
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnOnConsecutiveCalls(new Result($databaseResultFirstQuery, ''), new Result($databaseResultSecondQuery, ''))
         ;
 
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('prepare')
             ->willReturn($statement)
@@ -144,7 +144,7 @@ class ModuleTest extends TestCase
 
     private function mockDatabase(Database $database): void
     {
-        $property = (new \ReflectionClass($database))->getProperty('objInstance');
+        $property = new \ReflectionClass($database)->getProperty('objInstance');
         $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());

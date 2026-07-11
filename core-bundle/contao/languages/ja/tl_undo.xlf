@@ -41,13 +41,21 @@
         <source>Raw data of the undo step</source>
         <target>取り消しの項目の生データ</target>
       </trans-unit>
-      <trans-unit id="tl_undo.undo">
+      <trans-unit id="tl_undo.undo.0">
+        <source>Restore</source>
+        <target>復元</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.undo.1">
         <source>Restore element ID %s</source>
-        <target>ID %sの要素を復元</target>
+        <target>ID %sという要素を復元</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.jumpToParent.0">
+        <source>Show origin</source>
+        <target>元を表示</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>
-        <target>%s IDの%sの元を表示</target>
+        <target>%s というIDの%sの元を表示</target>
       </trans-unit>
     </body>
   </file>

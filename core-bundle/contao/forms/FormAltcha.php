@@ -30,7 +30,7 @@ class FormAltcha extends Widget
 	/**
 	 * @var string
 	 */
-	protected $prefix = 'widget widget-altcha';
+	protected $strPrefix = 'widget widget-altcha';
 
 	/**
 	 * Use the raw request data.
@@ -40,8 +40,6 @@ class FormAltcha extends Widget
 	public function __construct($arrAttributes=null)
 	{
 		parent::__construct($arrAttributes);
-
-		$this->useRawRequestData = true;
 	}
 
 	/**
@@ -51,7 +49,7 @@ class FormAltcha extends Widget
 	 */
 	public function generate(): string
 	{
-		return \sprintf('<altcha-widget%s></altcha-widget>', $this->getAltchaAttributes());
+		return \sprintf('<altcha-widget%s></altcha-widget>', $this->altchaAttributes);
 	}
 
 	/**
@@ -81,6 +79,7 @@ class FormAltcha extends Widget
 		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
 		$this->altchaAttributes->setIfExists('hidelogo', $this->altchaHideLogo);
 		$this->altchaAttributes->setIfExists('hidefooter', $this->altchaHideFooter);
+		$this->altchaAttributes->setIfExists('floating', $this->altchaFloating);
 
 		$this->canUseAltcha = $request->isSecure();
 

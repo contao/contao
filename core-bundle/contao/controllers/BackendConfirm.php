@@ -65,7 +65,7 @@ class BackendConfirm extends Backend
 
 		// Prepare the URL
 		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
-		$objTemplate->href = StringUtil::ampersand($url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
+		$objTemplate->href = $url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		$vars = array();
 		list(, $request) = explode('?', $url, 2);
@@ -138,22 +138,22 @@ class BackendConfirm extends Backend
 				$arrInfo['act'] = $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['mode']][0];
 			}
 		}
-		elseif ($arrInfo['act'] == 'select' && isset($GLOBALS['TL_LANG']['MSC']['all']))
+		elseif (($arrInfo['act'] ?? null) == 'select' && isset($GLOBALS['TL_LANG']['MSC']['all']))
 		{
 			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG']['MSC']['all']) ? $GLOBALS['TL_LANG']['MSC']['all'][0] : $GLOBALS['TL_LANG']['MSC']['all'];
 		}
-		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]))
+		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act'] ?? null]))
 		{
 			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']];
 		}
 
 		// Replace the ID wildcard
-		if (str_contains($arrInfo['act'], '%s'))
+		if (str_contains($arrInfo['act'] ?? '', '%s'))
 		{
 			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
-		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);
+		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['mode']);
 
 		// Template variables
 		$objTemplate->confirm = true;
@@ -163,7 +163,6 @@ class BackendConfirm extends Backend
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 		$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		$objTemplate->continue = $GLOBALS['TL_LANG']['MSC']['continue'];
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidToken']);

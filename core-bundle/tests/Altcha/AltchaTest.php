@@ -228,8 +228,8 @@ class AltchaTest extends TestCase
 
     private function getAltcha(AltchaRepository|null $repository = null, EntityManager|null $entityManager = null, string|null $algorithm = 'SHA-256'): Altcha
     {
-        $repository ??= $this->createMock(AltchaRepository::class);
-        $entityManager ??= $this->createMock(EntityManager::class);
+        $repository ??= $this->createStub(AltchaRepository::class);
+        $entityManager ??= $this->createStub(EntityManager::class);
 
         return new Altcha($repository, $entityManager, 'secret', $algorithm, 100_000, 3600);
     }

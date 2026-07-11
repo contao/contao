@@ -30,13 +30,13 @@ class RobotsTxtListenerTest extends TestCase
     #[DataProvider('disallowProvider')]
     public function testRobotsTxt(string $providedRobotsTxt, bool|null $withWebProfiler, string $expectedRobotsTxt): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class);
         $rootPage->id = 42;
         $rootPage->fallback = true;
         $rootPage->dns = 'www.foobar.com';
         $rootPage->useSSL = true;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')
@@ -171,7 +171,7 @@ class RobotsTxtListenerTest extends TestCase
     #[DataProvider('routePrefixProvider')]
     public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class);
 
         $expected = [
             'disallow:'.$routePrefix.'/',
@@ -192,20 +192,20 @@ class RobotsTxtListenerTest extends TestCase
             ))
         ;
 
-        $record = $this->createMock(Record::class);
+        $record = $this->createStub(Record::class);
         $record
             ->method('getDirectiveList')
             ->willReturn($directiveList)
         ;
 
-        $file = $this->createPartialMock(File::class, ['getRecords']);
+        $file = $this->createStub(File::class);
         $file
             ->method('getRecords')
             ->willReturn([$record])
         ;
 
         $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $listener = new RobotsTxtListener($framework, null, $routePrefix);
         $listener($event);

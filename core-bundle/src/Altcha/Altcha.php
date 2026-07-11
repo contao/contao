@@ -50,7 +50,7 @@ class Altcha
         }
 
         if (!$salt) {
-            $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds");
+            $salt = bin2hex(random_bytes(12)).'?expires='.strtotime("now +$this->altchaChallengeExpiry seconds").'&';
         }
 
         $number ??= random_int(0, $this->altchaRangeMax);
@@ -97,7 +97,7 @@ class Altcha
             return false;
         }
 
-        $entity = new AltchaEntity($json['challenge'], (new \DateTimeImmutable())->setTimestamp($expiry));
+        $entity = new AltchaEntity($json['challenge'], new \DateTimeImmutable()->setTimestamp($expiry));
 
         // Save the solved challenge in the database to prevent replay attacks
         $this->entityManager->persist($entity);

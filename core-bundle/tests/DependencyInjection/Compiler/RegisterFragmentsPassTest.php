@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class RegisterFragmentsPassTest extends TestCase
 {
-    public function testCreatesChildDefinitionForFragments(): void
+    public function testCreatesChildDefinitionForFragmentsWithOnlyOneTag(): void
     {
         $elementController = new Definition('App\Fragments\Text');
         $elementController->addTag('contao.content_element');
@@ -46,7 +46,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $elementController);
         $container->setDefinition('app.fragments.module_controller', $moduleController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -57,9 +57,7 @@ class RegisterFragmentsPassTest extends TestCase
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
         [$element, $module] = $methodCalls;
 
-        /*
-         * Test Content Element
-         */
+        // Test a content element
         $this->assertSame('add', $element[0]);
         $this->assertSame('contao.content_element.text', $element[1][0]);
         $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element[1][1]);
@@ -67,18 +65,80 @@ class RegisterFragmentsPassTest extends TestCase
         $arguments = $container->getDefinition((string) $element[1][1])->getArguments();
         $this->assertSame('forward', $arguments[1]);
 
-        $definition = $container->getDefinition($arguments[0]);
-        $this->assertInstanceOf(ChildDefinition::class, $definition);
-        $this->assertSame('app.fragments.content_controller', $definition->getParent());
-
-        /*
-         * Test Frontend Module
-         */
+        // Test a front end module
         $this->assertSame('add', $module[0]);
         $this->assertSame('contao.frontend_module.login', $module[1][0]);
         $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module[1][1]);
 
         $arguments = $container->getDefinition((string) $module[1][1])->getArguments();
+        $this->assertSame('esi', $arguments[1]);
+    }
+
+    public function testCreatesChildDefinitionForFragmentsWithMultipleTags(): void
+    {
+        $elementController = new Definition('App\Fragments\Text');
+        $elementController->addTag('contao.content_element', ['type' => 'text_1']);
+        $elementController->addTag('contao.content_element', ['type' => 'text_2']);
+
+        $moduleController = new Definition('App\Fragments\LoginController');
+        $moduleController->addTag('contao.frontend_module', ['type' => 'login_1', 'renderer' => 'esi']);
+        $moduleController->addTag('contao.frontend_module', ['type' => 'login_2', 'renderer' => 'esi']);
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller', $elementController);
+        $container->setDefinition('app.fragments.module_controller', $moduleController);
+
+        new ResolveClassPass()->process($container);
+
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
+        $pass->process($container);
+
+        $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
+        $pass->process($container);
+
+        $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
+        [$element1, $element2, $module1, $module2] = $methodCalls;
+
+        // Test content elements
+        $this->assertSame('add', $element1[0]);
+        $this->assertSame('contao.content_element.text_1', $element1[1][0]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element1[1][1]);
+
+        $arguments = $container->getDefinition((string) $element1[1][1])->getArguments();
+        $this->assertSame('forward', $arguments[1]);
+
+        $definition = $container->getDefinition($arguments[0]);
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller', $definition->getParent());
+
+        $this->assertSame('add', $element2[0]);
+        $this->assertSame('contao.content_element.text_2', $element2[1][0]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element2[1][1]);
+
+        $arguments = $container->getDefinition((string) $element2[1][1])->getArguments();
+        $this->assertSame('forward', $arguments[1]);
+
+        $definition = $container->getDefinition($arguments[0]);
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller', $definition->getParent());
+
+        // Test front end modules
+        $this->assertSame('add', $module1[0]);
+        $this->assertSame('contao.frontend_module.login_1', $module1[1][0]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module1[1][1]);
+
+        $arguments = $container->getDefinition((string) $module1[1][1])->getArguments();
+        $this->assertSame('esi', $arguments[1]);
+
+        $definition = $container->getDefinition($arguments[0]);
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.module_controller', $definition->getParent());
+
+        $this->assertSame('add', $module2[0]);
+        $this->assertSame('contao.frontend_module.login_2', $module2[1][0]);
+        $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module2[1][1]);
+
+        $arguments = $container->getDefinition((string) $module2[1][1])->getArguments();
         $this->assertSame('esi', $arguments[1]);
 
         $definition = $container->getDefinition($arguments[0]);
@@ -100,7 +160,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
@@ -112,7 +172,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $arguments = $container->getDefinition((string) $methodCalls[0][1][1])->getArguments();
 
-        $this->assertSame('contao.fragment._contao.content_element.foo:bar', $arguments[0]);
+        $this->assertSame('app.fragments.content_controller::bar', $arguments[0]);
         $this->assertSame('esi', $arguments[1]);
     }
 
@@ -128,14 +188,12 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller.enhanced_text', $duplicateContentController);
         $container->setDefinition('app.fragments.content_controller.text', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
-        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
-
-        $this->assertInstanceOf(ChildDefinition::class, $definition);
-        $this->assertSame('app.fragments.content_controller.enhanced_text', $definition->getParent());
+        $this->assertSame([], $container->getDefinition('app.fragments.content_controller.text')->getTags());
+        $this->assertSame(['contao.content_element' => [['type' => 'text']]], $container->getDefinition('app.fragments.content_controller.enhanced_text')->getTags());
     }
 
     public function testMakesFragmentServicesPublic(): void
@@ -147,18 +205,14 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
-        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
-
-        $this->assertInstanceOf(ChildDefinition::class, $definition);
-        $this->assertSame('app.fragments.content_controller', $definition->getParent());
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($container->findDefinition('app.fragments.content_controller')->isPublic());
     }
 
     public function testAddsContainerCallIfClassExtendsSymfonyAbstractController(): void
@@ -169,12 +223,12 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.two_factor', $definition);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
         $pass->process($container);
 
-        $definition = $container->findDefinition('contao.fragment._contao.frontend_module.two_factor');
+        $definition = $container->findDefinition('app.fragments.two_factor');
         $calls = $definition->getMethodCalls();
 
         $this->assertCount(2, $calls);
@@ -183,22 +237,29 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame(ContainerInterface::class, (string) $calls[1][1][0]);
     }
 
-    public function testCopiesTagsToChildDefinition(): void
+    public function testCopiesTagsToChildDefinitions(): void
     {
         $contentController = new Definition('App\Fragments\Text');
         $contentController->setPublic(false);
-        $contentController->addTag('contao.content_element');
+        $contentController->addTag('contao.content_element', ['type' => 'text_1']);
+        $contentController->addTag('contao.content_element', ['type' => 'text_2']);
         $contentController->addTag('foo.bar');
 
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
-        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
+        $definition = $container->findDefinition('contao.fragment._contao.content_element.text_1');
+
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller', $definition->getParent());
+        $this->assertSame(['foo.bar' => [[]]], $definition->getTags());
+
+        $definition = $container->findDefinition('contao.fragment._contao.content_element.text_2');
 
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('app.fragments.content_controller', $definition->getParent());
@@ -213,7 +274,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -223,7 +284,7 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertArrayHasKey('contao.content_element.fragment_pre_handler_interface', $arguments[0]);
 
         $this->assertSame(
-            'contao.fragment._contao.content_element.fragment_pre_handler_interface',
+            'app.fragments.content_controller',
             (string) $arguments[0]['contao.content_element.fragment_pre_handler_interface'],
         );
     }
@@ -239,7 +300,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('contao.fragment.compositor', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
 
@@ -257,20 +318,12 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
         $pass->process($container);
 
-        $definition = null;
-
-        foreach ($container->getDefinitions() as $def) {
-            if (GlobalsMapListener::class === $def->getClass()) {
-                $definition = $def;
-                break;
-            }
-        }
-
+        $definition = array_find($container->getDefinitions(), static fn ($def) => GlobalsMapListener::class === $def->getClass());
         $this->assertNotNull($definition);
 
         $this->assertSame(
@@ -307,7 +360,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
 
@@ -326,7 +379,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $contentController);
         $container->setDefinition('contao.listener.data_container.template_options', $templateOptionsListener = new Definition());
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(
             ContentElementReference::TAG_NAME,

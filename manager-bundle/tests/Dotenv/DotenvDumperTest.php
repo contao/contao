@@ -20,7 +20,7 @@ class DotenvDumperTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        (new Filesystem())->remove([$this->getTempDir().'/.env', $this->getTempDir().'/.env.local']);
+        new Filesystem()->remove([$this->getTempDir().'/.env', $this->getTempDir().'/.env.local']);
 
         parent::tearDown();
     }

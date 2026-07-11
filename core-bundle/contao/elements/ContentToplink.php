@@ -10,8 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\ToplinkController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', ContentToplink::class, ToplinkController::class);
+
 /**
  * Front end content element "toplink".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7;
+ *             use Contao\CoreBundle\Controller\ContentElement\ToplinkController instead.
  */
 class ContentToplink extends ContentElement
 {
@@ -33,6 +40,6 @@ class ContentToplink extends ContentElement
 
 		$this->Template->label = $this->linkTitle;
 		$this->Template->title = StringUtil::specialchars($this->linkTitle);
-		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
+		$this->Template->request = Environment::get('requestUri');
 	}
 }

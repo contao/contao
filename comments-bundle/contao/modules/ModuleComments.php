@@ -15,7 +15,6 @@ namespace Contao;
  *
  * @property Comments $Comments
  * @property bool     $com_moderate
- * @property bool     $com_bbcode
  * @property bool     $com_disableCaptcha
  * @property bool     $com_requireLogin
  * @property string   $com_order
@@ -45,7 +44,7 @@ class ModuleComments extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -58,7 +57,7 @@ class ModuleComments extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$objConfig = new \stdClass();
 		$objConfig->perPage = $this->perPage;
@@ -66,7 +65,6 @@ class ModuleComments extends Module
 		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $this->com_requireLogin;
 		$objConfig->disableCaptcha = $this->com_disableCaptcha;
-		$objConfig->bbcode = $this->com_bbcode;
 		$objConfig->moderate = $this->com_moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL'] ?? null);

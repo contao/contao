@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
@@ -37,7 +36,7 @@ class FrontendModuleControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         System::setContainer($this->container);
     }
@@ -55,7 +54,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_test', $template['templateName']);
@@ -65,7 +64,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['type' => 'foo']);
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_foo', $template['templateName']);
@@ -75,7 +74,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['template' => 'mod_bar']);
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_bar', $template['templateName']);
@@ -83,11 +82,10 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@Contao/mod_bar.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/mod_bar.html.twig', true]])
         ;
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
@@ -95,7 +93,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['customTpl' => 'mod_bar']);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['customTpl' => 'mod_bar']);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -107,7 +105,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('', $template['cssID']);
@@ -118,7 +116,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -131,7 +129,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -144,7 +142,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'left');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'left');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('left', $template['inColumn']);
@@ -160,13 +158,13 @@ class FrontendModuleControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($this->createStub(Request::class))
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(false)
@@ -178,7 +176,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController(['type' => 'html', 'template' => 'frontend_module/html']);
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'headline' => serialize(['value' => 'foo', 'unit' => 'h3']),
             'cssID' => serialize(['foo-id', 'foo-class']),
         ]);
@@ -199,26 +197,21 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testReturnsWildCardInBackendScope(): void
     {
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($this->createStub(Request::class))
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
         ;
 
-        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
-        $tokenManager
-            ->method('getDefaultTokenValue')
-            ->willReturn('<token>')
-        ;
-
         $twig = $this->createMock(Environment::class);
         $twig
+            ->expects($this->once())
             ->method('render')
             ->with(
                 '@Contao/backend/module_wildcard.html.twig',
@@ -226,7 +219,6 @@ class FrontendModuleControllerTest extends TestCase
                     'id' => 42,
                     'name' => 'foo',
                     'title' => 'foo headline',
-                    'request_token' => '<token>',
                     'type' => 'foobar',
                 ],
             )
@@ -235,12 +227,11 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('request_stack', $requestStack);
         $this->container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $this->container->set('contao.csrf.token_manager', $tokenManager);
         $this->container->set('twig', $twig);
 
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'type' => 'foobar',
             'name' => 'foo',
@@ -252,7 +243,7 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('<rendered wildcard>', $response->getContent());
     }
 
-    public function provideScope(): \Generator
+    public function provideScope(): iterable
     {
         yield 'frontend' => [false];
         yield 'backend' => [true];
@@ -260,7 +251,7 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class);
         $model->id = 42;
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
@@ -270,7 +261,7 @@ class FrontendModuleControllerTest extends TestCase
             ->with($model)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->method('createInstance')
             ->willReturnCallback(

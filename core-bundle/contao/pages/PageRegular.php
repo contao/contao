@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -64,7 +65,7 @@ class PageRegular extends Frontend
 	 */
 	private function prepare($objPage)
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 6.0
+		// Deprecated since Contao 4.0, to be removed in Contao 7.0
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
@@ -160,6 +161,9 @@ class PageRegular extends Frontend
 				}
 			}
 
+			$arrPreloadedModules = $this->preloadReaderModules($objPage, $request, $arrModules, $arrModuleMapper);
+			$arrPreloadedContentElements = $this->preloadReaderContentElements($objPage, $request, $arrModules, $arrModuleMapper);
+
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
@@ -205,7 +209,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 				else
 				{
@@ -214,7 +218,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 			}
 		}
@@ -264,17 +268,77 @@ class PageRegular extends Frontend
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}
 
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
+
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
+		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
+		$this->Template->class = htmlspecialchars(trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+
+		// Additional meta tags
+		$this->Template->metaTags = $headBag->getMetaTags();
+		$this->Template->linkTags = $headBag->getLinkTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
+	}
+
+	protected function preloadReaderModules($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$arrModule['col']][$arrModule['mod']] = $this->getFrontendModule($arrMapper[$arrModule['mod']], $arrModule['col']);
+		}
+
+		return $arrPreloaded;
+	}
+
+	protected function preloadReaderContentElements($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+		$arrArticleColumns = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			if ($arrModule['mod'] == 0)
+			{
+				$arrArticleColumns[] = $arrModule['col'];
+			}
+		}
+
+		if (empty($arrArticleColumns))
+		{
+			return $arrPreloaded;
+		}
+
+		$objResult = ContentModel::findModulesByArticleByPublishedPidAndColumns($objPage->id, $arrArticleColumns);
+
+		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
+		{
+			$strClass = Module::findClass($strType);
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($strType, $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$intId] = $this->getContentElement($intId, $strColumn);
+		}
+
+		return $arrPreloaded;
 	}
 
 	/**
@@ -411,7 +475,7 @@ class PageRegular extends Frontend
 		// Overwrite the viewport tag (see #6251)
 		if ($objLayout->viewport)
 		{
-			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
+			$this->Template->viewport = '<meta name="viewport" content="' . StringUtil::specialcharsAttribute($objLayout->viewport) . '">' . "\n";
 		}
 
 		$this->Template->mooScripts = '';
@@ -666,7 +730,9 @@ class PageRegular extends Frontend
 			// Add a nonce to the <script> tags since we consider this safe user input.
 			// Do NOT copy the str_replace() into your own code unless you know what you are doing!
 			// It will defeat the purpose of CSP.
-			if ($nonce = $this->Template->nonce('script-src'))
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+			if ($responseContext?->has(CspHandler::class) && ($nonce = $responseContext->get(CspHandler::class)->getNonce('script-src')))
 			{
 				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
 			}

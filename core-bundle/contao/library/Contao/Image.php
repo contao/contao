@@ -16,55 +16,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
-	private static array $deprecated = array
-	(
-		'alias',
-		'copychilds',
-		'copychilds_',
-		'filemanager',
-		'folMinus',
-		'folPlus',
-		'header',
-		'header_',
-		'important',
-		'manager',
-		'pickfile',
-		'settings',
-		'unpublished',
-	);
-
-	private static array $disabled = array
-	(
-		'admin_',
-		'admin_two_factor_',
-		'article_',
-		'children_',
-		'copy_',
-		'cut_',
-		'delete_',
-		'diff_',
-		'diffTemplate_',
-		'edit_',
-		'editor_',
-		'featured_',
-		'group_',
-		'layout_',
-		'member_',
-		'member_two_factor_',
-		'mgroup_',
-		'modules_',
-		'parent_',
-		'pasteafter_',
-		'pasteinto_',
-		'share_',
-		'sizes_',
-		'su_',
-		'theme_export_',
-		'user_',
-		'user_two_factor_',
-		'visible_',
-	);
-
 	private static array $htmlTemplateCache = array();
 
 	/**
@@ -93,27 +44,17 @@ class Image
 			return 'assets/contao/images/' . $src;
 		}
 
-		$theme = Backend::getTheme();
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
-		if (\in_array($filename, self::$deprecated))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6.');
-		}
-		elseif (\in_array($filename, self::$disabled))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
-		}
+		// Use path from icon manifest
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		// Prefer SVG icons
-		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		if (isset($icons["$filename.svg"]))
 		{
-			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		return 'system/themes/' . $theme . '/images/' . $src;
+		return 'bundles/contaocore/icons/' . $src;
 	}
 
 	/**
@@ -140,29 +81,53 @@ class Image
 	/**
 	 * Generate an image tag and return it as string
 	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
+	 * @param string                $src        The image path
+	 * @param string                $alt        An optional alt attribute
+	 * @param string|HtmlAttributes $attributes A string of other attributes
 	 *
 	 * @return string The image HTML tag
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
-		$template = self::getHtmlTemplate($src);
+		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
-		$search = array('{alt}', '{attributes}');
-		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
+
+		if (isset($attributesObject['width']))
+		{
+			$defaultSize['width'] = $attributesObject['width'];
+			unset($attributesObject['width']);
+		}
+
+		if (isset($attributesObject['height']))
+		{
+			$defaultSize['height'] = $attributesObject['height'];
+			unset($attributesObject['height']);
+		}
+
+		if (isset($attributesObject['alt']))
+		{
+			$alt = $attributesObject['alt'];
+			unset($attributesObject['alt']);
+		}
+
+		$search = array('{width}', '{height}', '{alt}', '{attributes}');
+		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
-			$darkAttributes = new HtmlAttributes($attributes);
+			$darkAttributes = new HtmlAttributes($attributesObject);
 
 			foreach (array('data-icon', 'data-icon-disabled') as $icon)
 			{
 				if (isset($darkAttributes[$icon]))
 				{
 					$pathinfo = pathinfo($darkAttributes[$icon]);
-					$darkAttributes[$icon] = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+					$fileName = $pathinfo['filename'] . '--dark.' . $pathinfo['extension'];
+
+					$darkAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
 				}
 			}
 
@@ -172,18 +137,30 @@ class Image
 
 		if (str_contains($template, '{lightAttributes}'))
 		{
+			$lightAttributes = new HtmlAttributes($attributesObject);
+
+			foreach (array('data-icon', 'data-icon-disabled') as $icon)
+			{
+				if (isset($lightAttributes[$icon]))
+				{
+					$fileName = pathinfo($lightAttributes[$icon], PATHINFO_BASENAME);
+
+					$lightAttributes[$icon] = isset($icons[$fileName]) ? pathinfo($icons[$fileName]['path'], PATHINFO_BASENAME) : $fileName;
+				}
+			}
+
 			$search[] = '{lightAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+			$replace[] = $lightAttributes->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
 		}
 
 		return str_replace($search, $replace, $template);
 	}
 
-	private static function getHtmlTemplate($src): string
+	private static function getHtmlTemplateAndDefaultSize($src): array
 	{
 		if (!$src)
 		{
-			return '';
+			return array('', array('width' => 0, 'height' => 0));
 		}
 
 		$cacheKey = $src;
@@ -193,11 +170,35 @@ class Image
 			return self::$htmlTemplateCache[$cacheKey];
 		}
 
+		/** @param string|list{string, string} $sources */
+		$getImageMarkup = static function (array|string $sources, string $attributesType = 'attributes') use (&$getImageMarkup) {
+			if (\is_array($sources))
+			{
+				return $getImageMarkup($sources[0], 'darkAttributes') . $getImageMarkup($sources[1], 'lightAttributes');
+			}
+
+			return \sprintf('<img src="%s" width="{width}" height="{height}" alt="{alt}"{%s}>', $sources, $attributesType);
+		};
+
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		if (null !== ($icon = ($icons[$src] ?? null)))
+		{
+			$darkVariant = substr($src, 0, -4) . '--dark.svg';
+
+			$sources = null !== ($darkIcon = ($icons[$darkVariant] ?? null)) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
+
+			return self::$htmlTemplateCache[$cacheKey] = array(
+				$getImageMarkup($sources),
+				array('width' => $icon['width'], 'height' => $icon['height'])
+			);
+		}
+
 		$src = static::getPath($src);
 
 		if (!$src)
 		{
-			return self::$htmlTemplateCache[$cacheKey] = '';
+			return self::$htmlTemplateCache[$cacheKey] = array('', array('width' => 0, 'height' => 0));
 		}
 
 		$container = System::getContainer();
@@ -210,7 +211,7 @@ class Image
 			{
 				$deferredImage = $container->get('contao.image.factory')->create($projectDir . '/' . $src);
 			}
-			catch (\Exception $e)
+			catch (\Exception)
 			{
 				$deferredImage = null;
 			}
@@ -222,7 +223,7 @@ class Image
 			}
 			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
-				return self::$htmlTemplateCache[$cacheKey] = '';
+				return self::$htmlTemplateCache[$cacheKey] = array('', array('width' => 0, 'height' => 0));
 			}
 		}
 
@@ -245,9 +246,15 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{darkAttributes}><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{lightAttributes}>';
+			return self::$htmlTemplateCache[$cacheKey] = array(
+				$getImageMarkup(array(self::getUrl($darkSrc), self::getUrl($src))),
+				array('width' => $objFile->width, 'height' => $objFile->height)
+			);
 		}
 
-		return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{attributes}>';
+		return self::$htmlTemplateCache[$cacheKey] = array(
+			$getImageMarkup(self::getUrl($src)),
+			array('width' => $objFile->width, 'height' => $objFile->height)
+		);
 	}
 }

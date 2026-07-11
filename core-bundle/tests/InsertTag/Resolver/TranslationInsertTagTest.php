@@ -47,7 +47,7 @@ class TranslationInsertTagTest extends TestCase
         if ($parameters) {
             $params = [$id, $domain, implode(':', $parameters)];
 
-            $this->expectUserDeprecationMessageMatches('/Passing parameters to the trans insert tag separated by a single colon has has been deprecated/');
+            $this->expectUserDeprecationMessageMatches('/Using single colons to pass parameters to the "trans" insert tag is deprecated/');
             $this->assertSame($result, $listener(new ResolvedInsertTag('trans', new ResolvedParameters($params), []))->getValue());
         }
     }

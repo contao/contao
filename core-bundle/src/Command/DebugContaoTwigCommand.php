@@ -90,7 +90,6 @@ class DebugContaoTwigCommand extends Command
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore isset.offset */
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }
@@ -205,17 +204,15 @@ class DebugContaoTwigCommand extends Command
                     ];
                 }
 
-                if (!str_ends_with($name, '.html5')) {
-                    $rows = [
-                        ...$rows,
-                        ...$this->formatMultiline(
-                            'Preview',
-                            $this->createPreview($templateInformation->getCode()),
-                            $codeCellStyle,
-                        ),
-                        ['', ''],
-                    ];
-                }
+                $rows = [
+                    ...$rows,
+                    ...$this->formatMultiline(
+                        'Preview',
+                        $this->createPreview($templateInformation->getCode()),
+                        $codeCellStyle,
+                    ),
+                    ['', ''],
+                ];
 
                 $rows[] = new TableSeparator();
             }

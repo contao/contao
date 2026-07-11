@@ -38,18 +38,17 @@ class RecordPreviewListenerTest extends TestCase
         $GLOBALS['TL_DCA'][$table]['config']['notDeletable'] = $notDeletable;
         $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] = $dataContainer;
 
-        $dcAdapter = $this->mockAdapter(['getDriverForTable']);
+        $dcAdapter = $this->createAdapterStub(['getDriverForTable']);
         $dcAdapter
             ->method('getDriverForTable')
-            ->with($table)
-            ->willReturn($driver)
+            ->willReturnMap([[$table, $driver]])
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             DataContainer::class => $dcAdapter,
         ]);
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $listener = new RecordPreviewListener($framework, $connection);
         $listener->registerDeleteCallbacks($table);
@@ -70,11 +69,11 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
         ];
 
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
+        $framework = $this->createContaoFrameworkStub([
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -101,7 +100,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);
@@ -128,11 +127,11 @@ class RecordPreviewListenerTest extends TestCase
             'email' => 'foo@example.org',
         ];
 
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
+        $framework = $this->createContaoFrameworkStub([
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -153,7 +152,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -189,11 +188,11 @@ class RecordPreviewListenerTest extends TestCase
             'email' => 'foo@example.org',
         ];
 
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
+        $framework = $this->createContaoFrameworkStub([
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -214,7 +213,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -238,144 +237,17 @@ class RecordPreviewListenerTest extends TestCase
         $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testPrecompilesRecordPreviewWithCallable(): void
-    {
-        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
-        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = ['childRecordListener', 'callback'];
-
-        $row = [
-            'id' => '42',
-        ];
-
-        $childRecordListener = $this->mockAdapter(['callback']);
-        $childRecordListener
-            ->expects($this->once())
-            ->method('callback')
-            ->with($row)
-            ->willReturn('<record-preview>')
-        ;
-
-        $systemAdapter = $this->mockAdapter([
-            'importStatic',
-        ]);
-
-        $systemAdapter
-            ->expects($this->once())
-            ->method('importStatic')
-            ->with('childRecordListener')
-            ->willReturn($childRecordListener)
-        ;
-
-        $framework = $this->mockContaoFramework([
-            System::class => $systemAdapter,
-        ]);
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->method('fetchAssociative')
-            ->willReturn($row)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('quoteIdentifier')
-            ->with('tl_content')
-            ->willReturn('tl_content')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
-            ->willReturn($result)
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('update')
-            ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
-        ;
-
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
-            'id' => '42',
-            'table' => 'tl_content',
-        ]);
-
-        $dataContainer
-            ->expects($this->never())
-            ->method('generateRecordLabel')
-        ;
-
-        $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrecompiledRecordPreview($dataContainer, '42');
-    }
-
-    public function testPrecompilesRecordPreviewWithCallback(): void
-    {
-        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
-        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = static fn () => '<record-preview>';
-
-        $row = [
-            'id' => '42',
-        ];
-
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
-        ]);
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->method('fetchAssociative')
-            ->willReturn($row)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('quoteIdentifier')
-            ->with('tl_content')
-            ->willReturn('tl_content')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
-            ->willReturn($result)
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('update')
-            ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
-        ;
-
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
-            'id' => '42',
-            'table' => 'tl_content',
-        ]);
-
-        $dataContainer
-            ->expects($this->never())
-            ->method('generateRecordLabel')
-        ;
-
-        $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrecompiledRecordPreview($dataContainer, '42');
-    }
-
     public function testHandlesExceptionsGracefully(): void
     {
         $row = [
             'id' => 42,
         ];
 
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
+        $framework = $this->createContaoFrameworkStub([
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -402,7 +274,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => ''], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -419,11 +291,11 @@ class RecordPreviewListenerTest extends TestCase
 
     public function testFailsSilentlyIfRowDoesNotExist(): void
     {
-        $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class),
+        $framework = $this->createContaoFrameworkStub([
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn(false)
@@ -436,7 +308,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);

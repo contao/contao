@@ -40,7 +40,6 @@ class CheckBox extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 	}
 
 	/**
@@ -179,7 +178,7 @@ class CheckBox extends Widget
 				$display = 'block';
 			}
 
-			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
+			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . StringUtil::ampersand(Backend::addToUrl('cbc=' . $id)) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '" data-controller="contao--check-all"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
 
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
@@ -202,15 +201,15 @@ class CheckBox extends Widget
 		if ($this->multiple)
 		{
 			return \sprintf(
-				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
+				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s" data-controller="contao--check-all"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
 				$this->strId,
-				$this->strClass ? ' ' . $this->strClass : '',
+				$this->strClass ? ' ' . StringUtil::specialchars($this->strClass) : '',
 				$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-				$this->strLabel,
+				StringUtil::specialchars($this->strLabel),
 				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
-				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
+				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" data-action="focus->contao--scroll-offset#store contao--check-all#toggleAll"' . ($this->onclick ? ' onclick="' . $this->onclick . '"' : '') . '> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
 				implode(' ', $arrOptions),
 				$this->wizard
 			);
@@ -237,15 +236,17 @@ class CheckBox extends Widget
 	protected function generateCheckbox($arrOption, $i)
 	{
 		return \sprintf(
-			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s</span>',
+			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store%s"%s> <label for="opt_%s">%s%s%s</label>%s</span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
 			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
+			$this->multiple ? ' contao--check-all#toggleInput' : '',
+			$this->multiple ? ' data-contao--check-all-target="input"' : '',
 			$this->strId . '_' . $i,
 			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-			$arrOption['label'] ?? null,
+			System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('label', $arrOption['label'] ?? ''),
 			$this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '',
 			!$this->multiple ? $this->xlabel : ''
 		);

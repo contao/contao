@@ -20,6 +20,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 #[AsCallback(table: 'tl_layout', target: 'fields.lightboxSize.options')]
 #[AsCallback(table: 'tl_content', target: 'fields.size.options')]
 #[AsCallback(table: 'tl_module', target: 'fields.imgSize.options')]
+#[AsCallback(table: 'tl_page', target: 'fields.imgSize.options')]
 class ImageSizeOptionsListener
 {
     public function __construct(

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Controller\CspReporterController;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -21,8 +22,12 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
+use Contao\FrontendUser;
 use Contao\PageModel;
+use Contao\StringUtil;
+use Spatie\SchemaOrg\ImageObject;
 use Spatie\SchemaOrg\WebPage;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -39,6 +44,8 @@ class CoreResponseContextFactory
         private readonly InsertTagParser $insertTagParser,
         private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
+        private readonly Studio $studio,
     ) {
     }
 
@@ -105,16 +112,33 @@ class CoreResponseContextFactory
         }
 
         $jsonLdManager = $context->get(JsonLdManager::class);
+
+        if ($pageModel->primaryImage) {
+            $figureBuilder = $this->studio->createFigureBuilder()->fromUuid($pageModel->primaryImage);
+
+            if ($figure = $figureBuilder->buildIfResourceExists()) {
+                $imageObject = new ImageObject();
+
+                foreach ($figure->getSchemaOrgData() as $key => $value) {
+                    $imageObject->{$key}($value);
+                }
+
+                $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->getNodes()[WebPage::class]['default']->primaryImageOfPage($imageObject);
+            }
+        }
+
         $jsonLdManager
             ->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
             ->set(
                 new ContaoPageSchema(
                     $title ?: '',
                     $pageModel->id,
-                    $pageModel->noSearch,
+                    $pageModel->noSearch ?? false,
                     $pageModel->protected,
                     array_map(\intval(...), array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode(),
+                    $this->getMemberGroups(),
+                    $pageModel->searchIndexer,
                 ),
             )
         ;
@@ -152,5 +176,19 @@ class CoreResponseContextFactory
         }
 
         $context->add($cspHandler);
+    }
+
+    /**
+     * @return array<int>
+     */
+    private function getMemberGroups(): array
+    {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return [];
+        }
+
+        return array_map(\intval(...), array_filter((array) StringUtil::deserialize($user->groups, true)));
     }
 }

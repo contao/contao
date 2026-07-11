@@ -1,0 +1,36 @@
+{% if header|default %}
+  <div class="header">
+    {% if firstDay|default %}<span class="day">{{ firstDay }}, </span>{% endif %}<span class="date">{{ firstDate|default }}</span>
+  </div>
+{% endif %}
+
+<div class="event layout_list{{ classList|default }}">
+
+  <h2><a href="{{ href|default }}" title="{{ title|insert_tag }} ({% if day|default %}{{ day }}, {% endif %}{{ date }}{% if time %} {{ time }}{% endif %})"{{ target }}>{{ link }}</a></h2>
+  <p class="time"><time datetime="{{ datetime }}">{{ date }}{% if time %} {{ time }}{% endif %}</time></p>
+
+  {% if location %}
+    <p class="location">{{ location }}{% if address %} ({{ address }}){% endif %}</p>
+  {% endif %}
+
+  {% if addImage %}
+    {{ include('@Contao/image.html.twig') }}
+  {% endif %}
+
+  {% if details.invoke() %}
+    {{ details.invoke()|raw }}
+  {% else %}
+    <div class="ce_text block">
+      {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+    </div>
+  {% endif %}
+
+</div>
+
+{#
+  This template is used as an event list template by default, so we only add
+  JSON-LD data in case this is an event without a reader
+#}
+{% if not hasReader %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
+{% endif %}

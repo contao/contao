@@ -39,8 +39,8 @@ class DebugFragmentsCommandTest extends TestCase
     public function testNameAndArguments(): void
     {
         $command = new DebugFragmentsCommand(
-            $this->createMock(FragmentRegistry::class),
-            $this->createMock(ContainerInterface::class),
+            $this->createStub(FragmentRegistry::class),
+            $this->createStub(ContainerInterface::class),
         );
 
         $this->assertSame('debug:fragments', $command->getName());
@@ -58,7 +58,7 @@ class DebugFragmentsCommandTest extends TestCase
             $fragmentsRegistry->add($id, $config);
 
             /** @var FragmentOptionsAwareInterface $instance */
-            $instance = (new \ReflectionClass($config->getController()))->newInstanceWithoutConstructor();
+            $instance = new \ReflectionClass($config->getController())->newInstanceWithoutConstructor();
 
             if ($instance instanceof FragmentOptionsAwareInterface) {
                 $instance->setFragmentOptions($options);

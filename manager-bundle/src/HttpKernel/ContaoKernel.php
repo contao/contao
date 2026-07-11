@@ -84,7 +84,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getLogDir(): string
     {
-        return Path::join($this->getProjectDir(), 'var/logs');
+        return Path::join($this->getProjectDir(), 'var/log');
     }
 
     public function getPluginLoader(): PluginLoader
@@ -181,7 +181,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 }
 
                 if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
-                    $loader->load(__DIR__.'/../../skeleton/config/services.php');
+                    $loader->load(Path::join(__DIR__, '../../skeleton/config/services.php'));
                 }
             },
         );
@@ -312,11 +312,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             }
         }
 
-        if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file has been deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
-            $exists[] = $path;
-        }
-
         return $exists[0] ?? null;
     }
 
@@ -362,13 +357,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // Load cached env vars if the .env.local.php file exists.
         // https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.4/config/bootstrap.php
         if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
-            (new Dotenv())->populate($env);
+            new Dotenv()->populate($env);
 
             if ('jwt' === ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null)) {
                 $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $defaultEnv;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
-            (new Dotenv())->loadEnv($filePath, 'APP_ENV', $defaultEnv);
+            new Dotenv()->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

@@ -20,23 +20,14 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-        Contao\CoreBundle\Controller\Page\AbstractLayoutPageController:
-            tags:
-                - { name: container.service_subscriber, id: contao.routing.page_finder }
-                - { name: container.service_subscriber, id: contao.routing.response_context_accessor }
-                - { name: container.service_subscriber, id: contao.routing.response_context_factory }
-                - { name: container.service_subscriber, id: contao.security.token_checker }
-                - { name: container.service_subscriber, id: contao.image.picture_factory }
-                - { name: container.service_subscriber, id: contao.image.preview_factory }
-
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\AltchaController:
         arguments:
             - '@contao.altcha'
 
-    Contao\CoreBundle\Controller\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendController: ~
 
-    Contao\CoreBundle\Controller\BackendCsvImportController:
+    Contao\CoreBundle\Controller\Backend\CsvImportController:
         public: true
         arguments:
             - '@contao.framework'
@@ -45,7 +36,20 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Controller\BackendPreviewController:
+    Contao\CoreBundle\Controller\BackendCsvImportController:
+        public: true
+        alias: Contao\CoreBundle\Controller\Backend\CsvImportController
+        deprecated:
+            package: contao/core-bundle
+            version: 5.7
+
+    Contao\CoreBundle\Controller\Backend\JobsController:
+        arguments:
+            - '@contao.job.jobs'
+        tags:
+            - controller.service_arguments
+
+    Contao\CoreBundle\Controller\Backend\PreviewController:
         arguments:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
@@ -56,7 +60,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\BackendPreviewSwitchController:
+    Contao\CoreBundle\Controller\Backend\PreviewSwitchController:
         arguments:
             - '@contao.security.frontend_preview_authenticator'
             - '@contao.security.token_checker'
@@ -71,6 +75,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\Backend\FavoriteController:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
             - '@contao.framework'
@@ -81,6 +90,23 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
+        arguments:
+            - '@contao.framework'
+            - '@security.password_hasher_factory'
+            - '@contao.routing.content_url_generator'
+            - '@event_dispatcher'
+            - '@router.default'
+
+    Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
+        arguments:
+            - '@contao.framework'
+            - '@event_dispatcher'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
+            - '@monolog.logger.contao.access'
+            - '@contao.filesystem.virtual.files'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
@@ -89,11 +115,6 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
-        tags:
-            - controller.service_arguments
-            - { name: container.service_subscriber, id: contao.filesystem.file_download_helper }
-            - { name: container.service_subscriber, id: contao.image.preview_factory }
-            - { name: container.service_subscriber, id: contao.image.studio }
 
     Contao\CoreBundle\Controller\ContentElement\ElementGroupController: ~
 
@@ -111,9 +132,26 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
             - '@contao.image.studio'
+            - '@contao.pagination.factory'
             - '%contao.image.valid_extensions%'
 
     Contao\CoreBundle\Controller\ContentElement\ListController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\LoginController:
+        arguments:
+            - '@uri_signer'
+            - '@security.logout_url_generator'
+            - '@security.authentication_utils'
+            - '@translator'
+            - '@event_dispatcher'
+            - '@contao.framework'
+
+    Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
+        arguments:
+            - '@contao.repository.webauthn_credential'
+            - '@uri_signer'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
@@ -134,6 +172,14 @@ services:
             - '@contao.image.studio'
 
     Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TwoFactorController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.backup_code_manager'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@contao.security.two_factor.authenticator'
+            - '@security.authentication_utils'
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
@@ -168,6 +214,7 @@ services:
             - '@contao.feed.feedio'
             - '@logger'
             - '@cache.system'
+            - '@contao.pagination.factory'
 
     Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
@@ -190,13 +237,28 @@ services:
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.insert_tag.parser'
-            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.framework'
+            - '@kernel'
         tags:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\Page\ErrorPageController:
         arguments:
-            - '@contao.framework'
+            - '@uri_signer'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\Page\ForwardPageController:
+        arguments:
+            - '@contao.routing.page_registry'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\Page\LogoutPageController:
+        arguments:
+            - '@security.logout_url_generator'
 
     Contao\CoreBundle\Controller\Page\RedirectPageController:
         arguments:
@@ -215,6 +277,12 @@ services:
             - '@contao.security.frontend_preview_authenticator'
             - '@uri_signer'
             - '@database_connection'
+        tags:
+            - controller.service_arguments
+
+    Contao\CoreBundle\Controller\FileStreamController:
+        arguments:
+            - '@contao.filesystem.file_download_helper'
         tags:
             - controller.service_arguments
 

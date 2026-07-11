@@ -1,0 +1,27 @@
+<label for="{{ name }}">{{ title }}</label>
+
+{% set select_wrapper_attributes = attrs()
+    .addClass('tl_select_wrapper')
+    .set('data-controller', 'contao--choices')
+%}
+<div{{ select_wrapper_attributes }}>
+    {% set select_attributes = attrs()
+        .set('name', name)
+        .set('id', name)
+        .addClass('tl_select')
+        .addClass('active', active|default)
+        .set('onchange', 'this.form.requestSubmit()', auto_submit|default(false))
+        .mergeWith(select_attributes|default)
+    %}
+    <select{{ select_attributes }}>
+        {% for option in options %}
+            {% set option_attributes = attrs()
+                .set('value', option.value)
+                .set('selected', option.selected)
+            %}
+            {% block option %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endblock %}
+        {% endfor %}
+    </select>
+</div>

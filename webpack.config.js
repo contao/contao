@@ -1,47 +1,98 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 // Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
-    .setPublicPath('/bundles/contaocore')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public' : '/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader()
+    .enablePostCssLoader(options => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
+    })
+    .cleanupOutputBeforeBuild(options => {
+        options.keep = /icons\//;
+    })
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('navigation', './core-bundle/assets/navigation.js')
+    .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
+    .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
+    .addStyleEntry('login', './core-bundle/assets/styles/login.pcss')
+    .addStyleEntry('tinymce', './core-bundle/assets/styles/vendors/tinymce/theme/light.pcss')
+    .addStyleEntry('tinymce-dark', './core-bundle/assets/styles/vendors/tinymce/theme/dark.pcss')
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
+    })
 ;
 
 const jsConfig = Encore.getWebpackConfig();
 
 Encore.reset();
 
-// Back end theme "flexible"
+// Back end icons
 Encore
-    .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath('/system/themes/flexible')
+    .setOutputPath('core-bundle/public/icons')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public/icons' : '/bundles/contaocore/icons')
     .setManifestKeyPrefix('')
+    .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
-    .configureCssLoader(config => {
-        config.url = false;
+    .addPlugin(new ImageMinimizerPlugin({
+        minimizer: {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            options: {
+                encodeOptions: {
+                    multipass: true,
+                    plugins: [{
+                        name: 'preset-default',
+                        params: {
+                            overrides: {
+                                inlineStyles: {
+                                    onlyMatchedOnce: false,
+                                },
+                                convertPathData: {
+                                    noSpaceAfterFlags: true,
+                                },
+                            },
+                        },
+                    }],
+                },
+            },
+        },
+    }))
+    .copyFiles({
+        from: './core-bundle/assets/icons',
+        to: '[name].[hash:8].[ext]',
+        pattern: /\.svg$/,
     })
-    .cleanupOutputBeforeBuild(config => {
-        config.keep = /(fonts|icons|styles)\//;
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
     })
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
-    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
-    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/conflict.css')
-    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
-    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
-    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
-    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
-    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/tinymce.css')
-    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/tinymce-dark.css')
 ;
 
-const themeConfig = Encore.getWebpackConfig();
+const iconConfig = Encore.getWebpackConfig();
 
-module.exports = [jsConfig, themeConfig];
+delete iconConfig.devServer;
+
+module.exports = [jsConfig, iconConfig];

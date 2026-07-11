@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Filesystem\Dbafs\Hashing;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -115,8 +116,8 @@ class HashGeneratorTest extends TestCase
     private function getDemoFilesystem(): VirtualFilesystemInterface
     {
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
+            $this->createStub(DbafsManager::class),
         );
 
         $filesystem->write('foo.txt', "foo\0bar");

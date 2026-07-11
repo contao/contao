@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\StringUtil;
@@ -20,15 +21,35 @@ class StringRuntimeTest extends TestCase
 {
     public function testDelegatesCalls(): void
     {
-        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil = $this->createAdapterMock(['encodeEmail']);
         $stringUtil
             ->expects($this->once())
             ->method('encodeEmail')
-            ->willReturn('&#102;&#x6F;&#111;&#x40;&#98;&#x61;&#114;&#x2E;&#99;&#x6F;&#109;')
+            ->with('email')
+            ->willReturn('encoded email')
         ;
 
-        $framework = $this->mockContaoFramework([StringUtil::class => $stringUtil]);
+        $framework = $this->createContaoFrameworkStub([StringUtil::class => $stringUtil]);
 
-        (new StringRuntime($framework))->encodeEmail('foo@bar.com');
+        $htmlDecoder = $this->createMock(HtmlDecoder::class);
+        $htmlDecoder
+            ->expects($this->once())
+            ->method('htmlToPlainText')
+            ->with('html', true)
+            ->willReturn('plain text')
+        ;
+
+        $htmlDecoder
+            ->expects($this->once())
+            ->method('inputEncodedToPlainText')
+            ->with('input encoded html', true)
+            ->willReturn('plain text')
+        ;
+
+        $stringRuntime = new StringRuntime($framework, $htmlDecoder);
+
+        $this->assertSame('encoded email', $stringRuntime->encodeEmail('email'));
+        $this->assertSame('plain text', $stringRuntime->htmlToPlainText('html', true));
+        $this->assertSame('plain text', $stringRuntime->inputEncodedToPlainText('input encoded html', true));
     }
 }

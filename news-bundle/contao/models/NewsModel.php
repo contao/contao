@@ -48,6 +48,7 @@ use Contao\Model\MetadataTrait;
  * @property string         $url
  * @property boolean        $target
  * @property string         $cssClass
+ * @property string         $searchIndexer
  * @property boolean        $noComments
  * @property boolean        $featured
  * @property boolean        $published
@@ -90,50 +91,52 @@ use Contao\Model\MetadataTrait;
  * @method static NewsModel|null findOneByUrl($val, array $opt=array())
  * @method static NewsModel|null findOneByTarget($val, array $opt=array())
  * @method static NewsModel|null findOneByCssClass($val, array $opt=array())
+ * @method static NewsModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static NewsModel|null findOneByNoComments($val, array $opt=array())
  * @method static NewsModel|null findOneByFeatured($val, array $opt=array())
  * @method static NewsModel|null findOneByPublished($val, array $opt=array())
  * @method static NewsModel|null findOneByStart($val, array $opt=array())
  * @method static NewsModel|null findOneByStop($val, array $opt=array())
  *
- * @method static Collection<NewsModel>|NewsModel[]|null findByPid($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByHeadline($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByAuthor($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByDate($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByTime($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByPageTitle($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByDescription($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByCanonicalLink($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByRobots($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findBySubheadline($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByTeaser($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByAddImage($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByOverwriteMeta($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findBySingleSRC($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByAlt($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByImageTitle($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findBySize($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByImageUrl($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByFullsize($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByCaption($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByFloating($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByAddEnclosure($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByEnclosure($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findBySource($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByJumpTo($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByArticleId($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByUrl($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByTarget($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByCssClass($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByNoComments($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByFeatured($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByPublished($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByStart($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findByStop($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<NewsModel>|NewsModel[]|null findAll(array $opt=array())
+ * @method static Collection<NewsModel>|null findByPid($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByHeadline($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByAuthor($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByDate($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByTime($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByPageTitle($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByDescription($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByCanonicalLink($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByRobots($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySubheadline($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByTeaser($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByAddImage($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByOverwriteMeta($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySingleSRC($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByAlt($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByImageTitle($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySize($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByImageUrl($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByFullsize($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByCaption($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByFloating($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByAddEnclosure($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByEnclosure($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySource($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByJumpTo($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByArticleId($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByUrl($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByTarget($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByCssClass($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySearchIndexer($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByNoComments($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByFeatured($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByPublished($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByStart($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findByStop($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<NewsModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -167,6 +170,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
  * @method static integer countByFeatured($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
@@ -221,7 +225,7 @@ class NewsModel extends Model
 	 * @param integer $intOffset   An optional offset
 	 * @param array   $arrOptions  An optional options array
 	 *
-	 * @return Collection<NewsModel>|NewsModel[]|null A collection of models or null if there are no news
+	 * @return Collection<NewsModel>|null A collection of models or null if there are no news
 	 */
 	public static function findPublishedByPids($arrPids, $blnFeatured=null, $intLimit=0, $intOffset=0, array $arrOptions=array())
 	{
@@ -302,7 +306,7 @@ class NewsModel extends Model
 	 * @param integer $intPid     The news archive ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<NewsModel>|NewsModel[]|null A collection of models or null if there are no news
+	 * @return Collection<NewsModel>|null A collection of models or null if there are no news
 	 */
 	public static function findPublishedDefaultByPid($intPid, array $arrOptions=array())
 	{
@@ -330,7 +334,7 @@ class NewsModel extends Model
 	 * @param integer $intLimit   An optional limit
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<NewsModel>|NewsModel[]|null A collection of models or null if there are no news
+	 * @return Collection<NewsModel>|null A collection of models or null if there are no news
 	 */
 	public static function findPublishedByPid($intId, $intLimit=0, array $arrOptions=array())
 	{
@@ -366,7 +370,7 @@ class NewsModel extends Model
 	 * @param integer $intOffset  An optional offset
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<NewsModel>|NewsModel[]|null A collection of models or null if there are no news
+	 * @return Collection<NewsModel>|null A collection of models or null if there are no news
 	 */
 	public static function findPublishedFromToByPids($intFrom, $intTo, $arrPids, $intLimit=0, $intOffset=0, array $arrOptions=array())
 	{

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 
 /**
@@ -21,6 +22,9 @@ use Contao\Model\Collection;
  * @property string $typePrefix
  * @property string $hl
  * @property string $attributes
+ *
+ * @deprecated extending from Hybrid is deprecated since Contao 6.0 and will no
+ *             longer work in Contao 7; use a fragment controller instead
  */
 abstract class Hybrid extends Frontend
 {
@@ -81,6 +85,8 @@ abstract class Hybrid extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main', $strTypePrefix=null)
 	{
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Hybrid is deprecated and will no longer work in Contao 7. Use a fragment controller instead.');
+
 		parent::__construct();
 
 		// Store the parent element (see #4556)
@@ -153,7 +159,7 @@ abstract class Hybrid extends Frontend
 
 		if ($this->typePrefix = $objElement->typePrefix)
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Passing the "typePrefix" via the model has been deprecated and will no longer work in Contao 6. Pass the prefix via the constructor instead.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Passing the "typePrefix" via the model is deprecated and will no longer work in Contao 7. Pass the prefix via the constructor instead.');
 		}
 		else
 		{

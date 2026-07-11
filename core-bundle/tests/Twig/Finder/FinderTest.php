@@ -258,17 +258,33 @@ class FinderTest extends TestCase
         $this->assertSame($expected, $options);
     }
 
+    public function testGetAsTemplateOptionsWithoutDefaultKey(): void
+    {
+        $options = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->excludePartials()
+            ->asTemplateOptions(false)
+        ;
+
+        $expected = [
+            'content_element/text' => 'content_element/text [App, ContaoCore]',
+            'content_element/text/bar' => 'content_element/text/bar [App]',
+            'content_element/text/foo' => 'content_element/text/foo [App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
     private function getFinder(array $translations = []): Finder
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
                 static function (string|null $themeSlug): array {
                     $chains = [
-                        'ce_html' => [
-                            '/templates/ce_html.html5' => '@Contao_ContaoCoreBundle/ce_html.html5',
-                        ],
                         'ce_table' => [
                             '/app/templates/ce_table.html.twig' => '@Contao_App/ce_table.html.twig',
                         ],
@@ -309,7 +325,7 @@ class FinderTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -322,14 +338,14 @@ class FinderTest extends TestCase
 
                     return match ($id) {
                         'MSC.templatesTheme' => \sprintf('Theme %s', $parameters[0]),
-                        'MSC.global' => 'Global',
+                        'MSC.user' => 'User',
                         default => throw new \LogicException('Unsupported translation id.'),
                     };
                 },
             )
         ;
 
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(
@@ -346,6 +362,6 @@ class FinderTest extends TestCase
             ->willReturn($catalogue)
         ;
 
-        return (new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator))->create();
+        return new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator)->create();
     }
 }

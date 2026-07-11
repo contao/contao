@@ -10,9 +10,11 @@
 
 namespace Contao;
 
-use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
@@ -32,8 +34,6 @@ class Comments extends Frontend
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		global $objPage;
-
 		$limit = 0;
 		$offset = 0;
 		$total = 0;
@@ -59,22 +59,23 @@ class Comments extends Frontend
 			}
 
 			// Get the current page
-			$id = 'page_c' . $key . $intParent; // see #4141
-			$page = (int) (Input::get($id) ?? 1);
+			$param = 'page_c' . $key . $intParent; // see #4141
 
-			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
+			try
 			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $objConfig->perPage));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 			}
 
 			// Set limit and offset
-			$limit = $objConfig->perPage;
-			$offset = ($page - 1) * $objConfig->perPage;
+			$limit = $pagination->getPerPage();
+			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objPagination = new Pagination($total, $objConfig->perPage, Config::get('maxPaginationLinks'), $id);
-			$objTemplate->pagination = $objPagination->generate("\n  ");
+			$objTemplate->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 		}
 
 		$objTemplate->allowComments = true;
@@ -94,6 +95,7 @@ class Comments extends Frontend
 		{
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 			while ($objComments->next())
 			{
@@ -116,7 +118,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
+					$objPartial->reply = $objComments->reply;
 					$objPartial->author = $objAuthor;
 				}
 
@@ -191,14 +193,14 @@ class Comments extends Frontend
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
 				'value'     => $user->email,
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255)
 			),
 			'website' => array
 			(
 				'name'      => 'website',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_website'],
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>128, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>128)
 			)
 		);
 
@@ -299,19 +301,10 @@ class Comments extends Frontend
 			}
 
 			// Do not parse any tags in the comment
-			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
+			$strComment = trim($arrWidgets['comment']->value);
 
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
-
-			// Parse BBCode
-			if ($objConfig->bbcode)
-			{
-				$strComment = $this->parseBbCode($strComment);
-			}
-
-			// Prevent cross-site request forgeries
-			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
 			$intMember = 0;
 
@@ -332,7 +325,7 @@ class Comments extends Frontend
 				'email'     => $arrWidgets['email']->value,
 				'website'   => $strWebsite,
 				'member'    => $intMember,
-				'comment'   => $this->convertLineFeeds($strComment),
+				'comment'   => $strComment,
 				'ip'        => Environment::get('ip'),
 				'date'      => $time,
 				'published' => ($objConfig->moderate ? '' : 1)
@@ -362,10 +355,6 @@ class Comments extends Frontend
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
 			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
-
-			// Convert the comment to plain text
-			$strComment = strip_tags($strComment);
-			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
 			$objEmail->text = \sprintf(
@@ -404,71 +393,6 @@ class Comments extends Frontend
 
 			$this->reload();
 		}
-	}
-
-	/**
-	 * Replace bbcode and return the HTML string
-	 *
-	 * @param string $strComment
-	 *
-	 * @return string
-	 */
-	public function parseBbCode($strComment)
-	{
-		return (new BbCode())->toHtml($strComment);
-	}
-
-	/**
-	 * Convert line feeds to <br /> tags
-	 *
-	 * @param string $strComment
-	 *
-	 * @return string
-	 */
-	public function convertLineFeeds($strComment)
-	{
-		$strComment = preg_replace('/\r?\n/', '<br>', $strComment);
-
-		// Use paragraphs to generate new lines
-		if (strncmp('<p>', $strComment, 3) !== 0)
-		{
-			$strComment = '<p>' . $strComment . '</p>';
-		}
-
-		$arrReplace = array
-		(
-			'@<br>\s?<br>\s?@' => "</p>\n<p>", // Convert two linebreaks into a new paragraph
-			'@\s?<br></p>@'    => '</p>',      // Remove BR tags before closing P tags
-			'@<p><div@'        => '<div',      // Do not nest DIVs inside paragraphs
-			'@</div></p>@'     => '</div>'     // Do not nest DIVs inside paragraphs
-		);
-
-		return preg_replace(array_keys($arrReplace), array_values($arrReplace), $strComment);
-	}
-
-	/**
-	 * Purge subscriptions that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use CommentsNotifyModel::findExpiredSubscriptions() instead.
-	 */
-	public function purgeSubscriptions()
-	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
-
-		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
-
-		if ($objNotify === null)
-		{
-			return;
-		}
-
-		while ($objNotify->next())
-		{
-			$objNotify->delete();
-		}
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated comment subscriptions');
 	}
 
 	/**

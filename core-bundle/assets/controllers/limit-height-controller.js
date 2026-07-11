@@ -25,7 +25,7 @@ export default class extends Controller {
 
     nodeTargetConnected(node) {
         const style = window.getComputedStyle(node, null);
-        const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+        const padding = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
         const height = node.clientHeight - padding;
 
         // Resize the element if it is higher than the maximum height
@@ -109,13 +109,13 @@ export default class extends Controller {
         event.preventDefault();
         const isExpanded = this.hasExpanded() ^ event.altKey;
 
-        this.nodeTargets.forEach((node) => {
+        for (const node of this.nodeTargets) {
             if (isExpanded) {
                 this.collapse(node);
             } else {
                 this.expand(node);
             }
-        });
+        }
 
         this.updateOperation(event);
     }
@@ -132,16 +132,22 @@ export default class extends Controller {
         const hasTogglers = !!this.nodeTargets.find((el) => this.togglerMap.has(el));
         const expanded = this.hasExpanded();
 
-        this.operationTarget.style.display = hasTogglers ? '' : 'none';
-        this.operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
-        this.operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        for (const operationTarget of this.operationTargets) {
+            operationTarget.style.display = hasTogglers ? '' : 'none';
+            operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
+            operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 
-        if (expanded ^ (event ? event.altKey : false)) {
-            this.operationTarget.innerText = this.collapseAllValue;
-            this.operationTarget.title = this.collapseAllTitleValue;
-        } else {
-            this.operationTarget.innerText = this.expandAllValue;
-            this.operationTarget.title = this.expandAllTitleValue;
+            if (operationTarget.closest('#tl_buttons')) {
+                operationTarget.parentNode.style.display = hasTogglers ? '' : 'none';
+            }
+
+            if (expanded ^ (event ? event.altKey : false)) {
+                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.title = this.collapseAllTitleValue;
+            } else {
+                operationTarget.innerText = this.expandAllValue;
+                operationTarget.title = this.expandAllTitleValue;
+            }
         }
     }
 

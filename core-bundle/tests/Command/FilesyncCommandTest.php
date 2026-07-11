@@ -151,6 +151,6 @@ class FilesyncCommandTest extends TestCase
 
     private function getCommand(DbafsManager|null $manager = null, ClockInterface $clock = new NativeClock()): FilesyncCommand
     {
-        return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class), $clock);
+        return new FilesyncCommand($manager ?? $this->createStub(DbafsManager::class), $clock);
     }
 }

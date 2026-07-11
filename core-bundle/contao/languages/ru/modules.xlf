@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Настройте страницы вашего веб-сайта(ов)</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Студия шаблонов</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Добавить или отредактировать шаблоны Twig</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Шаблоны</target>
@@ -153,6 +161,14 @@
         <source>Restore deleted records</source>
         <target>Восстановление удаленных записей</target>
       </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Задачи</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Обзор системных задач</target>
+      </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
         <target>Профиль пользователя</target>
@@ -192,6 +208,10 @@
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
         <target>Модули внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+        <target>Элементы контента</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
@@ -306,7 +326,7 @@
         <target>Личные данные</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Создает форму для заполнения личных данных участника</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

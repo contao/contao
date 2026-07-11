@@ -10,12 +10,18 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', ContentDownload::class, DownloadsController::class);
+
 /**
  * Front end content element "download".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7;
+ *             use Contao\CoreBundle\Controller\ContentElement\DownloadsController instead.
  */
 class ContentDownload extends ContentElement
 {
@@ -100,8 +106,7 @@ class ContentDownload extends ContentElement
 		}
 		else
 		{
-			global $objPage;
-
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);
 
 			if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
@@ -134,7 +139,7 @@ class ContentDownload extends ContentElement
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
 
-		$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
+		$strHref .= (str_contains($strHref, '?') ? '&' : '?') . 'file=' . System::urlEncode($objFile->value) . '&cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
 		$this->Template->title = StringUtil::specialchars($this->titleText);
@@ -164,7 +169,9 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
+			if (($layoutId = $objPage?->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}

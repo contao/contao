@@ -34,13 +34,13 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->willReturn($records)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $msg) => $msg)
         ;
 
-        $listener = new LanguageFallbackWarningListener($this->createMock(RequestStack::class), $connection, $translator, $this->createMock(ContaoFramework::class));
+        $listener = new LanguageFallbackWarningListener($this->createStub(RequestStack::class), $connection, $translator, $this->createStub(ContaoFramework::class));
 
         $this->assertSame($listener->getMessages(), $messages);
     }
@@ -94,20 +94,20 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->willReturn([['fallback' => 0, 'dns' => '']])
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $msg) => $msg)
         ;
 
-        $contaoMessage = $this->mockAdapter(['addRaw']);
+        $contaoMessage = $this->createAdapterMock(['addRaw']);
         $contaoMessage
             ->expects($this->once())
             ->method('addRaw')
             ->with('<p class="tl_error">ERR.noFallbackEmpty</p>')
         ;
 
-        $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
+        $contaoFramework = $this->createContaoFrameworkStub([Message::class => $contaoMessage]);
 
         $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();
@@ -134,13 +134,13 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $contaoMessage = $this->mockAdapter(['addRaw']);
+        $contaoMessage = $this->createAdapterMock(['addRaw']);
         $contaoMessage
             ->expects($this->never())
             ->method('addRaw')
         ;
 
-        $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
+        $contaoFramework = $this->createContaoFrameworkStub([Message::class => $contaoMessage]);
 
         $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();

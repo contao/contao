@@ -33,8 +33,9 @@ class RootPageDependentSelect extends SelectMenu
 			$this->strLabel = $rootPage->title;
 
 			$fields[] = \sprintf(
-				'<select name="%s[]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">%s</select>%s',
+				'<div class="tl_select_wrapper" data-controller="contao--choices"><select name="%s[%s]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store">%s</select></div>%s',
 				$this->strName,
+				$rootPage->id,
 				\sprintf('%s-%s', $this->strId, $rootPage->id),
 				$this->strClass ? ' ' . $this->strClass : '',
 				$this->getAttributes(),
@@ -62,18 +63,18 @@ class RootPageDependentSelect extends SelectMenu
 	{
 		$options = array();
 
-		foreach ($this->arrOptions as $option)
+		foreach ($this->arrOptions as $key => $option)
 		{
-			$option['index'] = $rootPage->id;
-
 			if (isset($option['value']))
 			{
+				$option['index'] = $rootPage->id;
+
 				if ($this->isSelected($option))
 				{
 					$option['label'] = \sprintf(
 						'%s <span class="label-info">[%s]</span>',
 						$option['label'],
-						$rootPage->title,
+						StringUtil::specialchars($rootPage->title),
 					);
 				}
 
@@ -81,8 +82,35 @@ class RootPageDependentSelect extends SelectMenu
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($option['value']),
 					$this->isSelected($option),
-					$option['label']
+					System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $option['label']),
 				);
+			}
+			else
+			{
+				$optgroups = array();
+
+				foreach ($option as $optgroup)
+				{
+					$optgroup['index'] = $rootPage->id;
+
+					if ($this->isSelected($optgroup))
+					{
+						$optgroup['label'] = \sprintf(
+							'%s <span class="label-info">[%s]</span>',
+							$optgroup['label'],
+							StringUtil::specialchars($rootPage->title),
+						);
+					}
+
+					$optgroups[] = \sprintf(
+						'<option value="%s"%s>%s</option>',
+						self::specialcharsValue($optgroup['value']),
+						$this->isSelected($optgroup),
+						System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('option', $optgroup['label']),
+					);
+				}
+
+				$options[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($key), implode('', $optgroups));
 			}
 		}
 

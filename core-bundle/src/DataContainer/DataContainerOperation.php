@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\StringUtil;
 
@@ -32,35 +33,32 @@ class DataContainerOperation implements \ArrayAccess
     public function __construct(
         private readonly string $name,
         array $operation,
-        private readonly array $record,
+        private readonly array|null $record,
         private readonly DataContainer $dataContainer,
     ) {
-        $id = StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
+        $id = null === $record ? null : StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
         $operation = StringUtil::resolveReferences($operation);
 
         if (isset($operation['label'])) {
             if (\is_array($operation['label'])) {
-                $operation['title'] = \sprintf($operation['label'][1] ?? '', $id);
+                $operation['title'] = $id ? \sprintf($operation['label'][1] ?? '', $id) : $operation['label'][1] ?? '';
                 $operation['label'] = $operation['label'][0] ?? $name;
             } else {
-                $operation['label'] = $operation['title'] = \sprintf($operation['label'], $id);
+                $operation['label'] = $operation['title'] = $id ? \sprintf($operation['label'], $id) : $operation['label'];
             }
         } else {
             $operation['label'] = $operation['title'] = $name;
         }
 
-        $attributes = !empty($operation['attributes']) ? ' '.ltrim(\sprintf($operation['attributes'], $id, $id)) : '';
+        foreach (['attributes', 'listAttributes', 'iconAttributes'] as $key) {
+            $operation[$key] ??= new HtmlAttributes();
 
-        // Add the key as CSS class
-        if (str_contains($attributes, 'class="')) {
-            $attributes = str_replace('class="', 'class="'.$name.' ', $attributes);
-        } else {
-            $attributes = ' class="'.$name.'" '.$attributes;
+            if (\is_string($operation[$key])) {
+                $operation[$key] = new HtmlAttributes(null !== $id ? \sprintf($operation[$key], $id, $id) : $operation[$key]);
+            }
         }
-
-        $operation['attributes'] = $attributes;
 
         $this->operation = $operation;
     }
@@ -70,6 +68,13 @@ class DataContainerOperation implements \ArrayAccess
         return isset($this->operation[$offset]);
     }
 
+    /**
+     * @template T as mixed
+     *
+     * @param T $offset
+     *
+     * @return (T is "attributes"|"listAttributes"|"iconAttributes" ? HtmlAttributes : mixed)
+     */
     public function offsetGet(mixed $offset): mixed
     {
         return $this->operation[$offset];
@@ -77,6 +82,10 @@ class DataContainerOperation implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        if (!$value instanceof HtmlAttributes && \in_array($offset, ['attributes', 'listAttributes', 'iconAttributes'], true)) {
+            $value = new HtmlAttributes($value);
+        }
+
         $this->operation[$offset] = $value;
     }
 
@@ -90,7 +99,7 @@ class DataContainerOperation implements \ArrayAccess
         return $this->name;
     }
 
-    public function getRecord(): array
+    public function getRecord(): array|null
     {
         return $this->record;
     }
@@ -131,5 +140,10 @@ class DataContainerOperation implements \ArrayAccess
         if (isset($this['icon'])) {
             $this['icon'] = str_replace('.svg', '--disabled.svg', $this['icon']);
         }
+    }
+
+    public function hide(): void
+    {
+        $this->setHtml('');
     }
 }

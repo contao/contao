@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yorumların sitede yayınlanmadan önce onaylanması gerekir.</target>
+        <target>Yorumların sitede yayınlanmasından önce onaylanması istenir.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
+        <target>Ziyaretçilerin yorumlarında BBCode kullanabilmesini sağlar.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnızca oturum açmış kullanıcılar yorum yapabilir.</target>
+        <target>Yalnızca oturum açmış kullanıcıların yorum yapabilmesini sağlar.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>

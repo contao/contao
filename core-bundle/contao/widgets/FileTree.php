@@ -83,14 +83,22 @@ class FileTree extends Widget
 
 		if (!str_contains($varInput, ','))
 		{
-			$varInput = StringUtil::uuidToBin($varInput);
+			if (false !== $this->binary)
+			{
+				$varInput = StringUtil::uuidToBin($varInput);
+			}
 
 			return $this->multiple ? array($varInput) : $varInput;
 		}
 
 		$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-		return $this->multiple ? array_map('\Contao\StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
+		if (false === $this->binary)
+		{
+			return $this->multiple ? $arrValue : $arrValue[0];
+		}
+
+		return $this->multiple ? array_map(StringUtil::uuidToBin(...), $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
@@ -195,12 +203,12 @@ class FileTree extends Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . StringUtil::specialchars($objFiles->path);
 						}
 						else
 						{
 							$objFile = new File($objFiles->path);
-							$strInfo = $objFiles->path . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+							$strInfo = StringUtil::specialchars($objFiles->path) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 							if ($this->showAsImage($objFile))
 							{
@@ -232,7 +240,7 @@ class FileTree extends Widget
 							}
 
 							$objFile = new File($objSubfiles->path);
-							$strInfo = '<span class="dirname">' . \dirname($objSubfiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+							$strInfo = '<span class="dirname">' . StringUtil::specialchars(\dirname($objSubfiles->path)) . '/</span>' . StringUtil::specialchars($objFile->basename) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 							if ($this->isGallery)
 							{
@@ -259,14 +267,14 @@ class FileTree extends Widget
 					else
 					{
 						$objFile = new File($objFiles->path);
-						$strInfo = '<span class="dirname">' . \dirname($objFiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+						$strInfo = '<span class="dirname">' . StringUtil::specialchars(\dirname($objFiles->path)) . '/</span>' . StringUtil::specialchars($objFile->basename) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 						if ($this->isGallery)
 						{
 							// Only show images
 							if ($objFile->isImage)
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, 'gimage removable');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 							}
 						}
 						// Only show allowed download types
@@ -274,7 +282,7 @@ class FileTree extends Widget
 						{
 							if ($this->showAsImage($objFile))
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, 'gimage removable');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 							}
 							else
 							{
@@ -289,14 +297,14 @@ class FileTree extends Widget
 		// Convert the binary UUIDs
 		$strSet = implode(',', array_map('\Contao\StringUtil::binToUuid', $arrSet));
 
-		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . ' data-contao--input-map-target="input">
   <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . trim(($this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '"' . ($this->isSortable ? ' data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update"' : '') . '>';
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="' . StringUtil::binToUuid($k) . '">' . $v . '</li>';
+			$return .= '<li data-contao--input-map-target="source" data-id="' . StringUtil::binToUuid($k) . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -320,24 +328,28 @@ class FileTree extends Widget
           "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
+            AjaxRequest.displayBox(Contao.lang.loading + \' …\');
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
-                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
-                json.javascript && Browser.exec(json.javascript);
+                var parent = $("ctrl_' . $this->strId . '").getParent("div");
+                parent.set("html", json.content);
+                if (json.javascript) {
+                    new Element("script", {text: json.javascript}).inject(parent.getElement(".selector_container"));
+                }
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);
+                AjaxRequest.hideBox();
               }
             }).post({"action":"reloadFiletree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '"});
           }
         });
       });
-    </script>' . ($this->isSortable ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>';
 		}
 
-		$return = '<div>' . $return . '</div></div>';
+		$return = '<div data-controller="contao--input-map" data-contao--input-map-attribute-value="data-id">' . $return . '</div></div>';
 
 		return $return;
 	}
@@ -416,10 +428,16 @@ class FileTree extends Widget
 
 			$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-			return \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo, $strClass);
+			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], StringUtil::specialcharsAttribute(strip_tags($strInfo)), $strClass);
+		}
+		else
+		{
+			$buffer = Image::getHtml('placeholder.svg', $strInfo, \sprintf('class="%s" width="100" height="75" data-contao--tooltips-target="tooltip"', $strClass));
 		}
 
-		return Image::getHtml('placeholder.svg', $strInfo, 'class="' . $strClass . '" data-contao--tooltips-target="tooltip"');
+		$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', Image::getHtml('close'));
+
+		return $buffer;
 	}
 
 	private function getFilePreviewPath(string $path): string|null

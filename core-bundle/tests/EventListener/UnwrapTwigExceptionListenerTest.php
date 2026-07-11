@@ -30,13 +30,13 @@ class UnwrapTwigExceptionListenerTest extends TestCase
     public function testUnwrapsException(\Exception $exception): void
     {
         $event = new ExceptionEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         );
 
-        (new UnwrapTwigExceptionListener())($event);
+        new UnwrapTwigExceptionListener()($event);
 
         $this->assertSame($exception, $event->getThrowable(), 'exception should be unwrapped');
     }
@@ -60,13 +60,13 @@ class UnwrapTwigExceptionListenerTest extends TestCase
     public function testIgnoresOtherExceptions(\Throwable $throwable): void
     {
         $event = new ExceptionEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $throwable,
         );
 
-        (new UnwrapTwigExceptionListener())($event);
+        new UnwrapTwigExceptionListener()($event);
 
         $this->assertSame($throwable, $event->getThrowable(), 'throwable should be left untouched');
     }

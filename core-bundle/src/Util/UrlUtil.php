@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Util;
 
 use Nyholm\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 
 class UrlUtil
@@ -54,5 +55,53 @@ class UrlUtil
         }
 
         return (string) $base->withPath($path)->withQuery($query)->withFragment($relative->getFragment());
+    }
+
+    public static function mergeQueryIfMissing(UriInterface|string $uri, string $queryToAdd): UriInterface
+    {
+        $uri = $uri instanceof UriInterface ? $uri : new Uri($uri);
+
+        $existing = [];
+        $existingQueryString = $uri->getQuery();
+
+        if ('' !== $existingQueryString) {
+            parse_str($existingQueryString, $existing);
+        }
+
+        $toAdd = [];
+        $queryToAdd = ltrim($queryToAdd, '?&');
+
+        if ('' !== $queryToAdd) {
+            parse_str($queryToAdd, $toAdd);
+        }
+
+        // Add only missing keys
+        foreach ($toAdd as $k => $v) {
+            if (!\array_key_exists($k, $existing)) {
+                $existing[$k] = $v;
+            }
+        }
+
+        $newQueryString = [] === $existing ? '' : http_build_query($existing, '', '&', PHP_QUERY_RFC3986);
+
+        return $uri->withQuery($newQueryString);
+    }
+
+    public static function getNormalizePathAndQuery(string $url): string
+    {
+        $uri = new Uri($url);
+
+        if ($qs = $uri->getQuery()) {
+            parse_str($qs, $pairs);
+            ksort($pairs);
+
+            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
+            if ([] !== $pairs) {
+                $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            }
+        }
+
+        return $uri->getPath().$qs;
     }
 }

@@ -24,7 +24,7 @@ class AuthenticationFailureHandlerTest extends TestCase
 {
     public function testLogsTheExceptionIfLoggerIsAvailable(): void
     {
-        $exception = $this->createMock(AccountStatusException::class);
+        $exception = $this->createStub(AccountStatusException::class);
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger

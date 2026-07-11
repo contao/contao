@@ -98,7 +98,6 @@ class BackendIndex extends Backend
 			$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		}
 
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->messages = Message::generate();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->host = Backend::getDecodedHostname();

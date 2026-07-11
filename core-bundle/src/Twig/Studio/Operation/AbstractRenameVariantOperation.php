@@ -15,7 +15,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
-        if ($context->isThemeContext()) {
+        if ($context->isThemeContext() || !$this->userTemplateExists($context)) {
             return false;
         }
 
@@ -43,14 +43,16 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
-            return $this->error($context, 'message.rename_variant.error');
+            return $this->error($context, 'template_studio.message.rename_variant.error');
         }
 
         // Rename the variant template file
         $this->getUserTemplatesStorage()->move($context->getUserTemplatesStoragePath(), $newStoragePath);
 
-        $this->migrateDatabaseUsages($context->getIdentifier(), $newIdentifier);
+        $this->invalidateTemplateCache($context);
         $this->refreshTemplateHierarchy();
+
+        $this->migrateDatabaseUsages($context->getIdentifier(), $newIdentifier);
 
         return $this->render('@Contao/backend/template_studio/operation/rename_variant_result.stream.html.twig', [
             'old_identifier' => $context->getIdentifier(),
@@ -100,7 +102,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         // Disallow selecting a name of an existing variant
         return \sprintf(
             '^(?!(%s)$).*',
-            implode('|', array_map(preg_quote(...), $existingVariantNames)),
+            implode('|', $existingVariantNames),
         );
     }
 

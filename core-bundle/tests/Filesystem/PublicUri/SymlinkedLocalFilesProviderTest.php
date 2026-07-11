@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\PublicUri;
 
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -23,14 +24,29 @@ class SymlinkedLocalFilesProviderTest extends TestCase
     public function testGetUri(): void
     {
         $adapter = $this->createMock(LocalFilesystemAdapter::class);
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('fileExists')
+            ->willReturnMap([
+                ['path/to/resource.txt', true],
+                ['path/'.Dbafs::FILE_MARKER_PUBLIC, true],
+            ])
+        ;
 
-        $request = $this->createMock(Request::class);
+        $adapter
+            ->expects($this->once())
+            ->method('directoryExists')
+            ->with('path')
+            ->willReturn(true)
+        ;
+
+        $request = $this->createStub(Request::class);
         $request
             ->method('getSchemeAndHttpHost')
             ->willReturn('https://example.com')
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
             ->willReturn($request)
@@ -46,16 +62,45 @@ class SymlinkedLocalFilesProviderTest extends TestCase
     public function testGetUriWithNonMatchingAdapter(): void
     {
         $provider = new SymlinkedLocalFilesProvider(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'upload/dir',
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
         );
 
         $uri = $provider->getUri(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'path/to/resource.txt',
             null,
         );
+
+        $this->assertNull($uri);
+    }
+
+    public function testGetUriReturnsNullIfResourceIsNotPublic(): void
+    {
+        $adapter = $this->createMock(LocalFilesystemAdapter::class);
+        $adapter
+            ->expects($this->exactly(3))
+            ->method('fileExists')
+            ->willReturnMap([
+                ['path/to/resource.txt', true],
+                // No public marker anywhere in the checked chunks.
+                ['path/'.Dbafs::FILE_MARKER_PUBLIC, false],
+                ['to/'.Dbafs::FILE_MARKER_PUBLIC, false],
+            ])
+        ;
+
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('directoryExists')
+            ->willReturnMap([
+                ['path', true],
+                ['to', true],
+            ])
+        ;
+
+        $provider = new SymlinkedLocalFilesProvider($adapter, 'upload/dir', new RequestStack());
+        $uri = $provider->getUri($adapter, 'path/to/resource.txt', null);
 
         $this->assertNull($uri);
     }

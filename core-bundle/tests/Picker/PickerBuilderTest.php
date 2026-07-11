@@ -30,7 +30,7 @@ class PickerBuilderTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('/contao/picker?context=page')
@@ -42,8 +42,8 @@ class PickerBuilderTest extends ContaoTestCase
     public function testCreatesAPickerObject(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $pageProvider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
@@ -72,8 +72,8 @@ class PickerBuilderTest extends ContaoTestCase
     public function testCreatesAPickerObjectFromData(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
@@ -88,8 +88,8 @@ class PickerBuilderTest extends ContaoTestCase
     public function testDoesNotCreateAPickerObjectFromDataIfTheArgumentIsInvalid(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
@@ -101,8 +101,8 @@ class PickerBuilderTest extends ContaoTestCase
     public function testChecksIfAContextIsSupported(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
@@ -116,8 +116,8 @@ class PickerBuilderTest extends ContaoTestCase
     public function testReturnsThePickerUrl(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
@@ -133,7 +133,7 @@ class PickerBuilderTest extends ContaoTestCase
 
     private function getSecurityHelper(): Security
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willReturn(true)

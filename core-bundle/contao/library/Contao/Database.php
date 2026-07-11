@@ -87,7 +87,7 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.', __CLASS__, $strKey);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" is deprecated and will no longer work in Contao 7.', __CLASS__, $strKey);
 
 		return null;
 	}
@@ -160,7 +160,7 @@ class Database
 	 * Do not pass user input as $strKey to this method as only identifiers get
 	 * quoted and SQL expressions get returned as is!
 	 *
-	 * @internal Do not use this class in your code
+	 * @internal Do not use this method in your code
 	 *
 	 * @param string  $strKey     The field name
 	 * @param mixed   $varSet     The set to find the key in
@@ -437,7 +437,7 @@ class Database
 
 		if ($intId !== null)
 		{
-			$strQuery .= " AND id!=?";
+			$strQuery .= " AND id != ?";
 			$params[] = $intId;
 		}
 
@@ -474,7 +474,7 @@ class Database
 			return $arrReturn;
 		}
 
-		$objChildren = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
+		$objChildren = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($this->fieldExists('ptable', $strTable) ? " AND ptable = '" . $strTable . "'" : "") . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
 		if ($objChildren->numRows > 0)
 		{
@@ -519,7 +519,7 @@ class Database
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
 		// Limit to a nesting level of 10
-		$ids = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
+		$ids = $this->prepare("SELECT id, @pid := pid FROM $strTable WHERE id = ?" . str_repeat(" UNION SELECT id, @pid := pid FROM $strTable WHERE id = @pid", 9))
 					->execute($intId)
 					->fetchEach('id');
 
@@ -665,7 +665,7 @@ class Database
 	 * Do not pass user input to this method as only identifiers get quoted and
 	 * SQL expressions get returned as is!
 	 *
-	 * @internal Do not use this class in your code; use the "quoteIdentifier()"
+	 * @internal Do not use this method in your code; use the "quoteIdentifier()"
 	 *           method of the "@database_connection" service instead
 	 *
 	 * @param string $strName

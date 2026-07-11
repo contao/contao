@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
+use Contao\CoreBundle\String\HtmlAttributes;
 use Symfony\Component\HttpFoundation\Request;
 
 final class HtmlHeadBag
@@ -25,6 +26,16 @@ final class HtmlHeadBag
     private string $canonicalUri = '';
 
     private array $keepParamsForCanonical = [];
+
+    /**
+     * @var list<HtmlAttributes>
+     */
+    private array $metaTags = [];
+
+    /**
+     * @var list<HtmlAttributes>
+     */
+    private array $linkTags = [];
 
     public function getTitle(): string
     {
@@ -119,5 +130,57 @@ final class HtmlHeadBag
         );
 
         return $request->getUri();
+    }
+
+    public function getMetaTags(): array
+    {
+        return $this->metaTags;
+    }
+
+    public function setMetaTags(array $metaTags): self
+    {
+        $this->metaTags = $metaTags;
+
+        return $this;
+    }
+
+    public function addMetaTag(HtmlAttributes $metaTag): self
+    {
+        $this->metaTags[] = $metaTag;
+
+        return $this;
+    }
+
+    public function removeMetaTag(string $key, string $value): self
+    {
+        $this->metaTags = array_filter($this->metaTags, static fn (HtmlAttributes $metaTag): bool => ($metaTag[$key] ?? null) !== $value);
+
+        return $this;
+    }
+
+    public function getLinkTags(): array
+    {
+        return $this->linkTags;
+    }
+
+    public function setLinkTags(array $linkTags): self
+    {
+        $this->linkTags = $linkTags;
+
+        return $this;
+    }
+
+    public function addLinkTag(HtmlAttributes $linkTag): self
+    {
+        $this->linkTags[] = $linkTag;
+
+        return $this;
+    }
+
+    public function removeLinkTag(string $key, string $value): self
+    {
+        $this->linkTags = array_filter($this->linkTags, static fn (HtmlAttributes $linkTag): bool => ($linkTag[$key] ?? null) !== $value);
+
+        return $this;
     }
 }

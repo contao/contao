@@ -55,7 +55,7 @@ class TranslatorTest extends TestCase
             ->willReturn('en')
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -78,14 +78,14 @@ class TranslatorTest extends TestCase
 
     public function testReadsFromTheGlobalLanguageArray(): void
     {
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterMock(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
             ->with('default')
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkMock([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -131,7 +131,7 @@ class TranslatorTest extends TestCase
             ->method('getCatalogue')
             ->willReturnCallback(
                 function ($locale) {
-                    $catalogue = $this->createMock(MessageCatalogueInterface::class);
+                    $catalogue = $this->createStub(MessageCatalogueInterface::class);
                     $catalogue
                         ->method('getLocale')
                         ->willReturn($locale ?? 'de')
@@ -142,14 +142,14 @@ class TranslatorTest extends TestCase
             )
         ;
 
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterMock(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
             ->with('default', 'de')
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkMock([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -162,7 +162,7 @@ class TranslatorTest extends TestCase
 
     public function testUsesADecoratedCatalogue(): void
     {
-        $originalCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $originalCatalogue = $this->createStub(MessageCatalogueInterface::class);
 
         $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
@@ -178,19 +178,19 @@ class TranslatorTest extends TestCase
 
     public function testUsesDecoratedCatalogues(): void
     {
-        $originalCatalogueDe = $this->createMock(MessageCatalogueInterface::class);
+        $originalCatalogueDe = $this->createStub(MessageCatalogueInterface::class);
         $originalCatalogueDe
             ->method('getLocale')
             ->willReturn('de')
         ;
 
-        $originalCatalogueEn = $this->createMock(MessageCatalogueInterface::class);
+        $originalCatalogueEn = $this->createStub(MessageCatalogueInterface::class);
         $originalCatalogueEn
             ->method('getLocale')
             ->willReturn('en')
         ;
 
-        $originalTranslator = $this->createMock(BaseTranslator::class);
+        $originalTranslator = $this->createStub(BaseTranslator::class);
         $originalTranslator
             ->method('getCatalogues')
             ->willReturn([$originalCatalogueDe, $originalCatalogueEn])
@@ -234,7 +234,7 @@ class TranslatorTest extends TestCase
             ->method('getCatalogue')
             ->willReturnCallback(
                 function ($locale) {
-                    $catalogue = $this->createMock(MessageCatalogueInterface::class);
+                    $catalogue = $this->createStub(MessageCatalogueInterface::class);
                     $catalogue
                         ->method('getLocale')
                         ->willReturn($locale ?? 'en')
@@ -248,7 +248,7 @@ class TranslatorTest extends TestCase
         $expected = [['default', 'de'], ['default', 'en']];
         $matcher = $this->exactly(2);
 
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterMock(['loadLanguageFile']);
         $adapter
             ->expects($matcher)
             ->method('loadLanguageFile')
@@ -257,7 +257,7 @@ class TranslatorTest extends TestCase
             ))
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkMock([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -271,12 +271,12 @@ class TranslatorTest extends TestCase
     private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null): Translator
     {
         if (!$translator) {
-            $translator = $this->createMock(BaseTranslator::class);
+            $translator = $this->createStub(BaseTranslator::class);
             $translator
                 ->method('getCatalogue')
                 ->willReturnCallback(
                     function ($locale) {
-                        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+                        $catalogue = $this->createStub(MessageCatalogueInterface::class);
                         $catalogue
                             ->method('getLocale')
                             ->willReturn($locale ?? 'de')
@@ -288,8 +288,8 @@ class TranslatorTest extends TestCase
             ;
         }
 
-        $framework ??= $this->mockContaoFramework();
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $framework ??= $this->createContaoFrameworkStub();
+        $resourceFinder = $this->createStub(ResourceFinder::class);
 
         return new Translator($translator, $framework, $resourceFinder);
     }

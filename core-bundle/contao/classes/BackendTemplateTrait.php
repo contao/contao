@@ -20,13 +20,12 @@ trait BackendTemplateTrait
 	 *
 	 * @return string
 	 */
-	protected function getLocaleString()
+	public function getLocaleString()
 	{
 		$container = System::getContainer();
 
 		return
 			'var Contao={...(Contao ?? {}), ...{'
-				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
 					. 'cancel:"' . $GLOBALS['TL_LANG']['MSC']['cancelBT'] . '",'
@@ -44,7 +43,7 @@ trait BackendTemplateTrait
 					. 'backend_picker:"' . $container->get('router')->generate('contao_backend_picker') . '"'
 				. '},'
 				. 'request_token:"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '",'
-				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
+				. 'referer_id:""' // Backwards compatibility
 			. '}};';
 	}
 
@@ -56,7 +55,7 @@ trait BackendTemplateTrait
 	 *
 	 * @return string
 	 */
-	protected function getDateString()
+	public function getDateString()
 	{
 		return
 			'Locale.define("en-US","Date",{'

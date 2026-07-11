@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Asset;
 
 use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
@@ -25,7 +24,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -33,7 +31,7 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class, Config::class]);
 
@@ -72,8 +70,7 @@ class ContaoContextTest extends TestCase
 
         $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('staticPlugins', $requestStack);
 
@@ -83,21 +80,21 @@ class ContaoContextTest extends TestCase
     #[DataProvider('getBasePaths')]
     public function testReadsTheBasePathFromThePageModel(string $domain, bool $useSSL, string $basePath, string $expected): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getBasePath')
-            ->willReturn($basePath)
-        ;
+        $request = Request::create(
+            \sprintf('https://example.com%s/index.php', $basePath),
+            server: [
+                'SCRIPT_FILENAME' => \sprintf('%s/index.php', $basePath),
+                'SCRIPT_NAME' => \sprintf('%s/index.php', $basePath),
+            ],
+        );
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $page = $this->getPageWithDetails();
         $page->rootUseSSL = $useSSL;
         $page->staticPlugins = $domain;
 
-        $request->attributes = new ParameterBag(['pageModel' => $page]);
+        $request->attributes->set('pageModel', $page);
 
         $context = $this->getContaoContext('staticPlugins', $requestStack);
 
@@ -115,21 +112,21 @@ class ContaoContextTest extends TestCase
 
     public function testReturnsTheStaticUrl(): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getBasePath')
-            ->willReturn('/foo')
-        ;
+        $request = Request::create(
+            'https://example.com/foo/index.php',
+            server: [
+                'SCRIPT_FILENAME' => '/foo/index.php',
+                'SCRIPT_NAME' => '/foo/index.php',
+            ],
+        );
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $page = $this->getPageWithDetails();
         $page->rootUseSSL = true;
         $page->staticPlugins = 'example.com';
 
-        $request->attributes = new ParameterBag(['pageModel' => $page]);
+        $request->attributes->set('pageModel', $page);
 
         $context = $this->getContaoContext('staticPlugins', $requestStack);
 
@@ -147,11 +144,10 @@ class ContaoContextTest extends TestCase
     {
         $page = $this->getPageWithDetails();
 
-        $request = new Request();
-        $request->attributes = new ParameterBag(['pageModel' => $page]);
+        $request = Request::create('https://example.com/');
+        $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('', $requestStack);
 
@@ -164,11 +160,9 @@ class ContaoContextTest extends TestCase
 
     public function testReadsTheSslConfigurationFromTheRequest(): void
     {
-        $request = new Request();
-        $request->attributes = $this->createMock(ParameterBag::class);
+        $request = Request::create('http://example.com/');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('', $requestStack);
 
@@ -190,28 +184,21 @@ class ContaoContextTest extends TestCase
 
     private function getPageWithDetails(): PageModel
     {
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $connection);
-        $container->set('contao.resource_finder', $finder);
-        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
+        System::setContainer($this->getContainerWithFixtures());
 
-        System::setContainer($container);
-
-        $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+        $page = new PageModel();
         $page->type = 'root';
         $page->fallback = true;
         $page->staticPlugins = '';

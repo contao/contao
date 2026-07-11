@@ -178,7 +178,7 @@ class ExceptionConverterListenerTest extends TestCase
 
     private function getResponseEvent(\Exception $exception): ExceptionEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $request = new Request();
 
         return new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);

@@ -18,7 +18,7 @@ use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 
 /**
- * @experimental
+ * @internal
  */
 #[YieldReady]
 final class AddNode extends Node implements NodeOutputInterface

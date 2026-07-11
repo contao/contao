@@ -30,13 +30,13 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $eventModel = $this->createMock(CalendarEventsModel::class);
+        $eventModel = $this->createStub(CalendarEventsModel::class);
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $eventModel]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -56,7 +56,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -82,7 +82,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -106,10 +106,10 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_PORT', 80);
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator

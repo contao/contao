@@ -111,7 +111,7 @@ class ModuleWizard extends Widget
 
 			foreach ($slots as $slot)
 			{
-				$cols[$slot] = "{% slot $slot %}";
+				$cols[$slot] = $GLOBALS['TL_LANG']['COLS'][$slot] ?? $slot;
 			}
 		}
 		else
@@ -174,7 +174,7 @@ class ModuleWizard extends Widget
 		}
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || !($this->varValue[0] ?? null))
 		{
 			$this->varValue = array(array('mod'=>0, 'col'=>'main'));
 		}

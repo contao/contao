@@ -32,10 +32,10 @@ class DisableCanonicalFieldsListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['eval'] = [];
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->enableCanonical = false;
 
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -43,7 +43,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -51,7 +51,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn('<img src="info.svg" alt="disabled" data-contao--tooltips-target="tooltip">')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageModelAdapter,
             Image::class => $imageAdapter,
         ]);
@@ -64,7 +64,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn('disabled')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
         $dc->table = 'tl_page';
         $dc->field = 'canonicalLink';
@@ -78,10 +78,10 @@ class DisableCanonicalFieldsListenerTest extends TestCase
 
     public function testDoesNotDisableTheFieldIfCanonicalUrlsAreEnabled(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->enableCanonical = true;
 
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -89,13 +89,13 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->never())
             ->method('getHtml')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageModelAdapter,
             Image::class => $imageAdapter,
         ]);
@@ -106,7 +106,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
         $dc->table = 'tl_page';
         $dc->field = 'canonicalLink';
@@ -117,7 +117,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
 
     public function testDoesNotDisableTheFieldIfThePageModelCannotBeFound(): void
     {
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -125,13 +125,13 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->never())
             ->method('getHtml')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageModelAdapter,
             Image::class => $imageAdapter,
         ]);
@@ -142,7 +142,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
         $dc->table = 'tl_page';
         $dc->field = 'canonicalLink';
@@ -155,13 +155,13 @@ class DisableCanonicalFieldsListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['eval'] = [];
 
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->never())
             ->method('findWithDetails')
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -169,7 +169,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
 
         $listener = new DisableCanonicalFieldsListener($framework, $translator);
         $listener('', $dc);

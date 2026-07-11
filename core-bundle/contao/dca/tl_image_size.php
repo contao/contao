@@ -9,16 +9,13 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
-use Imagine\Gd\Imagine as GdImagine;
-use Imagine\Gmagick\Imagine as GmagickImagine;
-use Imagine\Imagick\Imagine as ImagickImagine;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -31,14 +28,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'oncreate_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
+		'userRoot'                   => 'imageSizes',
 		'sql' => array
 		(
 			'keys' => array
@@ -57,11 +47,16 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_image_size', 'listImageSize')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('name'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_image_size', 'listImageSize'),
+		),
 	),
 
 	// Palettes
@@ -77,17 +72,17 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -95,46 +90,46 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'search'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NULL"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
 		),
 		'imageQuality' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'densities' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sizes' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'width' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'height' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'resizeMode' => array
 		(
@@ -142,20 +137,20 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'zoom' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'formats' => array
 		(
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "varchar(1024) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>1024, 'default'=>'')
 		),
 		'preserveMetadata' => array
 		(
@@ -163,25 +158,25 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options'                 => array('default', 'overwrite', 'delete'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "varchar(12) NOT NULL default 'default'"
+			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'default')
 		),
 		'preserveMetadataFields' => array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'lazyLoading' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		)
 	)
 );
@@ -194,121 +189,25 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 class tl_image_size extends Backend
 {
 	/**
-	 * Add the new image size to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set the image sizes
-		if (empty($user->imageSizes) || !is_array($user->imageSizes))
-		{
-			$imageSizes = array();
-		}
-		else
-		{
-			$imageSizes = $user->imageSizes;
-		}
-
-		// The image size is enabled already
-		if (in_array($insertId, $imageSizes))
-		{
-			return;
-		}
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
-		{
-			$db = Database::getInstance();
-
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrThemes = StringUtil::deserialize($objGroup->themes);
-
-					if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-					{
-						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
-						$arrImageSizes[] = $insertId;
-
-						$db
-							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-							->execute(serialize($arrImageSizes), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrThemes = StringUtil::deserialize($objUser->themes);
-
-				if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-				{
-					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
-					$arrImageSizes[] = $insertId;
-
-					$db
-						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-						->execute(serialize($arrImageSizes), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$imageSizes[] = $insertId;
-			$user->imageSizes = $imageSizes;
-		}
-	}
-
-	/**
 	 * List an image size
 	 *
 	 * @param array $row
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
-	public function listImageSize($row)
+	public function listImageSize($row, $label)
 	{
-		$html = '<div class="tl_content_left">';
-		$html .= $row['name'];
-
 		if ($row['width'] || $row['height'])
 		{
-			$html .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
+			$label .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
 		}
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
+			$label .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
 		}
 
-		$html .= "</div>\n";
-
-		return $html;
+		return RecordLabel::fromHtml($label);
 	}
 
 	/**
@@ -433,28 +332,9 @@ class tl_image_size extends Backend
 
 		$imagine = System::getContainer()->get('contao.image.imagine');
 
-		if ($imagine instanceof ImagickImagine)
+		foreach (array_keys($supported) as $format)
 		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), Imagick::queryFormats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GmagickImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), (new Gmagick())->queryformats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GdImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = function_exists('image' . $format);
-			}
+			$supported[$format] = $imagine->getDriverInfo()->isFormatSupported($format);
 		}
 
 		return $supported;

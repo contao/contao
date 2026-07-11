@@ -17,6 +17,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
@@ -48,13 +49,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_module', 'listModule')
 		),
 		'label' => array
 		(
+			'fields'                  => array('name', 'type'),
+			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'group_callback'          => array('tl_module', 'getGroupHeader')
 		)
 	),
@@ -85,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
-		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'template'                    => '{title_legend},name,headline,type;{template_legend},customTpl,data;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
@@ -106,17 +108,17 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -125,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'headline' => array
 		(
@@ -133,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}')
 		),
 		'type' => array
 		(
@@ -144,50 +146,50 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'navigation'"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'navigation', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'ariaLabel' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'levelOffset' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w25 clr'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 		),
 		'showLevel' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w25'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 		),
 		'hardLimit' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'showProtected' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'defineRoot' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'rootPage' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'navigationTpl' => array
@@ -197,13 +199,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'pages' => array
 		(
@@ -214,32 +216,32 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			(
 				array('tl_module', 'setPagesFlags')
 			),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'showHidden' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'customLabel' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'rgxp'=>'extnd', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'autologin' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'overviewPage' => array
@@ -247,20 +249,20 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'redirectBack' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'pwResetPage' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'editable' => array
@@ -268,12 +270,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_module', 'getEditableMemberProperties'),
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'reqFullAuth' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'memberTpl' => array
 		(
@@ -282,7 +284,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'form' => array
 		(
@@ -290,7 +292,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'queryType' => array
@@ -299,31 +301,31 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('and', 'or'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default 'and'"
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'and', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'fuzzy' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'contextLength' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50', 'placeholder'=>array(48, 360)),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'minKeywordLength' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 4"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>4)
 		),
 		'perPage' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 		),
 		'searchType' => array
 		(
@@ -331,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('simple', 'advanced'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'simple'"
+			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'simple', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'searchTpl' => array
 		(
@@ -340,7 +342,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'inColumn' => array
 		(
@@ -348,24 +350,24 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getLayoutSections'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'main'"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'main', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'skipFirst' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 		),
 		'loadFirst' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'singleSRC' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'imgSize' => array
 		(
@@ -373,19 +375,19 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'useCaption' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'fullsize' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'multiSRC' => array
 		(
@@ -395,7 +397,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			(
 				array('tl_module', 'setMultiSrcFlags')
 			),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'html' => array
 		(
@@ -403,15 +405,15 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'unfilteredHtml' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
+			'eval'                    => array('preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
-			'sql'                     => "mediumtext NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'rss_cache' => array
 		(
@@ -419,13 +421,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
-			'sql'                     => "int(10) unsigned NOT NULL default 3600"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>3600)
 		),
 		'rss_feed' => array
 		(
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'style'=>'height:60px'),
-			'sql'                     => "text NULL"
+			'eval'                    => array('mandatory'=>true, 'style'=>'height:60px'),
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'rss_template' => array
 		(
@@ -434,37 +436,37 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'numberOfItems' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['numberOfItems'],
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>3)
 		),
 		'disableCaptcha' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_groups' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'reg_allowLogin' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_skipName' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_close' => array
 		(
@@ -472,91 +474,99 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('close_deactivate', 'close_delete'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'reg_deleteDir' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_assignDir' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_homeDir' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'reg_activate' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'reg_text' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback' => array
-			(
-				array('tl_module', 'getActivationDefault')
-			),
-			'sql'                     => "text NULL"
+			'eval'                    => array('style'=>'height:120px'),
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'reg_password' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback'           => array
-			(
-				array('tl_module', 'getPasswordDefault')
-			),
-			'sql'                     => "text NULL"
+			'eval'                    => array('style'=>'height:120px'),
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
-			'sql'                     => "text NULL"
+			'inputType'               => 'rowWizard',
+			'fields' => array
+			(
+				'key' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
+					'inputType'       => 'text'
+				)
+			),
+			'eval'                    => array('tl_class'=>'w66 clr'),
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'protected' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'groups' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'cssID' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'rootPageDependentModules' => array
 		(
 			'inputType'               => 'rootPageDependentSelect',
 			'eval'                    => array('submitOnChange'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => 'blob NULL'
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 	)
 );
@@ -608,7 +618,7 @@ class tl_module extends Backend
 		{
 			if ($v['eval']['feEditable'] ?? null)
 			{
-				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
+				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0] ?? $k;
 			}
 		}
 
@@ -694,52 +704,6 @@ class tl_module extends Backend
 		}
 
 		return $group;
-	}
-
-	/**
-	 * Load the default activation text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getActivationDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Load the default password text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getPasswordDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * List a front end module
-	 *
-	 * @param array $row
-	 *
-	 * @return string
-	 */
-	public function listModule($row)
-	{
-		return '<div class="tl_content_left">' . $row['name'] . ' <span class="label-info">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

@@ -4,43 +4,6 @@ import * as Turbo from '@hotwired/turbo';
 export default class extends Controller {
     static targets = ['primary', 'secondary'];
 
-    static afterLoad(identifier) {
-        const setupController = () => {
-            document.querySelectorAll('.click2edit').forEach((el) => {
-                el.classList.remove('click2edit');
-
-                const primary = el.querySelector('a.edit');
-                const secondary = el.querySelector('a.children');
-
-                if (primary) {
-                    primary.setAttribute(`data-${identifier}-target`, 'primary');
-                }
-
-                if (secondary) {
-                    secondary.setAttribute(`data-${identifier}-target`, 'secondary');
-                }
-
-                el.dataset.controller = `${el.dataset.controller || ''} ${identifier}`;
-            });
-        };
-
-        document.addEventListener('DOMContentLoaded', setupController);
-        document.addEventListener('ajax_change', setupController);
-        document.addEventListener('turbo:render', setupController);
-        document.addEventListener('turbo:frame-render', setupController);
-        setupController();
-
-        Theme.setupCtrlClick = () => {
-            if (window.console) {
-                console.warn(
-                    'Using Theme.setupCtrlClick() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.',
-                );
-            }
-
-            setupController();
-        };
-    }
-
     initialize() {
         this.handle = this.handle.bind(this);
     }
@@ -55,7 +18,7 @@ export default class extends Controller {
             return;
         }
 
-        const primaryKey = window.navigator.platform?.startsWith('Mac') ? 'metaKey' : 'ctrlKey';
+        const primaryKey = /^(Mac|iPhone|iPad)/.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
         if (event[primaryKey] && !event.shiftKey && this.hasPrimaryTarget && this.primaryTarget.href) {
             Turbo.visit(this.primaryTarget.href);

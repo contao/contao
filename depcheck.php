@@ -10,20 +10,36 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use App\Entity\FooEntity;
+use App\EventListener\InvalidListener;
+use App\EventListener\ValidListener;
+use App\FrontendModule\LegacyModule;
+use App\Messenger\UnionTypeMessage;
+use App\Model\FooModel;
 use AppBundle\AppBundle;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
-return (new Configuration())
+return new Configuration()
     ->ignoreUnknownClasses([
         AppBundle::class,
-        'Imagick',
+        FooEntity::class,
+        FooModel::class,
         'Gmagick',
+        'Imagick',
+        InvalidListener::class,
+        LegacyModule::class,
+        LoupeAdapter::class,
+        Mysql::class,
         'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
+        UnionTypeMessage::class,
+        ValidListener::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -49,12 +65,23 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('contao-components/tinymce4', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tristen-tablesort', [ErrorType::UNUSED_DEPENDENCY])
 
+    // These packages are required for the search integration.
+    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
     // The manager plugin is a dev dependency because it is only required in the
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
-    // This packages provides the trigger_deprecation() function.
+    // We want to control the version of Loupe we support in contao/loupe-bridge.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::UNUSED_DEPENDENCY])
+
+    // This package provides the trigger_deprecation() function.
     ->ignoreErrorsOnPackage('symfony/deprecation-contracts', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We set up doctrine messenger transports via the skeleton config in the
+    // managed edition.
+    ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
 
     // This package provides the "sanitize_html" Twig filter.
     ->ignoreErrorsOnPackage('symfony/html-sanitizer', [ErrorType::UNUSED_DEPENDENCY])
@@ -65,6 +92,9 @@ return (new Configuration())
     // These packages provide global functions if the PHP extensions are missing.
     ->ignoreErrorsOnPackage('symfony/polyfill-intl-idn', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-mbstring', [ErrorType::UNUSED_DEPENDENCY])
+
+    // Allows us to use array_first/array_last in PHP <8.5.
+    ->ignoreErrorsOnPackage('symfony/polyfill-php85', [ErrorType::UNUSED_DEPENDENCY])
 
     // The rate limiter is required for the functional tests.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::UNUSED_DEPENDENCY])
@@ -80,14 +110,9 @@ return (new Configuration())
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
 
+    // The monorepo check requires this to be a prod dependency
+    ->ignoreErrorsOnPackage('symfony/twig-bridge', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
+
     // We only use the assets from the web-auth/webauthn-stimulus package.
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
-
-    // These packages are required for the search integration.
-    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
-
-    // This package is required by cmsig/seal-loupe-adapter and may therefore be a
-    // shadow dependency.
-    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
 ;

@@ -15,6 +15,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL",
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
@@ -38,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => "blob NULL",
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('table'=>'tl_newsletter_channel', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
@@ -47,35 +48,29 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 	'inputType'               => 'textarea',
 	'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
 	'explanation'             => 'insertTags',
-	'sql'                     => "text NULL"
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 (
 	'inputType'               => 'checkbox',
-	'sql'                     => array('type' => 'boolean', 'default' => false)
+	'sql'                     => array('type'=>'boolean', 'default'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
+	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getSubscribeDefault')
-	),
-	'sql'                     => "text NULL"
+	'eval'                    => array('style'=>'height:120px'),
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
+	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getUnsubscribeDefault')
-	),
-	'sql'                     => "text NULL"
+	'eval'                    => array('style'=>'height:120px'),
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
@@ -85,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 /**
@@ -95,40 +90,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Backend
 {
-	/**
-	 * Load the default subscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getSubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1];
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Load the default unsubscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getUnsubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1];
-		}
-
-		return $varValue;
-	}
-
 	/**
 	 * Get all channels and return them as array
 	 *

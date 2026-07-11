@@ -133,7 +133,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
             ->willReturn($plugins)
         ;
 
-        $kernel = $this->createMock(ContaoKernel::class);
+        $kernel = $this->createStub(ContaoKernel::class);
         $kernel
             ->method('getContainer')
             ->willReturn($container)

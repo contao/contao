@@ -32,7 +32,7 @@ class SuperviseWorkersCronTest extends TestCase
 
     public function testReturnsCorrectPromise(): void
     {
-        $process = $this->createMock(Process::class);
+        $process = $this->createStub(Process::class);
 
         $processUtil = $this->createMock(ProcessUtil::class);
         $processUtil

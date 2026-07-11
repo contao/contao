@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Migration;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -54,12 +55,12 @@ class CommandCompiler
             $this->copyMissingTablesAndColumns($fromSchema, $toSchema);
         }
 
+        $comparator = $schemaManager->createComparator(new ComparatorConfig(false, false));
+
         // Get a list of SQL statements from the schema diff
-        $diffCommands = $schemaManager
-            ->createComparator()
-            ->compareSchemas($fromSchema, $toSchema)
-            ->toSql($this->connection->getDatabasePlatform())
-        ;
+        $schemaDiff = $comparator->compareSchemas($fromSchema, $toSchema);
+
+        $diffCommands = $this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaDiff);
 
         // Get a list of SQL statements that adjust the engine and collation options
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
@@ -92,7 +93,7 @@ class CommandCompiler
 
     private function copyTableDefinition(Schema $targetSchema, Table $table): void
     {
-        (new \ReflectionClass(Schema::class))
+        new \ReflectionClass(Schema::class)
             ->getMethod('_addTable')
             ->invoke($targetSchema, $table)
         ;
@@ -100,7 +101,7 @@ class CommandCompiler
 
     private function copyColumnDefinition(Table $targetTable, Column $column): void
     {
-        (new \ReflectionClass(Table::class))
+        new \ReflectionClass(Table::class)
             ->getMethod('_addColumn')
             ->invoke($targetTable, $column)
         ;

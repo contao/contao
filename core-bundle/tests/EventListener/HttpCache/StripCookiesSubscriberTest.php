@@ -33,7 +33,7 @@ class StripCookiesSubscriberTest extends TestCase
     public function testCookiesAreStrippedCorrectly(array $cookies, array $expectedCookies, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', [], $cookies);
-        $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
+        $event = new CacheEvent($this->createStub(CacheInvalidation::class), $request);
 
         $subscriber = new StripCookiesSubscriber($allowList);
         $subscriber->removeFromDenyList($removeFromDenyList);

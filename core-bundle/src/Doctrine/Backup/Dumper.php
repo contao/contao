@@ -24,6 +24,9 @@ class Dumper implements DumperInterface
 {
     private array $quoteCache = [];
 
+    /**
+     * @return \Generator<string>
+     */
     public function dump(Connection $connection, CreateConfig $config): \Generator
     {
         try {
@@ -39,6 +42,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function doDump(Connection $connection, CreateConfig $config): \Generator
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
@@ -48,7 +54,7 @@ class Dumper implements DumperInterface
         $schemaManager = $connection->createSchemaManager();
         $platform = clone $connection->getDatabasePlatform();
 
-        $reflection = (new \ReflectionClass($platform))->getProperty('_keywords');
+        $reflection = new \ReflectionClass($platform)->getProperty('_keywords');
         $reflection->setValue($platform, $this->getCompatibleKeywords());
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
@@ -81,6 +87,8 @@ class Dumper implements DumperInterface
 
     /**
      * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     *
+     * @return \Generator<string>
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
@@ -90,6 +98,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
         yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
@@ -100,6 +111,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function dumpData(Connection $connection, Table $table): \Generator
     {
         yield \sprintf('-- BEGIN DATA %s', $table->getName());
@@ -142,7 +156,7 @@ class Dumper implements DumperInterface
         }
     }
 
-    private function formatValueForDump(float|int|string|null $value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
+    private function formatValueForDump(float|int|string|null $value, ParameterType|int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
@@ -202,7 +216,7 @@ class Dumper implements DumperInterface
     private function getCompatibleKeywords(): KeywordList
     {
         return new class() extends KeywordList {
-            public function isKeyword($word): bool
+            public function isKeyword(mixed $word): bool
             {
                 return true;
             }

@@ -11,8 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\String\HtmlAttributes;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -34,7 +36,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $class
  * @property string       $inColumn
  * @property string       $headline
- * @property array        $hl
+ * @property string       $hl
  * @property string       $content
  * @property string       $action
  * @property boolean      $enforceTwoFactor
@@ -60,13 +62,12 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7;
  *             use Twig templates instead
  */
 abstract class Template extends Controller
 {
 	use TemplateInheritance;
-	use TemplateTrait;
 
 	/**
 	 * Output buffer
@@ -220,13 +221,16 @@ abstract class Template extends Controller
 	 */
 	public static function once(callable $callback)
 	{
-		return static function () use (&$callback) {
-			if (\is_callable($callback))
+		$result = null;
+
+		return static function () use (&$callback, &$result) {
+			if ($callback !== null)
 			{
-				$callback = $callback();
+				$result = $callback();
+				$callback = null;
 			}
 
-			return $callback;
+			return $result;
 		};
 	}
 
@@ -268,26 +272,6 @@ abstract class Template extends Controller
 	public function getName()
 	{
 		return $this->strTemplate;
-	}
-
-	/**
-	 * Set the output format
-	 *
-	 * @param string $strFormat The output format
-	 */
-	public function setFormat($strFormat)
-	{
-		$this->strFormat = $strFormat;
-	}
-
-	/**
-	 * Return the output format
-	 *
-	 * @return string The output format
-	 */
-	public function getFormat()
-	{
-		return $this->strFormat;
 	}
 
 	/**
@@ -442,32 +426,35 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a style sheet tag
 	 *
-	 * @param string $href  The script path
-	 * @param string $media The media type string
-	 * @param mixed  $mtime The file mtime
+	 * @param string      $href  The script path
+	 * @param string|null $media The media type string
+	 * @param mixed       $mtime The file mtime
+	 * @param string|null $track The data-turbo-track attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null, $mtime=false)
+	public static function generateStyleTag($href, $media=null, $mtime=false, $track=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
 			$container = System::getContainer();
 			$projectDir = $container->getParameter('kernel.project_dir');
+			$projectPath = Path::join($projectDir, $href);
 
-			if (file_exists($projectDir . '/' . $href))
+			if (file_exists($projectPath))
 			{
-				$mtime = filemtime($projectDir . '/' . $href);
+				$mtime = filemtime($projectPath);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webPath = Path::join($projectDir, $webDir, $href);
 
 				// Handle public bundle resources in the contao.web_dir folder
-				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
+				if (file_exists($webPath))
 				{
-					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($webPath);
 				}
 			}
 		}
@@ -477,7 +464,14 @@ abstract class Template extends Controller
 			$href .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
+		$attributes = (new HtmlAttributes())
+			->set('rel', 'stylesheet')
+			->set('href', $href)
+			->set('media', $media, $media && $media != 'all')
+			->setIfExists('data-turbo-track', $track)
+		;
+
+		return "<link$attributes>";
 	}
 
 	/**
@@ -511,29 +505,32 @@ abstract class Template extends Controller
 	 * @param string|null $crossorigin    An optional crossorigin attribute
 	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
 	 * @param boolean     $defer          True to add the defer attribute
+	 * @param string|null $track          The data-turbo-track attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false, $track=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
 		{
 			$container = System::getContainer();
 			$projectDir = $container->getParameter('kernel.project_dir');
+			$projectPath = Path::join($projectDir, $src);
 
-			if (file_exists($projectDir . '/' . $src))
+			if (file_exists($projectPath))
 			{
-				$mtime = filemtime($projectDir . '/' . $src);
+				$mtime = filemtime($projectPath);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webPath = Path::join($projectDir, $webDir, $src);
 
 				// Handle public bundle resources in the contao.web_dir folder
-				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
+				if (file_exists($webPath))
 				{
-					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($webPath);
 				}
 			}
 		}
@@ -543,7 +540,17 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . ($defer ? ' defer' : '') . '></script>';
+		$attributes = (new HtmlAttributes())
+			->set('src', $src)
+			->set('async', '', $async)
+			->setIfExists('integrity', $hash)
+			->setIfExists('crossorigin', $crossorigin)
+			->setIfExists('referrerpolicy', $referrerpolicy)
+			->set('defer', '', $defer)
+			->setIfExists('data-turbo-track', $track)
+		;
+
+		return "<script$attributes></script>";
 	}
 
 	/**

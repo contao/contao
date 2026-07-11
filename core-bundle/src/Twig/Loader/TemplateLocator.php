@@ -20,9 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
-/**
- * @experimental
- */
 class TemplateLocator
 {
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
@@ -33,6 +30,9 @@ class TemplateLocator
 
     private readonly string $globalTemplateDirectory;
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly string $projectDir,
         private readonly ResourceFinder $resourceFinder,
@@ -97,10 +97,10 @@ class TemplateLocator
             return [];
         }
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->files()
             ->in($path)
-            ->name('/(\.twig|\.html5)$/')
+            ->name('/\.twig$/')
         ;
 
         if (!$this->isNamespaceRoot($path)) {
@@ -133,7 +133,7 @@ class TemplateLocator
 
         $namespaceRoots = [];
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->directories()
             ->in($path)
             ->sortByName()
@@ -141,10 +141,8 @@ class TemplateLocator
                 function (\SplFileInfo $info) use (&$namespaceRoots): bool {
                     $path = $info->getPathname();
 
-                    foreach ($namespaceRoots as $directory) {
-                        if (Path::isBasePath($directory, $path)) {
-                            return false;
-                        }
+                    if (array_any($namespaceRoots, static fn ($directory) => Path::isBasePath($directory, $path))) {
+                        return false;
                     }
 
                     if ($this->isNamespaceRoot($path)) {

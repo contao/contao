@@ -134,6 +134,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         return null;
     }
 
+    /**
+     * @return \Generator<FilesystemItem>
+     */
     public function getRecords(string $path, bool $deep = false): \Generator
     {
         $path = Path::join($this->dbPathPrefix, $path);
@@ -316,7 +319,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Allow falling back (= skip hashing) to the existing hash if useLastModified is
                 // enabled, and we already got an existing timestamp
-                $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
+                $fallback = $this->useLastModified && null !== $oldLastModified && $oldHash ? $oldHash : null;
 
                 $hashContext = new Context($fallback, $oldLastModified);
                 $this->hashGenerator->hashFileContent($this->filesystem, $path, $hashContext);
@@ -448,7 +451,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid = ?', $this->connection->quoteIdentifier($this->table)),
             [$uuid],
         );
 
@@ -464,7 +467,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id = ?', $this->connection->quoteIdentifier($this->table)),
             [$id],
         );
 
@@ -480,7 +483,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path = ?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -508,6 +511,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         $record = [
             'isFile' => $isFile,
             'path' => $path,
+            'lastModified' => null,
+            'fileSize' => null,
+            'mimeType' => null,
             'extra' => $event->getExtraMetadata(),
         ];
 
@@ -683,7 +689,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         $items = $this->connection->fetchAllNumeric(
             \sprintf(
-                "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
+                "SELECT path, uuid, hash, IF(type = 'folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
             ),

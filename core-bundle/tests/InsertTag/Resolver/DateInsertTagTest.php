@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Tests\InsertTag\Resolver;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\Date;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -16,13 +17,16 @@ class DateInsertTagTest extends ContaoTestCase
     #[DataProvider('expiresAtProvider')]
     public function testExpiresAt(array $formats, \DateTimeImmutable|null $expectedExpiresAt): void
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturn('parsed')
         ;
 
-        $insertTag = new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        $insertTag = new DateInsertTag(
+            $this->createContaoFrameworkStub([Date::class => $dateAdapter]),
+            $this->createStub(PageFinder::class),
+        );
 
         foreach ($formats as $format) {
             $result = $insertTag(new ResolvedInsertTag('date', new ResolvedParameters([$format]), []));

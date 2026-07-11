@@ -344,7 +344,7 @@ class Newsletter extends Backend
 
 		$return .= '
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">' . $GLOBALS['TL_LANG']['tl_newsletter']['preview'] . '</button>
 <button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
@@ -409,17 +409,11 @@ class Newsletter extends Backend
 	 * @param array  $arrRecipient
 	 * @param string $text
 	 * @param string $html
-	 * @param string $css
 	 *
 	 * @return boolean
 	 */
-	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
+	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
 	{
-		if (\count(\func_get_args()) > 5)
-		{
-			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method has been deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
-		}
-
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
@@ -642,7 +636,7 @@ class Newsletter extends Backend
 
 </div>
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 
 <div class="tl_submit_container">
   <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['import'][0] . '</button>
@@ -870,7 +864,7 @@ class Newsletter extends Backend
 			{
 				$db
 					->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-					->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
+					->execute($intId, $objUser->email, $objUser->disable ? 0 : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
@@ -964,7 +958,7 @@ class Newsletter extends Backend
 				{
 					$db
 						->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-						->execute(Input::post('disable') ? '' : 1, $objUser->email);
+						->execute(Input::post('disable') ? 0 : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}
@@ -986,31 +980,6 @@ class Newsletter extends Backend
 					->execute($objUser->email);
 			}
 		}
-	}
-
-	/**
-	 * Purge subscriptions that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use NewsletterRecipientsModel::findExpiredSubscriptions() instead.
-	 */
-	public function purgeSubscriptions()
-	{
-		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
-
-		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
-
-		if ($objRecipient === null)
-		{
-			return;
-		}
-
-		foreach ($objRecipient as $objModel)
-		{
-			$objModel->delete();
-		}
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated newsletter subscriptions');
 	}
 
 	/**

@@ -24,10 +24,10 @@ class UserCheckerTest extends TestCase
 {
     public function testChecksAContaoUser(): void
     {
-        $adapter = $this->mockConfiguredAdapter(['dateFormat' => 'Y-m-d']);
-        $framework = $this->mockContaoFramework([Config::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['dateFormat' => 'Y-m-d']);
+        $framework = $this->createContaoFrameworkStub([Config::class => $adapter]);
 
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user->username = 'foo';
         $user->disable = false;
         $user->login = true;
@@ -43,23 +43,23 @@ class UserCheckerTest extends TestCase
 
     public function testDoesNothingIfTheUserIsNotAContaoUser(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('getAdapter')
         ;
 
         $userChecker = new UserChecker($framework);
-        $userChecker->checkPreAuth($this->createMock(UserInterface::class));
+        $userChecker->checkPreAuth($this->createStub(UserInterface::class));
     }
 
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->username = 'foo';
         $user->disable = true;
 
-        $userChecker = new UserChecker($this->mockContaoFramework());
+        $userChecker = new UserChecker($this->createContaoFrameworkStub());
 
         $this->expectException(DisabledException::class);
         $this->expectExceptionMessage('The account has been disabled');
@@ -69,12 +69,12 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheUserIsNotAllowedToLogin(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->username = 'foo';
         $user->disable = false;
         $user->login = false;
 
-        $userChecker = new UserChecker($this->mockContaoFramework());
+        $userChecker = new UserChecker($this->createContaoFrameworkStub());
 
         $this->expectException(DisabledException::class);
         $this->expectExceptionMessage('User "foo" is not allowed to log in');
@@ -86,13 +86,13 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('tomorrow');
 
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->username = 'foo';
         $user->disable = false;
         $user->login = true;
         $user->start = (string) $time;
 
-        $userChecker = new UserChecker($this->mockContaoFramework());
+        $userChecker = new UserChecker($this->createContaoFrameworkStub());
         $message = \sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
 
         $this->expectException(DisabledException::class);
@@ -105,14 +105,14 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('yesterday');
 
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->username = 'foo';
         $user->disable = false;
         $user->login = true;
         $user->start = '';
         $user->stop = (string) $time;
 
-        $userChecker = new UserChecker($this->mockContaoFramework());
+        $userChecker = new UserChecker($this->createContaoFrameworkStub());
         $message = \sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));
 
         $this->expectException(DisabledException::class);

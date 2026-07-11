@@ -9,14 +9,16 @@
  */
 
 use Contao\Backend;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
 (
@@ -56,23 +58,29 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'importTheme' => array
 			(
 				'href'                => 'key=importTheme',
 				'class'               => 'header_theme_import',
-				'button_callback'     => array('tl_theme', 'importTheme')
+				'button_callback'     => array('tl_theme', 'importTheme'),
+				'prefetch'            => true,
 			),
 			'store' => array
 			(
-				'href'                => 'key=themeStore',
-				'class'               => 'header_store',
-				'button_callback'     => array('tl_theme', 'themeStore')
+				'href'                => 'https://themes.contao.org',
+				'icon'                => 'store.svg',
+				'attributes'          => 'target="_blank" rel="noreferrer noopener"'
 			),
 		),
 		'operations' => array
 		(
 			'edit',
 			'delete',
+			'show',
+			'versions',
+			'-',
 			'elements' => array
 			(
 				'href'                => 'table=tl_content',
@@ -101,13 +109,15 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'icon'                => 'sizes.svg',
 				'primary'             => true,
 			),
-			'show',
+			'-',
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
+				'method'              => 'GET',
 				'icon'                => 'theme_export.svg',
 				'button_callback'     => array('tl_theme', 'exportTheme'),
-				'attributes'          => 'data-turbo="false"'
+				'attributes'          => 'data-turbo="false"',
+				'prefetch'            => false,
 			)
 		)
 	),
@@ -123,11 +133,11 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -135,8 +145,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'author' => array
 		(
@@ -144,27 +154,28 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'folders' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'screenshot' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>'%contao.image.valid_extensions%'),
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'templates' => array
 		(
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		)
 	)
 );
@@ -182,7 +193,7 @@ class tl_theme extends Backend
 	 * @param array  $row
 	 * @param string $label
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function addPreviewImage($row, $label)
 	{
@@ -197,7 +208,7 @@ class tl_theme extends Backend
 			}
 		}
 
-		return $label;
+		return RecordLabel::fromHtml($label);
 	}
 
 	/**
@@ -236,45 +247,24 @@ class tl_theme extends Backend
 	}
 
 	/**
-	 * Return the "import theme" link
-	 *
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $class
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Check permissions on the "import theme" link.
 	 */
-	public function importTheme($href, $label, $title, $class, $attributes)
+	public function importTheme(DataContainerOperation $operation)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
+		{
+			$operation->hide();
+		}
 	}
 
 	/**
-	 * Return the theme store link
-	 *
-	 * @return string
+	 * Check permissions on the "export theme" button.
 	 */
-	public function themeStore()
+	public function exportTheme(DataContainerOperation $operation)
 	{
-		return '<a href="https://themes.contao.org" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
-	}
-
-	/**
-	 * Return the "export theme" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES))
+		{
+			$operation->hide();
+		}
 	}
 }

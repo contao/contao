@@ -42,7 +42,7 @@ class ModuleNewsletterList extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl($container->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = $container->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -70,13 +70,12 @@ class ModuleNewsletterList extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$arrNewsletter = array();
 
-		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
+		$strRequest = Environment::get('requestUri');
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 		$container = System::getContainer();
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if ($objNewsletter !== null)
 		{
@@ -96,7 +95,7 @@ class ModuleNewsletterList extends Module
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
-					'title' => StringUtil::stripInsertTags($objNewsletter->subject),
+					'title' => StringUtil::specialcharsAttribute(StringUtil::stripInsertTags($objNewsletter->subject)),
 					'href' => $strUrl,
 					'date' => Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => Date::parse($objPage->datimFormat, $objNewsletter->date),

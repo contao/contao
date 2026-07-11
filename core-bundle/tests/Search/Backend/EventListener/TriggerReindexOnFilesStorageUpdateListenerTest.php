@@ -26,7 +26,7 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
 {
     public function testInvokeTriggersReindexOnFilesStorageElements(): void
     {
-        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage = $this->createStub(VirtualFilesystem::class);
         $storage
             ->method('getPrefix')
             ->willReturn('files')

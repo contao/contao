@@ -43,6 +43,8 @@ class ModuleArticle extends Module
 	 */
 	protected $blnNoMarkup = false;
 
+	protected $arrPreloadedContentElements = array();
+
 	/**
 	 * Check whether the article is published
 	 *
@@ -67,6 +69,14 @@ class ModuleArticle extends Module
 		}
 
 		return parent::generate();
+	}
+
+	/**
+	 * @internal
+	 */
+	public function setPreloadedContentElements(array $arrPreloadedContentElements)
+	{
+		$this->arrPreloadedContentElements = $arrPreloadedContentElements;
 	}
 
 	protected function isHidden()
@@ -103,8 +113,6 @@ class ModuleArticle extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$id = 'article-' . $this->id;
 
 		// Generate the CSS ID if it is not set
@@ -115,6 +123,8 @@ class ModuleArticle extends Module
 
 		$this->Template->column = $this->inColumn;
 		$this->Template->noMarkup = $this->blnNoMarkup;
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;
@@ -186,7 +196,14 @@ class ModuleArticle extends Module
 		{
 			while ($objCte->next())
 			{
-				$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
+				if (isset($this->arrPreloadedContentElements[$objCte->id]))
+				{
+					$arrElements[] = $this->arrPreloadedContentElements[$objCte->id];
+				}
+				else
+				{
+					$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
+				}
 			}
 		}
 

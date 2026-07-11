@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\ResponseContext;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -45,15 +44,14 @@ class AddTokenParserTest extends TestCase
     #[DataProvider('provideSources')]
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedStyleSheetContent, array $expectedBodyContent): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -151,12 +149,12 @@ class AddTokenParserTest extends TestCase
     #[DataProvider('provideInvalidSources')]
     public function testValidatesSource(string $code, string $expectedException): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
 
         $parser = new Parser($environment);
         $source = new Source($code, 'template.html.twig');
-        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $tokenStream = new Lexer($environment)->tokenize($source);
 
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage($expectedException);

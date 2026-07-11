@@ -34,9 +34,9 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
-use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -141,16 +141,23 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         if ('dev' === $kernel->getEnvironment()) {
             $files = [
-                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+                '_wdt' => [
+                    '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                    '@WebProfilerBundle/Resources/config/routing/wdt.php',
+                ],
+                '_profiler' => [
+                    '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+                    '@WebProfilerBundle/Resources/config/routing/profiler.php',
+                ],
             ];
 
-            foreach ($files as $prefix => $file) {
-                /** @var RouteCollection $collection */
-                $collection = $resolver->resolve($file)->load($file);
-                $collection->addPrefix($prefix);
+            foreach ($files as $prefix => $candidates) {
+                /** @var RouteCollection|null $collection */
+                if ($collection = $this->loadRouteCollection($resolver, $candidates)) {
+                    $collection->addPrefix($prefix);
 
-                $collections[] = $collection;
+                    $collections[] = $collection;
+                }
             }
         }
 
@@ -210,11 +217,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
                 }
 
-                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+                return $extensionConfigs;
 
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
+                $extensionConfigs = $this->addDefaultVersionStrategy($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     if ($container->hasParameter('secret')) {
@@ -249,21 +257,42 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
+     * @param list<string> $files
+     */
+    private function loadRouteCollection(LoaderResolverInterface $resolver, array $files): RouteCollection|null
+    {
+        foreach ($files as $file) {
+            $loader = $resolver->resolve($file);
+
+            if (false === $loader) {
+                continue;
+            }
+
+            $routes = $loader->load($file);
+
+            if ($routes instanceof RouteCollection) {
+                return $routes;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Sets the PDO driver options if applicable (#2459).
      *
      * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
-        // Do not add PDO options if the constant does not exist
-        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+        if (!class_exists(Mysql::class)) {
             return $extensionConfigs;
         }
 
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+        if (isset($options[Mysql::ATTR_MULTI_STATEMENTS])) {
             return $extensionConfigs;
         }
 
@@ -277,7 +306,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            Mysql::ATTR_MULTI_STATEMENTS => false,
                         ],
                     ],
                 ],
@@ -368,7 +397,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver ?? ''] ?? null)) {
             return $extensionConfigs;
         }
 
@@ -486,38 +515,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Dynamically configures the back end search adapter if none was configured and
-     * the system supports it.
-     */
-    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
-    {
-        foreach ($extensionConfigs as $config) {
-            // Configured a custom adapter (e.g. MeiliSearch or whatever)
-            if (isset($config['backend_search']['dsn'])) {
-                return $extensionConfigs;
-            }
-        }
-
-        if (!class_exists(LoupeFactory::class)) {
-            return $extensionConfigs;
-        }
-
-        $loupeFactory = new LoupeFactory();
-
-        if (!$loupeFactory->isSupported()) {
-            return $extensionConfigs;
-        }
-
-        $extensionConfigs[] = [
-            'backend_search' => [
-                'dsn' => 'loupe://%kernel.project_dir%/var/loupe',
-            ],
-        ];
-
-        return $extensionConfigs;
-    }
-
-    /**
      * @return array{0: string|null, 1: array<string, mixed>}
      */
     private function parseDbalDriverAndOptions(array $extensionConfigs, ContainerBuilder $container): array
@@ -560,10 +557,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
-                return $extensionConfigs;
-            }
+        if (array_any($extensionConfigs, static fn ($extensionConfig) => isset($extensionConfig['clickjacking']['paths']['^/.*']))) {
+            return $extensionConfigs;
         }
 
         $extensionConfigs[] = [
@@ -658,5 +653,22 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function encodeUrlParameter(string $parameter): string
     {
         return str_replace('%', '%%', rawurlencode($parameter));
+    }
+
+    private function addDefaultVersionStrategy(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            if (isset($config['assets']['version_strategy']) || isset($config['assets']['json_manifest_path'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'assets' => [
+                'version_strategy' => 'contao.asset.mtime_version_strategy',
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 }

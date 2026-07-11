@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         yield [
             ['pid' => 42],
@@ -54,7 +54,7 @@ class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTestCase
 
     public function testDeniesUpdateActionToNewParent(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager

@@ -26,7 +26,7 @@ class FilesystemUtilTest extends TestCase
     #[DataProvider('provideResources')]
     public function testListContentsFromSerialized(array|string $sources, array $expectedPaths): void
     {
-        $storage = $this->createMock(VirtualFilesystemInterface::class);
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
         $storage
             ->method('get')
             ->willReturnCallback(
@@ -43,14 +43,14 @@ class FilesystemUtilTest extends TestCase
 
         $storage
             ->method('listContents')
-            ->with('directory')
-            ->willReturn(
+            ->willReturnMap([[
+                'directory',
                 new FilesystemItemIterator([
                     new FilesystemItem(true, 'directory/file3'),
                     new FilesystemItem(true, 'directory/file4'),
                     new FilesystemItem(false, 'directory/subdirectory'),
                 ]),
-            )
+            ]])
         ;
 
         $paths = array_map(
@@ -103,7 +103,7 @@ class FilesystemUtilTest extends TestCase
         ];
 
         yield 'unknown UUID amongst valid' => [
-            [$file1->toBinary(), (new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab'))->toBinary()],
+            [$file1->toBinary(), new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab')->toBinary()],
             ['file1'],
         ];
 

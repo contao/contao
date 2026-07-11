@@ -27,11 +27,11 @@ use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -258,7 +258,7 @@ class MigrateCommandTest extends TestCase
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '929210d967bc630ef187795ca91759f9e27906fc16316b205600ff7b40cbfd1b'],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '151d946b476547549d3d45acf8e74d3e57094153179ccabe921bc4dcd7a057da'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
@@ -294,7 +294,23 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $connection = $this->createDefaultConnection();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(
+                static fn (string $query): string|false => match ($query) {
+                    'SELECT @@sql_mode' => 'TRADITIONAL',
+                    'SELECT @@version' => '8.0.0',
+                    default => false,
+                },
+            )
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn(new PdoDriver())
+        ;
+
         $connection
             ->expects($this->never())
             ->method('executeQuery')
@@ -436,26 +452,20 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testAbortsOnWrongServerVersion(string $format): void
     {
-        $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
-        $driverConnection
+        $connection = $this->createDefaultConnection();
+        $connection
             ->method('getServerVersion')
             ->willReturn('8.0.29')
         ;
 
-        $connection = $this->createDefaultConnection();
+        $connection
+            ->method('getDriver')
+            ->willReturn($this->createStub(Driver::class))
+        ;
+
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())
-        ;
-
-        $connection
-            ->method('getDriver')
-            ->willReturn($this->createMock(Driver::class))
-        ;
-
-        $connection
-            ->method('getWrappedConnection')
-            ->willReturn($driverConnection)
         ;
 
         $connection
@@ -500,11 +510,10 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('provideBadConfigurations')]
     public function testOutputsConfigurationErrors(array $configuration, array|string $expectedMessages): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
-            ->willReturn($configuration['version'] ?? '10.10.0-MariaDB-foo-bar')
+            ->willReturnMap([['SELECT @@version', $configuration['version'] ?? '10.10.0-MariaDB-foo-bar']])
         ;
 
         $connection
@@ -527,8 +536,7 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('fetchAllAssociative')
-            ->with('SHOW ENGINES')
-            ->willReturn($configuration['engines'] ?? [])
+            ->willReturnMap([['SHOW ENGINES', $configuration['engines'] ?? []]])
         ;
 
         $command = $this->getCommand(connection: $connection);
@@ -735,7 +743,7 @@ class MigrateCommandTest extends TestCase
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
     {
-        $migrations = $this->createMock(MigrationCollection::class);
+        $migrations = $this->createStub(MigrationCollection::class);
         $migrations
             ->method('hasPending')
             ->willReturn((bool) \count($pendingMigrations))
@@ -763,7 +771,7 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$migrationResults)
         ;
 
-        $commandCompiler ??= $this->createMock(CommandCompiler::class);
+        $commandCompiler ??= $this->createStub(CommandCompiler::class);
         $commandCompiler
             ->method('compileTargetSchema')
             ->willReturn(new Schema())
@@ -774,13 +782,13 @@ class MigrateCommandTest extends TestCase
             $connection ?? $this->createDefaultConnection(),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
-            $this->createMock(MysqlInnodbRowSizeCalculator::class),
+            $this->createStub(MysqlInnodbRowSizeCalculator::class),
         );
     }
 
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&MockObject
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&Stub
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturnCallback(

@@ -60,7 +60,7 @@ class ResizeImagesCommand extends Command
         private readonly Filesystem $filesystem = new Filesystem(),
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
-        $this->terminalWidth = (new Terminal())->getWidth();
+        $this->terminalWidth = new Terminal()->getWidth();
 
         parent::__construct();
     }

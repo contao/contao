@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
+ * @property string   $robotsField
  * @property callable $url_callback
  * @property callable $title_tag_callback
  */
@@ -34,6 +35,11 @@ class SerpPreview extends Widget
 	 */
 	public function generate()
 	{
+		if (Input::isPost())
+		{
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreviewPost'] . '</p></div>';
+		}
+
 		/** @var class-string<Model> $class */
 		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findById($this->activeRecord->id);
@@ -53,30 +59,33 @@ class SerpPreview extends Widget
 		}
 		catch (RouteParametersException)
 		{
-			return $this->render([
+			return $this->render(array(
 				'error' => true,
-			]);
+			));
 		}
-		catch (ExceptionInterface) {
+		catch (ExceptionInterface)
+		{
 			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
 
-		return $this->render([
-			'fields' => [
-				'title' => [$this->getTitleField($suffix), $this->getTitleFallbackField($suffix)],
-				'alias' => [$this->getAliasField($suffix)],
-				'description' => [$this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)],
-			],
+		return $this->render(array(
+			'fields' => array(
+				'title' => array($this->getTitleField($suffix), $this->getTitleFallbackField($suffix)),
+				'alias' => array($this->getAliasField($suffix)),
+				'description' => array($this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)),
+				'robots' => array($this->getRobotsField($suffix)),
+			),
 			'id' => $model->id,
 			'trail' => $trail,
 			'titleTag' => $this->getTitleTag($model),
-		]);
+		));
 	}
 
-	private function render($parameters = []): string {
+	private function render($parameters = array()): string
+	{
 		return System::getContainer()
 			->get('twig')
 			->render('@Contao/backend/widget/serp_preview.html.twig', $parameters)
@@ -190,6 +199,16 @@ class SerpPreview extends Widget
 		return 'ctrl_' . $this->aliasField . $suffix;
 	}
 
+	private function getRobotsField($suffix)
+	{
+		if (!isset($this->robotsField))
+		{
+			return 'ctrl_robots' . $suffix;
+		}
+
+		return 'ctrl_' . $this->robotsField . $suffix;
+	}
+
 	private function convertUrlToItems($url): array
 	{
 		$chunks = parse_url($url);
@@ -203,7 +222,14 @@ class SerpPreview extends Widget
 
 		if (isset($chunks['host']))
 		{
-			$steps = array_merge(array($chunks['host']), $steps);
+			$host = $chunks['host'];
+
+			if (isset($chunks['scheme']))
+			{
+				$host = $chunks['scheme'] . '://' . $host;
+			}
+
+			$steps = array_merge(array($host), $steps);
 		}
 
 		return $steps;

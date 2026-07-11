@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -27,15 +26,10 @@ use Contao\Model;
 use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -53,9 +47,9 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -187,14 +181,17 @@ class StringUtilTest extends TestCase
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+            $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+            $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+            $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        }
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -223,6 +220,12 @@ class StringUtilTest extends TestCase
         $this->expectException('InvalidArgumentException');
 
         StringUtil::stripRootDir($this->getFixturesDir());
+    }
+
+    public function testDecodesEntities(): void
+    {
+        $this->assertSame("10\u{a0}€", StringUtil::decodeEntities('10&nbsp;€'));
+        $this->assertSame(['sum' => "10\u{a0}€"], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
     }
 
     public function testHandlesFalseyValuesWhenDecodingEntities(): void
@@ -509,6 +512,7 @@ class StringUtilTest extends TestCase
 
     public function testResolvesReferencesInArrays(): void
     {
+        /** @phpstan-var array $ref (signals PHPStan that the array shape may change) */
         $ref = ['a'];
 
         $array = [
@@ -533,12 +537,10 @@ class StringUtilTest extends TestCase
         $ref[0] = 'b';
         $ref = ['c'];
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
         $this->assertSame($ref, $array[0]);
 
-        /** @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 ['a'],
@@ -560,26 +562,8 @@ class StringUtilTest extends TestCase
 
     public function testInsertTagToSrc(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('introspectSchema')
-            ->willReturn(new Schema())
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('createSchemaManager')
-            ->willReturn($schemaManager)
-        ;
-
-        $container = System::getContainer();
-        $container->set('database_connection', $connection);
-
-        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_finder', $finder);
-
-        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_locator', $locator);
+        $container = $this->getContainerWithFixtures();
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files'] = [];
         $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
@@ -608,27 +592,34 @@ class StringUtilTest extends TestCase
     }
 
     #[DataProvider('basicEntitiesProvider')]
-    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities, array|string $unicodeEntities): void
     {
         $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
         $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($unicodeEntities, false));
+        $this->assertSame($unicodeEntities, StringUtil::restoreBasicEntities($basicEntities, false));
     }
 
     public static function basicEntitiesProvider(): iterable
     {
         yield 'String value' => [
-            'foo&amp;bar',
-            'foo[&]bar',
+            'foo&amp;bar&ZeroWidthSpace;baz',
+            'foo[&]bar[zwsp]baz',
+            "foo&bar\u{200B}baz",
         ];
 
         yield 'InputUnit field' => [
             [
                 'unit' => 'h2',
-                'value' => '&lt;strong&gt;',
+                'value' => '&lt;strong&gt; and &lsqb;-&rsqb;',
             ],
             [
                 'unit' => 'h2',
-                'value' => '[lt]strong[gt]',
+                'value' => '[lt]strong[gt] and [lsqb]-[rsqb]',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '<strong> and [-]',
             ],
         ];
 
@@ -651,6 +642,16 @@ class StringUtilTest extends TestCase
                 [
                     'key' => 'name',
                     'value' => 'Con[-]tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => "10\u{A0}€",
+                ],
+                [
+                    'key' => 'name',
+                    'value' => "Con\u{AD}tao",
                 ],
             ],
         ];
@@ -676,6 +677,57 @@ class StringUtilTest extends TestCase
                     'value' => true,
                 ],
             ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('ensureStringUuidsProvider')]
+    public function testEnsureStringUuids(mixed $input, mixed $expected): void
+    {
+        $this->assertSame($expected, StringUtil::ensureStringUuids($input));
+    }
+
+    public static function ensureStringUuidsProvider(): iterable
+    {
+        yield 'Single binary UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720'),
+            '0f075396-ed26-11ee-a657-14ac60298720',
+        ];
+
+        yield 'Serialized UUIDs' => [
+            serialize([StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')]),
+            'a:2:{i:0;s:36:"0f075374-ed26-11ee-a657-14ac60298720";i:1;s:36:"0f07538b-ed26-11ee-a657-14ac60298720";}',
+        ];
+
+        yield 'Array UUIDs' => [
+            [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')],
+            ['0f075374-ed26-11ee-a657-14ac60298720', '0f07538b-ed26-11ee-a657-14ac60298720'],
+        ];
+
+        yield 'Ignores regular string' => [
+            'Lorem',
+            'Lorem',
+        ];
+
+        $object = (object) [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')];
+
+        yield 'Ignores object' => [
+            $object,
+            $object,
+        ];
+
+        yield 'Ignores invalid UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
         ];
     }
 }

@@ -92,6 +92,16 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
         $currentPid = $action instanceof UpdateAction ? (int) $action->getCurrentPid() : null;
         $pid = (int) ($action->getNewPid() ?? $currentPid);
 
+        // Always allow copy to clipboard operation
+        if (
+            $action instanceof CreateAction
+            && \in_array($type, self::FIRST_LEVEL_TYPES, true)
+            && \array_key_exists('sorting', $action->getNew())
+            && null === $action->getNew()['sorting']
+        ) {
+            return true;
+        }
+
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
@@ -126,7 +136,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
     private function isRootPage(int $pageId): bool
     {
         if (null === $this->rootIds) {
-            $this->rootIds = $this->connection->fetchFirstColumn("SELECT id FROM tl_page WHERE type='root'");
+            $this->rootIds = $this->connection->fetchFirstColumn("SELECT id FROM tl_page WHERE type = 'root'");
             $this->rootIds = array_map(\intval(...), $this->rootIds);
         }
 
@@ -137,7 +147,7 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
     {
         if (null === $this->rootTypes) {
             $this->rootTypes = [];
-            $records = $this->connection->fetchAllNumeric("SELECT p.pid, p.type FROM tl_page p JOIN tl_page r ON p.pid=r.id WHERE r.type='root' GROUP BY p.pid, p.type");
+            $records = $this->connection->fetchAllNumeric("SELECT p.pid, p.type FROM tl_page p JOIN tl_page r ON p.pid = r.id WHERE r.type = 'root' GROUP BY p.pid, p.type");
 
             foreach ($records as $row) {
                 $this->rootTypes[$row[0]][$row[1]] = true;

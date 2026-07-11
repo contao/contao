@@ -59,9 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
+        <target>Naslov URI zahteve</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
+        <target>Naslov URI zahteve</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
@@ -78,6 +80,14 @@
       <trans-unit id="tl_log.FE">
         <source>Front end</source>
         <target>Ospredje</target>
+      </trans-unit>
+      <trans-unit id="tl_log.show.1">
+        <source>Show the details of log entry ID %s</source>
+        <target>Prikaži podrobnosti dnevniškega vnosa z ID%s</target>
+      </trans-unit>
+      <trans-unit id="tl_log.delete.1">
+        <source>Delete log entry ID %s</source>
+        <target>Izbriši dnevniški vnos z ID %s</target>
       </trans-unit>
     </body>
   </file>

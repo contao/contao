@@ -1,0 +1,23 @@
+{% trans_default_domain 'contao_default' %}
+
+<div id="tl_maintenance_search" class="maintenance_inactive">
+
+    <h2 class="sub_headline">{{ 'tl_maintenance.backend_search.title'|trans }}</h2>
+
+    {% if message|default %}
+        <div class="tl_message">
+            {{ message|raw }}
+        </div>
+    {% endif %}
+
+    <form class="tl_form" method="post">
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_rebuild_backend_search">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            <div class="tl_submit_container">
+                <button type="submit" name="clear" class="tl_submit"{% if disabled %} disabled{% endif %}>{{ 'tl_maintenance.backend_search.button'|trans }}</button>
+            </div>
+        </div>
+    </form>
+
+</div>

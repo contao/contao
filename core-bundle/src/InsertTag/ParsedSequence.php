@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @implements \IteratorAggregate<int,InsertTag|InsertTagResult|string>
+ * @implements \IteratorAggregate<int, InsertTag|InsertTagResult|string>
  */
 final class ParsedSequence implements \IteratorAggregate, \Countable
 {
@@ -42,17 +42,11 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
 
     public function hasInsertTags(): bool
     {
-        foreach ($this->sequence as $item) {
-            if ($item instanceof InsertTag) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->sequence, static fn ($item) => $item instanceof InsertTag);
     }
 
     /**
-     * @return \ArrayIterator<int, InsertTag|InsertTagResult|string>
+     * @return \ArrayIterator<int, InsertTag|InsertTagResult|non-empty-string>
      */
     public function getIterator(): \ArrayIterator
     {

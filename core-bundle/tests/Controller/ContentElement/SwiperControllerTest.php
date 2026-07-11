@@ -20,11 +20,11 @@ class SwiperControllerTest extends ContentElementTestCase
 {
     public function testOutputsMarkup(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
         ]);
 
@@ -49,7 +49,7 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedJson = htmlspecialchars(json_encode([
             'speed' => 300,
-            'offset' => 0,
+            'initialSlide' => 0,
             'loop' => true,
             'autoplay' => [
                 'delay' => 1000,
@@ -71,8 +71,8 @@ class SwiperControllerTest extends ContentElementTestCase
                             image
                         </div>
                     </div>
-                    <button type="button" class="swiper-button-prev"></button>
-                    <button type="button" class="swiper-button-next"></button>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                     <div class="swiper-pagination"></div>
                 </div>
             </div>

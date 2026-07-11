@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -81,6 +83,9 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $groups
  * @property string  $cssID
  * @property string  $hl
+ *
+ * @deprecated extending from Module is deprecated since Contao 6.0 and will no
+ *             longer work in Contao 7; use a fragment controller instead
  */
 abstract class Module extends Frontend
 {
@@ -122,6 +127,8 @@ abstract class Module extends Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated and will no longer work in Contao 7. Use a fragment controller instead.');
+
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
 			$objModel = $objModule;
@@ -298,7 +305,7 @@ abstract class Module extends Frontend
 		$db = Database::getInstance();
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Browse subpages
 		foreach ($arrSubpages as list('page' => $objSubpage, 'hasSubpages' => $blnHasSubpages))
@@ -462,7 +469,7 @@ abstract class Module extends Frontend
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return array<array{page:PageModel, hasSubpages:bool}>|null
+	 * @return array<array{page: PageModel, hasSubpages: bool}>|null
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
@@ -515,5 +522,14 @@ abstract class Module extends Frontend
 		}
 
 		return '';
+	}
+
+	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
+	 *             use a page type controller instead.
+	 */
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return false;
 	}
 }

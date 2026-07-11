@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MSC.author">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="MSC.by">
         <source>by</source>
@@ -20,14 +20,6 @@
       <trans-unit id="MSC.emptyList">
         <source>Currently there are no news items.</source>
         <target>Nie ma dostępnych aktualności.</target>
-      </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Komentarze</target>
-      </trans-unit>
-      <trans-unit id="MSC.commentCount">
-        <source>(comments: %s)</source>
-        <target>(%s komentarzy)</target>
       </trans-unit>
       <trans-unit id="MSC.news_items">
         <source>%d item(s)</source>

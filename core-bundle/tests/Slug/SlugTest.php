@@ -29,7 +29,7 @@ class SlugTest extends ContaoTestCase
             ->willReturn([])
         ;
 
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->atLeastOnce())
             ->method('findWithDetails')

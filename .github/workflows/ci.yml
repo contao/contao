@@ -3,35 +3,32 @@ name: CI
 on:
     pull_request: ~
 
-permissions: read-all
-
-defaults:
-    run:
-        # Simulate an interactive terminal with color support
-        shell: script -q -e -c "export TERM=xterm; bash {0}"
+permissions:
+    contents: read
 
 jobs:
     rector:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install Rector
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/rector
 
@@ -42,23 +39,24 @@ jobs:
         name: ECS
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install ECS
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/ecs
 
@@ -69,52 +67,83 @@ jobs:
         name: ECS legacy
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install ECS
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/ecs
 
-            - name: Run ECS
-              run: |
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
+            - name: Run ECS legacy
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+
+            - name: Run ECS template
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
+
+    twig-cs-fixer:
+        name: Twig CS Fixer
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.4
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  show-progress: false
+                  persist-credentials: false
+
+            - name: Install Contao
+              uses: ramsey/composer-install@v4
+
+            - name: Install Twig CS Fixer
+              uses: ramsey/composer-install@v4
+              with:
+                  working-directory: vendor-bin/twig-cs-fixer
+
+            - name: Run Twig CS Fixer
+              run: vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer lint
 
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install PHPStan
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/phpstan
 
@@ -126,48 +155,55 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Run YAMLlint
               run: yamllint --format=github .
 
-    prettier:
-        name: Prettier
+    linter:
+        name: Linter
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
-            - name: Run Prettier
-              uses: creyD/prettier_action@v4.3
-              with:
-                  prettier_options: --check core-bundle/assets
+            - name: Install the Node packages
+              run: npm install
+
+            - name: Run Biome
+              run: npx biome ci core-bundle/assets
+
+            - name: Run Stylelint
+              run: npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
 
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install the service linter
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/service-linter
 
@@ -178,21 +214,22 @@ jobs:
         name: Depcheck
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Check for unknown symbols (contao/contao)
               run: vendor/bin/composer-dependency-analyser --config=depcheck.php
@@ -220,9 +257,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [8.2, 8.3]
+                php: [8.4, 8.5]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
@@ -235,15 +272,16 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
 
             - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional
@@ -259,30 +297,66 @@ jobs:
         name: Reverse order
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
-        name: PHP 8.4
+        name: PHP nightly
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: nightly
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  show-progress: false
+                  persist-credentials: false
+
+            - name: Install Contao
+              uses: ramsey/composer-install@v4
+              with:
+                  composer-options: --ignore-platform-req=php+
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
+
+            - name: Run the functional tests
+              run: vendor/bin/phpunit --testsuite=functional
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+    prefer-lowest:
+        name: Prefer lowest
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.4
@@ -295,46 +369,13 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
-              with:
-                  composer-options: --ignore-platform-req=php+
-
-            - name: Run the unit tests
-              run: vendor/bin/phpunit
-
-            - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional
-              env:
-                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
-
-    prefer-lowest:
-        name: Prefer lowest
-        runs-on: ubuntu-latest
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.2
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-
-            - name: Initialize the database
-              run: |
-                  sudo /etc/init.d/mysql start
-                  mysql -uroot -proot -e "CREATE database contao_test"
-
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  show-progress: false
-
-            - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   dependency-versions: lowest
 
@@ -355,21 +396,22 @@ jobs:
         name: Bundles
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Test the single bundles
               run: |
-                  bundles=(calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle news-bundle newsletter-bundle)
+                  bundles=(api-bundle calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle mcp-bundle news-bundle newsletter-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
                       php -r '
@@ -397,23 +439,24 @@ jobs:
         name: Monorepo check
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.4
                   extensions: json, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Install the monorepo tools
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
               with:
                   working-directory: vendor-bin/monorepo-tools
 

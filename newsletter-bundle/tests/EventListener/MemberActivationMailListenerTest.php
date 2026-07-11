@@ -24,8 +24,8 @@ class MemberActivationMailListenerTest extends ContaoTestCase
 {
     public function testAddsChannelsTokenIfNewsletterSelected(): void
     {
-        $member = $this->mockClassWithProperties(MemberModel::class, ['newsletter' => serialize([2, 3])]);
-        $event = new MemberActivationMailEvent($member, $this->createMock(OptInToken::class), 'subject', 'text', []);
+        $member = $this->createClassWithPropertiesStub(MemberModel::class, ['newsletter' => serialize([2, 3])]);
+        $event = new MemberActivationMailEvent($member, $this->createStub(OptInToken::class), 'subject', 'text', []);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -35,15 +35,15 @@ class MemberActivationMailListenerTest extends ContaoTestCase
             ->willReturn(['Channel 1', 'Channel 2'])
         ;
 
-        (new MemberActivationMailListener($connection))($event);
+        new MemberActivationMailListener($connection)($event);
 
         $this->assertSame(['channels' => "Channel 1\nChannel 2"], $event->getSimpleTokens());
     }
 
     public function testDoesNotAddChannelsTokenIfNoNewsletterSelected(): void
     {
-        $member = $this->mockClassWithProperties(MemberModel::class, ['newsletter' => null]);
-        $event = new MemberActivationMailEvent($member, $this->createMock(OptInToken::class), 'subject', 'text', []);
+        $member = $this->createClassWithPropertiesStub(MemberModel::class, ['newsletter' => null]);
+        $event = new MemberActivationMailEvent($member, $this->createStub(OptInToken::class), 'subject', 'text', []);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -51,7 +51,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
             ->method('fetchFirstColumn')
         ;
 
-        (new MemberActivationMailListener($connection))($event);
+        new MemberActivationMailListener($connection)($event);
 
         $this->assertSame([], $event->getSimpleTokens());
     }

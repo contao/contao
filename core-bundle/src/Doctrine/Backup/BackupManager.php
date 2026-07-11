@@ -156,7 +156,7 @@ class BackupManager
         // Ensure the target file exists and is empty
         $this->backupsStorage->write($backup->getFilename(), '');
 
-        $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
+        $tmpFile = new Filesystem()->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $fileHandle = fopen($tmpFile, 'r+w');
         $deflateContext = $config->isGzCompressionEnabled() ? deflate_init(ZLIB_ENCODING_GZIP, ['level' => 9]) : null;
 
@@ -171,10 +171,10 @@ class BackupManager
 
             $this->finishWriting($backup, $fileHandle, $deflateContext);
             $this->tidyDirectory($config->getBackup());
-            (new Filesystem())->remove($tmpFile);
+            new Filesystem()->remove($tmpFile);
         } catch (BackupManagerException $exception) {
             $this->backupsStorage->delete($backup->getFilename());
-            (new Filesystem())->remove($tmpFile);
+            new Filesystem()->remove($tmpFile);
 
             throw $exception;
         }
@@ -191,7 +191,10 @@ class BackupManager
             $data = deflate_add($deflateContext, $data, ZLIB_NO_FLUSH);
         }
 
-        @fwrite($fileHandle, $data);
+        if (false === fwrite($fileHandle, $data)) {
+            throw new \RuntimeException('Could not write backup data.');
+        }
+
         fflush($fileHandle);
     }
 
@@ -200,8 +203,8 @@ class BackupManager
      */
     private function finishWriting(Backup $backup, $fileHandle, \DeflateContext|null $deflateContext): void
     {
-        if ($deflateContext) {
-            fwrite($fileHandle, deflate_add($deflateContext, '', ZLIB_FINISH));
+        if ($deflateContext && false === fwrite($fileHandle, deflate_add($deflateContext, '', ZLIB_FINISH))) {
+            throw new \RuntimeException('Could not write backup data.');
         }
 
         $this->backupsStorage->writeStream($backup->getFilename(), $fileHandle);
@@ -218,7 +221,7 @@ class BackupManager
             throw new BackupManagerException(\sprintf('Dump "%s" does not exist.', $backup->getFilename()));
         }
 
-        $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
+        $tmpFile = new Filesystem()->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $handle = fopen($tmpFile, 'w');
         stream_copy_to_stream($this->backupsStorage->readStream($backup->getFilename()), $handle);
         fclose($handle);

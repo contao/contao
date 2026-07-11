@@ -29,10 +29,10 @@ class BackendLogoutListenerTest extends ContaoTestCase
 {
     public function testAddsTheLogoutButtonWithSwitchUserToken(): void
     {
-        $switchUserToken = $this->createMock(SwitchUserToken::class);
+        $switchUserToken = $this->createStub(SwitchUserToken::class);
         $switchUserToken
             ->method('getOriginalToken')
-            ->willReturn($this->createMock(UsernamePasswordToken::class))
+            ->willReturn($this->createStub(UsernamePasswordToken::class))
         ;
 
         $this->assertLogoutButton($switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit');
@@ -40,7 +40,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
     public function testAddsTheLogoutButtonWithRegularToken(): void
     {
-        $this->assertLogoutButton($this->createMock(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout');
+        $this->assertLogoutButton($this->createStub(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout');
     }
 
     public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
@@ -62,8 +62,8 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $listener = new BackendLogoutListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
             $this->getTranslator(),
         );
 
@@ -93,8 +93,8 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $listener = new BackendLogoutListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
             $this->getTranslator(),
         );
 
@@ -121,8 +121,8 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $listener = new BackendLogoutListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
             $this->getTranslator(),
         );
 
@@ -217,7 +217,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

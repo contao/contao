@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +39,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
+ * @property integer           $backendWidth
  * @property string            $uploader
  * @property boolean           $showHelp
  * @property boolean           $thumbnails
@@ -112,26 +114,15 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * IP address
 	 * @var string
+	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
 	 */
 	protected $strIp;
-
-	/**
-	 * Authentication hash
-	 * @var string
-	 */
-	protected $strHash;
 
 	/**
 	 * Table
 	 * @var string
 	 */
 	protected $strTable;
-
-	/**
-	 * Cookie name
-	 * @var string
-	 */
-	protected $strCookie;
 
 	/**
 	 * Data
@@ -263,6 +254,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
 			}
 
+			// Expand virtual fields
+			$this->arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->expandFields($this->arrData, $this->strTable);
+
 			return true;
 		}
 
@@ -276,10 +270,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		$db = Database::getInstance();
 
-		$arrFields = $db->getFieldNames($this->strTable);
-		$arrSet = array_intersect_key($this->arrData, array_flip($arrFields));
+		// Combine virtual fields
+		$arrData = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->arrData, $this->strTable);
 
-		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")->set($arrSet)->execute($this->id);
+		$arrFields = $db->getFieldNames($this->strTable);
+		$arrSet = array_intersect_key($arrData, array_flip($arrFields));
+		$arrTypes = array_map(fn (string $k) => \in_array($k, DcaExtractor::getInstance($this->strTable)->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
+		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+			->set($arrSet)
+			->query('', array(...array_values($arrSet), $this->id), $arrTypes);
 	}
 
 	/**
@@ -289,11 +289,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 *
 	 * @return boolean True if the user is a member of the group
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7.
 	 */
 	public function isMemberOf($ids)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
 
 		// Filter non-numeric values
 		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
@@ -339,11 +339,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserBy(string $column, mixed $value): self|null
 	{
-		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			return null;
-		}
-
 		$user = new static();
 
 		// Load the user object

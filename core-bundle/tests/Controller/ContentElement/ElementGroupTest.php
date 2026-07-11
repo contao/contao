@@ -20,11 +20,11 @@ class ElementGroupTest extends ContentElementTestCase
 {
     public function testOutputsAccordion(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
         ]);
 

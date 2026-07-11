@@ -193,7 +193,7 @@ class ImageSize extends Widget
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->optionSelected($arrOption['value'], $this->varValue[2] ?? null),
-					$arrOption['label'] ?? null
+					StringUtil::specialchars($arrOption['label'] ?? ''),
 				);
 
 				$arrValues[] = $arrOption['value'];
@@ -208,18 +208,18 @@ class ImageSize extends Widget
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
-						$arrOptgroup['label'] ?? null
+						StringUtil::specialchars($arrOptgroup['label'] ?? ''),
 					);
 
 					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
-				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
 		$arrFields[] = \sprintf(
-			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-contao--image-size-target="select" data-action="focus->contao--scroll-offset#store change->contao--image-size#updateWizard"%s>%s</select>',
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-contao--image-size-target="select" data-action="focus->contao--scroll-offset#store change->contao--image-size#update"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
 			$this->getAttribute('disabled'),
@@ -229,13 +229,14 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = \sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--image-size-target="%s">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,
 				$i,
 				self::specialcharsValue(@$this->varValue[$i]), // see #4979
-				$this->getAttributes()
+				$this->getAttributes(),
+				$i ? 'height' : 'width',
 			);
 		}
 

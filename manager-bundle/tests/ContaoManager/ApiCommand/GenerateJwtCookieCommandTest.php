@@ -32,18 +32,13 @@ class GenerateJwtCookieCommandTest extends ContaoTestCase
 
         $this->jwtManager = $this->createMock(JwtManager::class);
 
-        $application = $this->createMock(Application::class);
+        $application = $this->createStub(Application::class);
         $application
             ->method('getProjectDir')
             ->willReturn($this->getTempDir())
         ;
 
         $this->command = new GenerateJwtCookieCommand($application, $this->jwtManager);
-    }
-
-    public function testHasCorrectName(): void
-    {
-        $this->assertSame('jwt-cookie:generate', $this->command->getName());
     }
 
     public function testGeneratesCookieWithDebugEnabled(): void

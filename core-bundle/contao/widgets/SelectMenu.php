@@ -42,7 +42,6 @@ class SelectMenu extends Widget
 		parent::__construct($arrAttributes);
 
 		$this->preserveTags = true;
-		$this->decodeEntities = true;
 	}
 
 	/**
@@ -166,7 +165,7 @@ class SelectMenu extends Widget
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->isSelected($arrOption),
-					$arrOption['label'] ?? null
+					StringUtil::specialchars($arrOption['label'] ?? ''),
 				);
 			}
 			else
@@ -179,29 +178,25 @@ class SelectMenu extends Widget
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->isSelected($arrOptgroup),
-						$arrOptgroup['label'] ?? null
+						StringUtil::specialchars($arrOptgroup['label'] ?? ''),
 					);
 				}
 
-				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
-		// Chosen
-		if ($this->chosen)
-		{
-			$this->arrAttributes['data-controller'] = trim(($this->arrAttributes['data-controller'] ?? '') . ' contao--choices');
-		}
-
 		return \sprintf(
-			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
+			'%s%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s%s',
 			$this->multiple ? '<input type="hidden" name="' . (str_ends_with($this->strName, '[]') ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
+			$this->chosen ? '<div class="tl_select_wrapper" data-controller="contao--choices">' : '',
 			$this->strName,
 			$this->strId,
 			$strClass,
 			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			implode('', $arrOptions),
+			$this->chosen ? '</div>' : '',
 			$this->wizard
 		);
 	}

@@ -28,7 +28,7 @@ class FavoritesVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -79,7 +79,7 @@ class FavoritesVoterTest extends TestCase
 
     public function testDeniesAccessIfUserIsNotABackendUser(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 2]);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['id' => 2]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -94,7 +94,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_favorites', ['user' => 3]),
+                new ReadAction('tl_favorites', ['user' => 2]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );

@@ -10,8 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\VideoController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', ContentVimeo::class, VideoController::class);
+
 /**
  * Content element "Vimeo".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 7;
+ *             use Contao\CoreBundle\Controller\ContentElement\VideoController instead.
  */
 class ContentVimeo extends ContentElement
 {
@@ -99,7 +106,7 @@ class ContentVimeo extends ContentElement
 
 		if (!empty($params))
 		{
-			$url .= (str_contains($url, '?') ? '&amp;' : '?') . implode('&amp;', $params);
+			$url .= (str_contains($url, '?') ? '&' : '?') . implode('&', $params);
 		}
 
 		if ($this->playerStart > 0)

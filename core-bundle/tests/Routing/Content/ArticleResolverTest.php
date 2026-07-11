@@ -22,9 +22,9 @@ class ArticleResolverTest extends TestCase
 {
     public function testAbstainsIfContentIsNotAnArticleModel(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class);
+        $content = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $resolver = new ArticleResolver($this->mockContaoFramework());
+        $resolver = new ArticleResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertNull($result);
@@ -32,10 +32,10 @@ class ArticleResolverTest extends TestCase
 
     public function testResolvesArticleModel(): void
     {
-        $content = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $content = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -43,7 +43,7 @@ class ArticleResolverTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $resolver = new ArticleResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $resolver = new ArticleResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
         $result = $resolver->resolve($content);
 
         $this->assertFalse($result->isRedirect());
@@ -52,9 +52,9 @@ class ArticleResolverTest extends TestCase
 
     public function testThrowsExceptionIfPageOfArticleIsNotFound(): void
     {
-        $content = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
+        $content = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -62,7 +62,7 @@ class ArticleResolverTest extends TestCase
             ->willReturn(null)
         ;
 
-        $resolver = new ArticleResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $resolver = new ArticleResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
 
         $this->expectException(ForwardPageNotFoundException::class);
 

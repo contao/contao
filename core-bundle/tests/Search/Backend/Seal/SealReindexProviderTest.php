@@ -26,8 +26,8 @@ class SealReindexProviderTest extends TestCase
     public function testTotalReturnsNull(): void
     {
         $provider = new SealReindexProvider(
-            [$this->createMock(ProviderInterface::class)],
-            $this->createMock(EventDispatcherInterface::class),
+            [$this->createStub(ProviderInterface::class)],
+            $this->createStub(EventDispatcherInterface::class),
         );
 
         $this->assertNull($provider->total());
@@ -41,11 +41,11 @@ class SealReindexProviderTest extends TestCase
             ->method('updateIndex')
         ;
 
-        $reindexConfig = (new SealReindexConfig())->withIndex('non_matching_index');
+        $reindexConfig = new SealReindexConfig()->withIndex('non_matching_index');
 
         $provider = new SealReindexProvider(
             [$internalProvider],
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
         );
 
         $provider->provide($reindexConfig);

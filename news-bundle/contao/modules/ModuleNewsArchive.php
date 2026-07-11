@@ -11,6 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
+use Contao\CoreBundle\Pagination\PaginationConfig;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "news archive".
@@ -45,7 +49,7 @@ class ModuleNewsArchive extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -85,8 +89,6 @@ class ModuleNewsArchive extends ModuleNews
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$limit = null;
 		$offset = 0;
 		$intBegin = 0;
@@ -115,6 +117,8 @@ class ModuleNewsArchive extends ModuleNews
 					break;
 			}
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Create the date object
 		try
@@ -166,22 +170,23 @@ class ModuleNewsArchive extends ModuleNews
 				$total = $intTotal;
 
 				// Get the current page
-				$id = 'page_a' . $this->id;
-				$page = (int) (Input::get($id) ?? 1);
+				$param = 'page_a' . $this->id;
 
-				// Do not index or cache the page if the page number is outside the range
-				if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
+				try
 				{
-					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $this->perPage));
+				}
+				catch (PageOutOfRangeException $e)
+				{
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 				}
 
 				// Set limit and offset
-				$limit = $this->perPage;
-				$offset = (max($page, 1) - 1) * $this->perPage;
+				$limit = $pagination->getPerPage();
+				$offset = $pagination->getOffset();
 
 				// Add the pagination menu
-				$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
-				$this->Template->pagination = $objPagination->generate("\n  ");
+				$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 			}
 		}
 
@@ -230,5 +235,10 @@ class ModuleNewsArchive extends ModuleNews
 		$this->Template->headline = trim($this->headline);
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

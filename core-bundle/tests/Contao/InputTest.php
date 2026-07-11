@@ -47,7 +47,7 @@ class InputTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
+        $container->set('contao.routing.scope_matcher', $this->createStub(ScopeMatcher::class));
 
         System::setContainer($container);
     }
@@ -64,13 +64,13 @@ class InputTest extends TestCase
         parent::tearDown();
     }
 
-    #[DataProvider('encodeInputProvider')]
+    #[DataProvider('encodeInputProvider', validateArgumentCount: false)]
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
 
         if ($source !== $expected) {
-            $this->expectUserDeprecationMessageMatches('/cleanKey\(\)" has been deprecated/');
+            $this->expectUserDeprecationMessageMatches('/cleanKey\(\)" is deprecated/');
         }
 
         Input::initialize();
@@ -107,7 +107,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_GET = $_POST = $_COOKIE = ['key' => $source];
 
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+ has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+ is deprecated/');
 
         $this->assertSame($expected, Input::get('key', true));
         $this->assertSame($expected, Input::post('key', true));
@@ -119,7 +119,6 @@ class InputTest extends TestCase
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
         $this->assertSame($expected, Input::postHtml('key', true));
         $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
@@ -129,7 +128,7 @@ class InputTest extends TestCase
     {
         $expectedEncoded ??= $expected;
 
-        $specialchars = (new \ReflectionClass(Widget::class))->getMethod('specialcharsValue')->invoke(...);
+        $specialchars = new \ReflectionClass(Widget::class)->getMethod('specialcharsValue')->invoke(...);
 
         // html_entity_decode simulates the browser here
         $_POST = [
@@ -143,9 +142,6 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::post('decoded', true));
         $this->assertSame($expectedEncoded, Input::post('encoded'));
 
-        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
-
-        $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
     }
 
@@ -178,7 +174,7 @@ class InputTest extends TestCase
         $this->assertSame($encoded, Input::postRaw('key'));
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectUserDeprecationMessageMatches('/postHtml\(\) with \$blnDecodeEntities set to false has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/postHtml\(\) with \$blnDecodeEntities set to false is deprecated/');
         $this->assertSame($encoded, Input::postHtml('key'));
     }
 
@@ -323,7 +319,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = ['key' => $source];
 
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+is deprecated/');
 
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
@@ -379,7 +375,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = ['key' => $source];
 
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+is deprecated/');
 
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
@@ -394,6 +390,36 @@ class InputTest extends TestCase
         yield 'Keeps allowed tags' => [
             'Text <with> <span> tags',
             'Text &#60;with&#62; <span> tags',
+        ];
+
+        yield 'Allows self-closing tags' => [
+            '<p><img src="img.png" /></p>',
+            '<p><img src="img.png" /></p>',
+        ];
+
+        yield 'Self-closing no space' => [
+            '<img src="img.png"/>',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no quotes' => [
+            '<img src=img.png />',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no attributes' => [
+            '<img />',
+            '<img />',
+        ];
+
+        yield 'Self-closing no attributes no space' => [
+            '<img/>',
+            '<img />',
+        ];
+
+        yield 'Not self-closing' => [
+            '<img src=img.png/>',
+            '<img src="img.png/">',
         ];
 
         yield 'Removes attributes' => [
@@ -533,7 +559,7 @@ class InputTest extends TestCase
 
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
-            '<form><input></form>',
+            '<form><input /></form>',
         ];
 
         yield [
@@ -670,8 +696,6 @@ class InputTest extends TestCase
     #[DataProvider('stripTagsNoTagsAllowedProvider')]
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
-        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
-
         $this->assertSame($expected, Input::stripTags($source));
     }
 
@@ -713,14 +737,11 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
 
-        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
     public function testStripTagsScriptAllowed(): void
     {
-        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
-
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
             Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),
@@ -864,7 +885,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = $_GET = [];
 
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+is deprecated/');
 
         $this->assertSame([], Input::getKeys());
         $this->assertFalse(Input::isPost());

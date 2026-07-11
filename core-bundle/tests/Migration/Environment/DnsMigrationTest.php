@@ -25,7 +25,7 @@ class DnsMigrationTest extends TestCase
 {
     public function testDoesNotRunIfNoMappings(): void
     {
-        $db = $this->createMock(Connection::class);
+        $db = $this->createStub(Connection::class);
         $migration = new DnsMigration($db, []);
 
         $this->assertFalse($migration->shouldRun());

@@ -13,14 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
@@ -34,7 +33,7 @@ class DynamicUseTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicUseTokenParser($this->createMock(ContaoFilesystemLoader::class));
+        $tokenParser = new DynamicUseTokenParser($this->createStub(ContaoFilesystemLoader::class));
 
         $this->assertSame('use', $tokenParser->getTag());
     }
@@ -86,10 +85,10 @@ class DynamicUseTokenParserTest extends TestCase
 
     public function testHandlesContaoUsesWithThemeContext(): void
     {
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/theme']))
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => 'templates/theme']))
         ;
 
         $environment = $this->getDemoEnvironment($pageFinder);
@@ -117,18 +116,16 @@ class DynamicUseTokenParserTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/use');
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn(['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')])
+            ->willReturnMap([['templates', ['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')]]])
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
-            ->with("SELECT templates FROM tl_theme WHERE templates != ''")
-            ->willReturn(['templates/theme'])
+            ->willReturnMap([["SELECT templates FROM tl_theme WHERE templates != ''", ['templates/theme']]])
         ;
 
         $templateLocator = new TemplateLocator(
@@ -142,8 +139,7 @@ class DynamicUseTokenParserTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );
 
@@ -152,9 +148,8 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

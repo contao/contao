@@ -43,7 +43,7 @@ class AccessDecisionStrategyPassTest extends TestCase
 
     public function testReplacesTheAccessDecisionStrategy(): void
     {
-        $strategy = $this->createMock(AccessDecisionStrategyInterface::class);
+        $strategy = $this->createStub(AccessDecisionStrategyInterface::class);
 
         $definition = $this->createMock(Definition::class);
         $definition

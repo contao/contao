@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\UrlUtil;
+use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Http\Message\UriInterface;
 
 class UrlUtilTest extends TestCase
 {
@@ -74,5 +76,139 @@ class UrlUtilTest extends TestCase
     {
         $this->assertSame('https://fööbar.de/foo', UrlUtil::makeAbsolute('/foo', 'https://fööbar.de/'));
         $this->assertSame('https://xn--fbar-5qaa.de/foo', UrlUtil::makeAbsolute('/foo', 'https://xn--fbar-5qaa.de/'));
+    }
+
+    #[DataProvider('normalizePathAndQueryProvider')]
+    public function testNormalizePathAndQuery(string $url, string $expected): void
+    {
+        $actual = UrlUtil::getNormalizePathAndQuery($url);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public static function normalizePathAndQueryProvider(): iterable
+    {
+        yield [
+            '/foo/bar',
+            '/foo/bar',
+        ];
+
+        yield [
+            '/foo/bar?bar=baz',
+            '/foo/bar?bar=baz',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&bar=baz',
+            '/foo/bar?bar=baz&foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&rt=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&ref=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&revise=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?bar=baz&rt=1&ref=2&revise=3',
+            '/foo/bar?bar=baz',
+        ];
+    }
+
+    #[DataProvider('mergeQueryIfMissingProvider')]
+    public function testMergeQueryIfMissing(UriInterface|string $uri, string $queryToAdd, string $expected): void
+    {
+        $actual = UrlUtil::mergeQueryIfMissing($uri, $queryToAdd);
+        $this->assertSame($expected, (string) $actual);
+    }
+
+    public static function mergeQueryIfMissingProvider(): iterable
+    {
+        yield 'Adds query to url without query' => [
+            'https://example.com/path',
+            'a=1',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Strips leading question mark' => [
+            'https://example.com/path',
+            '?a=1',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Strips leading ampersand' => [
+            'https://example.com/path',
+            '&a=1',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Empty queryToAdd does not change url (empty string)' => [
+            'https://example.com/path?a=1',
+            '',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Empty queryToAdd does not change url (just ?)' => [
+            'https://example.com/path?a=1',
+            '?',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Empty queryToAdd does not change url (just &)' => [
+            'https://example.com/path?a=1',
+            '&',
+            'https://example.com/path?a=1',
+        ];
+
+        yield 'Adds only missing keys' => [
+            'https://example.com/path?a=1',
+            'a=999&b=2',
+            'https://example.com/path?a=1&b=2',
+        ];
+
+        yield 'Adds multiple keys when none exist' => [
+            'https://example.com/path',
+            'a=1&b=2',
+            'https://example.com/path?a=1&b=2',
+        ];
+
+        yield 'Keeps existing key order and appends new keys' => [
+            'https://example.com/path?b=2&a=1',
+            'c=3&a=999',
+            'https://example.com/path?b=2&a=1&c=3',
+        ];
+
+        yield 'Accepts UriInterface input' => [
+            new Uri('https://example.com/path?a=1'),
+            'b=2',
+            'https://example.com/path?a=1&b=2',
+        ];
+
+        yield 'Preserves fragment' => [
+            'https://example.com/path?a=1#fragment',
+            'b=2',
+            'https://example.com/path?a=1&b=2#fragment',
+        ];
+
+        yield 'Uses RFC3986 encoding' => [
+            'https://example.com/path',
+            'q=hello world',
+            'https://example.com/path?q=hello%20world',
+        ];
+
+        yield 'No query remains no query' => [
+            'https://example.com/path',
+            '',
+            'https://example.com/path',
+        ];
     }
 }

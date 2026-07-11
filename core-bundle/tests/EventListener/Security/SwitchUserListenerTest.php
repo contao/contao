@@ -43,8 +43,8 @@ class SwitchUserListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $event = new SwitchUserEvent(new Request(), $this->createMock(BackendUser::class));
-        $listener = new SwitchUserListener($tokenStorage, $this->mockLogger());
+        $event = new SwitchUserEvent(new Request(), $this->createStub(BackendUser::class));
+        $listener = new SwitchUserListener($tokenStorage, $this->createStub(LoggerInterface::class));
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The token storage did not contain a token.');
@@ -52,14 +52,9 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockLogger(string|null $message = null): LoggerInterface&MockObject
+    private function mockLogger(string $message): LoggerInterface&MockObject
     {
         $logger = $this->createMock(LoggerInterface::class);
-
-        if (null === $message) {
-            return $logger;
-        }
-
         $logger
             ->expects($this->once())
             ->method('info')
@@ -69,24 +64,21 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    private function mockTokenStorage(string|null $username = null): TokenStorageInterface&MockObject
+    private function mockTokenStorage(string $username): TokenStorageInterface&MockObject
     {
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUserIdentifier')
+            ->willReturn($username)
+        ;
+
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        if (null !== $username) {
-            $token = $this->createMock(TokenInterface::class);
-            $token
-                ->expects($this->once())
-                ->method('getUserIdentifier')
-                ->willReturn($username)
-            ;
-
-            $tokenStorage
-                ->expects($this->once())
-                ->method('getToken')
-                ->willReturn($token)
-            ;
-        }
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
 
         return $tokenStorage;
     }

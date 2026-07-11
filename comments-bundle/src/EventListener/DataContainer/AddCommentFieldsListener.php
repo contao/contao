@@ -69,8 +69,19 @@ class AddCommentFieldsListener
 
     private function applyParentFields(string $table): void
     {
+        $isInstalled = match ($table) {
+            'tl_news_archive' => isset($this->bundles['ContaoNewsBundle']),
+            'tl_calendar' => isset($this->bundles['ContaoCalendarBundle']),
+            'tl_faq_category' => isset($this->bundles['ContaoFaqBundle']),
+            default => throw new \RuntimeException('Unsupported table '.$table),
+        };
+
+        if (!$isInstalled) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['palettes']['__selector__'][] = 'allowComments';
-        $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha';
+        $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,requireLogin,disableCaptcha';
 
         $GLOBALS['TL_DCA'][$table]['fields']['allowComments'] = [
             'filter' => true,
@@ -84,30 +95,24 @@ class AddCommentFieldsListener
             'options' => ['notify_admin', 'notify_author', 'notify_both'],
             'reference' => &$GLOBALS['TL_LANG'][$table],
             'eval' => ['tl_class' => 'w50'],
-            'sql' => "varchar(32) NOT NULL default 'notify_admin'",
+            'sql' => ['type' => 'string', 'length' => 32, 'default' => 'notify_admin'],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['sortOrder'] = [
             'inputType' => 'select',
             'options' => ['ascending', 'descending'],
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
-            'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => "varchar(32) NOT NULL default 'ascending'",
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => ['type' => 'string', 'length' => 32, 'default' => 'ascending'],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['perPage'] = [
             'inputType' => 'text',
             'eval' => ['rgxp' => 'natural', 'tl_class' => 'w50'],
-            'sql' => 'smallint(5) unsigned NOT NULL default 0',
+            'sql' => ['type' => 'smallint', 'unsigned' => true, 'default' => 0],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = [
-            'inputType' => 'checkbox',
-            'eval' => ['tl_class' => 'w50'],
-            'sql' => ['type' => 'boolean', 'default' => false],
-        ];
-
-        $GLOBALS['TL_DCA'][$table]['fields']['bbcode'] = [
             'inputType' => 'checkbox',
             'eval' => ['tl_class' => 'w50'],
             'sql' => ['type' => 'boolean', 'default' => false],
@@ -134,6 +139,17 @@ class AddCommentFieldsListener
 
     private function applyChildFields(string $table): void
     {
+        $isInstalled = match ($table) {
+            'tl_news' => isset($this->bundles['ContaoNewsBundle']),
+            'tl_calendar_events' => isset($this->bundles['ContaoCalendarBundle']),
+            'tl_faq' => isset($this->bundles['ContaoFaqBundle']),
+            default => throw new \RuntimeException('Unsupported table '.$table),
+        };
+
+        if (!$isInstalled) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
         $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [

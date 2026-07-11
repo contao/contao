@@ -128,7 +128,7 @@ class Cron
         $entityManager = ($this->entityManager)();
         $cronJobsToBeRun = [];
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTime();
 
         // Return if another cron process is already running
         try {
@@ -172,6 +172,7 @@ class Cron
             }
 
             $entityManager->flush();
+            $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
         } finally {
             $repository->unlockTable();
         }
