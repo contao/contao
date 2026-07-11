@@ -220,4 +220,110 @@ class FactoryTest extends TestCase
         $this->assertSame(3, $mockClient->getRequestsCount());
         $this->assertInstanceOf(ScopingHttpClient::class, $escargot->getClient());
     }
+
+    public function testDoesNotScopeWithoutConfidentialData(): void
+    {
+        $options = ['headers' => ['Accept-Language' => 'de']];
+
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (): MockHttpClient => $mockClient;
+
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1
+            ->method('getName')
+            ->willReturn('subscriber-1')
+        ;
+
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack(), [], $options, $clientFactory);
+        $factory->addSubscriber($subscriber1);
+
+        $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
+        $escargot = $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-1']);
+
+        $this->assertSame($mockClient, $escargot->getClient());
+    }
+
+    /**
+     * @dataProvider provideConfidentialOptions
+     */
+    public function testStripsConfidentialOptionsFromExternalDomainOptions(array $confidentialOptions): void
+    {
+        $options = null;
+
+        $clientFactory = static function (array $defaultOptions) use (&$options): MockHttpClient {
+            $options = $defaultOptions;
+
+            return new MockHttpClient();
+        };
+
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1
+            ->method('getName')
+            ->willReturn('subscriber-1')
+        ;
+
+        $factory = new Factory(
+            $this->createMock(Connection::class),
+            $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findPublishedRootPages'])]),
+            $this->createMock(ContentUrlGenerator::class),
+            new RequestStack(),
+            [],
+            $confidentialOptions,
+            $clientFactory,
+        );
+
+        $factory->addSubscriber($subscriber1);
+
+        $queue = new InMemoryQueue();
+        $jobId = $queue->createJobId(new BaseUriCollection([new Uri('https://contao.org')]));
+
+        $factory->createFromJobId($jobId, $queue, ['subscriber-1']);
+
+        $this->assertIsArray($options);
+        $this->assertSame(Factory::USER_AGENT, $options['headers']['user-agent']);
+        $this->assertSame(10, $options['max_duration']);
+
+        foreach (array_keys($options) as $key) {
+            $this->assertStringStartsNotWith('auth_', (string) $key);
+        }
+
+        foreach (array_keys($options['headers']) as $header) {
+            $this->assertNotContains(
+                strtolower((string) $header),
+                ['authorization', 'cookie'],
+            );
+        }
+    }
+
+    public static function provideConfidentialOptions(): iterable
+    {
+        yield 'auth_basic' => [['auth_basic' => 'username:password']];
+
+        yield 'auth_bearer' => [['auth_bearer' => 'token']];
+
+        yield 'auth_wildcard' => [['auth_foo' => 'bar']];
+
+        yield 'authorization' => [['headers' => ['Authorization' => 'Bearer token']]];
+
+        yield 'authorization (lowercase)' => [['headers' => ['authorization' => 'Bearer token']]];
+
+        yield 'authorization (uppercase)' => [['headers' => ['AUTHORIZATION' => 'Bearer token']]];
+
+        yield 'session cookie' => [['headers' => ['Cookie' => 'Confidential']]];
+
+        yield 'session cookie (lowercase)' => [['headers' => ['cookie' => 'Confidential']]];
+
+        yield 'session cookie (uppercase)' => [['headers' => ['COOKIE' => 'Confidential']]];
+
+        yield 'strips only confidential options' => [
+            [
+                'auth_basic' => 'username:password',
+                'headers' => [
+                    'User-Agent' => Factory::USER_AGENT,
+                    'Cookie' => 'Confidential',
+                    'Authorization' => 'Bearer token',
+                ],
+            ],
+        ];
+    }
 }

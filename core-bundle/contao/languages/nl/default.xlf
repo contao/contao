@@ -381,6 +381,18 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Element-ID %d kan hier niet worden ingevoegd omdat het in conflict is met een bestaand element.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Je kunt alleen toegang tot de template editor verlenen als je beheerder bent.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Het trefwoord &apos;auto&apos; is alleen toegestaan ​​aan het begin van het attribuut &apos;sizes&apos; en moet worden gevolgd door een komma als er aanvullende waarden zijn.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy loading moet ingeschakeld zijn als het attribuut &apos;sizes&apos; is ingesteld op &apos;auto&apos;.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Tel %d en %d bij elkaar op.</target>
