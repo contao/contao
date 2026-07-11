@@ -23,7 +23,6 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -205,14 +204,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $route = new PageRoute($pageModel);
 
-        $request = $this->createMock(Request::class);
-        $request->query = new InputBag(['page' => '9']);
-
-        $request
-            ->expects($this->once())
-            ->method('getUriForPath')
-            ->willReturnArgument(0)
-        ;
+        $request = Request::create('https://example.com/?page=9');
 
         $adapters = [
             PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
@@ -248,7 +240,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $defaults = $route->getDefaults();
         $defaults['pageModel'] = 42;
 
-        $expectedUrl = '/_fragment?_path='.urlencode(http_build_query($defaults));
+        $expectedUrl = 'https://example.com/_fragment?_path='.urlencode(http_build_query($defaults));
 
         $this->assertNull($event->getResponse());
         $this->assertSame($expectedUrl, $event->getUrl());
@@ -266,8 +258,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $route = new PageRoute($pageModel);
 
-        $request = $this->createStub(Request::class);
-        $request->query = new InputBag(['page' => '42']);
+        $request = new Request(['page' => '42']);
 
         $adapters = [
             PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),

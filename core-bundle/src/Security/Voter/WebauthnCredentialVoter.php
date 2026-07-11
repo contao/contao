@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
@@ -39,7 +40,7 @@ class WebauthnCredentialVoter extends Voter
         return $this->supportsAttribute($attribute) && $this->supportsType($subject::class);
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, Vote|null $vote = null): bool
     {
         $user = $token->getUser();
 

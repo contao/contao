@@ -17,8 +17,6 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\Stub;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -30,20 +28,21 @@ class LocaleSubscriberTest extends TestCase
     #[DataProvider('getLocaleRequestData')]
     public function testReadsTheLocaleFromTheRequest(string|null $locale, string $expected): void
     {
-        $request = $this->createStub(Request::class);
-        $request->attributes = $this->createMock(ParameterBag::class);
-        $request->attributes
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->with('_locale')
-            ->willReturn($expected)
-        ;
+        $request = new class($expected) extends Request {
+            public function __construct(private readonly string $preferredLanguage)
+            {
+                parent::__construct();
+            }
 
-        $request->attributes
-            ->expects($this->once())
-            ->method('set')
-            ->with('_locale', $expected)
-        ;
+            public function getPreferredLanguage(array|null $locales = null): string
+            {
+                return $this->preferredLanguage;
+            }
+        };
+
+        if (null !== $locale) {
+            $request->attributes->set('_locale', $locale);
+        }
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
@@ -63,6 +62,8 @@ class LocaleSubscriberTest extends TestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
     public static function getLocaleRequestData(): iterable
@@ -78,15 +79,17 @@ class LocaleSubscriberTest extends TestCase
     #[DataProvider('acceptLanguageTestData')]
     public function testReadsTheLocaleFromTheAcceptLanguageHeader(string|null $locale, string $expected, array $available): void
     {
-        $request = $this->createMock(Request::class);
-        $request->attributes = new ParameterBag();
+        $request = new class($expected) extends Request {
+            public function __construct(private readonly string $preferredLanguage)
+            {
+                parent::__construct();
+            }
 
-        $request
-            ->expects($this->once())
-            ->method('getPreferredLanguage')
-            ->with($available)
-            ->willReturn($expected)
-        ;
+            public function getPreferredLanguage(array|null $locales = null): string
+            {
+                return $this->preferredLanguage;
+            }
+        };
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
@@ -126,17 +129,10 @@ class LocaleSubscriberTest extends TestCase
 
     public function testDoesNothingIfThereIsNoRequestScope(): void
     {
-        $attributes = $this->createMock(ParameterBag::class);
-        $attributes
-            ->expects($this->never())
-            ->method('set')
-        ;
+        $request = Request::create('/');
+        $request->attributes->set('_locale', 'en');
 
-        $event = new RequestEvent(
-            $this->createStub(KernelInterface::class),
-            Request::create('/', Request::METHOD_GET, [$attributes]),
-            HttpKernelInterface::MAIN_REQUEST,
-        );
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener = new LocaleSubscriber(
             $this->createStub(LocaleAwareInterface::class),
@@ -145,6 +141,8 @@ class LocaleSubscriberTest extends TestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertSame('en', $request->attributes->get('_locale'));
     }
 
     public function testSetsTheTranslatorLocale(): void
@@ -174,7 +172,7 @@ class LocaleSubscriberTest extends TestCase
         $listener->setTranslatorLocale($event);
     }
 
-    private function mockLocales(array $locales): Locales&Stub
+    private function mockLocales(array $locales): Locales
     {
         $localesService = $this->createStub(Locales::class);
         $localesService

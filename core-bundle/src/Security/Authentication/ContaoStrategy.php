@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
@@ -43,13 +44,13 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
         return get_debug_type($strategy);
     }
 
-    public function decide(\Traversable $results): bool
+    public function decide(\Traversable $results, AccessDecision|null $accessDecision = null): bool
     {
         if ($this->isContaoContext()) {
-            return $this->contaoStrategy->decide($results);
+            return $this->contaoStrategy->decide($results, $accessDecision);
         }
 
-        return $this->defaultStrategy->decide($results);
+        return $this->defaultStrategy->decide($results, $accessDecision);
     }
 
     private function isContaoContext(): bool
