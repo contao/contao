@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.48] (2026-07-13)
+
+**Security fixes:**
+
+- [CVE-2026-57232]: Server-side request forgery (SSRF) via unvalidated RSS feed URLs
+
+**Fixed issues:**
+
+- [#10004] Resolve insert tags in the accordion header ([dennisbohn])
+- [#9996] Only consider items from the same `ptable` for sorting ([lukasbableck])
+- [#9926] Fix compatibility with ICU version 78 ([ausi])
+- [#9920] Handle invalid database values in the `InputUnit` widget ([aschempp])
+- [#9940] Remove the obsolete `Input::setGet()` from the event list ([ausi])
+- [#9915] Handle file errors in the Twig filesystem loader ([aschempp])
+- [#9927] Delete `OptIn` tokens if the model does not exist anymore ([fritzmg])
+- [#9911] Complete the contao 2FA provider on the `code_valid` event ([zoglo])
+
 ## [5.3.47] (2026-06-18)
 
 **Security fixes:**
@@ -28,7 +45,7 @@ This project adheres to [Semantic Versioning].
 - [#9819] Support self-closing tags in the `Input::stripAttributes()` method ([leofeyer])
 - [#9823] Add a trace to the maximum insert tag nesting level exception ([Toflar])
 - [#9812] Allow a lower `--time-limit` for messenger workers ([fritzmg])
-- [#9811] Add an attributes variable to the `player.html.twig` template ([fritzmg])
+- [#9811] Add an `attributes` variable to the `player.html.twig` template ([fritzmg])
 - [#9795] Correctly set the poster URL in the `PlayerController` ([leofeyer])
 - [#9783] Fix setting integer properties on models to invalid types ([ausi])
 - [#9779] Improve the support and documentation of `sizes=auto` in images ([ausi])
@@ -947,6 +964,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
 [5.3.47]: https://github.com/contao/contao/releases/tag/5.3.47
 [5.3.46]: https://github.com/contao/contao/releases/tag/5.3.46
 [5.3.45]: https://github.com/contao/contao/releases/tag/5.3.45
@@ -1000,6 +1018,7 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
@@ -1691,3 +1710,11 @@ This project adheres to [Semantic Versioning].
 [#9894]: https://github.com/contao/contao/pull/9894
 [#9900]: https://github.com/contao/contao/pull/9900
 [#9903]: https://github.com/contao/contao/pull/9903
+[#9911]: https://github.com/contao/contao/pull/9911
+[#9915]: https://github.com/contao/contao/pull/9915
+[#9920]: https://github.com/contao/contao/pull/9920
+[#9926]: https://github.com/contao/contao/pull/9926
+[#9927]: https://github.com/contao/contao/pull/9927
+[#9940]: https://github.com/contao/contao/pull/9940
+[#9996]: https://github.com/contao/contao/pull/9996
+[#10004]: https://github.com/contao/contao/pull/10004
