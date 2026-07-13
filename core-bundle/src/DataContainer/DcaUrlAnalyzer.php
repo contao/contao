@@ -268,7 +268,7 @@ class DcaUrlAnalyzer
 
     private function findGet(string $key): string|null
     {
-        $value = $this->requestStack->getCurrentRequest()->query->all()[$key] ?? null;
+        $value = $this->requestStack->getCurrentRequest()?->query->all()[$key] ?? null;
 
         return \is_string($value) ? $value : null;
     }

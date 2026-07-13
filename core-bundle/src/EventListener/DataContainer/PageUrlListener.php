@@ -286,30 +286,30 @@ class PageUrlListener
 
     private function addInputToPage(PageModel $pageModel): void
     {
-        $post = $this->requestStack->getCurrentRequest()?->request;
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (null !== ($type = $post?->get('type'))) {
+        if (null !== ($type = $request?->request->get('type'))) {
             $pageModel->type = $type;
         }
 
-        if (null !== ($title = $post?->get('title'))) {
+        if (null !== ($title = $request?->request->get('title'))) {
             $pageModel->title = $title;
         }
 
-        if (null !== ($requireItem = $post?->get('requireItem'))) {
+        if (null !== ($requireItem = $request?->request->get('requireItem'))) {
             $pageModel->requireItem = (bool) $requireItem;
         }
 
         if ('root' === $pageModel->type) {
-            if (null !== ($dns = $post?->get('dns'))) {
+            if (null !== ($dns = $request?->request->get('dns'))) {
                 $pageModel->domain = $dns;
             }
 
-            if (null !== ($urlPrefix = $post?->get('urlPrefix'))) {
+            if (null !== ($urlPrefix = $request?->request->get('urlPrefix'))) {
                 $pageModel->urlPrefix = $urlPrefix;
             }
 
-            if (null !== ($urlSuffix = $post?->get('urlSuffix'))) {
+            if (null !== ($urlSuffix = $request?->request->get('urlSuffix'))) {
                 $pageModel->urlSuffix = $urlSuffix;
             }
         }

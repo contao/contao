@@ -156,7 +156,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             return $this;
         }
 
-        $query = $this->requestStack->getCurrentRequest()?->query;
+        $request = $this->requestStack->getCurrentRequest();
 
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
             if ('new' === $k) {
@@ -168,7 +168,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
                 continue;
             }
 
-            if (!($v['showOnSelect'] ?? null) && 'select' === $query?->get('act')) {
+            if (!($v['showOnSelect'] ?? null) && 'select' === $request?->query->get('act')) {
                 continue;
             }
 
