@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Framework;
+namespace Contao\CoreBundle\Tests\HttpClient;
 
 use Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
