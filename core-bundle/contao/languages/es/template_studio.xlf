@@ -23,9 +23,11 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>Buscar plantillas…</target>
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
         <source>Show only my templates</source>
+        <target>Mostrar solo mis plantillas</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
         <source>Create a new variant template for the %s legacy content element</source>
+        <target>Crear una nueva plantilla de variante para el elemento %s de contenido heredado</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
         <source>Create variant</source>

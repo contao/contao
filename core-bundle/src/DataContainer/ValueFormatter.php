@@ -119,9 +119,11 @@ class ValueFormatter implements ResetInterface
 
         $length = match ($mode) {
             DataContainer::SORT_INITIAL_LETTER_ASC,
-            DataContainer::SORT_INITIAL_LETTER_DESC => 1,
+            DataContainer::SORT_INITIAL_LETTER_DESC,
+            DataContainer::SORT_INITIAL_LETTER_BOTH => 1,
             DataContainer::SORT_INITIAL_LETTERS_ASC,
-            DataContainer::SORT_INITIAL_LETTERS_DESC => max((int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['length'] ?? 2), 1),
+            DataContainer::SORT_INITIAL_LETTERS_DESC,
+            DataContainer::SORT_INITIAL_LETTERS_BOTH => max((int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['length'] ?? 2), 1),
             default => null,
         };
 
@@ -272,7 +274,8 @@ class ValueFormatter implements ResetInterface
         }
 
         if (
-            \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
+            \is_scalar($value)
+            && \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
             && (
                 ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['isAssociative'] ?? null)
                 || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
@@ -285,7 +288,7 @@ class ValueFormatter implements ResetInterface
             }
         }
 
-        if ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc)) {
+        if (\is_scalar($value) && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
             $label = $this->findOptionLabel($callbackOptions, $value);
 
             if (null !== $label) {
@@ -445,7 +448,7 @@ class ValueFormatter implements ResetInterface
             $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
             $fk = $this->connection->quoteIdentifier($fk);
 
-            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk=?", [$id]);
+            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk = ?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? null : $value;
         }

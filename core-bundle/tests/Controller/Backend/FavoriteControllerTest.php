@@ -82,7 +82,7 @@ class FavoriteControllerTest extends TestCase
         ]];
 
         if ($currentId && 'success_stream' === $block) {
-            $queries[] = ['SELECT COUNT(*) FROM tl_favorites WHERE user=?', [42], 0];
+            $queries[] = ['SELECT COUNT(*) FROM tl_favorites WHERE user = ?', [42], 0];
         }
 
         $connection = $this->createMock(Connection::class);

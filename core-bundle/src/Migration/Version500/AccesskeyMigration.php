@@ -31,13 +31,7 @@ class AccesskeyMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        foreach (self::$affectedTables as $table) {
-            if ($this->needsMigration($table)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(self::$affectedTables, fn ($table) => $this->needsMigration($table));
     }
 
     public function run(): MigrationResult

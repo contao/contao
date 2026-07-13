@@ -15,7 +15,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
-        if ($context->isThemeContext()) {
+        if ($context->isThemeContext() || !$this->userTemplateExists($context)) {
             return false;
         }
 

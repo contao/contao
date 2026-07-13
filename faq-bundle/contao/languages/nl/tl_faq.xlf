@@ -123,6 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.versions.1">
         <source>Show the versions of question ID %s</source>
+        <target>Toon de versies van vraag ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
@@ -178,9 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenewtop.1">
         <source>Add a new question at the top</source>
+        <target>Voeg bovenaan een nieuwe vraag toe</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenewafter.1">
         <source>Add a new question after question ID %s</source>
+        <target>Voeg een nieuwe vraag toe na vraag ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.tableLabel">
         <source>Question</source>

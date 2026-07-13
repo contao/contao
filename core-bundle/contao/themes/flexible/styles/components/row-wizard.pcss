@@ -65,6 +65,65 @@
             white-space: nowrap;
         }
     }
+
+    tbody {
+        tr:last-child {
+            td {
+                padding-bottom: 5px;
+            }
+        }
+    }
+
+    &[data-rows-count="0"] {
+        &:not(:has(>thead)) {
+            margin-top: 6px;
+        }
+
+        th {
+            padding-bottom: 3px;
+        }
+    }
+
+    + .tl_help {
+        margin-top: 7px;
+    }
+}
+
+.row-wizard-ghost {
+    outline: 1px dashed var(--form-border);
+    outline-offset: 2px;
+    border-radius: calc(var(--border-radius) - 4px);
+
+    td {
+        padding-block: 0;
+    }
+
+    td:not(.tl_right) {
+        opacity: 0.7;
+
+        a {
+            cursor: not-allowed;
+
+            &:active {
+                color: currentcolor;
+            }
+        }
+    }
+
+    /* Prevent layout shift due to missing sortable button (#9843)  */
+    .ghost-spacer {
+        width: 1%;
+        white-space: nowrap;
+
+        > span {
+            display: inline-block;
+            width: 16px;
+        }
+    }
+
+    .tl_right > *:not(.row-wizard-add) {
+        visibility: hidden;
+    }
 }
 
 [data-contao--row-wizard-target="copy"][disabled],
@@ -73,6 +132,7 @@
     filter: brightness(var(--disable-brightness, 0.2)) grayscale(1) opacity(0.3);
 }
 
+.row-wizard-add,
 .row-wizard-drag-handle {
     background: none;
     border: 0;

@@ -201,16 +201,22 @@ class Configuration implements ConfigurationInterface
                                 ->validate()
                                     ->ifTrue(
                                         static function (array $options): bool {
+                                            $timeLimitCount = 0;
+
                                             foreach ($options as $option) {
-                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches) && $matches[1] <= 60) {
-                                                    return false;
+                                                if (preg_match('/^--time-limit=([0-9]+)$/', $option, $matches)) {
+                                                    ++$timeLimitCount;
+
+                                                    if ($timeLimitCount > 1 || (int) $matches[1] > 60) {
+                                                        return true;
+                                                    }
                                                 }
                                             }
 
-                                            return true;
+                                            return 1 !== $timeLimitCount;
                                         },
                                     )
-                                    ->thenInvalid('Custom messenger:consume options must include a "--time-limit" of 60 seconds or less.')
+                                    ->thenInvalid('Custom messenger:consume options must include exactly one "--time-limit" of 60 seconds or less.')
                                 ->end()
                             ->end()
                             ->arrayNode('autoscale')
@@ -423,17 +429,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                     ->example(['+heic', '-svgz'])
                     ->validate()
-                        ->ifTrue(
-                            static function (array $extensions): bool {
-                                foreach ($extensions as $extension) {
-                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
-                                        return true;
-                                    }
-                                }
-
-                                return false;
-                            },
-                        )
+                        ->ifTrue(static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)))
                         ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
                     ->end()
                     ->validate()
@@ -640,17 +636,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([])
                     ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
-                        ->ifTrue(
-                            static function (array $countries): bool {
-                                foreach ($countries as $country) {
-                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
-                                        return true;
-                                    }
-                                }
-
-                                return false;
-                            },
-                        )
+                        ->ifTrue(static fn (array $countries): bool => array_any($countries, static fn ($country) => !preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)))
                         ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
@@ -765,17 +751,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('additional_uris')
                     ->info('Additional URIs to crawl. By default, only the ones defined in the root pages are crawled.')
                     ->validate()
-                    ->ifTrue(
-                        static function (array $uris): bool {
-                            foreach ($uris as $uri) {
-                                if (!preg_match('@^https?://@', $uri)) {
-                                    return true;
-                                }
-                            }
-
-                            return false;
-                        },
-                    )
+                    ->ifTrue(static fn (array $uris): bool => array_any($uris, static fn ($uri) => !preg_match('@^https?://@', $uri)))
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
                     ->prototype('scalar')->end()

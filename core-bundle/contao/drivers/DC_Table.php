@@ -43,6 +43,17 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
+	private const LAZY_LOAD_OPERATIONS_THRESHOLD = 300;
+
+	/**
+	 * @var array{id: int, table: string}|null
+	 */
+	private array|null $singleRecordOperationsTarget = null;
+
+	private bool|null $lazyLoadOperations = null;
+
+	private int|null $lazyLoadOperationsRows = null;
+
 	/**
 	 * Name of the parent table
 	 * @var string
@@ -502,6 +513,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$this->handleSingleRecordOperationsRequest();
+
 		// Render view
 		if ($this->treeView)
 		{
@@ -525,6 +538,163 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return $this->render('show_all', $parameters);
+	}
+
+	private function handleSingleRecordOperationsRequest(): void
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$id = (int) $request?->headers->get('Contao-Operations');
+
+		if ($id < 1)
+		{
+			return;
+		}
+
+		$table = $request?->headers->get('Contao-Operations-Table');
+		$table = \is_string($table) && '' !== $table ? $table : $this->strTable;
+
+		// Restrict to the current table context (plus parent table in extended tree mode).
+		if ($table !== $this->strTable && $table !== $this->ptable)
+		{
+			throw new AccessDeniedException('Invalid table "' . $table . '"');
+		}
+
+		// Check permission, otherwise anybody can send an Ajax request with those
+		// headers and lookup arbitrary rows.
+		$record = $this->getCurrentRecord($id, $table);
+
+		if (null === $record)
+		{
+			throw new AccessDeniedException('Access to record "' . $table . '.' . $id . '" denied');
+		}
+
+		$this->singleRecordOperationsTarget = array(
+			'id' => $id,
+			'table' => $table,
+		);
+
+		// Restrict the root to the current ID now so we don't render
+		// the entire tree/list - we're only interested in one row.
+		$rootId = $id;
+
+		// In extended tree mode, child-table rows are rendered within their parent-table node.
+		// Use the parent ID as root so normal tree generation can still reach the target child row.
+		if (self::MODE_TREE_EXTENDED == ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $table === $this->strTable)
+		{
+			$rootId = (int) ($record['pid'] ?? 0);
+		}
+
+		if ($rootId > 0)
+		{
+			$this->updateRoot(array($rootId));
+		}
+	}
+
+	private function respondWithSingleRecordOperationsIfNeeded(string $table, int $recordId, mixed $operations): void
+	{
+		if (!$this->shouldRespondWithSingleRecordOperations($table, $recordId))
+		{
+			return;
+		}
+
+		throw new ResponseException(new Response((string) $operations));
+	}
+
+	private function shouldRespondWithSingleRecordOperations(string $table, int $recordId): bool
+	{
+		return null !== $this->singleRecordOperationsTarget
+			&& $this->singleRecordOperationsTarget['id'] === $recordId
+			&& $this->singleRecordOperationsTarget['table'] === $table;
+	}
+
+	protected function shouldRenderPrimaryOperationsOnly(): bool
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && $request->headers->has('Contao-Operations'))
+		{
+			return false;
+		}
+
+		if (null !== $this->lazyLoadOperations)
+		{
+			return $this->lazyLoadOperations;
+		}
+
+		$mode = $GLOBALS['TL_DCA'][$this->strTable]['list']['lazyLoadOperations'] ?? 'auto';
+
+		if (\is_bool($mode))
+		{
+			return $this->lazyLoadOperations = $mode;
+		}
+
+		if (!\is_string($mode) || 'auto' !== strtolower($mode))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid list.lazyLoadOperations value "%s" in DCA "%s". Allowed values are true, false or "auto".', $mode, $this->strTable));
+		}
+
+		// The row count can be initialized later in the rendering pipeline.
+		// Do not cache a preliminary auto decision in that case.
+		if (null === $this->lazyLoadOperationsRows)
+		{
+			return false;
+		}
+
+		$rows = max(0, (int) $this->lazyLoadOperationsRows);
+		$operationsPerRow = $this->getOperationsPerRowCount();
+		$hasPrimaryOperation = $this->hasPrimaryOperation();
+		$result = $hasPrimaryOperation && $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+
+		return $this->lazyLoadOperations = $result;
+	}
+
+	private function hasPrimaryOperation(): bool
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? null;
+
+		if (!\is_array($operations))
+		{
+			return false;
+		}
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			if (\is_array($operation) && ($operation['primary'] ?? false))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function getOperationsPerRowCount(): int
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? null;
+
+		if (!\is_array($operations))
+		{
+			return 0;
+		}
+
+		$count = 0;
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			++$count;
+		}
+
+		return $count;
 	}
 
 	/**
@@ -1283,7 +1453,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($limit > 0)
 					{
 						$objInsertAfter = $db
-							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 							->limit(1, $limit - 1)
 							->execute($pid);
 
@@ -1301,7 +1471,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$newPID = $pid;
 
 					$objSorting = $db
-						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
+						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
 						->execute($pid);
 
 					// Select sorting value of the first record
@@ -1313,7 +1483,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
 							$objNewSorting = $db
-								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 								->execute($pid);
 
 							$count = 2;
@@ -1360,7 +1530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (is_numeric($newPID) || $newPID === null)
 						{
 							$objNextSorting = $db
-								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
+								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " AND sorting>?")
 								->execute($newPID, $curSorting);
 
 							// Select sorting value of the next record
@@ -1374,7 +1544,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									$count = 1;
 
 									$objNewSorting = $db
-										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 										->execute($newPID);
 
 									while ($objNewSorting->next())
@@ -3399,6 +3569,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Call a recursive function that builds the tree
 		$records = array();
+		$this->lazyLoadOperationsRows = \count($topMostRootIds) + \count($this->rootChildren ?? array());
+		$treeRecordLimit = $this->getTreeRecordLimit();
+
+		if ($treeRecordLimit > 0)
+		{
+			$this->lazyLoadOperationsRows = min($this->lazyLoadOperationsRows, $treeRecordLimit);
+		}
+
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
@@ -3737,6 +3916,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$operations->addSeparator();
 					$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
 				}
+
+				$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($currentRecord['id'] ?? 0), $operations);
 			}
 			else
 			{
@@ -3841,6 +4022,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons .= $this->getPickerInputField($id);
 			}
+
+			$this->respondWithSingleRecordOperationsIfNeeded($table, (int) ($currentRecord['id'] ?? 0), $operations);
 		}
 
 		// Add the records of the table itself
@@ -3849,11 +4032,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'id' => "{$node}_$id",
+			'record_id' => (int) $currentRecord['id'],
+			'record_table' => $table,
 			'level' => $intMargin / $intSpacing + 1,
 			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
 			'is_group' => ($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable,
 			'is_expanded' => $blnIsOpen,
 			'enable_deeplink' => $isCurrentTable,
+			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
 			'toggler_url' => !empty($children) ? $this->addToUrl('ptg=' . $id) : null,
 			'records' => array(),
 			'children' => array(),
@@ -4038,10 +4224,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$headerFields = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['headerFields'];
 		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 
+		$dc = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+		$dc->strTable = $this->ptable;
+		$dc->intId = $this->intCurrentPid;
+
 		foreach ($headerFields as $v)
 		{
-			$this->strField = $v;
-			$_v = $valueFormatter->format($this->ptable, $v, $objParent->$v, $this);
+			$dc->strField = $v;
+			$_v = $valueFormatter->format($this->ptable, $v, $objParent->$v, $dc);
 
 			// Add the sorting field
 			if ($_v)
@@ -4152,6 +4342,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$blnIndent = false;
 			$intWrapLevel = 0;
 			$row = $objOrderBy->fetchAllAssoc();
+			$this->lazyLoadOperationsRows = \count($row);
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
@@ -4256,9 +4447,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Backwards compatibility: Drag handle in case the child_record_callback is used and no leftside handle is output (to be removed in Contao 6)
 						if ($blnIsSortable && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$recordOperations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" style="display:none">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
+							$recordOperations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle hidden" data-action="keydown->contao--sortable#move" data-contao--sortable-target="fallbackHandle">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
 						}
 					}
+
+					$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row[$i]['id'], $recordOperations);
 
 					$record['operations'] = $recordOperations;
 				}
@@ -4315,6 +4508,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters['message'] = Message::generate();
 		$parameters['global_operations'] = $operations;
+		$parameters['table_name'] = $this->strTable;
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		return $this->render('view/parent', $parameters);
 	}
@@ -4495,6 +4690,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($objRow->numRows)
 		{
 			$result = $objRow->fetchAllAssoc();
+			$this->lazyLoadOperationsRows = \count($result);
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
@@ -4551,10 +4747,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
 
+				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
+				$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row['id'], $recordOperations);
+
 				$record = array(
 					'id' => $row['id'],
 					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
-					'operations' => $this->generateButtons($row, $this->strTable, $this->root),
+					'operations' => $recordOperations,
 				);
 
 				if ($this->strPickerFieldType)
@@ -4628,6 +4827,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$parameters['records'] = $records;
 		$parameters['order_by'] = $firstOrderBy;
 		$parameters['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
+		$parameters['table_name'] = $this->strTable;
+		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
 
 		return $this->render('view/list', $parameters);
 	}
@@ -4721,6 +4922,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
+			$searchField = $this->getFilterFieldExpression($fld);
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
@@ -4729,12 +4931,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$fkField = Database::quoteIdentifier($fkField);
 
 				$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-				$this->procedure[] = "(" . \sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . \sprintf($strPattern, "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
+				$this->procedure[] = "(" . \sprintf($strPattern, $searchField) . " OR " . \sprintf($strPattern, "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
 			else
 			{
-				$this->procedure[] = \sprintf($strPattern, Database::quoteIdentifier($fld));
+				$this->procedure[] = \sprintf($strPattern, $searchField);
 			}
 
 			$this->values[] = $searchValue;
@@ -5129,7 +5331,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($sortingFields as $field)
 			{
-				$what = Database::quoteIdentifier($field);
+				$what = $this->getFilterFieldExpression($field);
 
 				if (isset($session['filter'][$filter][$field]))
 				{
@@ -5187,7 +5389,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// CSV lists (see #2890)
 						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['csv']))
 						{
-							$this->procedure[] = $db->findInSet('?', $field, true);
+							$this->procedure[] = "FIND_IN_SET(?, $what)";
 							$this->values[] = $session['filter'][$filter][$field];
 						}
 						else
@@ -5249,7 +5451,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues[] = $this->ptable;
 			}
 
-			$what = Database::quoteIdentifier($field);
+			$what = $this->getFilterFieldExpression($field);
+			$whatWithAlias = $what . ' AS ' . Database::quoteIdentifier($field);
 
 			// Optimize the SQL query (see #8485)
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag']))
@@ -5257,19 +5460,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-%d'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-%d'))), '') AS " . Database::quoteIdentifier($field);
 				}
 
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-01'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-01'))), '') AS " . Database::quoteIdentifier($field);
 				}
 
 				// Sort by year
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-01-01'))), '') AS $what";
+					$whatWithAlias = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-01-01'))), '') AS " . Database::quoteIdentifier($field);
 				}
 			}
 
@@ -5297,7 +5500,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$objFields = $db
-				->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
+				->prepare("SELECT DISTINCT " . $whatWithAlias . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
 				->execute(...$arrValues);
 
 			$active = isset($session['filter'][$filter][$field]);
@@ -5341,6 +5544,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'filters' => $filters,
 			))
 		;
+	}
+
+	/**
+	 * Returns the SQL expression used for search and filter operations.
+	 * Supports regular columns and JSON searching in virtual fields.
+	 */
+	private function getFilterFieldExpression(string $field): string
+	{
+		$virtualFields = DcaExtractor::getInstance($this->strTable)->getVirtualFields();
+
+		if (!isset($virtualFields[$field]))
+		{
+			return Database::quoteIdentifier($field);
+		}
+
+		$path = System::getContainer()
+			->get('database_connection')
+			->getDatabasePlatform()
+			->quoteStringLiteral('$.' . json_encode($field, JSON_THROW_ON_ERROR))
+		;
+
+		return "JSON_UNQUOTE(JSON_EXTRACT(" . Database::quoteIdentifier($virtualFields[$field]) . ", " . $path . '))';
 	}
 
 	/**

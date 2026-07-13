@@ -5,7 +5,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    line-height: 1;
+    line-height: normal;
 
     > li {
         &:not(:first-child, .current_ancestor)::before {
@@ -28,22 +28,26 @@
         margin: 0;
 
         li {
-            margin: 3px 0;
-
-            a:focus-visible {
-                color: var(--contao);
+            a {
+                color: var(--text);
             }
 
-            &.current {
-                opacity: 0.5;
+            a:hover,
+            a:focus,
+            &.current a {
+                background-color: var(--nav-bg-hover);
             }
 
-            > * {
+            > :is(a, button) {
                 overflow-x: clip;
                 text-overflow: ellipsis;
-                white-space: nowrap;
-                max-width: 100%;
+                width: calc(100% - var(--trail-padding, -9px) - 39px);
+                padding: 3px 15px 4px calc(var(--trail-padding, -9px) + 24px);
             }
+        }
+
+        .trail-icon {
+            background: var(--icon-corner-down-right) calc(var(--trail-padding, 0px) + 5px) center no-repeat;
         }
     }
 
@@ -66,9 +70,8 @@
         left: 6px;
         display: flex;
         flex-direction: column;
-        gap: 2px;
         margin: 4px 0 0;
-        padding: 8px 15px;
+        padding: 9px 0;
         color: var(--text);
         background: var(--content-bg) !important;
         border: 1px solid var(--content-border);
@@ -97,8 +100,6 @@
 
         > li {
             display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
     }
 

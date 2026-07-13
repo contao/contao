@@ -2,6 +2,108 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.9] (2026-07-13)
+
+**Security fixes:**
+
+- [CVE-2026-57232]: Server-side request forgery (SSRF) via unvalidated RSS feed URLs
+
+**Fixed issues:**
+
+- [#10008] Apply cache tags for all iterable collections ([aschempp])
+- [#9993] Do not sanitize content in the newsletter reader ([ausi])
+- [#9985] Fix the Stimulus color picker preview and Turbo reconnect ([zoglo])
+- [#9972] Do not add attributes twice in `Image::getHtml()` ([leofeyer])
+- [#9975] Fix undefined array access when `getimagesize()` fails for invalid image uploads ([qzminski])
+- [#9959] Fix output encoding migration for MariaDB ([ausi])
+- [#9922] Safely replace insert tags in widget values ([aschempp])
+- [#9527] Preparatory migration for output encoding ([ausi])
+
+## [5.7.8] (2026-07-01)
+
+**Fixed issues:**
+
+- [#9937] Fix destroying an undefined `linkContainer` in the `jump-targets-controller` ([zoglo])
+- [#9935] Fix incorrect pagination range in `ModuleSearch` ([fritzmg])
+- [#9902] Make the VFS configuration helper compatible with Flysystem 3.7 ([m-vo])
+- [#9928] Fix lazy-loaded list operations for tables without primary operations ([Toflar])
+- [#9914] Fix root redirect not working for forward pages ([Toflar])
+
+## [5.7.7] (2026-06-15)
+
+**Security fixes:**
+
+- [CVE-2026-55824]: Contao crawler leaks auth credentials to external hosts
+- [CVE-2026-55825]: Possible path traversal in job download URIs
+
+**Fixed issues:**
+
+- [#9906] Only allow user templates to be modified in the Template Studio ([aschempp])
+- [#9882] Prevent PHP object injection in `Document::__unserialize()` ([XananasX7])
+- [#9890] Fix more ghost target functionality in the row wizard ([zoglo])
+- [#9908] Fix job attachments not updating ([fritzmg])
+- [#9898] Use `foreach` instead of `array_map` to preserve cross-table DCA field references ([qzminski])
+- [#9864] Pass the correct DC when calling the parent table callback ([aschempp])
+
+## [5.7.6] (2026-06-03)
+
+**Fixed issues:**
+
+- [#9843] Fix the initial state visibility and the missing reset support of the row wizard ([zoglo])
+- [#9887] Do not open the context menu when text has been selected ([zoglo])
+- [#9885] Ensure that there is only one `--time-limit` option ([leofeyer])
+- [#9883] Fix the operations menu controller performance ([zoglo])
+- [#9874] Show the translated slot names instead of `{% slot … %}` ([leofeyer])
+- [#9873] Always use modern controllers ([aschempp])
+- [#9872] Revert `pointerDown` preload for lazy operations ([zoglo])
+- [#9855] Lazy-load secondary operations ([Toflar])
+- [#9865] Do not load labels in `System::getReferer()` ([Toflar])
+- [#9857] Queue the tooltips migration ([Toflar])
+- [#9863] Also check for scalar values when formatting options ([aschempp])
+- [#9859] Use ETag-based conditional polling for backend jobs ([Toflar])
+- [#9854] Fix an error if a hidden form field is created without a value ([qzminski])
+- [#9846] Improve the breadcrumb menu implementation ([leofeyer])
+- [#9851] Ignore separators when checking whether to show the operations menu button or not ([qzminski])
+- [#9860] Pass a `DataContainer` object instead of `null` in the `FallbackRecordLabelListener` ([leofeyer])
+- [#9815] Support content elements in the root-page-dependent frontend module ([aschempp])
+- [#9858] Negate the condition for auto-closing messages ([bytehead])
+- [#9852] Add a class service alias for `VirtualFieldsHandler` ([aschempp])
+- [#9836] Handle empty user when indexing protected pages ([aschempp])
+- [#9840] Set the `picker` class in the listing attributes ([leofeyer])
+- [#9834] Do not render the trail headline if there is a breadcrumb ([leofeyer])
+- [#9837] Fix the facet alignment ([aschempp])
+- [#9835] Add the `SORT_INITIAL_LETTER_BOTH` flags to the value formatter ([pressi])
+
+## [5.7.5] (2026-05-12)
+
+**Fixed issues:**
+
+- [#9833] Use `grid-auto-flow` for the main headline ([leofeyer])
+- [#9822] Make the dashboard version history mobile friendly ([fritzmg])
+- [#9430] Patch `@hotwired/turbo` to cancel pending prefetch requests ([zoglo])
+- [#9805] Fix the operation menu positioning and quirks ([zoglo])
+- [#9792] Save some calls on `HtmlAttributes` ([Toflar])
+- [#9780] Adjust the insufficient color contrasts in the back end ([zoglo])
+- [#9828] Use the named import for the `WebauthnController` ([zoglo])
+- [#9803] Fix the scroll offset controller behavior ([zoglo])
+- [#9814] Support searching and filtering virtual fields in `DC_Table` ([Toflar])
+- [#9825] Register the `textarea-autogrow` Stimulus controller on the meta caption field ([zoglo])
+- [#9821] Remove the search for cache settings and add a filter for enabling instead ([fritzmg])
+- [#9796] Fix the SERP preview styling ([leofeyer])
+- [#9397] Improve the searchable content settings on DCAs ([Toflar])
+- [#9820] Remove the deprecated `terminate_on_cache_hit` option ([fritzmg])
+- [#9810] Support `dcaPicker` in the row wizard ([aschempp])
+- [#9813] Fix the cancel URL in 2FA elements ([aschempp])
+- [#9818] Fix the job owner display in the backend ([qzminski])
+- [#9816] Add an autowiring alias for the record labeler ([aschempp])
+- [#9798] Fix incorrect spacing for `#main_headline` on <768px viewport width ([lukasbableck])
+- [#9791] Do not extend from the deprecated WebAuthn credential repository class ([fritzmg])
+- [#9786] Replace breadcrumb insert tags for JSON-LD in the module and for HTML in the template ([lukasbableck])
+- [#9784] Don't use `$this->framework` in `DC_Table` ([leofeyer])
+- [#9785] Resolve insert tags in the redirect page URL in the breadcrumb module ([lukasbableck])
+- [#9776] Support accessing and manipulating virtual fields in user objects ([fritzmg])
+- [#9782] Fix the button styling in the Template Studio header ([lukasbableck])
+
 ## [5.7.4] (2026-04-24)
 
 **Fixed issues:**
@@ -89,7 +191,7 @@ This project adheres to [Semantic Versioning].
 - [#9606] Add `|default` to the `form_explanation` text variable ([lukasbableck])
 - [#9598] Fix the version of the `customSchemaOptions` deprecation ([fritzmg])
 - [#9594] Fix copying or moving multiple files ([qzminski])
-- [#9593] Fix timestamp fields in breadcrumb do not get formatted as expected  ([fiedsch])
+- [#9593] Fix timestamp fields in breadcrumb do not get formatted as expected ([fiedsch])
 - [#9585] Fix the current page appearing twice in the breadcrumb ([qzminski])
 - [#9583] Add the missing `insert_tag_raw` in the form templates ([MarkejN])
 - [#9579] Use `MockClock` for time sensitive tests ([bytehead])
@@ -435,6 +537,11 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.9]: https://github.com/contao/contao/releases/tag/5.7.9
+[5.7.8]: https://github.com/contao/contao/releases/tag/5.7.8
+[5.7.7]: https://github.com/contao/contao/releases/tag/5.7.7
+[5.7.6]: https://github.com/contao/contao/releases/tag/5.7.6
+[5.7.5]: https://github.com/contao/contao/releases/tag/5.7.5
 [5.7.4]: https://github.com/contao/contao/releases/tag/5.7.4
 [5.7.3]: https://github.com/contao/contao/releases/tag/5.7.3
 [5.7.2]: https://github.com/contao/contao/releases/tag/5.7.2
@@ -444,6 +551,9 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
+[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
+[CVE-2026-55825]: https://github.com/contao/contao/security/advisories/GHSA-grm4-wm43-9jh5
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [alike03]: https://github.com/alike03
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -458,10 +568,12 @@ This project adheres to [Semantic Versioning].
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
+[pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
+[XananasX7]: https://github.com/XananasX7
 [xchs]: https://github.com/xchs
 [zoglo]: https://github.com/zoglo
 [#7562]: https://github.com/contao/contao/pull/7562
@@ -703,6 +815,7 @@ This project adheres to [Semantic Versioning].
 [#9390]: https://github.com/contao/contao/pull/9390
 [#9391]: https://github.com/contao/contao/pull/9391
 [#9393]: https://github.com/contao/contao/pull/9393
+[#9397]: https://github.com/contao/contao/pull/9397
 [#9399]: https://github.com/contao/contao/pull/9399
 [#9405]: https://github.com/contao/contao/pull/9405
 [#9406]: https://github.com/contao/contao/pull/9406
@@ -716,6 +829,7 @@ This project adheres to [Semantic Versioning].
 [#9427]: https://github.com/contao/contao/pull/9427
 [#9428]: https://github.com/contao/contao/pull/9428
 [#9429]: https://github.com/contao/contao/pull/9429
+[#9430]: https://github.com/contao/contao/pull/9430
 [#9433]: https://github.com/contao/contao/pull/9433
 [#9437]: https://github.com/contao/contao/pull/9437
 [#9439]: https://github.com/contao/contao/pull/9439
@@ -757,6 +871,7 @@ This project adheres to [Semantic Versioning].
 [#9518]: https://github.com/contao/contao/pull/9518
 [#9520]: https://github.com/contao/contao/pull/9520
 [#9526]: https://github.com/contao/contao/pull/9526
+[#9527]: https://github.com/contao/contao/pull/9527
 [#9529]: https://github.com/contao/contao/pull/9529
 [#9531]: https://github.com/contao/contao/pull/9531
 [#9532]: https://github.com/contao/contao/pull/9532
@@ -842,3 +957,68 @@ This project adheres to [Semantic Versioning].
 [#9771]: https://github.com/contao/contao/pull/9771
 [#9773]: https://github.com/contao/contao/pull/9773
 [#9775]: https://github.com/contao/contao/pull/9775
+[#9776]: https://github.com/contao/contao/pull/9776
+[#9780]: https://github.com/contao/contao/pull/9780
+[#9782]: https://github.com/contao/contao/pull/9782
+[#9784]: https://github.com/contao/contao/pull/9784
+[#9785]: https://github.com/contao/contao/pull/9785
+[#9786]: https://github.com/contao/contao/pull/9786
+[#9791]: https://github.com/contao/contao/pull/9791
+[#9792]: https://github.com/contao/contao/pull/9792
+[#9796]: https://github.com/contao/contao/pull/9796
+[#9798]: https://github.com/contao/contao/pull/9798
+[#9803]: https://github.com/contao/contao/pull/9803
+[#9805]: https://github.com/contao/contao/pull/9805
+[#9810]: https://github.com/contao/contao/pull/9810
+[#9813]: https://github.com/contao/contao/pull/9813
+[#9814]: https://github.com/contao/contao/pull/9814
+[#9815]: https://github.com/contao/contao/pull/9815
+[#9816]: https://github.com/contao/contao/pull/9816
+[#9818]: https://github.com/contao/contao/pull/9818
+[#9820]: https://github.com/contao/contao/pull/9820
+[#9821]: https://github.com/contao/contao/pull/9821
+[#9822]: https://github.com/contao/contao/pull/9822
+[#9825]: https://github.com/contao/contao/pull/9825
+[#9828]: https://github.com/contao/contao/pull/9828
+[#9833]: https://github.com/contao/contao/pull/9833
+[#9834]: https://github.com/contao/contao/pull/9834
+[#9835]: https://github.com/contao/contao/pull/9835
+[#9836]: https://github.com/contao/contao/pull/9836
+[#9837]: https://github.com/contao/contao/pull/9837
+[#9840]: https://github.com/contao/contao/pull/9840
+[#9843]: https://github.com/contao/contao/pull/9843
+[#9846]: https://github.com/contao/contao/pull/9846
+[#9851]: https://github.com/contao/contao/pull/9851
+[#9852]: https://github.com/contao/contao/pull/9852
+[#9854]: https://github.com/contao/contao/pull/9854
+[#9855]: https://github.com/contao/contao/pull/9855
+[#9857]: https://github.com/contao/contao/pull/9857
+[#9858]: https://github.com/contao/contao/pull/9858
+[#9859]: https://github.com/contao/contao/pull/9859
+[#9860]: https://github.com/contao/contao/pull/9860
+[#9863]: https://github.com/contao/contao/pull/9863
+[#9864]: https://github.com/contao/contao/pull/9864
+[#9865]: https://github.com/contao/contao/pull/9865
+[#9872]: https://github.com/contao/contao/pull/9872
+[#9873]: https://github.com/contao/contao/pull/9873
+[#9874]: https://github.com/contao/contao/pull/9874
+[#9882]: https://github.com/contao/contao/pull/9882
+[#9883]: https://github.com/contao/contao/pull/9883
+[#9885]: https://github.com/contao/contao/pull/9885
+[#9887]: https://github.com/contao/contao/pull/9887
+[#9890]: https://github.com/contao/contao/pull/9890
+[#9898]: https://github.com/contao/contao/pull/9898
+[#9902]: https://github.com/contao/contao/pull/9902
+[#9906]: https://github.com/contao/contao/pull/9906
+[#9908]: https://github.com/contao/contao/pull/9908
+[#9914]: https://github.com/contao/contao/pull/9914
+[#9922]: https://github.com/contao/contao/pull/9922
+[#9928]: https://github.com/contao/contao/pull/9928
+[#9935]: https://github.com/contao/contao/pull/9935
+[#9937]: https://github.com/contao/contao/pull/9937
+[#9959]: https://github.com/contao/contao/pull/9959
+[#9972]: https://github.com/contao/contao/pull/9972
+[#9975]: https://github.com/contao/contao/pull/9975
+[#9985]: https://github.com/contao/contao/pull/9985
+[#9993]: https://github.com/contao/contao/pull/9993
+[#10008]: https://github.com/contao/contao/pull/10008

@@ -51,6 +51,7 @@ services:
         arguments:
             - '@contao.cron'
             - '@database_connection'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
             - false
 
@@ -179,6 +180,7 @@ services:
     contao.listener.data_container.fallback_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
+            - '@contao.framework'
             - '@translator'
             - '@contao.data_container.value_formatter'
 
@@ -643,9 +645,14 @@ services:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
             - '@messenger.bus.default'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
-            - '%contao.backend.route_prefix%'
             - '%kernel.debug%'
+
+    contao.listener.security.complete_two_factor_provider:
+        class: Contao\CoreBundle\EventListener\Security\CompleteTwoFactorProviderListener
+        arguments:
+            - '@security.token_storage'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -738,6 +745,7 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+            - '@contao.data_container.record_labeler'
 
     contao.listener.widget.title_tag:
         class: Contao\CoreBundle\EventListener\Widget\TitleTagListener

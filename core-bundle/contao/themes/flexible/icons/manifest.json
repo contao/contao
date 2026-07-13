@@ -36,7 +36,6 @@
   "cut_.svg": "/system/themes/flexible/icons/cut_.svg",
   "article_--dark.svg": "/system/themes/flexible/icons/article_--dark.svg",
   "article_.svg": "/system/themes/flexible/icons/article_.svg",
-  "logo--dark.svg": "/system/themes/flexible/icons/logo--dark.svg",
   "logo.svg": "/system/themes/flexible/icons/logo.svg",
   "su_--dark.svg": "/system/themes/flexible/icons/su_--dark.svg",
   "su_.svg": "/system/themes/flexible/icons/su_.svg",
@@ -352,6 +351,7 @@
   "preview--dark.svg": "/system/themes/flexible/icons/preview--dark.svg",
   "preview.svg": "/system/themes/flexible/icons/preview.svg",
   "rss.svg": "/system/themes/flexible/icons/rss.svg",
+  "profile--dark.svg": "/system/themes/flexible/icons/profile--dark.svg",
   "profile.svg": "/system/themes/flexible/icons/profile.svg",
   "profile_small--dark.svg": "/system/themes/flexible/icons/profile_small--dark.svg",
   "profile_small.svg": "/system/themes/flexible/icons/profile_small.svg",
@@ -406,8 +406,6 @@
   "folMinus--dark.svg": "/system/themes/flexible/icons/folMinus--dark.svg",
   "folPlus--dark.svg": "/system/themes/flexible/icons/folPlus--dark.svg",
   "movel.svg": "/system/themes/flexible/icons/movel.svg",
-  "corner-down-right--dark.svg": "/system/themes/flexible/icons/corner-down-right--dark.svg",
-  "corner-down-right.svg": "/system/themes/flexible/icons/corner-down-right.svg",
   "diff--disabled--dark.svg": "/system/themes/flexible/icons/diff--disabled--dark.svg",
   "diff--disabled.svg": "/system/themes/flexible/icons/diff--disabled.svg",
   "mover.svg": "/system/themes/flexible/icons/mover.svg",
@@ -426,6 +424,7 @@
   "chevron-right.svg": "/system/themes/flexible/icons/chevron-right.svg",
   "folMinus.svg": "/system/themes/flexible/icons/folMinus.svg",
   "folPlus.svg": "/system/themes/flexible/icons/folPlus.svg",
+  "chevron-down--dark.svg": "/system/themes/flexible/icons/chevron-down--dark.svg",
   "chevron-down.svg": "/system/themes/flexible/icons/chevron-down.svg",
   "arrow-down.svg": "/system/themes/flexible/icons/arrow-down.svg"
 }

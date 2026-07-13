@@ -120,6 +120,9 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
             - '@request_stack'
+            - []
+            - []
+            - '@=service("contao.http_client.no_private_network_except_root_pages").getFactory()'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -361,7 +364,7 @@ services:
     contao.feed.http_adapter:
         class: FeedIo\Adapter\Http\Client
         arguments:
-            - '@psr18.http_client'
+            - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
@@ -456,6 +459,13 @@ services:
             - '@contao.framework'
         tags:
             - { name: html_sanitizer, sanitizer: contao }
+
+    contao.http_client.no_private_network_except_root_pages:
+        class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        arguments:
+            - '@http_client'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -694,6 +704,7 @@ services:
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
             - '@messenger.bus.default'
+            - '@uri_signer'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -749,6 +760,7 @@ services:
         arguments:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
+            - '@contao.routing.scope_matcher'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -1602,6 +1614,7 @@ services:
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
     Contao\CoreBundle\DataContainer\ForeignKeyParser: '@contao.data_container.foreign_key_parser'
     Contao\CoreBundle\DataContainer\RecordLabeler: '@contao.data_container.record_labeler'
+    Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
