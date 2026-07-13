@@ -61,49 +61,53 @@ class ModelTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGetColumnCastTypesFromSchema(): void
+    public function testGetColumnInfosFromSchema(): void
     {
         $this->assertSame(
             [
                 'tl_Foo' => [
-                    'int_not_null' => Types::INTEGER,
-                    'int_null' => Types::INTEGER,
-                    'smallint_not_null' => Types::SMALLINT,
-                    'smallint_null' => Types::SMALLINT,
-                    'bigint_not_null' => Types::BIGINT,
-                    'bigint_null' => Types::BIGINT,
-                    'float_not_null' => Types::FLOAT,
-                    'float_null' => Types::FLOAT,
-                    'bool_not_null' => Types::BOOLEAN,
-                    'bool_null' => Types::BOOLEAN,
-                    'floatNotNullCamelCase' => Types::FLOAT,
-                    'dca_only' => Types::INTEGER,
+                    'string_not_null' => [Types::STRING, 'string', 2 => true],
+                    'string_null' => [Types::STRING, '1'],
+                    'int_not_null' => [Types::INTEGER, 0, 2 => true],
+                    'int_null' => [Types::INTEGER],
+                    'smallint_not_null' => [Types::SMALLINT, 1, 2 => true],
+                    'smallint_null' => [Types::SMALLINT],
+                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', 2 => true],
+                    'bigint_null' => [Types::BIGINT],
+                    'float_not_null' => [Types::FLOAT, 0.0, 2 => true],
+                    'float_null' => [Types::FLOAT],
+                    'bool_not_null' => [Types::BOOLEAN, 2 => true],
+                    'bool_null' => [Types::BOOLEAN, true],
+                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, 2 => true],
+                    'dca_only' => [Types::INTEGER],
                 ],
             ],
-            Model::getColumnCastTypesFromDca(),
+            Model::getColumnInfosFromDca(),
         );
     }
 
-    public function testGetColumnCastTypesFromDatabase(): void
+    public function testGetColumnInfosFromDatabase(): void
     {
         $this->assertSame(
             [
                 'tl_Foo' => [
-                    'int_not_null' => Types::INTEGER,
-                    'int_null' => Types::INTEGER,
-                    'smallint_not_null' => Types::SMALLINT,
-                    'smallint_null' => Types::SMALLINT,
-                    'bigint_not_null' => Types::BIGINT,
-                    'bigint_null' => Types::BIGINT,
-                    'float_not_null' => Types::FLOAT,
-                    'float_null' => Types::FLOAT,
-                    'bool_not_null' => Types::BOOLEAN,
-                    'bool_null' => Types::BOOLEAN,
-                    'floatNotNullCamelCase' => Types::FLOAT,
-                    'database_only' => Types::INTEGER,
+                    'string_not_null' => [Types::STRING, 'string', 2 => true],
+                    'string_null' => [Types::STRING, '1'],
+                    'int_not_null' => [Types::INTEGER, 0, 2 => true],
+                    'int_null' => [Types::INTEGER],
+                    'smallint_not_null' => [Types::SMALLINT, 1, 2 => true],
+                    'smallint_null' => [Types::SMALLINT],
+                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', 2 => true],
+                    'bigint_null' => [Types::BIGINT],
+                    'float_not_null' => [Types::FLOAT, 0.0, 2 => true],
+                    'float_null' => [Types::FLOAT],
+                    'bool_not_null' => [Types::BOOLEAN, 2 => true],
+                    'bool_null' => [Types::BOOLEAN, true],
+                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, 2 => true],
+                    'database_only' => [Types::INTEGER],
                 ],
             ],
-            Model::getColumnCastTypesFromDatabase(),
+            Model::getColumnInfosFromDatabase(),
         );
     }
 
@@ -121,8 +125,8 @@ class ModelTest extends TestCase
         $this->assertSame($expected, $fooModel::convertToPhpValue($key, $value));
     }
 
-    #[DataProvider('getDatabaseValues')]
-    public function testMagicSetterTypesDeprecation(string $key, mixed $value, mixed $expected): void
+    #[DataProvider('getDefaultValues')]
+    public function testDefaultValues(string $key, mixed $expected): void
     {
         $fooModel = new class() extends Model {
             protected static $strTable = 'tl_Foo';
@@ -132,20 +136,58 @@ class ModelTest extends TestCase
             }
         };
 
-        if ($value !== $expected) {
-            $this->expectUserDeprecationMessageMatches('/Setting "[^":]+::\$[^"]+" to type [a-z]+ is deprecated/');
-        }
+        $this->assertSame($expected, $fooModel->$key);
+    }
+
+    public static function getDefaultValues(): iterable
+    {
+        yield ['string_not_null', 'string'];
+
+        yield ['string_null', '1'];
+
+        yield ['int_not_null', 0];
+
+        yield ['int_null', null];
+
+        yield ['smallint_not_null', 1];
+
+        yield ['smallint_null', null];
+
+        yield ['bigint_not_null', '9223372036854775808'];
+
+        yield ['bigint_null', null];
+
+        yield ['float_not_null', 0.0];
+
+        yield ['float_null', null];
+
+        yield ['bool_not_null', null];
+
+        yield ['bool_null', true];
+
+        yield ['floatNotNullCamelCase', 1.23];
+    }
+
+    #[DataProvider('getDatabaseValues')]
+    public function testMagicSetterTypes(string $key, mixed $value, mixed $expected): void
+    {
+        $fooModel = new class() extends Model {
+            protected static $strTable = 'tl_Foo';
+
+            public function __construct()
+            {
+            }
+        };
 
         $fooModel->$key = $value;
 
-        $this->assertSame($value, $fooModel->$key);
+        $this->assertSame($expected, $fooModel->$key);
 
         if (\is_int($expected)) {
-            $this->expectUserDeprecationMessageMatches('/Setting "[^":]+::\$[^"]+" to type [a-z]+ is deprecated/');
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessageMatches('/Setting ".*::\$.*" to type string failed, expected type for (integer|smallint|bigint) column\./');
 
             $fooModel->$key = 'not_an_integer';
-
-            $this->assertSame('not_an_integer', $fooModel->$key);
         }
     }
 
@@ -233,19 +275,19 @@ class ModelTest extends TestCase
     {
         $schema = new Schema();
         $table = $schema->createTable('tl_Foo');
-        $table->addColumn('string_not_null', Types::STRING, ['notnull' => true]);
-        $table->addColumn('string_null', Types::STRING, ['notnull' => false]);
-        $table->addColumn('int_not_null', Types::INTEGER, ['notnull' => true]);
+        $table->addColumn('string_not_null', Types::STRING, ['notnull' => true, 'default' => 'string']);
+        $table->addColumn('string_null', Types::STRING, ['notnull' => false, 'default' => 1]);
+        $table->addColumn('int_not_null', Types::INTEGER, ['notnull' => true, 'default' => 0]);
         $table->addColumn('int_null', Types::INTEGER, ['notnull' => false]);
-        $table->addColumn('smallint_not_null', Types::SMALLINT, ['notnull' => true]);
+        $table->addColumn('smallint_not_null', Types::SMALLINT, ['notnull' => true, 'default' => '1']);
         $table->addColumn('smallint_null', Types::SMALLINT, ['notnull' => false]);
-        $table->addColumn('bigint_not_null', Types::BIGINT, ['notnull' => true]);
+        $table->addColumn('bigint_not_null', Types::BIGINT, ['notnull' => true, 'default' => '9223372036854775808']);
         $table->addColumn('bigint_null', Types::BIGINT, ['notnull' => false]);
-        $table->addColumn('float_not_null', Types::FLOAT, ['notnull' => true]);
+        $table->addColumn('float_not_null', Types::FLOAT, ['notnull' => true, 'default' => '0.0']);
         $table->addColumn('float_null', Types::FLOAT, ['notnull' => false]);
         $table->addColumn('bool_not_null', Types::BOOLEAN, ['notnull' => true]);
-        $table->addColumn('bool_null', Types::BOOLEAN, ['notnull' => false]);
-        $table->addColumn('floatNotNullCamelCase', Types::FLOAT, ['notnull' => true]);
+        $table->addColumn('bool_null', Types::BOOLEAN, ['notnull' => false, 'default' => true]);
+        $table->addColumn('floatNotNullCamelCase', Types::FLOAT, ['notnull' => true, 'default' => 1.23]);
 
         if ($fromDatabase) {
             $table->addColumn('database_only', Types::INTEGER, ['notnull' => false]);
