@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.9] (2026-07-13)
+
+**Security fixes:**
+
+- [CVE-2026-57232]: Server-side request forgery (SSRF) via unvalidated RSS feed URLs
+
+**Fixed issues:**
+
+- [#10008] Apply cache tags for all iterable collections ([aschempp])
+- [#9993] Do not sanitize content in the newsletter reader ([ausi])
+- [#9985] Fix the Stimulus color picker preview and Turbo reconnect ([zoglo])
+- [#9972] Do not add attributes twice in `Image::getHtml()` ([leofeyer])
+- [#9975] Fix undefined array access when `getimagesize()` fails for invalid image uploads ([qzminski])
+- [#9959] Fix output encoding migration for MariaDB ([ausi])
+- [#9922] Safely replace insert tags in widget values ([aschempp])
+- [#9527] Preparatory migration for output encoding ([ausi])
+
 ## [5.7.8] (2026-07-01)
 
 **Fixed issues:**
@@ -22,6 +39,7 @@ This project adheres to [Semantic Versioning].
 **Fixed issues:**
 
 - [#9906] Only allow user templates to be modified in the Template Studio ([aschempp])
+- [#9882] Prevent PHP object injection in `Document::__unserialize()` ([XananasX7])
 - [#9890] Fix more ghost target functionality in the row wizard ([zoglo])
 - [#9908] Fix job attachments not updating ([fritzmg])
 - [#9898] Use `foreach` instead of `array_map` to preserve cross-table DCA field references ([qzminski])
@@ -173,7 +191,7 @@ This project adheres to [Semantic Versioning].
 - [#9606] Add `|default` to the `form_explanation` text variable ([lukasbableck])
 - [#9598] Fix the version of the `customSchemaOptions` deprecation ([fritzmg])
 - [#9594] Fix copying or moving multiple files ([qzminski])
-- [#9593] Fix timestamp fields in breadcrumb do not get formatted as expected  ([fiedsch])
+- [#9593] Fix timestamp fields in breadcrumb do not get formatted as expected ([fiedsch])
 - [#9585] Fix the current page appearing twice in the breadcrumb ([qzminski])
 - [#9583] Add the missing `insert_tag_raw` in the form templates ([MarkejN])
 - [#9579] Use `MockClock` for time sensitive tests ([bytehead])
@@ -519,6 +537,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.9]: https://github.com/contao/contao/releases/tag/5.7.9
 [5.7.8]: https://github.com/contao/contao/releases/tag/5.7.8
 [5.7.7]: https://github.com/contao/contao/releases/tag/5.7.7
 [5.7.6]: https://github.com/contao/contao/releases/tag/5.7.6
@@ -534,6 +553,7 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2026-55825]: https://github.com/contao/contao/security/advisories/GHSA-grm4-wm43-9jh5
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [alike03]: https://github.com/alike03
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -553,6 +573,7 @@ This project adheres to [Semantic Versioning].
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
+[XananasX7]: https://github.com/XananasX7
 [xchs]: https://github.com/xchs
 [zoglo]: https://github.com/zoglo
 [#7562]: https://github.com/contao/contao/pull/7562
@@ -850,6 +871,7 @@ This project adheres to [Semantic Versioning].
 [#9518]: https://github.com/contao/contao/pull/9518
 [#9520]: https://github.com/contao/contao/pull/9520
 [#9526]: https://github.com/contao/contao/pull/9526
+[#9527]: https://github.com/contao/contao/pull/9527
 [#9529]: https://github.com/contao/contao/pull/9529
 [#9531]: https://github.com/contao/contao/pull/9531
 [#9532]: https://github.com/contao/contao/pull/9532
@@ -980,6 +1002,7 @@ This project adheres to [Semantic Versioning].
 [#9872]: https://github.com/contao/contao/pull/9872
 [#9873]: https://github.com/contao/contao/pull/9873
 [#9874]: https://github.com/contao/contao/pull/9874
+[#9882]: https://github.com/contao/contao/pull/9882
 [#9883]: https://github.com/contao/contao/pull/9883
 [#9885]: https://github.com/contao/contao/pull/9885
 [#9887]: https://github.com/contao/contao/pull/9887
@@ -989,6 +1012,13 @@ This project adheres to [Semantic Versioning].
 [#9906]: https://github.com/contao/contao/pull/9906
 [#9908]: https://github.com/contao/contao/pull/9908
 [#9914]: https://github.com/contao/contao/pull/9914
+[#9922]: https://github.com/contao/contao/pull/9922
 [#9928]: https://github.com/contao/contao/pull/9928
 [#9935]: https://github.com/contao/contao/pull/9935
 [#9937]: https://github.com/contao/contao/pull/9937
+[#9959]: https://github.com/contao/contao/pull/9959
+[#9972]: https://github.com/contao/contao/pull/9972
+[#9975]: https://github.com/contao/contao/pull/9975
+[#9985]: https://github.com/contao/contao/pull/9985
+[#9993]: https://github.com/contao/contao/pull/9993
+[#10008]: https://github.com/contao/contao/pull/10008
