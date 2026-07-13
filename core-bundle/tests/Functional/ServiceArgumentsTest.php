@@ -119,6 +119,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         break;
 
                     case 'abstract':
+                    case 'service':
                         // noop
                         break;
 
@@ -152,6 +153,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
             if ('@.inner' === $argument || str_ends_with($argument, '.inner')) {
                 $this->assertContainsInstanceOf($class, $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), $class));
 
+                continue;
+            }
+
+            if (str_starts_with($argument, '@=')) {
                 continue;
             }
 
