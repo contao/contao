@@ -2331,7 +2331,7 @@
         <source>Name/ID</source>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
+        <source>Name this passkey</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>
