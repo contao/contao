@@ -642,9 +642,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$rows = max(0, (int) $this->lazyLoadOperationsRows);
 		$operationsPerRow = $this->getOperationsPerRowCount();
-		$result = $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
+		$hasPrimaryOperation = $this->hasPrimaryOperation();
+		$result = $hasPrimaryOperation && $operationsPerRow > 0 && ($rows * $operationsPerRow) > self::LAZY_LOAD_OPERATIONS_THRESHOLD;
 
 		return $this->lazyLoadOperations = $result;
+	}
+
+	private function hasPrimaryOperation(): bool
+	{
+		$operations = $GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] ?? null;
+
+		if (!\is_array($operations))
+		{
+			return false;
+		}
+
+		foreach ($operations as $key => $operation)
+		{
+			if ('new' === $key || '-' === $operation)
+			{
+				continue;
+			}
+
+			if (\is_array($operation) && ($operation['primary'] ?? false))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function getOperationsPerRowCount(): int
@@ -1427,7 +1453,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($limit > 0)
 					{
 						$objInsertAfter = $db
-							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 							->limit(1, $limit - 1)
 							->execute($pid);
 
@@ -1445,7 +1471,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$newPID = $pid;
 
 					$objSorting = $db
-						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
+						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : ''))
 						->execute($pid);
 
 					// Select sorting value of the first record
@@ -1457,7 +1483,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
 							$objNewSorting = $db
-								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 								->execute($pid);
 
 							$count = 2;
@@ -1504,7 +1530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (is_numeric($newPID) || $newPID === null)
 						{
 							$objNextSorting = $db
-								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
+								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " AND sorting>?")
 								->execute($newPID, $curSorting);
 
 							// Select sorting value of the next record
@@ -1518,7 +1544,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									$count = 1;
 
 									$objNewSorting = $db
-										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) ? " AND ptable='" . $this->ptable . "'" : '') . " ORDER BY sorting, id")
 										->execute($newPID);
 
 									while ($objNewSorting->next())

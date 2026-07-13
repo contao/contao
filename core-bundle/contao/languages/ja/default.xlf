@@ -1199,51 +1199,51 @@
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.0">
         <source>Jan</source>
-        <target>1</target>
+        <target>1月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.1">
         <source>Feb</source>
-        <target>2</target>
+        <target>2月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.2">
         <source>Mar</source>
-        <target>3</target>
+        <target>3月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.3">
         <source>Apr</source>
-        <target>4</target>
+        <target>4月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.4">
         <source>May</source>
-        <target>5</target>
+        <target>5月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.5">
         <source>Jun</source>
-        <target>6</target>
+        <target>6月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.6">
         <source>Jul</source>
-        <target>7</target>
+        <target>7月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.7">
         <source>Aug</source>
-        <target>8</target>
+        <target>8月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.8">
         <source>Sep</source>
-        <target>9</target>
+        <target>9月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.9">
         <source>Oct</source>
-        <target>10</target>
+        <target>10月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.10">
         <source>Nov</source>
-        <target>11</target>
+        <target>11月</target>
       </trans-unit>
       <trans-unit id="MONTHS_SHORT.11">
         <source>Dec</source>
-        <target>12</target>
+        <target>12月</target>
       </trans-unit>
       <trans-unit id="MSC.dayShortLength">
         <source>3</source>
@@ -1259,7 +1259,7 @@
       </trans-unit>
       <trans-unit id="MSC.titleFormat">
         <source>%B %d%o, %Y</source>
-        <target>%Y年%d月%d日</target>
+        <target>%Y年%B%e日</target>
       </trans-unit>
       <trans-unit id="MSC.url.0">
         <source>Link target</source>

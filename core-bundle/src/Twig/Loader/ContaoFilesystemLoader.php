@@ -19,6 +19,7 @@ use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
+use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
@@ -118,7 +119,13 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // and parser and just keep the block names. At some point we may transpile the
         // source to valid Twig instead and drop the proxy.
         if ('html5' !== Path::getExtension($path, true)) {
-            return new Source(file_get_contents($path), $templateName, $path);
+            $source = @file_get_contents($path);
+
+            if (false === $source) {
+                throw new LoaderError(\sprintf('Could not get contents of "%s"', $path));
+            }
+
+            return new Source($source, $templateName, $path);
         }
 
         $getExtendedTemplate = static function ($path): string|null {
@@ -198,13 +205,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // Check hierarchy
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
-        foreach (array_keys($chain) as $path) {
-            if ($isExpired($path, $time)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all(array_keys($chain), static fn ($path) => !$isExpired($path, $time));
     }
 
     /**

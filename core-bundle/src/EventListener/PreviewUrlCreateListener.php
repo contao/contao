@@ -61,7 +61,7 @@ class PreviewUrlCreateListener
                 return;
             }
 
-            $pageId = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$id]);
+            $pageId = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id = ?', [$id]);
         }
 
         if ($pageId) {
