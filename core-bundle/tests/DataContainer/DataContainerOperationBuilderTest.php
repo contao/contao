@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DataContainer;
 
+use Contao\CoreBundle\DataContainer\AbstractDataContainerOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
@@ -21,6 +22,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
+/**
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ */
 class DataContainerOperationBuilderTest extends TestCase
 {
     #[DataProvider('parsesOperationsHtmlProvider')]
@@ -59,8 +63,11 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createStub(UrlGeneratorInterface::class),
         );
 
+        /** @var Operation $operation */
+        $operation = ['html' => $html];
+
         $builder = $builder->initialize('tl_foo');
-        $builder->append(['html' => $html], true);
+        $builder->append($operation, true);
 
         $this->assertSame('success', (string) $builder);
     }
@@ -131,9 +138,12 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createStub(UrlGeneratorInterface::class),
         );
 
+        /** @var Operation $operation */
+        $operation = ['html' => ''];
+
         $builder = $builder->initialize('tl_foo');
         $builder->append($expected[0]);
-        $builder->append(['html' => ''], true);
+        $builder->append($operation, true);
 
         $this->assertSame('success', (string) $builder);
     }
@@ -165,10 +175,13 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createStub(UrlGeneratorInterface::class),
         );
 
+        /** @var Operation $operation */
+        $operation = ['html' => ''];
+
         $builder = $builder->initialize('tl_foo');
         $builder->append($expected[0]);
         $builder->addSeparator();
-        $builder->append(['html' => ''], true);
+        $builder->append($operation, true);
         $builder->addSeparator();
         $builder->append($expected[2]);
 

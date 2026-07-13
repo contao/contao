@@ -34,12 +34,6 @@ final class ParsedParameters extends InsertTagParameters
 
     public function hasInsertTags(): bool
     {
-        foreach ($this->all() as $sequence) {
-            if ($sequence->hasInsertTags()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->all(), static fn ($sequence) => $sequence->hasInsertTags());
     }
 }
