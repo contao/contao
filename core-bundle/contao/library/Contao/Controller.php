@@ -1025,7 +1025,7 @@ abstract class Controller extends System
 		// Merge the request string to be added
 		if ($strRequest)
 		{
-			parse_str(str_replace('&', '&', $strRequest), $newPairs);
+			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
 			$pairs = array_merge($pairs, $newPairs);
 		}
 
@@ -1055,7 +1055,7 @@ abstract class Controller extends System
 	 */
 	public static function redirect($strLocation, $intStatus=303): never
 	{
-		$strLocation = str_replace('&', '&', $strLocation);
+		$strLocation = str_replace('&amp;', '&', $strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
@@ -1130,12 +1130,12 @@ abstract class Controller extends System
 	 *
 	 * @throws AccessDeniedException
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the Symfony BinaryFileResponse instead.
 	 */
 	public static function sendFileToBrowser($strFile, $inline=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the Symfony BinaryFileResponse instead.', __METHOD__);
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1210,12 +1210,12 @@ abstract class Controller extends System
 	 *
 	 * @return string The URL of the target page
 	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7;
 	 *             use the contao_backend_preview route instead.
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{

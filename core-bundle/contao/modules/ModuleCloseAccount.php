@@ -12,12 +12,12 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\ContentElement\CloseAccountController;
 
-trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ModuleCloseAccount::class, CloseAccountController::class);
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 7. Use the "%s" class instead.', ModuleCloseAccount::class, CloseAccountController::class);
 
 /**
  * Front end module "close account".
  *
- * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
  *             use Contao\CoreBundle\Controller\ContentElement\CloseAccountController instead.
  */
 class ModuleCloseAccount extends Module
@@ -45,7 +45,7 @@ class ModuleCloseAccount extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}

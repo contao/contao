@@ -224,12 +224,12 @@ class Automator extends System
 	/**
 	 * Purge registrations that have not been activated within 24 hours
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7;
 	 *             use MemberModel::findExpiredRegistrations() instead.
 	 */
 	public function purgeRegistrations()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
 
 		$objMember = MemberModel::findExpiredRegistrations();
 
@@ -249,12 +249,12 @@ class Automator extends System
 	/**
 	 * Purge opt-in tokens
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 7;
 	 *             use the "contao.opt_in" service instead.
 	 */
 	public function purgeOptInTokens()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.opt_in" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.opt_in" service instead.', __METHOD__);
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();

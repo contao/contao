@@ -203,12 +203,12 @@ class FileTree extends Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . StringUtil::specialchars($objFiles->path);
 						}
 						else
 						{
 							$objFile = new File($objFiles->path);
-							$strInfo = $objFiles->path . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+							$strInfo = StringUtil::specialchars($objFiles->path) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 							if ($this->showAsImage($objFile))
 							{
@@ -240,7 +240,7 @@ class FileTree extends Widget
 							}
 
 							$objFile = new File($objSubfiles->path);
-							$strInfo = '<span class="dirname">' . \dirname($objSubfiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+							$strInfo = '<span class="dirname">' . StringUtil::specialchars(\dirname($objSubfiles->path)) . '/</span>' . StringUtil::specialchars($objFile->basename) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 							if ($this->isGallery)
 							{
@@ -267,7 +267,7 @@ class FileTree extends Widget
 					else
 					{
 						$objFile = new File($objFiles->path);
-						$strInfo = '<span class="dirname">' . \dirname($objFiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+						$strInfo = '<span class="dirname">' . StringUtil::specialchars(\dirname($objFiles->path)) . '/</span>' . StringUtil::specialchars($objFile->basename) . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 						if ($this->isGallery)
 						{

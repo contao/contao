@@ -18,6 +18,7 @@ use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class DcaUrlAnalyzerTest extends FunctionalTestCase
@@ -35,7 +36,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $container->set(
             'security.authorization_checker',
             new class() implements AuthorizationCheckerInterface {
-                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                public function isGranted(mixed $attribute, mixed $subject = null, AccessDecision|null $accessDecision = null): bool
                 {
                     return true;
                 }
@@ -177,7 +178,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $container->set(
             'security.authorization_checker',
             new class() implements AuthorizationCheckerInterface {
-                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                public function isGranted(mixed $attribute, mixed $subject = null, AccessDecision|null $accessDecision = null): bool
                 {
                     // Deny read access to root page ID 3
                     return !($subject instanceof ReadAction && 'tl_page' === $subject->getDataSource() && 3 === (int) $subject->getCurrentId());
@@ -211,7 +212,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $container->set(
             'security.authorization_checker',
             new class() implements AuthorizationCheckerInterface {
-                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                public function isGranted(mixed $attribute, mixed $subject = null, AccessDecision|null $accessDecision = null): bool
                 {
                     return true;
                 }

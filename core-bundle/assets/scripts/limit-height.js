@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('div.limit_height').forEach(function(div) {
         if (window.console) {
-            console.warn('Using "limit_height" class on child_record_callback is deprecated. Set a list.sorting.limitHeight in your DCA instead.');
+            console.warn('Using "limit_height" class on label_callback is deprecated. Set a list.sorting.limitHeight in your DCA instead.');
         }
 
         const parent = div.parentNode.closest('.tl_content');

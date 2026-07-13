@@ -86,7 +86,7 @@ class Form extends Hybrid
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['form'][0] . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id)));
+			$objTemplate->href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id));
 
 			return $objTemplate->parse();
 		}
@@ -513,15 +513,41 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
-				// Encode the values (see #6053)
-				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
+				$dom = new \DOMDocument('1.0', $this->charset);
+				$dom->xmlStandalone = true;
+				$dom->formatOutput = true;
 
-				// TODO: This template only exists for backwards compatibility and needs to be replaced with a DOM object in Contao 6
-				$objTemplate = new FrontendTemplate('form_xml');
-				$objTemplate->fields = $fields;
-				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+				$form = $dom->createElement('form');
+				$dom->appendChild($form);
 
-				$email->attachFileFromString($objTemplate->parse(), 'form.xml', 'application/xml');
+				foreach ($fields as $field)
+				{
+					$fieldElement = $dom->createElement('field');
+
+					$nameElement = $dom->createElement('name');
+					$nameElement->textContent = $field['name'];
+					$fieldElement->appendChild($nameElement);
+
+					foreach ($field['values'] as $value)
+					{
+						$valueElement = $dom->createElement('value');
+						$valueElement->textContent = $value;
+						$fieldElement->appendChild($valueElement);
+					}
+
+					$form->appendChild($fieldElement);
+				}
+
+				$dtd = <<<'DTD'
+					<!DOCTYPE form [
+					  <!ELEMENT form (field)+>
+					  <!ELEMENT field (name, value+)>
+					  <!ELEMENT name (#PCDATA)>
+					  <!ELEMENT value (#PCDATA)>
+					]>
+					DTD;
+
+				$email->attachFileFromString(str_replace('<form>', "$dtd\n<form>", $dom->saveXML()), 'form.xml', 'application/xml');
 			}
 
 			// Attach CSV file

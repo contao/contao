@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -444,7 +445,7 @@ class tl_form_field extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
 	public function listFormFields($arrRow)
 	{
@@ -462,11 +463,8 @@ class tl_form_field extends Backend
 			$objWidget = null;
 		}
 
-		$label = array(
-			($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : ''),
-			'',
-			$arrRow['invisible'] ? 'unpublished' : 'published',
-		);
+		$label = new RecordLabel(($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : ''));
+		$label->state = $arrRow['invisible'] ? 'unpublished' : 'published';
 
 		if ($objWidget)
 		{
@@ -476,11 +474,11 @@ class tl_form_field extends Backend
 
 			if ($objWidget instanceof FormHidden)
 			{
-				$label[1] = $objWidget->value;
+				$label->htmlPreview = StringUtil::specialchars($objWidget->value);
 			}
 			else
 			{
-				$label[1] = StringUtil::insertTagToSrc($strWidget);
+				$label->htmlPreview = StringUtil::insertTagToSrc($strWidget);
 			}
 		}
 
@@ -494,7 +492,7 @@ class tl_form_field extends Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '</a>';
+		return ' <a href="' . StringUtil::ampersand($this->addToUrl('key=option')) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '</a>';
 	}
 
 	/**

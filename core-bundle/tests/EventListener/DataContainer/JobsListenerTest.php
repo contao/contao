@@ -190,7 +190,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             'Kevin Jones',
         ];
 
-        $columnsNew = $listener->onLabelCallback($row, 'label', $this->createStub(DC_Table::class), $columns);
+        $columnsNew = $listener->onLabelCallback($row, 'label', $this->createStub(DC_Table::class), $columns)->htmlColumns;
 
         $this->assertSame('progress.html.twig output', $columnsNew[2]);
         $this->assertSame('status.html.twig output', $columnsNew[3]);

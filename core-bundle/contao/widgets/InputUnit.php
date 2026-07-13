@@ -138,7 +138,7 @@ class InputUnit extends Widget
 				'<option value="%s"%s>%s</option>',
 				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
-				$arrUnit['label']
+				StringUtil::specialchars($arrUnit['label']),
 			);
 		}
 
@@ -152,7 +152,7 @@ class InputUnit extends Widget
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
-			self::specialcharsValue($this->varValue['value']),
+			self::specialcharsValue($this->varValue['value'] ?? ''),
 			$this->getAttributes(),
 			$this->strName,
 			$this->getAttribute('disabled'),

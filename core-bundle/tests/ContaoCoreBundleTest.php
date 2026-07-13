@@ -34,7 +34,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
@@ -79,7 +78,6 @@ class ContaoCoreBundleTest extends TestCase
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
             DataContainerCallbackPass::class,
-            TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
             SearchIndexerPass::class,
             CrawlerPass::class,

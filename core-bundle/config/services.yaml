@@ -243,7 +243,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@router'
-            - '@contao.translation.translator'
+            - '@translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
@@ -441,6 +441,7 @@ services:
 
     contao.html_sanitizer:
         class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        public: true
         arguments:
             - '@contao.framework'
         tags:
@@ -552,7 +553,7 @@ services:
         arguments:
             - '@database_connection'
             - '@event_dispatcher'
-            - '@contao.translation.translator'
+            - '@translator'
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
@@ -1047,6 +1048,7 @@ services:
             - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
             - '@security.helper'
+            - '@contao.image.studio'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -1381,14 +1383,6 @@ services:
         arguments:
             - 48
 
-    contao.translation.data_collector_translator:
-        class: Contao\CoreBundle\Translation\DataCollectorTranslator
-        autoconfigure: false
-        arguments:
-            - '@contao.translation.data_collector_translator.inner'
-        tags:
-            - { name: kernel.reset, method: reset }
-
     contao.translation.legacy_locale_switcher:
         class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
         arguments:
@@ -1398,10 +1392,16 @@ services:
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator
+        decoration_priority: 1
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
             - '@contao.resource_finder'
+
+    contao.twig.autolink_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\AutolinkRuntime
+        arguments:
+            - '@contao.url_highlight'
 
     contao.twig.backend_helper_runtime:
         class: Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime
@@ -1567,6 +1567,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.twig.simple_token_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime
+        arguments:
+            - '@contao.string.simple_token_parser'
+
     contao.twig.string_runtime:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
@@ -1577,6 +1582,19 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.url_highlight:
+        class: VStelmakh\UrlHighlight\UrlHighlight
+        arguments:
+            - ~
+            - '@contao.url_highlight.html_highlighter'
+            - !service { class: VStelmakh\UrlHighlight\Encoder\HtmlSpecialcharsEncoder }
+
+    contao.url_highlight.html_highlighter:
+        class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
+        arguments:
+            - https
+            - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
         class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser

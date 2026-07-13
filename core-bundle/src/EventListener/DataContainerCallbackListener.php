@@ -26,7 +26,6 @@ class DataContainerCallbackListener
 {
     private const SINGLETONS = [
         'button_callback',
-        'child_record_callback',
         'default',
         'group_callback',
         'header_callback',

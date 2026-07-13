@@ -103,7 +103,7 @@ class InsertTagParser implements ResetInterface
     public function addSubscription(InsertTagSubscription $subscription): void
     {
         if ($subscription->asFragment) {
-            trigger_deprecation('contao/core-bundle', '5.3', 'Using "asFragment: true" in the #[AsInsertTag] attribute is no longer effective and will fail in Contao 6. Render the desired ESI tag directly or use the fragment insert tag instead.');
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using "asFragment: true" in the #[AsInsertTag] attribute is no longer effective and will fail in Contao 7. Render the desired ESI tag directly or use the fragment insert tag instead.');
         }
 
         if (1 !== preg_match($this->allowedTagsRegex, $subscription->name)) {
@@ -189,12 +189,12 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 6;
+     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 7;
      *             use renderTag() instead.
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "%s::renderTag()" instead.', __METHOD__, self::class);
 
         return $this->renderTag($input)->getValue();
     }
@@ -207,7 +207,7 @@ class InsertTagParser implements ResetInterface
             try {
                 $tag = $this->parseTag($input);
             } catch (\InvalidArgumentException $exception) {
-                trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 6.');
+                trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 7.');
                 $tag = null;
             }
         }
@@ -289,13 +289,13 @@ class InsertTagParser implements ResetInterface
         }
 
         if (strtolower($name) !== $name) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 6.', $name);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 7.', $name);
             $name = strtolower($name);
         }
 
         foreach ($flags as $flag) {
             if (strtolower($flag) !== $flag) {
-                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") are deprecated and will no longer work in Contao 6.', $flag);
+                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") are deprecated and will no longer work in Contao 7.', $flag);
             }
         }
 
@@ -721,7 +721,7 @@ class InsertTagParser implements ResetInterface
             return $result;
         }
 
-        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 7. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
         // Set up as variables as they may be used by reference in the hooks
         $flagName = $flag->getName();

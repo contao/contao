@@ -13,13 +13,13 @@
         "php": "^8.4",
         "contao/core-bundle": "self.version",
         "phpunit/phpunit": "^12.4",
-        "symfony/yaml": "^6.4 || ^7.0"
+        "symfony/yaml": "^7.4 || ^8.0"
     },
     "require-dev": {
         "ext-pdo": "*",
         "doctrine/dbal": "^3.6 || ^4.0",
         "doctrine/orm": "^2.17 || ^3.0",
-        "symfony/http-client": "^6.4 || ^7.0"
+        "symfony/http-client": "^7.4 || ^8.0"
     },
     "autoload": {
         "psr-4": {

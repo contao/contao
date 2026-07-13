@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
@@ -487,7 +488,7 @@ class tl_user extends Backend
 	 * @param DataContainer $dc
 	 * @param array         $args
 	 *
-	 * @return array
+	 * @return RecordLabel
 	 */
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
@@ -513,7 +514,7 @@ class tl_user extends Backend
 			Image::getUrl($icon . '--disabled')
 		);
 
-		return $args;
+		return RecordLabel::fromHtml($args);
 	}
 
 	/**

@@ -18,6 +18,8 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\String\SimpleTokenExpressionLanguage;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -25,6 +27,7 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -81,6 +84,62 @@ class InsertTagTest extends TestCase
         ];
     }
 
+    #[DataProvider('provideSimpleTokenVariableStatements')]
+    public function testReplacesInsertTagsAndSimpleTokens(string $content, string $expected): void
+    {
+        $context = ['text' => '<br> {{br}} ##token## {{abbr::##token##}}'];
+
+        $this->assertSame($expected, $this->render($content, $context));
+    }
+
+    public static function provideSimpleTokenVariableStatements(): iterable
+    {
+        yield 'no replacement' => [
+            '{{ text }}',
+            '&lt;br&gt; {{br}} ##token## {{abbr::##token##}}',
+        ];
+
+        yield 'insert tag replacement with escaping' => [
+            '{{ text|insert_tag|simple_token({ token: "<token>" }) }}',
+            '&lt;br&gt; &lt;br&gt; &lt;token&gt; &lt;abbr title=&quot;&lt;token&gt;&quot;&gt;',
+        ];
+
+        yield 'raw insert tag, escaped outer text' => [
+            '{{ text|insert_tag_raw|simple_token({ token: "<token>" }) }}',
+            '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+        ];
+
+        yield 'all raw with insert_tag' => [
+            '{{ text|insert_tag|simple_token({ token: "<token>" })|raw }}',
+            '<br> <br> <token> <abbr title="<token>">',
+        ];
+
+        yield 'all raw with insert_tag_raw' => [
+            '{{ text|insert_tag_raw|simple_token({ token: "<token>" })|raw }}',
+            '<br> <br> <token> <abbr title="&lt;token&gt;">',
+        ];
+
+        yield 'insert tag replacement with escaping and simple token as HTML' => [
+            '{{ text|insert_tag|simple_token_html({ token: "<token>" }) }}',
+            '&lt;br&gt; &lt;br&gt; &amp;lt;token&amp;gt; &lt;abbr title=&quot;&amp;lt;token&amp;gt;&quot;&gt;',
+        ];
+
+        yield 'raw insert tag, escaped outer text and simple token as HTML' => [
+            '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" }) }}',
+            '&lt;br&gt; <br> &amp;lt;token&amp;gt; <abbr title="&lt;token&gt;">',
+        ];
+
+        yield 'all raw with insert_tag and simple token as HTML' => [
+            '{{ text|insert_tag|simple_token_html({ token: "<token>" })|raw }}',
+            '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+        ];
+
+        yield 'all raw with insert_tag_raw and simple token as HTML' => [
+            '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" })|raw }}',
+            '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+        ];
+    }
+
     private function render(string $content, array $context): string
     {
         $templates = [
@@ -112,10 +171,12 @@ class InsertTagTest extends TestCase
 
         $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'abbr', null, true, false));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
+                SimpleTokenRuntime::class => static fn () => new SimpleTokenRuntime(new SimpleTokenParser(new SimpleTokenExpressionLanguage())),
             ]),
         );
 

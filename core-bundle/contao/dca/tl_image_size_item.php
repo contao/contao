@@ -9,6 +9,7 @@
  */
 
 use Contao\Backend;
+use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
@@ -153,7 +154,7 @@ class tl_image_size_item extends Backend
 	 *
 	 * @param array $row
 	 *
-	 * @return string
+	 * @return RecordLabel
 	 */
 	public function listImageSizeItem($row, $label)
 	{
@@ -167,6 +168,6 @@ class tl_image_size_item extends Backend
 			$label .= ' <span class="label-info">(' . $row['zoom'] . '%)</span>';
 		}
 
-		return $label;
+		return RecordLabel::fromHtml($label);
 	}
 }
