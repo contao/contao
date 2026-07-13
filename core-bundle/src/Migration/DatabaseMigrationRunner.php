@@ -13,55 +13,35 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
-use Doctrine\DBAL\Connection;
+use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 
 class DatabaseMigrationRunner
 {
     public function __construct(
         private readonly CommandCompiler $commandCompiler,
-        private readonly Connection $connection,
         private readonly MigrationCollection $migrations,
         private readonly BackupManager $backupManager,
-        private readonly DatabaseMigrationChecks $checks,
     ) {
     }
 
-    /**
-     * @return array<int, string>
-     */
-    public function compileConfigurationErrors(): array
+    public function hasWorkToDo(bool $skipDropStatements = false): bool
     {
-        return $this->checks->compileConfigurationErrors($this->connection);
+        return $this->migrations->hasPending() || [] !== $this->commandCompiler->compileCommands($skipDropStatements);
+    }
+
+    public function createBackupConfig(): CreateConfig
+    {
+        return $this->backupManager->createCreateConfig();
     }
 
     /**
-     * @return array<int, string>
+     * @return array<string, mixed>
      */
-    public function compileConfigurationWarnings(): array
+    public function createBackup(CreateConfig $config): array
     {
-        return $this->checks->compileConfigurationWarnings($this->connection);
-    }
+        $this->backupManager->create($config);
 
-    /**
-     * @return array<int, string>
-     */
-    public function compileSchemaWarnings(bool $skipDropStatements): array
-    {
-        return $this->checks->compileSchemaWarnings($this->connection, $skipDropStatements);
-    }
-
-    public function validateDatabaseVersion(): string|null
-    {
-        return $this->checks->validateDatabaseVersion($this->connection);
-    }
-
-    public function hasWorkToDo(bool $skipDropStatements): bool
-    {
-        if ($this->migrations->hasPending()) {
-            return true;
-        }
-
-        return [] !== $this->commandCompiler->compileCommands($skipDropStatements);
+        return $config->getBackup()->toArray();
     }
 
     /**
@@ -91,21 +71,5 @@ class DatabaseMigrationRunner
     public function executeSqlCommand(string $command): void
     {
         $this->commandCompiler->executeSqlCommand($command);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function createBackup(): array
-    {
-        $config = $this->backupManager->createCreateConfig();
-        $this->backupManager->create($config);
-
-        return $config->getBackup()->toArray();
-    }
-
-    public function getBackupFilename(): string
-    {
-        return $this->backupManager->createCreateConfig()->getBackup()->getFilename();
     }
 }

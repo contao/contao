@@ -96,6 +96,7 @@ services:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
             - '@contao.migration.database_runner'
+            - '@contao.migration.database_checks'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand

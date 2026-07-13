@@ -14,12 +14,14 @@ namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Schema\Table;
 
 class DatabaseMigrationChecks
 {
     public function __construct(
+        private readonly Connection $connection,
         private readonly CommandCompiler $commandCompiler,
         private readonly MysqlInnodbRowSizeCalculator $rowSizeCalculator,
     ) {
@@ -28,10 +30,12 @@ class DatabaseMigrationChecks
     /**
      * @return array<int, string>
      */
-    public function compileConfigurationErrors(Connection $connection): array
+    public function compileConfigurationErrors(): array
     {
         $errors = [];
-        [$version] = explode('-', (string) $connection->fetchOne('SELECT @@version'));
+
+        // Check if the database version is too old
+        [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
 
         if (version_compare($version, '5.1.0', '<')) {
             $errors[] = <<<EOF
@@ -42,10 +46,11 @@ class DatabaseMigrationChecks
             return $errors;
         }
 
-        $options = $connection->getParams()['defaultTableOptions'] ?? [];
+        $options = $this->connection->getParams()['defaultTableOptions'] ?? [];
 
+        // Check the collation if the user has configured it
         if (null !== $collate = $options['collate'] ?? null) {
-            $row = $connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
+            $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
                 $errors[] = <<<EOF
@@ -62,9 +67,10 @@ class DatabaseMigrationChecks
             }
         }
 
+        // Check the engine if the user has configured it
         if (null !== $engine = $options['engine'] ?? null) {
             $engineFound = false;
-            $rows = $connection->fetchAllAssociative('SHOW ENGINES');
+            $rows = $this->connection->fetchAllAssociative('SHOW ENGINES');
 
             foreach ($rows as $row) {
                 if ($engine === $row['Engine']) {
@@ -88,6 +94,7 @@ class DatabaseMigrationChecks
             }
         }
 
+        // Check if utf8mb4 can be used if the user has configured it
         if ($engine && $collate && str_starts_with($collate, 'utf8mb4')) {
             if ('innodb' !== strtolower($engine)) {
                 $errors[] = <<<EOF
@@ -105,18 +112,24 @@ class DatabaseMigrationChecks
                 return $errors;
             }
 
-            $largePrefixSetting = $connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")['Value'] ?? '';
+            $largePrefixSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")['Value'] ?? '';
 
+            // The variable no longer exists as of MySQL 8 and MariaDB 10.3
             if ('' === $largePrefixSetting) {
                 return $errors;
             }
 
+            // As there is no reliable way to get the vendor (see #84), we are guessing based
+            // on the version number. The check will not be run as of MySQL 8 and MariaDB
+            // 10.3, so this should be safe.
             $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
+            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
             if (version_compare($version, $vok, '>=')) {
                 return $errors;
             }
 
+            // The innodb_large_prefix option is disabled
             if (!\in_array(strtolower((string) $largePrefixSetting), ['1', 'on'], true)) {
                 $errors[] = <<<'EOF'
                     The "innodb_large_prefix" option is not enabled!
@@ -131,8 +144,8 @@ class DatabaseMigrationChecks
                     EOF;
             }
 
-            $fileFormatSetting = $connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")['Value'] ?? '';
-            $filePerTableSetting = $connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")['Value'] ?? null;
+            $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")['Value'] ?? '';
+            $filePerTableSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")['Value'] ?? null;
 
             if (
                 ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting))
@@ -155,13 +168,15 @@ class DatabaseMigrationChecks
     /**
      * @return array<int, string>
      */
-    public function compileConfigurationWarnings(Connection $connection): array
+    public function compileConfigurationWarnings(): array
     {
         $warnings = [];
-        $sqlMode = $connection->fetchOne('SELECT @@sql_mode');
+
+        // Suggest running in strict mode
+        $sqlMode = $this->connection->fetchOne('SELECT @@sql_mode');
 
         if (!array_intersect(explode(',', strtoupper((string) $sqlMode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
-            $initOptionsKey = $connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
+            $initOptionsKey = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
 
             $warnings[] = <<<EOF
                 Running MySQL in non-strict mode can cause corrupt or truncated data.
@@ -181,7 +196,7 @@ class DatabaseMigrationChecks
     /**
      * @return array<int, string>
      */
-    public function compileSchemaWarnings(Connection $connection, bool $skipDropStatements): array
+    public function compileSchemaWarnings(bool $skipDropStatements): array
     {
         $warnings = [];
         $schema = $this->commandCompiler->compileTargetSchema($skipDropStatements);
@@ -193,17 +208,17 @@ class DatabaseMigrationChecks
         return $warnings;
     }
 
-    public function validateDatabaseVersion(Connection $connection): string|null
+    public function validateDatabaseVersion(): string|null
     {
-        $version = $connection->getServerVersion();
-        $correctPlatform = $connection->getDriver()->getDatabasePlatform(new \Doctrine\DBAL\Connection\StaticServerVersionProvider($version));
-        $currentPlatform = $connection->getDatabasePlatform();
+        $version = $this->connection->getServerVersion();
+        $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
+        $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {
             return null;
         }
 
-        $currentVersion = $connection->getParams()['serverVersion'] ?? '';
+        $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
 
         if (!$currentVersion || !$version) {
             return null;

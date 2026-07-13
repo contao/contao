@@ -12,12 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Migration\DatabaseMigrationChecks;
 use Contao\CoreBundle\Migration\DatabaseMigrationRunner;
-use Contao\CoreBundle\Migration\MigrationConfiguration;
-use Contao\CoreBundle\Migration\MigrationExecutionMode;
-use Contao\CoreBundle\Migration\SchemaUpdateMode;
 use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
-use Contao\CoreBundle\Migration\WarningMode;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -34,8 +31,10 @@ class MigrateCommand extends Command
 {
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private readonly DatabaseMigrationRunner $runner)
-    {
+    public function __construct(
+        private readonly DatabaseMigrationRunner $runner,
+        private readonly DatabaseMigrationChecks $checks,
+    ) {
         parent::__construct();
     }
 
@@ -55,30 +54,19 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $format = (string) $input->getOption('format');
 
-        if (!\in_array($format, ['txt', 'ndjson'], true)) {
-            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $format));
+        $asJson = 'ndjson' === $input->getOption('format');
+
+        if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
+            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $input->getOption('format')));
         }
 
-        $dryRun = (bool) $input->getOption('dry-run');
-        $interactive = $input->isInteractive();
-        $asJson = 'ndjson' === $format;
-
-        if ($asJson && !$dryRun && $interactive) {
+        if ($asJson && !$input->getOption('dry-run') && $input->isInteractive()) {
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
         }
 
-        if ($input->getOption('migrations-only') && $input->getOption('schema-only')) {
-            throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
-        }
-
-        if ($input->getOption('migrations-only') && $input->getOption('with-deletes')) {
-            throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
-        }
-
         try {
-            if ($errors = $this->runner->compileConfigurationErrors()) {
+            if ($errors = $this->checks->compileConfigurationErrors()) {
                 if ($asJson) {
                     foreach ($errors as $message) {
                         $this->writeNdjson('problem', ['message' => $message]);
@@ -98,11 +86,7 @@ class MigrateCommand extends Command
                 return Command::FAILURE;
             }
 
-            $this->validateDatabaseVersion($asJson);
-
-            $configuration = $this->createConfiguration($input, $dryRun, $interactive);
-
-            return $this->executeCommand($input, $configuration, $asJson);
+            return $this->executeCommand($input);
         } catch (\Throwable $exception) {
             if (!$asJson) {
                 throw $exception;
@@ -125,6 +109,7 @@ class MigrateCommand extends Command
         $asJson = 'ndjson' === $input->getOption('format');
         $skipDropStatements = !$input->isInteractive() && !$input->getOption('with-deletes');
 
+        // Return early if there is no work to be done
         if (!$this->runner->hasWorkToDo($skipDropStatements)) {
             if (!$asJson) {
                 $this->io->info('Database dump skipped because there are no migrations to execute.');
@@ -133,18 +118,20 @@ class MigrateCommand extends Command
             return true;
         }
 
+        $config = $this->runner->createBackupConfig();
+
         if (!$asJson) {
             $this->io->info(\sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $this->runner->getBackupFilename(),
+                $config->getBackup()->getFilename(),
             ));
         }
 
         try {
-            $backup = $this->runner->createBackup();
+            $config = $this->runner->createBackup($config);
 
             if ($asJson) {
-                $this->writeNdjson('backup-result', $backup);
+                $this->writeNdjson('backup-result', $config);
             }
 
             return true;
@@ -165,28 +152,45 @@ class MigrateCommand extends Command
         }
     }
 
-    private function executeCommand(InputInterface $input, MigrationConfiguration $configuration, bool $asJson): int
+    private function executeCommand(InputInterface $input): int
     {
-        $dryRun = $configuration->isDryRun();
-        $specifiedHash = $configuration->getHash();
+        $dryRun = (bool) $input->getOption('dry-run');
+        $asJson = 'ndjson' === $input->getOption('format');
+        $specifiedHash = $input->getOption('hash');
+
+        if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
+            throw new InvalidOptionException(\sprintf('Unsupported format "%s".', $input->getOption('format')));
+        }
+
+        if ($asJson && !$dryRun && $input->isInteractive()) {
+            throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
+        }
 
         if (!$this->validateDatabaseVersion($asJson)) {
             return 1;
         }
 
         if ($input->getOption('migrations-only')) {
+            if ($input->getOption('schema-only')) {
+                throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
+            }
+
+            if ($input->getOption('with-deletes')) {
+                throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
+            }
+
             return $this->executeMigrations($dryRun, $asJson, $specifiedHash) ? 0 : 1;
         }
 
         if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($dryRun, $asJson, (bool) $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
+            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
         }
 
         if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return Command::FAILURE;
         }
 
-        if (!$this->executeSchemaDiff($dryRun, $asJson, (bool) $input->getOption('with-deletes'), $specifiedHash)) {
+        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
             return Command::FAILURE;
         }
 
@@ -283,7 +287,11 @@ class MigrateCommand extends Command
             }
 
             if (null !== $specifiedHash) {
+                // Do not run the schema update after migrations got executed if a hash was specified,
+                // because that hash could never match both, migrations and schema updates
                 $dryRun = true;
+
+                // Do not run the update recursive if a hash was specified
                 break;
             }
 
@@ -306,12 +314,10 @@ class MigrateCommand extends Command
 
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string|null $specifiedHash = null): bool
     {
-        $warnings = [...$this->runner->compileConfigurationWarnings(), ...$this->runner->compileSchemaWarnings($withDeletesOption)];
-
-        if ($warnings) {
+        if ($warnings = [...$this->checks->compileConfigurationWarnings(), ...$this->checks->compileSchemaWarnings(!$withDeletesOption)]) {
             if ($asJson) {
-                foreach ($warnings as $warning) {
-                    $this->writeNdjson('warning', ['message' => $warning]);
+                foreach ($warnings as $message) {
+                    $this->writeNdjson('warning', ['message' => $message]);
                 }
             } else {
                 $this->io->warning(implode("\n\n", $warnings));
@@ -326,11 +332,15 @@ class MigrateCommand extends Command
 
         while (true) {
             $commands = $this->runner->compileSchemaCommands();
+
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
+            // Backwards compatibility with doctrine/dbal < 4.5.0, see
+            // https://github.com/doctrine/dbal/pull/7302
             $sortedCommands = $commands;
             sort($sortedCommands);
+
             $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
@@ -376,14 +386,15 @@ class MigrateCommand extends Command
             }
 
             $count = 0;
-            $exceptions = [];
 
+            // If deletes should not be processed, recompile the commands without DROP statements
             if ('yes, with deletes' !== $answer) {
                 $commands = $this->runner->compileSchemaCommands(true);
             }
 
             do {
                 $commandExecuted = false;
+                $exceptions = [];
 
                 foreach ($commands as $key => $command) {
                     if ($asJson) {
@@ -408,14 +419,14 @@ class MigrateCommand extends Command
                         } else {
                             $this->io->writeln('');
                         }
-                    } catch (\Throwable $exception) {
-                        $exceptions[] = $exception;
+                    } catch (\Throwable $e) {
+                        $exceptions[] = $e;
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
                                 'command' => $command,
                                 'isSuccessful' => false,
-                                'message' => $exception->getMessage(),
+                                'message' => $e->getMessage(),
                             ]);
                         } else {
                             $this->io->writeln('......FAILED');
@@ -436,6 +447,7 @@ class MigrateCommand extends Command
                 return false;
             }
 
+            // Do not run the update recursive if a hash was specified
             if (null !== $specifiedHash) {
                 break;
             }
@@ -444,64 +456,26 @@ class MigrateCommand extends Command
         return true;
     }
 
+    private function writeNdjson(string $type, array $data): void
+    {
+        // Make sure $type is the first in array but always wins
+        $this->io->writeln(json_encode(['type' => $type] + $data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
+    }
+
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        $message = $this->runner->validateDatabaseVersion();
+        $message = $this->checks->validateDatabaseVersion();
 
         if (null === $message) {
             return true;
         }
 
-        if (!$asJson) {
-            $this->io->error($message);
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
         } else {
-            $this->writeNdjson('problem', ['message' => $message, 'severity' => 'error']);
+            $this->io->error($message);
         }
 
         return false;
-    }
-
-    private function createConfiguration(InputInterface $input, bool $dryRun, bool $interactive): MigrationConfiguration
-    {
-        $schemaOnly = (bool) $input->getOption('schema-only');
-        $migrationsOnly = (bool) $input->getOption('migrations-only');
-        $withDeletes = (bool) $input->getOption('with-deletes');
-
-        $warningMode = $interactive && !$dryRun ? WarningMode::Ask : WarningMode::Continue;
-        $migrationExecutionMode = $schemaOnly
-            ? MigrationExecutionMode::Skip
-            : ($interactive && !$dryRun ? MigrationExecutionMode::Ask : MigrationExecutionMode::Execute);
-        $schemaUpdateMode = $migrationsOnly
-            ? SchemaUpdateMode::Skip
-            : ($interactive && !$dryRun ? SchemaUpdateMode::Ask : ($withDeletes ? SchemaUpdateMode::WithDeletes : SchemaUpdateMode::WithoutDeletes));
-
-        return MigrationConfiguration::create()
-            ->withDryRun($dryRun)
-            ->withCreateBackup(!$dryRun && !$input->getOption('no-backup'))
-            ->withSchemaOnly($schemaOnly)
-            ->withMigrationsOnly($migrationsOnly)
-            ->withBackupSkipDropStatements(!$interactive && !$withDeletes)
-            ->withSchemaWarningSkipDropStatements(!$withDeletes)
-            ->withWarningMode($warningMode)
-            ->withMigrationExecutionMode($migrationExecutionMode)
-            ->withSchemaUpdateMode($schemaUpdateMode)
-            ->withHash($input->getOption('hash') ? (string) $input->getOption('hash') : null)
-        ;
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function writeNdjson(string $type, array $payload): void
-    {
-        $payload = ['type' => $type] + array_diff_key($payload, [
-            'severity' => true,
-            'started' => true,
-            'prompt' => true,
-            'unexpectedPending' => true,
-            'warnings' => true,
-        ]);
-
-        $this->io->writeln(json_encode($payload, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
     }
 }
