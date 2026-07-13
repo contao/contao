@@ -16,8 +16,8 @@ use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -33,11 +33,12 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
     public function __construct(
         ContaoFramework $framework,
+        RequestStack $requestStack,
         private readonly Environment $twig,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
     ) {
-        parent::__construct($framework);
+        parent::__construct($framework, $requestStack);
     }
 
     public function __toString(): string
@@ -155,7 +156,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             return $this;
         }
 
-        $inputAdapter = $this->framework->getAdapter(Input::class);
+        $request = $this->requestStack->getCurrentRequest();
 
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
             if ('new' === $k) {
@@ -167,7 +168,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
                 continue;
             }
 
-            if (!($v['showOnSelect'] ?? null) && 'select' === $inputAdapter->get('act')) {
+            if (!($v['showOnSelect'] ?? null) && 'select' === $request?->query->get('act')) {
                 continue;
             }
 

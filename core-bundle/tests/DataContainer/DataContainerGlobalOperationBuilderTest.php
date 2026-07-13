@@ -18,9 +18,10 @@ use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -33,6 +34,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $this->createStub(Environment::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),
@@ -51,6 +53,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),
@@ -105,7 +108,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ])
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $urlGenerator, $translator);
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $this->createStub(RequestStack::class), $twig, $urlGenerator, $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addBackButton($href);
 
@@ -163,6 +166,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(UrlGeneratorInterface::class),
             $translator,
@@ -208,7 +212,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('Clear Clipboard')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createStub(UrlGeneratorInterface::class), $translator);
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $this->createStub(RequestStack::class), $twig, $this->createStub(UrlGeneratorInterface::class), $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addClearClipboardButton();
 
@@ -241,7 +245,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->createContaoFrameworkStub([Backend::class => $backendAdapter, Input::class => $this->createAdapterStub(['get'])]),
+            $this->createContaoFrameworkStub([Backend::class => $backendAdapter]),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),
@@ -269,6 +274,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $twig,
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),
@@ -287,11 +293,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
-        $inputAdapter = $this->createAdapterStub(['get']);
-        $inputAdapter
-            ->method('get')
-            ->willReturnMap([['act', $selectView ? 'select' : '']])
-        ;
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/?act='.($selectView ? 'select' : '')));
 
         $backendAdapter = $this->createAdapterStub(['addToUrl']);
         $backendAdapter
@@ -306,7 +309,6 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            Input::class => $inputAdapter,
             Backend::class => $backendAdapter,
             Controller::class => $controllerAdapter,
         ]);
@@ -331,6 +333,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $framework,
+            $requestStack,
             $twig,
             $urlGenerator,
             $this->createStub(TranslatorInterface::class),
@@ -416,6 +419,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createStub(ContaoFramework::class),
+            $this->createStub(RequestStack::class),
             $this->createStub(Environment::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(TranslatorInterface::class),

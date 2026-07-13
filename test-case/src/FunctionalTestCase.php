@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +33,9 @@ abstract class FunctionalTestCase extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
+        // Remove objects imported via System::importStatic()
+        new \ReflectionClass(System::class)->setStaticPropertyValue('arrStaticObjects', []);
 
         // Remove the default exception handler
         restore_exception_handler();

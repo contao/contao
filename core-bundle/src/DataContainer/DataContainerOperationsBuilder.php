@@ -20,6 +20,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
@@ -39,11 +40,12 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     public function __construct(
         ContaoFramework $framework,
+        RequestStack $requestStack,
         private readonly Environment $twig,
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
-        parent::__construct($framework);
+        parent::__construct($framework, $requestStack);
     }
 
     public function __toString(): string
@@ -119,7 +121,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return $builder;
         }
 
-        $inputAdapter = $this->framework->getAdapter(Input::class);
+        $request = $this->requestStack->getCurrentRequest();
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             if ('new' === $k) {
@@ -131,7 +133,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 $v['showInHeader'] = true;
             }
 
-            if (empty($v['showInHeader']) || ('select' === $inputAdapter->get('act') && !($v['showOnSelect'] ?? null))) {
+            if (empty($v['showInHeader']) || ('select' === $request?->query->get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
             }
 

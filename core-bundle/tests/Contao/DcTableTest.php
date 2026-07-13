@@ -36,8 +36,6 @@ class DcTableTest extends TestCase
     #[DataProvider('getPalette')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
-        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class is deprecated/');
-
         $result = $this->createMock(Result::class);
         $result
             ->expects($this->once())
