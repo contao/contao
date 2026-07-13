@@ -24,7 +24,6 @@ use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\TestCase\AbstractProviderTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;

@@ -22,7 +22,6 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
-use Contao\TestCase\AbstractProviderTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
@@ -194,10 +193,5 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $this->assertSame('contao.db.tl_news', $documents[2]->getType());
         $this->assertSame('tl_news', $documents[2]->getMetadata()['table']);
         $this->assertSame('This is my news 3! Another great teaser!', $documents[2]->getSearchableContent());
-    }
-
-    private function getFixturesDir(): string
-    {
-        return Path::join(\dirname(__DIR__, 3), 'Fixtures');
     }
 }

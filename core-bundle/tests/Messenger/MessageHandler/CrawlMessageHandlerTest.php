@@ -10,7 +10,7 @@ use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 use Contao\CoreBundle\Messenger\MessageHandler\CrawlMessageHandler;
-use Contao\TestCase\AbstractJobsTestCase;
+use Contao\CoreBundle\Tests\Job\AbstractJobsTestCase;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpClient\MockHttpClient;

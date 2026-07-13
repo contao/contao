@@ -6,10 +6,10 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
 use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Tests\Job\AbstractJobsTestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
-use Contao\TestCase\AbstractJobsTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Symfony\Bundle\SecurityBundle\Security;

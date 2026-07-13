@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contao\TestCase;
+namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
@@ -11,6 +11,7 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Job\Jobs;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;

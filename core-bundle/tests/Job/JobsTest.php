@@ -17,7 +17,6 @@ use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageInterface;
 use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageTrait;
-use Contao\TestCase\AbstractJobsTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Messenger\Envelope;
