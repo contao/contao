@@ -38,7 +38,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 {
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    private string|null $currentThemeSlug = null;
+    /**
+     * @var array<string, string>
+     */
+    private array $currentThemeSlugs = [];
 
     /**
      * The list of all identifiers mapped to a chain of template candidates (<absolute
@@ -215,7 +218,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     public function reset(): void
     {
-        $this->currentThemeSlug = null;
+        $this->currentThemeSlugs = [];
         $this->lookupCache = [];
     }
 
@@ -583,18 +586,18 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function getThemeSlug(): string|false
     {
-        if (null !== $this->currentThemeSlug) {
-            return $this->currentThemeSlug;
+        $path = (string) $this->pageFinder->getCurrentPage()?->templateGroup;
+
+        if ('' === $path) {
+            return false;
         }
 
-        $pageModel = $this->pageFinder->getCurrentPage();
-
-        if (!$path = $pageModel?->templateGroup) {
-            return false;
+        if (isset($this->currentThemeSlugs[$path])) {
+            return $this->currentThemeSlugs[$path];
         }
 
         $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
 
-        return $this->currentThemeSlug = $slug;
+        return $this->currentThemeSlugs[$path] = $slug;
     }
 }
