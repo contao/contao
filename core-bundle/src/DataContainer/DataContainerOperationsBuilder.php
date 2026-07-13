@@ -177,16 +177,20 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         [$label, $title] = $this->getLabelAndTitle($table, $type, $this->id);
 
         if (null === $href) {
-            $this->append([
+            /** @var Operation $operation */
+            $operation = [
                 'label' => $label,
                 'icon' => $icon.'--disabled.svg',
                 'primary' => true,
-            ]);
+            ];
+
+            $this->append($operation);
 
             return $this;
         }
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'label' => $label,
             'title' => $title,
             'attributes' => new HtmlAttributes('data-action="contao--scroll-offset#store"'),
@@ -194,7 +198,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $href,
             'method' => 'POST',
             'primary' => !str_starts_with($type, 'pastenew'),
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -206,7 +212,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     {
         [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'label' => $label,
             'title' => $title,
             'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null)->set('data-action', 'contao--scroll-offset#store'),
@@ -214,7 +221,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $this->getNewHref($mode, $pid, $id),
             'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
             'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }

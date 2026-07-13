@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\AbstractDataContainerOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
@@ -26,6 +27,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ */
 class DataContainerGlobalOperationBuilderTest extends TestCase
 {
     public function testThrowsExceptionIfNotInitialized(): void
@@ -40,7 +44,10 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             $this->createStub(TranslatorInterface::class),
         );
 
-        $builder->append(['html' => '']);
+        /** @var Operation $operation */
+        $operation = ['html' => ''];
+
+        $builder->append($operation);
     }
 
     public function testRendersNothingWithoutOperations(): void

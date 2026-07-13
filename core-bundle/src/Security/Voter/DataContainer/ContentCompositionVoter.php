@@ -78,12 +78,6 @@ class ContentCompositionVoter implements VoterInterface, CacheableVoterInterface
             return false;
         }
 
-        foreach (StringUtil::deserialize($layout->modules, true) as $config) {
-            if (0 === (int) $config['mod']) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(StringUtil::deserialize($layout->modules, true), static fn ($config) => 0 === (int) $config['mod']);
     }
 }

@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractDeleteVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use Contao\TestCase\AbstractOperationTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;

@@ -407,7 +407,7 @@ class MountManagerTest extends TestCase
         try {
             $result = $manager->$method('some/place', ...$arguments);
 
-            // Make sure to read from the iterator, so that the exception will get thrown
+            // Make sure to read from the iterator so that the exception will get thrown
             if ('listContents' === $method) {
                 iterator_to_array($result);
             }
