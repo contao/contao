@@ -586,9 +586,9 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function getThemeSlug(): string|false
     {
-        $path = (string) $this->pageFinder->getCurrentPage()?->templateGroup;
+        $path = $this->pageFinder->getCurrentPage()?->templateGroup;
 
-        if ('' === $path) {
+        if (null === $path) {
             return false;
         }
 
