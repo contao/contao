@@ -109,7 +109,7 @@ export default class extends Controller {
     #positionTooltip() {
         const anchor = this.#isTouch ? this.#current : Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
 
-        Position.compute(anchor, this.popupTarget, this.#arrowEl(), this.#isTouch ? 'bottom-start' : 'right-start');
+        Position.compute(anchor, this.popupTarget, this.#arrowEl(), 'bottom-start', this.#isTouch ? 6 : 20);
     }
 
     #arrowEl() {

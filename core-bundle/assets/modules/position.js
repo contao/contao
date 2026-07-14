@@ -4,8 +4,8 @@ export function pointerAnchor(x, y) {
     return { getBoundingClientRect: () => new DOMRect(x, y, 0, 0) };
 }
 
-export function compute(anchor, element, arrowEl, placement = 'bottom') {
-    const middleware = [offset(3), flip(), shift({ padding: 10 })];
+export function compute(anchor, element, arrowEl, placement = 'bottom', offsetOptions = 6) {
+    const middleware = [offset(offsetOptions), flip(), shift({ padding: 10 })];
 
     if (arrowEl) {
         middleware.push(arrow({ element: arrowEl }));
