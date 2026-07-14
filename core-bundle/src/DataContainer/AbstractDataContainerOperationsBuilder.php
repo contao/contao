@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\Input;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @phpstan-type LegacyOperation array{
@@ -57,8 +57,10 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      */
     protected array|null $operations = null;
 
-    public function __construct(protected readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        protected readonly ContaoFramework $framework,
+        protected readonly RequestStack $requestStack,
+    ) {
     }
 
     /**
@@ -278,7 +280,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
             $url .= '&id='.$id;
         }
 
-        if ($this->framework->getAdapter(Input::class)->get('nb')) {
+        if ($this->requestStack->getCurrentRequest()?->query->get('nb')) {
             $url .= '&nc=1';
         }
 

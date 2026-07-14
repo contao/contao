@@ -14,14 +14,12 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\RouteParametersException;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -30,6 +28,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\NativeType;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -51,8 +51,10 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($input),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $input));
 
         $expectedTitle = $input['title'] ?? $page->title;
 
@@ -68,6 +70,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $slug,
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -166,7 +169,6 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter([]),
         ]);
 
         $slug = $this->createMock(Slug::class);
@@ -197,6 +199,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $slug,
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -240,7 +243,6 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter([]),
         ]);
 
         $slug = $this->createMock(Slug::class);
@@ -265,6 +267,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $slug,
             $translator,
             $this->createStub(Connection::class),
@@ -296,7 +299,6 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter([]),
         ]);
 
         $slug = $this->createMock(Slug::class);
@@ -313,6 +315,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $slug,
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -356,7 +359,6 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter([]),
         ]);
 
         $slug = $this->createMock(Slug::class);
@@ -375,6 +377,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $slug,
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -967,7 +970,6 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter([]),
         ]);
 
         $slug = $this->createMock(Slug::class);
@@ -988,6 +990,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $slug,
             $translator,
             $this->createStub(Connection::class),
@@ -1043,14 +1046,17 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($inputData),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $inputData));
 
         $route = new PageRoute($pageModels['id'][2]);
         $pageRegistry = $this->mockPageRegistry([true, true], [$route]);
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $this->createStub(Slug::class),
             $this->mockTranslator(),
             $this->mockConnection(),
@@ -1093,6 +1099,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $this->createContaoFrameworkStub(),
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $translator,
             $connection,
@@ -1198,14 +1205,17 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($inputData),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $inputData));
 
         // Expects exception
         $translator = $this->mockTranslator('ERR.pageUrlPrefix', ['/de/bar/foo.html']);
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $this->createStub(Slug::class),
             $translator,
             $this->mockConnection(),
@@ -1305,11 +1315,14 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($inputData),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $inputData));
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->mockConnection(),
@@ -1339,6 +1352,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
@@ -1371,6 +1385,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
@@ -1405,6 +1420,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
@@ -1468,11 +1484,14 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($inputData),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $inputData));
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $this->createStub(Slug::class),
             $this->mockTranslator(),
             $this->createStub(Connection::class),
@@ -1570,13 +1589,16 @@ class PageUrlListenerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            Input::class => $this->mockInputAdapter($inputData),
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/', 'POST', $inputData));
 
         $translator = $this->mockTranslator('ERR.pageUrlSuffix', ['/de/bar/foo.html']);
 
         $listener = new PageUrlListener(
             $framework,
+            $requestStack,
             $this->createStub(Slug::class),
             $translator,
             $this->createStub(Connection::class),
@@ -1606,6 +1628,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -1638,6 +1661,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -1672,6 +1696,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
+            $this->createStub(RequestStack::class),
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(Connection::class),
@@ -1734,20 +1759,6 @@ class PageUrlListenerTest extends TestCase
         ;
 
         return $connection;
-    }
-
-    /**
-     * @return Adapter<Input>&Stub
-     */
-    private function mockInputAdapter(array $inputData): Adapter&Stub
-    {
-        $inputAdapter = $this->createAdapterStub(['post']);
-        $inputAdapter
-            ->method('post')
-            ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
-        ;
-
-        return $inputAdapter;
     }
 
     private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface&MockObject

@@ -20,12 +20,12 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -38,6 +38,7 @@ class PageUrlListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
         private readonly Slug $slug,
         private readonly TranslatorInterface $translator,
         private readonly Connection $connection,
@@ -285,30 +286,30 @@ class PageUrlListener
 
     private function addInputToPage(PageModel $pageModel): void
     {
-        $input = $this->framework->getAdapter(Input::class);
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (null !== ($type = $input->post('type'))) {
+        if (null !== ($type = $request?->request->get('type'))) {
             $pageModel->type = $type;
         }
 
-        if (null !== ($title = $input->post('title'))) {
+        if (null !== ($title = $request?->request->get('title'))) {
             $pageModel->title = $title;
         }
 
-        if (null !== ($requireItem = $input->post('requireItem'))) {
+        if (null !== ($requireItem = $request?->request->get('requireItem'))) {
             $pageModel->requireItem = (bool) $requireItem;
         }
 
         if ('root' === $pageModel->type) {
-            if (null !== ($dns = $input->post('dns'))) {
+            if (null !== ($dns = $request?->request->get('dns'))) {
                 $pageModel->domain = $dns;
             }
 
-            if (null !== ($urlPrefix = $input->post('urlPrefix'))) {
+            if (null !== ($urlPrefix = $request?->request->get('urlPrefix'))) {
                 $pageModel->urlPrefix = $urlPrefix;
             }
 
-            if (null !== ($urlSuffix = $input->post('urlSuffix'))) {
+            if (null !== ($urlSuffix = $request?->request->get('urlSuffix'))) {
                 $pageModel->urlSuffix = $urlSuffix;
             }
         }

@@ -165,7 +165,7 @@ class ArrayUtil
 	}
 
 	/**
-	 * Add, remove or replace values from the current array based on your configuration.
+	 * Add, remove, or replace values from the current array based on your configuration.
 	 */
 	public static function alterListByConfig(array $list, array $config): array
 	{

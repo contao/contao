@@ -151,12 +151,11 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-		/** @var Adapter<Input> $input */
-		$input = System::getContainer()->get('contao.framework')->getAdapter(Input::class);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($input->get($strParameter) > 0)
+		if ($request?->query->get($strParameter) > 0)
 		{
-			$this->intPage = (int) $input->get($strParameter);
+			$this->intPage = (int) $request->query->get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;
