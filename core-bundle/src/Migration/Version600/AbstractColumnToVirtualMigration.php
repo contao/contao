@@ -36,10 +36,8 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
             $tableColumns = array_keys($schemaManager->listTableColumns($table));
 
             // If there is at least one column that should be a virtual field, run the migration
-            foreach ($fields as $field) {
-                if (\in_array(strtolower($field), $tableColumns, true)) {
-                    return true;
-                }
+            if (array_any($fields, static fn ($targetColumn, $field) => \in_array(strtolower($field), $tableColumns, true))) {
+                return true;
             }
         }
 
@@ -59,18 +57,18 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
 
             $tableColumns = array_keys($schemaManager->listTableColumns($table));
 
-            foreach ($fields as $field) {
+            foreach ($fields as $field => $targetColumn) {
                 if (!\in_array(strtolower($field), $tableColumns, true)) {
                     continue;
                 }
 
-                $rows = $this->connection->fetchAllAssociative("SELECT id, `$field`, jsonData FROM `$table`");
+                $rows = $this->connection->fetchAllAssociative("SELECT id, `$field`, `$targetColumn` FROM `$table`");
 
                 foreach ($rows as $row) {
-                    if (null === $row['jsonData']) {
+                    if (null === $row[$targetColumn]) {
                         $jsonData = [];
                     } else {
-                        $jsonData = json_decode($row['jsonData'], true, flags: JSON_THROW_ON_ERROR);
+                        $jsonData = json_decode($row[$targetColumn], true, flags: JSON_THROW_ON_ERROR);
                     }
 
                     if (isset($jsonData[$field])) {
@@ -79,7 +77,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
 
                     $jsonData[$field] = $row[$field];
 
-                    $this->connection->update($table, ['jsonData' => json_encode($jsonData, flags: JSON_THROW_ON_ERROR)], ['id' => $row['id']]);
+                    $this->connection->update($table, [$targetColumn => json_encode($jsonData, flags: JSON_THROW_ON_ERROR)], ['id' => $row['id']]);
                 }
 
                 $this->connection->executeQuery("ALTER TABLE `$table` DROP COLUMN `$field`");
@@ -95,12 +93,12 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
      * Example:
      *   [
      *     'tl_content' => [
-     *       'playerStart',
-     *       'playerStop',
+     *       'playerStart' => 'jsonData',
+     *       'playerStop' => 'jsonData',
      *     ],
      *   ]
      *
-     * @return array<string, list<string>>
+     * @return array<string, array<string, string>>
      */
     abstract protected function getMapping(): array;
 }
