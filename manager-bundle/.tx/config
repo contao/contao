@@ -6,4 +6,4 @@ file_filter = translations/ContaoManagerBundle.<lang>.xlf
 source_file = translations/ContaoManagerBundle.en.xlf
 type = XLIFF
 source_lang = en
-resource_name = v5_7-ContaoManagerBundle
+resource_name = v6_0-ContaoManagerBundle
