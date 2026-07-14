@@ -195,7 +195,23 @@ class ModelTest extends TestCase
     {
         yield ['string_not_null', 'string', 'string'];
 
+        yield ['string_not_null', null, ''];
+
         yield ['string_null', 'string', 'string'];
+
+        yield ['string_null', 123, '123'];
+
+        yield ['string_null', 12.3, '12.3'];
+
+        yield ['string_null', true, '1'];
+
+        yield ['string_null', false, ''];
+
+        yield ['string_null', null, null];
+
+        yield ['string_null', [], []];
+
+        yield ['string_null', $object = new \stdClass(), $object];
 
         yield ['int_not_null', '123', 123];
 
