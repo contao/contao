@@ -24,10 +24,16 @@ class DatabaseMigrationRunnerTest extends TestCase
 {
     public function testRunsMigrationsBeforeAndAfterUpdatingTheSchema(): void
     {
+        $calls = [];
         $migrations = $this->createMock(MigrationCollection::class);
         $migrations
             ->expects($this->exactly(2))
             ->method('runAll')
+            ->willReturnCallback(
+                static function () use (&$calls): void {
+                    $calls[] = 'migrations';
+                },
+            )
         ;
 
         $compiler = $this->createMock(CommandCompiler::class);
@@ -35,11 +41,18 @@ class DatabaseMigrationRunnerTest extends TestCase
             ->expects($this->once())
             ->method('runAll')
             ->with(false)
+            ->willReturnCallback(
+                static function () use (&$calls): void {
+                    $calls[] = 'schema';
+                },
+            )
         ;
 
         $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
 
         $runner->runAll();
+
+        $this->assertSame(['migrations', 'schema', 'migrations'], $calls);
     }
 
     public function testDelegatesPendingMigrationsAndSchemaCommands(): void

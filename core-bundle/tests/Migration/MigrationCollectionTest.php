@@ -67,22 +67,33 @@ class MigrationCollectionTest extends TestCase
 
     public function testRunsAllPendingMigrations(): void
     {
-        $migration = $this->createMock(MigrationInterface::class);
-        $migration
-            ->expects($this->once())
+        $firstMigration = $this->createMock(MigrationInterface::class);
+        $firstMigration
+            ->expects($this->exactly(3))
             ->method('shouldRun')
-            ->willReturn(true)
+            ->willReturnOnConsecutiveCalls(true, false, false)
         ;
 
-        $migration
+        $firstMigration
             ->expects($this->once())
             ->method('run')
             ->willReturn(new MigrationResult(true, 'successful'))
         ;
 
-        new MigrationCollection([$migration])->runAll();
+        $secondMigration = $this->createMock(MigrationInterface::class);
+        $secondMigration
+            ->expects($this->exactly(3))
+            ->method('shouldRun')
+            ->willReturnOnConsecutiveCalls(false, true, false)
+        ;
 
-        $this->addToAssertionCount(1);
+        $secondMigration
+            ->expects($this->once())
+            ->method('run')
+            ->willReturn(new MigrationResult(true, 'successful'))
+        ;
+
+        new MigrationCollection([$firstMigration, $secondMigration])->runAll();
     }
 
     #[DataProvider('getUnexpectedPendingMigrations')]

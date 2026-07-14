@@ -58,6 +58,7 @@ class MigrationCollection
     {
         do {
             $executedMigrations = false;
+
             foreach ($this->getPending() as $migration) {
                 $migration->run();
                 $executedMigrations = true;
