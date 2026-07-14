@@ -4,6 +4,8 @@ import * as Position from '../modules/position';
 export default class extends Controller {
     #timer = null;
     #current = null;
+    #pointer = null;
+    #isTouch = false;
     #targetSelector = null;
     #contentTargetSelector = null;
 
@@ -15,20 +17,16 @@ export default class extends Controller {
     }
 
     connect() {
-        this.element.addEventListener('mouseover', this.#show);
-        this.element.addEventListener('mouseout', this.#hide);
-        this.element.addEventListener('focusin', this.#show);
-        this.element.addEventListener('focusout', this.#hide);
-        this.element.addEventListener('touchend', this.#show);
+        this.element.addEventListener('pointerover', this.#show);
+        this.element.addEventListener('pointermove', this.#setPosition);
+        this.element.addEventListener('pointerout', this.#hide);
         this.element.addEventListener('click', this.#hide);
     }
 
     disconnect() {
-        this.element.removeEventListener('mouseover', this.#show);
-        this.element.removeEventListener('mouseout', this.#hide);
-        this.element.removeEventListener('focusin', this.#show);
-        this.element.removeEventListener('focusout', this.#hide);
-        this.element.removeEventListener('touchend', this.#show);
+        this.element.removeEventListener('pointerover', this.#show);
+        this.element.removeEventListener('pointermove', this.#setPosition);
+        this.element.removeEventListener('pointerout', this.#hide);
         this.element.removeEventListener('click', this.#hide);
 
         this.#hide();
@@ -47,11 +45,7 @@ export default class extends Controller {
     }
 
     #show = (event) => {
-        if (!(event.target instanceof Element)) {
-            return;
-        }
-
-        const el = event.target.closest(this.#targetSelector);
+        const el = event.target instanceof Element ? event.target.closest(this.#targetSelector) : null;
 
         if (!el || el === this.#current) {
             return;
@@ -66,12 +60,29 @@ export default class extends Controller {
         this.#migrateElementTitle(el, true);
         this.#current = el;
 
-        const delay = { mouseover: 1000, focusin: 500 }[event.type] ?? 0;
+        this.#pointer = { x: event.clientX, y: event.clientY };
+        this.#isTouch = 'touch' === event.pointerType;
 
-        this.#timer = setTimeout(() => {
-            Position.compute(el, this.popupTarget, this.popupArrowTarget);
-            this.popupTarget.style.display = 'block';
-        }, delay);
+        this.#timer = setTimeout(
+            () => {
+                this.popupArrowTarget.style.display = this.#isTouch ? '' : 'none';
+                this.#positionTooltip();
+                this.popupTarget.style.display = 'block';
+            },
+            this.#isTouch ? 500 : 1000,
+        );
+    };
+
+    #setPosition = (event) => {
+        if ('touch' === event.pointerType || this.#isTouch) {
+            return;
+        }
+
+        this.#pointer = { x: event.clientX, y: event.clientY };
+
+        if (this.#current && this.popupTarget.style.display === 'block') {
+            this.#positionTooltip();
+        }
     };
 
     #hide = (event = null) => {
@@ -79,8 +90,13 @@ export default class extends Controller {
             return;
         }
 
-        // Ignore mouseout events that only move within the current element
-        if (event?.type === 'mouseout' && this.#current.contains(event.relatedTarget)) {
+        // Don't destroy the tooltip when lifting your finger on touch devices
+        if (event?.type === 'pointerout' && 'touch' === event.pointerType) {
+            return;
+        }
+
+        // Ignore pointerout events that only move within the current element
+        if (event?.type === 'pointerout' && this.#current.contains(event.relatedTarget)) {
             return;
         }
 
@@ -89,6 +105,16 @@ export default class extends Controller {
         this.#current = null;
         this.popupTarget.style.display = 'none';
     };
+
+    #positionTooltip() {
+        const anchor = this.#isTouch ? this.#current : Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
+
+        Position.compute(anchor, this.popupTarget, this.#arrowEl(), this.#isTouch ? 'bottom-start' : 'right-start');
+    }
+
+    #arrowEl() {
+        return this.#isTouch ? this.popupArrowTarget : null;
+    }
 
     #updateContent(el) {
         if (el.matches(this.#contentTargetSelector)) {
@@ -115,10 +141,6 @@ export default class extends Controller {
     }
 
     #migrateElementTitle(el, setTitle) {
-        if (!el) {
-            return;
-        }
-
         if (setTitle && el.hasAttribute('title')) {
             el.setAttribute('data-original-title', el.getAttribute('title'));
             el.removeAttribute('title');
