@@ -3398,7 +3398,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$strNode = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('tl_files_node');
 
-			// Hide the breadcrumb if the files node is not mounted
+			// Hide the breadcrumb if the file node is not mounted
 			if ($strNode && $this->arrFilemounts && !\in_array($strNode, $this->arrFilemounts))
 			{
 				unset($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
