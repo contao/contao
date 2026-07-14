@@ -66,19 +66,19 @@ class ModelTest extends TestCase
         $this->assertSame(
             [
                 'tl_Foo' => [
-                    'string_not_null' => [Types::STRING, 'string', 2 => true],
+                    'string_not_null' => [Types::STRING, 'string', true],
                     'string_null' => [Types::STRING, '1'],
-                    'int_not_null' => [Types::INTEGER, 0, 2 => true],
+                    'int_not_null' => [Types::INTEGER, 0, true],
                     'int_null' => [Types::INTEGER],
-                    'smallint_not_null' => [Types::SMALLINT, 1, 2 => true],
+                    'smallint_not_null' => [Types::SMALLINT, 1, true],
                     'smallint_null' => [Types::SMALLINT],
-                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', 2 => true],
+                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', true],
                     'bigint_null' => [Types::BIGINT],
-                    'float_not_null' => [Types::FLOAT, 0.0, 2 => true],
+                    'float_not_null' => [Types::FLOAT, 0.0, true],
                     'float_null' => [Types::FLOAT],
-                    'bool_not_null' => [Types::BOOLEAN, 2 => true],
+                    'bool_not_null' => [Types::BOOLEAN, false, true],
                     'bool_null' => [Types::BOOLEAN, true],
-                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, 2 => true],
+                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, true],
                     'dca_only' => [Types::INTEGER],
                 ],
             ],
@@ -91,19 +91,19 @@ class ModelTest extends TestCase
         $this->assertSame(
             [
                 'tl_Foo' => [
-                    'string_not_null' => [Types::STRING, 'string', 2 => true],
+                    'string_not_null' => [Types::STRING, 'string', true],
                     'string_null' => [Types::STRING, '1'],
-                    'int_not_null' => [Types::INTEGER, 0, 2 => true],
+                    'int_not_null' => [Types::INTEGER, 0, true],
                     'int_null' => [Types::INTEGER],
-                    'smallint_not_null' => [Types::SMALLINT, 1, 2 => true],
+                    'smallint_not_null' => [Types::SMALLINT, 1, true],
                     'smallint_null' => [Types::SMALLINT],
-                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', 2 => true],
+                    'bigint_not_null' => [Types::BIGINT, '9223372036854775808', true],
                     'bigint_null' => [Types::BIGINT],
-                    'float_not_null' => [Types::FLOAT, 0.0, 2 => true],
+                    'float_not_null' => [Types::FLOAT, 0.0, true],
                     'float_null' => [Types::FLOAT],
-                    'bool_not_null' => [Types::BOOLEAN, 2 => true],
+                    'bool_not_null' => [Types::BOOLEAN, false, true],
                     'bool_null' => [Types::BOOLEAN, true],
-                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, 2 => true],
+                    'floatNotNullCamelCase' => [Types::FLOAT, 1.23, true],
                     'database_only' => [Types::INTEGER],
                 ],
             ],
@@ -161,7 +161,7 @@ class ModelTest extends TestCase
 
         yield ['float_null', null];
 
-        yield ['bool_not_null', null];
+        yield ['bool_not_null', false];
 
         yield ['bool_null', true];
 
