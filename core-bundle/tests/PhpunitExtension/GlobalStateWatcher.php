@@ -222,6 +222,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\Uid\Ulid',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
+                'Symfony\Polyfill\DeepClone\DeepClone',
                 'Webmozart\PathUtil\\',
             ] as $ignorePrefix) {
                 if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {

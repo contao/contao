@@ -24,14 +24,8 @@ class RedirectControllerTest extends TestCase
 {
     public function testAddsTheHeader(): void
     {
-        $response = $this->createStub(RedirectResponse::class);
-
-        $response->headers = $this->createMock(ResponseHeaderBag::class);
-        $response->headers
-            ->expects($this->once())
-            ->method('set')
-            ->with('Strict-Transport-Security', 'max-age=0')
-        ;
+        $response = new RedirectResponse('https://example.com');
+        $response->headers = new ResponseHeaderBag();
 
         $inner = $this->createMock(SymfonyRedirectController::class);
         $inner
@@ -47,17 +41,14 @@ class RedirectControllerTest extends TestCase
 
         $controller = new RedirectController($inner);
         $controller->urlRedirectAction($request, '/foo/bar');
+
+        $this->assertSame('max-age=0', $response->headers->get('Strict-Transport-Security'));
     }
 
     public function testDoesNotAddTheHeaderForInsecureRequess(): void
     {
-        $response = $this->createStub(RedirectResponse::class);
-
-        $response->headers = $this->createMock(ResponseHeaderBag::class);
-        $response->headers
-            ->expects($this->never())
-            ->method('set')
-        ;
+        $response = new RedirectResponse('http://example.com');
+        $response->headers = new ResponseHeaderBag();
 
         $inner = $this->createMock(SymfonyRedirectController::class);
         $inner
@@ -73,17 +64,14 @@ class RedirectControllerTest extends TestCase
 
         $controller = new RedirectController($inner);
         $controller->urlRedirectAction($request, '/foo/bar');
+
+        $this->assertNull($response->headers->get('Strict-Transport-Security'));
     }
 
     public function testDoesNotAddTheHeaderWithoutPageModel(): void
     {
-        $response = $this->createStub(RedirectResponse::class);
-
-        $response->headers = $this->createMock(ResponseHeaderBag::class);
-        $response->headers
-            ->expects($this->never())
-            ->method('set')
-        ;
+        $response = new RedirectResponse('https://example.com');
+        $response->headers = new ResponseHeaderBag();
 
         $inner = $this->createMock(SymfonyRedirectController::class);
         $inner
@@ -96,17 +84,14 @@ class RedirectControllerTest extends TestCase
 
         $controller = new RedirectController($inner);
         $controller->urlRedirectAction($request, '/foo/bar');
+
+        $this->assertNull($response->headers->get('Strict-Transport-Security'));
     }
 
     public function testDoesNotAddTheHeaderIfRootPageUsesSSL(): void
     {
-        $response = $this->createStub(RedirectResponse::class);
-
-        $response->headers = $this->createMock(ResponseHeaderBag::class);
-        $response->headers
-            ->expects($this->never())
-            ->method('set')
-        ;
+        $response = new RedirectResponse('https://example.com');
+        $response->headers = new ResponseHeaderBag();
 
         $inner = $this->createMock(SymfonyRedirectController::class);
         $inner
@@ -122,5 +107,7 @@ class RedirectControllerTest extends TestCase
 
         $controller = new RedirectController($inner);
         $controller->urlRedirectAction($request, '/foo/bar');
+
+        $this->assertNull($response->headers->get('Strict-Transport-Security'));
     }
 }

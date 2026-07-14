@@ -19,7 +19,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -108,10 +107,9 @@ class PreviewLinkListener
     #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function adjustEditView(DataContainer $dc): void
     {
-        $input = $this->framework->getAdapter(Input::class);
         $message = $this->framework->getAdapter(Message::class);
 
-        if ('edit' !== $input->get('act')) {
+        if ('edit' !== $this->requestStack->getCurrentRequest()?->query->get('act')) {
             return;
         }
 

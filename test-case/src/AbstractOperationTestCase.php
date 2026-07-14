@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
+namespace Contao\TestCase;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -20,7 +19,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-abstract class AbstractOperationTestCase extends TestCase
+abstract class AbstractOperationTestCase extends ContaoTestCase
 {
     public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): iterable
     {

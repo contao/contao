@@ -66,7 +66,7 @@ class BackendTemplateStudioListener
             ->setUri($this->router->generate('contao_template_studio'))
             ->setLinkAttribute('class', 'navigation template-studio')
             ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
-            ->setCurrent(TemplateStudioController::class === $request->get('_controller'))
+            ->setCurrent(TemplateStudioController::class === $request->attributes->get('_controller'))
         ;
 
         $categoryNode->addChild($templateStudioNode);

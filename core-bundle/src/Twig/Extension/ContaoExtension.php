@@ -25,6 +25,7 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\AutolinkRuntime;
 use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
 use Contao\CoreBundle\Twig\Runtime\CspRuntime;
@@ -37,6 +38,7 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
@@ -263,6 +265,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['needs_context' => true, 'preserves_safety' => ['html']],
             ),
             new TwigFilter(
+                'simple_token',
+                [SimpleTokenRuntime::class, 'parsePlain'],
+            ),
+            new TwigFilter(
+                'simple_token_html',
+                [SimpleTokenRuntime::class, 'parseHtml'],
+                ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
                 'highlight',
                 [HighlighterRuntime::class, 'highlight'],
             ),
@@ -306,6 +317,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
+            ),
+            new TwigFilter(
+                'autolink_url',
+                [AutolinkRuntime::class, 'linkUrls'],
+                ['pre_escape' => 'html', 'is_safe' => ['html']],
             ),
         ];
     }

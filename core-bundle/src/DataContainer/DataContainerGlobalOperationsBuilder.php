@@ -16,8 +16,8 @@ use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -33,11 +33,12 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
     public function __construct(
         ContaoFramework $framework,
+        RequestStack $requestStack,
         private readonly Environment $twig,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
     ) {
-        parent::__construct($framework);
+        parent::__construct($framework, $requestStack);
     }
 
     public function __toString(): string
@@ -76,13 +77,16 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             $href = $this->urlGenerator->generate('contao_backend').'?'.$href;
         }
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'href' => $href,
             'label' => $this->translator->trans('MSC.backBT', [], 'contao_default'),
             'title' => $this->translator->trans('MSC.backBTTitle', [], 'contao_default'),
             'attributes' => new HtmlAttributes()->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
             'primary' => true,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -101,11 +105,14 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             ->set('data-action', 'contao--toggle-sender#toggle:prevent contao--operations-menu#close')
         ;
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', $buttonAttributes),
             'listAttributes' => new HtmlAttributes()->set('style', 'display: none;'),
             'primary' => true,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -114,13 +121,16 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $this->ensureInitialized();
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', true, [], false),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
             'attributes' => new HtmlAttributes()->addClass('header_clipboard')->set('accesskey', 'x'),
             'method' => 'POST',
             'primary' => true,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -134,7 +144,8 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
         [$label, $title] = $this->getLabelAndTitle($this->table, 'new');
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'href' => $this->getNewHref($mode, $pid),
             'label' => $label,
             'title' => $title,
@@ -142,7 +153,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null)->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -155,7 +168,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             return $this;
         }
 
-        $inputAdapter = $this->framework->getAdapter(Input::class);
+        $request = $this->requestStack->getCurrentRequest();
 
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
             if ('new' === $k) {
@@ -167,7 +180,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
                 continue;
             }
 
-            if (!($v['showOnSelect'] ?? null) && 'select' === $inputAdapter->get('act')) {
+            if (!($v['showOnSelect'] ?? null) && 'select' === $request?->query->get('act')) {
                 continue;
             }
 

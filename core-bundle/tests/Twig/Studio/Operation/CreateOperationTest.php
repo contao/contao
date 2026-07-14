@@ -9,6 +9,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\CreateOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use Contao\TestCase\AbstractOperationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;

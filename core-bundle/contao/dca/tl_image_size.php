@@ -316,7 +316,7 @@ class tl_image_size extends Backend
 	}
 
 	/**
-	 * Check if WEBP, AVIF, HEIC or JXL is supported
+	 * Check if WEBP, AVIF, HEIC, or JXL is supported
 	 *
 	 * @return array
 	 */
