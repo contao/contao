@@ -109,7 +109,7 @@ abstract class Model
 	/**
 	 * @var array<string, array<string, string>>
 	 */
-	private static $arrColumnCastTypes = array();
+	private static $arrColumnInfos = array();
 
 	/**
 	 * Load the relations and optionally process a result set
@@ -251,6 +251,8 @@ abstract class Model
 	 */
 	public function __set($strKey, $varValue)
 	{
+		$varValue = static::convertToPhpValue($strKey, $varValue);
+
 		if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
 		{
 			return;
@@ -260,18 +262,6 @@ abstract class Model
 		$this->arrData[$strKey] = $varValue;
 
 		unset($this->arrRelated[$strKey]);
-
-		try
-		{
-			if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
-			{
-				trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s is deprecated and will no longer work in Contao 7. Use type "%s" instead.', get_debug_type($this), $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
-			}
-		}
-		catch (\TypeError)
-		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s is deprecated and will no longer work in Contao 7. Use the appropriate type instead.', get_debug_type($this), $strKey, get_debug_type($varValue));
-		}
 	}
 
 	/**
@@ -283,7 +273,14 @@ abstract class Model
 	 */
 	public function __get($strKey)
 	{
-		return $this->arrData[$strKey] ?? null;
+		if (\array_key_exists($strKey, $this->arrData))
+		{
+			return $this->arrData[$strKey];
+		}
+
+		self::loadColumnInfos();
+
+		return self::$arrColumnInfos[static::$strTable][$strKey][1] ?? null;
 	}
 
 	/**
@@ -432,12 +429,12 @@ abstract class Model
 	 *
 	 * @return array<string, array<string, string>>
 	 */
-	public static function getColumnCastTypesFromDatabase(): array
+	public static function getColumnInfosFromDatabase(): array
 	{
 		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
 		$schema = $schemaManager->introspectSchema();
 
-		return static::getColumnCastTypesFromSchema($schema);
+		return static::getColumnInfosFromSchema($schema);
 	}
 
 	/**
@@ -445,29 +442,44 @@ abstract class Model
 	 *
 	 * @return array<string, array<string, string>>
 	 */
-	public static function getColumnCastTypesFromDca(): array
+	public static function getColumnInfosFromDca(): array
 	{
-		return static::getColumnCastTypesFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
+		return static::getColumnInfosFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
 	}
 
-	private static function getColumnCastTypesFromSchema(Schema $schema): array
+	private static function getColumnInfosFromSchema(Schema $schema): array
 	{
-		$types = array();
+		$infos = array();
 
 		foreach ($schema->getTables() as $table)
 		{
 			foreach ($table->getColumns() as $column)
 			{
 				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
+				$infos[$table->getName()][$column->getName()][0] = $type;
 
-				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::BIGINT, Types::FLOAT, Types::BOOLEAN), true))
+				if (null !== ($default = $column->getDefault()))
 				{
-					$types[$table->getName()][$column->getName()] = $type;
+					$default = match ($type)
+					{
+						Types::INTEGER, Types::SMALLINT, Types::BIGINT => \is_int($number = +$default) ? $number : $default,
+						Types::FLOAT => (float) $default,
+						Types::BOOLEAN => (bool) $default,
+						Types::ASCII_STRING, Types::BINARY, Types::BLOB, Types::STRING, Types::TEXT => \is_scalar($default ?? '') ? (string) $default : $default,
+						default => $default,
+					};
+
+					$infos[$table->getName()][$column->getName()][1] = $default;
+				}
+
+				if ($column->getNotnull())
+				{
+					$infos[$table->getName()][$column->getName()][2] = true;
 				}
 			}
 		}
 
-		return $types;
+		return $infos;
 	}
 
 	/**
@@ -483,32 +495,47 @@ abstract class Model
 	 */
 	public static function convertToPhpValue(string $strKey, mixed $varValue): mixed
 	{
-		if (null === $varValue)
+		self::loadColumnInfos();
+
+		if (null === $varValue && !(self::$arrColumnInfos[static::$strTable][$strKey][2] ?? null))
 		{
 			return null;
 		}
 
-		if (!self::$arrColumnCastTypes)
+		try
 		{
-			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
+			return match (self::$arrColumnInfos[static::$strTable][$strKey][0] ?? null)
+			{
+				Types::INTEGER, Types::SMALLINT, Types::BIGINT => \is_int($number = +$varValue) ? $number : $varValue,
+				Types::FLOAT => (float) $varValue,
+				Types::BOOLEAN => (bool) $varValue,
+				Types::ASCII_STRING, Types::BINARY, Types::BLOB, Types::STRING, Types::TEXT => \is_scalar($varValue ?? '') ? (string) $varValue : $varValue,
+				default => $varValue,
+			};
+		}
+		catch (\TypeError $exception)
+		{
+			throw new \InvalidArgumentException(\sprintf('Setting "%s::$%s" to type %s failed, expected type for %s column.', static::class, $strKey, get_debug_type($varValue), self::$arrColumnInfos[static::$strTable][$strKey][0] ?? ''), 0, $exception);
+		}
+	}
 
-			if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
-			{
-				self::$arrColumnCastTypes = include $path;
-			}
-			else
-			{
-				self::$arrColumnCastTypes = self::getColumnCastTypesFromDatabase();
-			}
+	private static function loadColumnInfos()
+	{
+		if (self::$arrColumnInfos)
+		{
+			return;
 		}
 
-		return match (self::$arrColumnCastTypes[static::$strTable][$strKey] ?? null)
+		$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-infos.php');
+
+		if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
 		{
-			Types::INTEGER, Types::SMALLINT, Types::BIGINT => \is_int($number = +$varValue) ? $number : $varValue,
-			Types::FLOAT => (float) $varValue,
-			Types::BOOLEAN => (bool) $varValue,
-			default => $varValue,
-		};
+			self::$arrColumnInfos = include $path;
+		}
+		else
+		{
+			self::$arrColumnInfos = self::getColumnInfosFromDatabase();
+		}
 	}
 
 	/**
