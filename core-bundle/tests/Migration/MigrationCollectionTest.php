@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -62,6 +63,26 @@ class MigrationCollectionTest extends TestCase
         $this->assertInstanceOf(MigrationResult::class, $results[1]);
         $this->assertFalse($results[1]->isSuccessful());
         $this->assertSame('failing', $results[1]->getMessage());
+    }
+
+    public function testRunsAllPendingMigrations(): void
+    {
+        $migration = $this->createMock(MigrationInterface::class);
+        $migration
+            ->expects($this->once())
+            ->method('shouldRun')
+            ->willReturn(true)
+        ;
+
+        $migration
+            ->expects($this->once())
+            ->method('run')
+            ->willReturn(new MigrationResult(true, 'successful'))
+        ;
+
+        new MigrationCollection([$migration])->runAll();
+
+        $this->addToAssertionCount(1);
     }
 
     #[DataProvider('getUnexpectedPendingMigrations')]

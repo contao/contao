@@ -69,6 +69,13 @@ class CommandCompiler
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
     }
 
+    public function runAll(bool $skipDropStatements = false): void
+    {
+        foreach ($this->compileCommands($skipDropStatements) as $command) {
+            $this->executeSqlCommand($command);
+        }
+    }
+
     public function executeSqlCommand(string $command): void
     {
         try {

@@ -22,6 +22,26 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseMigrationRunnerTest extends TestCase
 {
+    public function testRunsMigrationsBeforeAndAfterUpdatingTheSchema(): void
+    {
+        $migrations = $this->createMock(MigrationCollection::class);
+        $migrations
+            ->expects($this->exactly(2))
+            ->method('runAll')
+        ;
+
+        $compiler = $this->createMock(CommandCompiler::class);
+        $compiler
+            ->expects($this->once())
+            ->method('runAll')
+            ->with(false)
+        ;
+
+        $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
+
+        $runner->runAll();
+    }
+
     public function testDelegatesPendingMigrationsAndSchemaCommands(): void
     {
         $migrations = $this->createStub(MigrationCollection::class);

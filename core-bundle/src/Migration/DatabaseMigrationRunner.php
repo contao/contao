@@ -29,6 +29,15 @@ class DatabaseMigrationRunner
         return $this->migrations->hasPending() || [] !== $this->commandCompiler->compileCommands($skipDropStatements);
     }
 
+    public function runAll(): void
+    {
+        $this->migrations->runAll();
+        $this->commandCompiler->runAll();
+
+        // Schema changes can make additional migrations pending.
+        $this->migrations->runAll();
+    }
+
     public function createBackupConfig(): CreateConfig
     {
         return $this->backupManager->createCreateConfig();

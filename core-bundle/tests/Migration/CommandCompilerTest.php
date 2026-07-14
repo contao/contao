@@ -23,6 +23,31 @@ use PHPUnit\Framework\TestCase;
 
 class CommandCompilerTest extends TestCase
 {
+    public function testRunsAllCompiledCommands(): void
+    {
+        $compiler = new class() extends CommandCompiler {
+            public array $executedCommands = [];
+
+            public function __construct()
+            {
+            }
+
+            public function compileCommands(bool $skipDropStatements = false): array
+            {
+                return ['ALTER TABLE tl_foo ADD bar INT'];
+            }
+
+            public function executeSqlCommand(string $command): void
+            {
+                $this->executedCommands[] = $command;
+            }
+        };
+
+        $compiler->runAll();
+
+        $this->assertSame(['ALTER TABLE tl_foo ADD bar INT'], $compiler->executedCommands);
+    }
+
     public function testReturnsTheAlterTableCommands(): void
     {
         $fromSchema = new Schema();

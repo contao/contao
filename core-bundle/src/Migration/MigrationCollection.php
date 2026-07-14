@@ -54,6 +54,13 @@ class MigrationCollection
         }
     }
 
+    public function runAll(): void
+    {
+        foreach ($this->getPending() as $migration) {
+            $migration->run();
+        }
+    }
+
     /**
      * @return iterable<MigrationResult>
      *
