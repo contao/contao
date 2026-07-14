@@ -18,15 +18,15 @@ class ColumnToVirtualMigration extends AbstractColumnToVirtualMigration
     {
         return [
             'tl_content' => [
-                'playerSize',
-                'playerOptions',
-                'playerStart',
-                'playerStop',
-                'playerTitle',
-                'playerCaption',
-                'playerAspect',
-                'playerPreload',
-                'playerColor',
+                'playerSize' => 'jsonData',
+                'playerOptions' => 'jsonData',
+                'playerStart' => 'jsonData',
+                'playerStop' => 'jsonData',
+                'playerTitle' => 'jsonData',
+                'playerCaption' => 'jsonData',
+                'playerAspect' => 'jsonData',
+                'playerPreload' => 'jsonData',
+                'playerColor' => 'jsonData',
             ],
         ];
     }
