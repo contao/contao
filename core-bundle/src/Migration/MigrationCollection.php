@@ -56,9 +56,13 @@ class MigrationCollection
 
     public function runAll(): void
     {
-        foreach ($this->getPending() as $migration) {
-            $migration->run();
-        }
+        do {
+            $executedMigrations = false;
+            foreach ($this->getPending() as $migration) {
+                $migration->run();
+                $executedMigrations = true;
+            }
+        } while ($executedMigrations);
     }
 
     /**
