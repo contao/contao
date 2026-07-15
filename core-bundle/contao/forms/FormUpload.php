@@ -362,23 +362,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	}
 
 	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<input type="file" name="%s" id="ctrl_%s" class="upload%s"%s%s',
-			$this->strName,
-			$this->strId,
-			$this->strClass ? ' ' . $this->strClass : '',
-			$this->getAttributes(),
-			$this->strTagEnding
-		);
-	}
-
-	/**
 	 * Return the maximum upload file size in bytes
 	 *
 	 * @return string

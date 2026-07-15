@@ -97,23 +97,4 @@ class FormRange extends Widget
 				break;
 		}
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<input type="%s" name="%s" id="ctrl_%s" class="range%s" value="%s"%s%s',
-			$this->type,
-			$this->strName,
-			$this->strId,
-			$this->strClass ? ' ' . $this->strClass : '',
-			StringUtil::specialchars($this->value),
-			$this->getAttributes(),
-			$this->strTagEnding
-		);
-	}
 }
