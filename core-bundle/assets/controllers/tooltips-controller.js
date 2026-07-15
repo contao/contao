@@ -99,7 +99,7 @@ export default class extends Controller {
     #positionTooltip() {
         const anchor = Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
 
-        Position.compute(anchor, this.popupTarget, null, 'bottom-start', 20);
+        Position.compute(anchor, this.popupTarget, null, 'bottom-start', 18);
     }
 
     #updateContent(el) {
