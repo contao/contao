@@ -961,7 +961,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $columns = array_map(
             static fn (Column $column): string => $column->getObjectName()->toString(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table),
+            $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($this->table),
         );
 
         $defaultFields = [

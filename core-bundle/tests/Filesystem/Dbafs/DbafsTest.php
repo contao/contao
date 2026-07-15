@@ -256,7 +256,7 @@ class DbafsTest extends TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableColumnsByUnquotedName')
             ->with('tl_files')
             ->willReturn(
                 array_map(
