@@ -869,4 +869,210 @@ abstract class Backend extends Controller
 			}
 		}
 	}
+
+	/**
+	 * Get all allowed pages and return them as string
+	 *
+	 * @return string
+	 */
+	public function createPageList()
+	{
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
+		{
+			return $this->doCreatePageList();
+		}
+
+		$return = '';
+		$processed = array();
+
+		foreach ($this->eliminateNestedPages($user->pagemounts) as $page)
+		{
+			$objPage = PageModel::findWithDetails($page);
+
+			// Root page mounted
+			if ($objPage->type == 'root')
+			{
+				$title = $objPage->title;
+				$start = $objPage->id;
+			}
+
+			// Regular page mounted
+			else
+			{
+				$title = $objPage->rootTitle;
+				$start = $objPage->rootId;
+			}
+
+			// Do not process twice
+			if (\in_array($start, $processed))
+			{
+				continue;
+			}
+
+			// Skip websites that run under a different domain (see #2387)
+			if ($objPage->domain && $objPage->domain != Environment::get('host'))
+			{
+				continue;
+			}
+
+			$processed[] = $start;
+			$return .= '<optgroup label="' . $title . '">' . $this->doCreatePageList($start) . '</optgroup>';
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Recursively get all allowed pages and return them as string
+	 *
+	 * @param integer $intId
+	 * @param integer $level
+	 *
+	 * @return string
+	 */
+	protected function doCreatePageList($intId=0, $level=-1)
+	{
+		$objPages = Database::getInstance()
+			->prepare("SELECT id, title, type, dns FROM tl_page WHERE pid=? ORDER BY sorting")
+			->execute($intId);
+
+		if ($objPages->numRows < 1)
+		{
+			return '';
+		}
+
+		++$level;
+		$strOptions = '';
+
+		while ($objPages->next())
+		{
+			if ($objPages->type == 'root')
+			{
+				// Skip websites that run under a different domain
+				if ($objPages->dns && $objPages->dns != Environment::get('host'))
+				{
+					continue;
+				}
+
+				$strOptions .= '<optgroup label="' . $objPages->title . '">';
+				$strOptions .= $this->doCreatePageList($objPages->id, -1);
+				$strOptions .= '</optgroup>';
+			}
+			else
+			{
+				$strOptions .= \sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= $this->doCreatePageList($objPages->id, $level);
+			}
+		}
+
+		return $strOptions;
+	}
+
+	/**
+	 * Get all allowed files and return them as string
+	 *
+	 * @param string  $strFilter
+	 * @param boolean $filemount
+	 *
+	 * @return string
+	 */
+	public function createFileList($strFilter='', $filemount=false)
+	{
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
+		{
+			return $this->doCreateFileList(System::getContainer()->getParameter('contao.upload_path'), -1, $strFilter);
+		}
+
+		$return = '';
+		$processed = array();
+
+		// Set custom file mount
+		if ($filemount)
+		{
+			$user->filemounts = array($filemount);
+		}
+
+		// Limit nodes to the file mounts of the user
+		foreach ($this->eliminateNestedPaths($user->filemounts) as $path)
+		{
+			if (\in_array($path, $processed))
+			{
+				continue;
+			}
+
+			$processed[] = $path;
+			$return .= $this->doCreateFileList($path, -1, $strFilter);
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Recursively get all allowed files and return them as string
+	 *
+	 * @param string  $strFolder
+	 * @param integer $level
+	 * @param string  $strFilter
+	 *
+	 * @return string
+	 */
+	protected function doCreateFileList($strFolder=null, $level=-1, $strFilter='')
+	{
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrPages = Folder::scan($projectDir . '/' . $strFolder);
+
+		// Empty folder
+		if (empty($arrPages))
+		{
+			return '';
+		}
+
+		// Protected folder
+		if (\in_array('.htaccess', $arrPages))
+		{
+			return '';
+		}
+
+		++$level;
+		$strFolders = '';
+		$strFiles = '';
+
+		// Recursively list all files and folders
+		foreach ($arrPages as $strFile)
+		{
+			if (str_starts_with($strFile, '.'))
+			{
+				continue;
+			}
+
+			// Folders
+			if (is_dir($projectDir . '/' . $strFolder . '/' . $strFile))
+			{
+				$strFolders .= $this->doCreateFileList($strFolder . '/' . $strFile, $level, $strFilter);
+			}
+
+			// Files
+			else
+			{
+				// Filter images
+				if ($strFilter && !preg_match('/\.(' . str_replace(',', '|', $strFilter) . ')$/i', $strFile))
+				{
+					continue;
+				}
+
+				$strFiles .= \sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
+			}
+		}
+
+		if ($strFiles)
+		{
+			return '<optgroup label="' . StringUtil::specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
+		}
+
+		return $strFiles . $strFolders;
+	}
 }
