@@ -33,6 +33,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'cacheTagsInvalidation'       => array('start'=>'start', 'stop'=>'stop'),
 		'markAsCopy'                  => 'headline',
 		'onsubmit_callback' => array
 		(

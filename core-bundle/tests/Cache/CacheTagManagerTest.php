@@ -16,6 +16,7 @@ use Contao\ArticleModel;
 use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Event\InvalidateCacheTagsEvent;
+use Contao\CoreBundle\Repository\CacheTagInvalidationRepository;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Author;
 use Contao\CoreBundle\Tests\Fixtures\Entity\BlogPost;
@@ -31,6 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CacheTagManagerTest extends DoctrineTestCase
@@ -69,9 +71,76 @@ class CacheTagManagerTest extends DoctrineTestCase
         $cacheTagManager = new CacheTagManager(
             $this->createStub(EntityManagerInterface::class),
             $eventDispatcher,
+            $this->createStub(CacheTagInvalidationRepository::class),
+            new MockClock(),
         );
 
         $cacheTagManager->invalidateTags($tags);
+    }
+
+    public function testSchedulesInvalidation(): void
+    {
+        $tags = ['foo', 'bar'];
+        $invalidateAt = new \DateTimeImmutable('2030-01-01');
+        $repository = $this->createMock(CacheTagInvalidationRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('schedule')
+            ->with($tags, $invalidateAt, 'my-identifier')
+        ;
+
+        $cacheTagManager = new CacheTagManager(
+            $this->createStub(EntityManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $repository,
+            new MockClock('2025-01-01'),
+            null,
+            null,
+        );
+
+        $this->assertSame($cacheTagManager, $cacheTagManager->invalidateTagsAt($tags, $invalidateAt, 'my-identifier'));
+    }
+
+    public function testRejectsInvalidationInThePast(): void
+    {
+        $repository = $this->createMock(CacheTagInvalidationRepository::class);
+        $repository
+            ->expects($this->never())
+            ->method('schedule')
+        ;
+
+        $cacheTagManager = new CacheTagManager(
+            $this->createStub(EntityManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $repository,
+            new MockClock('2025-01-01'),
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The invalidation time must be in the future.');
+
+        $cacheTagManager->invalidateTagsAt([], new \DateTimeImmutable('2024-12-31'));
+    }
+
+    public function testCancelsInvalidation(): void
+    {
+        $repository = $this->createMock(CacheTagInvalidationRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('cancel')
+            ->with('my-identifier')
+        ;
+
+        $cacheTagManager = new CacheTagManager(
+            $this->createStub(EntityManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $repository,
+            new MockClock(),
+            null,
+            null,
+        );
+
+        $this->assertSame($cacheTagManager, $cacheTagManager->cancelInvalidation('my-identifier'));
     }
 
     public function testGetTagForEntityClass(): void
@@ -304,6 +373,8 @@ class CacheTagManagerTest extends DoctrineTestCase
         return new CacheTagManager(
             $this->getTestEntityManager(),
             $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(CacheTagInvalidationRepository::class),
+            new MockClock(),
             $responseTagger ?? $this->createStub(ResponseTagger::class),
             $cacheTagInvalidator,
         );

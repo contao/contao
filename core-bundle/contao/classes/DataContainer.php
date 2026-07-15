@@ -314,7 +314,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array<string, mixed>|AccessDeniedException>
+	 * @var array<int|string, array<string, mixed>|AccessDeniedException|null>
 	 */
 	private static $arrCurrentRecordCache = array();
 
@@ -1209,7 +1209,48 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		System::getContainer()->get('contao.cache.tag_manager')->invalidateTags($tags);
+		$cacheTagManager = System::getContainer()->get('contao.cache.tag_manager');
+		$cacheTagManager->invalidateTags($tags);
+
+		// Schedule future cache tag invalidations
+		if (\array_key_exists('cacheTagsInvalidation', $GLOBALS['TL_DCA'][$this->table]['config'] ?? array()))
+		{
+			$fields = $GLOBALS['TL_DCA'][$this->table]['config']['cacheTagsInvalidation'];
+			$record = $this->getCurrentRecord();
+			$identifier = \sprintf('contao.dca.%s.%s', $this->table, $this->id);
+
+			// Always remove the previous hints before calculating the current ones.
+			$cacheTagManager->cancelInvalidation($identifier);
+
+			$invalidations = array();
+
+			foreach ($fields as $field => $type)
+			{
+				if (!\in_array($type, array('start', 'stop'), true))
+				{
+					throw new \InvalidArgumentException(\sprintf('Invalid cache tag invalidation type "%s" configured for field "%s.%s".', $type, $this->table, $field));
+				}
+
+				$rgxp = $GLOBALS['TL_DCA'][$this->table]['fields'][$field]['eval']['rgxp'] ?? null;
+
+				if ($record && \in_array($rgxp, array('date', 'time', 'datim'), true) && ($value = $record[$field] ?? null))
+				{
+					$timestamp = (int) $value;
+
+					if ($timestamp > time())
+					{
+						$invalidations[] = $timestamp;
+					}
+				}
+			}
+
+			$invalidations = array_values(array_unique($invalidations));
+
+			foreach ($invalidations as $timestamp)
+			{
+				$cacheTagManager->invalidateTagsAt($tags, new \DateTimeImmutable('@' . $timestamp), $identifier);
+			}
+		}
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)
@@ -1452,9 +1493,9 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
+	 * @param array<string, mixed>|null $row Pass null if the record does not exist
 	 */
-	protected static function setCurrentRecordCache(int|string $id, string $table, array $row): void
+	protected static function setCurrentRecordCache(int|string $id, string $table, array|null $row): void
 	{
 		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
@@ -1471,13 +1512,13 @@ abstract class DataContainer extends Backend
 		$table = $table ?: $this->strTable;
 		$key = $table . '.' . $id;
 
-		if (!isset(self::$arrCurrentRecordCache[$key]))
+		if (!\array_key_exists($key, self::$arrCurrentRecordCache))
 		{
 			static::preloadCurrentRecords(array($id), $table);
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!isset(self::$arrCurrentRecordCache[$key]))
+		if (!\array_key_exists($key, self::$arrCurrentRecordCache) || null === self::$arrCurrentRecordCache[$key])
 		{
 			return null;
 		}
