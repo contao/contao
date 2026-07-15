@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\Index\IndexType;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -53,7 +53,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->getColumn('title')->getNotnull());
         $this->assertFalse($table->getColumn('title')->getFixed());
         $this->assertSame(128, $table->getColumn('title')->getLength());
-        $this->assertSame('utf8mb4_bin', $table->getColumn('title')->getPlatformOption('collation'));
+        $this->assertSame('utf8mb4_bin', $table->getColumn('title')->getCollation());
 
         $titleDefault = $table->getColumn('title')->getDefault();
 
@@ -261,21 +261,31 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
-        $this->assertTrue($table->hasIndex('PRIMARY'));
-        $this->assertTrue($table->getIndex('PRIMARY')->isPrimary());
-        $this->assertSame(['id'], $table->getIndex('PRIMARY')->getColumns());
+        $primaryKeys = $table->getPrimaryKeyConstraint()->getColumnNames();
+        $this->assertCount(1, $primaryKeys);
+        $this->assertSame('id', $primaryKeys[0]->toString());
 
         $this->assertTrue($table->hasIndex('pid'));
-        $this->assertFalse($table->getIndex('pid')->isUnique());
-        $this->assertSame(['pid'], $table->getIndex('pid')->getColumns());
+        $this->assertSame(IndexType::REGULAR, $table->getIndex('pid')->getType());
+
+        $columns = $table->getIndex('pid')->getIndexedColumns();
+        $this->assertCount(1, $columns);
+        $this->assertSame('pid', $columns[0]->getColumnName()->toString());
 
         $this->assertTrue($table->hasIndex('username'));
-        $this->assertTrue($table->getIndex('username')->isUnique());
-        $this->assertSame(['username'], $table->getIndex('username')->getColumns());
+        $this->assertSame(IndexType::UNIQUE, $table->getIndex('username')->getType());
+
+        $columns = $table->getIndex('username')->getIndexedColumns();
+        $this->assertCount(1, $columns);
+        $this->assertSame('username', $columns[0]->getColumnName()->toString());
 
         $this->assertTrue($table->hasIndex('name'));
-        $this->assertFalse($table->getIndex('name')->isUnique());
-        $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
+        $this->assertSame(IndexType::REGULAR, $table->getIndex('name')->getType());
+
+        $columns = $table->getIndex('name')->getIndexedColumns();
+        $this->assertCount(2, $columns);
+        $this->assertSame('firstname', $columns[0]->getColumnName()->toString());
+        $this->assertSame('lastname', $columns[1]->getColumnName()->toString());
     }
 
     #[DataProvider('provideIndexes')]
@@ -327,21 +337,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(255, $table->getColumn('name')->getLength());
 
         $this->assertTrue($table->hasIndex('name'));
-        $this->assertFalse($table->getIndex('name')->isUnique());
-        $this->assertSame([$expected], $table->getIndex('name')->getOption('lengths'));
+        $this->assertSame(IndexType::REGULAR, $table->getIndex('name')->getType());
 
-        /** @phpstan-ignore function.alreadyNarrowedType */
-        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-            $this->assertSame(['name'], $table->getIndex('name')->getColumns());
-        } else {
-            $column = 'name';
-
-            if ($expected) {
-                $column .= '('.$expected.')';
-            }
-
-            $this->assertSame([$column], $table->getIndex('name')->getColumns());
-        }
+        $columns = $table->getIndex('name')->getIndexedColumns();
+        $this->assertCount(1, $columns);
+        $this->assertSame('name', $columns[0]->getColumnName()->toString());
+        $this->assertSame($expected, $columns[0]->getLength());
     }
 
     public static function provideIndexes(): iterable
@@ -517,15 +518,16 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
 
         $this->assertTrue($table->hasIndex('col123'));
-        $this->assertFalse($table->getIndex('col123')->isUnique());
-        $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
+        $this->assertSame(IndexType::REGULAR, $table->getIndex('col123')->getType());
 
-        /** @phpstan-ignore function.alreadyNarrowedType */
-        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-            $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
-        } else {
-            $this->assertSame(['col1(100)', 'col2', 'col3(99)'], $table->getIndex('col123')->getColumns());
-        }
+        $columns = $table->getIndex('col123')->getIndexedColumns();
+        $this->assertCount(3, $columns);
+        $this->assertSame('col1', $columns[0]->getColumnName()->toString());
+        $this->assertSame(100, $columns[0]->getLength());
+        $this->assertSame('col2', $columns[1]->getColumnName()->toString());
+        $this->assertNull($columns[1]->getLength());
+        $this->assertSame('col3', $columns[2]->getColumnName()->toString());
+        $this->assertSame(99, $columns[2]->getLength());
     }
 
     public function testAppendToSchemaHandlesFulltextIndexes(): void
@@ -564,8 +566,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
 
         $this->assertTrue($table->hasIndex('text'));
-        $this->assertFalse($table->getIndex('text')->isUnique());
-        $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
+        $this->assertSame(IndexType::FULLTEXT, $table->getIndex('text')->getType());
     }
 
     #[DataProvider('provideInvalidIndexDefinitions')]

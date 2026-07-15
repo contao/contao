@@ -92,9 +92,11 @@ class Dumper implements DumperInterface
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
-        foreach ($schemaManager->listViews() as $view) {
-            yield \sprintf('-- BEGIN VIEW %s', $view->getObjectName()->toString());
-            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
+        foreach ($schemaManager->introspectViews() as $view) {
+            $viewName = $view->getObjectName();
+
+            yield \sprintf('-- BEGIN VIEW %s', $viewName->toString());
+            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $viewName->toSQL($platform), $view->getSql());
         }
     }
 
@@ -103,10 +105,10 @@ class Dumper implements DumperInterface
      */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        $tableName = $table->getObjectName()->toString();
+        $tableName = $table->getObjectName();
 
-        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName);
-        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $tableName);
+        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName->toString());
+        yield \sprintf('DROP TABLE IF EXISTS %s;', $tableName->toSQL($platform));
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -118,23 +120,27 @@ class Dumper implements DumperInterface
      */
     private function dumpData(Connection $connection, Table $table): \Generator
     {
-        $tableName = $table->getObjectName()->toString();
+        $tableName = $table->getObjectName();
 
-        yield \sprintf('-- BEGIN DATA %s', $tableName);
+        yield \sprintf('-- BEGIN DATA %s', $tableName->toString());
 
         $values = [];
         $columnBindingTypes = [];
         $columnUtf8Charsets = [];
 
+        $platform = $connection->getDatabasePlatform();
+        $tableNameSql = $tableName->toSQL($platform);
+
         foreach ($table->getColumns() as $column) {
+            $values[] = $column->getObjectName()->toSQL($platform);
+
             $columnName = $column->getObjectName()->toString();
-            $values[] = "`$columnName` AS `$columnName`";
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
-            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
+            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getCharset() ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
-        $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
+        $rows = $connection->executeQuery("SELECT $values FROM $tableNameSql");
 
         /** @var array<string, float|int|string|null> $row[] */
         foreach ($rows->iterateAssociative() as $row) {
@@ -142,7 +148,7 @@ class Dumper implements DumperInterface
             $insertValues = [];
 
             foreach ($row as $columnName => $value) {
-                $insertColumns[] = "`$columnName`";
+                $insertColumns[] = $platform->quoteSingleIdentifier($columnName);
 
                 $insertValues[] = $this->formatValueForDump(
                     $value,
@@ -155,7 +161,7 @@ class Dumper implements DumperInterface
             $insertColumns = implode(', ', $insertColumns);
             $insertValues = implode(', ', $insertValues);
 
-            yield "INSERT INTO `$tableName` ($insertColumns) VALUES ($insertValues);";
+            yield "INSERT INTO $tableNameSql ($insertColumns) VALUES ($insertValues);";
         }
     }
 
