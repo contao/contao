@@ -279,13 +279,7 @@ final class Figure
         }
 
         if ($linkAttributes) {
-            $htmlAttributes = array_map(
-                static fn (string $attribute, string $value) => \sprintf('%s="%s"', $attribute, $value),
-                array_keys($linkAttributes),
-                $linkAttributes,
-            );
-
-            $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);
+            $templateData['attributes'] = new HtmlAttributes($linkAttributes)->toString();
         }
 
         // Lightbox
