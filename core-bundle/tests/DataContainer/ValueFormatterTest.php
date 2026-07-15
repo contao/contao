@@ -412,7 +412,7 @@ class ValueFormatterTest extends TestCase
         ;
 
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 
@@ -477,7 +477,7 @@ class ValueFormatterTest extends TestCase
         ;
 
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 

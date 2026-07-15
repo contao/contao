@@ -910,7 +910,7 @@ class DbafsTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->with('tl_files')
             ->willReturn('tl_files')
         ;
@@ -1394,7 +1394,7 @@ class DbafsTest extends TestCase
 
         if ($connection instanceof Stub) {
             $connection
-                ->method('quoteIdentifier')
+                ->method('quoteSingleIdentifier')
                 ->willReturnArgument(0)
             ;
         }

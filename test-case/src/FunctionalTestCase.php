@@ -116,7 +116,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
                 foreach (array_keys(self::$tableColumns) as $tableName) {
                     if ($tableColumns[$tableName] !== self::$tableColumns[$tableName]) {
-                        $connection->executeStatement('DROP TABLE '.$connection->quoteIdentifier($tableName));
+                        $connection->executeStatement('DROP TABLE '.$connection->quoteSingleIdentifier($tableName));
                         $connection->executeStatement(self::$tableSchemas[$tableName]);
                     }
                 }
@@ -133,7 +133,7 @@ abstract class FunctionalTestCase extends WebTestCase
             );
 
             foreach ($truncateTables as $tableName) {
-                $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteIdentifier($tableName));
+                $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteSingleIdentifier($tableName));
             }
 
             return;
@@ -145,7 +145,7 @@ abstract class FunctionalTestCase extends WebTestCase
         if ($tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables),
+                array_map(static fn (Table $table) => $connection->quoteSingleIdentifier($table->getName()), $tables),
             ));
         }
 
@@ -173,7 +173,7 @@ abstract class FunctionalTestCase extends WebTestCase
         foreach ($tables as $table) {
             $name = $table->getName();
 
-            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteIdentifier($name))[1];
+            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteSingleIdentifier($name))[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
@@ -198,10 +198,10 @@ abstract class FunctionalTestCase extends WebTestCase
                 $data = [];
 
                 foreach ($row as $key => $value) {
-                    $data[$connection->quoteIdentifier($key)] = $value;
+                    $data[$connection->quoteSingleIdentifier($key)] = $value;
                 }
 
-                $connection->insert($connection->quoteIdentifier($table), $data);
+                $connection->insert($connection->quoteSingleIdentifier($table), $data);
             }
         }
     }

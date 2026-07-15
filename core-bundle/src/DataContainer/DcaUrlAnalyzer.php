@@ -567,7 +567,7 @@ class DcaUrlAnalyzer
 
         new DcaLoader($table)->load();
 
-        $tableQuoted = $this->connection->quoteIdentifier($table);
+        $tableQuoted = $this->connection->quoteSingleIdentifier($table);
 
         $rows = $this->connection->fetchAllAssociative(
             "SELECT id FROM $tableQuoted WHERE pid = ?",

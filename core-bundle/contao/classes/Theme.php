@@ -751,7 +751,7 @@ class Theme extends Backend
 			{
 				if (str_starts_with($table, 'tl_'))
 				{
-					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteIdentifier($table));
+					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteSingleIdentifier($table));
 				}
 			}
 		}
@@ -772,7 +772,7 @@ class Theme extends Backend
 			{
 				$connection->insert(
 					'tl_user',
-					array_combine(array_map($connection->quoteIdentifier(...), array_keys($userRow)), $userRow),
+					array_combine(array_map($connection->quoteSingleIdentifier(...), array_keys($userRow)), $userRow),
 				);
 			}
 		}
