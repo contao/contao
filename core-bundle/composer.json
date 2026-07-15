@@ -201,8 +201,7 @@
             "contao/config/",
             "contao/dca/",
             "contao/languages/",
-            "contao/templates/",
-            "contao/themes/"
+            "contao/templates/"
         ]
     },
     "autoload-dev": {
