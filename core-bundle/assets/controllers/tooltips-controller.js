@@ -1,5 +1,21 @@
 import { Controller } from '@hotwired/stimulus';
-import * as Position from '../modules/position';
+import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+
+function positionAt(element, clientX, clientY) {
+    const anchor = {
+        getBoundingClientRect: () => new DOMRect(clientX, clientY, 0, 0),
+    };
+
+    computePosition(anchor, element, {
+        placement: 'bottom-start',
+        middleware: [offset(18), flip(), shift({ padding: 10 })],
+    }).then(({ x, y }) => {
+        Object.assign(element.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+        });
+    });
+}
 
 export default class extends Controller {
     #timer = null;
@@ -97,9 +113,7 @@ export default class extends Controller {
     };
 
     #positionTooltip() {
-        const anchor = Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
-
-        Position.compute(anchor, this.popupTarget, null, 'bottom-start', 18);
+        positionAt(this.popupTarget, this.#pointer.x, this.#pointer.y);
     }
 
     #updateContent(el) {
