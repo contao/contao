@@ -34,10 +34,10 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                 continue;
             }
 
-            $tableColumns = array_keys($schemaManager->listTableColumns($table));
+            $tableDefinition = $schemaManager->introspectTableByUnquotedName($table);
 
             // If there is at least one column that should be a virtual field, run the migration
-            if (array_any($fields, static fn ($targetColumn, $field) => \in_array(strtolower($field), $tableColumns, true))) {
+            if (array_any($fields, static fn ($targetColumn, $field) => $tableDefinition->hasColumn($field))) {
                 return true;
             }
         }
@@ -56,10 +56,10 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                 continue;
             }
 
-            $tableColumns = array_keys($schemaManager->listTableColumns($table));
+            $tableDefinition = $schemaManager->introspectTableByUnquotedName($table);
 
             foreach ($fields as $field => $targetColumn) {
-                if (!\in_array(strtolower($field), $tableColumns, true)) {
+                if (!$tableDefinition->hasColumn($field)) {
                     continue;
                 }
 
