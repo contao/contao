@@ -544,7 +544,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? \sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', StringUtil::specialchars($this->arrErrors[$intIndex])) : '';
+		return $this->hasErrors() ? \sprintf('<p class="%s" data-contao--tooltips-target="content">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', StringUtil::specialchars($this->arrErrors[$intIndex])) : '';
 	}
 
 	/**

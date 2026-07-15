@@ -458,7 +458,7 @@ abstract class Model
 				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
 				$infos[$table->getName()][$column->getName()][0] = $type;
 
-				if (null !== ($default = $column->getDefault()))
+				if (null !== ($default = $column->getDefault()) || $column->getNotnull())
 				{
 					$default = match ($type)
 					{

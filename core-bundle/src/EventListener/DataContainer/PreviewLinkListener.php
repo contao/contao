@@ -175,7 +175,7 @@ class PreviewLinkListener
         $url = $this->generateUrl($id);
 
         return \sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent" data-contao--tooltips-target="tooltip">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link')),
             StringUtil::specialcharsUrl($url),
