@@ -20,7 +20,7 @@
                 <div class="widget w50 clr">
                     <h3><label for="verify"{% if error|default %} class="error"{% endif %}>{{ 'MSC.twoFactorVerification'|trans }}</label></h3>
                     <input type="text" name="verify" id="verify" class="tl_text{% if error|default %} error{% endif %}" value="" autocapitalize="off" autocomplete="one-time-code" required>
-                    <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
+                    <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip" data-contao--tooltips-target="content">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
                 </div>
                 <div class="submit_container cf">
                     <button type="submit" class="tl_submit">{{ 'MSC.enable'|trans }}</button>

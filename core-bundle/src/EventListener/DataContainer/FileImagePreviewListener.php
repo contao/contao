@@ -75,7 +75,7 @@ class FileImagePreviewListener
         $strPreview .= '<script>Backend.editPreviewWizard($(\''.$ctrl."'));</script>";
 
         if ($this->framework->getAdapter(Config::class)->get('showHelp')) {
-            $strPreview .= '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_files']['preview'][1].'</p>';
+            $strPreview .= '<p class="tl_help tl_tip" data-contao--tooltips-target="content">'.$GLOBALS['TL_LANG']['tl_files']['preview'][1].'</p>';
         }
 
         return '<div class="widget">'.$strPreview.'</div>';

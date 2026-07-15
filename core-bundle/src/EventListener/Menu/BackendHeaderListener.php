@@ -65,6 +65,7 @@ class BackendHeaderListener
             ->setLinkAttribute('class', 'icon-manual')
             ->setLinkAttribute('title', $manualTitle)
             ->setLinkAttribute('target', '_blank')
+            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
         ;
@@ -89,6 +90,7 @@ class BackendHeaderListener
             ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
             ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#profileMenu')
+            ->set('data-contao--tooltips-target', 'tooltip')
         ;
 
         $submenu = $factory
@@ -179,6 +181,7 @@ class BackendHeaderListener
             ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
             ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
             ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#left')
+            ->set('data-contao--tooltips-target', 'tooltip')
         ;
 
         $burger = $factory
@@ -197,7 +200,7 @@ class BackendHeaderListener
         $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
 
         $label = \sprintf(
-            '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+            '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false" data-contao--tooltips-target="tooltip">%s</a>',
             $this->router->generate('contao_backend_alerts'),
             htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),

@@ -876,7 +876,7 @@ class tl_files extends Backend
       <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
     </span>
   </div>' . (Config::get('showHelp') ? '
-  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';
 	}
 
@@ -958,7 +958,7 @@ class tl_files extends Backend
       <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
     </span>
   </div>' . (Config::get('showHelp') ? '
-  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
 </div>';
 	}
 }

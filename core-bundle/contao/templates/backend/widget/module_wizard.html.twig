@@ -87,6 +87,7 @@
                         .set('href', path('contao_backend', {do: 'themes', table: row.is_content_element ? 'tl_content' : 'tl_module', act: 'edit', id: row.id, popup: '1'}))
                         .set('onclick', "Backend.openModalIframe({'title': '#{'tl_layout.edit_module'|trans(domain: 'contao_layout')|e('js')}' , 'url': this.href});return false")
                         .set('title', title)
+                        .set('data-contao--tooltips-target', 'tooltip')
                         .addClass('module_link')
                         .addClass('hidden', not row.controls.edit)
                     %}
@@ -122,6 +123,7 @@
                     {% set enable_label_attributes = attrs()
                         .set('for', "#{id}_#{loop.index0}_enable")
                         .set('data-action', 'click->contao--scroll-offset#store')
+                        .set('data-contao--tooltips-target', 'content')
                         .addClass('mw_enable')
                     %}
                     <label{{ enable_label_attributes }}>{{ 'MSC.mw_enable'|trans }}</label>
