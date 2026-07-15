@@ -14,6 +14,7 @@ namespace Contao\TestCase;
 
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -140,12 +141,12 @@ abstract class FunctionalTestCase extends WebTestCase
         }
 
         $schemaManager = $connection->createSchemaManager();
-        $tables = $schemaManager->listTables();
+        $tables = $schemaManager->introspectTables();
 
-        if ($tables) {
+        if ([] !== $tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteSingleIdentifier($table->getObjectName()->toString()), $tables),
+                array_map(static fn (Table $table) => $table->getObjectName()->toSQL(new MySQLPlatform()), $tables),
             ));
         }
 
@@ -155,8 +156,6 @@ abstract class FunctionalTestCase extends WebTestCase
 
         $tool = new SchemaTool($manager);
         $tool->createSchema($metadata);
-
-        $tables = $schemaManager->listTables();
 
         $allColumns = $connection->fetchAllNumeric(
             <<<'SQL'
@@ -170,10 +169,12 @@ abstract class FunctionalTestCase extends WebTestCase
             self::$tableColumns[$column[0]][] = $column;
         }
 
-        foreach ($tables as $table) {
-            $name = $table->getObjectName()->toString();
+        $tables = $schemaManager->introspectTables();
 
-            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteSingleIdentifier($name))[1];
+        foreach ($tables as $table) {
+            $name = $table->getObjectName()->toSQL(new MySQLPlatform());
+
+            self::$tableSchemas[$name] = $connection->fetchNumeric("SHOW CREATE TABLE $name")[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;

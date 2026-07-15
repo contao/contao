@@ -200,7 +200,7 @@ class Dumper implements DumperInterface
      */
     private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array
     {
-        $allTables = $schemaManager->listTables();
+        $allTables = $schemaManager->introspectTables();
         $filteredTables = [];
 
         foreach ($allTables as $table) {
