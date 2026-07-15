@@ -93,19 +93,19 @@ class PageRoutingListenerTest extends TestCase
         yield 'Replaces parameter' => [
             'foo/{bar}.html',
             ['bar' => '.+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
+            'foo/{<span class="tl_tip" title=".+" data-contao--tooltips-target="content">bar</span>}.html',
         ];
 
         yield 'Replaces parameters' => [
             'foo/{bar}/{baz}.html',
             ['bar' => '.+', 'baz' => '\d+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}/{<span class="tl_tip" title="\d+">baz</span>}.html',
+            'foo/{<span class="tl_tip" title=".+" data-contao--tooltips-target="content">bar</span>}/{<span class="tl_tip" title="\d+" data-contao--tooltips-target="content">baz</span>}.html',
         ];
 
         yield 'Handles parameters starting with exclamation point' => [
             'foo/{!bar}.html',
             ['bar' => '.+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
+            'foo/{<span class="tl_tip" title=".+" data-contao--tooltips-target="content">bar</span>}.html',
         ];
     }
 

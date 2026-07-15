@@ -19,7 +19,7 @@
                     {% endfor %}
                 </select>
                 {% if separatorHelp|default %}
-                    <p class="tl_help tl_tip">{{ separatorHelp }}</p>
+                    <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ separatorHelp }}</p>
                 {% endif %}
             </div>
 
@@ -27,7 +27,7 @@
                 <h3>{{ sourceLabel }}</h3>
                 {{ uploader|raw }}
                 {% if sourceLabelHelp|default %}
-                    <p class="tl_help tl_tip">{{ sourceLabelHelp }}</p>
+                    <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ sourceLabelHelp }}</p>
                 {% endif %}
             </div>
         </fieldset>

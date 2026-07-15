@@ -756,7 +756,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return '
-  <p class="tl_help tl_tip' . $strClass . '">' . $return . '</p>';
+  <p class="tl_help tl_tip' . $strClass . '" data-contao--tooltips-target="content">' . $return . '</p>';
 	}
 
 	/**

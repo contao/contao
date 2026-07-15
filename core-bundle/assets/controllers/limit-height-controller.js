@@ -45,6 +45,7 @@ export default class extends Controller {
         button.title = this.expandValue;
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
+        button.setAttribute('data-contao--tooltips-target', 'tooltip');
         button.setAttribute('aria-expanded', 'false');
         button.setAttribute('aria-controls', node.id);
 

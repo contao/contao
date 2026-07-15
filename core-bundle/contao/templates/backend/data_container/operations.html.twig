@@ -65,6 +65,7 @@
         <li{{ list_attributes }}>
             {% set operation_attributes = attrs(operation.attributes|default)
                 .set('title', title, ((menu or show_labels) and title != label))
+                .set('data-contao--tooltips-target', 'tooltip')
                 .addClass('has-icon', icon)
             %}
             {% do operation_attributes.set('data-action', operation_attributes['data-action']|default('') ~ ' contao--operations-menu#close') %}

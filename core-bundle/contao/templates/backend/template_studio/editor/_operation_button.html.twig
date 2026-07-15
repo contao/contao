@@ -4,6 +4,7 @@
     .set('formaction', path('_contao_template_studio_operation.stream', {identifier, operation}))
     .set('data-operation', operation)
     .set('title', ('template_studio.operation.' ~ operation ~ '.1')|trans([identifier]))
+    .set('data-contao--tooltips-target', 'tooltip')
     .set('accesskey', 's', operation == 'save')
     .addClass('operation operation--' ~ operation)
     .mergeWith(button_attributes|default)
