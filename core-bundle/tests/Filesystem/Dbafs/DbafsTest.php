@@ -31,6 +31,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Name;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
@@ -237,10 +238,16 @@ class DbafsTest extends TestCase
         ;
 
         $getColumn = function (string $name): Column {
+            $nameObject = $this->createStub(Name::class);
+            $nameObject
+                ->method('toString')
+                ->willReturn($name)
+            ;
+
             $column = $this->createStub(Column::class);
             $column
-                ->method('getName')
-                ->willReturn($name)
+                ->method('getObjectName')
+                ->willReturn($nameObject)
             ;
 
             return $column;

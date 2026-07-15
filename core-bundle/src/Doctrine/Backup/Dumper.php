@@ -93,7 +93,7 @@ class Dumper implements DumperInterface
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
         foreach ($schemaManager->listViews() as $view) {
-            yield \sprintf('-- BEGIN VIEW %s', $view->getName());
+            yield \sprintf('-- BEGIN VIEW %s', $view->getObjectName()->toString());
             yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
@@ -103,8 +103,10 @@ class Dumper implements DumperInterface
      */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
-        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
+        $tableName = $table->getObjectName()->toString();
+
+        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName);
+        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $tableName);
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -116,21 +118,22 @@ class Dumper implements DumperInterface
      */
     private function dumpData(Connection $connection, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN DATA %s', $table->getName());
+        $tableName = $table->getObjectName()->toString();
+
+        yield \sprintf('-- BEGIN DATA %s', $tableName);
 
         $values = [];
         $columnBindingTypes = [];
         $columnUtf8Charsets = [];
 
         foreach ($table->getColumns() as $column) {
-            $columnName = $column->getName();
+            $columnName = $column->getObjectName()->toString();
             $values[] = "`$columnName` AS `$columnName`";
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
             $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
-        $tableName = $table->getName();
         $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
 
         /** @var array<string, float|int|string|null> $row[] */
@@ -201,7 +204,9 @@ class Dumper implements DumperInterface
         $filteredTables = [];
 
         foreach ($allTables as $table) {
-            if (\in_array($table->getName(), $config->getTablesToIgnore(), true)) {
+            $tableName = $table->getObjectName()->toString();
+
+            if (\in_array($tableName, $config->getTablesToIgnore(), true)) {
                 continue;
             }
 

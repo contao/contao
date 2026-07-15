@@ -145,7 +145,7 @@ abstract class FunctionalTestCase extends WebTestCase
         if ($tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteSingleIdentifier($table->getName()), $tables),
+                array_map(static fn (Table $table) => $connection->quoteSingleIdentifier($table->getObjectName()->toString()), $tables),
             ));
         }
 
@@ -171,7 +171,7 @@ abstract class FunctionalTestCase extends WebTestCase
         }
 
         foreach ($tables as $table) {
-            $name = $table->getName();
+            $name = $table->getObjectName()->toString();
 
             self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteSingleIdentifier($name))[1];
         }
