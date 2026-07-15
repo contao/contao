@@ -113,21 +113,13 @@ class Image
 			unset($attributesObject['alt']);
 		}
 
-		$tooltipTarget = '';
-
 		if ('' !== $alt)
 		{
 			$attributesObject['data-contao--tooltips-target'] = 'tooltip';
-
-			if (!$attributes instanceof HtmlAttributes)
-			{
-				// Only one image existing e.g. copy / delete without dark variant
-				$tooltipTarget = ' data-contao--tooltips-target="tooltip"';
-			}
 		}
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
-		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $tooltipTarget . ($attributes ? ' ' . $attributes : ''));
+		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributesObject->toString());
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
