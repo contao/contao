@@ -1,5 +1,5 @@
-import { Controller } from '@hotwired/stimulus';
 import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { Controller } from '@hotwired/stimulus';
 
 function positionAt(element, clientX, clientY) {
     const anchor = {
