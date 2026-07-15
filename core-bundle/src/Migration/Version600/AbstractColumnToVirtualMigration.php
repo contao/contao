@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Migration\Version600;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
 abstract class AbstractColumnToVirtualMigration extends AbstractMigration
@@ -75,7 +76,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                         continue;
                     }
 
-                    $jsonData[$field] = $row[$field];
+                    $jsonData[$field] = StringUtil::ensureStringUuids($row[$field]);
 
                     $this->connection->update($table, [$targetColumn => json_encode($jsonData, flags: JSON_THROW_ON_ERROR)], ['id' => $row['id']]);
                 }
