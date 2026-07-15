@@ -5,11 +5,10 @@ export default class extends Controller {
     #timer = null;
     #current = null;
     #pointer = null;
-    #isTouch = false;
     #targetSelector = null;
     #contentTargetSelector = null;
 
-    static targets = ['tooltip', 'content', 'popup', 'popupContent', 'popupArrow'];
+    static targets = ['tooltip', 'content', 'popup', 'popupContent'];
 
     initialize() {
         this.#contentTargetSelector = `[data-${this.identifier}-target~="content"]`;
@@ -45,6 +44,9 @@ export default class extends Controller {
     }
 
     #show = (event) => {
+        // Bail on touch devices
+        if ('touch' === event.pointerType) return;
+
         const el = event.target instanceof Element ? event.target.closest(this.#targetSelector) : null;
 
         if (!el || el === this.#current) {
@@ -61,22 +63,15 @@ export default class extends Controller {
         this.#current = el;
 
         this.#pointer = { x: event.clientX, y: event.clientY };
-        this.#isTouch = 'touch' === event.pointerType;
 
-        this.#timer = setTimeout(
-            () => {
-                this.popupArrowTarget.style.display = this.#isTouch ? '' : 'none';
-                this.#positionTooltip();
-                this.popupTarget.style.display = 'block';
-            },
-            this.#isTouch ? 500 : 1000,
-        );
+        this.#timer = setTimeout(() => {
+            this.#positionTooltip();
+            this.popupTarget.style.display = 'block';
+        }, 1000);
     };
 
     #setPosition = (event) => {
-        if ('touch' === event.pointerType || this.#isTouch) {
-            return;
-        }
+        if ('touch' === event.pointerType) return;
 
         this.#pointer = { x: event.clientX, y: event.clientY };
 
@@ -87,11 +82,6 @@ export default class extends Controller {
 
     #hide = (event = null) => {
         if (this.#current === null) {
-            return;
-        }
-
-        // Don't destroy the tooltip when lifting your finger on touch devices
-        if (event?.type === 'pointerout' && 'touch' === event.pointerType) {
             return;
         }
 
@@ -107,13 +97,9 @@ export default class extends Controller {
     };
 
     #positionTooltip() {
-        const anchor = this.#isTouch ? this.#current : Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
+        const anchor = Position.pointerAnchor(this.#pointer.x, this.#pointer.y);
 
-        Position.compute(anchor, this.popupTarget, this.#arrowEl(), 'bottom-start', this.#isTouch ? 6 : 18);
-    }
-
-    #arrowEl() {
-        return this.#isTouch ? this.popupArrowTarget : null;
+        Position.compute(anchor, this.popupTarget, null, 'bottom-start', 20);
     }
 
     #updateContent(el) {
