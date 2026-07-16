@@ -16,6 +16,10 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 
 abstract class AbstractColumnToVirtualMigration extends AbstractMigration
 {
@@ -47,6 +51,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $platform = $this->connection->getDatabasePlatform();
         $schemaManager = $this->connection->createSchemaManager();
         $mapping = $this->getMapping();
 
@@ -56,6 +61,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                 continue;
             }
 
+            $tableQuoted = $platform->quoteSingleIdentifier($table);
             $tableDefinition = $schemaManager->introspectTableByUnquotedName($table);
 
             foreach ($fields as $field => $targetColumn) {
@@ -63,7 +69,32 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                     continue;
                 }
 
-                $rows = $this->connection->fetchAllAssociative("SELECT id, `$field`, `$targetColumn` FROM `$table`");
+                $fieldQuoted = $platform->quoteSingleIdentifier($field);
+                $targetColumnQuoted = $platform->quoteSingleIdentifier($targetColumn);
+
+                // Add the target column if it doesn‘t exist
+                if (!$tableDefinition->hasColumn($targetColumn)) {
+                    $column = new Column(
+                        $targetColumn,
+                        Type::getType(Types::JSON),
+                        [
+                            'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT,
+                            'notnull' => false,
+                        ],
+                    );
+
+                    $this->connection->executeStatement(\sprintf(
+                        'ALTER TABLE %s ADD %s',
+                        $tableQuoted,
+                        $platform->getColumnDeclarationSQL($targetColumnQuoted, $column->toArray()),
+                    ));
+
+                    // Add the target column to the table definition so the `hasColumn()` method
+                    // returns `true` in the next iteration.
+                    $tableDefinition->addColumn($targetColumn, Types::JSON);
+                }
+
+                $rows = $this->connection->fetchAllAssociative(\sprintf('SELECT id, %s, %s FROM %s', $fieldQuoted, $targetColumnQuoted, $tableQuoted));
 
                 foreach ($rows as $row) {
                     if (null === $row[$targetColumn]) {
@@ -81,7 +112,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                     $this->connection->update($table, [$targetColumn => json_encode($jsonData, flags: JSON_THROW_ON_ERROR)], ['id' => $row['id']]);
                 }
 
-                $this->connection->executeQuery("ALTER TABLE `$table` DROP COLUMN `$field`");
+                $this->connection->executeQuery(\sprintf('ALTER TABLE %s DROP COLUMN %s', $tableQuoted, $fieldQuoted));
             }
         }
 
