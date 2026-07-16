@@ -172,9 +172,9 @@ abstract class FunctionalTestCase extends WebTestCase
         $tables = $schemaManager->introspectTables();
 
         foreach ($tables as $table) {
-            $name = $table->getObjectName()->toSQL(new MySQLPlatform());
+            $name = $table->getObjectName();
 
-            self::$tableSchemas[$name] = $connection->fetchNumeric("SHOW CREATE TABLE $name")[1];
+            self::$tableSchemas[$name->toString()] = $connection->fetchNumeric("SHOW CREATE TABLE {$name->toSQL(new MySQLPlatform())}")[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
