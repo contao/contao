@@ -302,7 +302,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null)); // FIXME: Input
         }
 
         return null;

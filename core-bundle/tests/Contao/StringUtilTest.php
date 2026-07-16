@@ -288,7 +288,7 @@ class StringUtilTest extends TestCase
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request(['value' => $source]));
 
-        $inputEncoded = Input::get('value');
+        $inputEncoded = Input::get('value'); // FIXME: Input
 
         // Test input encoding round trip
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
