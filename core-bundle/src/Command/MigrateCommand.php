@@ -715,7 +715,7 @@ class MigrateCommand extends Command
         $innodbLimit = $this->rowSizeCalculator->getInnodbRowSizeLimit();
 
         if ($mysqlSize > $mysqlLimit || $innodbSize > $innodbLimit) {
-            $warnings[] = "The row size of table {$table->getObjectName()->toString()} is too large, try changing or deleting some columns:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
+            $warnings[] = "The row size of table {$table->getObjectName()->getUnqualifiedName()->getValue()} is too large, try changing or deleting some columns:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
         }
 
         return $warnings;

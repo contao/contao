@@ -263,29 +263,29 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $primaryKeys = $table->getPrimaryKeyConstraint()->getColumnNames();
         $this->assertCount(1, $primaryKeys);
-        $this->assertSame('id', $primaryKeys[0]->toString());
+        $this->assertSame('id', $primaryKeys[0]->getIdentifier()->getValue());
 
         $this->assertTrue($table->hasIndex('pid'));
         $this->assertSame(IndexType::REGULAR, $table->getIndex('pid')->getType());
 
         $columns = $table->getIndex('pid')->getIndexedColumns();
         $this->assertCount(1, $columns);
-        $this->assertSame('pid', $columns[0]->getColumnName()->toString());
+        $this->assertSame('pid', $columns[0]->getColumnName()->getIdentifier()->getValue());
 
         $this->assertTrue($table->hasIndex('username'));
         $this->assertSame(IndexType::UNIQUE, $table->getIndex('username')->getType());
 
         $columns = $table->getIndex('username')->getIndexedColumns();
         $this->assertCount(1, $columns);
-        $this->assertSame('username', $columns[0]->getColumnName()->toString());
+        $this->assertSame('username', $columns[0]->getColumnName()->getIdentifier()->getValue());
 
         $this->assertTrue($table->hasIndex('name'));
         $this->assertSame(IndexType::REGULAR, $table->getIndex('name')->getType());
 
         $columns = $table->getIndex('name')->getIndexedColumns();
         $this->assertCount(2, $columns);
-        $this->assertSame('firstname', $columns[0]->getColumnName()->toString());
-        $this->assertSame('lastname', $columns[1]->getColumnName()->toString());
+        $this->assertSame('firstname', $columns[0]->getColumnName()->getIdentifier()->getValue());
+        $this->assertSame('lastname', $columns[1]->getColumnName()->getIdentifier()->getValue());
     }
 
     #[DataProvider('provideIndexes')]
@@ -341,7 +341,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $columns = $table->getIndex('name')->getIndexedColumns();
         $this->assertCount(1, $columns);
-        $this->assertSame('name', $columns[0]->getColumnName()->toString());
+        $this->assertSame('name', $columns[0]->getColumnName()->getIdentifier()->getValue());
         $this->assertSame($expected, $columns[0]->getLength());
     }
 
@@ -522,11 +522,11 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $columns = $table->getIndex('col123')->getIndexedColumns();
         $this->assertCount(3, $columns);
-        $this->assertSame('col1', $columns[0]->getColumnName()->toString());
+        $this->assertSame('col1', $columns[0]->getColumnName()->getIdentifier()->getValue());
         $this->assertSame(100, $columns[0]->getLength());
-        $this->assertSame('col2', $columns[1]->getColumnName()->toString());
+        $this->assertSame('col2', $columns[1]->getColumnName()->getIdentifier()->getValue());
         $this->assertNull($columns[1]->getLength());
-        $this->assertSame('col3', $columns[2]->getColumnName()->toString());
+        $this->assertSame('col3', $columns[2]->getColumnName()->getIdentifier()->getValue());
         $this->assertSame(99, $columns[2]->getLength());
     }
 

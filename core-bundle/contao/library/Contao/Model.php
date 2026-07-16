@@ -453,11 +453,11 @@ abstract class Model
 
 		foreach ($schema->getTables() as $table)
 		{
-			$tableName = $table->getObjectName()->toString();
+			$tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
 
 			foreach ($table->getColumns() as $column)
 			{
-				$columnName = $column->getObjectName()->toString();
+				$columnName = $column->getObjectName()->getIdentifier()->getValue();
 				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
 				$infos[$tableName][$columnName][0] = $type;
 

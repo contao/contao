@@ -95,7 +95,7 @@ class Dumper implements DumperInterface
         foreach ($schemaManager->introspectViews() as $view) {
             $viewName = $view->getObjectName();
 
-            yield \sprintf('-- BEGIN VIEW %s', $viewName->toString());
+            yield \sprintf('-- BEGIN VIEW %s', $viewName->getUnqualifiedName()->getValue());
             yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $viewName->toSQL($platform), $view->getSql());
         }
     }
@@ -107,7 +107,7 @@ class Dumper implements DumperInterface
     {
         $tableName = $table->getObjectName();
 
-        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName->toString());
+        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName->getUnqualifiedName()->getValue());
         yield \sprintf('DROP TABLE IF EXISTS %s;', $tableName->toSQL($platform));
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
@@ -122,7 +122,7 @@ class Dumper implements DumperInterface
     {
         $tableName = $table->getObjectName();
 
-        yield \sprintf('-- BEGIN DATA %s', $tableName->toString());
+        yield \sprintf('-- BEGIN DATA %s', $tableName->getUnqualifiedName()->getValue());
 
         $values = [];
         $columnBindingTypes = [];
@@ -132,11 +132,12 @@ class Dumper implements DumperInterface
         $tableNameSql = $tableName->toSQL($platform);
 
         foreach ($table->getColumns() as $column) {
-            $values[] = $column->getObjectName()->toSQL($platform);
+            $columnName = $column->getObjectName();
+            $values[] = $columnName->toSQL($platform);
 
-            $columnName = $column->getObjectName()->toString();
-            $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
-            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getCharset() ?? ''), ['utf8', 'utf8mb4'], true);
+            $key = $columnName->getIdentifier()->getValue();
+            $columnBindingTypes[$key] = $column->getType()->getBindingType();
+            $columnUtf8Charsets[$key] = \in_array(strtolower($column->getCharset() ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
@@ -210,7 +211,7 @@ class Dumper implements DumperInterface
         $filteredTables = [];
 
         foreach ($allTables as $table) {
-            $tableName = $table->getObjectName()->toString();
+            $tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
 
             if (\in_array($tableName, $config->getTablesToIgnore(), true)) {
                 continue;
