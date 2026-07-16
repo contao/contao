@@ -99,7 +99,7 @@ abstract class FunctionalTestCase extends WebTestCase
             }
         }
 
-        if (self::$tableColumns) {
+        if ([] !== self::$tableColumns) {
             if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
                 $allColumns = $connection->fetchAllNumeric(
                     <<<'SQL'
@@ -173,8 +173,9 @@ abstract class FunctionalTestCase extends WebTestCase
 
         foreach ($tables as $table) {
             $name = $table->getObjectName();
+            $key = str_replace('"', '', $name->toString());
 
-            self::$tableSchemas[$name->toString()] = $connection->fetchNumeric("SHOW CREATE TABLE {$name->toSQL(new MySQLPlatform())}")[1];
+            self::$tableSchemas[$key] = $connection->fetchNumeric("SHOW CREATE TABLE {$name->toSQL(new MySQLPlatform())}")[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
