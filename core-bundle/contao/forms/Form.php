@@ -344,12 +344,12 @@ class Form extends Hybrid
 
 		if (!empty($arrAttributes[0]))
 		{
-			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
+			$strAttributes .= ' id="' . StringUtil::specialchars($arrAttributes[0]) . '"';
 		}
 
 		if (!empty($arrAttributes[1]))
 		{
-			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
+			$strAttributes .= ' class="' . StringUtil::specialchars($arrAttributes[1]) . '"';
 		}
 
 		$this->Template->hasError = $doNotSubmit || $this->hasErrors();

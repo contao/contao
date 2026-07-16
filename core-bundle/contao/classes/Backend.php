@@ -506,11 +506,11 @@ abstract class Backend extends Controller
 				// No link for the active page or pages in the trail
 				if ($objPage->id == $intNode || !$objUser->hasAccess($objPage->id, 'pagemounts'))
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . StringUtil::specialchars($objPage->title);
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($objPage->title) . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -703,11 +703,11 @@ abstract class Backend extends Controller
 			// No link for the active folder
 			if ($strPath == $strNode)
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' ' . $strFolder;
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' ' . StringUtil::specialchars($strFolder);
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=' . $strPath)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . StringUtil::ampersand(self::addToUrl('fn=' . $strPath)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($strFolder) . '</a>';
 			}
 		}
 

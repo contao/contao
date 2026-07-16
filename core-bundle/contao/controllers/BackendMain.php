@@ -179,7 +179,7 @@ class BackendMain extends Backend
 
 			$objTemplate->loginMsg = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time title="' . Date::parse(Config::get('datimFormat'), $user->lastLogin) . '" data-contao--tooltips-target="tooltip">' . $diff . '</time>'
+				'<time title="' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $user->lastLogin)) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($diff) . '</time>'
 			);
 		}
 
