@@ -223,7 +223,7 @@ class Cron
             } catch (CronExecutionSkippedException) {
                 $onSkip($cron);
             } catch (\Throwable $e) {
-                // Catch any exceptions so that other cronjobs are still executed
+                // Catch any exceptions so that other cron jobs are still executed
                 $this->logger?->error((string) $e);
 
                 if (!$exception) {

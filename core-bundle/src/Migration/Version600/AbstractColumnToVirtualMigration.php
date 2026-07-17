@@ -72,7 +72,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
                 $fieldQuoted = $platform->quoteSingleIdentifier($field);
                 $targetColumnQuoted = $platform->quoteSingleIdentifier($targetColumn);
 
-                // Add the target column if it doesn‘t exist
+                // Add the target column if it doesn't exist
                 if (!$tableDefinition->hasColumn($targetColumn)) {
                     $column = new Column(
                         $targetColumn,

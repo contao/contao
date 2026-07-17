@@ -206,7 +206,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$paths);
 
-        // Gather all needed information from the database and filesystem
+        // Gather all information from the database and filesystem
         [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $allUuidsByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
         $filesystemIterator = $this->getFilesystemPaths($searchPaths, $parentPaths);
 
@@ -253,7 +253,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$paths);
 
-        // Gather all needed information from the database and filesystem
+        // Gather all information from the database and filesystem
         [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
         $filesystemIterator = $this->getFilesystemPaths($searchPaths, $parentPaths);
 
@@ -303,7 +303,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $itemsToDelete = $dbPaths;
 
         // We keep a list of hashes and names of traversed child elements indexed by
-        // their directory path, so that we are later able to compute the directory hash
+        // their directory path so that we are later able to compute the directory hash
         $dirHashesParts = [];
         $lastModifiedUpdates = [];
 
@@ -564,7 +564,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $newUuid = Uuid::v1()->toBinary();
 
             if ($itemToCreate->isDirectory()) {
-                // Add new UUID to lookup, so that child entries will be able to reference it
+                // Add new UUID to lookup so that child entries will be able to reference it
                 $allUuidsByPath[$itemToCreate->getPath()] = $newUuid;
             }
 
@@ -667,7 +667,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * Loads paths from the database that should be considered when synchronizing.
      *
-     * This includes all parent directories and - in case of directories - all
+     * This includes all parent directories and - in the case of directories - all
      * resources that reside in it.
      *
      * This method also builds lookup tables for hashes, "last modified" timestamps
