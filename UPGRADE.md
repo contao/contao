@@ -68,3 +68,9 @@ Frontend form widgets no longer implement the `Widget::generate()` method. Use `
 
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
 `contao.backend.custom_js` configuration options to customize the backend instead.
+
+### File hashes
+
+The database-assisted filesystem (DBAFS) now uses a 128-bit `xxHash` as its default hashing algorithm. Make sure the
+database and filesystem are in sync before upgrading, for example by running `contao:filesync`. Existing `md5` hashes
+will be removed from the database during a migration and rebuilt the first time the filesystem is synchronized.
