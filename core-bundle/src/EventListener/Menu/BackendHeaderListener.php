@@ -95,7 +95,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel(\sprintf('<button%s>%s</button>', $profileButtonAttributes, $user->username))
+            ->setLabel(\sprintf('<button%s>%s</button>', $profileButtonAttributes, StringUtil::specialchars($user->username)))
             ->setAttribute('class', 'submenu')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
@@ -111,7 +111,7 @@ class BackendHeaderListener
 
         $info = $factory
             ->createItem('info')
-            ->setLabel(\sprintf('<strong>%s</strong> %s', $user->name, $user->email))
+            ->setLabel(\sprintf('<strong>%s</strong> %s', StringUtil::specialchars($user->name), StringUtil::specialchars($user->email)))
             ->setAttribute('class', 'info')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
