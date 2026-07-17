@@ -4,11 +4,11 @@
 
 ### Input encoding
 
-User input is no longer filtered and encoded in Contao 6, which means that you have to ensure that all output is
-properly encoded! The easiest way to do this is to use Twig templates.
+Contao 6 no longer filters or encodes user input automatically. This means you must make sure that all output is
+properly encoded. The easiest way to do this is by using Twig templates.
 
-If you send content to the browser without using Twig templates, make sure to use `StringUtil::specialchars()` or
-the `contao.html_sanitizer` service to encode the output.
+If you send content to the browser without using Twig templates, use `StringUtil::specialchars()` or the
+`contao.html_sanitizer` service to encode the output.
 
 ### HTML5 templates
 
@@ -16,41 +16,50 @@ Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
 
 ### Double encoding enabled by default
 
-Double encoding is now enabled in all core methods by default, you can pass `false` as the third parameter to
-`StringUtil::specialchars()` if you need escaping without double encoding.
+Double encoding is now enabled by default in all core methods. If you need to escape a value without double encoding,
+pass `false` as the third argument to `StringUtil::specialchars()`.
 
 ### tl_member.language no longer contains country codes
 
-If you need locale codes with regions like `de_AT` you can restore the old behavior by using a custom callback like
-`#AsCallback('tl_member', target: 'fields.language.options')`.
+The `tl_member.language` field no longer contains country codes. If you need locale codes with regions, such as
+`de_AT`, you can restore the previous behavior by using a custom callback:
 
-### Widget evaluation options decodeEntities and useRawRequestData got removed
+```php
+#AsCallback('tl_member', target: 'fields.language.options')
+```
 
-Because input encoding is no longer used, the options `decodeEntities` and `useRawRequestData` got removed as all values
-are now stored decoded using the raw data from the request. You can still enable HTML sanitization by setting
-`allowHtml` to `true`. For fields with `rte` set, HTML sanitization is automatically enabled and can be disabled by
-setting `preserveTags` to `true`.
+### decodeEntities and useRawRequestData removed
 
-### child_record_callback got removed
+Because input encoding is no longer used, the `decodeEntities` and `useRawRequestData` options have been removed. All
+values are now stored decoded, using the raw data from the request.
+
+You can still enable HTML sanitization by setting `allowHtml` to `true`. For fields with `rte` set, HTML sanitization
+is enabled automatically. You can disable it by setting `preserveTags` to `true`.
+
+### child_record_callback removed
 
 Use the `label_callback` instead.
 
 ### label_callback return type changed
 
-String values returned by the `label_callback` get HTML encoded now. If you need to use HTML code you can return the
+String values returned by the `label_callback` are now HTML-encoded. If you need to return HTML, return a
 `Contao\CoreBundle\DataContainer\RecordLabel` object with `htmlLabel` set.
 
-### BBCode got removed
+### BBCode removed
 
-Code for parsing BBCode and the BBCode option in the comments bundle got removed. Comments get migrated to plain text
-format.
+BBCode support in the comments bundle has been removed. Existing comments are migrated to plain text format.
 
 ### Model property types and default values
 
-Setting values in models get automatically cast to the correct type and throw an exception if conversion is not
-possible. So setting `$contentModel->id = '123';` is cast to an integer and `$contentModel->id = 'not_an_int';` throws
-an exception. Missing values in models now return its default value instead of `null`.
+Model values are now automatically cast to the correct type. An exception is thrown if a value cannot be converted.
 
-### Widget::generate() got removed from frontend form widgets
+```php
+$contentModel->id = '123'; // Cast to integer
+$contentModel->id = 'not_an_int'; // Throws an exception
+```
+
+Missing values in models now return their default value instead of `null`.
+
+### Widget::generate() removed from frontend form widgets
 
 Frontend form widgets no longer implement the `Widget::generate()` method. Use `Widget::parse()` instead.
