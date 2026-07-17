@@ -221,6 +221,7 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '@request_stack'
 
     contao.data_container.clipboard_manager:
         class: Contao\CoreBundle\DataContainer\ClipboardManager

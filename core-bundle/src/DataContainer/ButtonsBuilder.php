@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\DataContainer;
 
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
 /**
@@ -27,19 +27,22 @@ class ButtonsBuilder
 
     private const TYPE_SELECT = 'select';
 
-    public function __construct(private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, bool $hasCopyPermission, DataContainer $dc): string
     {
+        $request = $this->requestStack->getCurrentRequest();
         $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
 
-        if (!Input::get('nb')) {
+        if (!$request?->query->get('nb')) {
             $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
 
-            if (!Input::get('nc')) {
+            if (!$request?->query->get('nc')) {
                 if (!($GLOBALS['TL_DCA'][$strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$strTable]['config']['notCreatable'] ?? null) && $hasCreatePermission) {
                     $arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNcreate'].'</button>';
                 }

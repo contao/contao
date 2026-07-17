@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -302,7 +301,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            $request = $this->requestStack->getCurrentRequest();
+
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].($request?->query->get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
