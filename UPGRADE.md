@@ -25,6 +25,9 @@ Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
 Double encoding is now enabled by default in all core methods. If you need to escape a value without double encoding,
 pass `false` as the third argument to `StringUtil::specialchars()`.
 
+Double encoding has also been reenabled in Twig. The Contao escaper strategy, as well as the `contao_html` and
+`contao_html_attr` escape filters, which previously prevented double encoding, have been removed.
+
 ### tl_member.language no longer contains country codes
 
 The `tl_member.language` field no longer contains country codes. If you need locale codes with regions, such as
@@ -75,8 +78,22 @@ Frontend form widgets no longer implement the `Widget::generate()` method. Use `
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
 `contao.backend.custom_js` configuration options to customize the backend instead.
 
+### Merging native HTTP headers
+
+Headers sent via `header()` are no longer merged into the final Symfony response. Work with the Symfony `Response`
+object instead.
+
+### Priority marker interfaces for Messenger integration
+
+The priority marker interfaces `HighPriorityMessageInterface`, `NormalPriorityMessageInterface`, and
+`LowPriorityMessageInterface` have been dropped. Use the `AsMessage` attribute instead:
+
+```php
+#[AsMessage('contao_prio_high|contao_prio_normal|contao_prio_low')]
+```
+
 ### File hashes
 
 The database-assisted filesystem (DBAFS) now uses a 128-bit `xxHash` as its default hashing algorithm. Make sure the
-database and filesystem are in sync before upgrading, for example by running `contao:filesync`. Existing `md5` hashes
+database and filesystem are in sync before upgrading, for example, by running `contao:filesync`. Existing `md5` hashes
 will be removed from the database during a migration and rebuilt the first time the filesystem is synchronized.
