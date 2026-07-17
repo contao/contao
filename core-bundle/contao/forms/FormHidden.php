@@ -51,19 +51,4 @@ class FormHidden extends Widget
 				break;
 		}
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<input type="hidden" name="%s" value="%s"%s',
-			$this->strName,
-			StringUtil::specialchars($this->varValue),
-			$this->strTagEnding
-		);
-	}
 }

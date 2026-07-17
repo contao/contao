@@ -43,16 +43,6 @@ class FormAltcha extends Widget
 	}
 
 	/**
-	 * Generate the widget and return it as string.
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate(): string
-	{
-		return \sprintf('<altcha-widget%s></altcha-widget>', $this->altchaAttributes);
-	}
-
-	/**
 	 * Parse the template file and return it as string.
 	 *
 	 * @param array $arrAttributes An optional attributes array

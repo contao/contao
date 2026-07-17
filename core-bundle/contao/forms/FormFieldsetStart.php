@@ -50,18 +50,4 @@ class FormFieldsetStart extends Widget
 
 		return parent::parse($arrAttributes);
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<fieldset%s>%s',
-			$this->strClass ? ' class="' . StringUtil::specialchars($this->strClass) . '"' : '',
-			$this->label ? '<legend>' . StringUtil::specialchars($this->label) . '</legend>' : ''
-		);
-	}
 }

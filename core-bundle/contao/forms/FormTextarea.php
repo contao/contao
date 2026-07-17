@@ -162,23 +162,4 @@ class FormTextarea extends Widget
 	{
 		return str_replace("\r\n", "\n", parent::getPost($strKey));
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
-			$this->strName,
-			$this->strId,
-			$this->strClass ? ' ' . $this->strClass : '',
-			$this->intRows,
-			$this->intCols,
-			$this->getAttributes(),
-			StringUtil::specialchars($this->value)
-		);
-	}
 }
