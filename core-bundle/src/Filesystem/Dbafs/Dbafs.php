@@ -140,7 +140,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function getRecords(string $path, bool $deep = false): \Generator
     {
         $path = Path::join($this->dbPathPrefix, $path);
-        $table = $this->connection->quoteIdentifier($this->table);
+        $table = $this->connection->quoteSingleIdentifier($this->table);
 
         $searchLiteral = '' !== $path ? "$path/%" : '%';
 
@@ -451,7 +451,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE uuid = ?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid = ?', $this->connection->quoteSingleIdentifier($this->table)),
             [$uuid],
         );
 
@@ -467,7 +467,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE id = ?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id = ?', $this->connection->quoteSingleIdentifier($this->table)),
             [$id],
         );
 
@@ -483,7 +483,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE path = ?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path = ?', $this->connection->quoteSingleIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -593,7 +593,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
 
         if ($inserts) {
-            $table = $this->connection->quoteIdentifier($this->table);
+            $table = $this->connection->quoteSingleIdentifier($this->table);
             $columns = \sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = \sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
@@ -691,7 +691,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             \sprintf(
                 "SELECT path, uuid, hash, IF(type = 'folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
-                $this->connection->quoteIdentifier($this->table),
+                $this->connection->quoteSingleIdentifier($this->table),
             ),
         );
 
@@ -960,8 +960,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function getExtraMetadataColumns(): array
     {
         $columns = array_map(
-            static fn (Column $column): string => $column->getName(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table),
+            static fn (Column $column): string => $column->getObjectName()->getIdentifier()->getValue(),
+            $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($this->table),
         );
 
         $defaultFields = [

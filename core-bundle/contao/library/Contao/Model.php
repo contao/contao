@@ -453,10 +453,13 @@ abstract class Model
 
 		foreach ($schema->getTables() as $table)
 		{
+			$tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
+
 			foreach ($table->getColumns() as $column)
 			{
+				$columnName = $column->getObjectName()->getIdentifier()->getValue();
 				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
-				$infos[$table->getName()][$column->getName()][0] = $type;
+				$infos[$tableName][$columnName][0] = $type;
 
 				if (null !== ($default = $column->getDefault()) || $column->getNotnull())
 				{
@@ -469,12 +472,12 @@ abstract class Model
 						default => $default,
 					};
 
-					$infos[$table->getName()][$column->getName()][1] = $default;
+					$infos[$tableName][$columnName][1] = $default;
 				}
 
 				if ($column->getNotnull())
 				{
-					$infos[$table->getName()][$column->getName()][2] = true;
+					$infos[$tableName][$columnName][2] = true;
 				}
 			}
 		}

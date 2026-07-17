@@ -257,13 +257,13 @@ class PaletteBuilder
     private function getAdminFields(string $table): array
     {
         $adminFields = [];
-        $columns = $this->connection->createSchemaManager()->listTableColumns($table);
+        $table = $this->connection->createSchemaManager()->introspectTableByUnquotedName($table);
 
-        if (\array_key_exists('pid', $columns)) {
+        if ($table->hasColumn('pid')) {
             $adminFields[] = 'pid';
         }
 
-        if (\array_key_exists('sorting', $columns)) {
+        if ($table->hasColumn('sorting')) {
             $adminFields[] = 'sorting';
         }
 

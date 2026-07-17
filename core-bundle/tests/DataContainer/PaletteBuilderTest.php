@@ -17,7 +17,11 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -482,7 +486,7 @@ class PaletteBuilderTest extends TestCase
             ],
             '{foo_legend},foo',
             [],
-            ['pid'],
+            [new Column('pid', Type::getType(Types::STRING))],
             true,
         ];
 
@@ -501,7 +505,7 @@ class PaletteBuilderTest extends TestCase
             ],
             '{foo_legend},foo',
             [],
-            ['pid'],
+            [new Column('pid', Type::getType(Types::STRING))],
             false,
         ];
 
@@ -525,7 +529,7 @@ class PaletteBuilderTest extends TestCase
             ],
             '{foo_legend},foo',
             [],
-            ['sorting'],
+            [new Column('sorting', Type::getType(Types::INTEGER))],
             true,
         ];
 
@@ -544,7 +548,7 @@ class PaletteBuilderTest extends TestCase
             ],
             '{foo_legend},foo',
             [],
-            ['sorting'],
+            [new Column('sorting', Type::getType(Types::INTEGER))],
             false,
         ];
 
@@ -568,7 +572,10 @@ class PaletteBuilderTest extends TestCase
             ],
             '{foo_legend},foo',
             [],
-            ['pid', 'sorting'],
+            [
+                new Column('pid', Type::getType(Types::STRING)),
+                new Column('sorting', Type::getType(Types::INTEGER)),
+            ],
             true,
         ];
     }
@@ -605,8 +612,8 @@ class PaletteBuilderTest extends TestCase
     {
         $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager
-            ->method('listTableColumns')
-            ->willReturn(array_flip($tableColumns))
+            ->method('introspectTableByUnquotedName')
+            ->willReturn(new Table('foo', $tableColumns))
         ;
 
         $connection = $this->createStub(Connection::class);
