@@ -92,9 +92,11 @@ class Dumper implements DumperInterface
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
-        foreach ($schemaManager->listViews() as $view) {
-            yield \sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
+        foreach ($schemaManager->introspectViews() as $view) {
+            $viewName = $view->getObjectName();
+
+            yield \sprintf('-- BEGIN VIEW %s', $viewName->getUnqualifiedName()->getValue());
+            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $viewName->toSQL($platform), $view->getSql());
         }
     }
 
@@ -103,8 +105,10 @@ class Dumper implements DumperInterface
      */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
-        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
+        $tableName = $table->getObjectName();
+
+        yield \sprintf('-- BEGIN STRUCTURE %s', $tableName->getUnqualifiedName()->getValue());
+        yield \sprintf('DROP TABLE IF EXISTS %s;', $tableName->toSQL($platform));
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -116,22 +120,28 @@ class Dumper implements DumperInterface
      */
     private function dumpData(Connection $connection, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN DATA %s', $table->getName());
+        $tableName = $table->getObjectName();
+
+        yield \sprintf('-- BEGIN DATA %s', $tableName->getUnqualifiedName()->getValue());
 
         $values = [];
         $columnBindingTypes = [];
         $columnUtf8Charsets = [];
 
+        $platform = $connection->getDatabasePlatform();
+        $tableNameSql = $tableName->toSQL($platform);
+
         foreach ($table->getColumns() as $column) {
-            $columnName = $column->getName();
-            $values[] = "`$columnName` AS `$columnName`";
-            $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
-            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
+            $columnName = $column->getObjectName();
+            $values[] = $columnName->toSQL($platform);
+
+            $key = $columnName->getIdentifier()->getValue();
+            $columnBindingTypes[$key] = $column->getType()->getBindingType();
+            $columnUtf8Charsets[$key] = \in_array(strtolower($column->getCharset() ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
-        $tableName = $table->getName();
-        $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
+        $rows = $connection->executeQuery("SELECT $values FROM $tableNameSql");
 
         /** @var array<string, float|int|string|null> $row[] */
         foreach ($rows->iterateAssociative() as $row) {
@@ -139,7 +149,7 @@ class Dumper implements DumperInterface
             $insertValues = [];
 
             foreach ($row as $columnName => $value) {
-                $insertColumns[] = "`$columnName`";
+                $insertColumns[] = $platform->quoteSingleIdentifier($columnName);
 
                 $insertValues[] = $this->formatValueForDump(
                     $value,
@@ -152,7 +162,7 @@ class Dumper implements DumperInterface
             $insertColumns = implode(', ', $insertColumns);
             $insertValues = implode(', ', $insertValues);
 
-            yield "INSERT INTO `$tableName` ($insertColumns) VALUES ($insertValues);";
+            yield "INSERT INTO $tableNameSql ($insertColumns) VALUES ($insertValues);";
         }
     }
 
@@ -197,11 +207,13 @@ class Dumper implements DumperInterface
      */
     private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array
     {
-        $allTables = $schemaManager->listTables();
+        $allTables = $schemaManager->introspectTables();
         $filteredTables = [];
 
         foreach ($allTables as $table) {
-            if (\in_array($table->getName(), $config->getTablesToIgnore(), true)) {
+            $tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
+
+            if (\in_array($tableName, $config->getTablesToIgnore(), true)) {
                 continue;
             }
 

@@ -446,7 +446,7 @@ class ValueFormatter implements ResetInterface
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
             $dcaExtractor = $this->framework->createInstance(DcaExtractor::class, [$relationTable]);
             $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
-            $fk = $this->connection->quoteIdentifier($fk);
+            $fk = $this->connection->quoteSingleIdentifier($fk);
 
             $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk = ?", [$id]);
 

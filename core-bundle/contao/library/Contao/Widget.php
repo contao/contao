@@ -627,7 +627,10 @@ abstract class Widget extends Controller
 	 *
 	 * @return string The widget markup
 	 */
-	abstract public function generate();
+	public function generate()
+	{
+		throw new \LogicException(\sprintf('Frontend form widgets cannot be generated. Use "%s::parse()" instead.', static::class));
+	}
 
 	/**
 	 * Generate the widget with error message and return it as string
