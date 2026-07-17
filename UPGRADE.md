@@ -116,3 +116,25 @@ The priority marker interfaces `HighPriorityMessageInterface`, `NormalPriorityMe
 The database-assisted filesystem (DBAFS) now uses a 128-bit `xxHash` as its default hashing algorithm. Make sure the
 database and filesystem are in sync before upgrading, for example, by running `contao:filesync`. Existing `md5` hashes
 will be removed from the database during a migration and rebuilt the first time the filesystem is synchronized.
+
+### JavaScript backwards compatibility layers
+
+The following JavaScript backwards compatibility layers have been removed. Use the corresponding Stimulus attributes
+instead:
+
+* `Backend.enableToggleSelect` → `data-contao--check-all-target="input"`
+* `Theme.setupCtrlClick` → `data-contao--deeplink-target="primary"`
+* `Backend.initScrollOffset` and `Backend.getScrollOffset` → `data-contao--scroll-offset-target="scrollTo"`
+
+Use the `contao--toggle-fieldset` Stimulus controller instead of `AjaxRequest.toggleFieldset`:
+
+```html
+data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="your_value" data-contao--toggle-fieldset-table-value="your_table" data-contao--toggle-fieldset-collapsed-class="collapsed"
+```
+
+Use the `contao--textarea-autogrow` Stimulus controller instead of `Theme.setupTextareaResizing`.
+
+Use the `contao--toggle-receiver` and `contao--toggle-sender` Stimulus controllers instead of `Theme.setupMenuToggle`,
+`Theme.setupProfileToggle`, and `Theme.setupSplitButtonToggle`.
+
+All remaining `Theme.*` methods have been removed.
