@@ -16,10 +16,6 @@ sanitize it.
 In Twig templates, make sure that anything you output using `|raw` does not contain untrusted data. If you are not
 absolutely sure, replace `|raw` with `|sanitize_html('contao')`.
 
-### HTML5 templates
-
-Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
-
 ### Double encoding enabled by default
 
 Double encoding is now enabled by default in all core methods. If you need to escape a value without double encoding,
@@ -27,6 +23,29 @@ pass `false` as the third argument to `StringUtil::specialchars()`.
 
 Double encoding has also been reenabled in Twig. The Contao escaper strategy, as well as the `contao_html` and
 `contao_html_attr` escape filters, which previously prevented double encoding, have been removed.
+
+### HTML5 templates
+
+Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
+
+### Twig namespace
+
+The `@Contao_Global` Twig namespace has been renamed to `@Contao_User`. If you reference the namespace explicitly, update your template and controller references accordingly.
+
+In almost all cases, you do not need to reference this namespace explicitly. Instead, use the managed `@Contao` namespace.
+
+### Bundle templates
+
+The remaining Symfony bundle templates have been removed. Use the corresponding Contao templates instead:
+
+* `@ContaoCore/Error/layout.html.twig` → `@Contao/error/_layout.html.twig`
+* `@ContaoCore/Image/Studio/_macros.html.twig` → `@Contao/component/_figure.html.twig`
+* `@ContaoCore/Image/Studio/figure.html.twig` → `@Contao/component/_figure.html.twig`
+* `@ContaoCore/blank.html.twig` → no replacement (empty template)
+
+### FigureRenderer
+
+The `contao.image.studio.figure_renderer` service and the `figure` insert tag now render the generic `component/_figure` template by default.
 
 ### tl_member.language no longer contains country codes
 
