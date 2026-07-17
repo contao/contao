@@ -63,3 +63,8 @@ Missing values in models now return their default value instead of `null`.
 ### Widget::generate() removed from frontend form widgets
 
 Frontend form widgets no longer implement the `Widget::generate()` method. Use `Widget::parse()` instead.
+
+### Backend themes
+
+It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
+`contao.backend.custom_js` configuration options to customize the backend instead.
