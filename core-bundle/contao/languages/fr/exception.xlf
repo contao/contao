@@ -26,8 +26,7 @@
         <target>Une erreur s&apos;est produite lors de l&apos;exécution de ce script. Quelque chose ne fonctionne pas correctement.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
-        <target>Ouvrez le fichier journal actuel dans le répertoire &lt;code&gt;var/logs&lt;/code&gt; et recherchez le message d&apos;erreur associé (généralement le dernier).</target>
+        <source>Open the current log file in the &lt;code&gt;var/log&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>

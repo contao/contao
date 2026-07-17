@@ -41,14 +41,6 @@
         <source>Approve comments before they are published on the website.</source>
         <target>Zatwierdzaj komentarze, zanim zostaną one opublikowane na stronie.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>Zezwól na kody BBcode</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Zezwól odwiedzającym na formatowanie ich komentarzy za pomocą BBCode.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
         <target>Wymagaj zalogowania, aby komentować</target>

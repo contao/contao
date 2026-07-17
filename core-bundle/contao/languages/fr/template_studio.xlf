@@ -182,10 +182,6 @@
         <source>Please define a new unique name for the variant template %s.</source>
         <target>Veuillez définir un nouveau nom unique pour le modèle de variante %s.</target>
       </trans-unit>
-      <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
-        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
-        <target>Le modèle %identifier% est fourni en deux formats. Lors de vos ajustements, préférez le format Twig pour rester compatible avec Contao 6.</target>
-      </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
         <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>La relation du modèle ne peut pas être analysée car elle contient des erreurs.</target>

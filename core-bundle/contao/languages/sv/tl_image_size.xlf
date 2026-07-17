@@ -46,8 +46,8 @@
         <target>Storleksattribut</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Här kan du definiera bildens avsedda layoutbredd, den faktiska storleken ska definieras via CSS. Exempel: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Här kan du ange den önskade layoutbredden för bilden; den faktiska storleken bör anges via CSS. Exempel: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.versions.1">
         <source>Show the versions of image size ID %s</source>
+        <target>Visa versionerna av bildstorlek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
