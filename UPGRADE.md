@@ -4,11 +4,17 @@
 
 ### Input encoding
 
-Contao 6 no longer filters or encodes user input automatically. This means you must make sure that all output is
-properly encoded. The easiest way to do this is by using Twig templates.
+Contao 6 no longer encodes user input. Instead, values are stored in their raw form in the database. This means you
+must ensure that all output is properly encoded. The easiest way to do this is by using Twig templates.
 
-If you send content to the browser without using Twig templates, use `StringUtil::specialchars()` or the
-`contao.html_sanitizer` service to encode the output.
+If you send content directly to the browser or return HTML from a hook, callback, or event listener without using Twig
+templates, use `StringUtil::specialchars()` or `htmlspecialchars()` to encode it.
+
+If user input contains HTML, use the `sanitize_html('contao')` Twig filter or the `contao.html_sanitizer` service to
+sanitize it.
+
+In Twig templates, make sure that anything you output using `|raw` does not contain untrusted data. If you are not
+absolutely sure, replace `|raw` with `|sanitize_html('contao')`.
 
 ### HTML5 templates
 
