@@ -16,6 +16,14 @@ sanitize it.
 In Twig templates, make sure that anything you output using `|raw` does not contain untrusted data. If you are not
 absolutely sure, replace `|raw` with `|sanitize_html('contao')`.
 
+### decodeEntities and useRawRequestData removed
+
+Because input encoding is no longer used, the `decodeEntities` and `useRawRequestData` options have been removed. All
+values are now stored decoded, using the raw data from the request.
+
+You can still enable HTML sanitization by setting `allowHtml` to `true`. For fields with `rte` set, HTML sanitization
+is enabled automatically. You can disable it by setting `preserveTags` to `true`.
+
 ### Double encoding enabled by default
 
 Double encoding is now enabled by default in all core methods. If you need to escape a value without double encoding,
@@ -55,14 +63,6 @@ The `tl_member.language` field no longer contains country codes. If you need loc
 ```php
 #AsCallback('tl_member', target: 'fields.language.options')
 ```
-
-### decodeEntities and useRawRequestData removed
-
-Because input encoding is no longer used, the `decodeEntities` and `useRawRequestData` options have been removed. All
-values are now stored decoded, using the raw data from the request.
-
-You can still enable HTML sanitization by setting `allowHtml` to `true`. For fields with `rte` set, HTML sanitization
-is enabled automatically. You can disable it by setting `preserveTags` to `true`.
 
 ### child_record_callback removed
 
