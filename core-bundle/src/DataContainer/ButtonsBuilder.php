@@ -36,6 +36,7 @@ class ButtonsBuilder
     public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, bool $hasCopyPermission, DataContainer $dc): string
     {
         $request = $this->requestStack->getCurrentRequest();
+
         $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
 
