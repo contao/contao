@@ -269,7 +269,7 @@ export default class extends Controller {
     }
 
     #resetInputs(row) {
-        for (const input of row.querySelectorAll('input')) {
+        for (const input of row.querySelectorAll('input:not([type="checkbox"], [type="radio"], [name$="[_rows][]"])')) {
             input.value = '';
         }
 
