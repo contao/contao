@@ -324,7 +324,7 @@ class Search
 
 		list($intMinId, $intMaxId, $intCount) = array_map('intval', $row);
 
-		// If the whole corpus has few documents we want to update the vector length of all documents
+		// If the whole corpus has few documents, we want to update the vector length of all documents
 		if ($intCount <= 200)
 		{
 			$arrRandomIds = $objDatabase->query("SELECT id FROM tl_search")->fetchEach('id');
@@ -377,8 +377,8 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
-		// As the search index is shared across all languages, we can not use
-		// locale specific rules here (like de-ASCII or tr-Lower).
+		// As the search index is shared across all languages, we cannot use
+		// locale-specific rules here (like de-ASCII or tr-Lower).
 		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
 		{
 			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
@@ -413,8 +413,8 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
-		// As the search index is shared across all languages, we can not use
-		// locale specific rules here (like de-ASCII or tr-Lower).
+		// As the search index is shared across all languages, we cannot use
+		// locale-specific rules here (like de-ASCII or tr-Lower).
 		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
 		{
 			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');

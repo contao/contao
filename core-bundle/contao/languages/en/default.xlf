@@ -1598,6 +1598,12 @@
       <trans-unit id="MSC.version">
         <source>Version</source>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
       </trans-unit>
@@ -2325,7 +2331,7 @@
         <source>Name/ID</source>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
+        <source>Name this passkey</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

@@ -251,9 +251,11 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.0">
         <source>Table permissions</source>
+        <target>Tabellbehörigheter</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.1">
         <source>Here you can select which operations are allowed for which table.</source>
+        <target>Här kan du välja vilka åtgärder som är tillåtna för respektive tabell.</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.create">
         <source>Create</source>
@@ -261,6 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.update">
         <source>Update</source>
+        <target>Uppdatering</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.delete">
         <source>Delete</source>
@@ -268,15 +271,19 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.other">
         <source>Additional permissions</source>
+        <target>Ytterligare behörigheter</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_create">
         <source>Create records in &quot;%s&quot;</source>
+        <target>Skapa poster i &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_update">
         <source>Update records of &quot;%s&quot;</source>
+        <target>Uppdatera poster för &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_delete">
         <source>Delete records of &quot;%s&quot;</source>
+        <target>Ta bort poster om &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -364,6 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud_legend">
         <source>Table permissions</source>
+        <target>Tabellbehörigheter</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -423,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_user.versions.1">
         <source>Show the versions of user ID %s</source>
+        <target>Visa versionerna av användar ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>

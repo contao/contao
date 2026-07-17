@@ -23,7 +23,7 @@ use Twig\Source;
 
 /**
  * The ContaoFilesystemLoader loads templates from the Contao-specific
- * template directories inside of bundles (<bundle>/contao/templates), the
+ * template directories inside bundles (<bundle>/contao/templates), the
  * app's global template directory (<root>/templates) and registered theme
  * directories (<root>/templates/<theme>).
  *
@@ -72,7 +72,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      * Gets the cache key to use for the environment's template cache for a given
      * template name.
      *
-     * If we are currently in a theme context and a theme specific variant of the
+     * If we are currently in a theme context and a theme-specific variant of the
      * template exists, its cache key will be returned instead.
      *
      * @param string $name The name of the template to load
@@ -96,7 +96,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Returns the source context for a given template logical name.
      *
-     * If we're currently in a theme context and a theme specific variant of the
+     * If we're currently in a theme context and a theme-specific variant of the
      * template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
@@ -122,7 +122,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Check if we have the source code of a template, given its name.
      *
-     * If we are currently in a theme context and a theme specific variant of the
+     * If we are currently in a theme context and a theme-specific variant of the
      * template exists, its availability will be checked as well.
      *
      * @param string $name The name of the template to check if we can load
@@ -145,7 +145,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Returns true if the template or any variant of it in the hierarchy is still fresh.
      *
-     * If we are currently in a theme context and a theme specific variant of the
+     * If we are currently in a theme context and a theme-specific variant of the
      * template exists, its state will be checked as well.
      *
      * @param string $name The template name
@@ -280,7 +280,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      * If a $themeSlug is given, the result will additionally include templates of that
      * theme if there are any. If $themeSlug is set to true, all themes will be included.
      *
-     * For example:
+     * Example:
      *   [
      *     'foo' => [
      *       '/path/to/foo.html.twig' => '@Some/foo.html.twig',

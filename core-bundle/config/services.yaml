@@ -221,6 +221,7 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '@request_stack'
 
     contao.data_container.clipboard_manager:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
@@ -248,6 +249,7 @@ services:
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
             - '@contao.csrf.token_manager'
+            - '@request_stack'
 
     contao.data_container.foreign_key_parser:
         class: Contao\CoreBundle\DataContainer\ForeignKeyParser
@@ -260,6 +262,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@request_stack'
             - '@twig'
             - '@router'
             - '@translator'
@@ -269,6 +272,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@request_stack'
             - '@twig'
             - '@security.helper'
             - '@router'

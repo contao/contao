@@ -44,7 +44,7 @@ class DynamicUseTokenParserTest extends TestCase
 
         // A component is adjusted by overwriting the component's template (here by
         // adding the item "ice" and turning apples into pineapples). The changes should
-        // be visible wherever the component is used like in this element template:
+        // be visible wherever the component is used, like in this element template:
         $this->assertSame(
             <<<'HTML'
                 <h1>Summer menu</h1>

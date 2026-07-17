@@ -37,21 +37,4 @@ class FormExplanation extends Widget
 	public function validate()
 	{
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		// Add the static files URL to images
-		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
-		{
-			$path = System::getContainer()->getParameter('contao.upload_path') . '/';
-			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
-		}
-
-		return StringUtil::encodeEmail($this->text);
-	}
 }

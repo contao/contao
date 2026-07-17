@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>Met deze module kunt u gebeurtenissen in verschillende kalenders beheren.</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>Kalender feeds</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>Kalender/Evenementen</target>

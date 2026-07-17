@@ -19,6 +19,10 @@ use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class DnsMigrationTest extends TestCase
@@ -65,9 +69,9 @@ class DnsMigrationTest extends TestCase
 
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableByUnquotedName')
             ->with('tl_page')
-            ->willReturn([])
+            ->willReturn(new Table('tl_page'))
         ;
 
         $db = $this->createMock(Connection::class);
@@ -95,9 +99,13 @@ class DnsMigrationTest extends TestCase
 
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableByUnquotedName')
             ->with('tl_page')
-            ->willReturn(['dns' => true, 'type' => true, 'usessl' => true])
+            ->willReturn(new Table('tl_page', [
+                new Column('dns', Type::getType(Types::STRING)),
+                new Column('type', Type::getType(Types::STRING)),
+                new Column('usessl', Type::getType(Types::BOOLEAN)),
+            ]))
         ;
 
         $db = $this->createMock(Connection::class);

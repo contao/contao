@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -32,6 +34,9 @@ abstract class FunctionalTestCase extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
+        // Remove objects imported via System::importStatic()
+        new \ReflectionClass(System::class)->setStaticPropertyValue('arrStaticObjects', []);
 
         // Remove the default exception handler
         restore_exception_handler();
@@ -94,7 +99,7 @@ abstract class FunctionalTestCase extends WebTestCase
             }
         }
 
-        if (self::$tableColumns) {
+        if ([] !== self::$tableColumns) {
             if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
                 $allColumns = $connection->fetchAllNumeric(
                     <<<'SQL'
@@ -112,7 +117,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
                 foreach (array_keys(self::$tableColumns) as $tableName) {
                     if ($tableColumns[$tableName] !== self::$tableColumns[$tableName]) {
-                        $connection->executeStatement('DROP TABLE '.$connection->quoteIdentifier($tableName));
+                        $connection->executeStatement('DROP TABLE '.$connection->quoteSingleIdentifier($tableName));
                         $connection->executeStatement(self::$tableSchemas[$tableName]);
                     }
                 }
@@ -129,19 +134,19 @@ abstract class FunctionalTestCase extends WebTestCase
             );
 
             foreach ($truncateTables as $tableName) {
-                $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteIdentifier($tableName));
+                $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteSingleIdentifier($tableName));
             }
 
             return;
         }
 
         $schemaManager = $connection->createSchemaManager();
-        $tables = $schemaManager->listTables();
+        $tables = $schemaManager->introspectTables();
 
-        if ($tables) {
+        if ([] !== $tables) {
             $connection->executeStatement('DROP TABLE '.implode(
                 ', ',
-                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables),
+                array_map(static fn (Table $table) => $table->getObjectName()->toSQL(new MySQLPlatform()), $tables),
             ));
         }
 
@@ -151,8 +156,6 @@ abstract class FunctionalTestCase extends WebTestCase
 
         $tool = new SchemaTool($manager);
         $tool->createSchema($metadata);
-
-        $tables = $schemaManager->listTables();
 
         $allColumns = $connection->fetchAllNumeric(
             <<<'SQL'
@@ -166,10 +169,14 @@ abstract class FunctionalTestCase extends WebTestCase
             self::$tableColumns[$column[0]][] = $column;
         }
 
-        foreach ($tables as $table) {
-            $name = $table->getName();
+        $platform = $connection->getDatabasePlatform();
+        $tables = $schemaManager->introspectTables();
 
-            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteIdentifier($name))[1];
+        foreach ($tables as $table) {
+            $name = $table->getObjectName();
+            $key = $name->getUnqualifiedName()->getValue();
+
+            self::$tableSchemas[$key] = $connection->fetchNumeric("SHOW CREATE TABLE {$name->toSQL($platform)}")[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
@@ -194,10 +201,10 @@ abstract class FunctionalTestCase extends WebTestCase
                 $data = [];
 
                 foreach ($row as $key => $value) {
-                    $data[$connection->quoteIdentifier($key)] = $value;
+                    $data[$connection->quoteSingleIdentifier($key)] = $value;
                 }
 
-                $connection->insert($connection->quoteIdentifier($table), $data);
+                $connection->insert($connection->quoteSingleIdentifier($table), $data);
             }
         }
     }

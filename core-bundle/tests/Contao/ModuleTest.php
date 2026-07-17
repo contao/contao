@@ -44,7 +44,7 @@ class ModuleTest extends TestCase
 
         $connection = $this->createStub(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 

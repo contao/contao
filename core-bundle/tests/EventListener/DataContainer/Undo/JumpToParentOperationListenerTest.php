@@ -58,7 +58,7 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 
@@ -98,7 +98,7 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 
@@ -137,7 +137,7 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 
@@ -184,7 +184,7 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 
@@ -268,7 +268,7 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 

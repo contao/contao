@@ -181,7 +181,7 @@ class MetaWizard extends Widget
 		// Add the input fields
 		foreach ($this->varValue as $lang=>$meta)
 		{
-			$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg', $GLOBALS['TL_LANG']['MSC']['delete']) . '</button></span>';
+			$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . StringUtil::specialchars($languages[$lang] ?? $lang) . ' <button type="button" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg', $GLOBALS['TL_LANG']['MSC']['delete']) . '</button></span>';
 
 			// Take the fields from the DCA (see #4327)
 			foreach ($this->metaFields as $field=>$fieldConfig)
@@ -195,7 +195,7 @@ class MetaWizard extends Widget
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{
-					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-controller="contao--textarea-autogrow" data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
+					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-controller="contao--textarea-autogrow" data-contao--metawizard-target="input">' . self::specialcharsValue($meta[$field] ?? '') . '</textarea>';
 				}
 				else
 				{

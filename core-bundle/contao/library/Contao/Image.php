@@ -113,8 +113,13 @@ class Image
 			unset($attributesObject['alt']);
 		}
 
+		if ('' !== $alt)
+		{
+			$attributesObject['data-contao--tooltips-target'] = 'tooltip';
+		}
+
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
-		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+		$replace = array($defaultSize['width'], $defaultSize['height'], StringUtil::specialchars($alt), $attributesObject->toString());
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
