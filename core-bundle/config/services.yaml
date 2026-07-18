@@ -1046,7 +1046,6 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@event_dispatcher'
             - '@contao.security.token_checker'
-            - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
             - '@contao.routing.response_context.csp_handler_factory'

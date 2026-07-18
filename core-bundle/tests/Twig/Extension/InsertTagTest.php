@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\SimpleTokenExpressionLanguage;
@@ -138,6 +141,41 @@ class InsertTagTest extends TestCase
             '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" })|raw }}',
             '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
         ];
+
+        yield 'safe HTML with insert_tag_raw' => [
+            '{{ "{{safe_html}}"|insert_tag_raw }}',
+            '<span title="">',
+        ];
+
+        yield 'unsafe text with insert_tag_raw' => [
+            '{{ "{{unsafe_text}}"|insert_tag_raw }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'unsafe url with insert_tag_raw' => [
+            '{{ "{{unsafe_url}}"|insert_tag_raw }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'safe HTML with insert_tag' => [
+            '{{ "{{safe_html}}"|insert_tag }}',
+            '<span title="">',
+        ];
+
+        yield 'safe HTML not pre escaped with insert_tag' => [
+            '{{ "" ~ "{{safe_html}}"|insert_tag }}',
+            '&lt;span title=&quot;&quot;&gt;',
+        ];
+
+        yield 'unsafe text with insert_tag' => [
+            '{{ "{{unsafe_text}}"|insert_tag }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'unsafe url with insert_tag' => [
+            '{{ "{{unsafe_url}}"|insert_tag }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
     }
 
     private function render(string $content, array $context): string
@@ -172,6 +210,9 @@ class InsertTagTest extends TestCase
         $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'abbr', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<span title="">', OutputType::html), '__invoke', 'safe_html', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<script src="">', OutputType::text), '__invoke', 'unsafe_text', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<script src="">', OutputType::url), '__invoke', 'unsafe_url', null, true, false));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

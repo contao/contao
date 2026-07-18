@@ -152,7 +152,17 @@ class InsertTagParser implements ResetInterface
         return implode(
             '',
             array_map(
-                static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
+                static function ($result) {
+                    if (\is_string($result)) {
+                        return $result;
+                    }
+
+                    if (OutputType::html !== $result->getOutputType()) {
+                        return StringUtil::specialchars($result->getValue());
+                    }
+
+                    return $result->getValue();
+                },
                 $this->handleCaching($this->executeReplace($input, true, OutputType::html)),
             ),
         );
@@ -174,7 +184,17 @@ class InsertTagParser implements ResetInterface
         return implode(
             '',
             array_map(
-                static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
+                static function ($result) {
+                    if (\is_string($result)) {
+                        return $result;
+                    }
+
+                    if (OutputType::html !== $result->getOutputType()) {
+                        return StringUtil::specialchars($result->getValue());
+                    }
+
+                    return $result->getValue();
+                },
                 $this->handleCaching($this->executeReplace($input, false, OutputType::html)),
             ),
         );
@@ -353,13 +373,17 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @param list<InsertTagResult> $replaced
+     * @param list<InsertTagResult|string> $replaced
      *
-     * @return list<InsertTagResult>
+     * @return list<InsertTagResult|string>
      */
     private function handleCaching(array $replaced): array
     {
         foreach ($replaced as $result) {
+            if (\is_string($result)) {
+                continue;
+            }
+
             if ($result->getExpiresAt()) {
                 $this->subrequestCacheSubscriber?->addToCurrentStrategy(
                     new Response()->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - new \DateTimeImmutable()->getTimestamp()),
@@ -373,7 +397,7 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @return list<InsertTagResult>
+     * @return list<InsertTagResult|string>
      */
     private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType = OutputType::text): array
     {
@@ -424,7 +448,7 @@ class InsertTagParser implements ResetInterface
             }
 
             if (\is_string($item)) {
-                $return[] = new InsertTagResult($item, $sourceType);
+                $return[] = $item;
                 continue;
             }
 
@@ -433,12 +457,12 @@ class InsertTagParser implements ResetInterface
                 continue;
             }
 
-            $return[] = $this->renderSubscription($item, $allowEsiTags) ?? new InsertTagResult($item->serialize(), OutputType::text);
+            $return[] = $this->renderSubscription($item, $allowEsiTags) ?? $item->serialize();
         }
 
         // Missing end tag
         if ($wrapStart) {
-            $return[] = new InsertTagResult($wrapStart->serialize(), OutputType::text);
+            $return[] = $wrapStart->serialize();
             $return = [...$return, ...$this->executeReplace(new ParsedSequence($wrapContent), $allowEsiTags, $sourceType)];
         }
 
@@ -652,19 +676,22 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
-     * @param list<InsertTagResult> $results
+     * @param list<InsertTagResult|string> $results
      */
     private function toChunkedText(array $results): ChunkedText
     {
         $chunked = [];
 
         foreach ($results as $result) {
-            if (OutputType::html === $result->getOutputType()) {
+            if (\is_string($result)) {
+                $chunked[] = $result;
+                $chunked[] = '';
+            } elseif (OutputType::html === $result->getOutputType()) {
                 $chunked[] = '';
                 $chunked[] = $result->getValue();
             } else {
-                $chunked[] = $result->getValue();
                 $chunked[] = '';
+                $chunked[] = StringUtil::specialchars($result->getValue());
             }
         }
 
