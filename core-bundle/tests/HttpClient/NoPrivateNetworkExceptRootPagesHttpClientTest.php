@@ -21,12 +21,15 @@ use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\AsyncResponse;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
 {
     protected function tearDown(): void
     {
+        $this->resetStaticProperties([IpUtils::class]);
+
         parent::tearDown();
     }
 
