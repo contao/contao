@@ -10,11 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-use Contao\CommentsBundle\Util\BbCode;
-use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
+namespace Contao\CommentsBundle\Tests\Util;
 
-class BbCodeTest extends TestCase
+use Contao\CommentsBundle\Util\BbCode;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
+
+class BbCodeTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
