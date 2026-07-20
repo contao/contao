@@ -106,7 +106,8 @@ class Newsletter extends Backend
 		try
 		{
 			// Replace insert tags
-			$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content ?? '');
+			$html = System::getContainer()->get('contao.html_sanitizer')->sanitize($objNewsletter->content ?? '');
+			$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($html);
 			$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
 		}
 		finally
@@ -277,7 +278,7 @@ class Newsletter extends Backend
 
 		$strToken = md5(uniqid(mt_rand(), true));
 		$objSession->set('tl_newsletter_send', $strToken);
-		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
+		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' <%s>' : '%s';
 
 		// Preview newsletter
 		$return = Message::generate() . '
@@ -294,11 +295,11 @@ class Newsletter extends Backend
 <table class="prev_header">
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td>' . \sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+    <td>' . StringUtil::specialchars(\sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender))) . '</td>
   </tr>
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
-    <td>' . $objNewsletter->subject . '</td>
+    <td>' . StringUtil::specialchars($objNewsletter->subject) . '</td>
   </tr>
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
@@ -306,15 +307,15 @@ class Newsletter extends Backend
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
   <tr>
     <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
-    <td>' . implode(', ', $arrAttachments) . '</td>
+    <td>' . StringUtil::specialchars(implode(', ', $arrAttachments)) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
 <div class="preview_html">' . ($objNewsletter->preheader ? '
-<p class="preheader">' . $objNewsletter->preheader . '</p>' : '') . '
+<p class="preheader">' . StringUtil::specialchars($objNewsletter->preheader) . '</p>' : '') . '
 ' . $html . '
 </div>' : '') . '
 <div class="preview_text">
-<pre style="white-space:pre-wrap">' . $text . '</pre>
+<pre style="white-space:pre-wrap">' . StringUtil::specialchars($text) . '</pre>
 </div>
 
 <fieldset class="tl_tbox nolegend">
@@ -335,7 +336,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail(BackendUser::getInstance()->email) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . StringUtil::specialchars(Idna::decodeEmail(BackendUser::getInstance()->email)) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>

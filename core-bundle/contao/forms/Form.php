@@ -709,7 +709,7 @@ class Form extends Hybrid
 		// Set the confirmation message if any
 		if ($this->objModel->confirmation)
 		{
-			$message = $this->objModel->confirmation;
+			$message = System::getContainer()->get('contao.html_sanitizer')->sanitize($this->objModel->confirmation);
 			$message = System::getContainer()->get('contao.string.simple_token_parser')->parse($message, ArrayUtil::mapRecursive(StringUtil::specialchars(...), $arrSubmitted));
 			$message = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($message);
 

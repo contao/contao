@@ -154,7 +154,7 @@
                                     {% else %}
                                         <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
                                     {% endif %}
-                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)])|e('js')|e('html') }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
                                 </form>
                             </td>
                         </tr>
