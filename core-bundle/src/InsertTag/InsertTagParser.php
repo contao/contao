@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\InsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
@@ -24,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Service\ResetInterface;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * Parse and replace insert tags.
@@ -82,6 +84,10 @@ class InsertTagParser implements ResetInterface
 
     private readonly string $allowedTagsRegex;
 
+    private readonly EscaperRuntime $escaperRuntime;
+
+    private readonly HtmlDecoder $htmlDecoder;
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly LoggerInterface $logger,
@@ -90,6 +96,7 @@ class InsertTagParser implements ResetInterface
         array $allowedTags = ['*'],
         private readonly ResponseTagger|null $responseTagger = null,
         private readonly SubrequestCacheSubscriber|null $subrequestCacheSubscriber = null,
+        EscaperRuntime|null $escaperRuntime = null,
     ) {
         $this->allowedTagsRegex = '('.implode(
             '|',
@@ -98,6 +105,9 @@ class InsertTagParser implements ResetInterface
                 $allowedTags ?: [''],
             ),
         ).')';
+
+        $this->escaperRuntime = $escaperRuntime ?? new EscaperRuntime();
+        $this->htmlDecoder = new HtmlDecoder($this);
     }
 
     public function addSubscription(InsertTagSubscription $subscription): void
@@ -152,17 +162,7 @@ class InsertTagParser implements ResetInterface
         return implode(
             '',
             array_map(
-                static function ($result) {
-                    if (\is_string($result)) {
-                        return $result;
-                    }
-
-                    if (OutputType::html !== $result->getOutputType()) {
-                        return StringUtil::specialchars($result->getValue());
-                    }
-
-                    return $result->getValue();
-                },
+                fn ($result) => $this->toOutputType($result, OutputType::html),
                 $this->handleCaching($this->executeReplace($input, true, OutputType::html)),
             ),
         );
@@ -170,42 +170,40 @@ class InsertTagParser implements ResetInterface
 
     /**
      * @return ChunkedText may include <esi> tags
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
      */
     public function replaceChunked(string $input): ChunkedText
     {
-        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, true)));
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s" is deprecated an will no longer work in Contao 7. Use "replace()" instead.', __METHOD__);
+
+        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, true, OutputType::html)));
     }
 
     /**
      * @return string does not include <esi> tags
      */
-    public function replaceInline(ParsedSequence|string $input): string
+    public function replaceInline(ParsedSequence|string $input, OutputType $outputType = OutputType::html): string
     {
         return implode(
             '',
             array_map(
-                static function ($result) {
-                    if (\is_string($result)) {
-                        return $result;
-                    }
-
-                    if (OutputType::html !== $result->getOutputType()) {
-                        return StringUtil::specialchars($result->getValue());
-                    }
-
-                    return $result->getValue();
-                },
-                $this->handleCaching($this->executeReplace($input, false, OutputType::html)),
+                fn ($result) => $this->toOutputType($result, $outputType),
+                $this->handleCaching($this->executeReplace($input, false, $outputType)),
             ),
         );
     }
 
     /**
      * @return ChunkedText does not include <esi> tags
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
      */
     public function replaceInlineChunked(string $input): ChunkedText
     {
-        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, false)));
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s" is deprecated an will no longer work in Contao 7. Use "replaceInline(…, OutputType::html)" instead.', __METHOD__);
+
+        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, false, OutputType::html)));
     }
 
     /**
@@ -266,16 +264,18 @@ class InsertTagParser implements ResetInterface
         return $callback(new InsertTagFlag($flag), new InsertTagResult($result, OutputType::html))->getValue();
     }
 
-    public function parse(string $input): ParsedSequence
+    public function parse(string $input, OutputType $outputType = OutputType::html): ParsedSequence
     {
         if (!$this->insertTags) {
             $this->framework->initialize();
             $this->insertTags = new InsertTags();
         }
 
-        $input = $this->insertTags->encodeHtmlAttributes($input);
+        if (OutputType::html === $outputType) {
+            $input = $this->insertTags->encodeHtmlAttributes($input);
+        }
 
-        return $this->doParse($input);
+        return $this->doParse($input, $outputType);
     }
 
     public function parseTag(string $insertTag): InsertTag
@@ -346,7 +346,7 @@ class InsertTagParser implements ResetInterface
         return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]) || ($this->blockSubscriptionEndTags[$name] ?? 0) > 0;
     }
 
-    private function doParse(string $input): ParsedSequence
+    private function doParse(string $input, OutputType $outputType): ParsedSequence
     {
         if (!preg_match_all('('.self::TAG_REGEX.')ix', $input, $matches, PREG_OFFSET_CAPTURE)) {
             return new ParsedSequence([$input]);
@@ -359,7 +359,13 @@ class InsertTagParser implements ResetInterface
             $result[] = substr($input, $lastOffset, $offset - $lastOffset);
 
             try {
-                $result[] = $this->parseTag(substr($insertTag, 2, -2));
+                $tagContent = substr($insertTag, 2, -2);
+
+                if (OutputType::html === $outputType) {
+                    $tagContent = html_entity_decode($tagContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+                }
+
+                $result[] = $this->parseTag($tagContent);
             } catch (\Throwable) {
                 $result[] = $insertTag;
             }
@@ -399,10 +405,10 @@ class InsertTagParser implements ResetInterface
     /**
      * @return list<InsertTagResult|string>
      */
-    private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType = OutputType::text): array
+    private function executeReplace(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType): array
     {
         if (!$input instanceof ParsedSequence) {
-            $input = $this->parse($input);
+            $input = $this->parse($input, $sourceType);
         }
 
         $input = $this->handleLegacyTagsHook($input, $allowEsiTags);
@@ -597,6 +603,31 @@ class InsertTagParser implements ResetInterface
         }
     }
 
+    private function toOutputType(InsertTagResult|string $result, OutputType $outputType): string
+    {
+        if (\is_string($result)) {
+            return $result;
+        }
+
+        if ($result->getOutputType() === $outputType) {
+            return $result->getValue();
+        }
+
+        $value = $result->getValue();
+
+        if (OutputType::text === $outputType && OutputType::html === $result->getOutputType()) {
+            $value = $this->htmlDecoder->htmlToPlainText($result->getValue(), null, false);
+        }
+
+        return match ($outputType) {
+            OutputType::text => $value,
+            OutputType::html => StringUtil::specialchars($value),
+            OutputType::js => (string) $this->escaperRuntime->escape($value, 'js', 'UTF-8'),
+            OutputType::css => (string) $this->escaperRuntime->escape($value, 'css', 'UTF-8'),
+            OutputType::url => (string) $this->escaperRuntime->escape($value, 'url', 'UTF-8'),
+        };
+    }
+
     private static function formatRecursionTrace(array $trace): string
     {
         if (!$trace) {
@@ -734,7 +765,7 @@ class InsertTagParser implements ResetInterface
 
         foreach ($this->callLegacyClass($input->serialize(), $allowEsiTags) as [$type, $chunk]) {
             $outputs[] = match ($type) {
-                ChunkedText::TYPE_TEXT => iterator_to_array($this->doParse($chunk)),
+                ChunkedText::TYPE_TEXT => iterator_to_array($this->doParse($chunk, OutputType::html)),
                 ChunkedText::TYPE_RAW => [new InsertTagResult($chunk, OutputType::html)],
             };
         }

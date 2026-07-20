@@ -39,7 +39,7 @@
         {{ framework|raw }}
         {{ stylesheets|raw }}
         {{ mooScripts|raw }}
-        {{ head|insert_tag_raw|raw }}
+        {{ head|raw|insert_tag_raw }}
     {% endblock %}
 
 </head>
@@ -114,7 +114,7 @@
     {{ contao_sections('bottom') }}
 {% endblock %}
 
-{{ mootools|insert_tag_raw|raw }}
+{{ mootools|raw|insert_tag_raw }}
 {{ jsonLdScripts|raw }}
 
 </body>

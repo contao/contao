@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
@@ -206,7 +205,7 @@ class TwigIntegrationTest extends TestCase
     {
         $templateContent = <<<'TEMPLATE'
             {{ '<i>foo</i>{{br}}'|insert_tag_raw }}
-            {{ unsafe|raw|insert_tag }}
+            {{ unsafe|insert_tag|raw }}
             {{ unsafe|insert_tag_raw }}
             TEMPLATE;
 
@@ -220,18 +219,25 @@ class TwigIntegrationTest extends TestCase
 
         $parser = $this->createStub(InsertTagParser::class);
         $parser
-            ->method('replaceChunked')
+            ->method('replace')
             ->willReturnCallback(
-                static fn (string $input): ChunkedText => match ($input) {
-                    '<i>foo</i>{{br}}' => new ChunkedText(['<i>foo</i>', '<br>']),
-                    default => new ChunkedText([$input]),
+                static fn (string $input): string => match ($input) {
+                    '<i>foo</i>{{br}}' => '<i>foo</i><br>',
+                    '&lt;i&gt;foo&lt;/i&gt;{{br}}' => '&lt;i&gt;foo&lt;/i&gt;<br>',
+                    default => $input,
                 },
             )
         ;
 
         $parser
             ->method('replaceInline')
-            ->willReturnMap([['<i>foo</i>{{br}}', '<i>foo</i><br>']])
+            ->willReturnCallback(
+                static fn (string $input): string => match ($input) {
+                    '<i>foo</i>{{br}}' => '<i>foo</i><br>',
+                    '&lt;i&gt;foo&lt;/i&gt;{{br}}' => '&lt;i&gt;foo&lt;/i&gt;<br>',
+                    default => $input,
+                },
+            )
         ;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
