@@ -40,28 +40,30 @@ final class PluginTest extends TestCase
     public function testLoadsTheSkeletonConfigAndApiPlatformRoutes(): void
     {
         $plugin = new Plugin();
-        $resolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
+        $routesPath = \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../config/routes.yaml';
         $routeCollection = new RouteCollection();
 
-        $resolver
-            ->expects($this->once())
-            ->method('resolve')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
-            ->willReturn($loader)
-        ;
-
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->with($routesPath)
             ->willReturn($routeCollection)
+        ;
+
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver
+            ->expects($this->once())
+            ->method('resolve')
+            ->with($routesPath)
+            ->willReturn($loader)
         ;
 
         $this->assertSame($routeCollection, $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class)));
 
-        $loader = $this->createMock(LoaderInterface::class);
         $paths = [];
+
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(2))
             ->method('load')
@@ -76,8 +78,8 @@ final class PluginTest extends TestCase
 
         $this->assertSame(
             [
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/config.yaml',
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/services.yaml',
+                \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../skeleton/config/config.yaml',
+                \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../skeleton/config/services.yaml',
             ],
             $paths,
         );
