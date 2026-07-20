@@ -55,6 +55,11 @@ The remaining Symfony bundle templates have been removed. Use the corresponding 
 
 The `contao.image.studio.figure_renderer` service and the `figure` insert tag now render the generic `component/_figure` template by default.
 
+### Password changes
+
+Changing a password in the frontend with the "personal data" module is no longer possible. Use the "change password"
+module instead.
+
 ### tl_member.language no longer contains country codes
 
 The `tl_member.language` field no longer contains country codes. If you need locale codes with regions, such as
