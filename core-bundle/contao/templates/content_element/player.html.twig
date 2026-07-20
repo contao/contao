@@ -37,6 +37,12 @@
 {# Add metadata #}
 {% block metadata %}
     {% for source_file in source_files %}
-        {% do add_schema_org(source_file.schemaOrgData|default) %}
+        {% set schemaOrgData = source_file.schemaOrgData|default({}) %}
+        {% if figure.media.attributes.poster|default %}
+            {% set schemaOrgData = schemaOrgData|merge({
+                'thumbnailUrl': figure.media.attributes.poster
+            }) %}
+        {% endif %}
+        {% do add_schema_org(schemaOrgData) %}
     {% endfor %}
 {% endblock %}
