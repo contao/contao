@@ -4,7 +4,7 @@
 
     <table id="{{ id }}"{% if sortable %} class="sortable" data-sort-default="{{ sortDefault }}"{% endif %}>
         {% if summary %}
-            <caption>{{ summary|insert_tag_raw }}</caption>
+            <caption>{{ summary|insert_tag_html }}</caption>
         {% endif %}
 
         {% if useHeader %}
@@ -12,9 +12,9 @@
             <tr>
                 {% for col in header %}
                     {% if loop.index0 == 0 and useLeftTh %}
-                        <th class="unsortable">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                        <th class="unsortable">{{ col|sanitize_html('contao')|insert_tag_html }}</th>
                     {% else %}
-                        <th>{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                        <th>{{ col|sanitize_html('contao')|insert_tag_html }}</th>
                     {% endif %}
                 {% endfor %}
             </tr>
@@ -25,7 +25,7 @@
             <tfoot>
             <tr>
                 {% for col in footer %}
-                    <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
+                    <td>{{ col|sanitize_html('contao')|insert_tag_html }}</td>
                 {% endfor %}
             </tr>
             </tfoot>
@@ -36,9 +36,9 @@
             <tr>
                 {% for col in row %}
                     {% if loop.index0 == 0 and useLeftTh %}
-                        <th scope="row">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                        <th scope="row">{{ col|sanitize_html('contao')|insert_tag_html }}</th>
                     {% else %}
-                        <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
+                        <td>{{ col|sanitize_html('contao')|insert_tag_html }}</td>
                     {% endif %}
                 {% endfor %}
             </tr>

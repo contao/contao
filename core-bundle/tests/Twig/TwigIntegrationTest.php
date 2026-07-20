@@ -204,9 +204,9 @@ class TwigIntegrationTest extends TestCase
     public function testPreservesSafetyInInsertTagFilters(): void
     {
         $templateContent = <<<'TEMPLATE'
-            {{ '<i>foo</i>{{br}}'|insert_tag_raw }}
+            {{ '<i>foo</i>{{br}}'|insert_tag_html }}
             {{ unsafe|insert_tag|raw }}
-            {{ unsafe|insert_tag_raw }}
+            {{ unsafe|insert_tag_html }}
             TEMPLATE;
 
         // With 'preserve_safety' set, we expect the unescaped versions in the first two

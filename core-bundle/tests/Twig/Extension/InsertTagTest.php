@@ -72,7 +72,7 @@ class InsertTagTest extends TestCase
         ];
 
         yield 'raw insert tag, escaped outer text' => [
-            '{{ text|insert_tag_raw }}',
+            '{{ text|insert_tag_html }}',
             '&lt;br&gt; <br>',
         ];
 
@@ -81,8 +81,8 @@ class InsertTagTest extends TestCase
             "<br> \n",
         ];
 
-        yield 'all raw with insert_tag_raw' => [
-            '{{ text|raw|insert_tag_raw }}',
+        yield 'all raw with insert_tag_html' => [
+            '{{ text|raw|insert_tag_html }}',
             '<br> <br>',
         ];
     }
@@ -108,7 +108,7 @@ class InsertTagTest extends TestCase
         ];
 
         yield 'raw insert tag, escaped outer text' => [
-            '{{ text|simple_token({ token: "<token>" })|insert_tag_raw }}',
+            '{{ text|simple_token({ token: "<token>" })|insert_tag_html }}',
             '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
         ];
 
@@ -117,8 +117,8 @@ class InsertTagTest extends TestCase
             "<br> \n <token> <token>",
         ];
 
-        yield 'all raw with insert_tag_raw' => [
-            '{{ text|simple_token({ token: "<token>" })|raw|insert_tag_raw }}',
+        yield 'all raw with insert_tag_html' => [
+            '{{ text|simple_token({ token: "<token>" })|raw|insert_tag_html }}',
             '<br> <br> <token> <abbr title="&lt;token&gt;"><token></abbr>',
         ];
 
@@ -128,7 +128,7 @@ class InsertTagTest extends TestCase
         ];
 
         yield 'raw insert tag, escaped outer text and simple token as HTML' => [
-            '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" }) }}',
+            '{{ text|insert_tag_html|simple_token_html({ token: "<token>" }) }}',
             '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
         ];
 
@@ -137,23 +137,23 @@ class InsertTagTest extends TestCase
             "<br> \n &lt;token&gt; &lt;token&gt;",
         ];
 
-        yield 'all raw with insert_tag_raw and simple token as HTML' => [
-            '{{ text|raw|insert_tag_raw|simple_token_html({ token: "<token>" }) }}',
+        yield 'all raw with insert_tag_html and simple token as HTML' => [
+            '{{ text|raw|insert_tag_html|simple_token_html({ token: "<token>" }) }}',
             '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
         ];
 
-        yield 'safe HTML with insert_tag_raw' => [
-            '{{ "{{safe_html}}"|insert_tag_raw }}',
+        yield 'safe HTML with insert_tag_html' => [
+            '{{ "{{safe_html}}"|insert_tag_html }}',
             '<div title="">',
         ];
 
-        yield 'unsafe text with insert_tag_raw' => [
-            '{{ "{{unsafe_text}}"|insert_tag_raw }}',
+        yield 'unsafe text with insert_tag_html' => [
+            '{{ "{{unsafe_text}}"|insert_tag_html }}',
             '&lt;script src=&quot;&quot;&gt;',
         ];
 
-        yield 'unsafe url with insert_tag_raw' => [
-            '{{ "{{unsafe_url}}"|insert_tag_raw }}',
+        yield 'unsafe url with insert_tag_html' => [
+            '{{ "{{unsafe_url}}"|insert_tag_html }}',
             '&lt;script src=&quot;&quot;&gt;',
         ];
 
