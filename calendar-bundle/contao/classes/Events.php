@@ -93,13 +93,12 @@ abstract class Events extends Module
 	 */
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
-		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
-			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
+			'name' => $objEvent->title,
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
 
@@ -126,14 +125,14 @@ abstract class Events extends Module
 		{
 			$jsonLd['location'] = array(
 				'@type' => 'Place',
-				'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->location)
+				'name' => $objEvent->location
 			);
 
 			if ($objEvent->address)
 			{
 				$jsonLd['location']['address'] = array(
 					'@type' => 'PostalAddress',
-					'description' => $htmlDecoder->inputEncodedToPlainText($objEvent->address)
+					'description' => $objEvent->address
 				);
 			}
 		}

@@ -42,7 +42,7 @@ class ModuleFaq extends Frontend
 		{
 			$jsonLd['mainEntity'][] = array(
 				'@type' => 'Question',
-				'name' => $htmlDecoder->inputEncodedToPlainText($objFaq->question),
+				'name' => $objFaq->question,
 				'acceptedAnswer' => array(
 					'@type' => 'Answer',
 					'text' => $htmlDecoder->htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
