@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\Tests\TestCase;
@@ -53,21 +52,21 @@ class InsertTagRuntimeTest extends TestCase
         );
     }
 
-    public function testReplaceInsertTagsChunkedRaw(): void
+    public function testReplaceInsertTagsRaw(): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('replaceChunked')
+            ->method('replace')
             ->with('{{tag}} foo')
-            ->willReturn(new ChunkedText(['', '<replaced-tag>', ' foo']))
+            ->willReturn('<replaced-tag> foo')
         ;
 
         $runtime = new InsertTagRuntime($insertTags);
 
         $this->assertSame(
             '<replaced-tag> foo',
-            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => false], '{{tag}} foo'),
+            $runtime->replaceInsertTagsRaw(['as_editor_view' => false], '{{tag}} foo'),
         );
     }
 
@@ -87,7 +86,7 @@ class InsertTagRuntimeTest extends TestCase
         );
     }
 
-    public function testDoesNotReplaceInsertTagsChunkedRawInEditorView(): void
+    public function testDoesNotReplaceInsertTagsRawInEditorView(): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
@@ -99,7 +98,7 @@ class InsertTagRuntimeTest extends TestCase
 
         $this->assertSame(
             '{{tag}} foo',
-            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => true], '{{tag}} foo'),
+            (string) $runtime->replaceInsertTagsRaw(['as_editor_view' => true], '{{tag}} foo'),
         );
     }
 
