@@ -41,7 +41,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
         return $this->insertTagParser->replaceInline($text, OutputType::text);
     }
 
-    public function replaceInsertTagsRaw(array $context, string $text, bool|null $bypass = null): string
+    public function replaceInsertTagsHtml(array $context, string $text, bool|null $bypass = null): string
     {
         $bypass ??= $context['as_editor_view'] ?? false;
 

@@ -3,7 +3,7 @@
 {% block label %}
     {% if this.label %}
         <label for="ctrl_{{ this.id }}">
-            <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
+            <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_html }}<span class="mandatory">*</span>
         </label>
     {% endif %}
 {% endblock %}

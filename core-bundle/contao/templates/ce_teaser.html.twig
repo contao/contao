@@ -9,7 +9,7 @@
 
 {% block content %}
 
-    {{ text|default|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_raw }}
-    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline|insert_tag_raw }}</span></a></p>
+    {{ text|default|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_html }}
+    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline|insert_tag_html }}</span></a></p>
 
 {% endblock %}
