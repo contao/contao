@@ -39,6 +39,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+            - '@twig'
+            - '@contao.html_sanitizer'
 
     contao_calendar.listener.add_feeds_from_layout:
         class: Contao\CalendarBundle\EventListener\AddFeedsFromLayoutListener
