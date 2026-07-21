@@ -18,6 +18,10 @@
     margin: 0 9px 0 0;
     padding: 1px 0;
     line-height: 18px;
+}
+
+/* Only apply flex if the FileTreeWidget type image exists - see #10043 */
+.selector_container li:has(>.file-image) {
     display: flex;
     align-items: center;
     gap: 3px;
