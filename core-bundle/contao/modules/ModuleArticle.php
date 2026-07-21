@@ -167,13 +167,12 @@ class ModuleArticle extends Module
 
 			if ($responseContext?->has(HtmlHeadBag::class))
 			{
-				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
-
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title));
+				$htmlHeadBag->setTitle($this->title);
 
 				if ($this->teaser)
 				{
+					$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 					$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($this->teaser));
 				}
 			}

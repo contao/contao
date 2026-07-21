@@ -285,6 +285,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'input_encoded_to_plain_text',
                 [StringRuntime::class, 'inputEncodedToPlainText'],
+                [
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '6.0'), // Backwards compatibility
+                ],
             ),
             new TwigFilter(
                 'html_to_plain_text',

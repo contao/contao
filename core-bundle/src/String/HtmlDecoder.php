@@ -30,19 +30,20 @@ class HtmlDecoder
      * @see StringUtil::revertInputEncoding()
      *
      * @param bool $removeInsertTags True to remove insert tags instead of replacing them, null to neither remove or replace them
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
      */
     public function inputEncodedToPlainText(string $val, bool|null $removeInsertTags = false): string
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
         if ($removeInsertTags) {
             $val = StringUtil::stripInsertTags($val);
         } elseif (false === $removeInsertTags) {
             $val = $this->insertTagParser->replaceInline($val);
         }
 
-        $val = strip_tags($val);
-        $val = StringUtil::revertInputEncoding($val);
-
-        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
+        return $this->stripTagsDecodeEntities($val);
     }
 
     /**
@@ -77,7 +78,7 @@ class HtmlDecoder
             $val,
         );
 
-        $val = $this->inputEncodedToPlainText($val, null);
+        $val = $this->stripTagsDecodeEntities($val);
 
         // Remove duplicate line breaks and spaces
         $val = preg_replace(['/[^\S\n]+/', '/\s*\n\s*/'], [' ', "\n"], $val);
@@ -87,5 +88,13 @@ class HtmlDecoder
         }
 
         return $val;
+    }
+
+    private function stripTagsDecodeEntities(string $val): string
+    {
+        $val = strip_tags($val);
+        $val = StringUtil::revertInputEncoding($val);
+
+        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
     }
 }
