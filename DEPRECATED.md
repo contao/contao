@@ -32,3 +32,7 @@ The global `$GLOBALS['TL_LANGUAGE']` variable will be removed in Contao 7. Use t
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
+
+## Twig filter insert_tag_raw
+
+The Twig filter `|insert_tag_raw` will no longer work in Contao 7. Use `|insert_tag_html` instead.

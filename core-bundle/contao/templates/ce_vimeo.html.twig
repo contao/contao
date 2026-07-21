@@ -34,7 +34,7 @@
         {% endif %}
 
         {% if caption %}
-            <figcaption class="caption">{{ caption|insert_tag_raw }}</figcaption>
+            <figcaption class="caption">{{ caption|insert_tag_html }}</figcaption>
         {% endif %}
     </figure>
 

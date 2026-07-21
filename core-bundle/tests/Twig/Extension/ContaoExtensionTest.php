@@ -134,6 +134,7 @@ class ContaoExtensionTest extends TestCase
 
         $expectedFilters = [
             'insert_tag',
+            'insert_tag_html',
             'insert_tag_raw',
             'simple_token',
             'simple_token_html',
