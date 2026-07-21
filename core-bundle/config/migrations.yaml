@@ -39,3 +39,6 @@ services:
         class: Contao\CoreBundle\Migration\Version600\OutputEncodingMigration
         arguments:
             - '@database_connection'
+        tags:
+            # Use a higher priority for the output encoding migration (see #10042)
+            - { name: contao.migration, priority: 1 }
