@@ -71,8 +71,35 @@ class CommandCompiler
 
     public function runAll(bool $skipDropStatements = false): void
     {
-        foreach ($this->compileCommands($skipDropStatements) as $command) {
-            $this->executeSqlCommand($command);
+        $lastCommands = [];
+
+        while (true) {
+            $commands = $this->compileCommands($skipDropStatements);
+
+            if ([] === array_diff($commands, $lastCommands)) {
+                return;
+            }
+
+            $lastCommands = $commands;
+
+            do {
+                $commandExecuted = false;
+                $lastException = null;
+
+                foreach ($commands as $key => $command) {
+                    try {
+                        $this->executeSqlCommand($command);
+                        $commandExecuted = true;
+                        unset($commands[$key]);
+                    } catch (\Throwable $e) {
+                        $lastException = $e;
+                    }
+                }
+            } while ($commandExecuted);
+
+            if ($lastException) {
+                throw $lastException;
+            }
         }
     }
 

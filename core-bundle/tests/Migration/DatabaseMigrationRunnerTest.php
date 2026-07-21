@@ -73,7 +73,7 @@ class DatabaseMigrationRunnerTest extends TestCase
 
         $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
 
-        $this->assertSame(['Migration 1'], $runner->getPendingMigrationNames());
+        $this->assertSame(['Migration 1'], iterator_to_array($runner->getPendingMigrationNames()));
         $this->assertTrue($runner->hasWorkToDo());
     }
 

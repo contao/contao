@@ -29,10 +29,10 @@ class DatabaseMigrationRunner
         return $this->migrations->hasPending() || [] !== $this->commandCompiler->compileCommands($skipDropStatements);
     }
 
-    public function runAll(): void
+    public function runAll(bool $skipDropStatements = false): void
     {
         $this->migrations->runAll();
-        $this->commandCompiler->runAll();
+        $this->commandCompiler->runAll($skipDropStatements);
 
         // Schema changes can make additional migrations pending.
         $this->migrations->runAll();
@@ -54,11 +54,11 @@ class DatabaseMigrationRunner
     }
 
     /**
-     * @return list<string>
+     * @return iterable<string>
      */
-    public function getPendingMigrationNames(): array
+    public function getPendingMigrationNames(): iterable
     {
-        return [...$this->migrations->getPendingNames()];
+        return $this->migrations->getPendingNames();
     }
 
     /**

@@ -59,9 +59,12 @@ class MigrationCollection
         do {
             $executedMigrations = false;
 
-            foreach ($this->getPending() as $migration) {
-                $migration->run();
-                $executedMigrations = true;
+            try {
+                foreach ($this->run([...$this->getPendingNames()]) as $ignored) {
+                    $executedMigrations = true;
+                }
+            } catch (UnexpectedPendingMigrationException $exception) {
+                // Restarting migration process...
             }
         } while ($executedMigrations);
     }
