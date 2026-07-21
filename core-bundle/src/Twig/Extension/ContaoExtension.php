@@ -143,7 +143,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FigureRuntime::class, 'renderFigure'],
                 [
                     'is_safe' => ['html'],
-                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'), // Backwards compatibility
                 ],
             ),
             new TwigFunction(
@@ -226,9 +226,19 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['needs_context' => true],
             ),
             new TwigFilter(
-                'insert_tag_raw',
-                [InsertTagRuntime::class, 'replaceInsertTagsRaw'],
+                'insert_tag_html',
+                [InsertTagRuntime::class, 'replaceInsertTagsHtml'],
                 ['needs_context' => true, 'pre_escape' => 'html', 'is_safe' => ['html']],
+            ),
+            new TwigFilter(
+                'insert_tag_raw',
+                [InsertTagRuntime::class, 'replaceInsertTagsHtml'],
+                [
+                    'needs_context' => true,
+                    'pre_escape' => 'html',
+                    'is_safe' => ['html'],
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '6.0', 'insert_tag_html'), // Backwards compatibility
+                ],
             ),
             new TwigFilter(
                 'simple_token',
@@ -275,6 +285,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'input_encoded_to_plain_text',
                 [StringRuntime::class, 'inputEncodedToPlainText'],
+                [
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '6.0'), // Backwards compatibility
+                ],
             ),
             new TwigFilter(
                 'html_to_plain_text',

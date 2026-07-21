@@ -1,5 +1,5 @@
 <fieldset{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
 
     {% if this.label %}
-        <legend>{{ this.label|insert_tag_raw }}</legend>
+        <legend>{{ this.label|insert_tag_html }}</legend>
     {% endif %}

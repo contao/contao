@@ -9,7 +9,7 @@
         <div class="reply">
             <p class="info">{{ rby }} {{ author.name }}</p>
             <div class="comment">
-                {{ reply|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                {{ reply|sanitize_html('contao')|csp_inline_styles|insert_tag_html }}
             </div>
         </div>
     {% endif %}

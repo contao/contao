@@ -6,7 +6,7 @@
 
 {% block content %}
     {% block teaser %}
-        {{ article.teaser|default|sanitize_html('contao')|insert_tag_raw }}
+        {{ article.teaser|default|sanitize_html('contao')|insert_tag_html }}
     {% endblock %}
 
     {% block link %}

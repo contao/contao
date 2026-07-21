@@ -52,7 +52,7 @@ class InsertTagRuntimeTest extends TestCase
         );
     }
 
-    public function testReplaceInsertTagsRaw(): void
+    public function testReplaceInsertTagsHtml(): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
@@ -66,7 +66,7 @@ class InsertTagRuntimeTest extends TestCase
 
         $this->assertSame(
             '<replaced-tag> foo',
-            $runtime->replaceInsertTagsRaw(['as_editor_view' => false], '{{tag}} foo'),
+            $runtime->replaceInsertTagsHtml(['as_editor_view' => false], '{{tag}} foo'),
         );
     }
 
@@ -86,7 +86,7 @@ class InsertTagRuntimeTest extends TestCase
         );
     }
 
-    public function testDoesNotReplaceInsertTagsRawInEditorView(): void
+    public function testDoesNotReplaceInsertTagsHtmlInEditorView(): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
@@ -98,7 +98,7 @@ class InsertTagRuntimeTest extends TestCase
 
         $this->assertSame(
             '{{tag}} foo',
-            (string) $runtime->replaceInsertTagsRaw(['as_editor_view' => true], '{{tag}} foo'),
+            (string) $runtime->replaceInsertTagsHtml(['as_editor_view' => true], '{{tag}} foo'),
         );
     }
 
