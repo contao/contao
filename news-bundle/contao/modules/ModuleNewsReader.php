@@ -119,7 +119,6 @@ class ModuleNewsReader extends ModuleNews
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objArticle->pageTitle)
 			{
@@ -127,15 +126,16 @@ class ModuleNewsReader extends ModuleNews
 			}
 			elseif ($objArticle->headline)
 			{
-				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objArticle->headline));
+				$htmlHeadBag->setTitle($objArticle->headline);
 			}
 
 			if ($objArticle->description)
 			{
-				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objArticle->description));
+				$htmlHeadBag->setMetaDescription($objArticle->description);
 			}
 			elseif ($objArticle->teaser)
 			{
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objArticle->teaser));
 			}
 

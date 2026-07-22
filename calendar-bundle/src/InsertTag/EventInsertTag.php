@@ -21,8 +21,11 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\StringUtil;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 /**
  * @internal
@@ -37,6 +40,8 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly Environment $twig,
+        private readonly HtmlSanitizerInterface $htmlSanitizer,
     ) {
     }
 
@@ -67,20 +72,18 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag) {
             'event' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>%s</a>',
-                    StringUtil::specialcharsAttribute($generateUrl()),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $model->title,
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                    'url' => $generateUrl(),
+                    'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                    'label' => $model->title,
+                ]),
                 OutputType::html,
             ),
             'event_open' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>',
-                    StringUtil::specialcharsAttribute($generateUrl()),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>')->render([
+                    'url' => $generateUrl(),
+                    'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                ]),
                 OutputType::html,
             ),
             'event_url' => new InsertTagResult(
@@ -88,7 +91,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
                 OutputType::url,
             ),
             'event_title' => new InsertTagResult($model->title),
-            'event_teaser' => new InsertTagResult($model->teaser ?? '', OutputType::html),
+            'event_teaser' => new InsertTagResult($this->htmlSanitizer->sanitize($model->teaser ?? ''), OutputType::html),
             default => throw new InvalidInsertTagException(),
         };
     }

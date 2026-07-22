@@ -28,6 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig\Runtime\EscaperRuntime;
 
 class MarkdownControllerTest extends ContentElementTestCase
 {
@@ -191,6 +192,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
 
         return $container;
     }

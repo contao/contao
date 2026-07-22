@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
-use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
@@ -48,7 +47,6 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
@@ -145,7 +143,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FigureRuntime::class, 'renderFigure'],
                 [
                     'is_safe' => ['html'],
-                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'), // Backwards compatibility
                 ],
             ),
             new TwigFunction(
@@ -221,48 +219,26 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
     public function getFilters(): array
     {
-        $escaperFilter = static function (Environment $env, $string, string $strategy = 'html', string|null $charset = null, bool $autoescape = false) {
-            $runtime = $env->getRuntime(EscaperRuntime::class);
-
-            if ($string instanceof ChunkedText) {
-                $parts = [];
-
-                foreach ($string as [$type, $chunk]) {
-                    if (ChunkedText::TYPE_RAW === $type) {
-                        $parts[] = $chunk;
-                    } else {
-                        $parts[] = $runtime->escape($chunk, $strategy, $charset);
-                    }
-                }
-
-                return implode('', $parts);
-            }
-
-            return $runtime->escape($string, $strategy, $charset, $autoescape);
-        };
-
         return [
-            // Overwrite the "escape" filter to additionally support chunked text and our
-            // escaper strategies
-            new TwigFilter(
-                'escape',
-                $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => EscaperExtension::escapeFilterIsSafe(...)],
-            ),
-            new TwigFilter(
-                'e',
-                $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => EscaperExtension::escapeFilterIsSafe(...)],
-            ),
             new TwigFilter(
                 'insert_tag',
                 [InsertTagRuntime::class, 'replaceInsertTags'],
-                ['needs_context' => true, 'preserves_safety' => ['html']],
+                ['needs_context' => true],
+            ),
+            new TwigFilter(
+                'insert_tag_html',
+                [InsertTagRuntime::class, 'replaceInsertTagsHtml'],
+                ['needs_context' => true, 'pre_escape' => 'html', 'is_safe' => ['html']],
             ),
             new TwigFilter(
                 'insert_tag_raw',
-                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw'],
-                ['needs_context' => true, 'preserves_safety' => ['html']],
+                [InsertTagRuntime::class, 'replaceInsertTagsHtml'],
+                [
+                    'needs_context' => true,
+                    'pre_escape' => 'html',
+                    'is_safe' => ['html'],
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '6.0', 'insert_tag_html'), // Backwards compatibility
+                ],
             ),
             new TwigFilter(
                 'simple_token',
@@ -271,7 +247,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'simple_token_html',
                 [SimpleTokenRuntime::class, 'parseHtml'],
-                ['preserves_safety' => ['html']],
+                ['pre_escape' => 'html', 'is_safe' => ['html']],
             ),
             new TwigFilter(
                 'highlight',
@@ -309,6 +285,9 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'input_encoded_to_plain_text',
                 [StringRuntime::class, 'inputEncodedToPlainText'],
+                [
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '6.0'), // Backwards compatibility
+                ],
             ),
             new TwigFilter(
                 'html_to_plain_text',

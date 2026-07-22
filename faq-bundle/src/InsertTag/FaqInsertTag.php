@@ -20,10 +20,11 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\FaqModel;
-use Contao\StringUtil;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 #[AsInsertTag('faq')]
 #[AsInsertTag('faq_open')]
@@ -34,6 +35,7 @@ class FaqInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -65,20 +67,18 @@ class FaqInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return match ($key) {
             'faq' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>%s</a>',
-                    StringUtil::specialcharsAttribute($url ?: './'),
-                    $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $faq->question,
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                    'url' => $url ?: './',
+                    'attributes' => new HtmlAttributes($blank ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                    'label' => $faq->question,
+                ]),
                 OutputType::html,
             ),
             'faq_open' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>',
-                    StringUtil::specialcharsAttribute($url ?: './'),
-                    $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>')->render([
+                    'url' => $url ?: './',
+                    'attributes' => new HtmlAttributes($blank ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                ]),
                 OutputType::html,
             ),
             'faq_url' => new InsertTagResult($url ?: './', OutputType::url),

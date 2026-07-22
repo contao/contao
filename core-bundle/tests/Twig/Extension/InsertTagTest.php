@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\SimpleTokenExpressionLanguage;
@@ -65,21 +68,21 @@ class InsertTagTest extends TestCase
 
         yield 'insert tag replacement with escaping' => [
             '{{ text|insert_tag }}',
-            '&lt;br&gt; &lt;br&gt;',
+            "&lt;br&gt; \n",
         ];
 
         yield 'raw insert tag, escaped outer text' => [
-            '{{ text|insert_tag_raw }}',
+            '{{ text|insert_tag_html }}',
             '&lt;br&gt; <br>',
         ];
 
         yield 'all raw with insert_tag' => [
             '{{ text|insert_tag|raw }}',
-            '<br> <br>',
+            "<br> \n",
         ];
 
-        yield 'all raw with insert_tag_raw' => [
-            '{{ text|insert_tag_raw|raw }}',
+        yield 'all raw with insert_tag_html' => [
+            '{{ text|raw|insert_tag_html }}',
             '<br> <br>',
         ];
     }
@@ -87,7 +90,7 @@ class InsertTagTest extends TestCase
     #[DataProvider('provideSimpleTokenVariableStatements')]
     public function testReplacesInsertTagsAndSimpleTokens(string $content, string $expected): void
     {
-        $context = ['text' => '<br> {{br}} ##token## {{abbr::##token##}}'];
+        $context = ['text' => '<br> {{br}} ##token## {{abbr::##token##}}##token##{{abbr}}'];
 
         $this->assertSame($expected, $this->render($content, $context));
     }
@@ -96,47 +99,82 @@ class InsertTagTest extends TestCase
     {
         yield 'no replacement' => [
             '{{ text }}',
-            '&lt;br&gt; {{br}} ##token## {{abbr::##token##}}',
+            '&lt;br&gt; {{br}} ##token## {{abbr::##token##}}##token##{{abbr}}',
         ];
 
         yield 'insert tag replacement with escaping' => [
             '{{ text|insert_tag|simple_token({ token: "<token>" }) }}',
-            '&lt;br&gt; &lt;br&gt; &lt;token&gt; &lt;abbr title=&quot;&lt;token&gt;&quot;&gt;',
+            "&lt;br&gt; \n &lt;token&gt; &lt;token&gt;",
         ];
 
         yield 'raw insert tag, escaped outer text' => [
-            '{{ text|insert_tag_raw|simple_token({ token: "<token>" }) }}',
-            '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+            '{{ text|simple_token({ token: "<token>" })|insert_tag_html }}',
+            '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
         ];
 
         yield 'all raw with insert_tag' => [
             '{{ text|insert_tag|simple_token({ token: "<token>" })|raw }}',
-            '<br> <br> <token> <abbr title="<token>">',
+            "<br> \n <token> <token>",
         ];
 
-        yield 'all raw with insert_tag_raw' => [
-            '{{ text|insert_tag_raw|simple_token({ token: "<token>" })|raw }}',
-            '<br> <br> <token> <abbr title="&lt;token&gt;">',
+        yield 'all raw with insert_tag_html' => [
+            '{{ text|simple_token({ token: "<token>" })|raw|insert_tag_html }}',
+            '<br> <br> <token> <abbr title="&lt;token&gt;"><token></abbr>',
         ];
 
         yield 'insert tag replacement with escaping and simple token as HTML' => [
             '{{ text|insert_tag|simple_token_html({ token: "<token>" }) }}',
-            '&lt;br&gt; &lt;br&gt; &amp;lt;token&amp;gt; &lt;abbr title=&quot;&amp;lt;token&amp;gt;&quot;&gt;',
+            "&lt;br&gt; \n &lt;token&gt; &lt;token&gt;",
         ];
 
         yield 'raw insert tag, escaped outer text and simple token as HTML' => [
-            '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" }) }}',
-            '&lt;br&gt; <br> &amp;lt;token&amp;gt; <abbr title="&lt;token&gt;">',
+            '{{ text|insert_tag_html|simple_token_html({ token: "<token>" }) }}',
+            '&lt;br&gt; <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
         ];
 
         yield 'all raw with insert_tag and simple token as HTML' => [
-            '{{ text|insert_tag|simple_token_html({ token: "<token>" })|raw }}',
-            '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+            '{{ text|insert_tag|raw|simple_token_html({ token: "<token>" }) }}',
+            "<br> \n &lt;token&gt; &lt;token&gt;",
         ];
 
-        yield 'all raw with insert_tag_raw and simple token as HTML' => [
-            '{{ text|insert_tag_raw|simple_token_html({ token: "<token>" })|raw }}',
-            '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">',
+        yield 'all raw with insert_tag_html and simple token as HTML' => [
+            '{{ text|raw|insert_tag_html|simple_token_html({ token: "<token>" }) }}',
+            '<br> <br> &lt;token&gt; <abbr title="&lt;token&gt;">&lt;token&gt;</abbr>',
+        ];
+
+        yield 'safe HTML with insert_tag_html' => [
+            '{{ "{{safe_html}}"|insert_tag_html }}',
+            '<div title="">',
+        ];
+
+        yield 'unsafe text with insert_tag_html' => [
+            '{{ "{{unsafe_text}}"|insert_tag_html }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'unsafe url with insert_tag_html' => [
+            '{{ "{{unsafe_url}}"|insert_tag_html }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'safe HTML with insert_tag' => [
+            '{{ "{{safe_html}}"|insert_tag }}',
+            "\n",
+        ];
+
+        yield 'safe HTML not pre escaped with insert_tag' => [
+            '{{ "" ~ "{{safe_html}}"|insert_tag }}',
+            "\n",
+        ];
+
+        yield 'unsafe text with insert_tag' => [
+            '{{ "{{unsafe_text}}"|insert_tag }}',
+            '&lt;script src=&quot;&quot;&gt;',
+        ];
+
+        yield 'unsafe url with insert_tag' => [
+            '{{ "{{unsafe_url}}"|insert_tag }}',
+            '&lt;script src=&quot;&quot;&gt;',
         ];
     }
 
@@ -172,6 +210,9 @@ class InsertTagTest extends TestCase
         $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'abbr', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<div title="">', OutputType::html), '__invoke', 'safe_html', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<script src="">', OutputType::text), '__invoke', 'unsafe_text', null, true, false));
+        $insertTagParser->addSubscription(new InsertTagSubscription(static fn (ResolvedInsertTag $insertTag): InsertTagResult => new InsertTagResult('<script src="">', OutputType::url), '__invoke', 'unsafe_url', null, true, false));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
