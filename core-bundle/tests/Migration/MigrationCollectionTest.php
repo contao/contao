@@ -263,6 +263,7 @@ class MigrationCollectionTest extends TestCase
                     'First Migration' => !$this->state->firstRun,
                     'Deferred Migration' => $this->state->firstRun && !$this->state->deferredRun,
                     'Last Migration' => !$this->state->lastRun,
+                    default => throw new \LogicException('Unexpected migration name.'),
                 };
             }
 
@@ -272,6 +273,7 @@ class MigrationCollectionTest extends TestCase
                     'First Migration' => $this->state->firstRun = true,
                     'Deferred Migration' => $this->state->deferredRun = true,
                     'Last Migration' => $this->state->lastRun = true,
+                    default => throw new \LogicException('Unexpected migration name.'),
                 };
 
                 if ('Deferred Migration' === $this->name) {
