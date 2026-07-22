@@ -41,7 +41,7 @@ final class SaveOperation extends AbstractOperation
             return $this->error($context);
         }
 
-        if (null === ($code = $request->get('code'))) {
+        if (null === ($code = $request->request->get('code'))) {
             throw new \LogicException('The request did not contain the template code.');
         }
 
