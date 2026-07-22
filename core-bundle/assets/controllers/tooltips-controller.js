@@ -3,8 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class TooltipsController extends Controller {
     #tooltip = null;
     #timer = null;
-    #activeTargets = new Set();
-    #removeClickTargetHandlerDelegates = new Map();
+    #current = null;
 
     static defaultOptionsMap = {
         'a img[alt]': { x: -9, y: 30 },
@@ -36,43 +35,53 @@ export default class TooltipsController extends Controller {
      */
     connect() {
         this.#tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this.#createTipContainer();
+
+        this.element.addEventListener('pointerover', this.#show);
+        this.element.addEventListener('pointerout', this.#hide);
+        this.element.addEventListener('click', this.#hide);
     }
 
     disconnect() {
+        this.element.removeEventListener('pointerover', this.#show);
+        this.element.removeEventListener('pointerout', this.#hide);
+        this.element.removeEventListener('click', this.#hide);
+
         this.#tooltip.remove();
     }
 
-    tooltipTargetConnected(el) {
-        el.addEventListener('mouseenter', (e) => this.#showTooltip(e.target, 1000));
-        el.addEventListener('touchend', (e) => this.#showTooltip(e.target));
-        el.addEventListener('mouseleave', (e) => this.#hideTooltip(e.target));
-
-        // In case the tooltip target is inside a link or button, also close it
-        // when a click happened
-        const clickTarget = el.closest('button, a');
-
-        if (clickTarget) {
-            const handler = () => this.#hideTooltip(el);
-
-            clickTarget.addEventListener('click', handler);
-            this.#removeClickTargetHandlerDelegates.set(el, () => el.removeEventListener('click', handler));
-        }
-    }
-
     tooltipTargetDisconnected(el) {
-        if (this.#activeTargets.has(el)) {
-            this.#hideTooltip(el);
-        }
-
-        if (this.#removeClickTargetHandlerDelegates.has(el)) {
-            this.#removeClickTargetHandlerDelegates.get(el)();
-            this.#removeClickTargetHandlerDelegates.delete(el);
+        if (el === this.#current) {
+            this.#hide();
         }
     }
 
-    touchStart(e) {
-        [...this.#activeTargets].filter((el) => !el.contains(e.target)).forEach(this.#hideTooltip.bind(this));
-    }
+    #show = (event) => {
+        // Bail on touch devices
+        if ('touch' === event.pointerType) return;
+
+        const el = event.target instanceof Element ? event.target.closest(`[data-${this.identifier}-target~="tooltip"]`) : null;
+
+        if (!el || el === this.#current) {
+            return;
+        }
+
+        this.#current = el;
+        this.#showTooltip(el, 1000);
+    };
+
+    #hide = (event = null) => {
+        if (this.#current === null) {
+            return;
+        }
+
+        // Ignore pointerout events that only move within the current target
+        if (event?.type === 'pointerout' && this.#current.contains(event.relatedTarget)) {
+            return;
+        }
+
+        this.#hideTooltip(this.#current);
+        this.#current = null;
+    };
 
     #createTipContainer() {
         const tooltip = document.createElement('div');
@@ -110,8 +119,6 @@ export default class TooltipsController extends Controller {
         this.#tooltip.style.willChange = 'display,contents';
 
         this.#timer = setTimeout(() => {
-            this.#activeTargets.add(el);
-
             const position = el.getBoundingClientRect();
             const rtl = getComputedStyle(el).direction === 'rtl';
             const clientWidth = document.documentElement.clientWidth;
@@ -146,8 +153,6 @@ export default class TooltipsController extends Controller {
         this.#tooltip.style.willChange = 'auto';
 
         if (this.#tooltip.style.display === 'block') {
-            this.#activeTargets.delete(el);
-
             this.#tooltip.style.willChange = 'display';
             this.#timer = setTimeout(() => {
                 this.#tooltip.style.display = 'none';
