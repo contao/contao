@@ -183,7 +183,7 @@ class FileTree extends Widget
 		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
 		{
-			$fileTypeAttributes = (new HtmlAttributes())->addClass('file-image');
+			$fileImageAttributes = (new HtmlAttributes())->addClass('file-image');
 
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
@@ -206,7 +206,7 @@ class FileTree extends Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg', attributes: $fileTypeAttributes) . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg', attributes: $fileImageAttributes) . ' ' . $objFiles->path;
 						}
 						else
 						{
@@ -219,7 +219,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileTypeAttributes) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
@@ -262,7 +262,7 @@ class FileTree extends Widget
 								}
 								else
 								{
-									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileTypeAttributes) . ' ' . $strInfo;
+									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 								}
 							}
 						}
@@ -289,7 +289,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileTypeAttributes) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
