@@ -67,33 +67,75 @@ class MigrationCollectionTest extends TestCase
 
     public function testRunsAllPendingMigrations(): void
     {
+        $state = new class() {
+            public bool $firstRun = false;
+
+            public bool $secondRun = false;
+        };
         $firstMigration = $this->createMock(MigrationInterface::class);
         $firstMigration
-            ->expects($this->exactly(3))
             ->method('shouldRun')
-            ->willReturnOnConsecutiveCalls(true, false, false)
+            ->willReturnCallback(
+                static fn (): bool => !$state->firstRun,
+            )
         ;
 
         $firstMigration
             ->expects($this->once())
             ->method('run')
-            ->willReturn(new MigrationResult(true, 'successful'))
+            ->willReturnCallback(
+                static function () use ($state): MigrationResult {
+                    $state->firstRun = true;
+
+                    return new MigrationResult(true, 'successful');
+                },
+            )
         ;
 
         $secondMigration = $this->createMock(MigrationInterface::class);
         $secondMigration
-            ->expects($this->exactly(3))
             ->method('shouldRun')
-            ->willReturnOnConsecutiveCalls(false, true, false)
+            ->willReturnCallback(
+                static fn (): bool => $state->firstRun && !$state->secondRun,
+            )
         ;
 
         $secondMigration
             ->expects($this->once())
             ->method('run')
-            ->willReturn(new MigrationResult(true, 'successful'))
+            ->willReturnCallback(
+                static function () use ($state): MigrationResult {
+                    $state->secondRun = true;
+
+                    return new MigrationResult(true, 'successful');
+                },
+            )
         ;
 
         new MigrationCollection([$firstMigration, $secondMigration])->runAll();
+    }
+
+    public function testRestartsIfThePendingMigrationsChangeWhileRunning(): void
+    {
+        $state = (object) [
+            'firstRun' => false,
+            'deferredRun' => false,
+            'lastRun' => false,
+            'deferredChecks' => 0,
+            'deferredRunAtCheck' => null,
+            'runOrder' => [],
+        ];
+
+        $migrations = new MigrationCollection([
+            $this->createChangingMigration($state, 'First Migration'),
+            $this->createChangingMigration($state, 'Deferred Migration'),
+            $this->createChangingMigration($state, 'Last Migration'),
+        ]);
+
+        $migrations->runAll();
+
+        $this->assertSame(['First Migration', 'Deferred Migration', 'Last Migration'], $state->runOrder);
+        $this->assertSame(4, $state->deferredRunAtCheck);
     }
 
     #[DataProvider('getUnexpectedPendingMigrations')]
@@ -195,5 +237,51 @@ class MigrationCollectionTest extends TestCase
                 }
             },
         ];
+    }
+
+    private function createChangingMigration(object $state, string $name): MigrationInterface
+    {
+        return new class($state, $name) extends AbstractMigration {
+            public function __construct(
+                private readonly object $state,
+                private readonly string $name,
+            ) {
+            }
+
+            public function getName(): string
+            {
+                return $this->name;
+            }
+
+            public function shouldRun(): bool
+            {
+                if ('Deferred Migration' === $this->name) {
+                    ++$this->state->deferredChecks;
+                }
+
+                return match ($this->name) {
+                    'First Migration' => !$this->state->firstRun,
+                    'Deferred Migration' => $this->state->firstRun && !$this->state->deferredRun,
+                    'Last Migration' => !$this->state->lastRun,
+                };
+            }
+
+            public function run(): MigrationResult
+            {
+                match ($this->name) {
+                    'First Migration' => $this->state->firstRun = true,
+                    'Deferred Migration' => $this->state->deferredRun = true,
+                    'Last Migration' => $this->state->lastRun = true,
+                };
+
+                if ('Deferred Migration' === $this->name) {
+                    $this->state->deferredRunAtCheck = $this->state->deferredChecks;
+                }
+
+                $this->state->runOrder[] = $this->getName();
+
+                return $this->createResult(true);
+            }
+        };
     }
 }

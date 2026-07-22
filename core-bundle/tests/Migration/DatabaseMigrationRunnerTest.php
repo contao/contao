@@ -55,6 +55,57 @@ class DatabaseMigrationRunnerTest extends TestCase
         $this->assertSame(['migrations', 'schema', 'migrations'], $calls);
     }
 
+    public function testSkipsDropStatementsWhenRunningAll(): void
+    {
+        $migrations = $this->createMock(MigrationCollection::class);
+        $migrations
+            ->expects($this->exactly(2))
+            ->method('runAll')
+        ;
+
+        $compiler = $this->createMock(CommandCompiler::class);
+        $compiler
+            ->expects($this->once())
+            ->method('runAll')
+            ->with(true)
+        ;
+
+        $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
+
+        $runner->runAll(true);
+    }
+
+    public function testReturnsPendingMigrationNamesLazily(): void
+    {
+        $pendingNames = new class() implements \IteratorAggregate {
+            public int $iterations = 0;
+
+            public function getIterator(): \Traversable
+            {
+                ++$this->iterations;
+
+                yield 'Migration 1';
+            }
+        };
+
+        $migrations = $this->createStub(MigrationCollection::class);
+        $migrations
+            ->method('getPendingNames')
+            ->willReturn($pendingNames)
+        ;
+
+        $runner = new DatabaseMigrationRunner(
+            $this->createStub(CommandCompiler::class),
+            $migrations,
+            $this->createStub(BackupManager::class),
+        );
+
+        $this->assertSame($pendingNames, $runner->getPendingMigrationNames());
+        $this->assertSame(0, $pendingNames->iterations);
+        $this->assertSame(['Migration 1'], iterator_to_array($pendingNames));
+        $this->assertSame(1, $pendingNames->iterations);
+    }
+
     public function testDelegatesPendingMigrationsAndSchemaCommands(): void
     {
         $migrations = $this->createStub(MigrationCollection::class);
