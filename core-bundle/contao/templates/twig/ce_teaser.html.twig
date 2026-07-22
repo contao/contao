@@ -1,7 +1,7 @@
 {% extends '@Contao/block_searchable.html.twig' %}
 
 {% set wrapperAttributes = attrs()
-    .addClass('ce_text')
+    .addClass(['ce_text', 'content-text'])
     .mergeWith(wrapperAttributes|default)
 %}
 

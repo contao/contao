@@ -13,7 +13,7 @@ $this->wrapperAttributes = $this
 
   <?php $this->block('alias'); ?>
     <article<?= $this->wrapperAttributes ?>>
-      <div class="ce_text block">
+      <div class="ce_text content-text block">
         <h2><?= $this->headline ?></h2>
         <div class="teaser">
           <?= $this->cspInlineStyles($this->teaser) ?>
