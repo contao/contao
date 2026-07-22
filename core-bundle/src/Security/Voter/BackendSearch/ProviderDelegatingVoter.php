@@ -39,13 +39,7 @@ class ProviderDelegatingVoter extends Voter
             return false;
         }
 
-        foreach ($this->providers as $provider) {
-            if ($provider->supportsType($subject->getType())) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->providers, static fn ($provider) => $provider->supportsType($subject->getType()));
     }
 
     /**

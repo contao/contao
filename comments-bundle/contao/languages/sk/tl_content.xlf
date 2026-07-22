@@ -25,14 +25,6 @@
         <source>Approve comments before they are published on the website.</source>
         <target>Schválenie komentárov pred ich zverejnením.</target>
       </trans-unit>
-      <trans-unit id="tl_content.com_bbcode.0">
-        <source>Allow BBCode</source>
-        <target>Povoliť BBCode</target>
-      </trans-unit>
-      <trans-unit id="tl_content.com_bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Povoliť návštevníkom formátovať ich komentáre pomocou BBCode.</target>
-      </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
         <target>Vyžadovať prihlásenie pre pridávanie komentárov</target>

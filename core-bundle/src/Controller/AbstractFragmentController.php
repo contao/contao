@@ -198,7 +198,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $data = StringUtil::deserialize($cssID, true);
         $template->set('class', trim($templateName.' '.($data[1] ?? '')));
-        $template->set('cssID', !empty($data[0]) ? ' id="'.$data[0].'"' : '');
+        $template->set('cssID', !empty($data[0]) ? ' id="'.StringUtil::specialchars($data[0]).'"' : '');
 
         if ($classes) {
             $template->set('class', $template->get('class').' '.implode(' ', $classes));

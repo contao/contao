@@ -49,14 +49,4 @@ class FormFieldsetStop extends Widget
 
 		return parent::parse($arrAttributes);
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return '</fieldset>';
-	}
 }

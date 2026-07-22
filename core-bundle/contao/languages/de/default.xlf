@@ -393,10 +393,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA ist ohne eine sichere HTTPS-Verbindung nicht verfügbar. Wenn Ihre Produktionswebsite kein HTTPS verwendet (nicht empfohlen), verwenden Sie stattdessen bitte die Sicherheitsfrage.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-        <target>Es gibt mindestens ein Modul &quot;Personendaten&quot;, das die Änderung des Passworts erlaubt. Das ist eine Sicherheitsschwachstelle und wird in Contao 6 nicht mehr funktionieren. Verwenden Sie stattdessen das Modul &quot;Passwort ändern&quot;.</target>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>Passkeys werden auf diesem Gerät nicht unterstützt.</target>
@@ -416,6 +412,14 @@
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
         <target>Sie können nur als Administrator Zugriff auf den Template-Editor gewähren.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Das Keyword &quot;auto&quot; ist nur am Anfang des sizes-Attributs zulässig. Wenn weitere Werte vorhanden sind, muss darauf ein Komma folgen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy-Loading muss aktiviert sein, wenn das sizes-Attribut auf &quot;auto&quot; gesetzt ist.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2125,6 +2129,14 @@
         <source>Version</source>
         <target>Version</target>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+        <target>Version A</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+        <target>Version B</target>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
         <target>Wiederherstellen</target>
@@ -2568,10 +2580,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
         <target>Seite %s von %s</target>
-      </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>global</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
@@ -3098,8 +3106,8 @@
         <target>Name/ID</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>Benennen Sie diesen Passkey …</target>
+        <source>Name this passkey</source>
+        <target>Benennen Sie diesen Passkey</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

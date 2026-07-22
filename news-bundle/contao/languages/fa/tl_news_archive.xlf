@@ -33,6 +33,12 @@
         <source>These groups will be able to see the news items in this archive.</source>
         <target>این گروه‌ها قادر به دیدن آیتم‌ها خبری در این بایگانی خواهند بود.</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.0">
+        <source>JSON-LD type</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.1">
+        <source>Please choose the JSON-LD type for the news items in this archive.</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
         <target>تاریخ بازنگری</target>
@@ -48,6 +54,10 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
         <target>حفاظت دسترسی</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.expert_legend">
+        <source>Expert settings</source>
+        <target>تنطیمات پیشرفته</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>

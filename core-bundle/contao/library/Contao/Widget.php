@@ -544,7 +544,7 @@ abstract class Widget extends Controller
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
-		return $this->hasErrors() ? \sprintf('<p class="%s">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', StringUtil::specialchars($this->arrErrors[$intIndex])) : '';
+		return $this->hasErrors() ? \sprintf('<p class="%s" data-contao--tooltips-target="content">%s</p>', $isBackend ? 'tl_error tl_tip' : 'error', StringUtil::specialchars($this->arrErrors[$intIndex])) : '';
 	}
 
 	/**
@@ -627,7 +627,10 @@ abstract class Widget extends Controller
 	 *
 	 * @return string The widget markup
 	 */
-	abstract public function generate();
+	public function generate()
+	{
+		throw new \LogicException(\sprintf('Frontend form widgets cannot be generated. Use "%s::parse()" instead.', static::class));
+	}
 
 	/**
 	 * Generate the widget with error message and return it as string

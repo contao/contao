@@ -19,7 +19,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -108,10 +107,9 @@ class PreviewLinkListener
     #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function adjustEditView(DataContainer $dc): void
     {
-        $input = $this->framework->getAdapter(Input::class);
         $message = $this->framework->getAdapter(Message::class);
 
-        if ('edit' !== $input->get('act')) {
+        if ('edit' !== $this->requestStack->getCurrentRequest()?->query->get('act')) {
             return;
         }
 
@@ -177,7 +175,7 @@ class PreviewLinkListener
         $url = $this->generateUrl($id);
 
         return \sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent" data-contao--tooltips-target="tooltip">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link')),
             StringUtil::specialcharsUrl($url),

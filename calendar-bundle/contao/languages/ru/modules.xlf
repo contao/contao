@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>Управление событиями и отображение событий в календаре или списке событий</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>RSS-каналы календаря</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>События</target>

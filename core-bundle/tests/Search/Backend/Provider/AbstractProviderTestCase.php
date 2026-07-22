@@ -49,7 +49,7 @@ abstract class AbstractProviderTestCase extends TestCase
                 $rowQuoted = [];
 
                 foreach ($row as $key => $value) {
-                    $rowQuoted[$connection->quoteIdentifier($key)] = $value;
+                    $rowQuoted[$connection->quoteSingleIdentifier($key)] = $value;
                 }
 
                 $connection->insert($table, $rowQuoted);

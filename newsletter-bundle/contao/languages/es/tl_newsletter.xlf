@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
         <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
-        <target>Por favor introduzca el contenido del boletín. Utillize los comodines &lt;em&gt;##email##&lt;/em&gt; para insertar el e-mail del recipiente. Generar los enlaces de baja de suscripción como &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
+        <target>Aquí puede introducir el contenido HTML del boletín informativo. Utilice el comodín &lt;em&gt;##email##&lt;/em&gt; para insertar la dirección de correo electrónico del destinatario.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
         <source>Text content</source>
@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.versions.1">
         <source>Show the versions of newsletter ID %s</source>
+        <target>Mostrar las versiones del boletín con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>

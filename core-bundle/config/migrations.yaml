@@ -37,6 +37,11 @@ services:
             - '@database_connection'
             - '%contao.dns_mapping%'
 
+    contao.migration.version_600.column_to_virtual:
+        class: Contao\CoreBundle\Migration\Version600\ColumnToVirtualMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_600.default_dbafs_hashing_algorithm:
         class: Contao\CoreBundle\Migration\Version600\DefaultDbafsHashingAlgorithmMigration
         arguments:

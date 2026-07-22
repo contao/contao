@@ -105,7 +105,7 @@ class StatementTest extends TestCase
         ;
 
         $connection
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 

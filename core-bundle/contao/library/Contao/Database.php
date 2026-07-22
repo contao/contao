@@ -582,7 +582,7 @@ class Database
 
 		foreach ($arrTables as $table=>$mode)
 		{
-			$arrLocks[] = $this->resConnection->quoteIdentifier($table) . ' ' . $mode;
+			$arrLocks[] = $this->resConnection->quoteSingleIdentifier($table) . ' ' . $mode;
 		}
 
 		$this->resConnection->executeStatement('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
@@ -680,6 +680,16 @@ class Database
 			return $strName;
 		}
 
-		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
+		$connection = System::getContainer()->get('database_connection');
+
+		/** @see Connection::quoteIdentifier() */
+		if (str_contains($strName, '.'))
+		{
+			$parts = array_map($connection->quoteSingleIdentifier(...), explode('.', $strName));
+
+			return implode('.', $parts);
+		}
+
+		return $connection->quoteSingleIdentifier($strName);
 	}
 }

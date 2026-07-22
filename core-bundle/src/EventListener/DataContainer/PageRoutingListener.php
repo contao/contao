@@ -103,10 +103,10 @@ class PageRoutingListener
 
     private function getPathWithParameters(PageRoute $route): string
     {
-        $path = $route->getPath();
+        $path = StringUtil::specialchars($route->getPath());
 
         foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{!?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+            $path = preg_replace('/{!?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'" data-contao--tooltips-target="content">$1</span>}', $path);
         }
 
         return $path;

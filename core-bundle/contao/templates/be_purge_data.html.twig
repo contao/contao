@@ -1,3 +1,5 @@
+{% trans_default_domain 'contao_default' %}
+
 <div id="tl_maintenance_cache" class="maintenance_{{ isActive ? 'active' : 'inactive' }}">
 
     <h2 class="sub_headline sub_headline_purge">{{ headline }}</h2>
@@ -17,7 +19,7 @@
                     <table class="with-border with-padding">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"></th>
+                            <th><input type="checkbox" id="check_all" class="tl_checkbox" aria-label="{{ 'MSC.selectAll'|trans }}" data-action="contao--check-all#toggleAll"></th>
                             <th>{{ job }}</th>
                             <th>{{ description }}</th>
                         </tr>
@@ -34,7 +36,7 @@
                     </table>
                 </fieldset>
                 {% if help|default %}
-                    <p class="tl_help tl_tip">{{ help }}</p>
+                    <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ help }}</p>
                 {% endif %}
             </div>
         </div>

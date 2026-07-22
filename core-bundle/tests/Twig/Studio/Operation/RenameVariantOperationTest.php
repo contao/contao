@@ -10,6 +10,7 @@ use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
+use Contao\TestCase\AbstractOperationTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;

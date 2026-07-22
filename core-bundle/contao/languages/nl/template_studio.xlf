@@ -23,9 +23,11 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>Zoek templates...</target>
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
         <source>Show only my templates</source>
+        <target>Alleen mijn templates tonen</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
         <source>Create a new variant template for the %s legacy content element</source>
+        <target>Maak een nieuwe variant template voor het %s legacy inhoudselement.</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
         <source>Create variant</source>
@@ -181,10 +184,6 @@
       <trans-unit id="template_studio.dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
         <target>Geef een nieuwe, unieke naam op voor template variant %s.</target>
-      </trans-unit>
-      <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
-        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
-        <target>De %identifier% template wordt in twee formaten aangeboden. Bij het aanpassen ervan, geef de voorkeur aan het Twig-formaat om compatibel te blijven met Contao 6.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
         <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
