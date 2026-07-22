@@ -40,5 +40,5 @@ services:
         arguments:
             - '@database_connection'
         tags:
-            # Use a higher priority for the output encoding migration (see #10042)
+            # The priority must be higher than the one of the "column to virtual" migration (see #10042)
             - { name: contao.migration, priority: 1 }
