@@ -20,17 +20,12 @@
     line-height: 18px;
 }
 
+/* Vertically align type images (see #10043) */
 .selector_container {
-    /* Only apply Flex if there is a type image (see #10043) */
-    li:has(.type-image) {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 3px;
-    }
-
-    li a:has(>img) {
-        display: flex;
+    .type-image {
+        vertical-align: top;
+        position: relative;
+        top: 1px;
     }
 }
 
