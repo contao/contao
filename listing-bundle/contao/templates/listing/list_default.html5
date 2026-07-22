@@ -4,7 +4,7 @@
 
 $this->wrapperAttributes = $this
     ->attrs()
-    ->addClass(['ce_table', 'listing'])
+    ->addClass(['ce_table', 'content-table', 'listing'])
     ->mergeWith($this->wrapperAttributes)
 ;
 

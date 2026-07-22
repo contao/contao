@@ -75,7 +75,7 @@ class FavoriteController extends AbstractController
             return $this->redirect($url);
         }
 
-        if (!$targetPath = $request->get('target_path')) {
+        if (!$targetPath = $request->attributes->get('target_path') ?? $request->query->get('target_path')) {
             throw new BadRequestException('Missing target_path in request.');
         }
 
