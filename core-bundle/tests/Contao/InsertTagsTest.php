@@ -34,6 +34,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Runtime\EscaperRuntime;
 
 class InsertTagsTest extends TestCase
 {
@@ -50,6 +51,7 @@ class InsertTagsTest extends TestCase
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
         $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
 
         System::setContainer($container);
     }

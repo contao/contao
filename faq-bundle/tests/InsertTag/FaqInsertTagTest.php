@@ -13,10 +13,17 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FaqBundle\InsertTag\FaqInsertTag;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
@@ -24,6 +31,9 @@ use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class FaqInsertTagTest extends ContaoTestCase
 {
@@ -59,7 +69,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willReturn($url ?? '')
         ;
 
-        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $listener = $this->createFaqInsertTag($adapters, $urlGenerator);
         $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
         $this->assertSame($expectedValue, $result->getValue());
@@ -73,7 +83,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ['2'],
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'faq/what-does-foobar-mean.html',
-            '<a href="faq/what-does-foobar-mean.html">What does "foobar" mean?</a>',
+            '<a href="faq/what-does-foobar-mean.html">What does &quot;foobar&quot; mean?</a>',
             OutputType::html,
         ];
 
@@ -82,7 +92,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ['2', 'blank'],
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'faq/what-does-foobar-mean.html',
-            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
+            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">What does &quot;foobar&quot; mean?</a>',
             OutputType::html,
         ];
 
@@ -195,10 +205,10 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener = $this->createFaqInsertTag($adapters);
 
         $this->assertSame(
-            '<a href="./">What does "foobar" mean?</a>',
+            '<a href="./">What does &quot;foobar&quot; mean?</a>',
             $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2']), []))->getValue(),
         );
 
@@ -219,7 +229,7 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
         ];
 
-        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener = $this->createFaqInsertTag($adapters);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2']), []))->getValue());
     }
@@ -243,8 +253,38 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willThrowException(new ForwardPageNotFoundException())
         ;
 
-        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $listener = $this->createFaqInsertTag($adapters, $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['3']), []))->getValue());
+    }
+
+    private function createFaqInsertTag(array $adapters = [], ContentUrlGenerator|null $urlGenerator = null): FaqInsertTag
+    {
+        $twig = new Environment($this->createStub(LoaderInterface::class));
+
+        $twig->addExtension(
+            new ContaoExtension(
+                $twig,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $twig),
+            ),
+        );
+
+        $insertTagParser = $this->createStub(InsertTagParser::class);
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
+
+        $twig->addRuntimeLoader(
+            new FactoryRuntimeLoader([
+                InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
+            ]),
+        );
+
+        $urlGenerator ??= $this->createStub(ContentUrlGenerator::class);
+
+        return new FaqInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator, $twig);
     }
 }

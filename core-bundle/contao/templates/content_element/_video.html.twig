@@ -29,7 +29,7 @@
             {% block video_caption %}
                 {% if caption %}
                     <figcaption{{ attrs(video_caption_attributes|default) }}>
-                        {{- caption|insert_tag_raw -}}
+                        {{- caption|insert_tag_html -}}
                     </figcaption>
                 {% endif %}
             {% endblock %}

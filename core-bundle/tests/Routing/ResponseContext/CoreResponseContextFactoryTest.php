@@ -29,7 +29,6 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -66,7 +65,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($this->createStub(InsertTagParser::class)),
             $this->createStub(RequestStack::class),
             $this->createStub(InsertTagParser::class),
             $this->createStub(CspHandlerFactory::class),
@@ -90,7 +88,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($this->createStub(InsertTagParser::class)),
             $this->createStub(RequestStack::class),
             $this->createStub(InsertTagParser::class),
             $this->createStub(CspHandlerFactory::class),
@@ -198,7 +195,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $cpHandlerFactory,
@@ -312,7 +308,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -377,7 +372,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -410,7 +404,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
-        $pageModel->title = 'We went from Alpha &#62; Omega';
+        $pageModel->title = 'We went from Alpha > Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
         $pageModel->searchIndexer = '';
         $pageModel->protected = false;
@@ -425,7 +419,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(ResponseContextAccessor::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $this->createStub(RequestStack::class),
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -439,7 +432,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $this->assertInstanceOf(HtmlHeadBag::class, $htmlBag);
         $this->assertSame('We went from Alpha > Omega', $htmlBag->getTitle());
-        $this->assertSame('My description contains HTML.', $htmlBag->getMetaDescription());
+        $this->assertSame('My description <strong>contains</strong> HTML<br>.', $htmlBag->getMetaDescription());
 
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
 
