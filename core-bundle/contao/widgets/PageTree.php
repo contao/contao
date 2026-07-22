@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlAttributes;
+
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -125,12 +127,14 @@ class PageTree extends Widget
 
 			if ($objPages !== null)
 			{
+				$pageImageAttributes = (new HtmlAttributes())->addClass('page-image');
+
 				foreach ($objPages as $objPage)
 				{
 					$objPage->loadDetails();
 
 					$arrSet[] = $objPage->id;
-					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
+					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage), attributes: $pageImageAttributes) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
 				}
 			}
 		}
