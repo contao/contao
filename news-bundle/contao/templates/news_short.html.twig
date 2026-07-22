@@ -6,7 +6,7 @@
 
     <h2>{{ linkHeadline|sanitize_html('contao') }}</h2>
 
-    <div class="ce_text block">
+    <div class="ce_text content-text block">
         {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_html }}
     </div>
 
