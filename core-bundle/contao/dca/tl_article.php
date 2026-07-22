@@ -303,7 +303,7 @@ class tl_article extends Backend
 			'data-icon="%s" data-icon-disabled="%s" class="%s"',
 			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
 			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
-			'article-image',
+			'type-image',
 		);
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));

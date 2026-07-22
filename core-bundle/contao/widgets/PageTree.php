@@ -127,7 +127,7 @@ class PageTree extends Widget
 
 			if ($objPages !== null)
 			{
-				$pageImageAttributes = (new HtmlAttributes())->addClass('page-image');
+				$pageImageAttributes = (new HtmlAttributes())->addClass('type-image');
 
 				foreach ($objPages as $objPage)
 				{

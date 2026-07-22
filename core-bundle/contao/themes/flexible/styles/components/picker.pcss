@@ -20,11 +20,14 @@
     line-height: 18px;
 }
 
-/* Only apply Flex if there is a file type icon (see #10043) */
-.selector_container li:has(>.file-image) {
-    display: flex;
-    align-items: center;
-    gap: 3px;
+.selector_container {
+    /* Only apply Flex if there is a type image (see #10043) */
+    li:has(.type-image) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 3px;
+    }
 }
 
 .selector_container p {
