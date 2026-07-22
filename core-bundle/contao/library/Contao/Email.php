@@ -38,6 +38,9 @@ use Symfony\Component\Mime\Email as EmailMessage;
  * @property boolean $embedImages Whether to embed images inline
  * @property string  $logFile     The log file path
  * @property array   $failures    An array of rejected e-mail addresses
+ *
+ * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+ *             use the Symfony Mailer instead.
  */
 class Email
 {
