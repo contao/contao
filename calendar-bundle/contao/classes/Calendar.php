@@ -569,10 +569,9 @@ class Calendar extends Frontend
 
 		if (null !== $request)
 		{
-			// FIXME: Use ->query, ->request or ->attributes
-			if ($request->get('_format'))
+			if ($format = $request->attributes->get('_format'))
 			{
-				$subRequest->attributes->set('_format', $request->get('_format'));
+				$subRequest->attributes->set('_format', $format);
 			}
 
 			if ($request->getDefaultLocale() !== $request->getLocale())
