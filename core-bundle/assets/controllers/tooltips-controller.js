@@ -59,7 +59,10 @@ export default class TooltipsController extends Controller {
         // Bail on touch devices
         if ('touch' === event.pointerType) return;
 
-        const el = event.target instanceof Element ? event.target.closest(`[data-${this.identifier}-target~="tooltip"]`) : null;
+        const el =
+            event.target instanceof Element
+                ? event.target.closest(`[data-${this.identifier}-target~="tooltip"]`)
+                : null;
 
         if (!el || el === this.#current) {
             return;
