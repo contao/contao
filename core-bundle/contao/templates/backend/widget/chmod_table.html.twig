@@ -16,7 +16,7 @@
 {% for p in permissions %}
     {% if p.group|default %}
         {% set group_members = group_members|merge({
-            (p.group): permissions|filter(m => m.member|default == p.group)
+            (p.group): permissions|filter(m => m.member|default == p.group),
         }) %}
     {% endif %}
 {% endfor %}
