@@ -77,6 +77,9 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
             - '@request_stack'
+            - []
+            - []
+            - '@=service("contao.http_client.no_private_network_except_root_pages").getFactory()'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -229,7 +232,7 @@ services:
     contao.feed.http_adapter:
         class: FeedIo\Adapter\Http\Client
         arguments:
-            - '@psr18.http_client'
+            - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
@@ -309,6 +312,13 @@ services:
             - '%contao.error_level%'
         calls:
             - [setContainer, ['@service_container']]
+
+    contao.http_client.no_private_network_except_root_pages:
+        class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        arguments:
+            - '@http_client'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem

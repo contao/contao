@@ -2,6 +2,55 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.48] (2026-07-13)
+
+**Security fixes:**
+
+- [CVE-2026-57232]: Server-side request forgery (SSRF) via unvalidated RSS feed URLs
+
+**Fixed issues:**
+
+- [#10004] Resolve insert tags in the accordion header ([dennisbohn])
+- [#9996] Only consider items from the same `ptable` for sorting ([lukasbableck])
+- [#9926] Fix compatibility with ICU version 78 ([ausi])
+- [#9920] Handle invalid database values in the `InputUnit` widget ([aschempp])
+- [#9940] Remove the obsolete `Input::setGet()` from the event list ([ausi])
+- [#9915] Handle file errors in the Twig filesystem loader ([aschempp])
+- [#9927] Delete `OptIn` tokens if the model does not exist anymore ([fritzmg])
+- [#9911] Complete the contao 2FA provider on the `code_valid` event ([zoglo])
+
+## [5.3.47] (2026-06-18)
+
+**Security fixes:**
+
+- [CVE-2026-55824]: Contao crawler leaks auth credentials to external hosts
+
+**Fixed issues:**
+
+- [#9894] Support  the `form` attribute in widgets ([aschempp])
+- [#9900] Fix an issue with adding multiple `ptable` conditions to `$strWhere` ([lukasbableck])
+- [#9903] Use the correct sitemap namespace identifier ([lukasbableck])
+- [#9888] Convert binary UUIDs in user insert tag ([fritzmg])
+- [#8688] Remove newsletter deny list entries upon activation ([de-es])
+- [#9879] Generate `panel` in `DC_Folder` before adding messages ([lukasbableck])
+- [#9878] Check `ptable` when fetching child records ([lukasbableck])
+- [#9880] Enable cache invalidation in `dev` ([fritzmg])
+- [#9875] Simplify converting the backend headline to the page title ([leofeyer])
+- [#9848] Restrict web-triggered cron/worker execution to the Contao scope ([Toflar])
+- [#9868] Allow version 4 of `spatie/schema-org` ([leofeyer])
+- [#9850] Fix non-DBAFS images not appearing in the search results ([qzminski])
+- [#9847] Simplify the search index listener ([Toflar])
+- [#9841] Remove `<style>` and `<script>` content when converting HTML to plain text ([lukasbableck])
+- [#9844] Do not enforce 2FA when impersonated ([aschempp])
+- [#9819] Support self-closing tags in the `Input::stripAttributes()` method ([leofeyer])
+- [#9823] Add a trace to the maximum insert tag nesting level exception ([Toflar])
+- [#9812] Allow a lower `--time-limit` for messenger workers ([fritzmg])
+- [#9811] Add an `attributes` variable to the `player.html.twig` template ([fritzmg])
+- [#9795] Correctly set the poster URL in the `PlayerController` ([leofeyer])
+- [#9783] Fix setting integer properties on models to invalid types ([ausi])
+- [#9779] Improve the support and documentation of `sizes=auto` in images ([ausi])
+- [#9787] Use the null-safe operator for `getBaseUrl()` and `getBasePath()` ([Toflar])
+
 ## [5.3.46] (2026-04-24)
 
 **Fixed issues:**
@@ -915,6 +964,8 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
+[5.3.47]: https://github.com/contao/contao/releases/tag/5.3.47
 [5.3.46]: https://github.com/contao/contao/releases/tag/5.3.46
 [5.3.45]: https://github.com/contao/contao/releases/tag/5.3.45
 [5.3.44]: https://github.com/contao/contao/releases/tag/5.3.44
@@ -966,6 +1017,8 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
@@ -1533,6 +1586,7 @@ This project adheres to [Semantic Versioning].
 [#8665]: https://github.com/contao/contao/pull/8665
 [#8675]: https://github.com/contao/contao/pull/8675
 [#8681]: https://github.com/contao/contao/pull/8681
+[#8688]: https://github.com/contao/contao/pull/8688
 [#8694]: https://github.com/contao/contao/pull/8694
 [#8698]: https://github.com/contao/contao/pull/8698
 [#8701]: https://github.com/contao/contao/pull/8701
@@ -1634,3 +1688,33 @@ This project adheres to [Semantic Versioning].
 [#9730]: https://github.com/contao/contao/pull/9730
 [#9736]: https://github.com/contao/contao/pull/9736
 [#9756]: https://github.com/contao/contao/pull/9756
+[#9779]: https://github.com/contao/contao/pull/9779
+[#9783]: https://github.com/contao/contao/pull/9783
+[#9787]: https://github.com/contao/contao/pull/9787
+[#9795]: https://github.com/contao/contao/pull/9795
+[#9811]: https://github.com/contao/contao/pull/9811
+[#9812]: https://github.com/contao/contao/pull/9812
+[#9819]: https://github.com/contao/contao/pull/9819
+[#9823]: https://github.com/contao/contao/pull/9823
+[#9841]: https://github.com/contao/contao/pull/9841
+[#9844]: https://github.com/contao/contao/pull/9844
+[#9847]: https://github.com/contao/contao/pull/9847
+[#9848]: https://github.com/contao/contao/pull/9848
+[#9850]: https://github.com/contao/contao/pull/9850
+[#9868]: https://github.com/contao/contao/pull/9868
+[#9875]: https://github.com/contao/contao/pull/9875
+[#9878]: https://github.com/contao/contao/pull/9878
+[#9879]: https://github.com/contao/contao/pull/9879
+[#9880]: https://github.com/contao/contao/pull/9880
+[#9888]: https://github.com/contao/contao/pull/9888
+[#9894]: https://github.com/contao/contao/pull/9894
+[#9900]: https://github.com/contao/contao/pull/9900
+[#9903]: https://github.com/contao/contao/pull/9903
+[#9911]: https://github.com/contao/contao/pull/9911
+[#9915]: https://github.com/contao/contao/pull/9915
+[#9920]: https://github.com/contao/contao/pull/9920
+[#9926]: https://github.com/contao/contao/pull/9926
+[#9927]: https://github.com/contao/contao/pull/9927
+[#9940]: https://github.com/contao/contao/pull/9940
+[#9996]: https://github.com/contao/contao/pull/9996
+[#10004]: https://github.com/contao/contao/pull/10004

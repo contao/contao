@@ -7,7 +7,7 @@
   <?php else: ?>
     <h1><?= $this->question ?></h1>
 
-    <div class="ce_text block">
+    <div class="ce_text content-text block">
       <?php if (!$this->addBefore): ?>
         <?= $this->cspInlineStyles($this->answer) ?>
       <?php endif; ?>

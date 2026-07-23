@@ -15,13 +15,13 @@ namespace Contao\CalendarBundle\Tests\EventListener\DataContainer;
 use Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Search;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class EventSearchListenerTest extends TestCase
+class EventSearchListenerTest extends ContaoTestCase
 {
     public function testPurgesTheSearchIndexOnAliasChange(): void
     {
