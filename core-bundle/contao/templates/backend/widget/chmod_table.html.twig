@@ -46,7 +46,7 @@
                         {% set input_attributes = attrs(attributes)
                             .set('id', "ctrl_#{id}_#{k}#{permission.group}")
                             .set('type', 'checkbox')
-                            .set('data-contao--check-all-target', 'input group')
+                            .set('data-contao--check-all-target', 'input')
                             .set('data-action', 'contao--check-all#toggleDependents')
                             .setIfExists('checked', group_checked)
                         %}

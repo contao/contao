@@ -5,7 +5,7 @@ export default class extends Controller {
     #shiftKey = false;
     #keypress;
 
-    static targets = ['source', 'input', 'group'];
+    static targets = ['source', 'input'];
 
     initialize() {
         this.#start = null;
