@@ -38,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
-		'cacheTagsInvalidation'       => array('start'=>'start', 'stop'=>'stop'),
+		'cacheTagsInvalidation'       => array('start', 'stop'),
 		'markAsCopy'                  => 'title',
 		'permissions'                 => array(),
 		'onload_callback' => array

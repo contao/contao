@@ -1224,13 +1224,8 @@ abstract class DataContainer extends Backend
 
 			$invalidations = array();
 
-			foreach ($fields as $field => $type)
+			foreach ($fields as $field)
 			{
-				if (!\in_array($type, array('start', 'stop'), true))
-				{
-					throw new \InvalidArgumentException(\sprintf('Invalid cache tag invalidation type "%s" configured for field "%s.%s".', $type, $this->table, $field));
-				}
-
 				$rgxp = $GLOBALS['TL_DCA'][$this->table]['fields'][$field]['eval']['rgxp'] ?? null;
 
 				if ($record && \in_array($rgxp, array('date', 'time', 'datim'), true) && ($value = $record[$field] ?? null))

@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
-		'cacheTagsInvalidation'       => array('start'=>'start', 'stop'=>'stop'),
+		'cacheTagsInvalidation'       => array('start', 'stop'),
 		'markAsCopy'                  => 'title',
 		'permissions'                 => array(),
 		'onload_callback' => array
