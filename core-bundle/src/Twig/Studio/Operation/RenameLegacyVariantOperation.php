@@ -52,7 +52,8 @@ final class RenameLegacyVariantOperation extends AbstractOperation
             ]);
         }
 
-        $newIdentifier = "{$baseIdentifier}_{$identifierFragment}";
+        // Do not allow creating subdirectories
+        $newIdentifier = str_replace('/', '-',"{$baseIdentifier}_{$identifierFragment}");
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
