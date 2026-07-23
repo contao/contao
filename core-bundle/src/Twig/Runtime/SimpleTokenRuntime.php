@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -25,37 +24,13 @@ final class SimpleTokenRuntime implements RuntimeExtensionInterface
     {
     }
 
-    /**
-     * @return ($content is ChunkedText ? ChunkedText : string)
-     */
-    public function parsePlain(ChunkedText|\Stringable|string $content, array $tokens = []): ChunkedText|string
+    public function parsePlain(\Stringable|string $content, array $tokens = []): string
     {
-        return $this->parse($content, $tokens, false);
+        return $this->simpleTokenParser->parse((string) $content, $tokens, false);
     }
 
-    /**
-     * @return ($content is ChunkedText ? ChunkedText : string)
-     */
-    public function parseHtml(ChunkedText|\Stringable|string $content, array $tokens = []): ChunkedText|string
+    public function parseHtml(\Stringable|string $content, array $tokens = []): string
     {
-        return $this->parse($content, $tokens, true);
-    }
-
-    /**
-     * @return ($content is ChunkedText ? ChunkedText : string)
-     */
-    private function parse(ChunkedText|\Stringable|string $content, array $tokens, bool $asHtml): ChunkedText|string
-    {
-        if ($content instanceof ChunkedText) {
-            $chunks = [];
-
-            foreach ($content as [$type, $chunk]) {
-                $chunks[] = [$type, $this->simpleTokenParser->parse($chunk, $tokens, $asHtml || ChunkedText::TYPE_RAW === $type)];
-            }
-
-            return ChunkedText::fromTypedChunks($chunks);
-        }
-
-        return $this->simpleTokenParser->parse((string) $content, $tokens, $asHtml);
+        return $this->simpleTokenParser->parse((string) $content, $tokens, true);
     }
 }

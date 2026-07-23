@@ -29,6 +29,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+            - '@twig'
+            - '@contao.html_sanitizer'
 
     contao_news.listener.add_feeds_from_layout:
         class: Contao\NewsBundle\EventListener\AddFeedsFromLayoutListener

@@ -92,10 +92,8 @@ class ModuleNewsletterReader extends Module
 
 			if ($responseContext?->has(HtmlHeadBag::class))
 			{
-				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
-
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objNewsletter->subject));
+				$htmlHeadBag->setTitle($objNewsletter->subject);
 			}
 		}
 

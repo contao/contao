@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -39,7 +38,6 @@ class CoreResponseContextFactory
         private readonly ResponseContextAccessor $responseContextAccessor,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TokenChecker $tokenChecker,
-        private readonly HtmlDecoder $htmlDecoder,
         private readonly RequestStack $requestStack,
         private readonly InsertTagParser $insertTagParser,
         private readonly CspHandlerFactory $cspHandlerFactory,
@@ -80,12 +78,12 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-        $title = $this->htmlDecoder->inputEncodedToPlainText(($pageModel->pageTitle ?: $pageModel->title) ?: '');
+        $title = $this->insertTagParser->replaceInline($pageModel->pageTitle ?: $pageModel->title ?: '');
 
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
         $htmlHeadBag
             ->setTitle($title ?: '')
-            ->setMetaDescription($this->htmlDecoder->inputEncodedToPlainText($pageModel->description ?: ''))
+            ->setMetaDescription($this->insertTagParser->replaceInline($pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {

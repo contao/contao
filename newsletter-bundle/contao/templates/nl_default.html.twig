@@ -37,7 +37,7 @@
 
             {% if text|default %}
                 <div class="widget widget-explanation">
-                    {{ text|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                    {{ text|sanitize_html('contao')|csp_inline_styles|insert_tag_html }}
                 </div>
             {% endif %}
 

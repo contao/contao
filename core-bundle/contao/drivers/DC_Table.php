@@ -4477,25 +4477,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$recordOperations->addPasteButton('pasteafter', $table, $pasteAfterHref);
 
 							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
-							$data = array('pid' => $row[$i]['id'] ?? null);
 
-							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+							if ($ctable === $this->strTable)
 							{
-								$data['ptable'] = $this->strTable;
-							}
+								$data = array('pid' => $row[$i]['id'] ?? null);
 
-							$subject = new ReadAction($ctable, $data);
+								if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+								{
+									$data['ptable'] = $this->strTable;
+								}
 
-							if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $ctable, $subject))
-							{
-								if ($ctable !== $this->strTable)
+								if ($this->canPasteClipboard($arrClipboard, $data))
 								{
 									$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
 								}
-							}
-							else
-							{
-								$recordOperations->addPasteButton('pasteinto', $table, $pasteIntoHref);
 							}
 						}
 

@@ -20,9 +20,11 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\NewsModel;
-use Contao\StringUtil;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 #[AsInsertTag('news')]
 #[AsInsertTag('news_open')]
@@ -34,6 +36,8 @@ class NewsInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly Environment $twig,
+        private readonly HtmlSanitizerInterface $htmlSanitizer,
     ) {
     }
 
@@ -50,25 +54,23 @@ class NewsInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag->getName()) {
             'news' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>%s</a>',
-                    StringUtil::specialcharsAttribute($this->generateNewsUrl($model, $arguments)),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                    $model->headline,
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                    'url' => $this->generateNewsUrl($model, $arguments),
+                    'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                    'label' => $model->headline,
+                ]),
                 OutputType::html,
             ),
             'news_open' => new InsertTagResult(
-                \sprintf(
-                    '<a href="%s"%s>',
-                    StringUtil::specialcharsAttribute($this->generateNewsUrl($model, $arguments)),
-                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
-                ),
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>')->render([
+                    'url' => $this->generateNewsUrl($model, $arguments),
+                    'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
+                ]),
                 OutputType::html,
             ),
             'news_url' => new InsertTagResult($this->generateNewsUrl($model, $arguments), OutputType::url),
             'news_title' => new InsertTagResult($model->headline),
-            'news_teaser' => new InsertTagResult($model->teaser ?? '', OutputType::html),
+            'news_teaser' => new InsertTagResult($this->htmlSanitizer->sanitize($model->teaser ?? ''), OutputType::html),
             default => new InsertTagResult(''),
         };
     }
