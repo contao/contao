@@ -5,7 +5,7 @@ export default class extends Controller {
     #shiftKey = false;
     #keypress;
 
-    static targets = ['source', 'input'];
+    static targets = ['source', 'input', 'group'];
 
     initialize() {
         this.#start = null;
@@ -60,6 +60,36 @@ export default class extends Controller {
         for (const el of this.inputTargets) {
             el.checked = checked;
         }
+    }
+
+    toggleDependents({ target }) {
+        const members = this.element.querySelectorAll(
+            `[data-${this.identifier}-group-param="${target.id}"]`
+        );
+
+        for (const member of members) {
+            if (!member.disabled) {
+                member.checked = target.checked;
+            }
+        }
+    }
+
+    updateGroup({ params }) {
+        const groupIdent = params.group;
+
+        if (null === groupIdent) {
+            return;
+        }
+
+        const group = this.element.getElementById(groupIdent);
+
+        if (null === group) {
+            return;
+        }
+
+        const members = this.element.querySelectorAll(`[data-${this.identifier}-group-param="${groupIdent}"]`);
+
+        group.checked = members.length > 0 && [...members].every(member => member.checked);
     }
 
     #shiftToggle(el) {

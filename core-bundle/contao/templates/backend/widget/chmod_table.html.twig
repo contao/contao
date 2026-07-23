@@ -1,18 +1,28 @@
 {% trans_default_domain 'contao_default' %}
 
 {% set permissions = [
-    {label: 'CHMOD.createpage', controls: [1, 2]},
-    {label: 'CHMOD.editpage', value: 1},
-    {label: 'CHMOD.editnavigation', value: 2},
+    {label: 'CHMOD.createpage', group: 'page'},
+    {label: 'CHMOD.editpage', value: 1, member: 'page'},
+    {label: 'CHMOD.editnavigation', value: 2, member: 'page'},
     {label: 'CHMOD.deletepage', value: 3},
-    {label: 'CHMOD.createarticles', controls: [4, 5]},
-    {label: 'CHMOD.editarticles', value: 4},
-    {label: 'CHMOD.movearticles', value: 5},
+    {label: 'CHMOD.createarticles', group: 'article'},
+    {label: 'CHMOD.editarticles', value: 4, member: 'article'},
+    {label: 'CHMOD.movearticles', value: 5, member: 'article'},
     {label: 'CHMOD.deletearticles', value: 6},
 ] %}
 
+{% set group_members = {} %}
+
+{% for p in permissions %}
+    {% if p.group|default %}
+        {% set group_members = group_members|merge({
+            (p.group): permissions|filter(m => m.member|default == p.group)
+        }) %}
+    {% endif %}
+{% endfor %}
+
 <input type="hidden" name="{{ name }}" value="">
-<table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all contao--checkbox-group" data-action="input->contao--checkbox-group#sync">
+<table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all">
     <tr>
         <th>
             <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
@@ -28,24 +38,30 @@
             <th scope="row">{{ "CHMOD.#{v}"|trans }}</th>
             {% for permission in permissions %}
                 <td>
-                    {% if permission.controls is defined %}
-                        {% set controlled_ids = permission.controls|map(value => "ctrl_#{id}_#{k}#{value}")|join(' ') %}
+                    {% if permission.group is defined %}
+                        {% set members = group_members[permission.group] %}
+                        {% set dependent_values = members|map(m => "#{k}#{m.value}") %}
+                        {% set group_checked = dependent_values is not empty and (dependent_values|filter(v => v in values)|length) == dependent_values|length %}
+
                         {% set input_attributes = attrs(attributes)
-                            .set('id', "ctrl_#{id}_#{k}_#{loop.index}")
+                            .set('id', "ctrl_#{id}_#{k}#{permission.group}")
                             .set('type', 'checkbox')
-                            .set('aria-controls', controlled_ids)
-                            .set('data-contao--checkbox-group-target', 'toggle')
-                            .set('data-action', 'focus->contao--scroll-offset#store contao--checkbox-group#toggleGroup')
+                            .set('data-contao--check-all-target', 'input group')
+                            .set('data-action', 'contao--check-all#toggleDependents')
+                            .setIfExists('checked', group_checked)
                         %}
                     {% else %}
                         {% set value = k ~ permission.value %}
+                        {% set group_id = permission.member|default ? "ctrl_#{id}_#{k}#{permission.member}" : null %}
+
                         {% set input_attributes = attrs(attributes)
                             .set('id', "ctrl_#{id}_#{value}")
                             .set('type', 'checkbox')
                             .set('name', "#{name}[]")
                             .set('value', value)
                             .set('data-contao--check-all-target', 'input')
-                            .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
+                            .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput contao--check-all#updateGroup')
+                            .setIfExists('data-contao--check-all-group-param', group_id)
                             .setIfExists('checked', value in values)
                         %}
                     {% endif %}
