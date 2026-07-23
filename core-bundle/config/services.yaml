@@ -113,6 +113,9 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
             - '@request_stack'
+            - []
+            - []
+            - '@=service("contao.http_client.no_private_network_except_root_pages").getFactory()'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -229,6 +232,7 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '@request_stack'
 
     contao.data_container.clipboard_manager:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
@@ -256,6 +260,7 @@ services:
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
             - '@contao.csrf.token_manager'
+            - '@request_stack'
 
     contao.data_container.foreign_key_parser:
         class: Contao\CoreBundle\DataContainer\ForeignKeyParser
@@ -268,6 +273,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@request_stack'
             - '@twig'
             - '@router'
             - '@translator'
@@ -277,6 +283,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@request_stack'
             - '@twig'
             - '@security.helper'
             - '@router'
@@ -353,7 +360,7 @@ services:
     contao.feed.http_adapter:
         class: FeedIo\Adapter\Http\Client
         arguments:
-            - '@psr18.http_client'
+            - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
@@ -454,6 +461,13 @@ services:
             - '@contao.framework'
         tags:
             - { name: html_sanitizer, sanitizer: contao }
+
+    contao.http_client.no_private_network_except_root_pages:
+        class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        arguments:
+            - '@http_client'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -604,6 +618,7 @@ services:
             - '%contao.insert_tags.allowed_tags%'
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@contao.listener.subrequest_cache'
+            - '@?twig.runtime.escaper'
 
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
@@ -1055,7 +1070,6 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@event_dispatcher'
             - '@contao.security.token_checker'
-            - '@contao.string.html_decoder'
             - '@request_stack'
             - '@contao.insert_tag.parser'
             - '@contao.routing.response_context.csp_handler_factory'

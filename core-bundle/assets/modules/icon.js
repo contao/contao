@@ -3,8 +3,8 @@ import manifest from '../../public/icons/manifest.json';
 /**
  * Create an icon template for the given name. You can call "getHtml()"
  * on the result to get the HTML of the included icon(s). The result will
- * include either one image element (light/dark mode share an icon) or
- * two with a color-scheme CSS class, if there are different variants for
+ * include either one image element (light and dark mode share an icon) or
+ * two with a color-scheme CSS class if there are different variants for
  * light/dark mode.
  *
  * @param name The name of the icon (e.g. "edit" or "delete").

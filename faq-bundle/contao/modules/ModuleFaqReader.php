@@ -96,7 +96,6 @@ class ModuleFaqReader extends Module
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objFaq->pageTitle)
 			{
@@ -104,16 +103,16 @@ class ModuleFaqReader extends Module
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setTitle($objFaq->question);
 			}
 
 			if ($objFaq->description)
 			{
-				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objFaq->description));
+				$htmlHeadBag->setMetaDescription($objFaq->description);
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setMetaDescription($objFaq->question);
 			}
 
 			if ($objFaq->robots)

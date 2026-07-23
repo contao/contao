@@ -20,11 +20,11 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
-use Contao\Input;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -49,6 +49,7 @@ class DcaUrlAnalyzer
         private readonly DcaRequestSwitcher $dcaRequestSwitcher,
         private readonly Connection $connection,
         private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -267,7 +268,7 @@ class DcaUrlAnalyzer
 
     private function findGet(string $key): string|null
     {
-        $value = $this->framework->getAdapter(Input::class)->findGet($key);
+        $value = $this->requestStack->getCurrentRequest()?->query->all()[$key] ?? null;
 
         return \is_string($value) ? $value : null;
     }
@@ -566,7 +567,7 @@ class DcaUrlAnalyzer
 
         new DcaLoader($table)->load();
 
-        $tableQuoted = $this->connection->quoteIdentifier($table);
+        $tableQuoted = $this->connection->quoteSingleIdentifier($table);
 
         $rows = $this->connection->fetchAllAssociative(
             "SELECT id FROM $tableQuoted WHERE pid = ?",

@@ -756,7 +756,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return '
-  <p class="tl_help tl_tip' . $strClass . '">' . $return . '</p>';
+  <p class="tl_help tl_tip' . StringUtil::specialchars($strClass) . '" data-contao--tooltips-target="content">' . System::getContainer()->get('contao.html_sanitizer')->sanitizeFor('p', $return) . '</p>';
 	}
 
 	/**

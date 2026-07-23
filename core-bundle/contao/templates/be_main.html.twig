@@ -14,7 +14,6 @@
     .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -144,6 +143,10 @@
             </turbo-frame>
         {% endblock %}
 
+    </div>
+
+    <div role="tooltip" id="tooltip" data-contao--tooltips-target="popup">
+        <div id="tooltip_content" data-contao--tooltips-target="popupContent"></div>
     </div>
 {% endblock %}
 

@@ -305,7 +305,12 @@ class ValueFormatter implements ResetInterface
             $this->framework->getAdapter(Controller::class)->loadDataContainer($ptable);
             $showField = $GLOBALS['TL_DCA'][$ptable]['list']['label']['fields'][0] ?? 'id';
 
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            // showField already has foreignKey format, no table needed
+            if (str_contains($showField, '.')) {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $showField;
+            } else {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            }
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {
@@ -446,7 +451,7 @@ class ValueFormatter implements ResetInterface
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
             $dcaExtractor = $this->framework->createInstance(DcaExtractor::class, [$relationTable]);
             $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
-            $fk = $this->connection->quoteIdentifier($fk);
+            $fk = $this->connection->quoteSingleIdentifier($fk);
 
             $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk = ?", [$id]);
 

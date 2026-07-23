@@ -16,6 +16,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+            - '@twig'
 
     contao_faq.listener.data_container.faq_search:
         class: Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener

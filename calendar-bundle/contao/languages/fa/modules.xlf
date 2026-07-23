@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>مدیریت رویدادها و نمایش آنها در فهرست تقویم یا رویداد</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>فیدهای تقویم</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>رویدادها</target>

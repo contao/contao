@@ -33,6 +33,14 @@
         <source>These groups will be able to see the news items in this archive.</source>
         <target>Diese Mitgliedergruppen können die Nachrichten des Archivs sehen.</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.0">
+        <source>JSON-LD type</source>
+        <target>JSON-LD-Typ</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.1">
+        <source>Please choose the JSON-LD type for the news items in this archive.</source>
+        <target>Bitte wählen Sie den JSON-LD-Typ für die Nachrichten in diesem Archiv aus.</target>
+      </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
         <target>Änderungsdatum</target>
@@ -48,6 +56,10 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
         <target>Zugriffsschutz</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.expert_legend">
+        <source>Expert settings</source>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>

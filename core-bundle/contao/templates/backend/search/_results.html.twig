@@ -27,6 +27,7 @@
                                         {% set hit_title_attributes = attrs()
                                             .set('href', hit.viewUrl)
                                             .set('title', 'MSC.searchHitView'|trans([hit.title]))
+                                            .set('data-contao--tooltips-target', 'tooltip')
                                             .addClass('hit_title')
                                             .mergeWith(hit_title_attributes|default)
                                         %}

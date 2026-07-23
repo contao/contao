@@ -114,7 +114,6 @@ class ModuleEventReader extends Events
 		if ($responseContext?->has(HtmlHeadBag::class))
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objEvent->pageTitle)
 			{
@@ -122,15 +121,16 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->title)
 			{
-				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objEvent->title));
+				$htmlHeadBag->setTitle($objEvent->title);
 			}
 
 			if ($objEvent->description)
 			{
-				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objEvent->description));
+				$htmlHeadBag->setMetaDescription($objEvent->description);
 			}
 			elseif ($objEvent->teaser)
 			{
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objEvent->teaser));
 			}
 

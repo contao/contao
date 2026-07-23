@@ -7,8 +7,6 @@ namespace Contao\CoreBundle\Cache;
 use Contao\CoreBundle\Event\InvalidateCacheTagsEvent;
 use Contao\CoreBundle\Repository\CacheTagInvalidationRepository;
 use Contao\Model;
-use Contao\Model\Collection as ModelCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\MappingException;
@@ -139,7 +137,7 @@ class CacheTagManager
             return [$target];
         }
 
-        if (\is_array($target) || $target instanceof Collection || $target instanceof ModelCollection) {
+        if (is_iterable($target)) {
             $tags = [];
 
             foreach ($target as $part) {

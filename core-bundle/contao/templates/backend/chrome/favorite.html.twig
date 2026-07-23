@@ -4,9 +4,9 @@
         {% if active %}
             <input type="hidden" name="FORM_SUBMIT" value="remove-favorite">
             <input type="hidden" name="target_path" value="{{ target_path }}">
-            <button type="submit" class="icon-favorite" title="{{ 'MSC.unfavorite'|trans([], 'contao_default') }}" onclick="return confirm('{{ 'MSC.confirmUnfavorite'|trans([], 'contao_default')|e('js')|e('html') }}')">{{ backend_icon('favorite_active.svg') }}</button>
+            <button type="submit" class="icon-favorite" title="{{ 'MSC.unfavorite'|trans([], 'contao_default') }}" onclick="return confirm('{{ 'MSC.confirmUnfavorite'|trans([], 'contao_default')|e('js')|e('html') }}')" data-contao--tooltips-target="tooltip">{{ backend_icon('favorite_active.svg') }}</button>
         {% else %}
-            <button type="submit" class="icon-favorite" title="{{ 'MSC.favorite'|trans([], 'contao_default') }}">{{ backend_icon('favorite.svg') }}</button>
+            <button type="submit" class="icon-favorite" title="{{ 'MSC.favorite'|trans([], 'contao_default') }}" data-contao--tooltips-target="tooltip">{{ backend_icon('favorite.svg') }}</button>
         {% endif %}
     </form>
 {% endblock %}

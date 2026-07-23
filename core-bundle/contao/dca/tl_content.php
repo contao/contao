@@ -587,7 +587,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'playerOptions' => array
 		(
@@ -595,31 +594,26 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('player_autoplay', 'player_nocontrols', 'player_loop', 'player_playsinline', 'player_muted'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'playerStart' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>16, 'nospace'=>true, 'tl_class'=>'w25'),
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'')
 		),
 		'playerStop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>16, 'nospace'=>true, 'tl_class'=>'w25'),
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'')
 		),
 		'playerTitle' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'playerCaption' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'playerAspect' => array
 		(
@@ -627,7 +621,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2', '9:16', '1:1'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'textTrackSRC' => array
 		(
@@ -647,7 +640,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('auto', 'metadata', 'none'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_preload'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'playerColor' => array
 		(
@@ -655,7 +647,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'tl_class'=>'w25 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'youtubeOptions' => array
 		(

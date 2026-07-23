@@ -11,7 +11,7 @@ use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
-use Contao\Input;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ThemeLayoutListener
 {
@@ -19,6 +19,7 @@ class ThemeLayoutListener
         private readonly FinderFactory $finderFactory,
         private readonly Inspector $inspector,
         private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -92,9 +93,7 @@ class ThemeLayoutListener
 
     private function isLegacy(DataContainer $dc): bool
     {
-        $input = $this->framework->getAdapter(Input::class);
-
-        if ('default' === $input->post('type')) {
+        if ('default' === $this->requestStack->getCurrentRequest()?->request->get('type')) {
             return true;
         }
 
@@ -105,8 +104,6 @@ class ThemeLayoutListener
 
     private function getTemplateIdentifier(DataContainer $dc): string|null
     {
-        $input = $this->framework->getAdapter(Input::class);
-
-        return $input->post('template') ?? $dc->getCurrentRecord()['template'] ?? null;
+        return $this->requestStack->getCurrentRequest()?->request->get('template') ?? $dc->getCurrentRecord()['template'] ?? null;
     }
 }

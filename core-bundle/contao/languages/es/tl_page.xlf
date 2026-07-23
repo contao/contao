@@ -655,6 +655,7 @@
       </trans-unit>
       <trans-unit id="tl_page.versions.1">
         <source>Show the versions of page ID %s</source>
+        <target>Mostrar las versiones de la página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
@@ -735,6 +736,12 @@
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
         <target>Habilite las URL canónicas en la página raíz del sitio web para habilitar esta configuración.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.primaryImage.0">
+        <source>Page image</source>
+      </trans-unit>
+      <trans-unit id="tl_page.primaryImage.1">
+        <source>Here you can select an image for the page.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

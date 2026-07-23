@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
-use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
@@ -62,13 +61,13 @@ class ContaoTableHandler extends AbstractProcessingHandler
 
         ($this->connection)()->insert('tl_log', [
             'tstamp' => $record->datetime->format('U'),
-            'text' => StringUtil::specialchars((string) $record->formatted),
+            'text' => (string) $record->formatted,
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
-            'browser' => StringUtil::specialchars((string) $context->getBrowser()),
-            'uri' => StringUtil::specialchars($context->getUri() ?? ''),
+            'browser' => (string) $context->getBrowser(),
+            'uri' => $context->getUri() ?? '',
             'page' => $context->getPageId() ?? 0,
         ]);
     }

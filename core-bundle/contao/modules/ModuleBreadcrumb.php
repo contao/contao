@@ -88,7 +88,7 @@ class ModuleBreadcrumb extends Module
 				'isRoot'   => true,
 				'isActive' => false,
 				'href'     => (($objFirstPage !== null) ? $this->generateContentUrl($objFirstPage) : $request?->getBasePath()),
-				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
+				'title'    => StringUtil::stripInsertTags($objPages->pageTitle ?: $objPages->title),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
 			);
@@ -146,7 +146,7 @@ class ModuleBreadcrumb extends Module
 					'isRoot'   => false,
 					'isActive' => false,
 					'href'     => $href,
-					'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
+					'title'    => StringUtil::stripInsertTags($pages[$i]->pageTitle ?: $pages[$i]->title),
 					'link'     => $pages[$i]->title,
 					'data'     => $pages[$i]->row(),
 				);
@@ -161,7 +161,7 @@ class ModuleBreadcrumb extends Module
 				'isRoot'   => false,
 				'isActive' => false,
 				'href'     => $this->generateContentUrl($pages[0]),
-				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
+				'title'    => StringUtil::stripInsertTags($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 			);
@@ -175,7 +175,7 @@ class ModuleBreadcrumb extends Module
 					'isRoot'   => false,
 					'isActive' => true,
 					'href'     => $this->generateContentUrl($objArticle),
-					'title'    => StringUtil::specialchars($objArticle->title, true),
+					'title'    => StringUtil::stripInsertTags($objArticle->title),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
 				);
@@ -191,7 +191,7 @@ class ModuleBreadcrumb extends Module
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
 				'href'     => $request?->getBaseUrl() . $request?->getPathInfo(),
-				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
+				'title'    => $pages[0]->pageTitle ?: $pages[0]->title,
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 			);
@@ -213,7 +213,6 @@ class ModuleBreadcrumb extends Module
 			);
 
 			$position = 0;
-			$htmlDecoder = $container->get('contao.string.html_decoder');
 			$insertTagParser = $container->get('contao.insert_tag.parser');
 
 			foreach ($items as $item)
@@ -229,7 +228,7 @@ class ModuleBreadcrumb extends Module
 					'position' => ++$position,
 					'item' => array(
 						'@id' => $insertTagParser->replaceInline($item['href']),
-						'name' => $insertTagParser->replaceInline($htmlDecoder->inputEncodedToPlainText($item['link']))
+						'name' => $insertTagParser->replaceInline($item['link'])
 					)
 				);
 			}

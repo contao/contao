@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Input;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Sets the parent table for the current table, if enabled and not set.
@@ -25,8 +25,10 @@ use Contao\Input;
 #[AsHook('loadDataContainer', priority: 255)]
 class DynamicPtableListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function __invoke(string $table): void
@@ -39,7 +41,7 @@ class DynamicPtableListener
             return;
         }
 
-        if (!$do = $this->framework->getAdapter(Input::class)->get('do')) {
+        if (!$do = $this->requestStack->getCurrentRequest()?->query->get('do')) {
             return;
         }
 

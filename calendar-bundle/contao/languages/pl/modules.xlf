@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>Ten moduł pozwala na zarządzanie wydarzeniami w kalendarzach.</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>Kanały RSS kalendarza</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>Kalendarz/Wydarzenia</target>

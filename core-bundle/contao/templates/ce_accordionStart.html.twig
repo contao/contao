@@ -10,7 +10,7 @@
         .addClass(toggler)
         .addStyle(headlineStyle|default)
     }}>
-        {{ headline|sanitize_html('contao')|insert_tag_raw }}
+        {{ headline|sanitize_html('contao')|insert_tag_html }}
     </div>
 
     <div class="{{ accordion }}">

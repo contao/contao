@@ -75,16 +75,18 @@ class CommandCompiler
     private function copyMissingTablesAndColumns(Schema $fromSchema, Schema $toSchema): void
     {
         foreach ($fromSchema->getTables() as $table) {
-            if (!$toSchema->hasTable($table->getName())) {
+            $tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
+
+            if (!$toSchema->hasTable($tableName)) {
                 $this->copyTableDefinition($toSchema, $table);
 
                 continue;
             }
 
-            $toSchemaTable = $toSchema->getTable($table->getName());
+            $toSchemaTable = $toSchema->getTable($tableName);
 
             foreach ($table->getColumns() as $column) {
-                if (!$toSchemaTable->hasColumn($column->getName())) {
+                if (!$toSchemaTable->hasColumn($column->getObjectName()->getIdentifier()->getValue())) {
                     $this->copyColumnDefinition($toSchemaTable, $column);
                 }
             }
@@ -120,7 +122,7 @@ class CommandCompiler
         $commands = [];
 
         foreach ($tables as $table) {
-            $tableName = $table->getName();
+            $tableName = $table->getObjectName()->getUnqualifiedName()->getValue();
             $deleteIndexes = false;
 
             if (!str_starts_with($tableName, 'tl_')) {
@@ -188,7 +190,7 @@ class CommandCompiler
                 $platform = $this->connection->getDatabasePlatform();
 
                 foreach ($fromSchema->getTable($tableName)->getIndexes() as $index) {
-                    $indexName = $index->getName();
+                    $indexName = $index->getObjectName()->getIdentifier()->getValue();
 
                     if ('primary' === strtolower($indexName)) {
                         continue;

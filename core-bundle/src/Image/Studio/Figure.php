@@ -262,7 +262,7 @@ final class Figure
         // Link attributes and title
         if ('' !== ($href = $this->getLinkHref())) {
             $templateData['href'] = $href;
-            $templateData['attributes'] = ''; // always define attributes key if href is set
+            $templateData['attributes'] = ''; // always define the "attributes" key if href is set
 
             // Use link "title" attribute for "linkTitle" as it is already output explicitly
             // in image.html5 (see #3385)
@@ -279,13 +279,7 @@ final class Figure
         }
 
         if ($linkAttributes) {
-            $htmlAttributes = array_map(
-                static fn (string $attribute, string $value) => \sprintf('%s="%s"', $attribute, $value),
-                array_keys($linkAttributes),
-                $linkAttributes,
-            );
-
-            $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);
+            $templateData['attributes'] = new HtmlAttributes($linkAttributes)->toString();
         }
 
         // Lightbox

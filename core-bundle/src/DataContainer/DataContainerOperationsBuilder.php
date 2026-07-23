@@ -17,9 +17,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
@@ -39,11 +39,12 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     public function __construct(
         ContaoFramework $framework,
+        RequestStack $requestStack,
         private readonly Environment $twig,
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
-        parent::__construct($framework);
+        parent::__construct($framework, $requestStack);
     }
 
     public function __toString(): string
@@ -119,7 +120,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return $builder;
         }
 
-        $inputAdapter = $this->framework->getAdapter(Input::class);
+        $request = $this->requestStack->getCurrentRequest();
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             if ('new' === $k) {
@@ -131,7 +132,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 $v['showInHeader'] = true;
             }
 
-            if (empty($v['showInHeader']) || ('select' === $inputAdapter->get('act') && !($v['showOnSelect'] ?? null))) {
+            if (empty($v['showInHeader']) || ('select' === $request?->query->get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
             }
 
@@ -175,16 +176,20 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         [$label, $title] = $this->getLabelAndTitle($table, $type, $this->id);
 
         if (null === $href) {
-            $this->append([
+            /** @var Operation $operation */
+            $operation = [
                 'label' => $label,
                 'icon' => $icon.'--disabled.svg',
                 'primary' => true,
-            ]);
+            ];
+
+            $this->append($operation);
 
             return $this;
         }
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'label' => $label,
             'title' => $title,
             'attributes' => new HtmlAttributes('data-action="contao--scroll-offset#store"'),
@@ -192,7 +197,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $href,
             'method' => 'POST',
             'primary' => !str_starts_with($type, 'pastenew'),
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -204,7 +211,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     {
         [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
-        $this->append([
+        /** @var Operation $operation */
+        $operation = [
             'label' => $label,
             'title' => $title,
             'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null)->set('data-action', 'contao--scroll-offset#store'),
@@ -212,7 +220,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $this->getNewHref($mode, $pid, $id),
             'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
             'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
-        ]);
+        ];
+
+        $this->append($operation);
 
         return $this;
     }
@@ -291,7 +301,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            $request = $this->requestStack->getCurrentRequest();
+
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].($request?->query->get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;

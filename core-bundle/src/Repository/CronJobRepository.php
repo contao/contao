@@ -52,13 +52,13 @@ class CronJobRepository extends ServiceEntityRepository
 
         $defaultLockTimeout = $this->connection->fetchOne('SELECT @@lock_wait_timeout');
 
-        // Use default lock timeout from MariaDB, if it cannot be retrieved
+        // Use default lock timeout from MariaDB if it cannot be retrieved
         if (false === $defaultLockTimeout) {
             $defaultLockTimeout = 86400;
         }
 
         try {
-            // Set a short lock timeout, so that the next statement throws an exception sooner
+            // Set a short lock timeout so that the next statement throws an exception sooner
             $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
             $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
         } finally {
@@ -83,7 +83,7 @@ class CronJobRepository extends ServiceEntityRepository
         $qb
             ->delete()
             ->where('c.lastRun < :date')
-            // Use a grace period of 1 month, so that a yearly cronjob is not deleted immediately
+            // Use a grace period of 1 month so that a yearly cronjob is not deleted immediately
             ->setParameter('date', new \DateTimeImmutable('-1 year -1 month'))
         ;
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter;
+use Contao\TestCase\AbstractAccessVoterTestCase;
 
 class LayoutAccessVoterTest extends AbstractAccessVoterTestCase
 {

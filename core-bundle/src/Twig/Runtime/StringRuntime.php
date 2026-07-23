@@ -35,6 +35,9 @@ final class StringRuntime implements RuntimeExtensionInterface
         return $this->framework->getAdapter(StringUtil::class)->encodeEmail($html);
     }
 
+    /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
+     */
     public function inputEncodedToPlainText(string $value, bool $removeInsertTags = false): string
     {
         return $this->htmlDecoder->inputEncodedToPlainText($value, $removeInsertTags);

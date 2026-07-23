@@ -91,11 +91,9 @@ abstract class Controller extends System
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
 		$identifierPattern = \sprintf('/^%s%s/', preg_quote($strPrefix, '/'), !str_ends_with($strPrefix, '_') ? '($|_)' : '');
 
-		$prefixedFiles = array_merge(
-			array_filter(
-				array_keys($templateHierarchy->getInheritanceChains()),
-				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
-			),
+		$prefixedFiles = array_filter(
+			array_keys($templateHierarchy->getInheritanceChains()),
+			static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
 		);
 
 		foreach ($prefixedFiles as $strTemplate)

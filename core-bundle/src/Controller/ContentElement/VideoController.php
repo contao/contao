@@ -55,7 +55,7 @@ class VideoController extends AbstractContentElementController
         $template->set('height', $height ?: 360);
         $template->set('aspect_ratio', $model->playerAspect);
 
-        // Meta data
+        // Metadata
         $template->set('title', $model->playerTitle);
         $template->set('caption', $model->playerCaption);
 

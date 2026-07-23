@@ -29,6 +29,7 @@ use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig\Runtime\EscaperRuntime;
 
 class MetadataTest extends TestCase
 {
@@ -38,6 +39,7 @@ class MetadataTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
 
         System::setContainer($container);
 
@@ -133,6 +135,7 @@ class MetadataTest extends TestCase
         $container = $this->getContainerWithFixtures();
         $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
 
         System::setContainer($container);
 
@@ -160,7 +163,10 @@ class MetadataTest extends TestCase
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
-        System::setContainer($this->getContainerWithFixtures());
+        $container = $this->getContainerWithFixtures();
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
+
+        System::setContainer($container);
 
         $model = new ContentModel();
         $model->setRow([
@@ -178,6 +184,7 @@ class MetadataTest extends TestCase
         $container = $this->getContainerWithFixtures();
         $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
 
         System::setContainer($container);
 

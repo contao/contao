@@ -172,6 +172,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\DynamicPtableListener
         arguments:
             - '@contao.framework'
+            - '@request_stack'
 
     contao.listener.data_container.enum_options:
         class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
@@ -263,6 +264,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@request_stack'
             - '@contao.slug'
             - '@translator'
             - '@database_connection'
@@ -335,6 +337,7 @@ services:
             - '@contao.twig.finder_factory'
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@request_stack'
 
     contao.listener.data_container.theme_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
