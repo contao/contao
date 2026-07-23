@@ -300,7 +300,7 @@ class tl_article extends Backend
 		}
 
 		$attributes = sprintf(
-			'data-icon="%s" data-icon-disabled="%s"',
+			'data-icon="%s" data-icon-disabled="%s" class="type-image"',
 			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
 			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);

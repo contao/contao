@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
@@ -182,6 +183,8 @@ class FileTree extends Widget
 		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
 		{
+			$fileImageAttributes = (new HtmlAttributes())->addClass('type-image');
+
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -203,7 +206,7 @@ class FileTree extends Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . $objFiles->path;
+							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg', attributes: $fileImageAttributes) . ' ' . $objFiles->path;
 						}
 						else
 						{
@@ -216,7 +219,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
@@ -259,7 +262,7 @@ class FileTree extends Widget
 								}
 								else
 								{
-									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 								}
 							}
 						}
@@ -286,7 +289,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
