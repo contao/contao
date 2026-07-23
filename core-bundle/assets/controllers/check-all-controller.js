@@ -63,9 +63,7 @@ export default class extends Controller {
     }
 
     toggleDependents({ target }) {
-        const members = this.element.querySelectorAll(
-            `[data-${this.identifier}-group-param="${target.id}"]`
-        );
+        const members = this.element.querySelectorAll(`[data-${this.identifier}-group-param="${target.id}"]`);
 
         for (const member of members) {
             if (!member.disabled) {
@@ -89,7 +87,7 @@ export default class extends Controller {
 
         const members = this.element.querySelectorAll(`[data-${this.identifier}-group-param="${groupIdent}"]`);
 
-        group.checked = members.length > 0 && [...members].every(member => member.checked);
+        group.checked = members.length > 0 && [...members].every((member) => member.checked);
     }
 
     #shiftToggle(el) {
