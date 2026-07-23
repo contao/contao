@@ -204,7 +204,7 @@ class StringUtil
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
-	 * @return string|array<string> The decoded string
+	 * @return string|array<string|array<string|array<string|array>>> The decoded string
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
