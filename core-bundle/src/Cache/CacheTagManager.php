@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cache;
 
 use Contao\CoreBundle\Event\InvalidateCacheTagsEvent;
+use Contao\CoreBundle\Repository\CacheTagInvalidationRepository;
 use Contao\Model;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\MappingException;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -30,6 +32,8 @@ class CacheTagManager
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly CacheTagInvalidationRepository $cacheTagInvalidationRepository,
+        private readonly ClockInterface $clock,
         private readonly ResponseTagger|null $responseTagger = null,
         private readonly CacheInvalidator|null $cacheInvalidator = null,
     ) {
@@ -267,6 +271,33 @@ class CacheTagManager
 
         $this->eventDispatcher->dispatch($event);
         $this->cacheInvalidator?->invalidateTags($event->getTags());
+
+        return $this;
+    }
+
+    /**
+     * Schedules the tags to be invalidated.
+     *
+     * @param array<string> $tags
+     */
+    public function invalidateTagsAt(array $tags, \DateTimeInterface $invalidateAt, string|null $identifier = null): self
+    {
+        if ($invalidateAt <= $this->clock->now()) {
+            throw new \InvalidArgumentException('The invalidation time must be in the future.');
+        }
+
+        if ([] === $tags) {
+            return $this;
+        }
+
+        $this->cacheTagInvalidationRepository->schedule(array_values($tags), $invalidateAt, $identifier);
+
+        return $this;
+    }
+
+    public function cancelInvalidation(string $identifier): self
+    {
+        $this->cacheTagInvalidationRepository->cancel($identifier);
 
         return $this;
     }
