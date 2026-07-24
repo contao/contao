@@ -1,7 +1,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
     .addStyle(style|default)
-    .setIfExists('aria-label', ariaLabel)
+    .setIfExists('aria-label', ariaLabel|insert_tag)
     .mergeWith(wrapperAttributes|default)
 %}
 
