@@ -2,10 +2,7 @@ import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
 import PasswordVisibility from '@stimulus-components/password-visibility';
-import {
-    AuthenticationController,
-    RegistrationController,
-} from '@web-auth/webauthn-stimulus';
+import { AuthenticationController, RegistrationController } from '@web-auth/webauthn-stimulus';
 import TextareaAutogrow from 'stimulus-textarea-autogrow';
 
 import './scripts/mootao.js';
