@@ -1,34 +1,78 @@
 {% trans_default_domain 'contao_default' %}
 
+{% set permissions = [
+    {label: 'CHMOD.createpage', group: 'page'},
+    {label: 'CHMOD.editpage', value: 1, member: 'page'},
+    {label: 'CHMOD.editnavigation', value: 2, member: 'page'},
+    {label: 'CHMOD.deletepage', value: 3},
+    {label: 'CHMOD.createarticles', group: 'article'},
+    {label: 'CHMOD.editarticles', value: 4, member: 'article'},
+    {label: 'CHMOD.movearticles', value: 5, member: 'article'},
+    {label: 'CHMOD.deletearticles', value: 6},
+] %}
+
+{% set group_members = {} %}
+
+{% for p in permissions %}
+    {% if p.group|default %}
+        {% set group_members = group_members|merge({
+            (p.group): permissions|filter(m => m.member|default == p.group),
+        }) %}
+    {% endif %}
+{% endfor %}
+
 <input type="hidden" name="{{ name }}" value="">
 <table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all">
     <tr>
         <th>
-            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
+            {% set check_all_attributes = attrs(attributes)
+                .unset('name')
+                .unset('value')
+                .set('id', "check_all_#{id}")
+                .set('type', 'checkbox')
+                .addClass('tl_checkbox')
+                .set('data-action', 'contao--check-all#toggleAll contao--scroll-offset#store')
+            %}
+            <input{{ check_all_attributes }}>
             <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
         </th>
-        <th scope="col">{{ 'CHMOD.editpage'|trans }}</th>
-        <th scope="col">{{ 'CHMOD.editnavigation'|trans }}</th>
-        <th scope="col">{{ 'CHMOD.deletepage'|trans }}</th>
-        <th scope="col">{{ 'CHMOD.editarticles'|trans }}</th>
-        <th scope="col">{{ 'CHMOD.movearticles'|trans }}</th>
-        <th scope="col">{{ 'CHMOD.deletearticles'|trans }}</th>
+        {% for permission in permissions %}
+            <th scope="col">{{ permission.label|trans }}</th>
+        {% endfor %}
     </tr>
 
     {% for k, v in objects %}
         <tr>
-            <th scope="row">{{ "CHMOD.#{v}"|trans }}</th>';
-            {% for j in 1..6 %}
+            <th scope="row">{{ "CHMOD.#{v}"|trans }}</th>
+            {% for permission in permissions %}
                 <td>
-                    {% set value = k ~ j %}
-                    {% set input_attributes = attrs(attributes)
-                        .set('type', 'checkbox')
-                        .set('name', "#{name}[]")
-                        .set('value', value)
-                        .set('data-contao--check-all-target', 'input')
-                        .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
-                        .setIfExists('checked', value in values)
-                    %}
+                    {% if permission.group is defined %}
+                        {% set members = group_members[permission.group] %}
+                        {% set dependent_values = members|map(m => "#{k}#{m.value}") %}
+                        {% set group_checked = dependent_values is not empty and (dependent_values|filter(v => v in values)|length) == dependent_values|length %}
+
+                        {% set input_attributes = attrs(attributes)
+                            .set('id', "ctrl_#{id}_#{k}#{permission.group}")
+                            .set('type', 'checkbox')
+                            .set('data-contao--check-all-target', 'input')
+                            .set('data-action', 'contao--check-all#toggleDependents')
+                            .setIfExists('checked', group_checked)
+                        %}
+                    {% else %}
+                        {% set value = k ~ permission.value %}
+                        {% set group_id = permission.member|default ? "ctrl_#{id}_#{k}#{permission.member}" : null %}
+
+                        {% set input_attributes = attrs(attributes)
+                            .set('id', "ctrl_#{id}_#{value}")
+                            .set('type', 'checkbox')
+                            .set('name', "#{name}[]")
+                            .set('value', value)
+                            .set('data-contao--check-all-target', 'input')
+                            .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput contao--check-all#updateGroup')
+                            .setIfExists('data-contao--check-all-group-param', group_id)
+                            .setIfExists('checked', value in values)
+                        %}
+                    {% endif %}
                     <input{{ input_attributes }}>
                 </td>
             {% endfor %}

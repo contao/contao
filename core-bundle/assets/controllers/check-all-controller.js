@@ -62,6 +62,34 @@ export default class extends Controller {
         }
     }
 
+    toggleDependents({ target }) {
+        const members = this.element.querySelectorAll(`[data-${this.identifier}-group-param="${target.id}"]`);
+
+        for (const member of members) {
+            if (!member.disabled) {
+                member.checked = target.checked;
+            }
+        }
+    }
+
+    updateGroup({ params }) {
+        const groupIdent = params.group;
+
+        if (null === groupIdent) {
+            return;
+        }
+
+        const group = this.element.getElementById(groupIdent);
+
+        if (null === group) {
+            return;
+        }
+
+        const members = this.element.querySelectorAll(`[data-${this.identifier}-group-param="${groupIdent}"]`);
+
+        group.checked = members.length > 0 && [...members].every((member) => member.checked);
+    }
+
     #shiftToggle(el) {
         const thisIndex = this.inputTargets.indexOf(el);
         const startIndex = this.inputTargets.indexOf(this.#start);

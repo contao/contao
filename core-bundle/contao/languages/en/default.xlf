@@ -749,20 +749,26 @@
       <trans-unit id="FOP.f6">
         <source>Synchronize the file system with the database</source>
       </trans-unit>
+      <trans-unit id="CHMOD.createpage">
+        <source>Create pages</source>
+      </trans-unit>
       <trans-unit id="CHMOD.editpage">
-        <source>Edit page</source>
+        <source>Edit pages</source>
       </trans-unit>
       <trans-unit id="CHMOD.editnavigation">
-        <source>Edit page hierarchy</source>
+        <source>Move pages</source>
       </trans-unit>
       <trans-unit id="CHMOD.deletepage">
-        <source>Delete page</source>
+        <source>Delete pages</source>
+      </trans-unit>
+      <trans-unit id="CHMOD.createarticles">
+        <source>Create articles</source>
       </trans-unit>
       <trans-unit id="CHMOD.editarticles">
         <source>Edit articles</source>
       </trans-unit>
       <trans-unit id="CHMOD.movearticles">
-        <source>Edit article hierarchy</source>
+        <source>Move articles</source>
       </trans-unit>
       <trans-unit id="CHMOD.deletearticles">
         <source>Delete articles</source>
