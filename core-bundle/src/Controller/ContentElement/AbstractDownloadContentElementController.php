@@ -64,7 +64,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             fn (FilesystemItem $filesystemItem): array => [
                 'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
                 'file' => $filesystemItem,
-                'show_file_previews' => $model->showPreview,
+                'show_file_previews' => (bool) $model->showPreview,
                 'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
             ],
             iterator_to_array($filesystemItems),
@@ -119,7 +119,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
         $path = $filesystemItem->getPath();
-        $inline = $model->inline;
+        $inline = (bool) $model->inline;
 
         if ($publicUri = $this->getVirtualFilesystem()->generatePublicUri($path, new ContentDispositionOption($inline))) {
             return (string) $publicUri;
@@ -146,7 +146,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         $figureBuilder = $this->container->get('contao.image.studio')
             ->createFigureBuilder()
             ->setSize($size = $model->size)
-            ->enableLightbox($fullsize = $model->fullsize)
+            ->enableLightbox($fullsize = (bool) $model->fullsize)
             ->disableMetadata()
             ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
