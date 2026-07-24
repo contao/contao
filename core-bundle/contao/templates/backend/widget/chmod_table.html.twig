@@ -25,7 +25,15 @@
 <table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all">
     <tr>
         <th>
-            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
+            {% set check_all_attributes = attrs(attributes)
+                .unset('name')
+                .unset('value')
+                .set('id', "check_all_#{id}")
+                .set('type', 'checkbox')
+                .addClass('tl_checkbox')
+                .set('data-action', 'contao--check-all#toggleAll contao--scroll-offset#store')
+            %}
+            <input{{ check_all_attributes }}>
             <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
         </th>
         {% for permission in permissions %}
