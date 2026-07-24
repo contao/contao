@@ -14,8 +14,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        // Fall back to element id to remove the TinyMCE instance, as the async
-        // editorId may still be null before tinyMCE is initialized (see #10051)
+        // Fall back to element ID to remove the TinyMCE instance, as the async
+        // editorId may still be null before TinyMCE is initialized (see #10051)
         const id = this.#editorId ?? this.element.id;
         tinymce?.get(id)?.remove();
     }
