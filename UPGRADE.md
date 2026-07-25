@@ -36,6 +36,13 @@ Double encoding has also been reenabled in Twig. The Contao escaper strategy, as
 
 Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
 
+### Twig filter insert_tag_raw
+
+The Twig filter `|insert_tag_raw` was renamed to `|insert_tag_html`. The old name is deprecated. It is a pre-escaped
+filter now which means if you previously used something like `foo|insert_tag_raw|raw` you need to change the order to
+`foo|raw|insert_tag_raw`. But as you should not use `|raw` at all, use `foo|sanitize_html('contao')|insert_tag_raw`
+instead.
+
 ### Twig namespace
 
 The `@Contao_Global` Twig namespace has been renamed to `@Contao_User`. If you reference the namespace explicitly, update your template and controller references accordingly.
