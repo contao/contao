@@ -1155,6 +1155,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	tableWizard: function(id) {
+		console.warn('Backend.tableWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			thead = table.getElement('thead'),
 			tbody = table.getElement('tbody'),
@@ -1348,6 +1350,8 @@ window.Backend =
 	 * @param {float} [factor] The resize factor
 	 */
 	tableWizardResize: function(factor) {
+		console.warn('Backend.tableWizardResize() is deprecated. Please use the Stimulus controller instead.');
+
 		var size = window.localStorage.getItem('contao_table_wizard_cell_size');
 
 		if (factor !== undefined) {
@@ -1373,6 +1377,8 @@ window.Backend =
 	 * Set the width of the table wizard
 	 */
 	tableWizardSetWidth: function() {
+		console.warn('Backend.tableWizardSetWidth() is deprecated. Please use the Stimulus controller instead.');
+
 		var wrap = $('tl_tablewizard');
 		if (!wrap) return;
 		wrap.setStyle('width', Math.round(wrap.getParent('.tl_formbody_edit').getComputedSize().width * 0.96));

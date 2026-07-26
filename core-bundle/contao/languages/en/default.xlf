@@ -1055,6 +1055,42 @@
       <trans-unit id="MSC.tw_cdelete">
         <source>Delete the column</source>
       </trans-unit>
+      <trans-unit id="MSC.tw_insert_above">
+        <source>Insert above</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_below">
+        <source>Insert below</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_left">
+        <source>Insert left</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_right">
+        <source>Insert right</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_duplicate">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_clear">
+        <source>Clear content</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_delete">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_row_actions">
+        <source>Row actions and sorting</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_col_actions">
+        <source>Column actions and sorting</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_row">
+        <source>Click to add a new row. Drag to add or remove rows.</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_column">
+        <source>Click to add a new column. Drag to add or remove columns.</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_row_column">
+        <source>Click to add rows/columns. Drag to add or remove rows/columns.</source>
+      </trans-unit>
       <trans-unit id="MSC.ow_copy">
         <source>Duplicate the row</source>
       </trans-unit>

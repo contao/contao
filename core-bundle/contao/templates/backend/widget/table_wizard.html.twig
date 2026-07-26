@@ -1,0 +1,201 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set wrapper_attributes = attrs()
+    .addClass('table-wizard')
+    .addClass(class|default)
+    .set('data-controller', 'contao--table-wizard')
+    .set('data-contao--table-wizard-name-value', id)
+    .set('data-contao--table-wizard-appearance-value', appearance|json_encode)
+    .set('data-action', 'keydown.esc->contao--table-wizard#closeMenu click@document->contao--table-wizard#documentClick change@document->contao--table-wizard#syncAppearance')
+%}
+<div{{ wrapper_attributes }}>
+    {% block toolbar %}
+        <div class="table-wizard-toolbar">
+            {% set import_button_attributes = attrs()
+                .set('href', import_url)
+                .addClass('table-wizard-toolbar-button')
+                .set('data-action', 'contao--scroll-offset#store')
+            %}
+            <a{{ import_button_attributes }}>{{ backend_icon('tablewizard.svg', 'MSC.tw_import.1'|trans) }}</a>
+
+            {% set shrink_button_attributes = attrs()
+                .set('type', 'button')
+                .addClass('table-wizard-toolbar-button')
+                .set('data-contao--tooltips-target', 'tooltip')
+                .set('data-action', 'contao--table-wizard#shrinkCellSizes')
+                .set('title', 'MSC.tw_shrink'|trans)
+            %}
+            <button{{ shrink_button_attributes }}>{{ backend_icon('demagnify.svg', 'MSC.tw_shrink'|trans) }}</button>
+
+            {% set expand_button_attributes = attrs()
+                .set('type', 'button')
+                .addClass('table-wizard-toolbar-button')
+                .set('data-contao--tooltips-target', 'tooltip')
+                .set('data-action', 'contao--table-wizard#expandCellSizes')
+                .set('title', 'MSC.tw_expand'|trans)
+            %}
+            <button{{ expand_button_attributes }}>{{ backend_icon('magnify.svg', 'MSC.tw_expand'|trans) }}</button>
+        </div>
+    {% endblock %}
+
+    {% block wizard %}
+        <div class="table-wizard-scroll">
+            <div class="table-wizard-grid">
+                {% block table %}
+                    {% set table_attributes = attrs()
+                        .set('id', 'ctrl_' ~ id)
+                        .addClass('table-wizard-table')
+                    %}
+                    <table{{ table_attributes }}>
+                        {% block table_head %}
+                            <thead>
+                            {% set handle_row_attributes = attrs()
+                                .addClass('table-wizard-handle-row')
+                                .set('data-contao--table-wizard-target', 'columnHandleRow')
+                            %}
+                            <tr{{ handle_row_attributes }}>
+                                <th class="table-wizard-corner"></th>
+
+                                {% for handle in range(0, col_count - 1) %}
+                                    {% block column_handle_cell %}
+                                        {% set column_handle_cell_attributes = attrs()
+                                            .addClass('table-wizard-handle-cell')
+                                            .set('data-contao--table-wizard-target', 'columnHandle')
+                                        %}
+                                        <th{{ column_handle_cell_attributes }}>
+                                            {% set column_handle_attributes = attrs()
+                                                .addClass(['table-wizard-handle', 'table-wizard-handle-column'])
+                                                .set('role', 'button')
+                                                .set('tabindex', '0')
+                                                .set('aria-haspopup', 'menu')
+                                                .set('aria-expanded', 'false')
+                                                .set('data-contao--tooltips-target', 'tooltip')
+                                                .set('title', 'MSC.tw_col_actions'|trans)
+                                                .set('data-action', 'click->contao--table-wizard#openMenu keydown->contao--table-wizard#handleMenu pointerenter->contao--table-wizard#highlight pointerleave->contao--table-wizard#clearHighlight focus->contao--table-wizard#highlight blur->contao--table-wizard#clearHighlight')
+                                            %}
+                                            <div{{ column_handle_attributes }}>{{ backend_icon('drag.svg') }}</div>
+                                        </th>
+                                    {% endblock %}
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endblock %}
+
+                        {% block table_body %}
+                            {% set body_attributes = attrs()
+                                .addClass('table-wizard-body')
+                                .set('data-contao--table-wizard-target', 'body')
+                            %}
+                            <tbody{{ body_attributes }}>
+                                {% set row_handle_attributes = attrs()
+                                    .addClass(['table-wizard-handle', 'table-wizard-handle-row'])
+                                    .set('role', 'button')
+                                    .set('tabindex', '0')
+                                    .set('aria-haspopup', 'menu')
+                                    .set('aria-expanded', 'false')
+                                    .set('data-contao--tooltips-target', 'tooltip')
+                                    .set('title', 'MSC.tw_row_actions'|trans)
+                                    .set('data-action', 'click->contao--table-wizard#openMenu keydown->contao--table-wizard#handleMenu pointerenter->contao--table-wizard#highlight pointerleave->contao--table-wizard#clearHighlight focus->contao--table-wizard#highlight blur->contao--table-wizard#clearHighlight')
+                                %}
+
+                                {% for row in rows %}
+                                    <tr class="table-wizard-row" data-contao--table-wizard-target="row">
+                                        <th class="table-wizard-handle-cell table-wizard-handle-cell-row">
+                                            <div{{ row_handle_attributes }}>{{ backend_icon('drag.svg') }}</div>
+                                        </th>
+
+                                        {% for cell in row.cells %}
+                                            <td class="table-wizard-cell">
+                                                {% set cell_input_attributes = attrs(cell_attributes|default)
+                                                    .set('name', cell.name)
+                                                    .addClass(['tl_textarea', 'table-wizard-input'])
+                                                    .set('rows', textarea_rows)
+                                                    .set('cols', textarea_cols)
+                                                    .set('data-contao--table-wizard-target', 'input')
+                                                    .set('data-action', 'keydown->contao--table-wizard#navigate')
+                                                %}
+                                                <textarea{{ cell_input_attributes }}>{{ cell.value }}</textarea>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        {% endblock %}
+                    </table>
+                {% endblock %}
+
+                {% block add_row_button %}
+                    {% set add_row_button_attributes = attrs()
+                        .set('type', 'button')
+                        .addClass(['table-wizard-add', 'table-wizard-add-row'])
+                        .set('data-contao--tooltips-target', 'tooltip')
+                        .set('title', 'MSC.tw_add_row'|trans)
+                        .set('data-action', 'contao--table-wizard#addCells pointerdown->contao--table-wizard#startDrag')
+                    %}
+                    <button{{ add_row_button_attributes }}><span aria-hidden="true">↕</span></button>
+                {% endblock %}
+
+                {% block add_column_button %}
+                    {% set add_column_button_attributes = attrs()
+                        .set('type', 'button')
+                        .addClass(['table-wizard-add', 'table-wizard-add-column'])
+                        .set('data-contao--tooltips-target', 'tooltip')
+                        .set('title', 'MSC.tw_add_column'|trans)
+                        .set('data-action', 'contao--table-wizard#addCells pointerdown->contao--table-wizard#startDrag')
+                    %}
+                    <button{{ add_column_button_attributes }}><span aria-hidden="true">↔</span></button>
+                {% endblock %}
+
+                {% block add_row_column_button %}
+                    {% set add_row_column_button_attributes = attrs()
+                        .set('type', 'button')
+                        .addClass(['table-wizard-add', 'table-wizard-add-both'])
+                        .set('data-contao--tooltips-target', 'tooltip')
+                        .set('title', 'MSC.tw_add_row_column'|trans)
+                        .set('data-action', 'contao--table-wizard#addCells pointerdown->contao--table-wizard#startDrag')
+                    %}
+                    <button{{ add_row_column_button_attributes }}><span aria-hidden="true">↘</span></button>
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block menu_template %}
+        <template data-contao--table-wizard-target="menuTemplate">
+            <div class="table-wizard-menu" role="menu" tabindex="-1">
+                {{ _self.menu_checkbox('tl_content.thead.0', 'toggleHead', 'row', 'first') }}
+                {{ _self.menu_checkbox('tl_content.tfoot.0', 'toggleFoot', 'row', 'last') }}
+                {{ _self.menu_checkbox('tl_content.tleft.0', 'toggleLeft', 'column', 'first') }}
+
+                {{ _self.menu_operation('MSC.tw_insert_above', 'insertBefore', 'row', 'move_up.svg') }}
+                {{ _self.menu_operation('MSC.tw_insert_below', 'insertAfter', 'row', 'move_down.svg') }}
+                {{ _self.menu_operation('MSC.tw_insert_left', 'insertBefore', 'column', 'move_left.svg') }}
+                {{ _self.menu_operation('MSC.tw_insert_right', 'insertAfter', 'column', 'move_right.svg') }}
+                {{ _self.menu_operation('MSC.tw_duplicate', 'duplicate', 'row column', 'copy.svg') }}
+                {{ _self.menu_operation('MSC.tw_clear', 'clear', 'row column', 'error.svg') }}
+                {{ _self.menu_operation('MSC.tw_delete', 'remove', 'row column', 'delete.svg') }}
+            </div>
+        </template>
+    {% endblock %}
+</div>
+
+{% macro menu_checkbox(translation_key, operation, show_in_axis, position) %}
+    <button type="button" role="menuitemcheckbox" class="table-wizard-menu-item table-header-item" data-operation="{{ operation }}" data-axis="{{ show_in_axis }}" data-position="{{ position }}">
+        {{ translation_key|trans({}, 'contao_tl_content') }}
+        <span class="table-wizard-switch" aria-hidden="true"></span>
+    </button>
+{% endmacro %}
+
+{% macro menu_operation(translation_key, operation, show_in_axis, icon, attributes = null) %}
+    {% set menu_operation_attributes = attrs()
+        .set('type', 'button')
+        .set('role', 'menuitem')
+        .addClass('table-wizard-menu-item')
+        .set('data-operation', operation)
+        .set('data-axis', show_in_axis)
+        .mergeWith(attributes|default)
+    %}
+    <button{{ menu_operation_attributes }}>
+        {{ backend_icon("#{icon}", '', attrs().set('width', 16).set('height', 16)) }} {{ translation_key|trans }}
+    </button>
+{% endmacro %}
