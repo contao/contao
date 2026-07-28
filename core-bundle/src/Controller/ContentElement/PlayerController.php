@@ -60,7 +60,7 @@ class PlayerController extends AbstractContentElementController
         }
 
         // Compile data
-        $figureData = $filesystemItems->first()?->isVideo() ?? false
+        $figureData = ($sourceFiles[0] ?? null)?->isVideo() ?? false
             ? $this->buildVideoFigureData($model, $sourceFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
