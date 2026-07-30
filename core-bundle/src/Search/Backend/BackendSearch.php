@@ -339,6 +339,12 @@ class BackendSearch
 
     private function getProviderForType(string $type): ProviderInterface|null
     {
-        return array_find($this->providers, static fn ($provider) => $provider->supportsType($type));
+        foreach ($this->providers as $provider) {
+            if ($provider->supportsType($type)) {
+                return $provider;
+            }
+        }
+
+        return null;
     }
 }
