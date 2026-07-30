@@ -416,10 +416,6 @@ jobs:
                       cd $bundle
                       php -r '
                           $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
-                          if ("contao/api-bundle" !== $data["name"]) {
-                              $data["repositories"][3]["type"] = "path";
-                              $data["repositories"][3]["url"] = "../api-bundle";
-                          }
                           if ("contao/core-bundle" !== $data["name"]) {
                               $data["repositories"][0]["type"] = "path";
                               $data["repositories"][0]["url"] = "../core-bundle";
@@ -431,6 +427,10 @@ jobs:
                           if ("contao/test-case" !== $data["name"]) {
                               $data["repositories"][2]["type"] = "path";
                               $data["repositories"][2]["url"] = "../test-case";
+                          }
+                          if ("contao/api-bundle" !== $data["name"]) {
+                              $data["repositories"][3]["type"] = "path";
+                              $data["repositories"][3]["url"] = "../api-bundle";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '

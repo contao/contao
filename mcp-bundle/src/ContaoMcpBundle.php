@@ -23,10 +23,10 @@ class ContaoMcpBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-            ->scalarNode('path')
-            ->defaultValue('/_mcp')
-            ->info('The HTTP route at which Contao shall expose the MCP server.')
-            ->end()
+                ->scalarNode('path')
+                    ->defaultValue('/_mcp')
+                    ->info('The HTTP route at which Contao shall expose the MCP server.')
+                ->end()
             ->end()
         ;
     }

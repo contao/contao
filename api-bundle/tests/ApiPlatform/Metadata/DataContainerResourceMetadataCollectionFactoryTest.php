@@ -48,12 +48,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     public function testBuildsMetadataForAllAvailableDataContainers(): void
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
-        $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
+
         $extendedDcTableClass = (new class() extends DC_Table {
             public function __construct()
             {
             }
         })::class;
+
+        $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
         $controllerAdapter
             ->expects($this->exactly(5))
             ->method('loadDataContainer')
@@ -82,6 +84,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                 },
             )
         ;
+
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
         $resourceFinder = $this->createResourceFinder(['tl_article', 'tl_content', 'tl_log', 'tl_page', 'tl_settings']);
 
@@ -100,15 +103,17 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     public function testDelegatesForNonDataContainerResources(): void
     {
         $collection = new ResourceMetadataCollection('App\\Entity\\Foo');
-        $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $framework = $this->createContaoFrameworkStub();
         $resourceFinder = $this->createStub(ResourceFinderInterface::class);
+
+        $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $decorated
             ->expects($this->once())
             ->method('create')
             ->with('App\\Entity\\Foo')
             ->willReturn($collection)
         ;
+
         $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
@@ -131,7 +136,6 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertCount($deletable ? 5 : 4, $operations);
 
         $operations = iterator_to_array($operations);
-
         $this->assertOperation($operations['get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
         $this->assertOperation($operations['get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         $this->assertOperation($operations['post'], Post::class, $expectedShortName, $expectedRoutePrefix);
@@ -160,7 +164,6 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         foreach (['get', 'post', 'patch'] as $operationName) {
             $operation = $mcp[$baseName.'_'.$operationName];
-
             $this->assertInstanceOf(McpTool::class, $operation);
             $this->assertSame($expectedShortName, $operation->getShortName());
             $this->assertSame(DataContainerRecord::class, $operation->getClass());

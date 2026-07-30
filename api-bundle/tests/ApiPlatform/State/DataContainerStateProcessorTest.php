@@ -27,6 +27,7 @@ final class DataContainerStateProcessorTest extends TestCase
     {
         $processor = new DataContainerStateProcessor();
         $record = new DataContainerRecord('tl_content', ['headline' => 'Example']);
+
         $operation = new McpTool(method: 'POST')->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -48,6 +49,7 @@ final class DataContainerStateProcessorTest extends TestCase
     {
         $processor = new DataContainerStateProcessor();
         $input = new DataContainerMcpRecord(['headline' => 'Example'], 17);
+
         $operation = new Post()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -66,6 +68,7 @@ final class DataContainerStateProcessorTest extends TestCase
     {
         $processor = new DataContainerStateProcessor();
         $record = new DataContainerRecord('tl_content', ['headline' => 'Example']);
+
         $operation = new Delete()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',

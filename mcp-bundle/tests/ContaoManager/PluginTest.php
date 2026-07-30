@@ -42,17 +42,9 @@ final class PluginTest extends TestCase
     public function testLoadsTheSkeletonConfigAndMcpRoutes(): void
     {
         $plugin = new Plugin();
-        $resolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
         $routeCollection = new RouteCollection();
 
-        $resolver
-            ->expects($this->once())
-            ->method('resolve')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
-            ->willReturn($loader)
-        ;
-
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->once())
             ->method('load')
@@ -60,10 +52,19 @@ final class PluginTest extends TestCase
             ->willReturn($routeCollection)
         ;
 
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver
+            ->expects($this->once())
+            ->method('resolve')
+            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->willReturn($loader)
+        ;
+
         $this->assertSame($routeCollection, $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class)));
 
-        $loader = $this->createMock(LoaderInterface::class);
         $paths = [];
+
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(2))
             ->method('load')

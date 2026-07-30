@@ -26,6 +26,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testProvidesARecordForItemOperations(): void
     {
         $provider = new DataContainerStateProvider();
+
         $operation = new Get()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -43,6 +44,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testProvidesARecordForMcpToolItemOperations(): void
     {
         $provider = new DataContainerStateProvider();
+
         $operation = new McpTool()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -60,6 +62,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testProvidesAnEmptyCollectionForCollectionOperations(): void
     {
         $provider = new DataContainerStateProvider();
+
         $operation = new GetCollection()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -72,6 +75,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testProvidesMcpInputForWriteOperations(): void
     {
         $provider = new DataContainerStateProvider();
+
         $operation = new McpTool(method: 'POST')->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
@@ -93,6 +97,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testProvidesAnEmptyCollectionForMcpToolCollectionOperations(): void
     {
         $provider = new DataContainerStateProvider();
+
         $operation = new McpToolCollection()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',
