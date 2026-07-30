@@ -48,6 +48,21 @@ class MigrationCollection
         }
     }
 
+    public function runAll(): void
+    {
+        do {
+            $executedMigrations = false;
+
+            try {
+                foreach ($this->run([...$this->getPendingNames()]) as $ignored) {
+                    $executedMigrations = true;
+                }
+            } catch (UnexpectedPendingMigrationException) {
+                // Restarting migration process...
+            }
+        } while ($executedMigrations);
+    }
+
     /**
      * @return iterable<MigrationResult>
      *
