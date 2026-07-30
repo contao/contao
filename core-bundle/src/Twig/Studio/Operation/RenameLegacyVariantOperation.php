@@ -39,6 +39,11 @@ final class RenameLegacyVariantOperation extends AbstractOperation
     {
         [$baseIdentifier, $oldFragment] = explode('_', $context->getIdentifier(), 2);
 
+        if (\in_array($baseIdentifier, ['ce', 'mod', 'form'], true) && str_contains($oldFragment, '_')) {
+            [$baseIdentifierSuffix, $oldFragment] = explode('_', $oldFragment, 2);
+            $baseIdentifier .= "_$baseIdentifierSuffix";
+        }
+
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
             return $this->render('@Contao/backend/template_studio/operation/create_or_rename_variant.stream.html.twig', [
@@ -53,7 +58,7 @@ final class RenameLegacyVariantOperation extends AbstractOperation
         }
 
         // Do not allow creating subdirectories
-        $newIdentifier = str_replace('/', '-',"{$baseIdentifier}_{$identifierFragment}");
+        $newIdentifier = str_replace('/', '-', "{$baseIdentifier}_{$identifierFragment}");
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {

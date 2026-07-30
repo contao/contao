@@ -31,6 +31,10 @@ class CreateLegacyVariantOperation extends AbstractOperation
     {
         [$identifier] = explode('_', $context->getIdentifier(), 2);
 
+        if (\in_array($identifier, ['ce', 'mod', 'form'], true)) {
+            $identifier = $context->getIdentifier();
+        }
+
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
             return $this->render('@Contao/backend/template_studio/operation/create_or_rename_variant.stream.html.twig', [
