@@ -91,9 +91,6 @@ final class RenameLegacyVariantOperation extends AbstractOperation
         );
 
         // Disallow selecting a name of an existing variant
-        return \sprintf(
-            '^(?!(%s)$).*',
-            implode('|', $existingVariantNames),
-        );
+        return \sprintf('^(?!(%s)$).*', implode('|', $existingVariantNames));
     }
 }
