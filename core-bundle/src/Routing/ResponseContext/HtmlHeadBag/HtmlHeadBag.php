@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class HtmlHeadBag
 {
+    private string $name = '';
+
     private string $title = '';
 
     private string $metaDescription = '';
@@ -36,6 +38,18 @@ final class HtmlHeadBag
      * @var list<HtmlAttributes>
      */
     private array $linkTags = [];
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     public function getTitle(): string
     {
