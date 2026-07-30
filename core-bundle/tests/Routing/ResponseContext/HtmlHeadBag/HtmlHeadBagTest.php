@@ -22,6 +22,7 @@ class HtmlHeadBagTest extends TestCase
     public function testHeadManagerBasics(): void
     {
         $manager = new HtmlHeadBag();
+        $manager->setName('foobar');
         $manager->setTitle('foobar title');
         $manager->setMetaDescription('foobar description');
 
@@ -29,6 +30,7 @@ class HtmlHeadBagTest extends TestCase
 
         $manager->setMetaRobots('noindex,nofollow');
 
+        $this->assertSame('foobar', $manager->getName());
         $this->assertSame('foobar title', $manager->getTitle());
         $this->assertSame('foobar description', $manager->getMetaDescription());
         $this->assertSame('noindex,nofollow', $manager->getMetaRobots());
