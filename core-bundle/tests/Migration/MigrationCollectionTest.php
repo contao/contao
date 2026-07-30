@@ -72,6 +72,7 @@ class MigrationCollectionTest extends TestCase
 
             public bool $secondRun = false;
         };
+
         $firstMigration = $this->createMock(MigrationInterface::class);
         $firstMigration
             ->method('shouldRun')

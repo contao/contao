@@ -44,6 +44,7 @@ class DatabaseMigrationChecksTest extends TestCase
     public function testCompilesSchemaWarningsWithoutDropStatements(): void
     {
         $schema = new Schema();
+
         $table = $schema->createTable('tl_foo');
         $table->addOption('engine', 'InnoDB');
 

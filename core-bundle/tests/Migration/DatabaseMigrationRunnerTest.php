@@ -25,6 +25,7 @@ class DatabaseMigrationRunnerTest extends TestCase
     public function testRunsMigrationsBeforeAndAfterUpdatingTheSchema(): void
     {
         $calls = [];
+
         $migrations = $this->createMock(MigrationCollection::class);
         $migrations
             ->expects($this->exactly(2))
@@ -49,7 +50,6 @@ class DatabaseMigrationRunnerTest extends TestCase
         ;
 
         $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
-
         $runner->runAll();
 
         $this->assertSame(['migrations', 'schema', 'migrations'], $calls);
@@ -71,7 +71,6 @@ class DatabaseMigrationRunnerTest extends TestCase
         ;
 
         $runner = new DatabaseMigrationRunner($compiler, $migrations, $this->createStub(BackupManager::class));
-
         $runner->runAll(true);
     }
 
@@ -149,6 +148,7 @@ class DatabaseMigrationRunnerTest extends TestCase
     public function testUsesTheProvidedBackupConfiguration(): void
     {
         $config = new CreateConfig(new Backup('valid_backup__20211101141254.sql'));
+
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
             ->expects($this->once())
