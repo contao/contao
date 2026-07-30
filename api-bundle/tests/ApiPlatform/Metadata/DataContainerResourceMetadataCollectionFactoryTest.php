@@ -16,6 +16,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\McpTool;
+use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -46,12 +48,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     public function testBuildsMetadataForAllAvailableDataContainers(): void
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
-        $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
+
         $extendedDcTableClass = (new class() extends DC_Table {
             public function __construct()
             {
             }
         })::class;
+
+        $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
         $controllerAdapter
             ->expects($this->exactly(5))
             ->method('loadDataContainer')
@@ -80,6 +84,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                 },
             )
         ;
+
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
         $resourceFinder = $this->createResourceFinder(['tl_article', 'tl_content', 'tl_log', 'tl_page', 'tl_settings']);
 
@@ -98,15 +103,17 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     public function testDelegatesForNonDataContainerResources(): void
     {
         $collection = new ResourceMetadataCollection('App\\Entity\\Foo');
-        $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $framework = $this->createContaoFrameworkStub();
         $resourceFinder = $this->createStub(ResourceFinderInterface::class);
+
+        $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $decorated
             ->expects($this->once())
             ->method('create')
             ->with('App\\Entity\\Foo')
             ->willReturn($collection)
         ;
+
         $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
@@ -122,13 +129,13 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
+        $this->assertMcpOperations($resource, $expectedShortName, $expectedTable, $deletable);
 
         $operations = $resource->getOperations();
         $this->assertInstanceOf(Operations::class, $operations);
         $this->assertCount($deletable ? 5 : 4, $operations);
 
         $operations = iterator_to_array($operations);
-
         $this->assertOperation($operations['get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
         $this->assertOperation($operations['get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         $this->assertOperation($operations['post'], Post::class, $expectedShortName, $expectedRoutePrefix);
@@ -138,6 +145,42 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->assertOperation($operations['delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         } else {
             $this->assertArrayNotHasKey('delete', $operations);
+        }
+    }
+
+    private function assertMcpOperations(ApiResource $resource, string $expectedShortName, string $expectedTable, bool $deletable): void
+    {
+        $mcp = $resource->getMcp();
+        $this->assertIsArray($mcp);
+        $this->assertCount($deletable ? 5 : 4, $mcp);
+
+        $baseName = preg_replace('/^tl_/', '', $expectedTable) ?? $expectedTable;
+
+        $this->assertInstanceOf(McpToolCollection::class, $mcp[$baseName.'_get_collection']);
+        $this->assertSame($expectedShortName, $mcp[$baseName.'_get_collection']->getShortName());
+        $this->assertSame(DataContainerRecord::class, $mcp[$baseName.'_get_collection']->getClass());
+        $this->assertSame(DataContainerStateProvider::class, $mcp[$baseName.'_get_collection']->getProvider());
+        $this->assertSame(DataContainerStateProcessor::class, $mcp[$baseName.'_get_collection']->getProcessor());
+
+        foreach (['get', 'post', 'patch'] as $operationName) {
+            $operation = $mcp[$baseName.'_'.$operationName];
+            $this->assertInstanceOf(McpTool::class, $operation);
+            $this->assertSame($expectedShortName, $operation->getShortName());
+            $this->assertSame(DataContainerRecord::class, $operation->getClass());
+            $this->assertSame(DataContainerStateProvider::class, $operation->getProvider());
+            $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
+        }
+
+        if ($deletable) {
+            $delete = $mcp[$baseName.'_delete'];
+            $this->assertInstanceOf(McpTool::class, $delete);
+            $this->assertSame($expectedShortName, $delete->getShortName());
+            $this->assertSame(DataContainerRecord::class, $delete->getClass());
+            $this->assertSame(DataContainerStateProvider::class, $delete->getProvider());
+            $this->assertSame(DataContainerStateProcessor::class, $delete->getProcessor());
+            $this->assertFalse($delete->getStructuredContent());
+        } else {
+            $this->assertArrayNotHasKey($baseName.'_delete', $mcp);
         }
     }
 
