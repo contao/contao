@@ -30,7 +30,7 @@
         "php": "^8.3",
         "cmsig/seal-loupe-adapter": "^0.12.6",
         "contao/core-bundle": "self.version",
-        "loupe/loupe": "^0.13.2"
+        "loupe/loupe": "^0.13.2 || ^1.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1"
