@@ -152,7 +152,7 @@ class InputUnit extends Widget
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
-			self::specialcharsValue($this->varValue['value']),
+			self::specialcharsValue($this->varValue['value'] ?? ''),
 			$this->getAttributes(),
 			$this->strName,
 			$this->getAttribute('disabled'),

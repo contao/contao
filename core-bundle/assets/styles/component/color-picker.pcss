@@ -20,7 +20,7 @@
         .pcr-button,
         .pcr-button::before,
         .pcr-button::after {
-            border-radius: 0;
+            border-radius: calc(var(--border-radius, 1px) - 1px);
         }
     }
 }

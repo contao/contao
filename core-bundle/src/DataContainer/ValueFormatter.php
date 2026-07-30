@@ -305,7 +305,12 @@ class ValueFormatter implements ResetInterface
             $this->framework->getAdapter(Controller::class)->loadDataContainer($ptable);
             $showField = $GLOBALS['TL_DCA'][$ptable]['list']['label']['fields'][0] ?? 'id';
 
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            // showField already has foreignKey format, no table needed
+            if (str_contains($showField, '.')) {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $showField;
+            } else {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            }
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {

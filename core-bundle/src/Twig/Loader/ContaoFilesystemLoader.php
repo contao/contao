@@ -38,7 +38,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 {
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    private string|false|null $currentThemeSlug = null;
+    /**
+     * @var array<string, string>
+     */
+    private array $currentThemeSlugs = [];
 
     /**
      * The list of all identifiers mapped to a chain of template candidates (<absolute
@@ -205,13 +208,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // Check hierarchy
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
-        foreach (array_keys($chain) as $path) {
-            if ($isExpired($path, $time)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all(array_keys($chain), static fn ($path) => !$isExpired($path, $time));
     }
 
     /**
@@ -221,7 +218,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     public function reset(): void
     {
-        $this->currentThemeSlug = null;
+        $this->currentThemeSlugs = [];
         $this->lookupCache = [];
     }
 
@@ -381,7 +378,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     public function getCurrentThemeSlug(): string|null
     {
-        $themeSlug = $this->currentThemeSlug ?? $this->getThemeSlug();
+        $themeSlug = $this->getThemeSlug();
 
         return false === $themeSlug ? null : $themeSlug;
     }
@@ -574,7 +571,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             return null;
         }
 
-        if (false === ($themeSlug = $this->currentThemeSlug ?? $this->getThemeSlug())) {
+        if (false === ($themeSlug = $this->getThemeSlug())) {
             return null;
         }
 
@@ -589,12 +586,18 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function getThemeSlug(): string|false
     {
-        if ((!$pageModel = $this->pageFinder->getCurrentPage()) || null === ($path = $pageModel->templateGroup)) {
-            return $this->currentThemeSlug = false;
+        $path = $this->pageFinder->getCurrentPage()?->templateGroup;
+
+        if (null === $path) {
+            return false;
+        }
+
+        if (isset($this->currentThemeSlugs[$path])) {
+            return $this->currentThemeSlugs[$path];
         }
 
         $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
 
-        return $this->currentThemeSlug = $slug;
+        return $this->currentThemeSlugs[$path] = $slug;
     }
 }

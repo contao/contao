@@ -17,6 +17,8 @@ use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
+use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
 
 return RectorConfig::configure()
     ->withSets([SetList::CONTAO])
@@ -45,6 +47,7 @@ return RectorConfig::configure()
         __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
+        AddOverrideAttributeToOverriddenMethodsRector::class,
         ArrayToFirstClassCallableRector::class => [
             'core-bundle/tests/Contao/InsertTagsTest.php',
             'core-bundle/tests/Twig/Interop/ContaoEscaperNodeVisitorTest.php',
@@ -53,6 +56,7 @@ return RectorConfig::configure()
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
+        DeprecatedAnnotationToDeprecatedAttributeRector::class,
         StringClassNameToClassConstantRector::class => [
             'core-bundle/tests/PhpunitExtension/GlobalStateWatcher.php',
         ],

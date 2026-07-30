@@ -15,7 +15,7 @@
     {% if details.invoke() %}
         {{ details.invoke()|raw }}
     {% else %}
-        <div class="ce_text block">
+        <div class="ce_text content-text block">
             {% if not addBefore %}
                 {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
             {% endif %}
