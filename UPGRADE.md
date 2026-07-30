@@ -38,10 +38,11 @@ Contao 6 no longer supports `.html5` templates. Use Twig templates instead.
 
 ### Twig filter insert_tag_raw
 
-The Twig filter `|insert_tag_raw` was renamed to `|insert_tag_html`. The old name is deprecated. It is a pre-escaped
-filter now which means if you previously used something like `foo|insert_tag_raw|raw` you need to change the order to
-`foo|raw|insert_tag_html`. But as you should not use `|raw` at all, use `foo|sanitize_html('contao')|insert_tag_html`
-instead.
+The Twig filter `|insert_tag_raw` has been renamed to `|insert_tag_html`. The old name is deprecated. The new filter
+expects pre-escaped input, so if you previously used something like `foo|insert_tag_raw|raw`, you need to change the
+order to `foo|raw|insert_tag_html` now.
+
+However, using `|raw` is generally discouraged. Use `foo|sanitize_html('contao')|insert_tag_html` instead.
 
 ### Twig namespace
 
