@@ -1513,7 +1513,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!\array_key_exists($key, self::$arrCurrentRecordCache) || null === self::$arrCurrentRecordCache[$key])
+		if (!isset(self::$arrCurrentRecordCache[$key]))
 		{
 			return null;
 		}
