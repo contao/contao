@@ -1872,9 +1872,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Invalidate cache tags (no need to invalidate the parent)
-			$this->invalidateCacheTags();
-
 			// Delete the records in the reverse order to start from child records and avoid foreign key errors
 			foreach (array_reverse($delete) as $table=>$fields)
 			{
@@ -1884,8 +1881,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						->prepare("DELETE FROM " . $table . " WHERE id=?")
 						->limit(1)
 						->execute($v);
+
+					static::setCurrentRecordCache($v, $table, null);
 				}
 			}
+
+			// Invalidate cache tags (no need to invalidate the parent)
+			$this->invalidateCacheTags();
 
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
@@ -3336,20 +3338,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->id = $intId;
 					$this->activeRecord = (object) $currentRecord;
 
-					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags();
-
-					$this->id = $origId;
-					$this->activeRecord = $origActiveRecord;
-
 					$objStmt = $db
 						->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
 						->execute((int) $intId);
 
 					if ($objStmt->affectedRows > 0)
 					{
+						static::setCurrentRecordCache($intId, $this->strTable, null);
+
+						// Invalidate cache tags (no need to invalidate the parent)
+						$this->invalidateCacheTags();
+
 						$reload = true;
 					}
+
+					$this->id = $origId;
+					$this->activeRecord = $origActiveRecord;
 				}
 			}
 		}
