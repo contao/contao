@@ -51,6 +51,8 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
             - '@event_dispatcher'
+            - '@contao.repository.cache_tag_invalidation'
+            - '@clock'
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
 
@@ -129,6 +131,12 @@ services:
             - !service_closure '@doctrine.orm.entity_manager'
             - '@cache.app'
             - '@?logger'
+
+    contao.cron.invalidate_cache_tags:
+        class: Contao\CoreBundle\Cron\InvalidateCacheTagsCron
+        arguments:
+            - '@contao.repository.cache_tag_invalidation'
+            - '@contao.cache.tag_manager'
 
     contao.cron.purge_expired_altcha_challenges:
         class: Contao\CoreBundle\Cron\PurgeExpiredAltchaChallengesCron
@@ -859,6 +867,11 @@ services:
 
     contao.repository.altcha:
         class: Contao\CoreBundle\Repository\AltchaRepository
+        arguments:
+            - '@doctrine'
+
+    contao.repository.cache_tag_invalidation:
+        class: Contao\CoreBundle\Repository\CacheTagInvalidationRepository
         arguments:
             - '@doctrine'
 
