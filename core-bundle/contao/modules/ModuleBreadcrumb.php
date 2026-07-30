@@ -187,12 +187,14 @@ class ModuleBreadcrumb extends Module
 		else
 		{
 			$pageName = null;
+			$pageTitle = null;
 			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if ($responseContext?->has(HtmlHeadBag::class))
 			{
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 				$pageName = $htmlHeadBag->getName();
+				$pageTitle = $htmlHeadBag->getTitle();
 			}
 
 			$items[] = array
@@ -201,7 +203,7 @@ class ModuleBreadcrumb extends Module
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
 				'href'     => $request?->getBaseUrl() . $request?->getPathInfo(),
-				'title'    => $pages[0]->pageTitle ?: $pages[0]->title,
+				'title'    => $pageTitle ?: $pages[0]->pageTitle ?: $pageName ?: $pages[0]->title,
 				'link'     => $pageName ?: $pages[0]->title,
 				'data'     => $pages[0]->row(),
 			);
