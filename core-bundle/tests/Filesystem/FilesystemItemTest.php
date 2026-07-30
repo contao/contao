@@ -352,7 +352,7 @@ class FilesystemItemTest extends TestCase
                 'encodingFormat' => 'video/mp4',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
-                'uploadDate' => '1970-01-02T10:17:30+00:00',
+                'uploadDate' => date('Y-m-d\TH:i:sP', 123450),
             ],
         ];
 

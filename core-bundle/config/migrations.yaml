@@ -39,3 +39,6 @@ services:
         class: Contao\CoreBundle\Migration\Version600\OutputEncodingMigration
         arguments:
             - '@database_connection'
+        tags:
+            # The priority must be higher than the one of the "column to virtual" migration (see #10042)
+            - { name: contao.migration, priority: 1 }
