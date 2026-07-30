@@ -78,6 +78,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         } else {
             $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;
+
             if ($model instanceof ContentModel) {
                 $model->addImage = false;
                 $model->showPreview = false;
