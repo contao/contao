@@ -82,6 +82,7 @@ class CacheTagManagerTest extends DoctrineTestCase
     {
         $tags = ['foo', 'bar'];
         $invalidateAt = new \DateTimeImmutable('2030-01-01');
+
         $repository = $this->createMock(CacheTagInvalidationRepository::class);
         $repository
             ->expects($this->once())

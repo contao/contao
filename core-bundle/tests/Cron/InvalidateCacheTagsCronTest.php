@@ -24,6 +24,7 @@ class InvalidateCacheTagsCronTest extends TestCase
     public function testInvalidatesTagsAndRemovesDueEntries(): void
     {
         $now = new \DateTimeImmutable('2026-07-15 12:00:00');
+
         $first = $this->createStub(CacheTagInvalidation::class);
         $first
             ->method('getId')
