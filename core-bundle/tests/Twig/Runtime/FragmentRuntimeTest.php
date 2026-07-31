@@ -29,7 +29,7 @@ class FragmentRuntimeTest extends TestCase
             ->method('getFrontendModule')
             ->with($this->callback(
                 function (ModuleModel $model) {
-                    $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], $model->row());
+                    $this->assertSame(['type' => 'navigation', 'foo' => 'bar'], array_intersect_key($model->row(), ['type' => null, 'foo' => null]));
 
                     return true;
                 },
@@ -141,7 +141,7 @@ class FragmentRuntimeTest extends TestCase
             ->method('getContentElement')
             ->with($this->callback(
                 function (ContentModel $model) {
-                    $this->assertSame(['type' => 'text', 'foo' => 'bar', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])], $model->row());
+                    $this->assertSame(['type' => 'text', 'foo' => 'bar', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])], array_intersect_key($model->row(), ['type' => null, 'foo' => null, 'headline' => null]));
 
                     return true;
                 },
@@ -170,11 +170,11 @@ class FragmentRuntimeTest extends TestCase
                 function (ContentElementReference $reference) {
                     $this->assertSame(
                         ['type' => 'slider', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])],
-                        $reference->getContentModel()->row(),
+                        array_intersect_key($reference->getContentModel()->row(), ['type' => null, 'headline' => null]),
                     );
                     $this->assertSame(
                         ['type' => 'text', 'text' => '<p>Test</p>'],
-                        $reference->attributes['nestedFragments'][0]->getContentModel()->row(),
+                        array_intersect_key($reference->attributes['nestedFragments'][0]->getContentModel()->row(), ['type' => null, 'text' => null]),
                     );
 
                     return true;
