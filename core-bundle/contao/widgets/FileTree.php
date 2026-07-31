@@ -183,11 +183,10 @@ class FileTree extends Widget
 		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
 		{
-			$fileImageAttributes = (new HtmlAttributes())->addClass('type-image');
-
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+			$fileImageAttributes = (new HtmlAttributes())->addClass('type-image');
 
 			if ($objFiles !== null)
 			{
