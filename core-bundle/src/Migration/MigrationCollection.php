@@ -23,7 +23,13 @@ class MigrationCollection
 
     public function hasPending(): bool
     {
-        return array_any($this->migrations, static fn ($migration) => $migration->shouldRun());
+        foreach ($this->migrations as $migration) {
+            if ($migration->shouldRun()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
