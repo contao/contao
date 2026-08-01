@@ -163,7 +163,8 @@ class RowWizard extends Widget
 		}
 
 		// Make sure empty values do not generate an empty row (see #10073)
-		if (\count($this->varValue) === 1 && count(array_filter($this->varValue[0], fn($v) => $v !== null)) === 0) {
+		if (\count($this->varValue) === 1 && \count(array_filter($this->varValue[0], static fn ($v) => $v !== null)) === 0)
+		{
 			$valuesEmpty = true;
 		}
 
