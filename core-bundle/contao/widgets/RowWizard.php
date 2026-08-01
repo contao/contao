@@ -162,6 +162,11 @@ class RowWizard extends Widget
 			$valuesEmpty = true;
 		}
 
+		// Make sure empty values do not generate an extra row (see #10073)
+		if (\count($this->varValue) === 1 && count(array_filter($this->varValue[0], fn($v) => $v !== null)) === 0) {
+			$valuesEmpty = true;
+		}
+
 		// Populate the rows if the initial count has not been reached
 		if (null !== $this->min)
 		{
