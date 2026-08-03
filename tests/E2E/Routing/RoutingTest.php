@@ -10,47 +10,27 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Functional;
+namespace Contao\E2eTests\Routing;
 
-use Contao\System;
-use Contao\TestCase\FunctionalTestCase;
+use Contao\E2eTestBundle\Http\Origin;
+use Contao\E2eTestBundle\ManagedEdition\ManagedEditionConfig;
+use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
+use Contao\InstallationRecipe\Fixture\FixtureResult;
+use Contao\InstallationRecipe\Fixture\FixtureSet;
+use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\BrowserKit\HttpBrowser;
 
-class RoutingTest extends FunctionalTestCase
+class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 {
-    private static array|null $lastImport = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $_GET = [];
-        unset($GLOBALS['objPage']);
-
-        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
-    }
-
     #[DataProvider('getAliases')]
-    public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
+    public function testResolvesAliases(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
         $this->loadFixtureFiles($fixtures);
+        $browser = $this->request($request, $host);
 
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getAliases(): iterable
@@ -246,32 +226,14 @@ class RoutingTest extends FunctionalTestCase
     }
 
     #[DataProvider('getAliasesWithLocale')]
-    public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
+    public function testResolvesAliasesWithLocale(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
         $this->loadFixtureFiles($fixtures);
+        self::managedEdition()->database()->connection()->executeStatement('UPDATE tl_page SET urlPrefix = language');
+        $browser = $this->request($request, $host);
 
-        self::getContainer()
-            ->get('doctrine')
-            ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix = language')
-        ;
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getAliasesWithLocale(): iterable
@@ -476,32 +438,14 @@ class RoutingTest extends FunctionalTestCase
     }
 
     #[DataProvider('getAliasesWithoutUrlSuffix')]
-    public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
+    public function testResolvesAliasesWithoutUrlSuffix(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
         $this->loadFixtureFiles($fixtures);
+        self::managedEdition()->database()->connection()->executeStatement("UPDATE tl_page SET urlSuffix = ''");
+        $browser = $this->request($request, $host);
 
-        self::getContainer()
-            ->get('doctrine')
-            ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlSuffix = ''")
-        ;
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getAliasesWithoutUrlSuffix(): iterable
@@ -634,24 +578,13 @@ class RoutingTest extends FunctionalTestCase
     }
 
     #[DataProvider('getRootAliases')]
-    public function testResolvesTheRootPage(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    public function testResolvesTheRootPage(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
         $this->loadFixtureFiles($fixtures);
+        $browser = $this->request($request, $host, $acceptLanguages);
 
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getRootAliases(): iterable
@@ -721,31 +654,14 @@ class RoutingTest extends FunctionalTestCase
     }
 
     #[DataProvider('getRootAliasesWithLocale')]
-    public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    public function testResolvesTheRootPageWithLocale(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
         $this->loadFixtureFiles($fixtures);
+        self::managedEdition()->database()->connection()->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''");
+        $browser = $this->request($request, $host, $acceptLanguages);
 
-        self::getContainer()
-            ->get('doctrine')
-            ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''")
-        ;
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getRootAliasesWithLocale(): iterable
@@ -906,59 +822,35 @@ class RoutingTest extends FunctionalTestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        $request = 'https://root-zh.local/main/sub-zh.html';
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'root-zh.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
         $this->loadFixtureFiles(['theme', 'language-sorting']);
+        $browser = $this->request('/main/sub-zh.html', 'root-zh.local');
 
-        $crawler = $client->request('GET', $request);
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringContainsString('', $title);
+        $this->assertResponse($browser, 200, '');
     }
 
     /**
      * @see https://github.com/contao/contao/issues/6328
      */
     #[DataProvider('disabledLanguageRedirectsProvider')]
-    public function testCorrectHandlesDisabledLanguageRedirects(bool $disableLanguageRedirects, bool $indexAlias, string $requestLocale, string $expectedLocation): void
+    public function testCorrectHandlesDisabledLanguageRedirects(mixed ...$case): void
     {
+        [$disableLanguageRedirects, $indexAlias, $requestLocale, $expectedLocation] = $case;
         $request = 'https://example.local/';
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'example.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $requestLocale;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
         $this->loadFixtureFiles(['disable-language-redirect']);
-
         $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
         $alias = $indexAlias ? 'index' : 'home';
-
-        $connection = self::getContainer()->get('doctrine')->getConnection();
+        $connection = self::managedEdition()->database()->connection();
         $connection->executeStatement("UPDATE tl_page SET disableLanguageRedirect = $disableLanguageRedirect WHERE id = 3");
         $connection->executeStatement("UPDATE tl_page SET alias = '$alias' WHERE type = 'regular'");
 
-        $client->request('GET', $request);
-        $response = $client->getResponse();
+        $browser = $this->request('/', 'example.local', $requestLocale);
+        $response = $browser->getInternalResponse();
 
         if ($expectedLocation === $request) {
             $this->assertSame(200, $response->getStatusCode());
         } else {
             $this->assertSame(302, $response->getStatusCode());
-            $this->assertSame($expectedLocation, $response->headers->get('Location'));
+            $this->assertSame($expectedLocation, $response->getHeader('Location'));
         }
     }
 
@@ -1063,45 +955,20 @@ class RoutingTest extends FunctionalTestCase
 
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
-        $request = 'https://protected-root.local/';
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'protected-root.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
         $this->loadFixtureFiles(['theme', 'protected-root']);
+        $browser = $this->request('/', 'protected-root.local');
 
-        $crawler = $client->request('GET', $request);
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame(401, $response->getStatusCode());
-        $this->assertStringContainsString('Error 401 Page', $title);
+        $this->assertResponse($browser, 401, 'Error 401 Page');
     }
 
     #[DataProvider('getUrlPrefixMixProvider')]
-    public function testUrlPrefixMix(string $request, string $acceptLanguage, int $statusCode, string $pageTitle): void
+    public function testUrlPrefixMix(mixed ...$case): void
     {
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'example.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
+        [$request, $acceptLanguage, $statusCode, $pageTitle] = $case;
         $this->loadFixtureFiles(['theme', 'url-prefix-mix']);
+        $browser = $this->request($request, 'example.local', $acceptLanguage);
 
-        $crawler = $client->request('GET', "https://example.local$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertStringContainsString($pageTitle, $title);
+        $this->assertResponse($browser, $statusCode, $pageTitle);
     }
 
     public static function getUrlPrefixMixProvider(): iterable
@@ -1151,37 +1018,55 @@ class RoutingTest extends FunctionalTestCase
 
     public function testMultidomainWithLanguages(): void
     {
-        $request = '/de/bar/bar';
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'example.ch';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en_US,en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
         $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+        $browser = $this->request('/de/bar/bar', 'example.ch', 'en_US,en');
 
-        $crawler = $client->request('GET', "https://example.ch$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringContainsString('Bar -', $title);
+        $this->assertResponse($browser, 200, 'Bar -');
     }
 
+    protected static function createManagedEditionConfig(): ManagedEditionConfig
+    {
+        // The routing fixtures contain news modules and records in tl_news and
+        // tl_news_archive.
+        $composer = self::createMonorepoComposerConfig('core-bundle', 'news-bundle');
+
+        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+    }
+
+    protected function shouldResetContaoManagedEdition(): bool
+    {
+        // Every routing case selects and loads its own fixture set.
+        return false;
+    }
+
+    /**
+     * @param list<string> $fileNames
+     */
     private function loadFixtureFiles(array $fileNames): void
     {
-        // Do not reload the fixtures if they have not changed
-        if (self::$lastImport && self::$lastImport === $fileNames) {
-            return;
-        }
-
-        self::$lastImport = $fileNames;
-
-        static::loadFixtures(array_map(
-            static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yaml',
+        self::managedEdition()->resetDatabase(new FixtureSet(array_map(
+            static fn ($file) => \dirname(__DIR__, 3).'/core-bundle/tests/Fixtures/Functional/Routing/'.$file.'.yaml',
             $fileNames,
-        ));
+        )));
+    }
+
+    private function request(string $path, string $host, string $acceptLanguage = 'en'): HttpBrowser
+    {
+        $browser = self::managedEdition()->createHttpBrowser(Origin::https($host));
+        $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
+        $browser->setServerParameter('HTTP_ACCEPT_LANGUAGE', $acceptLanguage);
+        $browser->request('GET', $path);
+
+        return $browser;
+    }
+
+    private function assertResponse(HttpBrowser $browser, int $statusCode, string $expectedTitle): void
+    {
+        $response = $browser->getInternalResponse();
+        $crawler = $browser->getCrawler();
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        $this->assertStringContainsString($expectedTitle, $title);
     }
 }
