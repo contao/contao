@@ -335,6 +335,12 @@ services:
             - []
             - '@contao.doctrine.backup.retention_policy'
 
+    contao.doctrine.dbal.hierarchy:
+        class: Contao\CoreBundle\Doctrine\DBAL\Hierarchy
+        public: true
+        arguments:
+            - '@database_connection'
+
     contao.doctrine.dca_schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
         arguments:
@@ -1640,6 +1646,7 @@ services:
     Contao\CoreBundle\DataContainer\RecordLabeler: '@contao.data_container.record_labeler'
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
