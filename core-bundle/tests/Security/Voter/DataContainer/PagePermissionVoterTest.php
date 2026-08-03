@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -22,11 +22,9 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Database;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -36,7 +34,7 @@ class PagePermissionVoterTest extends TestCase
     public function testSupport(): void
     {
         $voter = new PagePermissionVoter(
-            $this->createContaoFrameworkStub(),
+            $this->createStub(Hierarchy::class),
             $this->createStub(AccessDecisionManagerInterface::class),
             $this->createStub(Connection::class),
         );
@@ -69,7 +67,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn('regular')
         ;
 
-        $voter = new PagePermissionVoter($this->createContaoFrameworkStub(), $decisionManager, $connection);
+        $voter = new PagePermissionVoter($this->createStub(Hierarchy::class), $decisionManager, $connection);
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -89,7 +87,7 @@ class PagePermissionVoterTest extends TestCase
             },
         );
 
-        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts, $pagemountTrail);
+        $hierarchy = $this->mockHierarchy($pagemounts, $pagemountTrail);
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
@@ -104,7 +102,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn('regular')
         ;
 
-        $voter = new PagePermissionVoter($framework, $decisionManager, $connection);
+        $voter = new PagePermissionVoter($hierarchy, $decisionManager, $connection);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.$subject->getDataSource()]);
 
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
@@ -951,37 +949,37 @@ class PagePermissionVoterTest extends TestCase
         return $token;
     }
 
-    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null, array|null $pagemountTrail = null): ContaoFramework&Stub
+    private function mockHierarchy(array|null $pagemounts = null, array|null $pagemountTrail = null): Hierarchy&MockObject
     {
-        $database = $this->createMock(Database::class);
+        $hierarchy = $this->createMock(Hierarchy::class);
 
         if (null === $pagemounts || null !== $pagemountTrail) {
-            $database
+            $hierarchy
                 ->expects($this->never())
-                ->method('getChildRecords')
+                ->method('getChildIds')
             ;
         } else {
-            $database
+            $hierarchy
                 ->expects($this->once())
-                ->method('getChildRecords')
-                ->with($pagemounts, 'tl_page', false, $pagemounts)
-                ->willReturn($pagemounts)
+                ->method('getChildIds')
+                ->with($pagemounts, 'tl_page')
+                ->willReturn([])
             ;
         }
 
         if (null === $pagemountTrail) {
-            $database
+            $hierarchy
                 ->expects($this->never())
-                ->method('getParentRecords')
+                ->method('getParentIds')
             ;
         } else {
-            $database
+            $hierarchy
                 ->expects($this->exactly(\count($pagemountTrail)))
-                ->method('getParentRecords')
+                ->method('getParentIds')
                 ->willReturnMap($pagemountTrail)
             ;
         }
 
-        return $this->createContaoFrameworkStub([], [Database::class => $database]);
+        return $hierarchy;
     }
 }

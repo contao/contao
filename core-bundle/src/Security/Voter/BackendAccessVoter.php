@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Service\ResetInterface;
@@ -35,8 +35,10 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
 
     private array $pagemountsCache = [];
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Hierarchy $hierarchy,
+    ) {
     }
 
     public function reset(): void
@@ -84,8 +86,7 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
         // Additionally check the child pages of the mounted pages
         if ('pagemounts' === $field) {
             if (!isset($this->pagemountsCache[$user->id]) || (!empty($this->pagemountsCache[$user->id]) && !array_intersect($subject, $this->pagemountsCache[$user->id]))) {
-                $database = $this->framework->createInstance(Database::class);
-                $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page');
+                $this->pagemountsCache[$user->id] = $this->hierarchy->getChildIds($user->pagemounts, 'tl_page');
             }
 
             return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);

@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener;
 
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\Database;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
@@ -32,15 +32,16 @@ class SitemapListener
         private readonly ContaoFramework $framework,
         private readonly Security $security,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly Hierarchy $hierarchy,
     ) {
     }
 
     public function __invoke(SitemapEvent $event): void
     {
-        $arrRoot = $this->framework->createInstance(Database::class)->getChildRecords($event->getRootPageIds(), 'tl_page');
+        $arrRoot = $this->hierarchy->getChildIds($event->getRootPageIds(), 'tl_page');
 
         // Early return here in the unlikely case that there are no pages
-        if (empty($arrRoot)) {
+        if ([] === $arrRoot) {
             return;
         }
 

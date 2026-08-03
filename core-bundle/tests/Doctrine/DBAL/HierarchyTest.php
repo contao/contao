@@ -70,6 +70,7 @@ class HierarchyTest extends TestCase
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())
         ;
+
         $connection
             ->method('quoteIdentifier')
             ->with('tl_page')
@@ -84,6 +85,7 @@ class HierarchyTest extends TestCase
             ->method('introspectTable')
             ->willReturn($table)
         ;
+
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

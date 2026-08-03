@@ -124,7 +124,7 @@ class ModuleSearch extends Module
 				foreach ($this->pages as $intPageId)
 				{
 					$arrPages[] = array($intPageId);
-					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
+					$arrPages[] = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($intPageId, 'tl_page');
 				}
 
 				if (!empty($arrPages))
@@ -138,7 +138,7 @@ class ModuleSearch extends Module
 			else
 			{
 				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
-				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)

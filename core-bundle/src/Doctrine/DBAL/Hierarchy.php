@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 
-final class Hierarchy
+class Hierarchy
 {
     /**
      * @var array<string, bool>

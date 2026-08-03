@@ -96,6 +96,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+            - '@contao.doctrine.dbal.hierarchy'
 
     contao_news.listener.title_tag:
         class: Contao\NewsBundle\EventListener\TitleTagListener

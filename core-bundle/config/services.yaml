@@ -238,7 +238,7 @@ services:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
         public: true
         arguments:
-            - '@contao.framework'
+            - '@contao.doctrine.dbal.hierarchy'
             - '@request_stack'
 
     contao.data_container.dca_request_switcher:
@@ -1146,6 +1146,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
         arguments:
             - '@contao.framework'
+            - '@contao.doctrine.dbal.hierarchy'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -1230,7 +1231,7 @@ services:
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
-            - '@contao.framework'
+            - '@contao.doctrine.dbal.hierarchy'
             - '@security.access.decision_manager'
             - '@database_connection'
 

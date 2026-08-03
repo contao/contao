@@ -102,7 +102,7 @@ class PageTree extends Widget
 			$arrIds = array_map('\intval', array_filter(explode(',', $varInput)));
 		}
 
-		if (\count(array_diff($arrIds, array_merge($this->rootNodes, Database::getInstance()->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		if (\count(array_diff($arrIds, array_merge($this->rootNodes, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->rootNodes, 'tl_page')))) > 0)
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
