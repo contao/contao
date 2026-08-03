@@ -30,7 +30,7 @@
                .set('data-contao--toggle-nodes-level-param', level)
             %}
             <a{{ toggler_attributes }}>
-                {{ backend_icon('chevron-right.svg', (is_expanded ? 'MSC.collapseNode' : 'MSC.expandNode')|trans) }}
+                {{ backend_icon('chevron-right.svg', (is_expanded ? 'MSC.collapseNode' : 'MSC.expandNode')|trans, attrs().set('width', 16).set('height', 16)) }}
             </a>
         {% endif %}
 

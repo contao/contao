@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlAttributes;
+use Nette\Utils\Html;
+
 /**
  * Provide methods to handle check boxes.
  *
@@ -179,7 +182,7 @@ class CheckBox extends Widget
 				$display = 'block';
 			}
 
-			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '" data-controller="contao--check-all"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
+			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg', attributes: (new HtmlAttributes())->set('width', 16)->set('height', 16)) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '" data-controller="contao--check-all"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
 
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
