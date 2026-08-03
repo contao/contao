@@ -9,7 +9,12 @@ composer:
         zendframework/zend-code: <3.3.1
     require-dev:
         bamarni/composer-bin-plugin: ^1.4
+        contao/e2e-test-bundle: dev-main
+        contao/installation-recipe: dev-main
         shipmonk/composer-dependency-analyser: ^1.4
+    autoload-dev:
+        psr-4:
+            'Contao\E2eTests\': tests/E2E/
 
 repositories:
     core-bundle:
