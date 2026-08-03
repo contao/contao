@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\String\HtmlAttributes;
-use Nette\Utils\Html;
 
 /**
  * Provide methods to handle check boxes.
