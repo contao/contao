@@ -48,7 +48,7 @@ class HierarchyTest extends FunctionalTestCase
         sort($ids);
 
         $this->assertSame([3, 4, 5, 7], $ids);
-        $query = new ChildQuery()->withOrderBySorting();
+        $query = new ChildQuery()->withOrderBy('sorting');
 
         $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, 'tl_page', $query));
         $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, 'tl_page', $query->withWhere('id != 3')));

@@ -1355,7 +1355,13 @@ abstract class Controller extends System
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
 		$arrPages = array_filter(array_map('intval', $arrPages));
-		$query = new ChildQuery()->withOrderBySorting($blnSorting);
+		$query = new ChildQuery();
+
+		if ($blnSorting)
+		{
+			$query = $query->withOrderBy('sorting');
+		}
+
 		$arrPages = array_values(array_diff($arrPages, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($arrPages, $strTable, $query)));
 
 		return $arrPages;

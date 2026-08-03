@@ -33,12 +33,12 @@ class HierarchyTest extends TestCase
             ->method('fetchAllAssociative')
             ->willReturnOnConsecutiveCalls(
                 [
-                    ['id' => 4, 'pid' => 1, 'sorting' => 0],
-                    ['id' => 3, 'pid' => 1, 'sorting' => 0],
+                    ['id' => 4, 'pid' => 1, 'order_value' => 0],
+                    ['id' => 3, 'pid' => 1, 'order_value' => 0],
                 ],
                 [
-                    ['id' => 7, 'pid' => 4, 'sorting' => 0],
-                    ['id' => 5, 'pid' => 3, 'sorting' => 0],
+                    ['id' => 7, 'pid' => 4, 'order_value' => 0],
+                    ['id' => 5, 'pid' => 3, 'order_value' => 0],
                 ],
                 [],
             )
@@ -54,21 +54,21 @@ class HierarchyTest extends TestCase
         $connection
             ->expects($this->exactly(3))
             ->method('fetchAllAssociative')
-            ->with($this->callback(static fn (string $sql): bool => str_contains($sql, "ptable = 'tl_page'") && str_contains($sql, 'published = 1')))
+            ->with($this->callback(static fn (string $sql): bool => str_contains($sql, "ptable = 'tl_page'") && str_contains($sql, 'published = 1') && str_contains($sql, '`position` AS order_value')))
             ->willReturnOnConsecutiveCalls(
                 [
-                    ['id' => 3, 'pid' => 1, 'sorting' => 20],
-                    ['id' => 4, 'pid' => 1, 'sorting' => 10],
+                    ['id' => 3, 'pid' => 1, 'order_value' => 20],
+                    ['id' => 4, 'pid' => 1, 'order_value' => 10],
                 ],
                 [
-                    ['id' => 5, 'pid' => 3, 'sorting' => 10],
-                    ['id' => 7, 'pid' => 4, 'sorting' => 10],
+                    ['id' => 5, 'pid' => 3, 'order_value' => 10],
+                    ['id' => 7, 'pid' => 4, 'order_value' => 10],
                 ],
                 [],
             )
         ;
 
-        $query = new ChildQuery()->withOrderBySorting()->withWhere('published = 1');
+        $query = new ChildQuery()->withOrderBy('position')->withWhere('published = 1');
 
         $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, 'tl_page', $query));
     }
@@ -96,8 +96,7 @@ class HierarchyTest extends TestCase
 
         $connection
             ->method('quoteIdentifier')
-            ->with('tl_page')
-            ->willReturn('`tl_page`')
+            ->willReturnCallback(static fn (string $identifier): string => "`$identifier`")
         ;
 
         $table = new Table('tl_page');

@@ -15,15 +15,15 @@ namespace Contao\CoreBundle\Doctrine\DBAL;
 final class ChildQuery
 {
     public function __construct(
-        private bool $orderBySorting = false,
+        private string|null $orderBy = null,
         private string $where = '',
     ) {
     }
 
-    public function withOrderBySorting(bool $orderBySorting = true): self
+    public function withOrderBy(string $column): self
     {
         $clone = clone $this;
-        $clone->orderBySorting = $orderBySorting;
+        $clone->orderBy = $column;
 
         return $clone;
     }
@@ -39,9 +39,9 @@ final class ChildQuery
         return $clone;
     }
 
-    public function orderBySorting(): bool
+    public function orderBy(): string|null
     {
-        return $this->orderBySorting;
+        return $this->orderBy;
     }
 
     public function where(): string

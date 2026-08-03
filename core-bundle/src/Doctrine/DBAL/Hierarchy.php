@@ -46,7 +46,7 @@ class Hierarchy
             ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $table, $query)
             : $this->fetchChildrenIteratively($parentIds, $table, $query);
 
-        if (!$query->orderBySorting()) {
+        if (null === $query->orderBy()) {
             return array_map(static fn (array $row): int => (int) $row['id'], $rows);
         }
 
@@ -79,22 +79,21 @@ class Hierarchy
     private function fetchChildrenUsingCommonTableExpression(array $parentIds, string $table, ChildQuery $query): array
     {
         $quotedTable = $this->connection->quoteIdentifier($table);
-        $rootSorting = $query->orderBySorting() ? 'sorting' : '0 AS sorting';
-        $childSorting = $query->orderBySorting() ? 'sorting' : '0 AS sorting';
+        $orderBy = $this->getOrderBySelect($query);
         $rootCondition = $this->getParentTableCondition($table);
         $childCondition = $this->getParentTableCondition($table);
         $where = $this->getWhereCondition($query);
 
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (id, pid, sorting) AS (
-                SELECT id, pid, $rootSorting FROM $quotedTable WHERE pid IN (?)$rootCondition$where
+            WITH RECURSIVE contao_tree (id, pid, order_value) AS (
+                SELECT id, pid, $orderBy FROM $quotedTable WHERE pid IN (?)$rootCondition$where
                 UNION DISTINCT
-                SELECT child.id, child.pid, child.sorting FROM (
-                    SELECT id, pid, $childSorting FROM $quotedTable WHERE 1 = 1$childCondition$where
+                SELECT child.id, child.pid, child.order_value FROM (
+                    SELECT id, pid, $orderBy FROM $quotedTable WHERE 1 = 1$childCondition$where
                 ) child
                     INNER JOIN contao_tree parent ON child.pid = parent.id
             )
-            SELECT id, pid, sorting FROM contao_tree
+            SELECT id, pid, order_value FROM contao_tree
             SQL;
 
         return $this->connection->fetchAllAssociative($sql, [$parentIds], [ArrayParameterType::INTEGER]);
@@ -108,7 +107,7 @@ class Hierarchy
     private function fetchChildrenIteratively(array $parentIds, string $table, ChildQuery $query): array
     {
         $quotedTable = $this->connection->quoteIdentifier($table);
-        $sorting = $query->orderBySorting() ? 'sorting' : '0 AS sorting';
+        $orderBy = $this->getOrderBySelect($query);
         $parentTableCondition = $this->getParentTableCondition($table);
         $where = $this->getWhereCondition($query);
         $rows = [];
@@ -116,7 +115,7 @@ class Hierarchy
 
         while ([] !== $pendingIds) {
             $result = $this->connection->fetchAllAssociative(
-                "SELECT id, pid, $sorting FROM $quotedTable WHERE pid IN (?)$parentTableCondition$where",
+                "SELECT id, pid, $orderBy FROM $quotedTable WHERE pid IN (?)$parentTableCondition$where",
                 [$pendingIds],
                 [ArrayParameterType::INTEGER],
             );
@@ -202,11 +201,11 @@ class Hierarchy
         $children = [];
 
         foreach ($rows as $row) {
-            $children[(int) $row['pid']][] = ['id' => (int) $row['id'], 'sorting' => (int) $row['sorting']];
+            $children[(int) $row['pid']][] = ['id' => (int) $row['id'], 'order' => (int) $row['order_value']];
         }
 
         foreach ($children as &$siblings) {
-            usort($siblings, static fn (array $a, array $b): int => [$a['sorting'], $a['id']] <=> [$b['sorting'], $b['id']]);
+            usort($siblings, static fn (array $a, array $b): int => [$a['order'], $a['id']] <=> [$b['order'], $b['id']]);
         }
         unset($siblings);
 
@@ -214,8 +213,8 @@ class Hierarchy
     }
 
     /**
-     * @param array<int, list<array{id: int, sorting: int}>> $children
-     * @param list<int>                                      $parentIds
+     * @param array<int, list<array{id: int, order: int}>> $children
+     * @param list<int>                                    $parentIds
      *
      * @return list<int>
      */
@@ -280,6 +279,13 @@ class Hierarchy
     private function getWhereCondition(ChildQuery $query): string
     {
         return $query->where() ? ' AND ('.$query->where().')' : '';
+    }
+
+    private function getOrderBySelect(ChildQuery $query): string
+    {
+        $orderBy = $query->orderBy();
+
+        return null === $orderBy ? '0 AS order_value' : $this->connection->quoteIdentifier($orderBy).' AS order_value';
     }
 
     private function supportsRecursiveCommonTableExpressions(): bool

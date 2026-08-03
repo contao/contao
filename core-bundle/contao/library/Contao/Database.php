@@ -469,9 +469,13 @@ class Database
 		if (empty($arrReturn))
 		{
 			$query = new ChildQuery()
-				->withOrderBySorting($blnSorting)
 				->withWhere($strWhere)
 			;
+
+			if ($blnSorting)
+			{
+				$query = $query->withOrderBy('sorting');
+			}
 
 			return System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($arrParentIds, $strTable, $query);
 		}
