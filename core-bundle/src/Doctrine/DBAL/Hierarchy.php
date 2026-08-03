@@ -46,7 +46,11 @@ class Hierarchy
             ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $table, $query)
             : $this->fetchChildrenIteratively($parentIds, $table, $query);
 
-        return $this->sortChildren($rows, $parentIds, $query->orderBySorting());
+        if (!$query->orderBySorting()) {
+            return array_map(static fn (array $row): int => (int) $row['id'], $rows);
+        }
+
+        return $this->sortChildren($rows, $parentIds);
     }
 
     /**
@@ -193,7 +197,7 @@ class Hierarchy
      *
      * @return list<int>
      */
-    private function sortChildren(array $rows, array $parentIds, bool $orderBySorting): array
+    private function sortChildren(array $rows, array $parentIds): array
     {
         $children = [];
 
@@ -201,38 +205,12 @@ class Hierarchy
             $children[(int) $row['pid']][] = ['id' => (int) $row['id'], 'sorting' => (int) $row['sorting']];
         }
 
-        if ($orderBySorting) {
-            foreach ($children as &$siblings) {
-                usort($siblings, static fn (array $a, array $b): int => [$a['sorting'], $a['id']] <=> [$b['sorting'], $b['id']]);
-            }
-            unset($siblings);
-
-            return $this->sortChildrenDepthFirst($children, $parentIds);
+        foreach ($children as &$siblings) {
+            usort($siblings, static fn (array $a, array $b): int => [$a['sorting'], $a['id']] <=> [$b['sorting'], $b['id']]);
         }
+        unset($siblings);
 
-        $ids = [];
-        $seen = [];
-        $pendingIds = $parentIds;
-
-        while ([] !== $pendingIds) {
-            $nextIds = [];
-
-            foreach ($pendingIds as $parentId) {
-                foreach ($children[$parentId] ?? [] as $child) {
-                    if (isset($seen[$child['id']])) {
-                        continue;
-                    }
-
-                    $seen[$child['id']] = true;
-                    $ids[] = $child['id'];
-                    $nextIds[] = $child['id'];
-                }
-            }
-
-            $pendingIds = $nextIds;
-        }
-
-        return $ids;
+        return $this->sortChildrenDepthFirst($children, $parentIds);
     }
 
     /**

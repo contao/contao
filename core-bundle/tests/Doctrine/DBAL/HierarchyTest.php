@@ -24,6 +24,29 @@ use PHPUnit\Framework\TestCase;
 
 class HierarchyTest extends TestCase
 {
+    public function testGetsUnsortedChildIdsInResultOrder(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->exactly(3))
+            ->method('fetchAllAssociative')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    ['id' => 4, 'pid' => 1, 'sorting' => 0],
+                    ['id' => 3, 'pid' => 1, 'sorting' => 0],
+                ],
+                [
+                    ['id' => 7, 'pid' => 4, 'sorting' => 0],
+                    ['id' => 5, 'pid' => 3, 'sorting' => 0],
+                ],
+                [],
+            )
+        ;
+
+        $this->assertSame([4, 3, 7, 5], new Hierarchy($connection)->getChildIds(1, 'tl_page'));
+    }
+
     public function testGetsChildIdsIteratively(): void
     {
         $connection = $this->createMock(Connection::class);
