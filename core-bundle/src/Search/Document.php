@@ -348,6 +348,10 @@ class Document
 
         if (\is_array($data['@context'])) {
             foreach ($data['@context'] as $prefix => $context) {
+                if (!\is_string($prefix) || !\is_string($context)) {
+                    continue;
+                }
+
                 if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
                     $data['@type'] = $context.substr($data['@type'], \strlen((string) $prefix) + 1);
                 }

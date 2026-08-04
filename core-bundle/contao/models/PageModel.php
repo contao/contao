@@ -944,6 +944,7 @@ class PageModel extends Model
 		$ptitle = '';
 		$trail = array($this->id, $pid);
 		$time = time();
+		$cacheInherited = false;
 
 		// Inherit the settings
 		if ($this->type == 'root')
@@ -987,11 +988,13 @@ class PageModel extends Model
 					}
 
 					// Cache
-					if ($objParentPage->includeCache && !$this->includeCache)
+					if ($objParentPage->includeCache && !$this->includeCache && !$cacheInherited)
 					{
 						$this->cache = $objParentPage->cache;
 						$this->alwaysLoadFromCache = $objParentPage->alwaysLoadFromCache;
 						$this->clientCache = $objParentPage->clientCache;
+
+						$cacheInherited = true;
 					}
 
 					// Layout
