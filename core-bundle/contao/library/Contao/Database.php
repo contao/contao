@@ -460,11 +460,11 @@ class Database
 	 *
 	 * @return array An array of child record IDs
 	 *
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7. Use Hierarchy::getChildIds() instead.
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use Hierarchy::getChildIds() instead.
 	 */
 	public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
-		trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getChildIds()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getChildIds()" instead.', __METHOD__);
 
 		if (empty($arrReturn))
 		{
@@ -535,11 +535,11 @@ class Database
 	 *
 	 * @return array An array of parent record IDs
 	 *
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7. Use Hierarchy::getParentIds() instead.
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use Hierarchy::getParentIds() instead.
 	 */
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
-		trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getParentIds()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getParentIds()" instead.', __METHOD__);
 
 		return System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getParentIds($intId, $strTable, $skipId);
 	}
