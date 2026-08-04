@@ -9,9 +9,6 @@
  */
 
 namespace Contao;
-
-use Contao\CoreBundle\String\HtmlAttributes;
-
 /**
  * Provide methods to handle check boxes.
  *
