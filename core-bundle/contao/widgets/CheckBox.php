@@ -9,6 +9,7 @@
  */
 
 namespace Contao;
+
 /**
  * Provide methods to handle check boxes.
  *
