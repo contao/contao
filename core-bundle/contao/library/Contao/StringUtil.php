@@ -267,7 +267,6 @@ class StringUtil
 	 *
 	 * @return ($strBuffer is string ? string : array) The string with the original entities
 	 */
-
 	public static function restoreBasicEntities($strBuffer)
 	{
 		$replace = static function (&$value) {
