@@ -52,3 +52,17 @@
 .tl_undo_preview .cte_preview h6 {
     font-size: 0.775rem;
 }
+
+/* Make large tables in the undo preview scrollable (see #10077) */
+.tl_file_list:has(.tl_undo_preview) {
+    overflow: hidden;
+    max-width: 0;
+
+    .tl_undo_preview {
+        overflow-x: auto;
+    }
+
+    + td {
+        width: 1%;
+    }
+}
