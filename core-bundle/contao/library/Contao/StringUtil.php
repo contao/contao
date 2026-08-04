@@ -235,11 +235,9 @@ class StringUtil
 	/**
 	 * Convert basic entities
 	 *
-	 * @template T of string|array
+	 * @param string|array $strBuffer The string with the entities to be replaced
 	 *
-	 * @param T $strBuffer The string with the entities to be replaced
-	 *
-	 * @return T The string with the tags in square brackets
+	 * @return ($strBuffer is string ? string | array) The string with the tags in square brackets
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
@@ -265,12 +263,11 @@ class StringUtil
 	/**
 	 * Restore basic entities
 	 *
-	 * @template T of string|array
+	 * @param string|array $strBuffer The string with the tags to be replaced
 	 *
-	 * @param T $strBuffer The string with the tags to be replaced
-	 *
-	 * @return T The string with the original entities
+	 * @return ($strBuffer is string ? string : array) The string with the original entities
 	 */
+
 	public static function restoreBasicEntities($strBuffer)
 	{
 		$replace = static function (&$value) {
