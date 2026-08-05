@@ -63,15 +63,33 @@ class FormAltcha extends Widget
 
 		$this->altchaAttributes = new HtmlAttributes();
 		$this->altchaAttributes->set('name', $this->name);
-		$this->altchaAttributes->set('maxnumber', $this->getContainer()->get('contao.altcha')->getRangeMax());
 		$this->altchaAttributes->set('challenge', $this->getContainer()->get('router')->generate(AltchaController::class));
-		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
-		$this->altchaAttributes->setIfExists('hidelogo', $this->altchaHideLogo);
-		$this->altchaAttributes->setIfExists('hidefooter', $this->altchaHideFooter);
+
+		$config = [];
+
+		if ($this->altchaAuto)
+		{
+			$config['auto'] = $this->altchaAuto;
+		}
+
+		if ($this->altchaHideLogo)
+		{
+			$config['hideLogo'] = true;
+		}
+
+		if ($this->altchaHideFooter)
+		{
+			$config['hideFooter'] = true;
+		}
 
 		if ($this->altchaFloating)
 		{
-			$this->altchaAttributes->set('display', 'floating');
+			$config['display'] = 'floating';
+		}
+
+		if ([] !== $config)
+		{
+			$this->altchaAttributes->set('configuration', json_encode($config));
 		}
 
 		$this->canUseAltcha = $request->isSecure();
