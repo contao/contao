@@ -353,7 +353,7 @@
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
-        "e2e-tests": "@php vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit",
+        "e2e-tests": "@php -d xdebug.mode=off vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",
