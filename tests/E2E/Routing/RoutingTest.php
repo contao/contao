@@ -1046,7 +1046,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
      */
     private function loadFixtureFiles(array $fileNames): FixtureResult
     {
-        return self::managedEdition()->resetDatabase(new FixtureSet(array_map(
+        return self::managedEdition()->prepareDatabase(new FixtureSet(array_map(
             static fn ($file) => \dirname(__DIR__, 3).'/core-bundle/tests/Fixtures/Functional/Routing/'.$file.'.yaml',
             $fileNames,
         )));
