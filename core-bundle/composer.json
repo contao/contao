@@ -44,7 +44,7 @@
         "cmsig/seal": "^0.12.2",
         "cmsig/seal-symfony-bundle": "^0.12.2",
         "contao-components/ace": "^1.8",
-        "contao-components/altcha-v3": "^3.0",
+        "contao-components/altcha": "^3.0",
         "contao-components/choices": "^11.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/contao": "^9.1",
