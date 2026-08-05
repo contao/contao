@@ -65,7 +65,7 @@ class FormAltcha extends Widget
 		$this->altchaAttributes->set('name', $this->name);
 		$this->altchaAttributes->set('challenge', $this->getContainer()->get('router')->generate(AltchaController::class));
 
-		$config = [];
+		$config = array();
 
 		if ($this->altchaAuto)
 		{
@@ -87,7 +87,7 @@ class FormAltcha extends Widget
 			$config['display'] = 'floating';
 		}
 
-		if ([] !== $config)
+		if ($config)
 		{
 			$this->altchaAttributes->set('configuration', json_encode($config));
 		}
