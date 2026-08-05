@@ -1,0 +1,118 @@
+tl_user_group:
+    editors:
+        tstamp: 1709064282
+        name: Editors
+        modules:
+            - page
+            - article
+            - files
+            - news
+            - calendar
+        elements:
+            - code
+            - headline
+            - html
+            - list
+            - markdown
+            - table
+            - text
+            - hyperlink
+            - toplink
+            - download
+            - downloads
+            - image
+            - gallery
+            - player
+            - vimeo
+            - youtube
+            - article
+            - alias
+            - form
+            - module
+            - comments
+            - teaser
+            - accordionSingle
+            - accordionStart
+            - accordionStop
+            - sliderStart
+            - sliderStop
+        fields:
+            - explanation
+            - html
+            - fieldsetStart
+            - fieldsetStop
+            - text
+            - password
+            - textarea
+            - select
+            - radio
+            - checkbox
+            - upload
+            - range
+            - hidden
+            - captcha
+            - submit
+        alpty:
+            - regular
+            - forward
+            - redirect
+        fop:
+            - f1
+            - f2
+            - f3
+        imageSizes:
+            - crop
+            - proportional
+            - box
+        disable: 0
+
+tl_user:
+    kevin_jones:
+        tstamp: 1709063739
+        username: k.jones
+        name: Kevin Jones
+        email: k.jones@example.com
+        language: en
+        uploader: FileUpload
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: $2y$13$r2Bm9Yt7UdhbHJQ/HjgYZuUM89vVl9FSb0slHzlOfOY.ExQbj7u1.
+        admin: 1
+        disable: 0
+        dateAdded: 1257428510
+    james_wilson:
+        tstamp: 1709063927
+        username: j.wilson
+        name: James Wilson
+        email: j.wilson@example.com
+        language: en
+        uploader: DropZone
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: $argon2id$v=19$m=65536,t=4,p=1$KtVG/rsaYC1BY48jQNDgNg$ROCOHE3uh8Al1vH+AkVzYX1YirS2q28VpHJRfPDjiBY
+        groups:
+            - '@editors'
+        inherit: extend
+        disable: 0
+        dateAdded: 1259754527
+    helen_lewis:
+        tstamp: 1709063875
+        username: h.lewis
+        name: Helen Lewis
+        email: h.lewis@example.com
+        language: en
+        uploader: DropZone
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: $argon2id$v=19$m=65536,t=4,p=1$Kwd39s0EBayBe+63POnPqw$QMQKLMcKdvDdBbySlV5+cE+hk+rpBayospme0ZAtZiY
+        groups:
+            - '@editors'
+        inherit: extend
+        disable: 0
+        dateAdded: 1259754527
