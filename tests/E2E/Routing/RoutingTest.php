@@ -27,7 +27,8 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesAliases(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
-        $this->loadFixtureFiles($fixtures);
+        $fixtureResult = $this->loadFixtureFiles($fixtures);
+        $request = $fixtureResult->interpolate($request);
         $browser = $this->request($request, $host);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -208,7 +209,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
         yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
             ['theme', 'page-without-alias'],
-            '/15.html',
+            '/{page_home}.html',
             200,
             'Home - Page without alias',
             [],
@@ -229,7 +230,8 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesAliasesWithLocale(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
-        $this->loadFixtureFiles($fixtures);
+        $fixtureResult = $this->loadFixtureFiles($fixtures);
+        $request = $fixtureResult->interpolate($request);
         self::managedEdition()->database()->connection()->executeStatement('UPDATE tl_page SET urlPrefix = language');
         $browser = $this->request($request, $host);
 
@@ -411,7 +413,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
         yield 'Renders the page if the URL contains a page ID and the page has no alias' => [
             ['theme', 'page-without-alias'],
-            '/en/15.html',
+            '/en/{page_home}.html',
             200,
             'Home - Page without alias',
             ['language' => 'en'],
@@ -840,8 +842,8 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
         $alias = $indexAlias ? 'index' : 'home';
         $connection = self::managedEdition()->database()->connection();
-        $connection->executeStatement("UPDATE tl_page SET disableLanguageRedirect = $disableLanguageRedirect WHERE id = 3");
-        $connection->executeStatement("UPDATE tl_page SET alias = '$alias' WHERE type = 'regular'");
+        $connection->update('tl_page', ['disableLanguageRedirect' => $disableLanguageRedirect], ['alias' => 'nl', 'type' => 'root']);
+        $connection->update('tl_page', ['alias' => $alias], ['type' => 'regular']);
 
         $browser = $this->request('/', 'example.local', $requestLocale);
         $response = $browser->getInternalResponse();
@@ -1042,9 +1044,9 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * @param list<string> $fileNames
      */
-    private function loadFixtureFiles(array $fileNames): void
+    private function loadFixtureFiles(array $fileNames): FixtureResult
     {
-        self::managedEdition()->resetDatabase(new FixtureSet(array_map(
+        return self::managedEdition()->resetDatabase(new FixtureSet(array_map(
             static fn ($file) => \dirname(__DIR__, 3).'/core-bundle/tests/Fixtures/Functional/Routing/'.$file.'.yaml',
             $fileNames,
         )));
