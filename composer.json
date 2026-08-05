@@ -45,7 +45,7 @@
         "cmsig/seal-loupe-adapter": "^0.12.6",
         "cmsig/seal-symfony-bundle": "^0.12.2",
         "contao-components/ace": "^1.8",
-        "contao-components/altcha": "^1.0 || ^2.0",
+        "contao-components/altcha": "^3.0",
         "contao-components/choices": "^11.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/contao": "^9.1",
