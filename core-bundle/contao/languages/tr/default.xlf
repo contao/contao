@@ -385,10 +385,6 @@
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
         <target>Anti-spam doğrulaması geçilemedi. İnsan mısınız robot mu?</target>
       </trans-unit>
-      <trans-unit id="ERR.altchaWidgetError">
-        <source>Verification failed. Try again later.</source>
-        <target>Doğrulama geçilemedi. Bir süre sonra yeniden deneyin.</target>
-      </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA güvenli bir HTTPS bağlantısı olmadan kullanılamaz. Üretim siteniz HTTPS kullanmıyorsa (önerilmez), bunun yerine güvenlik sorusunu kullanın.</target>
@@ -3063,26 +3059,6 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Açık kip</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaFooter">
-        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
-        <target>&lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt; tarafından korunuyor</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaLabel">
-        <source>I&apos;m not a robot</source>
-        <target>Robot değilim</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerified">
-        <source>I&apos;m human</source>
-        <target>İnsanım</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying …</source>
-        <target>Doğrulanıyor…</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying … please wait.</source>
-        <target>Doğrulanıyor… Lütfen bekleyin.</target>
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>

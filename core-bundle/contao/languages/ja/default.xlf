@@ -385,10 +385,6 @@
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
         <target>spam対策の検証に失敗しました。あなたは人間ですか、それともロボットですか?</target>
       </trans-unit>
-      <trans-unit id="ERR.altchaWidgetError">
-        <source>Verification failed. Try again later.</source>
-        <target>検証できません。後で、もう一度試してください。</target>
-      </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHAは安全なHTTPS接続なしでは利用できません。実運用中のWebサイトがHTTPSを使用していない(ことは推奨できません)場合は、代わりにセキュリティ質問を使用してください。</target>
@@ -3068,26 +3064,6 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>ライトモード</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaFooter">
-        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
-        <target>&lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;による保護</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaLabel">
-        <source>I&apos;m not a robot</source>
-        <target>私はロボットでありません</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerified">
-        <source>I&apos;m human</source>
-        <target>私は人間です</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying …</source>
-        <target>検証中...</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying … please wait.</source>
-        <target>検証中...しばらくお待ちください。</target>
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>

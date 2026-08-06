@@ -385,10 +385,6 @@
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
         <target>Anti spam verificatie mislukt. Bent u een mens of een robot?</target>
       </trans-unit>
-      <trans-unit id="ERR.altchaWidgetError">
-        <source>Verification failed. Try again later.</source>
-        <target>Verificatie mislukt. Probeer het later opnieuw.</target>
-      </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA is niet beschikbaar zonder een beveiligde HTTPS-verbinding. Als uw productiewebsite geen HTTPS gebruikt (niet aanbevolen), gebruik dan de beveiligingsvraag.</target>
@@ -3068,26 +3064,6 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Lichte modus</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaFooter">
-        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
-        <target>Beschermd door &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaLabel">
-        <source>I&apos;m not a robot</source>
-        <target>Ik ben geen robot</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerified">
-        <source>I&apos;m human</source>
-        <target>Ik ben een mens</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying …</source>
-        <target>Verifiëren …</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying … please wait.</source>
-        <target>Verifiëren … even geduld.</target>
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>

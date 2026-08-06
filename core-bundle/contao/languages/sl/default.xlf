@@ -384,10 +384,6 @@
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
       </trans-unit>
-      <trans-unit id="ERR.altchaWidgetError">
-        <source>Verification failed. Try again later.</source>
-        <target>Preverjanje ni uspelo. Prosimo, poskusite kasneje.</target>
-      </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA ni na voljo brez varne povezave HTTPS. Če vaše produkcijsko spletno mesto ne uporablja HTTPS (ni priporočljivo), prosimo, namesto tega uporabite varnostno vprašanje.</target>
@@ -3041,26 +3037,6 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Svetli način</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaFooter">
-        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
-        <target>Zaščiten z &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaLabel">
-        <source>I&apos;m not a robot</source>
-        <target>Nisem robot</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerified">
-        <source>I&apos;m human</source>
-        <target>Sem človek</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying …</source>
-        <target>Preverjanje ...</target>
-      </trans-unit>
-      <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying … please wait.</source>
-        <target>Preverjanje ... prosimo, počakajte.</target>
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>

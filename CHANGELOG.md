@@ -2,6 +2,25 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.0-RC2] (2026-08-06)
+
+**Fixed issues:**
+
+- [#10092] Replace the remaining `|insert_tag_raw` with `|insert_tag_html` ([leofeyer])
+- [#10087] Use the "correct" TinyMCE package ([leofeyer])
+- [#10085] Upgrade to ALTCHA v3 ([leofeyer])
+- [#10082] Ensure a minimum stroke width for SVG icons ([leofeyer])
+- [#10056] Add `insert_tag_raw` to the `UPGRADE.md` file ([ausi])
+- [#10069] Store the page name in the `HtmlHeadBag` and use it in the breadcrumbs module ([ausi])
+- [#10066] Increase the size of `tl_log.browser` ([ausi])
+- [#10042] Use a higher priority for the output encoding migration ([zoglo])
+- [#10041] Use a Twig template for the `{{news::*}}`, `{{event::*}}` and `{{faq::*}}` insert tag ([ausi])
+- [#10038] Deprecate the obsolete `HtmlDecoder::inputEncodedToPlainText()` method ([ausi])
+- [#10037] Rename the `insert_tag_raw` Twig filter to `insert_tag_html` ([ausi])
+- [#10035] Drop `ChunkedText` and pre-escape `insert_tag_raw` instead ([ausi])
+- [#10032] Fix the permission check of the `pasteinto` operation ([lukasbableck])
+- [#10034] Fix output encoding in insert tags, newsletters and templates ([ausi])
+
 ## [6.0.0-RC1] (2026-07-17)
 
 **New features:**
@@ -10,13 +29,17 @@ This project adheres to [Semantic Versioning].
 - [#9584] Improve the UX of the tooltip controller ([zoglo])
 - [#10013] Return the default values from the schema in models ([ausi])
 - [#9999] Add ARIA labels where there is no `<label>` element ([leofeyer])
+- [#10006] Remove the `Input` class from the `DcaUrlAnalyzer`, operations, the palette builder, and several listeners ([ausi])
 - [#9983] Allow Symfony 8 ([Toflar])
 - [#10001] Remove the deprecated `Backend.Theme` scripts that already have Stimulus alternatives ([zoglo])
+- [#9997] Autolink URLs in comments and make them plain text ([ausi])
 - [#9992] Add a simple token filter for Twig ([ausi])
 - [#8349] Add a "paste into" operation to the `DC_Table` parent view ([lukasbableck])
+- [#9990] Move to a newer DBAFS hashing algorithm ([m-vo])
 - [#9548] Remove the legacy migrations from the Stimulus controllers ([zoglo])
 - [#9540] Remove the deprecations from the calendar bundle ([zoglo])
 - [#9981] Only add custom form field classes to the outer container ([leofeyer])
+- [#9966] Add a `RecordLabel` object for the label callback ([ausi])
 - [#9565] Allow adding a primary image to a page and use it in the JSON-LD ([lukasbableck])
 - [#9962] Remove the deprecated child record callback ([ausi])
 - [#9944] Deprecate `Input::get('language')` ([ausi])
@@ -72,19 +95,15 @@ This project adheres to [Semantic Versioning].
 - [#10020] Add more output encoding ([ausi])
 - [#10021] Remove unused `Backend` methods ([ausi])
 - [#10019] Do not return `null` for non-null columns in models ([ausi])
-- [#10006] Remove the `Input` class from the `DcaUrlAnalyzer`, operations, the palette builder, and several listeners ([ausi])
-- [#9997] Autolink URLs in comments and make them plain text ([ausi])
 - [#9977] Change "Contao 6" to "Contao 7" in the deprecation messages ([leofeyer])
 - [#9988] Remove old configuration nodes deprecated since Contao 4 ([leofeyer])
 - [#9989] Wrap the active breadcrumb item in `<strong>` tags ([leofeyer])
 - [#9994] Remove BBCode ([ausi])
-- [#9990] Move to a newer DBAFS hashing algorithm ([m-vo])
 - [#9986] Prevent changing the password in the "personal data" module ([leofeyer])
 - [#9987] Deprecate `$strIp` in user classes ([fritzmg])
 - [#9980] Generate the form data XML file using `DOMDocument` ([leofeyer])
 - [#9979] Remove the setters from the `RecordLabel` class ([ausi])
 - [#9969] Encode and sanitize widgets and options ([ausi])
-- [#9966] Add a `RecordLabel` object for the label callback ([ausi])
 - [#9974] Ensure that ampersands in URLs are correctly encoded ([leofeyer])
 - [#9968] Do not encode ampersands in the back button URL ([leofeyer])
 - [#9965] Use `findById()` instead of `getRelated()` ([leofeyer])
@@ -100,6 +119,7 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.0-RC2]: https://github.com/contao/contao/releases/tag/6.0.0-RC2
 [6.0.0-RC1]: https://github.com/contao/contao/releases/tag/6.0.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -199,3 +219,17 @@ This project adheres to [Semantic Versioning].
 [#10027]: https://github.com/contao/contao/pull/10027
 [#10029]: https://github.com/contao/contao/pull/10029
 [#10030]: https://github.com/contao/contao/pull/10030
+[#10032]: https://github.com/contao/contao/pull/10032
+[#10034]: https://github.com/contao/contao/pull/10034
+[#10035]: https://github.com/contao/contao/pull/10035
+[#10037]: https://github.com/contao/contao/pull/10037
+[#10038]: https://github.com/contao/contao/pull/10038
+[#10041]: https://github.com/contao/contao/pull/10041
+[#10042]: https://github.com/contao/contao/pull/10042
+[#10056]: https://github.com/contao/contao/pull/10056
+[#10066]: https://github.com/contao/contao/pull/10066
+[#10069]: https://github.com/contao/contao/pull/10069
+[#10082]: https://github.com/contao/contao/pull/10082
+[#10085]: https://github.com/contao/contao/pull/10085
+[#10087]: https://github.com/contao/contao/pull/10087
+[#10092]: https://github.com/contao/contao/pull/10092

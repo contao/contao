@@ -85,6 +85,14 @@
         <source>Rename the %s variant template</source>
         <target>Template variant %s hernoemen</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.0">
+        <source>Rename variant</source>
+        <target>Variant hernoemen</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Template variant %s hernoemen</target>
+      </trans-unit>
       <trans-unit id="template_studio.operation.create_page_variant.0">
         <source>Create variant</source>
         <target>Maak variant</target>
@@ -101,29 +109,12 @@
         <source>Rename the %s variant template</source>
         <target>Template variant %s hernoemen</target>
       </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+      <trans-unit id="template_studio.operation.create_legacy_variant.0">
         <source>Create variant</source>
         <target>Maak variant</target>
       </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
-        <source>Create a new variant template for the %s legacy content element</source>
-        <target>Maak een nieuwe variant template voor het %s legacy inhoudselement.</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
-        <source>Create variant</source>
-        <target>Maak variant</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
-        <source>Create a new variant template for the %s front end module</source>
-        <target>Maak een nieuwe variant template voor front-end module %s.</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
-        <source>Create variant</source>
-        <target>Maak variant</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
-        <source>Create a new variant template for the %s layout</source>
-        <target>Maak een nieuwe variant template voor lay-out %s.</target>
+      <trans-unit id="template_studio.operation.create_legacy_variant.1">
+        <source>Create a new variant template for the %s legacy template</source>
       </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>
