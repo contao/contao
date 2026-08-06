@@ -54,7 +54,7 @@ class NewsInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag->getName()) {
             'news' => new InsertTagResult(
-                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_html }}</a>')->render([
                     'url' => $this->generateNewsUrl($model, $arguments),
                     'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
                     'label' => $model->headline,
