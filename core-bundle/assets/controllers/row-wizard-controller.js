@@ -289,11 +289,11 @@ export default class extends Controller {
     }
 
     #deleteAllowed() {
-        return this.hasDeleteTarget && (!this.hasMinValue || this.rowTargets.length > this.minValue);
+        return !this.hasMinValue || this.rowTargets.length > this.minValue;
     }
 
     #copyAllowed() {
-        return this.hasCopyTarget && (!this.hasMaxValue || this.rowTargets.length < this.maxValue);
+        return !this.hasMaxValue || this.rowTargets.length < this.maxValue;
     }
 
     #updatePermissions() {
