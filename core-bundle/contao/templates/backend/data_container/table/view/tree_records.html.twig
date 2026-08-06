@@ -18,6 +18,13 @@
         .set('data-contao--operations-menu-primary-only-value', primary_only ? 'true' : 'false')
     %}
     <div{{ row_attributes }}>
+        {# Drag handle #}
+        {% if allow_dragging %}
+            <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" data-contao--sortable-target="primaryHandle">
+                {{ backend_icon('drag.svg', drag_handle_label) }}
+            </button>
+        {% endif %}
+
         {% set has_children = children|length or toggler_url %}
         {% set label_attributes = attrs()
             .addClass(['tl_left', 'with-offset'])
@@ -52,6 +59,12 @@
     {% if record_table != records_group %}
         {% set records_attributes = attrs()
             .set('data-id', record_id)
+            .set('data-controller', 'contao--sortable', is_sortable)
+            .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
+            .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
+            .set('data-contao--sortable-group-value', records_group, is_sortable)
+            .set('data-contao--sortable-draggable-value', 'li[data-id]', is_sortable)
+            .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
         %}
         <ul{{ records_attributes }}>
             {{ records|join|raw }}
@@ -65,6 +78,12 @@
             .set('data-id', record_id)
             .addStyle({'display': 'none'}, toggler_url and not is_expanded)
             .set('data-contao--toggle-nodes-target', 'child' ~ (level == 0 ? ' rootChild' : ''))
+            .set('data-controller', 'contao--sortable', is_sortable)
+            .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
+            .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
+            .set('data-contao--sortable-group-value', 'tree', is_sortable)
+            .set('data-contao--sortable-draggable-value', 'li[data-id]', is_sortable)
+            .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
         %}
         <ul{{ list_attributes }}>
             {{ children|join|raw }}

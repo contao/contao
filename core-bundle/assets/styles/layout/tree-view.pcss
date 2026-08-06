@@ -60,6 +60,13 @@
     }
 }
 
+/* Indent the level within articles view due to the drag label */
+.tl_tree_xtnd {
+    .drag-handle + .tl_left.with-offset {
+        padding-left: calc((var(--level) - 1) * 16px);
+    }
+}
+
 .tl_listing .tl_left.tl_left_dragging {
     position: absolute;
     background: var(--drag-bg);

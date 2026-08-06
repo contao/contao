@@ -4097,7 +4097,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($blnIsSortable && $isCurrentTable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
 		{
+			$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'] ?? '';
+
 			$parameters['allow_dragging'] = true;
+			$parameters['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $currentRecord['id']);
 		}
 
 		if ($table != $this->strTable)
