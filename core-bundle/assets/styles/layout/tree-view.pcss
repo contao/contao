@@ -1,5 +1,6 @@
 /* Tree view */
 .tl_folder_top {
+    display: flex;
     min-height: 18px;
     padding: 6px;
     border-bottom: 1px solid var(--border);
@@ -18,15 +19,13 @@
     background: var(--table-header);
 }
 
-.tl_folder.tl_folder_dropping,
-.tl_folder_top.tl_folder_dropping {
-    background-color: var(--drag-bg) !important;
-    color: var(--text) !important;
-}
+.tl_folder_dropping {
+    background-color: var(--drag-bg);
+    color: var(--text);
 
-.tl_folder.tl_folder_dropping a,
-.tl_folder_top.tl_folder_dropping a {
-    color: inherit;
+    a {
+        color: inherit;
+    }
 }
 
 .tl_listing .drag-handle {
@@ -128,15 +127,15 @@
 }
 
 .tl_listing li {
-    display: flex;
     margin: 0;
     list-style-type: none;
 }
 
-.tl_listing li.parent {
-    display: inline;
-    padding-left: 0;
-    padding-right: 0;
+.tl_listing li.tl_folder,
+.tl_listing li.tl_file,
+.tl_listing li > .tl_folder,
+.tl_listing li > .tl_file {
+    display: flex;
 }
 
 label.tl_change_selected {
