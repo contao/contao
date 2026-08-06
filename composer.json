@@ -210,6 +210,7 @@
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
+        "doctrine/orm": "3.6.8",
         "masterminds/html5": "<2.8",
         "nikic/php-parser": "4.7.0",
         "terminal42/contao-ce-access": "<3.0",
