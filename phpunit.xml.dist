@@ -50,6 +50,9 @@
       <directory>./core-bundle/tests/Functional</directory>
       <exclude>./core-bundle/tests/Functional/app</exclude>
     </testsuite>
+    <testsuite name="e2e">
+      <directory>./tests/E2E</directory>
+    </testsuite>
     <testsuite name="coverage">
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
