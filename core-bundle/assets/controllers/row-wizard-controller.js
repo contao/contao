@@ -310,6 +310,8 @@ export default class extends Controller {
             el.disabled = canCopy ? '' : true;
         }
 
-        this.ghostTarget.hidden = !canCopy;
+        if (this.hasGhostTarget) {
+            this.ghostTarget.hidden = !canCopy;
+        }
     }
 }
