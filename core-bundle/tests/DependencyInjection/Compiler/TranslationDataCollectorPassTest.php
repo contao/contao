@@ -54,7 +54,7 @@ class TranslationDataCollectorPassTest extends TestCase
 
         $dataCollector = $container->getDefinition('data_collector.translation');
 
-        $this->assertSame('contao.translation.data_collector_translator', (string) $dataCollector->getArgument(0));
+        $this->assertSame('contao.translation.data_collector_translator', (string) $dataCollector->getArgument('$translator'));
 
         $contaoDataCollector = $container->getDefinition('contao.translation.data_collector_translator');
 

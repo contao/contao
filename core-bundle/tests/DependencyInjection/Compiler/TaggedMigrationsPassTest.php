@@ -47,7 +47,7 @@ class TaggedMigrationsPassTest extends TestCase
         $pass = new TaggedMigrationsPass();
         $pass->process($container);
 
-        $migrationServices = $container->getDefinition('contao.migration.collection')->getArgument(0);
+        $migrationServices = $container->getDefinition('contao.migration.collection')->getArgument('$migrations');
 
         $this->assertSame(
             [
