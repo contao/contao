@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.11] (2026-08-06)
+
+**Fixed issues:**
+
+- [#10097] Replace the `doctrine/orm` conflict with `symfony/doctrine-bridge` ([ausi])
+- [#10095] Fix the copy and delete permissions in the row wizard Stimulus controller ([zoglo])
+
 ## [5.7.10] (2026-08-06)
 
 **Fixed issues:**
@@ -562,6 +569,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.11]: https://github.com/contao/contao/releases/tag/5.7.11
 [5.7.10]: https://github.com/contao/contao/releases/tag/5.7.10
 [5.7.9]: https://github.com/contao/contao/releases/tag/5.7.9
 [5.7.8]: https://github.com/contao/contao/releases/tag/5.7.8
@@ -1069,3 +1077,5 @@ This project adheres to [Semantic Versioning].
 [#10074]: https://github.com/contao/contao/pull/10074
 [#10077]: https://github.com/contao/contao/pull/10077
 [#10083]: https://github.com/contao/contao/pull/10083
+[#10095]: https://github.com/contao/contao/pull/10095
+[#10097]: https://github.com/contao/contao/pull/10097
