@@ -3096,11 +3096,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// No popup links for protected files and templates (see #700)
 			if ($blnProtected || $this->strTable == 'tl_templates')
 			{
-				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' ' . '<span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' <span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
 			}
 			else
 			{
-				$return .= '<a href="' . $staticUrl . $currentEncoded . '" target="_blank">' . Image::getHtml($objFile->icon, $GLOBALS['TL_LANG']['MSC']['view']) . '</a> ' . '<span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" target="_blank">' . Image::getHtml($objFile->icon, $GLOBALS['TL_LANG']['MSC']['view']) . '</a> <span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons
