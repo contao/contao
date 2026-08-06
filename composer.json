@@ -213,6 +213,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/annotations": "<1.9",
         "doctrine/cache": "<1.10",
+        "doctrine/orm": "3.6.8",
         "masterminds/html5": "<2.8",
         "nikic/php-parser": "4.7.0",
         "symfony/var-exporter": ">=8.0",
