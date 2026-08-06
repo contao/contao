@@ -2,6 +2,31 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.10] (2026-08-06)
+
+**Fixed issues:**
+
+- [#9949] Replace insert tags in select and submit fields ([aschempp])
+- [#10083] Ensure a minimum stroke width for SVG icons ([leofeyer])
+- [#10077] Fix the element width in the undo preview ([zoglo])
+- [#10072] Generalize the CSS for image dimensions ([zoglo])
+- [#10074] Include `#tl_search` in the element count of the filter button ([zoglo])
+- [#10073] Do not render an empty row in the row wizard if all values are `null` ([zoglo])
+- [#10043] Fix the picker CSS ([zoglo])
+- [#10070] Allow to create and rename legacy templates ([ausi])
+- [#10068] Allow Loupe v1 ([Toflar])
+- [#10050] Resolve insert tags in the ARIA labels of the navigation ([zoglo])
+- [#10051] Use `element.id` as a fallback to disconnect the TinyMCE instance ([zoglo])
+- [#10054] Fix the profile button styles for the `hover` and `active` state ([zoglo])
+- [#10053] Use the dedicated Webauthn Stimulus controllers ([zoglo])
+- [#9116] Stop using `$request->get()` ([leofeyer])
+- [#10047] Add the new element CSS classes in addition to the old ones ([leofeyer])
+- [#9912] Check for copy and delete actions in the row wizard ([aschempp])
+- [#10045] Backport 'Improve the UX of the tooltip controller' ([zoglo])
+- [#10014] Do not reset the checkbox values when adding new rows in the row wizard ([zoglo])
+- [#10012] Cache the theme slug in the filesystem loader per template group ([leofeyer])
+- [#10003] Fix a foreign key issue in the `ValueFormatter` ([michb])
+
 ## [5.7.9] (2026-07-13)
 
 **Security fixes:**
@@ -537,6 +562,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.10]: https://github.com/contao/contao/releases/tag/5.7.10
 [5.7.9]: https://github.com/contao/contao/releases/tag/5.7.9
 [5.7.8]: https://github.com/contao/contao/releases/tag/5.7.8
 [5.7.7]: https://github.com/contao/contao/releases/tag/5.7.7
@@ -551,9 +577,9 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2026-55825]: https://github.com/contao/contao/security/advisories/GHSA-grm4-wm43-9jh5
-[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [alike03]: https://github.com/alike03
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -568,6 +594,7 @@ This project adheres to [Semantic Versioning].
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
+[michb]: https://github.com/michb
 [pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
 [stefansl]: https://github.com/stefansl
@@ -684,6 +711,7 @@ This project adheres to [Semantic Versioning].
 [#9109]: https://github.com/contao/contao/pull/9109
 [#9110]: https://github.com/contao/contao/pull/9110
 [#9115]: https://github.com/contao/contao/pull/9115
+[#9116]: https://github.com/contao/contao/pull/9116
 [#9117]: https://github.com/contao/contao/pull/9117
 [#9118]: https://github.com/contao/contao/pull/9118
 [#9120]: https://github.com/contao/contao/pull/9120
@@ -1011,14 +1039,33 @@ This project adheres to [Semantic Versioning].
 [#9902]: https://github.com/contao/contao/pull/9902
 [#9906]: https://github.com/contao/contao/pull/9906
 [#9908]: https://github.com/contao/contao/pull/9908
+[#9912]: https://github.com/contao/contao/pull/9912
 [#9914]: https://github.com/contao/contao/pull/9914
 [#9922]: https://github.com/contao/contao/pull/9922
 [#9928]: https://github.com/contao/contao/pull/9928
 [#9935]: https://github.com/contao/contao/pull/9935
 [#9937]: https://github.com/contao/contao/pull/9937
+[#9949]: https://github.com/contao/contao/pull/9949
 [#9959]: https://github.com/contao/contao/pull/9959
 [#9972]: https://github.com/contao/contao/pull/9972
 [#9975]: https://github.com/contao/contao/pull/9975
 [#9985]: https://github.com/contao/contao/pull/9985
 [#9993]: https://github.com/contao/contao/pull/9993
+[#10003]: https://github.com/contao/contao/pull/10003
 [#10008]: https://github.com/contao/contao/pull/10008
+[#10012]: https://github.com/contao/contao/pull/10012
+[#10014]: https://github.com/contao/contao/pull/10014
+[#10043]: https://github.com/contao/contao/pull/10043
+[#10045]: https://github.com/contao/contao/pull/10045
+[#10047]: https://github.com/contao/contao/pull/10047
+[#10050]: https://github.com/contao/contao/pull/10050
+[#10051]: https://github.com/contao/contao/pull/10051
+[#10053]: https://github.com/contao/contao/pull/10053
+[#10054]: https://github.com/contao/contao/pull/10054
+[#10068]: https://github.com/contao/contao/pull/10068
+[#10070]: https://github.com/contao/contao/pull/10070
+[#10072]: https://github.com/contao/contao/pull/10072
+[#10073]: https://github.com/contao/contao/pull/10073
+[#10074]: https://github.com/contao/contao/pull/10074
+[#10077]: https://github.com/contao/contao/pull/10077
+[#10083]: https://github.com/contao/contao/pull/10083

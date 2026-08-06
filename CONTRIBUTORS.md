@@ -108,6 +108,7 @@
  * Marc Reimann ([MacKP](https://github.com/MacKP))
  * Marcel Pitz ([mpitz](https://github.com/mpitz))
  * Marco Schädlich ([Werbeagentur-Kopfnuss](https://github.com/Werbeagentur-Kopfnuss))
+ * Michael Bösherz ([michb](https://github.com/michb))
  * Mirko Wegener ([kuestenweb](https://github.com/kuestenweb))
  * P.I.E. Security Team ([paragonie-security](https://github.com/paragonie-security))
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))

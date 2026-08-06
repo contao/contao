@@ -415,12 +415,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Můžete poskytnout přístup k editoru předloh, pokud jste administrátor.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Lze použít &quot;auto&quot; jen na začátku atributu rozměru musí být zakončený čárkou, existují-li další poté následující hodnoty. </target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Musí být povolené pozvolné načítání (lazy loud), pokud je atribut rozměru &quot;auto&quot;. </target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -444,6 +447,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Vytvoří formulář pro změnu hesla</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -451,6 +455,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Vytvoří formulář pro smazání členského účtu.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -738,6 +743,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Vytvoří formulář pro nastavení nebo změnu dvoufázové autorizace</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1876,6 +1882,7 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Více záznamů je k dispozici, ale jsou skryté z výkonnostních důvodů. Rozbalte seznam nebo aplikujte filtry pro omezení zobrazení. </target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -1915,6 +1922,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Žádný záznam odpovídá danému filtru. </target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2867,9 +2875,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Zobrazit cestu</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Zobrazit podsložky</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2985,6 +2995,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpIndexSetting">
         <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>Daná URL se nebude indexovat kvůli nastavení robotických tagů. </target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -3128,12 +3139,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
+        <target>Načítám výsledky...</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3213,9 +3227,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Skrolovat doleva</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Skrolovat doprava</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3535,15 +3551,19 @@
       </trans-unit>
       <trans-unit id="DCA.permissions_legend">
         <source>Permissions</source>
+        <target>Povolení</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.0">
         <source>Back end permissions</source>
+        <target>Povolení pro backend</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.1">
         <source>The changes made here are saved in the user and group settings.</source>
+        <target>Tato nastavení se uloží do uživatelských a skupinových nastavení. </target>
       </trans-unit>
       <trans-unit id="DCA.permissions.groups">
         <source>Groups</source>
+        <target>Skupiny</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.users">
         <source>Users</source>

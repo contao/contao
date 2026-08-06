@@ -11,9 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_content.title.0">
         <source>Internal title</source>
+        <target>Intern titel</target>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>An optional title used, for example, in the back end preview and the breadcrumb menu.</source>
+        <target>En valfri rubrik som används till exempel i förhandsgranskningen i backend och i brödsmulsmenyn</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -953,6 +955,7 @@
       </trans-unit>
       <trans-unit id="tl_content.versions.1">
         <source>Show the versions of content element ID %s</source>
+        <target>Visa versionerna av innehållselement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>

@@ -23,9 +23,11 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>Sök efter mallar...</target>
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
         <source>Show only my templates</source>
+        <target>Visa endast mina mallar</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
@@ -83,6 +85,14 @@
         <source>Rename the %s variant template</source>
         <target>Byt namn på %s variantmallen</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.0">
+        <source>Rename variant</source>
+        <target>Byt namn på variant</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Byt namn på %s variantmallen</target>
+      </trans-unit>
       <trans-unit id="template_studio.operation.create_page_variant.0">
         <source>Create variant</source>
         <target>Skapa variant</target>
@@ -99,28 +109,12 @@
         <source>Rename the %s variant template</source>
         <target>Byt namn på %s variantmallen</target>
       </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+      <trans-unit id="template_studio.operation.create_legacy_variant.0">
         <source>Create variant</source>
         <target>Skapa variant</target>
       </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
-        <source>Create a new variant template for the %s legacy content element</source>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
-        <source>Create variant</source>
-        <target>Skapa variant</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
-        <source>Create a new variant template for the %s front end module</source>
-        <target>Skapa en ny variantmall för %s frontend-modulen</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
-        <source>Create variant</source>
-        <target>Skapa variant</target>
-      </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
-        <source>Create a new variant template for the %s layout</source>
-        <target>Skapa en ny variantmall för layouten %s</target>
+      <trans-unit id="template_studio.operation.create_legacy_variant.1">
+        <source>Create a new variant template for the %s legacy template</source>
       </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>

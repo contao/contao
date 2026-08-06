@@ -415,12 +415,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Du kan endast bevilja åtkomst till mallredigeraren om du är administratör.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Nyckelordet ”auto” får endast förekomma i början av attributet ”sizes” och måste följas av ett kommatecken om det finns ytterligare värden.</target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy loading måste vara aktiverat om attributet sizes är inställt på ”auto”.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -444,6 +447,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Skapar ett formulär för att ändra lösenordet.</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -451,6 +455,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Skapar ett formulär för att radera ett medlemskonto.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -738,6 +743,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Skapar ett formulär för att konfigurera eller ändra tvåfaktorsautentisering.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1877,6 +1883,8 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Det finns fler poster, men de är dolda av prestandaskäl. Dölj trädet eller använd filter för att begränsa visningen.
+</target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -1916,6 +1924,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Inga poster stämmer överens med de aktuella filterinställningarna.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2867,9 +2876,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Visa spår</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Visa syskon</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2985,6 +2996,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpIndexSetting">
         <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>URL:en kommer inte att indexeras på grund av inställningarna för robots-taggen.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -3128,12 +3140,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
+        <target>Laddar resultat …</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3213,9 +3228,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Bläddra åt vänster</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Bläddra åt höger</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3535,15 +3552,19 @@
       </trans-unit>
       <trans-unit id="DCA.permissions_legend">
         <source>Permissions</source>
+        <target>Behörigheter</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.0">
         <source>Back end permissions</source>
+        <target>Behörigheter för backend</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.1">
         <source>The changes made here are saved in the user and group settings.</source>
+        <target>De ändringar som görs här sparas i användar- och gruppinställningarna.</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.groups">
         <source>Groups</source>
+        <target>Grupper</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.users">
         <source>Users</source>

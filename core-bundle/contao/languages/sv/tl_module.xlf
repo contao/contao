@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Internal title</source>
+        <target>Intern titel</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -666,6 +667,7 @@ Kontakta webbplatsadministratören om du inte begärde detta e-postmeddelande.
       </trans-unit>
       <trans-unit id="tl_module.versions.1">
         <source>Show the versions of module ID %s</source>
+        <target>Visa versionerna av modul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
