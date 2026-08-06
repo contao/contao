@@ -11,6 +11,7 @@ composer:
         bamarni/composer-bin-plugin: ^1.4
         contao/e2e-test-bundle: dev-main
         contao/installation-recipe: dev-main
+        php-webdriver/webdriver: ^1.15
         shipmonk/composer-dependency-analyser: ^1.4
     autoload-dev:
         psr-4:
