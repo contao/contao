@@ -587,6 +587,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
+		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
+		$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
+
+		$strRoot = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath;
+		$strUploadUrl = html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($strRoot)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+
+		$blnCanUpload = Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null);
+
 		// Build the tree
 		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
@@ -600,7 +608,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
-<ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
+<ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" data-controller="contao--file-tree" data-action="pointerdown->contao--file-tree#onPointerDown dragstart->contao--file-tree#onDragStart dragenter->contao--file-tree#onDragOver:capture dragover->contao--file-tree#onDragOver:capture dragleave->contao--file-tree#onDragLeave drop->contao--file-tree#onDrop dragend->contao--file-tree#onDragEnd" data-contao--file-tree-request-token-value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-root-value="' . htmlspecialchars($strRoot, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-dragging-class="tl_listing_dragging" data-contao--file-tree-dropping-class="tl_folder_dropping" data-contao--file-tree-ghost-class="tl_left_dragging" data-contao--file-tree-uploading-class="dropzone-filetree-enabled" data-contao--file-tree-can-upload-value="' . ($blnCanUpload ? 'true' : 'false') . '" data-contao--file-tree-upload-url-value="' . htmlspecialchars($strUploadUrl, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-max-filesize-value="' . $intMaxSize . '" data-contao--file-tree-accepted-files-value="' . htmlspecialchars($strAccepted, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . ($blnCanUpload ? '<div class="dropzone dropzone-filetree" data-contao--file-tree-target="dropzone"><span class="dropzone-previews"></span></div>' : '') . '
   <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . StringUtil::ampersand($this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&id=' . $arrClipboard['id'] : ''))) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . $treeRecordLimitNotice . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
@@ -619,32 +627,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </form>';
 		}
 
-		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
-		{
-			$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
-			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
-
-			$return .= '<script>'
-				. 'Dropzone.autoDiscover = false;'
-				. 'Backend.enableFileTreeUpload("tl_listing", ' . json_encode(array(
-					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
-					'paramName' => 'files',
-					'maxFilesize' => $intMaxSize,
-					'acceptedFiles' => $strAccepted,
-					'params' => array(
-						'FORM_SUBMIT' => 'tl_upload',
-						'action' => 'fileupload',
-					),
-				)) . ')</script>'
-			;
-		}
-
-		$return .= '<script>'
-			. 'Backend.enableFileTreeDragAndDrop($("tl_listing").getChildren(".tl_file_manager")[0], ' . json_encode(array(
-				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
-			)) . ')</script>'
-		;
-
 		return '<div
 				class="tree-view"
 				data-controller="contao--toggle-nodes' . ($panel ? ' contao--element-count' : '') . '"
@@ -657,7 +639,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_limit)"' : '') . '
+				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
 			>' . $return . '</div>';
 	}
 
@@ -3114,11 +3096,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// No popup links for protected files and templates (see #700)
 			if ($blnProtected || $this->strTable == 'tl_templates')
 			{
-				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $iconAlt) . ' ' . '<span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
 			}
 			else
 			{
-				$return .= '<a href="' . $staticUrl . $currentEncoded . '" target="_blank">' . Image::getHtml($objFile->icon, $GLOBALS['TL_LANG']['MSC']['view']) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" target="_blank">' . Image::getHtml($objFile->icon, $GLOBALS['TL_LANG']['MSC']['view']) . '</a> ' . '<span>' . $strFileNameEncoded . '</span>' . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons
