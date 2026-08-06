@@ -383,12 +383,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Du kan endast bevilja åtkomst till mallredigeraren om du är administratör.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Nyckelordet ”auto” får endast förekomma i början av attributet ”sizes” och måste följas av ett kommatecken om det finns ytterligare värden.</target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Lazy loading måste vara aktiverat om attributet sizes är inställt på ”auto”.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

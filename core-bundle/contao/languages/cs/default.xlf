@@ -383,12 +383,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Můžete poskytnout přístup k editoru předloh, pokud jste administrátor.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Lze použít &quot;auto&quot; jen na začátku atributu rozměru musí být zakončený čárkou, existují-li další poté následující hodnoty. </target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Musí být povolené pozvolné načítání (lazy loud), pokud je atribut rozměru &quot;auto&quot;. </target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

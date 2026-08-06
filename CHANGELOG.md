@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.49] (2026-08-06)
+
+**Fixed issues:**
+
+- [#10086] Use `NodeCaptureInterface` for `AddNode` ([fritzmg])
+- [#10080] Support string UUIDs for `posterSRC` in the player element ([qzminski])
+- [#10076] Prevent array-to-string warnings in JSON-LD context definitions ([Toflar])
+- [#10063] Fix the cache settings inheritance ([fritzmg])
+- [#10067] Add default values for the `content_element` and `frontend_module` Twig functions ([ausi])
+- [#10065] Increase the size of `tl_log.browser` ([ausi])
+- [#10046] Add the new element CSS classes in addition to the old ones ([leofeyer])
+- [#9931] Fix the blank label for the root page dependent module ([zoglo])
+- [#10007] Fix `VideoObject` JSON-LD as per Google Schema Validator requirements ([lukasbableck])
+
 ## [5.3.48] (2026-07-13)
 
 **Security fixes:**
@@ -964,6 +978,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.49]: https://github.com/contao/contao/releases/tag/5.3.49
 [5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
 [5.3.47]: https://github.com/contao/contao/releases/tag/5.3.47
 [5.3.46]: https://github.com/contao/contao/releases/tag/5.3.46
@@ -1017,8 +1032,8 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
-[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
+[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
@@ -1715,6 +1730,15 @@ This project adheres to [Semantic Versioning].
 [#9920]: https://github.com/contao/contao/pull/9920
 [#9926]: https://github.com/contao/contao/pull/9926
 [#9927]: https://github.com/contao/contao/pull/9927
+[#9931]: https://github.com/contao/contao/pull/9931
 [#9940]: https://github.com/contao/contao/pull/9940
 [#9996]: https://github.com/contao/contao/pull/9996
 [#10004]: https://github.com/contao/contao/pull/10004
+[#10007]: https://github.com/contao/contao/pull/10007
+[#10046]: https://github.com/contao/contao/pull/10046
+[#10063]: https://github.com/contao/contao/pull/10063
+[#10065]: https://github.com/contao/contao/pull/10065
+[#10067]: https://github.com/contao/contao/pull/10067
+[#10076]: https://github.com/contao/contao/pull/10076
+[#10080]: https://github.com/contao/contao/pull/10080
+[#10086]: https://github.com/contao/contao/pull/10086
