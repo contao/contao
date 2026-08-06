@@ -63,7 +63,7 @@
         {% set list_attributes = attrs()
             .set('id', id)
             .set('data-id', record_id)
-            .addStyle({'display': 'none'}, toggler_url and not is_expanded)
+            .addStyle({display: 'none'}, toggler_url and not is_expanded)
             .set('data-contao--toggle-nodes-target', 'child' ~ (level == 0 ? ' rootChild' : ''))
         %}
         <ul{{ list_attributes }}>
