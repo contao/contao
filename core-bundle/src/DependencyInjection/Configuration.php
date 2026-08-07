@@ -700,6 +700,16 @@ class Configuration implements ConfigurationInterface
                     ->info('The name of the search index')
                     ->defaultValue('contao_backend')
                 ->end()
+                ->arrayNode('permission_aware_facets')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('max_groups')
+                            ->info('Maximum number of backend user groups that are evaluated for indexing allowed group access. Set to 0 for no limit.')
+                            ->min(0)
+                            ->defaultValue(10)
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
     }
