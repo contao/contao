@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\Database;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -50,7 +49,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private array $pageTypeCache = [];
 
     public function __construct(
-        private readonly ContaoFramework $framework,
+        private readonly Hierarchy $hierarchy,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly Connection $connection,
     ) {
@@ -203,9 +202,9 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             return $this->pagemountsCache[$user->id];
         }
 
-        $database = $this->framework->createInstance(Database::class);
+        $children = $this->hierarchy->getChildIds($user->pagemounts, 'tl_page');
 
-        return $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page', false, $user->pagemounts);
+        return $this->pagemountsCache[$user->id] = [...$children, ...$user->pagemounts];
     }
 
     private function getPagemountTrail(TokenInterface $token): array
@@ -220,11 +219,10 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             return $this->pagemountTrailCache[$user->id];
         }
 
-        $database = $this->framework->createInstance(Database::class);
         $trails = $this->pagemountTrailCache[$user->id] = [];
 
         foreach ($user->pagemounts as $pageId) {
-            $trails[] = $database->getParentRecords($pageId, 'tl_page');
+            $trails[] = $this->hierarchy->getParentIds($pageId, 'tl_page');
         }
 
         return $this->pagemountTrailCache[$user->id] = array_map(intval(...), array_unique(array_merge(...$trails)));

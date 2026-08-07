@@ -336,7 +336,7 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
-				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
