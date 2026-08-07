@@ -11,11 +11,13 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
@@ -365,22 +367,14 @@ class Newsletter extends Backend
 	 * @param Result $objNewsletter
 	 * @param array  $arrAttachments
 	 *
-	 * @return Email
+	 * @return EmailMessage
 	 */
 	protected function generateEmailObject(Result $objNewsletter, $arrAttachments)
 	{
-		$objEmail = new Email();
-		$objEmail->from = $objNewsletter->sender;
-		$objEmail->subject = $objNewsletter->subject;
-
-		// Add sender name
-		if ($objNewsletter->senderName)
-		{
-			$objEmail->fromName = $objNewsletter->senderName;
-		}
-
-		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
+		$objEmail = new EmailMessage()
+			->from(new Address($objNewsletter->sender, $objNewsletter->senderName))
+			->subject($objNewsletter->subject)
+		;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
@@ -389,14 +383,14 @@ class Newsletter extends Backend
 
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile($projectDir . '/' . $strAttachment);
+				$objEmail->attachFromPath($projectDir . '/' . $strAttachment, basename($strAttachment), 'application/octet-stream');
 			}
 		}
 
 		// Add transport
 		if (!empty($objNewsletter->mailerTransport) || !empty($objNewsletter->channelMailerTransport))
 		{
-			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
+			$objEmail->getHeaders()->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
 		return $objEmail;
@@ -405,26 +399,26 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email  $objEmail
-	 * @param Result $objNewsletter
-	 * @param array  $arrRecipient
-	 * @param string $text
-	 * @param string $html
+	 * @param EmailMessage $objEmail
+	 * @param Result       $objNewsletter
+	 * @param array        $arrRecipient
+	 * @param string       $text
+	 * @param string       $html
 	 *
 	 * @return boolean
 	 */
-	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
+	protected function sendNewsletter(EmailMessage $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
 	{
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
 		if (isset($arrRecipient['recipient']))
 		{
-			$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+			$objEmail->getHeaders()->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
 		}
 
 		// Prepare the text content
-		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
+		$objEmail->text(StringUtil::decodeEntities($simpleTokenParser->parse($text, $arrRecipient)));
 
 		if (!$objNewsletter->sendText)
 		{
@@ -437,11 +431,48 @@ class Newsletter extends Backend
 			$objTemplate->recipient = $arrRecipient['email'];
 
 			// Parse the template
-			$objEmail->html = (new CssToInlineStyles())->convert($objTemplate->parse());
-			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
+			$objEmail->html(new CssToInlineStyles())->convert($objTemplate->parse());
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
+		if (!$objNewsletter->externalImages)
+		{
+			$strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
+
+			$arrCid = array();
+			$arrMatches = array();
+			$strBase = Environment::get('base');
+
+			// Thanks to @ofriedrich and @aschempp (see #4562)
+			preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $objEmail->getHtmlBody(), $arrMatches);
+
+			// Check for internal images
+			if (!empty($arrMatches) && isset($arrMatches[0]))
+			{
+				for ($i=0, $c=\count($arrMatches[0]); $i<$c; $i++)
+				{
+					$url = $arrMatches[3][$i];
+
+					// Try to remove the base URL
+					$src = str_replace($strBase, '', $url);
+					$src = rawurldecode($src); // see #3713
+
+					// Embed the image if the URL is now relative
+					if (!preg_match('@^https?://@', $src) && ($objFile = new File(StringUtil::stripRootDir($strImageDir . $src))) && ($objFile->exists() || $objFile->createIfDeferred()))
+					{
+						if (!isset($arrCid[$src]))
+						{
+							// See https://symfony.com/doc/current/mailer.html#embedding-images
+							$objEmail->embedFromPath($this->strImageDir . $src, $src);
+							$arrCid[$src] = 'cid:' . $src;
+						}
+
+						$objEmail->html(str_replace($arrMatches[1][$i] . $arrMatches[3][$i] . $arrMatches[5][$i], $arrMatches[1][$i] . $arrCid[$src] . $arrMatches[5][$i], $objEmail->getHtmlBody()));
+					}
+				}
+			}
+		}
+
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->getTextBody(), $objEmail->getHtmlBody() ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
@@ -453,8 +484,8 @@ class Newsletter extends Backend
 			return false;
 		}
 
-		$objEmail->text = $event->getText();
-		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
+		$objEmail->text(StringUtil::decodeEntities($event->getText()));
+		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
@@ -463,18 +494,16 @@ class Newsletter extends Backend
 		// Deactivate invalid addresses
 		try
 		{
-			$objEmail->sendTo($arrRecipient['email']);
-		}
-		catch (RfcComplianceException|TransportException $e)
-		{
-			$arrRejected[] = $arrRecipient['email'];
-			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
-		}
+			$objEmail->to($arrRecipient['email']);
 
-		// Rejected recipients
-		if ($objEmail->hasFailures())
+			System::getContainer()->get('mailer')->send($objEmail);
+		}
+		catch (RfcComplianceException|HandlerFailedException|TransportException $e)
 		{
+			// Rejected recipients
 			$arrRejected[] = $arrRecipient['email'];
+
+			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		$objSession->set('rejected_recipients', $arrRejected);
