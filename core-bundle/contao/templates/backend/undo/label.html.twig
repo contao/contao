@@ -19,17 +19,19 @@
 </div>
 
 {% if preview is not empty %}
-    <div class="tl_undo_preview" inert>
-        {% if preview is not iterable %}
-            {{ preview|sanitize_html('contao') }}
-        {% else %}
-            <table>
-                <tr>
-                    {% for value in preview %}
-                        <td>{{ value|sanitize_html('contao') }}</td>
-                    {% endfor %}
-                </tr>
-            </table>
-        {% endif %}
+    <div class="tl_undo_preview cte_preview">
+        <div inert>
+            {% if preview is not iterable %}
+                {{ preview|sanitize_html('contao') }}
+            {% else %}
+                <table>
+                    <tr>
+                        {% for value in preview %}
+                            <td>{{ value|sanitize_html('contao') }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            {% endif %}
+        </div>
     </div>
 {% endif %}
