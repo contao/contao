@@ -49,10 +49,10 @@ export default class extends Controller {
         const atStart = 0 === input.selectionStart;
         const atEnd = input.value.length === input.selectionStart;
 
-        if ('ArrowLeft' === event.key && atStart) {
+        if (this.allowNestingValue && 'ArrowLeft' === event.key && atStart) {
             this.outdent(event);
             input.focus();
-        } else if ('ArrowRight' === event.key && atEnd) {
+        } else if (this.allowNestingValue && 'ArrowRight' === event.key && atEnd) {
             this.indent(event);
             input.focus();
         } else if ('ArrowUp' === event.key && atStart) {
