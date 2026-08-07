@@ -5,12 +5,11 @@ export default class extends Controller {
 
     static values = {
         name: String,
-        /** @deprecated Deprecated since Contao 6.1, to be removed in Contao 7 */
-        isLegacy: Boolean,
+        allowNesting: Boolean,
     };
 
     update() {
-        if (this.isLegacyValue) {
+        if (!this.allowNestingValue) {
             return;
         }
 
