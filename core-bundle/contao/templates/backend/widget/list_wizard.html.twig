@@ -33,6 +33,7 @@
             .set('type', 'text')
             .set('name', allow_nesting ? "#{prefix}[item]" : prefix)
             .set('value', allow_nesting ? row.item|default : row)
+            .set('data-action', 'keydown->contao--list-wizard#navigate')
             .addClass('tl_text')
         %}
         <input{{ value_attributes }}>

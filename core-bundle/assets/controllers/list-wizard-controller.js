@@ -17,14 +17,7 @@ export default class extends Controller {
     }
 
     copy(event) {
-        const row = this.#getRow(event);
-
-        const newRow = row.cloneNode(true);
-
-        row.after(newRow);
-        this.#focus(newRow);
-
-        this.update();
+        this.#addRow(this.#getRow(event), false);
     }
 
     delete(event) {
@@ -45,6 +38,31 @@ export default class extends Controller {
         }
 
         this.update();
+    }
+
+    navigate(event) {
+        const input = event.target;
+        const row = this.#getRow(event);
+        const rows = this.rowTargets;
+
+        const i = rows.indexOf(row);
+        const atStart = 0 === input.selectionStart;
+        const atEnd = input.value.length === input.selectionStart;
+
+        if ('ArrowLeft' === event.key && atStart) {
+            this.outdent(event);
+            input.focus();
+        } else if ('ArrowRight' === event.key && atEnd) {
+            this.indent(event);
+            input.focus();
+        } else if ('ArrowUp' === event.key && atStart) {
+            this.#focus(rows[i - 1]);
+        } else if ('ArrowDown' === event.key && atEnd) {
+            this.#focus(rows[i + 1]);
+        } else if ('Enter' === event.key) {
+            this.#addRow(row, true);
+            event.preventDefault();
+        }
     }
 
     indent(event) {
@@ -77,12 +95,28 @@ export default class extends Controller {
         this.update();
     }
 
+    #addRow(row, reset = true) {
+        const newRow = row.cloneNode(true);
+
+        if (reset) {
+            for (const input of newRow.querySelectorAll('input')) {
+                input.value = '';
+            }
+
+            newRow.querySelector(':scope > ul')?.replaceChildren();
+        }
+
+        row.after(newRow);
+        this.#focus(newRow);
+        this.update();
+    }
+
     #focus(el) {
         if (!el) {
             return false;
         }
 
-        el.querySelector('input')?.focus();
+        el.querySelector(':scope > input')?.focus();
 
         return true;
     }
