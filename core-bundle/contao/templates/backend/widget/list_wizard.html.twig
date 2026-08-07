@@ -8,6 +8,7 @@
     .set('data-contao--sortable-handle-value', '.drag-handle')
     .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
     .addClass('tl_listwizard')
+    .addClass('is-nested', allow_nesting)
 %}
 <ul{{ list_attributes }}>
     {% for row in rows %}
