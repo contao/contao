@@ -35,7 +35,7 @@ class ListWizard extends Widget
 	{
 		parent::__construct($arrAttributes);
 
-		/**
+		/*
 		 * Disable nesting if we use the legacy content element.
 		 *
 		 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
@@ -68,7 +68,6 @@ class ListWizard extends Widget
 			default:
 				parent::__set($strKey, $varValue);
 				break;
-
 		}
 	}
 
