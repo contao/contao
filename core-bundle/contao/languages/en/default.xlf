@@ -290,9 +290,6 @@
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
       </trans-unit>
-      <trans-unit id="ERR.altchaWidgetError">
-        <source>Verification failed. Try again later.</source>
-      </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
       </trans-unit>
@@ -2308,21 +2305,6 @@
       </trans-unit>
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
-      </trans-unit>
-      <trans-unit id="MSC.altchaFooter">
-        <source>Protected by &lt;a href="https://altcha.org/" target="_blank"&gt;ALTCHA&lt;/a&gt;</source>
-      </trans-unit>
-      <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
-      </trans-unit>
-      <trans-unit id="MSC.altchaVerifying">
-        <source>Verifying …</source>
-      </trans-unit>
-      <trans-unit id="MSC.altchaWaitAlert">
-        <source>Verifying … please wait.</source>
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>
