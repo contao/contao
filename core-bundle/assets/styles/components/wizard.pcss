@@ -175,10 +175,25 @@
     margin: 2px 0;
 }
 
+/* List wizard */
 .tl_listwizard {
     margin: 1px 0;
     padding: 0;
     list-style: none;
+}
+
+.tl_listwizard button {
+    margin-left: 1px;
+}
+
+.tl_listwizard:not(.is-nested) {
+    .tl_text {
+        width: 78%;
+        margin: 2px 0;
+    }
+}
+
+.tl_listwizard.is-nested {
     max-width: max(80%, 600px);
 
     ul {
@@ -211,13 +226,13 @@
     button {
         flex: none;
     }
-}
 
-.outdent,
-.indent {
-    &[disabled] {
-        cursor: not-allowed;
-        filter: brightness(var(--disable-brightness, 0.2)) grayscale(1) opacity(0.3);
+    .outdent,
+    .indent {
+        &[disabled] {
+            cursor: not-allowed;
+            filter: brightness(var(--disable-brightness, 0.2)) grayscale(1) opacity(0.3);
+        }
     }
 }
 
