@@ -82,6 +82,13 @@
     color: inherit;
 }
 
+.tl_listing_dragging {
+    .tl_folder > *,
+    .tl_file > * {
+        pointer-events: none;
+    }
+}
+
 .tl_listing_dragging .hover-div:not(.tl_folder):hover {
     background-color: transparent !important;
 }
@@ -111,6 +118,17 @@
     margin: 3px 0 2px;
     vertical-align: bottom;
     border-radius: var(--border-radius);
+}
+
+.tl_file_manager.tl_listing_draggable {
+    .tl_folder,
+    .tl_file {
+        cursor: grab;
+    }
+
+    .tl_left > span {
+        cursor: auto;
+    }
 }
 
 .tl_listing .tl_right {
