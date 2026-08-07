@@ -473,9 +473,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
-			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), (int) Input::get('id')));
+			$mode = Input::get('mode');
+
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission($mode, (int) Input::get('id')));
 
 			$children = Input::get('children');
+
+			// Paste directly if the target is unambiguous (see #10103)
+			if (
+				$mode === ClipboardManager::MODE_COPY
+				&& !$children
+				&& $this->ptable
+				&& $this->currentPid
+				&& !($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+				&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) != 'sorting'
+				&& Database::getInstance()->prepare("SELECT COUNT(*) AS count FROM " . $this->ptable)->execute()->count == 1
+			) {
+				$this->redirect(Backend::addToUrl('act=copy&mode=' . self::PASTE_INTO . '&pid=' . $this->currentPid, false, array('mode')));
+			}
 
 			// Backwards compatibility
 			if (Input::get('childs') !== null)
