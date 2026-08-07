@@ -2,47 +2,87 @@
 
 {% set list_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
-    .set('data-controller', 'contao--row-wizard contao--sortable')
-    .set('data-contao--row-wizard-name-value', id)
+    .set('data-controller', 'contao--list-wizard contao--sortable')
+    .set('data-contao--list-wizard-name-value', id)
+    .set('data-contao--list-wizard-is-legacy-value', is_legacy)
     .set('data-contao--sortable-handle-value', '.drag-handle')
-    .set('data-contao--row-wizard-target', 'body')
+    .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
     .addClass('tl_listwizard')
 %}
 <ul{{ list_attributes }}>
-    {% for value in rows %}
-        {% set item_attributes = attrs()
-            .set('data-contao--row-wizard-target', 'row')
-        %}
-        <li{{ item_attributes }}>
-            {# Drag row #}
-            {% set drag_handle_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'keydown->contao--sortable#move')
-                .addClass('drag-handle')
-            %}
-            <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
-            {% set value_attributes = attrs()
-                .set('type', 'text')
-                .set('name', "#{id}[]")
-                .set('value', value|default)
-                .addClass('tl_text')
-            %}
-            <input{{ value_attributes }}>
-
-            {# Controls #}
-            {# Copy row #}
-            {% set copy_button_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'contao--row-wizard#copy contao--scroll-offset#store')
-            %}
-            <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
-
-            {# Delete row #}
-            {% set delete_button_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
-            %}
-            <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
-        </li>
+    {% for row in rows %}
+        {{ _self.row(is_legacy ? "#{id}[]" : "#{id}[#{loop.index0}]", row, true, loop.first, is_legacy) }}
     {% endfor %}
 </ul>
+
+{% macro row(prefix, row, root, first, is_legacy) %}
+    {% set item_attributes = attrs()
+        .set('data-contao--list-wizard-target', 'row')
+    %}
+    <li{{ item_attributes }}>
+        {# Drag row #}
+        {% set drag_handle_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'keydown->contao--sortable#move')
+            .addClass('drag-handle')
+        %}
+        <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+
+        {% set value_attributes = attrs()
+            .set('type', 'text')
+            .set('name', is_legacy ? prefix : "#{prefix}[item]")
+            .set('value', is_legacy ? row : row.item|default)
+            .addClass('tl_text')
+        %}
+        <input{{ value_attributes }}>
+
+        {# Controls #}
+        {% if not is_legacy %}
+            {# Outdent row #}
+            {% set outdent_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--list-wizard#outdent')
+                .set('disabled', '', root)
+                .addClass('outdent')
+            %}
+            <button{{ outdent_button_attributes }}>{{ backend_icon('movel.svg', 'MSC.outdent'|trans) }}</button>
+
+            {# Indent row #}
+            {% set indent_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--list-wizard#indent')
+                .set('disabled', '', first)
+                .addClass('indent')
+            %}
+            <button{{ indent_button_attributes }}>{{ backend_icon('mover.svg', 'MSC.indent'|trans) }}</button>
+        {% endif %}
+
+        {# Copy row #}
+        {% set copy_button_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'contao--list-wizard#copy contao--scroll-offset#store')
+        %}
+        <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
+
+        {# Delete row #}
+        {% set delete_button_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'contao--list-wizard#delete contao--scroll-offset#store')
+        %}
+        <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
+
+        {% if not is_legacy %}
+            {# Nested lists #}
+            {% set sub_list_attributes = attrs()
+                .set('data-controller', 'contao--sortable')
+                .set('data-contao--sortable-handle-value', '.drag-handle')
+                .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
+            %}
+            <ul{{ sub_list_attributes }}>
+                {% for list_item in row.list|default([]) %}
+                    {{ _self.row("#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, is_legacy) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}

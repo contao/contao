@@ -23,11 +23,21 @@ class ListWizard extends Widget
 	 */
 	protected $blnSubmitInput = true;
 
+	protected bool $legacyContentElement = false;
+
 	/**
 	 * Template
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
+
+	public function __construct($arrAttributes=null)
+	{
+		parent::__construct($arrAttributes);
+
+		/** @deprecated Deprecated since Contao 6.1, to be removed in Contao 7 */
+		$this->legacyContentElement = ($GLOBALS['TL_CTE']['texts']['list'] ?? null) === ContentList::class;
+	}
 
 	/**
 	 * Add specific attributes
@@ -50,6 +60,18 @@ class ListWizard extends Widget
 		}
 	}
 
+	public function validate(): void
+	{
+		parent::validate();
+
+		if ($this->legacyContentElement)
+		{
+			return;
+		}
+
+		$this->varValue = $this->normalize($this->varValue);
+	}
+
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -65,7 +87,28 @@ class ListWizard extends Widget
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/widget/list_wizard.html.twig', array(
 			'id' => $this->strId,
-			'rows' => $this->varValue,
+			'rows' => $this->legacyContentElement ? $this->varValue : $this->normalize($this->varValue),
+			'is_legacy' => $this->legacyContentElement,
 		));
+	}
+
+	private function normalize($varValue): array
+	{
+		$arrRows = array();
+
+		foreach ((array) $varValue as $varRow)
+		{
+			if (!\is_array($varRow))
+			{
+				$varRow = array('item' => $varRow);
+			}
+
+			$arrRows[] = array(
+				'item' => (string) ($varRow['item'] ?? ''),
+				'list' => $this->normalize($varRow['list'] ?? array()),
+			);
+		}
+
+		return $arrRows;
 	}
 }
