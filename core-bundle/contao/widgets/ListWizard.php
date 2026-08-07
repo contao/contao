@@ -23,7 +23,7 @@ class ListWizard extends Widget
 	 */
 	protected $blnSubmitInput = true;
 
-	protected bool $legacyContentElement = false;
+	private bool $allowNesting;
 
 	/**
 	 * Template
@@ -35,8 +35,13 @@ class ListWizard extends Widget
 	{
 		parent::__construct($arrAttributes);
 
-		/** @deprecated Deprecated since Contao 6.1, to be removed in Contao 7 */
-		$this->legacyContentElement = ($GLOBALS['TL_CTE']['texts']['list'] ?? null) === ContentList::class;
+		/**
+		 * Disable nesting if we use the legacy content element.
+		 *
+		 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+		 * 			   Nesting will not be disabled if we are not using the `contentList` anymore.
+		 */
+		$this->allowNesting = $this->allowNesting && ($GLOBALS['TL_CTE']['texts']['list'] ?? null) !== ContentList::class;
 	}
 
 	/**
@@ -47,16 +52,23 @@ class ListWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		if ($strKey == 'maxlength')
+		switch ($strKey)
 		{
-			if ($varValue > 0)
-			{
-				$this->arrAttributes['maxlength'] = $varValue;
-			}
-		}
-		else
-		{
-			parent::__set($strKey, $varValue);
+			case 'maxlength':
+				if ($varValue > 0)
+				{
+					$this->arrAttributes['maxlength'] = $varValue;
+				}
+				break;
+
+			case 'nesting':
+				$this->allowNesting = $varValue ?: false;
+				break;
+
+			default:
+				parent::__set($strKey, $varValue);
+				break;
+
 		}
 	}
 
@@ -64,7 +76,7 @@ class ListWizard extends Widget
 	{
 		parent::validate();
 
-		if ($this->legacyContentElement)
+		if (!$this->allowNesting)
 		{
 			return;
 		}
@@ -87,8 +99,8 @@ class ListWizard extends Widget
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/widget/list_wizard.html.twig', array(
 			'id' => $this->strId,
-			'rows' => $this->legacyContentElement ? $this->varValue : $this->normalize($this->varValue),
-			'is_legacy' => $this->legacyContentElement,
+			'rows' => $this->allowNesting ? $this->normalize($this->varValue) : $this->varValue,
+			'allow_nesting' => $this->allowNesting,
 		));
 	}
 

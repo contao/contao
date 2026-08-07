@@ -4,18 +4,18 @@
     .set('id', 'ctrl_' ~ id)
     .set('data-controller', 'contao--list-wizard contao--sortable')
     .set('data-contao--list-wizard-name-value', id)
-    .set('data-contao--list-wizard-is-legacy-value', is_legacy)
+    .set('data-contao--list-wizard-allow-nesting-value', allow_nesting)
     .set('data-contao--sortable-handle-value', '.drag-handle')
     .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
     .addClass('tl_listwizard')
 %}
 <ul{{ list_attributes }}>
     {% for row in rows %}
-        {{ _self.row(is_legacy ? "#{id}[]" : "#{id}[#{loop.index0}]", row, true, loop.first, is_legacy) }}
+        {{ _self.row(allow_nesting ? "#{id}[#{loop.index0}]" : "#{id}[]", row, true, loop.first, allow_nesting) }}
     {% endfor %}
 </ul>
 
-{% macro row(prefix, row, root, first, is_legacy) %}
+{% macro row(prefix, row, root, first, allow_nesting) %}
     {% set item_attributes = attrs()
         .set('data-contao--list-wizard-target', 'row')
     %}
@@ -30,14 +30,14 @@
 
         {% set value_attributes = attrs()
             .set('type', 'text')
-            .set('name', is_legacy ? prefix : "#{prefix}[item]")
-            .set('value', is_legacy ? row : row.item|default)
+            .set('name', allow_nesting ? "#{prefix}[item]" : prefix)
+            .set('value', allow_nesting ? row.item|default : row)
             .addClass('tl_text')
         %}
         <input{{ value_attributes }}>
 
         {# Controls #}
-        {% if not is_legacy %}
+        {% if allow_nesting %}
             {# Outdent row #}
             {% set outdent_button_attributes = attrs()
                 .set('type', 'button')
@@ -71,7 +71,7 @@
         %}
         <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
 
-        {% if not is_legacy %}
+        {% if allow_nesting %}
             {# Nested lists #}
             {% set sub_list_attributes = attrs()
                 .set('data-controller', 'contao--sortable')
@@ -80,7 +80,7 @@
             %}
             <ul{{ sub_list_attributes }}>
                 {% for list_item in row.list|default([]) %}
-                    {{ _self.row("#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, is_legacy) }}
+                    {{ _self.row("#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, allow_nesting) }}
                 {% endfor %}
             </ul>
         {% endif %}
