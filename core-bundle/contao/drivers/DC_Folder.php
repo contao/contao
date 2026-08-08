@@ -3192,13 +3192,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		foreach ($searchFields as $field)
 		{
-			$strMetaField = str_contains($field, 'meta.') ?: '';
+			if (str_contains($field, 'meta.'))
+			{
+				$strLabel = 'MSC.aw_' . explode('.', $field)[1];
+				$strGroup = $this->strTable . '.' . explode('.', $field)[0] . '.0';
+			}
+			else
+			{
+				$strLabel = 'uuid' === $field ? 'MSC.fileUuid' : 'MSC.' . $field;
+				$strGroup = 'MSC.field';
+			}
 
 			$options[] = array(
 				'value' => $field,
 				'selected' => $strSelected === $field,
-				'label' => $translator->trans($strMetaField ? 'MSC.aw_' . substr($strMetaField, 1) : ('uuid' === $field ? 'MSC.fileUuid' : 'MSC.' . $field), array(), 'contao_default'),
-				'group' => $translator->trans($strMetaField ? $this->strTable . '.' . strstr($field, '.', true) . '.0' : 'MSC.field', array(), 'contao_default'),
+				'label' => $translator->trans($strLabel, array(), 'contao_default'),
+				'group' => $translator->trans($strGroup, array(), 'contao_default'),
 			);
 		}
 
