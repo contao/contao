@@ -408,7 +408,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$for = preg_quote($strSubField, '/') . '";s:[0-9]+:"[^"]*' . $for;
 				}
 
-				$strPattern = "LOWER(CAST(" . Database::getInstance()->quoteIdentifier($strField) . " AS CHAR)) REGEXP LOWER(?)";
+				$strPattern = "LOWER(CAST(" . Database::quoteIdentifier($strField) . " AS CHAR)) REGEXP LOWER(?)";
 
 				$objRoot = $db
 					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
