@@ -254,9 +254,9 @@ class HighlightLanguageListener
     #[AsCallback(table: 'tl_content', target: 'fields.code.load')]
     public function setRteSyntax(mixed $value, DataContainer $dc): mixed
     {
-        $syntax = self::ACE_MODES[$dc->activeRecord->highlight] ?? 'text';
+        $syntax = self::ACE_MODES[$dc->getCurrentRecord()['hightlight'] ?? null] ?? 'text';
 
-        if ('markdown' === $dc->activeRecord->type) {
+        if ('markdown' === $dc->getCurrentRecord()['type'] ?? null) {
             $syntax = 'markdown';
         }
 
