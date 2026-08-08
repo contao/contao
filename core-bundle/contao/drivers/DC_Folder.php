@@ -3220,7 +3220,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$strLabel = match ($field) {
+				$strLabel = match ($field)
+				{
 					'name' => 'MSC.name',
 					'uuid' => 'MSC.fileUuid',
 					default => $this->strTable . '.' . $field . '.0',
