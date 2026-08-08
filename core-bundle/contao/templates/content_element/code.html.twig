@@ -9,7 +9,7 @@
             {% set code_attributes = attrs()
                 .set('id', 'code_' ~ data.id)
                 .addClass('hljs')
-                .addClass(language ? 'language-' ~ language : '')
+                .addClass(language)
                 .mergeWith(code_attributes|default)
             %}
             <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
