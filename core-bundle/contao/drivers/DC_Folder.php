@@ -405,7 +405,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				if (str_contains($strField, 'meta.'))
 				{
 					list($strField, $strSubField) = explode('.', $strField, 2);
-					$for = preg_quote($strSubField) . '";s:[0-9]+:"[^"]*' . $for;
+					$for = preg_quote($strSubField, '/') . '";s:[0-9]+:"[^"]*' . $for;
 				}
 
 				$strPattern = "LOWER(CAST(" . Database::getInstance()->quoteIdentifier($strField) . " AS CHAR)) REGEXP LOWER(?)";
