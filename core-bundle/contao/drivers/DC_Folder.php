@@ -396,7 +396,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				$strField = $session['search'][$this->strTable]['field'] ?? 'name';
 
-				if (!\in_array($strField, array('name', 'meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license'), true))
+				if ('uuid' === $strField || !\in_array($strField, $this->getSearchFields(), true))
 				{
 					$strField = 'name';
 				}
@@ -3157,6 +3157,27 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	}
 
 	/**
+	 * Return searchable fields
+	 *
+	 * @return array
+	 */
+	protected function getSearchFields()
+	{
+		$arrFields = array('name', 'uuid');
+		$arrMeta = array('meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license');
+
+		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field => $config)
+		{
+			if (($config['search'] ?? null) && !\in_array($field, $arrFields, true))
+			{
+				$arrFields[] = $field;
+			}
+		}
+
+		return array_merge($arrFields, $arrMeta);
+	}
+
+	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
 	 * @return string
@@ -3166,7 +3187,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$searchFields = array('name', 'uuid', 'meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license');
+		$searchFields = $this->getSearchFields();
 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -3199,7 +3220,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$strLabel = 'uuid' === $field ? 'MSC.fileUuid' : 'MSC.' . $field;
+				$strLabel = match ($field) {
+					'name' => 'MSC.name',
+					'uuid' => 'MSC.fileUuid',
+					default => $this->strTable . '.' . $field . '.0',
+				};
+
 				$strGroup = 'MSC.field';
 			}
 
