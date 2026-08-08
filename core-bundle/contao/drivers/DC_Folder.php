@@ -394,7 +394,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$for = preg_quote($for, null);
 				}
 
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+				$strField = $session['search'][$this->strTable]['field'] ?? 'name';
+
+				if (!\in_array($strField, array('name', 'meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license'), true))
+				{
+					$strField = 'name';
+				}
+
+				// Regex search serialized meta field
+				if (str_contains($strField, 'meta.'))
+				{
+					list($strField, $strSubField) = explode('.', $strField, 2);
+					$for = preg_quote($strSubField) . '";s:[0-9]+:"[^"]*' . $for;
+				}
+
+				$strPattern = "LOWER(CAST(" . Database::getInstance()->quoteIdentifier($strField) . " AS CHAR)) REGEXP LOWER(?)";
 
 				$objRoot = $db
 					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
@@ -3152,7 +3166,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$searchFields = array('name', 'uuid');
+		$searchFields = array('name', 'uuid', 'meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license');
 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -3173,39 +3187,33 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$options = array();
+		$strSelected = $session['search'][$this->strTable]['field'] ?? null;
+		$translator = System::getContainer()->get('translator');
 
 		foreach ($searchFields as $field)
 		{
-			$option_label = $field;
+			$strMetaField = str_contains($field, 'meta.') ?: '';
 
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
-			{
-				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
-			}
-			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
-			{
-				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
-			}
-
-			$options[] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? null) === $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options[] = array(
+				'value' => $field,
+				'selected' => $strSelected === $field,
+				'label' => $translator->trans($strMetaField ? 'MSC.aw_' . substr($strMetaField, 1) : ('uuid' === $field ? 'MSC.fileUuid' : 'MSC.' . $field), array(), 'contao_default'),
+				'group' => $translator->trans($strMetaField ? $this->strTable . '.' . strstr($field, '.', true) . '.0' : 'MSC.field', array(), 'contao_default'),
+			);
 		}
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		$this->setPanelState($active);
 
-		return '
-    <fieldset class="tl_search tl_subpanel">
-      <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
-      <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
-      <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="tl_search" name="tl_search" class="tl_select">
-            ' . implode("\n", $options) . '
-          </select>
-      </div>
-      <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
-      <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
-    </fieldset>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
+				'options' => $options,
+				'active' => $active,
+				'value' => $session['search'][$this->strTable]['value'] ?? '',
+			))
+		;
 	}
 
 	/**
