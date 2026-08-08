@@ -401,8 +401,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'highlight' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'Twig', 'YAML', 'XML'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50', 'chosen'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'markdownSource' => array
@@ -419,10 +418,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace', 'helpwizard'=>true, 'tl_class'=>'clr'),
 			'explanation'             => 'insertTags',
-			'load_callback' => array
-			(
-				array('tl_content', 'setRteSyntax')
-			),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'url' => array
@@ -1207,10 +1202,14 @@ class tl_content extends Backend
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
 	 *
+	 * @deprecated Deprecated in Contao 6.1, to be removed in Contao 7.
+	 *
 	 * @return string
 	 */
 	public function setRteSyntax($varValue, DataContainer $dc)
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
 		switch ($dc->activeRecord->highlight)
 		{
 			case 'C':
