@@ -120,6 +120,11 @@ class ModuleNewsReader extends ModuleNews
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
+			if ($objArticle->headline)
+			{
+				$htmlHeadBag->setName($objArticle->headline);
+			}
+
 			if ($objArticle->pageTitle)
 			{
 				$htmlHeadBag->setTitle($objArticle->pageTitle); // Already stored decoded

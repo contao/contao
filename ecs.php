@@ -50,6 +50,7 @@ return ECSConfig::configure()
     ])
     ->withSkip([
         MethodChainingIndentationFixer::class => [
+            '*-bundle/src/*Bundle.php',
             '*/DependencyInjection/Configuration.php',
         ],
         ReferenceUsedNamesOnlySniff::class => [

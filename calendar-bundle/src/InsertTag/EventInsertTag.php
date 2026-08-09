@@ -72,7 +72,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($insertTag) {
             'event' => new InsertTagResult(
-                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_html }}</a>')->render([
                     'url' => $generateUrl(),
                     'attributes' => new HtmlAttributes(\in_array('blank', $arguments, true) ? 'target="_blank" rel="noreferrer noopener"' : ''),
                     'label' => $model->title,
