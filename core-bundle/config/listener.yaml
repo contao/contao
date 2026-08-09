@@ -580,6 +580,12 @@ services:
             - '@router'
             - '@uri_signer'
 
+    contao.listener.preview_time:
+        class: Contao\CoreBundle\EventListener\PreviewTimeListener
+        arguments:
+            - '@contao.security.token_checker'
+            - '@clock'
+
     contao.listener.preview_toolbar:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener
         arguments:
