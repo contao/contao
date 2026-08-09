@@ -628,7 +628,7 @@ class Date
 	{
 		if ($intTime === null)
 		{
-			// Get time from the clock component (see #10110)
+			// Get time from the clock component (see #10108)
 			$intTime = Clock::get()->now()->getTimestamp();
 		}
 
