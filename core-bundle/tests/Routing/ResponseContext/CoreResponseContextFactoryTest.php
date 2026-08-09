@@ -145,7 +145,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
                 ['My title', 'My title'],
@@ -251,7 +251,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('replaceInline')
             ->willReturnMap([
                 ['My title', 'My title'],
@@ -350,7 +350,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
                 ['', 'My title'],

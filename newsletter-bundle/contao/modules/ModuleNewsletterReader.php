@@ -93,6 +93,7 @@ class ModuleNewsletterReader extends Module
 			if ($responseContext?->has(HtmlHeadBag::class))
 			{
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlHeadBag->setName($objNewsletter->subject);
 				$htmlHeadBag->setTitle($objNewsletter->subject);
 			}
 		}

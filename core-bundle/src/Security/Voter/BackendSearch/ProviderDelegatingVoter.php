@@ -39,7 +39,13 @@ class ProviderDelegatingVoter extends Voter
             return false;
         }
 
-        return array_any($this->providers, static fn ($provider) => $provider->supportsType($subject->getType()));
+        foreach ($this->providers as $provider) {
+            if ($provider->supportsType($subject->getType())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -47,7 +53,6 @@ class ProviderDelegatingVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, Vote|null $vote = null): bool
     {
-        /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             if ($provider->supportsType($subject->getType())) {
                 return $provider->isDocumentGranted($token, $subject);

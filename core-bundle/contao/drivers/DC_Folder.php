@@ -657,7 +657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
+				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_limit)"' : '') . '
 			>' . $return . '</div>';
 	}
 

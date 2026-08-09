@@ -23,6 +23,93 @@ use PHPUnit\Framework\TestCase;
 
 class CommandCompilerTest extends TestCase
 {
+    public function testRunsAllCompiledCommands(): void
+    {
+        $compiler = new class() extends CommandCompiler {
+            public array $executedCommands = [];
+
+            public function __construct()
+            {
+            }
+
+            public function compileCommands(bool $skipDropStatements = false): array
+            {
+                return ['ALTER TABLE tl_foo ADD bar INT'];
+            }
+
+            public function executeSqlCommand(string $command): void
+            {
+                $this->executedCommands[] = $command;
+            }
+        };
+
+        $compiler->runAll();
+
+        $this->assertSame(['ALTER TABLE tl_foo ADD bar INT'], $compiler->executedCommands);
+    }
+
+    public function testRetriesFailedCommandsAfterAnotherCommandSucceeds(): void
+    {
+        $compiler = new class() extends CommandCompiler {
+            public array $attemptedCommands = [];
+
+            private bool $columnExists = false;
+
+            public function __construct()
+            {
+            }
+
+            public function compileCommands(bool $skipDropStatements = false): array
+            {
+                return $this->columnExists ? [] : ['ADD INDEX', 'ADD COLUMN'];
+            }
+
+            public function executeSqlCommand(string $command): void
+            {
+                $this->attemptedCommands[] = $command;
+
+                if ('ADD INDEX' === $command && !$this->columnExists) {
+                    throw new \RuntimeException('The column does not exist yet.');
+                }
+
+                $this->columnExists = true;
+            }
+        };
+
+        $compiler->runAll();
+
+        $this->assertSame(['ADD INDEX', 'ADD COLUMN', 'ADD INDEX'], $compiler->attemptedCommands);
+    }
+
+    public function testCompilesAgainAfterExecutingCommands(): void
+    {
+        $compiler = new class() extends CommandCompiler {
+            public array $executedCommands = [];
+
+            public function __construct()
+            {
+            }
+
+            public function compileCommands(bool $skipDropStatements = false): array
+            {
+                return match ($this->executedCommands) {
+                    [] => ['FIRST COMMAND'],
+                    ['FIRST COMMAND'] => ['SECOND COMMAND'],
+                    default => [],
+                };
+            }
+
+            public function executeSqlCommand(string $command): void
+            {
+                $this->executedCommands[] = $command;
+            }
+        };
+
+        $compiler->runAll();
+
+        $this->assertSame(['FIRST COMMAND', 'SECOND COMMAND'], $compiler->executedCommands);
+    }
+
     public function testReturnsTheAlterTableCommands(): void
     {
         $fromSchema = new Schema();

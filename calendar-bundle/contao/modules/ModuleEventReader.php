@@ -115,6 +115,11 @@ class ModuleEventReader extends Events
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
+			if ($objEvent->title)
+			{
+				$htmlHeadBag->setName($objEvent->title);
+			}
+
 			if ($objEvent->pageTitle)
 			{
 				$htmlHeadBag->setTitle($objEvent->pageTitle); // Already stored decoded

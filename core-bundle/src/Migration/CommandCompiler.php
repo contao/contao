@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
@@ -68,6 +69,49 @@ class CommandCompiler
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
     }
 
+    public function runAll(bool $skipDropStatements = false): void
+    {
+        $lastCommands = [];
+
+        while (true) {
+            $commands = $this->compileCommands($skipDropStatements);
+
+            if ([] === array_diff($commands, $lastCommands)) {
+                return;
+            }
+
+            $lastCommands = $commands;
+
+            do {
+                $commandExecuted = false;
+                $lastException = null;
+
+                foreach ($commands as $key => $command) {
+                    try {
+                        $this->executeSqlCommand($command);
+                        $commandExecuted = true;
+                        unset($commands[$key]);
+                    } catch (\Throwable $e) {
+                        $lastException = $e;
+                    }
+                }
+            } while ($commandExecuted);
+
+            if ($lastException) {
+                throw $lastException;
+            }
+        }
+    }
+
+    public function executeSqlCommand(string $command): void
+    {
+        try {
+            $this->connection->executeQuery($command);
+        } catch (\Throwable $exception) {
+            $this->fixFailedSqlCommand($command, $exception);
+        }
+    }
+
     /**
      * If tables or columns should be preserved, we copy the missing definitions over
      * to the $toSchema, so that no DROP commands will be issued in the diff.
@@ -107,6 +151,35 @@ class CommandCompiler
             ->getMethod('_addColumn')
             ->invoke($targetTable, $column)
         ;
+    }
+
+    /**
+     * MySQL can run into the error "1118 (42000): Row size too large" when adding or
+     * deleting columns. In MariaDB since version 10.4.0 this can also happen if a
+     * larger number of columns got deleted in the past because of the "Instant DROP
+     * COLUMN" feature. If we encounter such an error, we retry the affected query
+     * with the InnoDB strict mode disabled. Additionally, we optimize the table to
+     * prevent future errors due to the "Instant DROP COLUMN" feature. This approach
+     * involuntarily enables using too many or too large columns. To mitigate that,
+     * the migrate command shows a warning in these cases.
+     *
+     * @see DatabaseMigrationChecks::compileSchemaWarnings()
+     */
+    private function fixFailedSqlCommand(string $command, \Throwable $exception): void
+    {
+        if (!$exception instanceof DriverException || 1118 !== $exception->getCode() || !str_contains($exception->getMessage(), 'Row size too large') || !str_starts_with($command, 'ALTER TABLE ') || 1 !== (int) $this->connection->fetchOne('SELECT @@innodb_strict_mode')) {
+            throw $exception;
+        }
+
+        $this->connection->executeQuery('SET SESSION innodb_strict_mode = 0');
+
+        try {
+            $this->connection->executeQuery($command);
+            $table = explode(' ', substr($command, 12), 2)[0];
+            $this->connection->executeQuery("OPTIMIZE TABLE $table");
+        } finally {
+            $this->connection->executeQuery('SET SESSION innodb_strict_mode = 1');
+        }
     }
 
     /**

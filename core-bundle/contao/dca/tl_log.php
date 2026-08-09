@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'sorting'                 => true,
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'uri' => array
 		(

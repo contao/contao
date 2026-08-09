@@ -16,6 +16,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\McpTool;
+use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -24,6 +27,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
@@ -102,6 +106,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 ->withProcessor(DataContainerStateProcessor::class)
                 ->withRoutePrefix($routePrefix)
                 ->withDefaults(['_scope' => 'backend'])
+                ->withMcp($this->createMcpOperations($table, $shortName, $routePrefix, !($config['notDeletable'] ?? false)))
                 ->withExtraProperties([
                     'contao' => [
                         'table' => $table,
@@ -151,5 +156,84 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     private function getRoutePrefix(string $table): string
     {
         return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
+    }
+
+    /**
+     * @return array<string, McpTool|McpToolCollection>
+     */
+    private function createMcpOperations(string $table, string $shortName, string $routePrefix, bool $deletable): array
+    {
+        $baseName = preg_replace('/^tl_/', '', $table) ?? $table;
+
+        $operations = [
+            $baseName.'_get_collection' => new McpToolCollection(
+                name: $baseName.'_get_collection',
+                description: 'List '.$shortName.' records',
+                method: 'GET',
+                uriTemplate: $routePrefix,
+                shortName: $shortName,
+                class: DataContainerRecord::class,
+                input: ['class' => DataContainerMcpRecord::class],
+                output: ['class' => DataContainerRecord::class],
+                provider: DataContainerStateProvider::class,
+                processor: DataContainerStateProcessor::class,
+            ),
+            $baseName.'_get' => new McpTool(
+                name: $baseName.'_get',
+                description: 'Fetch a '.$shortName.' record',
+                method: 'GET',
+                uriTemplate: $routePrefix.'/{id}',
+                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
+                shortName: $shortName,
+                class: DataContainerRecord::class,
+                input: ['class' => DataContainerMcpRecord::class],
+                output: ['class' => DataContainerRecord::class],
+                provider: DataContainerStateProvider::class,
+                processor: DataContainerStateProcessor::class,
+            ),
+            $baseName.'_post' => new McpTool(
+                name: $baseName.'_post',
+                description: 'Create a '.$shortName.' record',
+                method: 'POST',
+                uriTemplate: $routePrefix,
+                shortName: $shortName,
+                class: DataContainerRecord::class,
+                input: ['class' => DataContainerMcpRecord::class],
+                output: ['class' => DataContainerRecord::class],
+                provider: DataContainerStateProvider::class,
+                processor: DataContainerStateProcessor::class,
+            ),
+            $baseName.'_patch' => new McpTool(
+                name: $baseName.'_patch',
+                description: 'Update a '.$shortName.' record',
+                method: 'PATCH',
+                uriTemplate: $routePrefix.'/{id}',
+                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
+                shortName: $shortName,
+                class: DataContainerRecord::class,
+                input: ['class' => DataContainerMcpRecord::class],
+                output: ['class' => DataContainerRecord::class],
+                provider: DataContainerStateProvider::class,
+                processor: DataContainerStateProcessor::class,
+            ),
+        ];
+
+        if ($deletable) {
+            $operations[$baseName.'_delete'] = new McpTool(
+                name: $baseName.'_delete',
+                description: 'Delete a '.$shortName.' record',
+                method: 'DELETE',
+                uriTemplate: $routePrefix.'/{id}',
+                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
+                shortName: $shortName,
+                class: DataContainerRecord::class,
+                input: ['class' => DataContainerMcpRecord::class],
+                output: false,
+                provider: DataContainerStateProvider::class,
+                processor: DataContainerStateProcessor::class,
+            )->withStructuredContent(false)->withStatus(204);
+        }
+
+        return $operations;
     }
 }

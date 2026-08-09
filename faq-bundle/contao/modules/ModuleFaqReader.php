@@ -97,6 +97,11 @@ class ModuleFaqReader extends Module
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
+			if ($objFaq->question)
+			{
+				$htmlHeadBag->setName($objFaq->question);
+			}
+
 			if ($objFaq->pageTitle)
 			{
 				$htmlHeadBag->setTitle($objFaq->pageTitle); // Already stored decoded

@@ -2,14 +2,25 @@
 ul.sortable li,
 [data-contao--input-map-target="source"] {
     position: relative;
-    cursor: move;
     border-radius: var(--border-radius);
     overflow: clip;
+}
+
+ul.sortable li,
+[data-controller*="contao--sortable"] > [data-contao--input-map-target="source"] {
+    cursor: move;
 }
 
 [data-contao--input-map-target="source"] {
     &:has(.gimage) {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 100px;
+        min-height: 75px;
+        margin: 0;
+        padding: 0;
+        background: var(--form-button);
     }
 
     &:has([data-action="contao--input-map#removeElement"]) {

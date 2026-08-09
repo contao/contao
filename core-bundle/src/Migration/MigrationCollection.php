@@ -23,7 +23,13 @@ class MigrationCollection
 
     public function hasPending(): bool
     {
-        return array_any($this->migrations, static fn ($migration) => $migration->shouldRun());
+        foreach ($this->migrations as $migration) {
+            if ($migration->shouldRun()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -46,6 +52,21 @@ class MigrationCollection
         foreach ($this->getPending() as $migration) {
             yield $migration->getName();
         }
+    }
+
+    public function runAll(): void
+    {
+        do {
+            $executedMigrations = false;
+
+            try {
+                foreach ($this->run([...$this->getPendingNames()]) as $ignored) {
+                    $executedMigrations = true;
+                }
+            } catch (UnexpectedPendingMigrationException) {
+                // Restarting migration process...
+            }
+        } while ($executedMigrations);
     }
 
     /**

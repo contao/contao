@@ -19,14 +19,18 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Migration\CommandCompiler;
+use Contao\CoreBundle\Migration\DatabaseMigrationChecks;
+use Contao\CoreBundle\Migration\DatabaseMigrationRunner;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -458,14 +462,20 @@ class MigrateCommandTest extends TestCase
             ->willReturn('8.0.29')
         ;
 
+        $driver = $this->createStub(Driver::class);
+        $driver
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySQLPlatform())
+        ;
+
         $connection
             ->method('getDriver')
-            ->willReturn($this->createStub(Driver::class))
+            ->willReturn($driver)
         ;
 
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySQLPlatform())
+            ->willReturn(new MySQL80Platform())
         ;
 
         $connection
@@ -473,7 +483,18 @@ class MigrateCommandTest extends TestCase
             ->willReturn(['serverVersion' => '5.7.39'])
         ;
 
-        $command = $this->getCommand([], [], null, null, $connection);
+        $checks = $this->createStub(DatabaseMigrationChecks::class);
+        $checks
+            ->method('compileConfigurationErrors')
+            ->willReturn([])
+        ;
+
+        $checks
+            ->method('validateDatabaseVersion')
+            ->willReturn("Wrong database version configured!\nYou have version 8.0.29 but the database connection is configured to 5.7.39.")
+        ;
+
+        $command = $this->getCommand([], [], null, null, $connection, $checks);
         $tester = new CommandTester($command);
         $errorMessage = 'Wrong database version configured! You have version 8.0.29 but the database connection is configured to 5.7.39.';
 
@@ -741,7 +762,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<MigrationResult>>     $migrationResults
      * @param (CommandCompiler&MockObject)|null $commandCompiler
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null, DatabaseMigrationChecks|null $checks = null): MigrateCommand
     {
         $migrations = $this->createStub(MigrationCollection::class);
         $migrations
@@ -777,17 +798,17 @@ class MigrateCommandTest extends TestCase
             ->willReturn(new Schema())
         ;
 
-        return new MigrateCommand(
-            $commandCompiler,
-            $connection ?? $this->createDefaultConnection(),
-            $migrations,
-            $backupManager ?? $this->createBackupManager(false),
-            $this->createStub(MysqlInnodbRowSizeCalculator::class),
-        );
+        $connection ??= $this->createDefaultConnection();
+        $backupManager ??= $this->createBackupManager(false);
+        $checks ??= new DatabaseMigrationChecks($connection, $commandCompiler, $this->createStub(MysqlInnodbRowSizeCalculator::class));
+        $runner = new DatabaseMigrationRunner($commandCompiler, $migrations, $backupManager);
+
+        return new MigrateCommand($runner, $checks);
     }
 
     private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&Stub
     {
+        $driver ??= new PdoDriver();
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
@@ -802,7 +823,22 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('getDriver')
-            ->willReturn($driver ?? new PdoDriver())
+            ->willReturn($driver)
+        ;
+
+        $connection
+            ->method('getServerVersion')
+            ->willReturn('8.0.0')
+        ;
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn($driver->getDatabasePlatform(new StaticServerVersionProvider('8.0.0')))
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(['serverVersion' => '8.0.0'])
         ;
 
         return $connection;

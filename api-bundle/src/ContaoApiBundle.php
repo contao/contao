@@ -23,14 +23,14 @@ class ContaoApiBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-            ->scalarNode('api_prefix')
-            ->defaultValue('/_api')
-            ->info('The general route prefix at which Contao shall expose the API.')
-            ->end()
-            ->scalarNode('data_container_api_prefix')
-            ->defaultValue('/backend/dc')
-            ->info('The DC specific subprefix at which Contao shall expose the API.')
-            ->end()
+                ->scalarNode('api_prefix')
+                    ->defaultValue('/_api')
+                    ->info('The general route prefix at which Contao shall expose the API.')
+                ->end()
+                ->scalarNode('data_container_api_prefix')
+                    ->defaultValue('/backend/dc')
+                    ->info('The DC specific subprefix at which Contao shall expose the API.')
+                ->end()
             ->end()
         ;
     }

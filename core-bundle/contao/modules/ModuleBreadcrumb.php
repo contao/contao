@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -185,14 +186,25 @@ class ModuleBreadcrumb extends Module
 		// Active page
 		else
 		{
+			$pageName = null;
+			$pageTitle = null;
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+			if ($responseContext?->has(HtmlHeadBag::class))
+			{
+				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$pageName = $htmlHeadBag->getName();
+				$pageTitle = $htmlHeadBag->getTitle();
+			}
+
 			$items[] = array
 			(
 				'isRoot'   => false,
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
 				'href'     => $request?->getBaseUrl() . $request?->getPathInfo(),
-				'title'    => $pages[0]->pageTitle ?: $pages[0]->title,
-				'link'     => $pages[0]->title,
+				'title'    => $pageTitle ?: $pages[0]->pageTitle ?: $pageName ?: $pages[0]->title,
+				'link'     => $pageName ?: $pages[0]->title,
 				'data'     => $pages[0]->row(),
 			);
 		}

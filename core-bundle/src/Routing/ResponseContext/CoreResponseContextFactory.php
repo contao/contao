@@ -78,10 +78,12 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
+        $name = $this->insertTagParser->replaceInline($pageModel->title ?: '');
         $title = $this->insertTagParser->replaceInline($pageModel->pageTitle ?: $pageModel->title ?: '');
 
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
         $htmlHeadBag
+            ->setName($name ?: '')
             ->setTitle($title ?: '')
             ->setMetaDescription($this->insertTagParser->replaceInline($pageModel->description ?: ''))
         ;
