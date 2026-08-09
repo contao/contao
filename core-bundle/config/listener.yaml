@@ -480,6 +480,7 @@ services:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
             - '@contao.routing.scope_matcher'
+            - '@contao.security.token_checker'
 
     contao.listener.menu.backend_breadcrumb:
         class: Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener
