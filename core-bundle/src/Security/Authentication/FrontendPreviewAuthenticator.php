@@ -59,7 +59,12 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
+        $preview = $session->get(self::SESSION_NAME);
+
+        $session->set(self::SESSION_NAME, [
+            'showUnpublished' => $showUnpublished,
+            'previewTime' => $preview['previewTime'] ?? null,
+        ]);
 
         return true;
     }
@@ -70,7 +75,30 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $session->set(self::SESSION_NAME, ['previewLinkId' => $previewLinkId, 'showUnpublished' => $showUnpublished]);
+        $preview = $session->get(self::SESSION_NAME);
+
+        $session->set(self::SESSION_NAME, [
+            'previewLinkId' => $previewLinkId,
+            'showUnpublished' => $showUnpublished,
+            'previewTime' => $preview['previewTime'] ?? null,
+        ]);
+
+        return true;
+    }
+
+    public function setPreviewTime(\DateTimeImmutable|null $previewTime): bool
+    {
+        if (!$session = $this->getSession()) {
+            return false;
+        }
+
+        if (!$preview = $session->get(self::SESSION_NAME)) {
+            return false;
+        }
+
+        $preview['previewTime'] = $previewTime?->getTimestamp();
+
+        $session->set(self::SESSION_NAME, $preview);
 
         return true;
     }
