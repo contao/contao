@@ -35,8 +35,9 @@ class PreviewTimeListener
 
     /**
      * The priority must be lower than the Symfony route listener because of the
-     * _preview request attribute (defaults to 32), and lower than the Symfony firewall listener so the token
-     * is available and the authentication (e.g. 2FA) is not affected by the mocked clock (defaults to 8).
+     * _preview request attribute (defaults to 32), and lower than the Symfony
+     * firewall listener so the token is available and the authentication (e.g. 2FA)
+     * is not affected by the mocked clock (defaults to 8).
      */
     #[AsEventListener(priority: 6)]
     public function onKernelRequest(RequestEvent $event): void
