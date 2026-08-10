@@ -150,6 +150,7 @@ class ContaoExtensionTest extends TestCase
             'deserialize',
             'autolink_url',
             'language_tag',
+            'contao_html_tag',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);
