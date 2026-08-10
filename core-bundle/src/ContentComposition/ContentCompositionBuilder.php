@@ -12,6 +12,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -41,6 +42,8 @@ class ContentCompositionBuilder
     private string|null $layoutTemplate = null;
 
     private string|null $defaultImageDensities = null;
+
+    private bool $legacyDocumentContentDeprecationTriggered = false;
 
     /**
      * Renderer used for the main layout template.
@@ -291,43 +294,51 @@ class ContentCompositionBuilder
 
     private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
     {
+        if (!$responseContext->has(HtmlBodyBag::class)) {
+            $responseContext->add(new HtmlBodyBag());
+        }
+
+        if (!$responseContext->has(HtmlHeadBag::class)) {
+            $responseContext->add(new HtmlHeadBag());
+        }
+
+        $htmlBodyBag = $responseContext->get(HtmlBodyBag::class);
+        $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+        $htmlHeadBag->setCanonicalEnabled((bool) ($this->page->enableCanonical ?? false));
+
         $responseContextData = [
-            'head' => $responseContext->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class) : null,
-            'end_of_head' => fn () => [
-                ...array_map(
-                    function (string $url): string {
-                        $options = StringUtil::resolveFlaggedUrl($url);
-
-                        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
-                            $url = Path::join($staticUrl, $url);
-                        }
-
-                        return Template::generateStyleTag($url, $options->media, $options->mtime);
-                    },
-                    array_unique($GLOBALS['TL_CSS'] ?? []),
-                ),
-                ...array_map(
-                    function (string $url): string {
-                        $options = StringUtil::resolveFlaggedUrl($url);
-
-                        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
-                            $url = Path::join($staticUrl, $url);
-                        }
-
-                        return Template::generateScriptTag($url, $options->async, $options->mtime, defer: $options->defer);
-                    },
-                    array_unique($GLOBALS['TL_JAVASCRIPT'] ?? []),
-                ),
-                ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
-                ...$GLOBALS['TL_HEAD'] ?? [],
-            ],
-            'end_of_body' => static fn () => $GLOBALS['TL_BODY'] ?? [],
+            'head' => fn () => $this->finalizePageTitle($htmlHeadBag),
+            'body' => $htmlBodyBag,
+            // @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+            'end_of_head' => $this->getLegacyHeadElements(...),
+            // @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+            'end_of_body' => $this->getLegacyBodyElements(...),
             'json_ld_scripts' => static fn () => $responseContext->isInitialized(JsonLdManager::class)
                 ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
                 : null,
         ];
 
-        $template->set('response_context', new class($responseContextData) {
+        $template->set('response_context', $this->createTemplateResponseContext($responseContextData));
+    }
+
+    private function finalizePageTitle(HtmlHeadBag $htmlHeadBag): HtmlHeadBag
+    {
+        $title = $htmlHeadBag->getTitle();
+        $rootPageTitle = (string) ($this->page->rootPageTitle ?? '');
+
+        if ($title && $rootPageTitle) {
+            $title .= ' - ';
+        }
+
+        return $htmlHeadBag->setTitle($title.$rootPageTitle);
+    }
+
+    /**
+     * @param array<string, \Closure(): mixed|mixed> $data
+     */
+    private function createTemplateResponseContext(array $data): object
+    {
+        return new class($data) {
             /**
              * @param array<string, \Closure(): mixed|mixed> $data
              */
@@ -369,7 +380,88 @@ class ContentCompositionBuilder
                     yield $key => $this->__get($key);
                 }
             }
-        });
+        };
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getLegacyHeadElements(): array
+    {
+        $elements = $this->collectLegacyHeadElements();
+
+        if ($elements) {
+            $this->triggerLegacyDocumentContentDeprecation();
+        }
+
+        return $elements;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function collectLegacyHeadElements(): array
+    {
+        return [
+            ...array_map($this->generateGlobalStyleTag(...), array_unique($GLOBALS['TL_CSS'] ?? [])),
+            ...array_map($this->generateGlobalScriptTag(...), array_unique($GLOBALS['TL_JAVASCRIPT'] ?? [])),
+            ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
+            ...$GLOBALS['TL_HEAD'] ?? [],
+        ];
+    }
+
+    /**
+     * @return array<array-key, string>
+     */
+    private function getLegacyBodyElements(): array
+    {
+        $elements = $GLOBALS['TL_BODY'] ?? [];
+
+        if ($elements) {
+            $this->triggerLegacyDocumentContentDeprecation();
+        }
+
+        return $elements;
+    }
+
+    private function triggerLegacyDocumentContentDeprecation(): void
+    {
+        if ($this->legacyDocumentContentDeprecationTriggered) {
+            return;
+        }
+
+        $this->legacyDocumentContentDeprecationTriggered = true;
+
+        trigger_deprecation(
+            'contao/core-bundle',
+            '6.1',
+            'Using legacy document content globals is deprecated and will no longer work in Contao 7. Use HtmlHeadBag, HtmlBodyBag or the Twig "add" tag instead.',
+        );
+    }
+
+    private function generateGlobalStyleTag(string $url): string
+    {
+        $options = StringUtil::resolveFlaggedUrl($url);
+        $url = $this->prefixStaticUrl($url);
+
+        return Template::generateStyleTag($url, $options->media, $options->mtime);
+    }
+
+    private function generateGlobalScriptTag(string $url): string
+    {
+        $options = StringUtil::resolveFlaggedUrl($url);
+        $url = $this->prefixStaticUrl($url);
+
+        return Template::generateScriptTag($url, $options->async, $options->mtime, defer: $options->defer);
+    }
+
+    private function prefixStaticUrl(string $url): string
+    {
+        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
+            return Path::join($staticUrl, $url);
+        }
+
+        return $url;
     }
 
     private function addCompositedContentToTemplate(LayoutTemplate $template, array $elementReferencesBySlot): void

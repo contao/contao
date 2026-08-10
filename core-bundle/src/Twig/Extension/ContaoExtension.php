@@ -23,7 +23,6 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
-use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\AutolinkRuntime;
 use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
 use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
@@ -33,6 +32,7 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
+use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -97,7 +97,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new DynamicIncludeTokenParser($this->filesystemLoader),
             new DynamicUseTokenParser($this->filesystemLoader),
             // Add a parser for the Contao specific "add" tag
-            new AddTokenParser(self::class),
+            new AddTokenParser(),
             // Add a parser for the Contao specific "slot" tag
             new SlotTokenParser(),
             // Add a parser for the Contao specific "defer" tag
@@ -302,6 +302,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [AutolinkRuntime::class, 'linkUrls'],
                 ['pre_escape' => 'html', 'is_safe' => ['html']],
             ),
+            new TwigFilter(
+                'contao_html_tag',
+                [HtmlDocumentRuntime::class, 'renderHtmlTag'],
+                ['is_safe' => ['html']],
+            ),
         ];
     }
 
@@ -311,36 +316,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function getCurrentThemeSlug(): string|null
     {
         return $this->filesystemLoader->getCurrentThemeSlug();
-    }
-
-    /**
-     * @see AddNode
-     * @see AddTokenParser
-     *
-     * @internal
-     */
-    public function addDocumentContent(string|null $identifier, string $content, DocumentLocation $location): void
-    {
-        // TODO: This should make use of the response context in the future.
-        if (DocumentLocation::head === $location) {
-            if (null !== $identifier) {
-                $GLOBALS['TL_HEAD'][$identifier] = $content;
-            } else {
-                $GLOBALS['TL_HEAD'][] = $content;
-            }
-        } elseif (DocumentLocation::endOfBody === $location) {
-            if (null !== $identifier) {
-                $GLOBALS['TL_BODY'][$identifier] = $content;
-            } else {
-                $GLOBALS['TL_BODY'][] = $content;
-            }
-        } elseif (DocumentLocation::stylesheets === $location) {
-            if (null !== $identifier) {
-                $GLOBALS['TL_STYLE_SHEETS'][$identifier] = $content;
-            } else {
-                $GLOBALS['TL_STYLE_SHEETS'][] = $content;
-            }
-        }
     }
 
     private function getTwigIncludeFunction(): TwigFunction

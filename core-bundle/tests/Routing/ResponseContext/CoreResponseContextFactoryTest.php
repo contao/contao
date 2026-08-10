@@ -24,6 +24,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -98,6 +99,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $responseContext = $factory->createWebpageResponseContext();
 
+        $this->assertInstanceOf(HtmlBodyBag::class, $responseContext->get(HtmlBodyBag::class));
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertFalse($responseContext->isInitialized(JsonLdManager::class));

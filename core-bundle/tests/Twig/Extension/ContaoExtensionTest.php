@@ -149,6 +149,7 @@ class ContaoExtensionTest extends TestCase
             'html_to_plain_text',
             'deserialize',
             'autolink_url',
+            'contao_html_tag',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);

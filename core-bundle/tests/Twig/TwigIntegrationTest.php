@@ -15,15 +15,23 @@ namespace Contao\CoreBundle\Tests\Twig;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Renderer\DeferredRenderer;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
 use Contao\System;
@@ -35,6 +43,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigIntegrationTest extends TestCase
@@ -61,7 +71,7 @@ class TwigIntegrationTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
+        $this->resetStaticProperties([ContaoFramework::class, DeferTokenParser::class, System::class, Config::class]);
 
         parent::tearDown();
     }
@@ -151,6 +161,118 @@ class TwigIntegrationTest extends TestCase
         ]);
 
         $this->assertSame($expectedOutput, $output);
+    }
+
+    public function testRendersHtmlTags(): void
+    {
+        $environment = $this->createHeadEnvironment([
+            'test.html.twig' => '{{ tag|contao_html_tag }}{{ raw_tag|contao_html_tag }}',
+        ]);
+
+        $this->assertSame(
+            '<title>&lt;Title&gt;</title><meta data-legacy>',
+            $environment->render('test.html.twig', [
+                'tag' => HtmlTag::title('<Title>'),
+                'raw_tag' => '<meta data-legacy>',
+            ]),
+        );
+    }
+
+    public function testRendersAndOverridesHeadTagBlocksWhenDeferred(): void
+    {
+        $environment = $this->createHeadEnvironment([
+            'child.html.twig' => <<<'TWIG'
+                {% extends 'page/layout.html.twig' %}
+                {% block viewport %}<meta name="viewport" content="custom">{% endblock %}
+                {% block title %}<title data-custom>{{ head_tag.content }}</title>{% endblock %}
+                {% block end_of_head %}{{ parent() }}<meta data-after-legacy>{% endblock %}
+                {% block body %}{% endblock %}
+                TWIG,
+        ]);
+
+        $head = new HtmlHeadBag()
+            ->setTitle('Page title')
+            ->addAfter(HtmlTag::script('/app.js', ['defer' => true]), HtmlHeadBag::TAG_DESCRIPTION, 'app.script')
+        ;
+
+        $output = new DeferredRenderer($environment)->render('child.html.twig', [
+            'locale' => 'en',
+            'rtl' => false,
+            'response_context' => ['head' => $head, 'end_of_head' => ['<meta data-legacy>']],
+            'app' => ['request' => Request::create('https://example.com/')],
+        ]);
+
+        $this->assertStringContainsString('<meta name="viewport" content="custom">', $output);
+        $this->assertStringNotContainsString('width=device-width', $output);
+        $this->assertStringContainsString('<title data-custom>Page title</title>', $output);
+        $this->assertMatchesRegularExpression('/<meta name="description" content>\s*<script src="\/app\.js" defer><\/script>/', $output);
+        $this->assertMatchesRegularExpression('/<meta data-legacy>\s*<meta data-after-legacy>/', $output);
+    }
+
+    public function testAddTwigTagAddsAndReordersContentInTheDeferredDocument(): void
+    {
+        $request = Request::create('https://example.com/');
+        $accessor = new ResponseContextAccessor(new RequestStack([$request]));
+        $responseContext = new ResponseContext()
+            ->add($body = new HtmlBodyBag())
+            ->add($head = new HtmlHeadBag())
+        ;
+        $body->add(HtmlTag::script('/structured.js'));
+        $accessor->setResponseContext($responseContext);
+        $environment = $this->createHeadEnvironment(
+            [
+                'child.html.twig' => <<<'TWIG'
+                    {% extends 'page/layout.html.twig' %}
+                    {% block body_content %}
+                        {% add 'theme' to stylesheets %}<link rel="stylesheet" href="/theme.css">{% endadd %}
+                        {% add 'module' to head after 'vendor' %}<script src="/module.js"></script>{% endadd %}
+                        {% add 'vendor' to head %}<script src="/vendor.js"></script>{% endadd %}
+                        {% add 'footer' to body after 'script[src="/structured.js"]' %}<script src="/footer.js"></script>{% endadd %}
+                    {% endblock %}
+                    {% block head_tags %}
+                        {% do response_context.head.orderBefore('module', 'vendor') %}
+                        {{ parent() }}
+                    {% endblock %}
+                    {% block end_of_body %}
+                        {% do response_context.body.orderBefore('footer', 'script[src="/structured.js"]') %}
+                        {{ parent() }}
+                    {% endblock %}
+                    TWIG,
+            ],
+            $accessor,
+            true,
+        );
+
+        $output = new DeferredRenderer($environment)->render('child.html.twig', [
+            'locale' => 'en',
+            'rtl' => false,
+            'response_context' => [
+                'head' => $head,
+                'body' => $body,
+                'end_of_body' => ['<script data-legacy-body></script>'],
+            ],
+            'app' => ['request' => $request],
+        ]);
+
+        $this->assertStringContainsString('<meta charset="UTF-8">', $output);
+        $this->assertStringContainsString('<meta name="generator" content="Contao Open Source CMS">', $output);
+        $this->assertStringContainsString('width=device-width,initial-scale=1.0,shrink-to-fit=no', $output);
+        $this->assertMatchesRegularExpression(
+            '/<!-- contao-tag: module --><script src="\/module\.js"><\/script>\s*<!-- contao-tag: vendor --><script src="\/vendor\.js"><\/script>/',
+            $output,
+        );
+        $this->assertMatchesRegularExpression(
+            '/<!-- contao-tag: footer --><script src="\/footer\.js"><\/script>\s*<script src="\/structured\.js" data-contao-tag="script\[src=&quot;\/structured\.js&quot;\]"><\/script>/',
+            $output,
+        );
+        $this->assertMatchesRegularExpression(
+            '/<script src="\/structured\.js"[^>]*><\/script>\s*<script data-legacy-body><\/script>/',
+            $output,
+        );
+        $this->assertStringContainsString('<!-- contao-tag: theme --><link rel="stylesheet" href="/theme.css">', $output);
+        $this->assertArrayNotHasKey('TL_HEAD', $GLOBALS);
+        $this->assertArrayNotHasKey('TL_STYLE_SHEETS', $GLOBALS);
+        $this->assertArrayNotHasKey('TL_BODY', $GLOBALS);
     }
 
     public function testHighlightsCode(): void
@@ -361,5 +483,30 @@ class TwigIntegrationTest extends TestCase
                 </ul>
                 HTML,
         ];
+    }
+
+    /**
+     * @param array<string, string> $templates
+     */
+    private function createHeadEnvironment(array $templates, ResponseContextAccessor|null $accessor = null, bool $debug = false): Environment
+    {
+        $accessor ??= $this->createStub(ResponseContextAccessor::class);
+        $environment = new Environment(new ChainLoader([
+            new ArrayLoader($templates),
+            new FilesystemLoader(__DIR__.'/../../contao/templates'),
+        ]));
+        $environment->addRuntimeLoader(new FactoryRuntimeLoader([
+            HtmlDocumentRuntime::class => static fn () => new HtmlDocumentRuntime($accessor, $debug),
+        ]));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+        );
+
+        $environment->addExtension($extension);
+
+        return $environment;
     }
 }
