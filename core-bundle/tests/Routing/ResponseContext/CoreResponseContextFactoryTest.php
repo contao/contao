@@ -21,6 +21,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
@@ -148,9 +149,9 @@ class CoreResponseContextFactoryTest extends TestCase
             ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
-                ['My title', 'My title'],
-                ['My description', 'My description'],
-                ['{{link_url::42}}', 'de/foobar.html'],
+                ['My title', OutputType::text, 'My title'],
+                ['My description', OutputType::text, 'My description'],
+                ['{{link_url::42}}', OutputType::url, 'de/foobar.html'],
             ])
         ;
 
@@ -254,8 +255,8 @@ class CoreResponseContextFactoryTest extends TestCase
             ->expects($this->exactly(3))
             ->method('replaceInline')
             ->willReturnMap([
-                ['My title', 'My title'],
-                ['My description', 'My description'],
+                ['My title', OutputType::text, 'My title'],
+                ['My description', OutputType::text, 'My description'],
             ])
         ;
 
@@ -353,9 +354,9 @@ class CoreResponseContextFactoryTest extends TestCase
             ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
-                ['', 'My title'],
-                ['', 'My description'],
-                ['{{link_url::42}}', $url],
+                ['', OutputType::text, 'My title'],
+                ['', OutputType::text, 'My description'],
+                ['{{link_url::42}}', OutputType::url, $url],
             ])
         ;
 
