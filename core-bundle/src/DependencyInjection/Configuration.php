@@ -130,6 +130,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->append($this->addPaginationNode())
                 ->scalarNode('auto_refresh_template_hierarchy')
                     ->info('Automatically refreshes the template hierarchy on every request.')
                     ->defaultNull()
@@ -1060,6 +1061,24 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->canBeDisabled()
+        ;
+    }
+
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addPaginationNode(): ArrayNodeDefinition
+    {
+        return (new TreeBuilder('pagination'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->integerNode('default_range')
+                    ->info('Sets the default range of pagination items in the front end.')
+                    ->min(0)
+                    ->defaultValue(7)
+                ->end()
+            ->end()
         ;
     }
 }
