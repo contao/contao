@@ -61,7 +61,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         }
 
         // Merge the CSS classes (see #6011)
-        $cssID[1] = trim(\sprintf('%s %s %s', $cssID[1] ?? '', $modelCssID[1] ?? '', implode(' ', (array) $model->classes)));
+        $cssID[1] = implode(' ', array_filter(array_map(trim(...), [$cssID[1] ?? '', $modelCssID[1] ?? '', ...(array) $model->classes])));
 
         $module->cssID = $cssID;
 
