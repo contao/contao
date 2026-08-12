@@ -29,7 +29,13 @@ class DcaHierarchy
      */
     public function getChildIds(array|int $parentIds, string $table, ChildQuery|null $query = null): array
     {
-        return $this->hierarchy->getChildIds($parentIds, $this->createDefinition($table), $query);
+        $parentIds = array_values(array_filter(array_map(intval(...), (array) $parentIds)));
+
+        if ([] === $parentIds) {
+            return [];
+        }
+
+        return array_map(intval(...), $this->hierarchy->getChildIds($parentIds, $this->createDefinition($table), $query));
     }
 
     /**
@@ -37,7 +43,11 @@ class DcaHierarchy
      */
     public function getParentIds(int $id, string $table, bool $skipId = false): array
     {
-        return $this->hierarchy->getParentIds($id, $this->createDefinition($table), $skipId);
+        if ($id <= 0) {
+            return [];
+        }
+
+        return array_map(intval(...), $this->hierarchy->getParentIds($id, $this->createDefinition($table), $skipId));
     }
 
     private function createDefinition(string $table): HierarchyDefinition

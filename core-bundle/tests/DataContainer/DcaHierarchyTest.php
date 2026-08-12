@@ -52,6 +52,28 @@ class DcaHierarchyTest extends TestCase
         $this->assertSame([3, 1], new DcaHierarchy($hierarchy)->getParentIds(5, 'tl_page', true));
     }
 
+    public function testIgnoresZeroChildIds(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->never())
+            ->method('getChildIds')
+        ;
+
+        $this->assertSame([], new DcaHierarchy($hierarchy)->getChildIds([0, '0'], 'tl_page'));
+    }
+
+    public function testIgnoresZeroParentId(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->never())
+            ->method('getParentIds')
+        ;
+
+        $this->assertSame([], new DcaHierarchy($hierarchy)->getParentIds(0, 'tl_page'));
+    }
+
     /**
      * @return Callback<HierarchyDefinition>
      */

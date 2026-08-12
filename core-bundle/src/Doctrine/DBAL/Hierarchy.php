@@ -29,11 +29,11 @@ class Hierarchy
     }
 
     /**
-     * @param int|list<int|string> $parentIds
+     * @param int|string|list<int|string> $parentIds
      *
-     * @return list<int>
+     * @return list<int|string>
      */
-    public function getChildIds(array|int $parentIds, HierarchyDefinition $definition, ChildQuery|null $query = null): array
+    public function getChildIds(array|int|string $parentIds, HierarchyDefinition $definition, ChildQuery|null $query = null): array
     {
         $parentIds = $this->normalizeIds((array) $parentIds);
         $query ??= new ChildQuery();
@@ -47,18 +47,18 @@ class Hierarchy
             : $this->fetchChildrenIteratively($parentIds, $definition, $query);
 
         if (null === $query->orderBy()) {
-            return array_map(static fn (array $row): int => (int) $row['node_id'], $rows);
+            return array_map(fn (array $row): int|string => $this->getRowId($row, 'node_id'), $rows);
         }
 
         return $this->sortChildren($rows, $parentIds);
     }
 
     /**
-     * @return list<int>
+     * @return list<int|string>
      */
-    public function getParentIds(int $id, HierarchyDefinition $definition, bool $skipId = false): array
+    public function getParentIds(int|string $id, HierarchyDefinition $definition, bool $skipId = false): array
     {
-        if ($id <= 0) {
+        if ('' === $id) {
             return [];
         }
 
@@ -68,11 +68,11 @@ class Hierarchy
             $ids = $this->fetchParentIdsUsingUnion($id, $definition);
         }
 
-        return $skipId ? array_values(array_diff($ids, [$id])) : $ids;
+        return $skipId ? array_values(array_filter($ids, static fn (int|string $parentId): bool => $parentId !== $id)) : $ids;
     }
 
     /**
-     * @param list<int> $parentIds
+     * @param list<int|string> $parentIds
      *
      * @return list<array<string, mixed>>
      */
@@ -97,11 +97,11 @@ class Hierarchy
             SELECT node_id, parent_id, order_value FROM contao_tree
             SQL;
 
-        return $this->connection->fetchAllAssociative($sql, [$parentIds], [ArrayParameterType::INTEGER]);
+        return $this->connection->fetchAllAssociative($sql, [$parentIds], [$this->getArrayParameterType($parentIds)]);
     }
 
     /**
-     * @param list<int> $parentIds
+     * @param list<int|string> $parentIds
      *
      * @return list<array<string, mixed>>
      */
@@ -120,18 +120,19 @@ class Hierarchy
             $result = $this->connection->fetchAllAssociative(
                 "SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where",
                 [$pendingIds],
-                [ArrayParameterType::INTEGER],
+                [$this->getArrayParameterType($pendingIds)],
             );
             $pendingIds = [];
 
             foreach ($result as $row) {
-                $id = (int) $row['node_id'];
+                $id = $this->getRowId($row, 'node_id');
+                $key = $this->getIdKey($id);
 
-                if (isset($rows[$id])) {
+                if (isset($rows[$key])) {
                     continue;
                 }
 
-                $rows[$id] = $row;
+                $rows[$key] = $row;
                 $pendingIds[] = $id;
             }
         }
@@ -142,7 +143,7 @@ class Hierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    private function fetchParentsUsingCommonTableExpression(int $id, HierarchyDefinition $definition): array
+    private function fetchParentsUsingCommonTableExpression(int|string $id, HierarchyDefinition $definition): array
     {
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
@@ -163,9 +164,9 @@ class Hierarchy
     }
 
     /**
-     * @return list<int>
+     * @return list<int|string>
      */
-    private function fetchParentIdsUsingUnion(int $id, HierarchyDefinition $definition): array
+    private function fetchParentIdsUsingUnion(int|string $id, HierarchyDefinition $definition): array
     {
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
@@ -174,18 +175,22 @@ class Hierarchy
         $query = "SELECT $idColumn, @parent_id := $parentColumn FROM $table WHERE $idColumn = ?$scopeCondition".str_repeat(" UNION SELECT $idColumn, @parent_id := $parentColumn FROM $table WHERE $idColumn = @parent_id$scopeCondition", 9);
         $ids = [];
         $seen = [];
+        $queried = [];
         $currentId = $id;
 
-        while ($currentId > 0 && !isset($seen[$currentId])) {
-            $batch = array_map(intval(...), $this->connection->fetchFirstColumn($query, [$currentId]));
+        while (!isset($queried[$this->getIdKey($currentId)])) {
+            $queried[$this->getIdKey($currentId)] = true;
+            $batch = $this->normalizeFetchedIds($this->connection->fetchFirstColumn($query, [$currentId]));
 
             if ([] === $batch) {
                 break;
             }
 
             foreach ($batch as $parentId) {
-                if (!isset($seen[$parentId])) {
-                    $seen[$parentId] = true;
+                $key = $this->getIdKey($parentId);
+
+                if (!isset($seen[$key])) {
+                    $seen[$key] = true;
                     $ids[] = $parentId;
                 }
             }
@@ -202,16 +207,17 @@ class Hierarchy
 
     /**
      * @param list<array<string, mixed>> $rows
-     * @param list<int>                  $parentIds
+     * @param list<int|string>           $parentIds
      *
-     * @return list<int>
+     * @return list<int|string>
      */
     private function sortChildren(array $rows, array $parentIds): array
     {
         $children = [];
 
         foreach ($rows as $row) {
-            $children[(int) $row['parent_id']][] = ['id' => (int) $row['node_id'], 'order' => $row['order_value']];
+            $parentId = $this->getRowId($row, 'parent_id');
+            $children[$this->getIdKey($parentId)][] = ['id' => $this->getRowId($row, 'node_id'), 'order' => $row['order_value']];
         }
 
         foreach ($children as &$siblings) {
@@ -223,28 +229,30 @@ class Hierarchy
     }
 
     /**
-     * @param array<int, list<array{id: int, order: mixed}>> $children
-     * @param list<int>                                      $parentIds
+     * @param array<string, list<array{id: int|string, order: mixed}>> $children
+     * @param list<int|string>                                         $parentIds
      *
-     * @return list<int>
+     * @return list<int|string>
      */
     private function sortChildrenDepthFirst(array $children, array $parentIds): array
     {
         $ids = [];
         $seen = [];
-        $stack = array_map(static fn (int $id): array => ['id' => $id, 'root' => true], array_reverse($parentIds));
+        $stack = array_map(static fn (int|string $id): array => ['id' => $id, 'root' => true], array_reverse($parentIds));
 
         while ($node = array_pop($stack)) {
             if (!$node['root']) {
-                if (isset($seen[$node['id']])) {
+                $key = $this->getIdKey($node['id']);
+
+                if (isset($seen[$key])) {
                     continue;
                 }
 
-                $seen[$node['id']] = true;
+                $seen[$key] = true;
                 $ids[] = $node['id'];
             }
 
-            foreach (array_reverse($children[$node['id']] ?? []) as $child) {
+            foreach (array_reverse($children[$this->getIdKey($node['id'])] ?? []) as $child) {
                 $stack[] = ['id' => $child['id'], 'root' => false];
             }
         }
@@ -255,21 +263,25 @@ class Hierarchy
     /**
      * @param list<array<string, mixed>> $rows
      *
-     * @return list<int>
+     * @return list<int|string>
      */
-    private function sortParents(array $rows, int $id): array
+    private function sortParents(array $rows, int|string $id): array
     {
         $parents = [];
 
         foreach ($rows as $row) {
-            $parents[(int) $row['node_id']] = (int) $row['parent_id'];
+            $parents[$this->getIdKey($this->getRowId($row, 'node_id'))] = $row;
         }
 
         $ids = [];
+        $seen = [];
 
-        while (isset($parents[$id]) && !\in_array($id, $ids, true)) {
+        while (isset($parents[$this->getIdKey($id)]) && !isset($seen[$this->getIdKey($id)])) {
+            $row = $parents[$this->getIdKey($id)];
+            $id = $this->getRowId($row, 'node_id');
+            $seen[$this->getIdKey($id)] = true;
             $ids[] = $id;
-            $id = $parents[$id];
+            $id = $this->getRowId($row, 'parent_id');
         }
 
         return $ids;
@@ -325,10 +337,58 @@ class Hierarchy
     /**
      * @param list<int|string> $ids
      *
-     * @return list<int>
+     * @return list<int|string>
      */
     private function normalizeIds(array $ids): array
     {
-        return array_values(array_unique(array_filter(array_map(intval(...), $ids))));
+        $normalized = [];
+
+        foreach ($ids as $id) {
+            if ('' !== $id) {
+                $normalized[$this->getIdKey($id)] = $id;
+            }
+        }
+
+        return array_values($normalized);
+    }
+
+    /**
+     * @param non-empty-list<int|string> $ids
+     */
+    private function getArrayParameterType(array $ids): ArrayParameterType
+    {
+        return array_all($ids, static fn (mixed $id): bool => \is_int($id)) ? ArrayParameterType::INTEGER : ArrayParameterType::STRING;
+    }
+
+    private function getIdKey(int|string $id): string
+    {
+        return (\is_int($id) ? 'i:' : 's:').$id;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function getRowId(array $row, string $column): int|string
+    {
+        return $this->normalizeIdentifier($row[$column] ?? null, $column);
+    }
+
+    private function normalizeIdentifier(mixed $id, string $source): int|string
+    {
+        if (!\is_int($id) && !\is_string($id)) {
+            throw new \UnexpectedValueException(\sprintf('The hierarchy identifier from "%s" must be an integer or a string.', $source));
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param list<mixed> $ids
+     *
+     * @return list<int|string>
+     */
+    private function normalizeFetchedIds(array $ids): array
+    {
+        return array_map(fn (mixed $id): int|string => $this->normalizeIdentifier($id, 'query result'), $ids);
     }
 }
