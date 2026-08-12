@@ -49,7 +49,7 @@ class PaginationConfig
     public function withPageRange(int $pageRange): self
     {
         $clone = clone $this;
-        $clone->pageRange = $pageRange;
+        $clone->pageRange = max(0, $pageRange);
 
         return $clone;
     }
