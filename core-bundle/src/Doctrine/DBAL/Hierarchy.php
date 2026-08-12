@@ -22,7 +22,7 @@ class Hierarchy
     /**
      * @var array<string, bool>
      */
-    private array $hasParentTableColumn = [];
+    private array $hasScopeColumn = [];
 
     public function __construct(private readonly Connection $connection)
     {
@@ -33,7 +33,7 @@ class Hierarchy
      *
      * @return list<int>
      */
-    public function getChildIds(array|int $parentIds, string $table, ChildQuery|null $query = null): array
+    public function getChildIds(array|int $parentIds, HierarchyDefinition $definition, ChildQuery|null $query = null): array
     {
         $parentIds = $this->normalizeIds((array) $parentIds);
         $query ??= new ChildQuery();
@@ -43,11 +43,11 @@ class Hierarchy
         }
 
         $rows = $this->supportsRecursiveCommonTableExpressions()
-            ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $table, $query)
-            : $this->fetchChildrenIteratively($parentIds, $table, $query);
+            ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $definition, $query)
+            : $this->fetchChildrenIteratively($parentIds, $definition, $query);
 
         if (null === $query->orderBy()) {
-            return array_map(static fn (array $row): int => (int) $row['id'], $rows);
+            return array_map(static fn (array $row): int => (int) $row['node_id'], $rows);
         }
 
         return $this->sortChildren($rows, $parentIds);
@@ -56,16 +56,16 @@ class Hierarchy
     /**
      * @return list<int>
      */
-    public function getParentIds(int $id, string $table, bool $skipId = false): array
+    public function getParentIds(int $id, HierarchyDefinition $definition, bool $skipId = false): array
     {
         if ($id <= 0) {
             return [];
         }
 
         if ($this->supportsRecursiveCommonTableExpressions()) {
-            $ids = $this->sortParents($this->fetchParentsUsingCommonTableExpression($id, $table), $id);
+            $ids = $this->sortParents($this->fetchParentsUsingCommonTableExpression($id, $definition), $id);
         } else {
-            $ids = $this->fetchParentIdsUsingUnion($id, $table);
+            $ids = $this->fetchParentIdsUsingUnion($id, $definition);
         }
 
         return $skipId ? array_values(array_diff($ids, [$id])) : $ids;
@@ -76,24 +76,25 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    private function fetchChildrenUsingCommonTableExpression(array $parentIds, string $table, ChildQuery $query): array
+    private function fetchChildrenUsingCommonTableExpression(array $parentIds, HierarchyDefinition $definition, ChildQuery $query): array
     {
-        $quotedTable = $this->connection->quoteIdentifier($table);
+        $quotedTable = $this->connection->quoteIdentifier($definition->table());
+        $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+        $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
         $orderBy = $this->getOrderBySelect($query);
-        $rootCondition = $this->getParentTableCondition($table);
-        $childCondition = $this->getParentTableCondition($table);
+        $scopeCondition = $this->getScopeCondition($definition);
         $where = $this->getWhereCondition($query);
 
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (id, pid, order_value) AS (
-                SELECT id, pid, $orderBy FROM $quotedTable WHERE pid IN (?)$rootCondition$where
+            WITH RECURSIVE contao_tree (node_id, parent_id, order_value) AS (
+                SELECT $idColumn, $parentColumn, $orderBy FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where
                 UNION DISTINCT
-                SELECT child.id, child.pid, child.order_value FROM (
-                    SELECT id, pid, $orderBy FROM $quotedTable WHERE 1 = 1$childCondition$where
+                SELECT child.node_id, child.parent_id, child.order_value FROM (
+                    SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy FROM $quotedTable WHERE 1 = 1$scopeCondition$where
                 ) child
-                    INNER JOIN contao_tree parent ON child.pid = parent.id
+                    INNER JOIN contao_tree parent ON child.parent_id = parent.node_id
             )
-            SELECT id, pid, order_value FROM contao_tree
+            SELECT node_id, parent_id, order_value FROM contao_tree
             SQL;
 
         return $this->connection->fetchAllAssociative($sql, [$parentIds], [ArrayParameterType::INTEGER]);
@@ -104,25 +105,27 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    private function fetchChildrenIteratively(array $parentIds, string $table, ChildQuery $query): array
+    private function fetchChildrenIteratively(array $parentIds, HierarchyDefinition $definition, ChildQuery $query): array
     {
-        $quotedTable = $this->connection->quoteIdentifier($table);
+        $quotedTable = $this->connection->quoteIdentifier($definition->table());
+        $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+        $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
         $orderBy = $this->getOrderBySelect($query);
-        $parentTableCondition = $this->getParentTableCondition($table);
+        $scopeCondition = $this->getScopeCondition($definition);
         $where = $this->getWhereCondition($query);
         $rows = [];
         $pendingIds = $parentIds;
 
         while ([] !== $pendingIds) {
             $result = $this->connection->fetchAllAssociative(
-                "SELECT id, pid, $orderBy FROM $quotedTable WHERE pid IN (?)$parentTableCondition$where",
+                "SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where",
                 [$pendingIds],
                 [ArrayParameterType::INTEGER],
             );
             $pendingIds = [];
 
             foreach ($result as $row) {
-                $id = (int) $row['id'];
+                $id = (int) $row['node_id'];
 
                 if (isset($rows[$id])) {
                     continue;
@@ -139,17 +142,21 @@ class Hierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    private function fetchParentsUsingCommonTableExpression(int $id, string $table): array
+    private function fetchParentsUsingCommonTableExpression(int $id, HierarchyDefinition $definition): array
     {
-        $table = $this->connection->quoteIdentifier($table);
+        $table = $this->connection->quoteIdentifier($definition->table());
+        $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+        $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+        $scopeCondition = $this->getScopeCondition($definition);
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (id, pid) AS (
-                SELECT id, pid FROM $table WHERE id = ?
+            WITH RECURSIVE contao_tree (node_id, parent_id) AS (
+                SELECT $idColumn, $parentColumn FROM $table WHERE $idColumn = ?$scopeCondition
                 UNION DISTINCT
-                SELECT parent.id, parent.pid FROM $table parent
-                    INNER JOIN contao_tree child ON parent.id = child.pid
+                SELECT parent.$idColumn, parent.$parentColumn FROM $table parent
+                    INNER JOIN contao_tree child ON parent.$idColumn = child.parent_id
+                    WHERE 1 = 1$scopeCondition
             )
-            SELECT id, pid FROM contao_tree
+            SELECT node_id, parent_id FROM contao_tree
             SQL;
 
         return $this->connection->fetchAllAssociative($sql, [$id]);
@@ -158,10 +165,13 @@ class Hierarchy
     /**
      * @return list<int>
      */
-    private function fetchParentIdsUsingUnion(int $id, string $table): array
+    private function fetchParentIdsUsingUnion(int $id, HierarchyDefinition $definition): array
     {
-        $table = $this->connection->quoteIdentifier($table);
-        $query = "SELECT id, @pid := pid FROM $table WHERE id = ?".str_repeat(" UNION SELECT id, @pid := pid FROM $table WHERE id = @pid", 9);
+        $table = $this->connection->quoteIdentifier($definition->table());
+        $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+        $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+        $scopeCondition = $this->getScopeCondition($definition);
+        $query = "SELECT $idColumn, @parent_id := $parentColumn FROM $table WHERE $idColumn = ?$scopeCondition".str_repeat(" UNION SELECT $idColumn, @parent_id := $parentColumn FROM $table WHERE $idColumn = @parent_id$scopeCondition", 9);
         $ids = [];
         $seen = [];
         $currentId = $id;
@@ -201,7 +211,7 @@ class Hierarchy
         $children = [];
 
         foreach ($rows as $row) {
-            $children[(int) $row['pid']][] = ['id' => (int) $row['id'], 'order' => (int) $row['order_value']];
+            $children[(int) $row['parent_id']][] = ['id' => (int) $row['node_id'], 'order' => $row['order_value']];
         }
 
         foreach ($children as &$siblings) {
@@ -213,8 +223,8 @@ class Hierarchy
     }
 
     /**
-     * @param array<int, list<array{id: int, order: int}>> $children
-     * @param list<int>                                    $parentIds
+     * @param array<int, list<array{id: int, order: mixed}>> $children
+     * @param list<int>                                      $parentIds
      *
      * @return list<int>
      */
@@ -252,7 +262,7 @@ class Hierarchy
         $parents = [];
 
         foreach ($rows as $row) {
-            $parents[(int) $row['id']] = (int) $row['pid'];
+            $parents[(int) $row['node_id']] = (int) $row['parent_id'];
         }
 
         $ids = [];
@@ -265,15 +275,32 @@ class Hierarchy
         return $ids;
     }
 
-    private function getParentTableCondition(string $table, string $alias = ''): string
+    private function getScopeCondition(HierarchyDefinition $definition): string
     {
-        if (!isset($this->hasParentTableColumn[$table])) {
-            $this->hasParentTableColumn[$table] = $this->connection->createSchemaManager()->introspectTable($table)->hasColumn('ptable');
+        if (null === $definition->scopeColumn()) {
+            return '';
         }
 
-        $quotedTable = $this->connection->getDatabasePlatform()->quoteStringLiteral($table);
+        if ($definition->hasOptionalScope() && !$this->hasScopeColumn($definition)) {
+            return '';
+        }
 
-        return $this->hasParentTableColumn[$table] ? " AND {$alias}ptable = $quotedTable" : '';
+        $column = $this->connection->quoteIdentifier($definition->scopeColumn());
+        $value = $definition->scopeValue();
+        $value = \is_int($value) ? (string) $value : $this->connection->getDatabasePlatform()->quoteStringLiteral($value);
+
+        return " AND $column = $value";
+    }
+
+    private function hasScopeColumn(HierarchyDefinition $definition): bool
+    {
+        $key = $definition->table().':'.$definition->scopeColumn();
+
+        return $this->hasScopeColumn[$key] ??= $this->connection
+            ->createSchemaManager()
+            ->introspectTable($definition->table())
+            ->hasColumn($definition->scopeColumn())
+        ;
     }
 
     private function getWhereCondition(ChildQuery $query): string

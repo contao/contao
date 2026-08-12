@@ -477,7 +477,7 @@ class Database
 				$query = $query->withOrderBy('sorting');
 			}
 
-			return System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($arrParentIds, $strTable, $query);
+			return System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrParentIds, $strTable, $query);
 		}
 
 		if (!\is_array($arrParentIds))
@@ -541,7 +541,7 @@ class Database
 	{
 		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getParentIds()" instead.', __METHOD__);
 
-		return System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getParentIds($intId, $strTable, $skipId);
+		return System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIds($intId, $strTable, $skipId);
 	}
 
 	/**

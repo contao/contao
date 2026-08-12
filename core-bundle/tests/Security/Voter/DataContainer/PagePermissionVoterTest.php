@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -34,7 +34,7 @@ class PagePermissionVoterTest extends TestCase
     public function testSupport(): void
     {
         $voter = new PagePermissionVoter(
-            $this->createStub(Hierarchy::class),
+            $this->createStub(DcaHierarchy::class),
             $this->createStub(AccessDecisionManagerInterface::class),
             $this->createStub(Connection::class),
         );
@@ -67,7 +67,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn('regular')
         ;
 
-        $voter = new PagePermissionVoter($this->createStub(Hierarchy::class), $decisionManager, $connection);
+        $voter = new PagePermissionVoter($this->createStub(DcaHierarchy::class), $decisionManager, $connection);
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -949,9 +949,9 @@ class PagePermissionVoterTest extends TestCase
         return $token;
     }
 
-    private function mockHierarchy(array|null $pagemounts = null, array|null $pagemountTrail = null): Hierarchy&MockObject
+    private function mockHierarchy(array|null $pagemounts = null, array|null $pagemountTrail = null): DcaHierarchy&MockObject
     {
-        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy = $this->createMock(DcaHierarchy::class);
 
         if (null === $pagemounts || null !== $pagemountTrail) {
             $hierarchy
@@ -976,7 +976,17 @@ class PagePermissionVoterTest extends TestCase
             $hierarchy
                 ->expects($this->exactly(\count($pagemountTrail)))
                 ->method('getParentIds')
-                ->willReturnMap($pagemountTrail)
+                ->willReturnCallback(
+                    static function (int $id) use ($pagemountTrail): array {
+                        foreach ($pagemountTrail as [$expectedId, , $result]) {
+                            if ($expectedId === $id) {
+                                return $result;
+                            }
+                        }
+
+                        return [];
+                    },
+                )
             ;
         }
 

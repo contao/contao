@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -34,7 +33,7 @@ class ClipboardManager
     private const SESSION_KEY = 'CLIPBOARD';
 
     public function __construct(
-        private readonly Hierarchy $hierarchy,
+        private readonly DcaHierarchy $hierarchy,
         private readonly RequestStack $requestStack,
     ) {
     }

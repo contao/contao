@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -37,7 +37,7 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
 
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Hierarchy $hierarchy,
+        private readonly DcaHierarchy $hierarchy,
     ) {
     }
 

@@ -22,7 +22,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
-            - '@contao.doctrine.dbal.hierarchy'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_newsletter.routing.newsletter_resolver:
         class: Contao\NewsletterBundle\Routing\NewsletterResolver

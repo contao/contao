@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -35,7 +35,7 @@ class SitemapListener
         private readonly ContaoFramework $framework,
         private readonly Security $security,
         private readonly ContentUrlGenerator $urlGenerator,
-        private readonly Hierarchy $hierarchy,
+        private readonly DcaHierarchy $hierarchy,
     ) {
     }
 

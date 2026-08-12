@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -81,7 +81,7 @@ class SitemapListenerTest extends ContaoTestCase
     {
         $framework = $this->createContaoFrameworkStub($adapters);
 
-        $hierarchy = $this->createStub(Hierarchy::class);
+        $hierarchy = $this->createStub(DcaHierarchy::class);
         $hierarchy
             ->method('getChildIds')
             ->willReturn($allPages)

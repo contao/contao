@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -49,7 +49,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     private array $pageTypeCache = [];
 
     public function __construct(
-        private readonly Hierarchy $hierarchy,
+        private readonly DcaHierarchy $hierarchy,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly Connection $connection,
     ) {

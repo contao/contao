@@ -1362,7 +1362,7 @@ abstract class Controller extends System
 			$query = $query->withOrderBy('sorting');
 		}
 
-		$arrPages = array_values(array_diff($arrPages, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($arrPages, $strTable, $query)));
+		$arrPages = array_values(array_diff($arrPages, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrPages, $strTable, $query)));
 
 		return $arrPages;
 	}

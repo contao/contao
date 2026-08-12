@@ -173,7 +173,7 @@ class BackendUser extends User
 		}
 		elseif ($array == 'pagemounts')
 		{
-			$childIds = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->pagemounts, 'tl_page');
+			$childIds = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->pagemounts, 'tl_page');
 
 			if (!empty($childIds) && array_intersect($field, $childIds))
 			{

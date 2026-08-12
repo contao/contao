@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
@@ -31,7 +31,7 @@ class BackendAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->voter = new BackendAccessVoter($this->createContaoFrameworkStub(), $this->createStub(Hierarchy::class));
+        $this->voter = new BackendAccessVoter($this->createContaoFrameworkStub(), $this->createStub(DcaHierarchy::class));
     }
 
     protected function tearDown(): void
@@ -147,7 +147,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($this->createClassWithPropertiesStub(BackendUser::class, $userData))
         ;
 
-        $hierarchy = $this->createStub(Hierarchy::class);
+        $hierarchy = $this->createStub(DcaHierarchy::class);
         $hierarchy
             ->method('getChildIds')
             ->willReturn([])
@@ -231,7 +231,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy = $this->createMock(DcaHierarchy::class);
         $hierarchy
             ->expects($this->once())
             ->method('getChildIds')
@@ -412,7 +412,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework, $this->createStub(Hierarchy::class));
+        $voter = new BackendAccessVoter($framework, $this->createStub(DcaHierarchy::class));
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }
@@ -449,7 +449,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework, $this->createStub(Hierarchy::class));
+        $voter = new BackendAccessVoter($framework, $this->createStub(DcaHierarchy::class));
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, [ContaoCorePermissions::USER_CAN_EDIT_PAGE.'.1']));
     }
@@ -474,7 +474,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework, $this->createStub(Hierarchy::class));
+        $voter = new BackendAccessVoter($framework, $this->createStub(DcaHierarchy::class));
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }

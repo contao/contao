@@ -942,7 +942,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Avoid circular references when there is no parent table or the table references itself
 		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
 		{
-			$cr = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->intId, $this->strTable);
+			$cr = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->intId, $this->strTable);
 			$cr[] = $this->intId;
 		}
 
@@ -1791,7 +1791,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// If there is a PID field but no parent table
 		if (!$this->ptable && self::MODE_TREE === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $db->fieldExists('pid', $this->strTable))
 		{
-			$delete[$this->strTable] = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->intId, $this->strTable);
+			$delete[$this->strTable] = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->intId, $this->strTable);
 			array_unshift($delete[$this->strTable], $this->intId);
 		}
 		else
@@ -3909,7 +3909,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					->fetchEach('pid');
 			}
 
-			if (!empty(array_intersect(System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds(array($id), $table), $selected)))
+			if (!empty(array_intersect(System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds(array($id), $table), $selected)))
 			{
 				$blnIsOpen = true;
 			}
@@ -5523,7 +5523,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Also add the child records of the table (see #1811)
 				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($rootIds, $table));
+					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
 				}
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
@@ -5773,7 +5773,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (!isset($this->parentPagesCache[$table][$id]))
 			{
-				$parents = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getParentIds($id, $table, true);
+				$parents = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIds($id, $table, true);
 				$this->parentPagesCache[$table][$id] = $parents;
 
 				// Get all IDs on that level, they all have the same parents
@@ -5823,7 +5823,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Fetch all children of the root
-			$this->rootChildren = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->root, $table);
+			$this->rootChildren = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->root, $table);
 
 			if ($isSearch)
 			{
@@ -5867,8 +5867,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$arrRoot = $this->eliminateNestedPages(
 					array_intersect(
-						array_merge($arrRoot, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($arrRoot, $this->strTable)),
-						array_merge($this->root, System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildIds($this->root, $this->strTable))
+						array_merge($arrRoot, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrRoot, $this->strTable)),
+						array_merge($this->root, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->root, $this->strTable))
 					),
 					$this->strTable,
 					$blnHasSorting

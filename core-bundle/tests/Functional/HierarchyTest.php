@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\TestCase\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
 
@@ -44,24 +45,27 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testGetsChildIdsUsingARecursiveCommonTableExpression(): void
     {
-        $ids = $this->hierarchy->getChildIds([0, 1], 'tl_page');
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $ids = $this->hierarchy->getChildIds([0, 1], $definition);
         sort($ids);
 
         $this->assertSame([3, 4, 5, 7], $ids);
         $query = new ChildQuery()->withOrderBy('sorting');
 
-        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, 'tl_page', $query));
-        $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, 'tl_page', $query->withWhere('id != 3')));
-        $this->assertSame([], $this->hierarchy->getChildIds(0, 'tl_page'));
-        $this->assertSame([9, 8], $this->hierarchy->getChildIds(8, 'tl_page'));
+        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, $definition, $query));
+        $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, $definition, $query->withWhere('id != 3')));
+        $this->assertSame([], $this->hierarchy->getChildIds(0, $definition));
+        $this->assertSame([9, 8], $this->hierarchy->getChildIds(8, $definition));
     }
 
     public function testGetsParentIdsUsingARecursiveCommonTableExpression(): void
     {
-        $this->assertSame([5, 3, 1], $this->hierarchy->getParentIds(5, 'tl_page'));
-        $this->assertSame([3, 1], $this->hierarchy->getParentIds(5, 'tl_page', true));
-        $this->assertSame([], $this->hierarchy->getParentIds(99, 'tl_page'));
-        $this->assertSame([8, 9], $this->hierarchy->getParentIds(8, 'tl_page'));
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+
+        $this->assertSame([5, 3, 1], $this->hierarchy->getParentIds(5, $definition));
+        $this->assertSame([3, 1], $this->hierarchy->getParentIds(5, $definition, true));
+        $this->assertSame([], $this->hierarchy->getParentIds(99, $definition));
+        $this->assertSame([8, 9], $this->hierarchy->getParentIds(8, $definition));
     }
 
     private function insertRows(): void

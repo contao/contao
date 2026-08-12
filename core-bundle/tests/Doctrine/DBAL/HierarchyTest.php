@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\DBAL;
 
 use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
@@ -33,18 +34,20 @@ class HierarchyTest extends TestCase
             ->method('fetchAllAssociative')
             ->willReturnOnConsecutiveCalls(
                 [
-                    ['id' => 4, 'pid' => 1, 'order_value' => 0],
-                    ['id' => 3, 'pid' => 1, 'order_value' => 0],
+                    ['node_id' => 4, 'parent_id' => 1, 'order_value' => 0],
+                    ['node_id' => 3, 'parent_id' => 1, 'order_value' => 0],
                 ],
                 [
-                    ['id' => 7, 'pid' => 4, 'order_value' => 0],
-                    ['id' => 5, 'pid' => 3, 'order_value' => 0],
+                    ['node_id' => 7, 'parent_id' => 4, 'order_value' => 0],
+                    ['node_id' => 5, 'parent_id' => 3, 'order_value' => 0],
                 ],
                 [],
             )
         ;
 
-        $this->assertSame([4, 3, 7, 5], new Hierarchy($connection)->getChildIds(1, 'tl_page'));
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+
+        $this->assertSame([4, 3, 7, 5], new Hierarchy($connection)->getChildIds(1, $definition));
     }
 
     public function testGetsChildIdsIteratively(): void
@@ -54,26 +57,27 @@ class HierarchyTest extends TestCase
         $connection
             ->expects($this->exactly(3))
             ->method('fetchAllAssociative')
-            ->with($this->callback(static fn (string $sql): bool => str_contains($sql, "ptable = 'tl_page'") && str_contains($sql, 'published = 1') && str_contains($sql, '`position` AS order_value')))
+            ->with($this->callback(static fn (string $sql): bool => str_contains($sql, "`tree_type` = 'category'") && str_contains($sql, 'published = 1') && str_contains($sql, '`position` AS order_value')))
             ->willReturnOnConsecutiveCalls(
                 [
-                    ['id' => 3, 'pid' => 1, 'order_value' => 20],
-                    ['id' => 4, 'pid' => 1, 'order_value' => 10],
+                    ['node_id' => 3, 'parent_id' => 1, 'order_value' => 20],
+                    ['node_id' => 4, 'parent_id' => 1, 'order_value' => 10],
                 ],
                 [
-                    ['id' => 5, 'pid' => 3, 'order_value' => 10],
-                    ['id' => 7, 'pid' => 4, 'order_value' => 10],
+                    ['node_id' => 5, 'parent_id' => 3, 'order_value' => 10],
+                    ['node_id' => 7, 'parent_id' => 4, 'order_value' => 10],
                 ],
                 [],
             )
         ;
 
         $query = new ChildQuery()->withOrderBy('position')->withWhere('published = 1');
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id')->withScope('tree_type', 'category');
 
-        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, 'tl_page', $query));
+        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, $definition, $query));
     }
 
-    public function testGetsParentIdsIteratively(): void
+    public function testGetsParentIdsUsingUnion(): void
     {
         $connection = $this->createMock(Connection::class);
         $this->configureConnection($connection);
@@ -84,7 +88,9 @@ class HierarchyTest extends TestCase
             ->willReturn([5, 3, 1])
         ;
 
-        $this->assertSame([5, 3, 1], new Hierarchy($connection)->getParentIds(5, 'tl_page'));
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+
+        $this->assertSame([5, 3, 1], new Hierarchy($connection)->getParentIds(5, $definition));
     }
 
     private function configureConnection(Connection&MockObject $connection): void
@@ -99,8 +105,8 @@ class HierarchyTest extends TestCase
             ->willReturnCallback(static fn (string $identifier): string => "`$identifier`")
         ;
 
-        $table = new Table('tl_page');
-        $table->addColumn('ptable', Types::STRING);
+        $table = new Table('categories');
+        $table->addColumn('tree_type', Types::STRING);
 
         $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
