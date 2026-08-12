@@ -1074,7 +1074,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->integerNode('default_range')
-                    ->info('Sets the default range of pagination items in the front end.')
+                    ->info('Sets the default range of items for the pagination factory.')
                     ->min(0)
                     ->defaultValue(7)
                 ->end()
