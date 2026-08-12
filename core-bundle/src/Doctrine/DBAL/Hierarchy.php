@@ -225,7 +225,44 @@ class Hierarchy
         }
         unset($siblings);
 
-        return $this->sortChildrenDepthFirst($children, $parentIds);
+        return $this->sortChildrenDepthFirst($children, $this->getRootParentIds($children, $parentIds));
+    }
+
+    /**
+     * @param array<string, list<array{id: int|string, order: mixed}>> $children
+     * @param list<int|string>                                         $parentIds
+     *
+     * @return list<int|string>
+     */
+    private function getRootParentIds(array $children, array $parentIds): array
+    {
+        $parentKeys = array_fill_keys(array_map($this->getIdKey(...), $parentIds), true);
+        $nestedKeys = [];
+
+        foreach ($parentIds as $parentId) {
+            $stack = $children[$this->getIdKey($parentId)] ?? [];
+            $seen = [];
+
+            while ($child = array_pop($stack)) {
+                $key = $this->getIdKey($child['id']);
+
+                if (isset($seen[$key])) {
+                    continue;
+                }
+
+                $seen[$key] = true;
+
+                if (isset($parentKeys[$key]) && $child['id'] !== $parentId) {
+                    $nestedKeys[$key] = true;
+                }
+
+                array_push($stack, ...($children[$key] ?? []));
+            }
+        }
+
+        $rootIds = array_values(array_filter($parentIds, fn (int|string $id): bool => !isset($nestedKeys[$this->getIdKey($id)])));
+
+        return [] === $rootIds ? [$parentIds[0]] : $rootIds;
     }
 
     /**

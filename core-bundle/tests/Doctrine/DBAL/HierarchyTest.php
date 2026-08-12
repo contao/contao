@@ -21,6 +21,7 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -80,6 +81,39 @@ class HierarchyTest extends TestCase
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id')->withScope('tree_type', 'category');
 
         $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, $definition, $query));
+    }
+
+    #[DataProvider('nestedParentIdsProvider')]
+    public function testGetsSortedChildIdsWithNestedParentIds(array $parentIds): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->exactly(3))
+            ->method('fetchAllAssociative')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    ['node_id' => 3, 'parent_id' => 1, 'order_value' => 20],
+                    ['node_id' => 4, 'parent_id' => 1, 'order_value' => 10],
+                    ['node_id' => 7, 'parent_id' => 4, 'order_value' => 10],
+                ],
+                [
+                    ['node_id' => 5, 'parent_id' => 3, 'order_value' => 10],
+                ],
+                [],
+            )
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $query = new ChildQuery()->withOrderBy('position');
+
+        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds($parentIds, $definition, $query));
+    }
+
+    public static function nestedParentIdsProvider(): iterable
+    {
+        yield 'root before child' => [[1, 4]];
+        yield 'child before root' => [[4, 1]];
     }
 
     public function testGetsParentIdsUsingUnion(): void
