@@ -58,7 +58,7 @@ class Hierarchy
             $rows = $this->sortChildRows($rows, $parentIds);
         }
 
-        return array_map(fn (array $row): array => $this->mapRow($row, $definition, $options->columns()), $rows);
+        return $this->mapRows($rows, $definition, $options);
     }
 
     /**
@@ -88,10 +88,7 @@ class Hierarchy
             ? $this->fetchParentRowsUsingCommonTableExpression($id, $definition, $options)
             : $this->fetchParentRowsUsingUnion($id, $definition, $options);
 
-        return array_map(
-            fn (array $row): array => $this->mapRow($row, $definition, $options->columns()),
-            $this->sortParentRows($rows, $id),
-        );
+        return $this->mapRows($this->sortParentRows($rows, $id), $definition, $options);
     }
 
     /**
@@ -441,6 +438,51 @@ class Hierarchy
         }
 
         return $mapped;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function mapRows(array $rows, HierarchyDefinition $definition, AbstractTraversalOptions $options): array
+    {
+        if ($options->includesAllColumns()) {
+            return $this->fetchAllColumns($rows, $definition);
+        }
+
+        return array_map(fn (array $row): array => $this->mapRow($row, $definition, $options->columns()), $rows);
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function fetchAllColumns(array $rows, HierarchyDefinition $definition): array
+    {
+        if ([] === $rows) {
+            return [];
+        }
+
+        $ids = array_map(fn (array $row): int|string => $this->getRowId($row, 'node_id'), $rows);
+        $table = $this->connection->quoteIdentifier($definition->table());
+        $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+        $fetchedRows = $this->connection->fetchAllAssociative(
+            "SELECT * FROM $table WHERE $idColumn IN (?)",
+            [$ids],
+            [$this->getArrayParameterType($ids)],
+        );
+        $indexed = [];
+
+        foreach ($fetchedRows as $row) {
+            $indexed[$this->getIdKey($this->getRowId($row, $definition->idColumn()))] = $row;
+        }
+
+        return array_values(array_filter(array_map(
+            fn (int|string $id): array|null => $indexed[$this->getIdKey($id)] ?? null,
+            $ids,
+        )));
     }
 
     private function getScopeCondition(HierarchyDefinition $definition, string|null $alias = null): string

@@ -27,9 +27,16 @@ class TraversalOptionsTest extends TestCase
 
         $this->assertNotSame($options, $configured);
         $this->assertSame([], $options->columns());
+        $this->assertFalse($options->includesAllColumns());
         $this->assertNull($options->maxDepth());
         $this->assertSame(['title', 'published'], $configured->columns());
         $this->assertSame(2, $configured->maxDepth());
+
+        $allColumns = $configured->withAllColumns();
+
+        $this->assertSame([], $allColumns->columns());
+        $this->assertTrue($allColumns->includesAllColumns());
+        $this->assertFalse($allColumns->withColumns('title')->includesAllColumns());
     }
 
     public function testRejectsAnInvalidMaximumDepth(): void

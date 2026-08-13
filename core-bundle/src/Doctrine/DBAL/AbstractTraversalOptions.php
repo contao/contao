@@ -19,12 +19,24 @@ abstract class AbstractTraversalOptions
      */
     private array $columns = [];
 
+    private bool $allColumns = false;
+
     private int|null $maxDepth = null;
 
     public function withColumns(string ...$columns): static
     {
         $clone = clone $this;
         $clone->columns = array_values(array_unique($columns));
+        $clone->allColumns = false;
+
+        return $clone;
+    }
+
+    public function withAllColumns(): static
+    {
+        $clone = clone $this;
+        $clone->columns = [];
+        $clone->allColumns = true;
 
         return $clone;
     }
@@ -47,6 +59,11 @@ abstract class AbstractTraversalOptions
     public function columns(): array
     {
         return $this->columns;
+    }
+
+    public function includesAllColumns(): bool
+    {
+        return $this->allColumns;
     }
 
     public function maxDepth(): int|null

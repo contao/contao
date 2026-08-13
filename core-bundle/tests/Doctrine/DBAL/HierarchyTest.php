@@ -105,6 +105,28 @@ class HierarchyTest extends TestCase
         );
     }
 
+    public function testGetsChildRowsWithAllColumns(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->willReturnOnConsecutiveCalls(
+                [['node_id' => 3, 'parent_id' => 1, 'order_value' => 0]],
+                [['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1]],
+            )
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $options = new ChildTraversalOptions()->withMaxDepth(1)->withAllColumns();
+
+        $this->assertSame(
+            [['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1]],
+            new Hierarchy($connection)->getChildRows(1, $definition, $options),
+        );
+    }
+
     public function testLimitsTheChildDepthIteratively(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -281,6 +303,28 @@ class HierarchyTest extends TestCase
                 ['category_id' => 1, 'parent_category_id' => 10, 'title' => 'Boundary'],
             ],
             new Hierarchy($connection)->getParentRows(5, $definition, $options),
+        );
+    }
+
+    public function testGetsParentRowsWithAllColumns(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->willReturnOnConsecutiveCalls(
+                [['node_id' => 3, 'parent_id' => 1]],
+                [['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1]],
+            )
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $options = new ParentTraversalOptions()->withMaxDepth(1)->withAllColumns();
+
+        $this->assertSame(
+            [['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1]],
+            new Hierarchy($connection)->getParentRows(3, $definition, $options),
         );
     }
 

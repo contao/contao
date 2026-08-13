@@ -79,6 +79,12 @@ class HierarchyTest extends FunctionalTestCase
             ],
             $this->hierarchy->getChildRows(1, $definition, $options),
         );
+
+        $rows = $this->hierarchy->getChildRows(1, $definition, $options->withMaxDepth(1)->withAllColumns());
+
+        $this->assertSame([4, 3], array_column($rows, 'id'));
+        $this->assertSame([10, 20], array_column($rows, 'sorting'));
+        $this->assertSame(['Page 4', 'Page 3'], array_column($rows, 'title'));
     }
 
     public function testGetsParentIdsUsingARecursiveCommonTableExpression(): void
@@ -108,6 +114,12 @@ class HierarchyTest extends FunctionalTestCase
             [['id' => 5, 'pid' => 3, 'title' => 'Page 5']],
             $this->hierarchy->getParentRows(5, $definition, $options->withMaxDepth(1)),
         );
+
+        $rows = $this->hierarchy->getParentRows(5, $definition, $options->withMaxDepth(1)->withAllColumns());
+
+        $this->assertSame([5], array_column($rows, 'id'));
+        $this->assertSame([10], array_column($rows, 'sorting'));
+        $this->assertSame(['Page 5'], array_column($rows, 'title'));
     }
 
     public function testIncludesTheFirstParentRowOutsideTheScope(): void
