@@ -237,7 +237,7 @@ class StringUtil
 	 *
 	 * @param string|array $strBuffer The string with the entities to be replaced
 	 *
-	 * @return ($strBuffer is string ? string | array) The string with the tags in square brackets
+	 * @return ($strBuffer is string ? string : array) The string with the tags in square brackets
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
