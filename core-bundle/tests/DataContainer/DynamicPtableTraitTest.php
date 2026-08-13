@@ -27,7 +27,7 @@ class DynamicPtableTraitTest extends TestCase
             ->willReturn([['id' => 5, 'pid' => 3, 'ptable' => 'tl_article']])
         ;
 
-        $subject = new class {
+        $subject = new class() {
             use DynamicPtableTrait;
 
             /**
@@ -38,10 +38,10 @@ class DynamicPtableTraitTest extends TestCase
                 return $this->getParentTableAndId($connection, $table, $id);
             }
         };
-
-        $this->assertSame(
-            ['tl_article', 3],
-            $subject->findParent($connection, 'tl_content', 5),
+        $this->expectUserDeprecationMessage(
+            'Since contao/core-bundle 6.1: Using "Contao\CoreBundle\DataContainer\DynamicPtableTrait" is deprecated and will no longer work in Contao 7. Use "Contao\CoreBundle\DataContainer\DcaHierarchy::getParentTableAndId()" instead.',
         );
+
+        $this->assertSame(['tl_article', 3], $subject->findParent($connection, 'tl_content', 5));
     }
 }
