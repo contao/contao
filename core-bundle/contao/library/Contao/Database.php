@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\Database\Result;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
@@ -468,16 +468,16 @@ class Database
 
 		if (empty($arrReturn))
 		{
-			$query = new ChildQuery()
+			$options = new ChildTraversalOptions()
 				->withWhere($strWhere)
 			;
 
 			if ($blnSorting)
 			{
-				$query = $query->withOrderBy('sorting');
+				$options = $options->withOrderBy('sorting');
 			}
 
-			return System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrParentIds, $strTable, $query);
+			return System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrParentIds, $strTable, $options);
 		}
 
 		if (!\is_array($arrParentIds))

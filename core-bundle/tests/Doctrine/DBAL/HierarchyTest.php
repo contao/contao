@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\DBAL;
 
-use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
@@ -78,10 +79,10 @@ class HierarchyTest extends TestCase
             )
         ;
 
-        $query = new ChildQuery()->withOrderBy('position')->withWhere('published = 1');
+        $options = new ChildTraversalOptions()->withOrderBy('position')->withWhere('published = 1');
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id')->withScope('tree_type', 'category');
 
-        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, $definition, $query));
+        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds(1, $definition, $options));
     }
 
     public function testGetsChildRowsWithAdditionalColumns(): void
@@ -99,12 +100,51 @@ class HierarchyTest extends TestCase
         ;
 
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
-        $query = new ChildQuery()->withColumns('title');
+        $options = new ChildTraversalOptions()->withColumns('title');
 
         $this->assertSame(
             [['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child']],
-            new Hierarchy($connection)->getChildRows(1, $definition, $query),
+            new Hierarchy($connection)->getChildRows(1, $definition, $options),
         );
+    }
+
+    public function testLimitsTheChildDepthIteratively(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn([
+                ['node_id' => 3, 'parent_id' => 1, 'order_value' => 0],
+                ['node_id' => 4, 'parent_id' => 1, 'order_value' => 0],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $options = new ChildTraversalOptions()->withMaxDepth(1);
+
+        $this->assertSame([3, 4], new Hierarchy($connection)->getChildIds(1, $definition, $options));
+    }
+
+    public function testLimitsTheChildDepthUsingACommonTableExpression(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection, new MySQL80Platform());
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->with($this->stringContains('parent.depth < 1'))
+            ->willReturn([
+                ['node_id' => 3, 'parent_id' => 1, 'order_value' => 0],
+                ['node_id' => 4, 'parent_id' => 1, 'order_value' => 0],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $options = new ChildTraversalOptions()->withMaxDepth(1);
+
+        $this->assertSame([3, 4], new Hierarchy($connection)->getChildIds(1, $definition, $options));
     }
 
     #[DataProvider('nestedParentIdsProvider')]
@@ -129,9 +169,9 @@ class HierarchyTest extends TestCase
         ;
 
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
-        $query = new ChildQuery()->withOrderBy('position');
+        $options = new ChildTraversalOptions()->withOrderBy('position');
 
-        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds($parentIds, $definition, $query));
+        $this->assertSame([4, 7, 3, 5], new Hierarchy($connection)->getChildIds($parentIds, $definition, $options));
     }
 
     public static function nestedParentIdsProvider(): iterable
@@ -235,7 +275,7 @@ class HierarchyTest extends TestCase
         ;
 
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id')->withScope('tree_type', 'category');
-        $query = new ParentQuery()->withColumns('title')->withBoundaryRow();
+        $options = new ParentTraversalOptions()->withColumns('title')->withBoundaryRow();
 
         $this->assertSame(
             [
@@ -243,7 +283,7 @@ class HierarchyTest extends TestCase
                 ['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Parent'],
                 ['category_id' => 1, 'parent_category_id' => 10, 'title' => 'Boundary'],
             ],
-            new Hierarchy($connection)->getParentRows(5, $definition, $query),
+            new Hierarchy($connection)->getParentRows(5, $definition, $options),
         );
     }
 
@@ -259,19 +299,19 @@ class HierarchyTest extends TestCase
         ;
 
         $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
-        $query = new ParentQuery()->withMaxDepth(1);
+        $options = new ParentTraversalOptions()->withMaxDepth(1);
 
         $this->assertSame(
             [['category_id' => 5, 'parent_category_id' => 3]],
-            new Hierarchy($connection)->getParentRows(5, $definition, $query),
+            new Hierarchy($connection)->getParentRows(5, $definition, $options),
         );
     }
 
-    private function configureConnection(Connection&MockObject $connection): void
+    private function configureConnection(Connection&MockObject $connection, MySQLPlatform|null $platform = null): void
     {
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySQLPlatform())
+            ->willReturn($platform ?? new MySQLPlatform())
         ;
 
         $connection

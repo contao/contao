@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -158,10 +158,10 @@ class PreviewUrlCreateListenerTest extends TestCase
     }
 
     /**
-     * @return Callback<ParentQuery>
+     * @return Callback<ParentTraversalOptions>
      */
     private function isSingleParentRowQuery(): Callback
     {
-        return $this->callback(static fn (ParentQuery $query): bool => $query->includesBoundaryRow() && 1 === $query->maxDepth());
+        return $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesBoundaryRow() && 1 === $options->maxDepth());
     }
 }

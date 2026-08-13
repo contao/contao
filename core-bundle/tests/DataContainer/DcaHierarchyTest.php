@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\TestCase;
 
@@ -24,19 +24,19 @@ class DcaHierarchyTest extends TestCase
 {
     public function testGetsChildIds(): void
     {
-        $query = new ChildQuery();
+        $options = new ChildTraversalOptions();
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
             ->method('getChildRows')
-            ->with([1, 2], $this->isDcaDefinition('tl_page'), $query)
+            ->with([1, 2], $this->isDcaDefinition('tl_page'), $options)
             ->willReturn([
                 ['id' => 3, 'pid' => 1],
                 ['id' => 4, 'pid' => 2],
             ])
         ;
 
-        $this->assertSame([3, 4], new DcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $query));
+        $this->assertSame([3, 4], new DcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $options));
     }
 
     public function testGetsParentIds(): void
@@ -91,7 +91,7 @@ class DcaHierarchyTest extends TestCase
             ->with(
                 5,
                 $this->isDcaDefinition('tl_content'),
-                $this->callback(static fn (ParentQuery $query): bool => ['ptable'] === $query->columns() && $query->includesBoundaryRow()),
+                $this->callback(static fn (ParentTraversalOptions $options): bool => ['ptable'] === $options->columns() && $options->includesBoundaryRow()),
             )
             ->willReturn([
                 ['id' => 5, 'pid' => 3, 'ptable' => 'tl_content'],
@@ -104,13 +104,13 @@ class DcaHierarchyTest extends TestCase
 
     public function testGetsRowsWithAdditionalColumns(): void
     {
-        $childQuery = new ChildQuery()->withColumns('title');
-        $parentQuery = new ParentQuery()->withColumns('title');
+        $childOptions = new ChildTraversalOptions()->withColumns('title');
+        $parentOptions = new ParentTraversalOptions()->withColumns('title');
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
             ->method('getChildRows')
-            ->with([1], $this->isDcaDefinition('tl_page'), $childQuery)
+            ->with([1], $this->isDcaDefinition('tl_page'), $childOptions)
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
 
@@ -120,15 +120,15 @@ class DcaHierarchyTest extends TestCase
             ->with(
                 2,
                 $this->isDcaDefinition('tl_page'),
-                $parentQuery,
+                $parentOptions,
             )
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
         $dcaHierarchy = new DcaHierarchy($hierarchy);
         $expected = [['id' => 2, 'pid' => 1, 'title' => 'Child']];
 
-        $this->assertSame($expected, $dcaHierarchy->getChildRows(1, 'tl_page', $childQuery));
-        $this->assertSame($expected, $dcaHierarchy->getParentRows(2, 'tl_page', $parentQuery));
+        $this->assertSame($expected, $dcaHierarchy->getChildRows(1, 'tl_page', $childOptions));
+        $this->assertSame($expected, $dcaHierarchy->getParentRows(2, 'tl_page', $parentOptions));
     }
 
     /**

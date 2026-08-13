@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Picker;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
@@ -738,9 +738,9 @@ class TablePickerProviderTest extends ContaoTestCase
             ->with(
                 $id,
                 $table,
-                $this->callback(static fn (ParentQuery $query): bool => $query->includesBoundaryRow()
-                    && 1 === $query->maxDepth()
-                    && (null === $dynamicPtable ? [] : ['ptable']) === $query->columns()),
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesBoundaryRow()
+                    && 1 === $options->maxDepth()
+                    && (null === $dynamicPtable ? [] : ['ptable']) === $options->columns()),
             )
             ->willReturn(false === $data ? [] : [[...$data, 'id' => $data['id'] ?? $id, 'pid' => $data['pid'] ?? 0]])
         ;

@@ -12,18 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\DBAL;
 
-final class ParentQuery
+abstract class AbstractTraversalOptions
 {
     /**
      * @var list<string>
      */
     private array $columns = [];
 
-    private bool $includeBoundary = false;
-
     private int|null $maxDepth = null;
 
-    public function withColumns(string ...$columns): self
+    public function withColumns(string ...$columns): static
     {
         $clone = clone $this;
         $clone->columns = array_values(array_unique($columns));
@@ -31,15 +29,7 @@ final class ParentQuery
         return $clone;
     }
 
-    public function withBoundaryRow(): self
-    {
-        $clone = clone $this;
-        $clone->includeBoundary = true;
-
-        return $clone;
-    }
-
-    public function withMaxDepth(int $maxDepth): self
+    public function withMaxDepth(int $maxDepth): static
     {
         if ($maxDepth < 1) {
             throw new \InvalidArgumentException('The maximum depth must be greater than zero.');
@@ -57,11 +47,6 @@ final class ParentQuery
     public function columns(): array
     {
         return $this->columns;
-    }
-
-    public function includesBoundaryRow(): bool
-    {
-        return $this->includeBoundary;
     }
 
     public function maxDepth(): int|null

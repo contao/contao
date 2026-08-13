@@ -33,11 +33,11 @@ class Hierarchy
      *
      * @return list<int|string>
      */
-    public function getChildIds(array|int|string $parentIds, HierarchyDefinition $definition, ChildQuery|null $query = null): array
+    public function getChildIds(array|int|string $parentIds, HierarchyDefinition $definition, ChildTraversalOptions|null $options = null): array
     {
         return array_map(
             static fn (array $row): int|string => $row[$definition->idColumn()],
-            $this->getChildRows($parentIds, $definition, $query),
+            $this->getChildRows($parentIds, $definition, $options),
         );
     }
 
@@ -46,24 +46,24 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    public function getChildRows(array|int|string $parentIds, HierarchyDefinition $definition, ChildQuery|null $query = null): array
+    public function getChildRows(array|int|string $parentIds, HierarchyDefinition $definition, ChildTraversalOptions|null $options = null): array
     {
         $parentIds = $this->normalizeIds((array) $parentIds);
-        $query ??= new ChildQuery();
+        $options ??= new ChildTraversalOptions();
 
         if ([] === $parentIds) {
             return [];
         }
 
         $rows = $this->supportsRecursiveCommonTableExpressions()
-            ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $definition, $query)
-            : $this->fetchChildrenIteratively($parentIds, $definition, $query);
+            ? $this->fetchChildrenUsingCommonTableExpression($parentIds, $definition, $options)
+            : $this->fetchChildrenIteratively($parentIds, $definition, $options);
 
-        if (null !== $query->orderBy()) {
+        if (null !== $options->orderBy()) {
             $rows = $this->sortChildRows($rows, $parentIds);
         }
 
-        return array_map(fn (array $row): array => $this->mapRow($row, $definition, $query->columns()), $rows);
+        return array_map(fn (array $row): array => $this->mapRow($row, $definition, $options->columns()), $rows);
     }
 
     /**
@@ -82,19 +82,19 @@ class Hierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    public function getParentRows(int|string $id, HierarchyDefinition $definition, ParentQuery|null $query = null): array
+    public function getParentRows(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions|null $options = null): array
     {
         if ('' === $id) {
             return [];
         }
 
-        $query ??= new ParentQuery();
+        $options ??= new ParentTraversalOptions();
         $rows = $this->supportsRecursiveCommonTableExpressions()
-            ? $this->fetchParentRowsUsingCommonTableExpression($id, $definition, $query)
-            : $this->fetchParentRowsUsingUnion($id, $definition, $query);
+            ? $this->fetchParentRowsUsingCommonTableExpression($id, $definition, $options)
+            : $this->fetchParentRowsUsingUnion($id, $definition, $options);
 
         return array_map(
-            fn (array $row): array => $this->mapRow($row, $definition, $query->columns()),
+            fn (array $row): array => $this->mapRow($row, $definition, $options->columns()),
             $this->sortParentRows($rows, $id),
         );
     }
@@ -104,28 +104,33 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    private function fetchChildrenUsingCommonTableExpression(array $parentIds, HierarchyDefinition $definition, ChildQuery $query): array
+    private function fetchChildrenUsingCommonTableExpression(array $parentIds, HierarchyDefinition $definition, ChildTraversalOptions $options): array
     {
         $quotedTable = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
-        $orderBy = $this->getOrderBySelect($query);
-        $fields = $this->getFields($query->columns());
-        $fieldNames = $this->getFieldNames($query->columns());
-        $childFieldNames = $this->getFieldNames($query->columns(), 'child');
+        $orderBy = $this->getOrderBySelect($options);
+        $fields = $this->getFields($options->columns());
+        $fieldNames = $this->getFieldNames($options->columns());
+        $childFieldNames = $this->getFieldNames($options->columns(), 'child');
         $scopeCondition = $this->getScopeCondition($definition);
-        $where = $this->getWhereCondition($query);
+        $where = $this->getWhereCondition($options);
+        $depthColumn = null === $options->maxDepth() ? '' : ', depth';
+        $anchorDepth = null === $options->maxDepth() ? '' : ', 1';
+        $childDepth = null === $options->maxDepth() ? '' : ', parent.depth + 1';
+        $recursiveDepth = null === $options->maxDepth() ? '' : ' AND parent.depth < '.$options->maxDepth();
 
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (node_id, parent_id, order_value$fieldNames) AS (
-                SELECT $idColumn, $parentColumn, $orderBy$fields FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where
+            WITH RECURSIVE contao_tree (node_id, parent_id, order_value$fieldNames$depthColumn) AS (
+                SELECT $idColumn, $parentColumn, $orderBy$fields$anchorDepth FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where
                 UNION DISTINCT
-                SELECT child.node_id, child.parent_id, child.order_value$childFieldNames FROM (
+                SELECT child.node_id, child.parent_id, child.order_value$childFieldNames$childDepth FROM (
                     SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy$fields FROM $quotedTable WHERE 1 = 1$scopeCondition$where
                 ) child
                     INNER JOIN contao_tree parent ON child.parent_id = parent.node_id
+                    WHERE 1 = 1$recursiveDepth
             )
-            SELECT node_id, parent_id, order_value$fieldNames FROM contao_tree
+            SELECT DISTINCT node_id, parent_id, order_value$fieldNames FROM contao_tree
             SQL;
 
         return $this->connection->fetchAllAssociative($sql, [$parentIds], [$this->getArrayParameterType($parentIds)]);
@@ -136,19 +141,20 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    private function fetchChildrenIteratively(array $parentIds, HierarchyDefinition $definition, ChildQuery $query): array
+    private function fetchChildrenIteratively(array $parentIds, HierarchyDefinition $definition, ChildTraversalOptions $options): array
     {
         $quotedTable = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
-        $orderBy = $this->getOrderBySelect($query);
-        $fields = $this->getFields($query->columns());
+        $orderBy = $this->getOrderBySelect($options);
+        $fields = $this->getFields($options->columns());
         $scopeCondition = $this->getScopeCondition($definition);
-        $where = $this->getWhereCondition($query);
+        $where = $this->getWhereCondition($options);
         $rows = [];
         $pendingIds = $parentIds;
+        $depth = 1;
 
-        while ([] !== $pendingIds) {
+        while ([] !== $pendingIds && (null === $options->maxDepth() || $depth <= $options->maxDepth())) {
             $result = $this->connection->fetchAllAssociative(
                 "SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy$fields FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where",
                 [$pendingIds],
@@ -167,6 +173,8 @@ class Hierarchy
                 $rows[$key] = $row;
                 $pendingIds[] = $id;
             }
+
+            ++$depth;
         }
 
         return array_values($rows);
@@ -175,17 +183,17 @@ class Hierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    private function fetchParentRowsUsingCommonTableExpression(int|string $id, HierarchyDefinition $definition, ParentQuery $query): array
+    private function fetchParentRowsUsingCommonTableExpression(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions $options): array
     {
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
-        $fields = $this->getFields($query->columns());
-        $parentFields = $this->getFields($query->columns(), 'parent');
-        $fieldNames = $this->getFieldNames($query->columns());
-        $anchorScope = $query->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
-        $recursiveScope = $query->includesBoundaryRow() ? ' AND child.continue_traversal = 1' : $this->getScopeCondition($definition, 'parent');
-        $recursiveDepth = null === $query->maxDepth() ? '' : ' AND child.depth < '.$query->maxDepth();
+        $fields = $this->getFields($options->columns());
+        $parentFields = $this->getFields($options->columns(), 'parent');
+        $fieldNames = $this->getFieldNames($options->columns());
+        $anchorScope = $options->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
+        $recursiveScope = $options->includesBoundaryRow() ? ' AND child.continue_traversal = 1' : $this->getScopeCondition($definition, 'parent');
+        $recursiveDepth = null === $options->maxDepth() ? '' : ' AND child.depth < '.$options->maxDepth();
         $continuation = $this->getScopeExpression($definition);
         $parentContinuation = $this->getScopeExpression($definition, 'parent');
         $sql = <<<SQL
@@ -205,7 +213,7 @@ class Hierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    private function fetchParentRowsUsingUnion(int|string $id, HierarchyDefinition $definition, ParentQuery $query): array
+    private function fetchParentRowsUsingUnion(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions $options): array
     {
         $rows = [];
         $queried = [];
@@ -214,9 +222,9 @@ class Hierarchy
 
         while (!isset($queried[$this->getIdKey($currentId)])) {
             $queried[$this->getIdKey($currentId)] = true;
-            $batchSize = $this->getParentBatchSize($query, $fetched);
-            $select = $this->getParentUnionSelect($definition, $query, true);
-            $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $query, false), $batchSize - 1);
+            $batchSize = $this->getParentBatchSize($options, $fetched);
+            $select = $this->getParentUnionSelect($definition, $options, true);
+            $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $options, false), $batchSize - 1);
             $batch = $this->connection->fetchAllAssociative($querySql, [$currentId]);
 
             foreach ($batch as $row) {
@@ -226,7 +234,7 @@ class Hierarchy
             $last = end($batch);
             $fetched += \count($batch) - (0 === $fetched ? 0 : 1);
 
-            if ($batchSize !== \count($batch) || $fetched === $query->maxDepth() || ($query->includesBoundaryRow() && !(bool) ($last['continue_traversal'] ?? false))) {
+            if ($batchSize !== \count($batch) || $fetched === $options->maxDepth() || ($options->includesBoundaryRow() && !(bool) ($last['continue_traversal'] ?? false))) {
                 break;
             }
 
@@ -236,13 +244,13 @@ class Hierarchy
         return array_values($rows);
     }
 
-    private function getParentBatchSize(ParentQuery $query, int $fetched): int
+    private function getParentBatchSize(ParentTraversalOptions $options, int $fetched): int
     {
-        if (null === $query->maxDepth()) {
+        if (null === $options->maxDepth()) {
             return 10;
         }
 
-        return min(10, $query->maxDepth() - $fetched + (0 === $fetched ? 0 : 1));
+        return min(10, $options->maxDepth() - $fetched + (0 === $fetched ? 0 : 1));
     }
 
     /**
@@ -405,15 +413,15 @@ class Hierarchy
         return implode('', array_map(static fn (int $index): string => ', '.$prefix.'field_'.$index, array_keys($columns)));
     }
 
-    private function getParentUnionSelect(HierarchyDefinition $definition, ParentQuery $query, bool $anchor): string
+    private function getParentUnionSelect(HierarchyDefinition $definition, ParentTraversalOptions $options, bool $anchor): string
     {
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
-        $fields = $this->getFields($query->columns());
-        $scope = $query->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
+        $fields = $this->getFields($options->columns());
+        $scope = $options->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
         $continuation = $this->getScopeExpression($definition);
-        $where = $anchor ? "$idColumn = ?$scope" : "$idColumn = @parent_id".($query->includesBoundaryRow() ? ' AND @continue' : $scope);
+        $where = $anchor ? "$idColumn = ?$scope" : "$idColumn = @parent_id".($options->includesBoundaryRow() ? ' AND @continue' : $scope);
 
         return "SELECT $idColumn AS node_id, @parent_id := $parentColumn AS parent_id$fields, @continue := $continuation AS continue_traversal FROM $table WHERE $where";
     }
@@ -472,14 +480,14 @@ class Hierarchy
         ;
     }
 
-    private function getWhereCondition(ChildQuery $query): string
+    private function getWhereCondition(ChildTraversalOptions $options): string
     {
-        return $query->where() ? ' AND ('.$query->where().')' : '';
+        return $options->where() ? ' AND ('.$options->where().')' : '';
     }
 
-    private function getOrderBySelect(ChildQuery $query): string
+    private function getOrderBySelect(ChildTraversalOptions $options): string
     {
-        $orderBy = $query->orderBy();
+        $orderBy = $options->orderBy();
 
         return null === $orderBy ? '0 AS order_value' : $this->connection->quoteIdentifier($orderBy).' AS order_value';
     }

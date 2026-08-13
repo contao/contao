@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
@@ -219,10 +219,10 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $data = false;
 
         if ($id) {
-            $query = new ParentQuery()->withBoundaryRow()->withMaxDepth(1);
+            $options = new ParentTraversalOptions()->withBoundaryRow()->withMaxDepth(1);
 
             if ($dynamicPtable) {
-                $query = $query->withColumns('ptable');
+                $options = $options->withColumns('ptable');
 
                 try {
                     [$ptable] = $this->dcaHierarchy->getParentTableAndId($id, $table);
@@ -230,7 +230,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 }
             }
 
-            $data = $this->dcaHierarchy->getParentRows($id, $table, $query)[0] ?? false;
+            $data = $this->dcaHierarchy->getParentRows($id, $table, $options)[0] ?? false;
         }
 
         return [

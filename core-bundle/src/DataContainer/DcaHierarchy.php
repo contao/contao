@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 
 class DcaHierarchy
 {
@@ -28,9 +28,9 @@ class DcaHierarchy
      *
      * @return list<int>
      */
-    public function getChildIds(array|int $parentIds, string $table, ChildQuery|null $query = null): array
+    public function getChildIds(array|int $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
-        return array_map(static fn (array $row): int => (int) $row['id'], $this->getChildRows($parentIds, $table, $query));
+        return array_map(static fn (array $row): int => (int) $row['id'], $this->getChildRows($parentIds, $table, $options));
     }
 
     /**
@@ -38,7 +38,7 @@ class DcaHierarchy
      *
      * @return list<array<string, mixed>>
      */
-    public function getChildRows(array|int $parentIds, string $table, ChildQuery|null $query = null): array
+    public function getChildRows(array|int $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
         $parentIds = array_values(array_filter(array_map(intval(...), (array) $parentIds)));
 
@@ -46,7 +46,7 @@ class DcaHierarchy
             return [];
         }
 
-        return $this->normalizeRows($this->hierarchy->getChildRows($parentIds, $this->createDefinition($table), $query));
+        return $this->normalizeRows($this->hierarchy->getChildRows($parentIds, $this->createDefinition($table), $options));
     }
 
     /**
@@ -62,13 +62,13 @@ class DcaHierarchy
     /**
      * @return list<array<string, mixed>>
      */
-    public function getParentRows(int $id, string $table, ParentQuery|null $query = null): array
+    public function getParentRows(int $id, string $table, ParentTraversalOptions|null $options = null): array
     {
         if ($id <= 0) {
             return [];
         }
 
-        return $this->normalizeRows($this->hierarchy->getParentRows($id, $this->createDefinition($table), $query));
+        return $this->normalizeRows($this->hierarchy->getParentRows($id, $this->createDefinition($table), $options));
     }
 
     /**
@@ -78,8 +78,8 @@ class DcaHierarchy
      */
     public function getParentTableAndId(int $id, string $table): array
     {
-        $query = new ParentQuery()->withColumns('ptable')->withBoundaryRow();
-        $rows = $this->getParentRows($id, $table, $query);
+        $options = new ParentTraversalOptions()->withColumns('ptable')->withBoundaryRow();
+        $rows = $this->getParentRows($id, $table, $options);
         $parent = end($rows);
 
         if (!$parent || !isset($parent['ptable']) || $table === $parent['ptable']) {

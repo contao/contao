@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
-use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
-use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\TestCase\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
 
@@ -51,12 +51,13 @@ class HierarchyTest extends FunctionalTestCase
         sort($ids);
 
         $this->assertSame([3, 4, 5, 7], $ids);
-        $query = new ChildQuery()->withOrderBy('sorting');
+        $options = new ChildTraversalOptions()->withOrderBy('sorting');
 
-        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, $definition, $query));
-        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds([1, 4], $definition, $query));
-        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds([4, 1], $definition, $query));
-        $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, $definition, $query->withWhere('id != 3')));
+        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, $definition, $options));
+        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds([1, 4], $definition, $options));
+        $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds([4, 1], $definition, $options));
+        $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, $definition, $options->withWhere('id != 3')));
+        $this->assertSame([4, 3], $this->hierarchy->getChildIds(1, $definition, $options->withMaxDepth(1)));
         $rootIds = $this->hierarchy->getChildIds(0, $definition);
         sort($rootIds);
 
@@ -67,7 +68,7 @@ class HierarchyTest extends FunctionalTestCase
     public function testGetsChildRowsUsingARecursiveCommonTableExpression(): void
     {
         $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
-        $query = new ChildQuery()->withOrderBy('sorting')->withColumns('title');
+        $options = new ChildTraversalOptions()->withOrderBy('sorting')->withColumns('title');
 
         $this->assertSame(
             [
@@ -76,7 +77,7 @@ class HierarchyTest extends FunctionalTestCase
                 ['id' => 3, 'pid' => 1, 'title' => 'Page 3'],
                 ['id' => 5, 'pid' => 3, 'title' => 'Page 5'],
             ],
-            $this->hierarchy->getChildRows(1, $definition, $query),
+            $this->hierarchy->getChildRows(1, $definition, $options),
         );
     }
 
@@ -93,7 +94,7 @@ class HierarchyTest extends FunctionalTestCase
     public function testGetsParentRowsUsingARecursiveCommonTableExpression(): void
     {
         $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
-        $query = new ParentQuery()->withColumns('title');
+        $options = new ParentTraversalOptions()->withColumns('title');
 
         $this->assertSame(
             [
@@ -101,18 +102,18 @@ class HierarchyTest extends FunctionalTestCase
                 ['id' => 3, 'pid' => 1, 'title' => 'Page 3'],
                 ['id' => 1, 'pid' => 0, 'title' => 'Page 1'],
             ],
-            $this->hierarchy->getParentRows(5, $definition, $query),
+            $this->hierarchy->getParentRows(5, $definition, $options),
         );
         $this->assertSame(
             [['id' => 5, 'pid' => 3, 'title' => 'Page 5']],
-            $this->hierarchy->getParentRows(5, $definition, $query->withMaxDepth(1)),
+            $this->hierarchy->getParentRows(5, $definition, $options->withMaxDepth(1)),
         );
     }
 
     public function testIncludesTheFirstParentRowOutsideTheScope(): void
     {
         $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScope('ptable', 'tl_content');
-        $query = new ParentQuery()->withColumns('ptable')->withBoundaryRow();
+        $options = new ParentTraversalOptions()->withColumns('ptable')->withBoundaryRow();
 
         $this->assertSame(
             [
@@ -120,7 +121,7 @@ class HierarchyTest extends FunctionalTestCase
                 ['id' => 11, 'pid' => 10, 'ptable' => 'tl_content'],
                 ['id' => 10, 'pid' => 42, 'ptable' => 'tl_article'],
             ],
-            $this->hierarchy->getParentRows(12, $definition, $query),
+            $this->hierarchy->getParentRows(12, $definition, $options),
         );
     }
 
