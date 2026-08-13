@@ -86,7 +86,8 @@ class DcaHierarchyTest extends ContaoTestCase
 
     public function testGetsParentTableAndId(): void
     {
-        $previousDca = $GLOBALS['TL_DCA']['tl_content'] ?? null;
+        $hadDca = \array_key_exists('TL_DCA', $GLOBALS);
+        $previousDca = $GLOBALS['TL_DCA'] ?? null;
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
             ->expects($this->once())
@@ -122,10 +123,10 @@ class DcaHierarchyTest extends ContaoTestCase
         try {
             $this->assertSame(['tl_article', 10], new DcaHierarchy($hierarchy, $framework)->getParentTableAndId(5, 'tl_content'));
         } finally {
-            if (null === $previousDca) {
-                unset($GLOBALS['TL_DCA']['tl_content']);
+            if ($hadDca) {
+                $GLOBALS['TL_DCA'] = $previousDca;
             } else {
-                $GLOBALS['TL_DCA']['tl_content'] = $previousDca;
+                unset($GLOBALS['TL_DCA']);
             }
         }
     }
