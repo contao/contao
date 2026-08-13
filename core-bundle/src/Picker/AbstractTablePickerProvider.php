@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
-use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -24,8 +24,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
-    use DynamicPtableTrait;
-
     private const PREFIX = 'dc.';
 
     private const PREFIX_LENGTH = 3;
@@ -35,7 +33,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private readonly FactoryInterface $menuFactory,
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
-        private readonly Connection $connection,
+        private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
 
@@ -221,28 +219,23 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $data = false;
 
         if ($id) {
-            $qb = $this->connection->createQueryBuilder();
-            $qb->select('id')->from($table)->where($qb->expr()->eq('id', (string) $id));
-
-            if ($ptable || $dynamicPtable) {
-                $qb->addSelect('pid');
-            }
+            $query = new ParentQuery()->withBoundaryRow()->withMaxDepth(1);
 
             if ($dynamicPtable) {
-                $qb->addSelect('ptable');
+                $query = $query->withColumns('ptable');
 
                 try {
-                    [$ptable] = $this->getParentTableAndId($this->connection, $table, $id);
+                    [$ptable] = $this->dcaHierarchy->getParentTableAndId($id, $table);
                 } catch (\RuntimeException) {
                 }
             }
 
-            $data = $qb->executeQuery()->fetchAssociative();
+            $data = $this->dcaHierarchy->getParentRows($id, $table, $query)[0] ?? false;
         }
 
         return [
             $ptable ?? $data['ptable'] ?? null,
-            (int) ($data['pid'] ?? 0) ?: null,
+            (int) ($ptable || $dynamicPtable ? ($data['pid'] ?? 0) : 0) ?: null,
             (int) ($data['id'] ?? 0) ?: null,
             $data['ptable'] ?? null,
         ];

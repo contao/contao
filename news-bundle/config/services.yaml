@@ -88,7 +88,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.data_container.dca_url_analyzer'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_news.listener.sitemap:
         class: Contao\NewsBundle\EventListener\SitemapListener
@@ -129,3 +129,4 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'

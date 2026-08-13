@@ -103,6 +103,10 @@ class HierarchyTest extends FunctionalTestCase
             ],
             $this->hierarchy->getParentRows(5, $definition, $query),
         );
+        $this->assertSame(
+            [['id' => 5, 'pid' => 3, 'title' => 'Page 5']],
+            $this->hierarchy->getParentRows(5, $definition, $query->withMaxDepth(1)),
+        );
     }
 
     public function testIncludesTheFirstParentRowOutsideTheScope(): void

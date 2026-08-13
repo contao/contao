@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
@@ -19,10 +21,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -257,7 +255,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection(),
+            $this->mockUnusedHierarchy(),
         );
 
         $provider->getUrl($config);
@@ -279,7 +277,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['id' => 15]),
+            $this->mockHierarchyForQuery('tl_article', 15, ['id' => 15]),
         );
 
         $provider->getUrl($config);
@@ -301,7 +299,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['id' => 15, 'pid' => 1], true),
+            $this->mockHierarchyForQuery('tl_article', 15, ['id' => 15, 'pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -325,7 +323,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 42, ['id' => 42, 'pid' => 1], true),
+            $this->mockHierarchyForQuery('tl_article', 42, ['id' => 42, 'pid' => 1]),
         );
 
         $provider->getUrl($config);
@@ -357,7 +355,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true, 'tl_news'),
+            $this->mockHierarchyForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], 'tl_news'),
         );
 
         $provider->getUrl($config);
@@ -390,7 +388,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_content'], true, 'tl_news'),
+            $this->mockHierarchyForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_content'], 'tl_news'),
         );
 
         $provider->getUrl($config);
@@ -415,7 +413,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true, ''),
+            $this->mockHierarchyForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], ''),
         );
 
         $provider->getUrl($config);
@@ -437,7 +435,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 42, false, true),
+            $this->mockHierarchyForQuery('tl_article', 42, false),
         );
 
         $provider->getUrl($config);
@@ -463,7 +461,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection(),
+            $this->mockUnusedHierarchy(),
         );
 
         $provider->getUrl($config);
@@ -489,7 +487,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection(),
+            $this->mockUnusedHierarchy(),
         );
 
         $provider->getUrl($config);
@@ -516,7 +514,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content', 'tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockUnusedConnection(),
+            $this->mockUnusedHierarchy(),
         );
 
         $provider->getUrl($config);
@@ -553,7 +551,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_parent', 'tl_child', 'tl_grandchild'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_grandchild', 123, false, true),
+            $this->mockHierarchyForQuery('tl_grandchild', 123, false),
         );
 
         $provider->getUrl($config);
@@ -569,14 +567,14 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    private function createTableProvider(ContaoFramework|null $framework = null, RouterInterface|null $router = null, Connection|null $connection = null): TablePickerProvider
+    private function createTableProvider(ContaoFramework|null $framework = null, RouterInterface|null $router = null, DcaHierarchy|null $dcaHierarchy = null): TablePickerProvider
     {
         return new TablePickerProvider(
             $framework ?: $this->createStub(ContaoFramework::class),
             $this->createStub(FactoryInterface::class),
             $router ?: $this->createStub(RouterInterface::class),
             $this->createStub(TranslatorInterface::class),
-            $connection ?: $this->createStub(Connection::class),
+            $dcaHierarchy ?: $this->createStub(DcaHierarchy::class),
         );
     }
 
@@ -626,7 +624,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $menuFactory,
             $this->mockRouterWithExpectedParams(...$expectedParams),
             $this->mockTranslatorWithExpectedCalls($modules),
-            $this->createStub(Connection::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 
@@ -720,121 +718,49 @@ class TablePickerProviderTest extends ContaoTestCase
         return $router;
     }
 
-    private function mockUnusedConnection(): Connection&MockObject
+    private function mockUnusedHierarchy(): DcaHierarchy&MockObject
     {
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
             ->expects($this->never())
             ->method($this->anything())
         ;
 
-        return $connection;
+        return $dcaHierarchy;
     }
 
-    private function mockConnectionForQuery(string $table, int $id, array|false $data, bool $ptable = false, string|null $dynamicPtable = null): Connection&MockObject
+    private function mockHierarchyForQuery(string $table, int $id, array|false $data, string|null $dynamicPtable = null): DcaHierarchy&MockObject
     {
-        $expr = $this->createMock(ExpressionBuilder::class);
-        $expr
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
             ->expects($this->once())
-            ->method('eq')
-            ->with('id', (string) $id)
-            ->willReturn(\sprintf("%s.id = '%s'", $table, $id))
+            ->method('getParentRows')
+            ->with(
+                $id,
+                $table,
+                $this->callback(static fn (ParentQuery $query): bool => $query->includesBoundaryRow()
+                    && 1 === $query->maxDepth()
+                    && (null === $dynamicPtable ? [] : ['ptable']) === $query->columns()),
+            )
+            ->willReturn(false === $data ? [] : [[...$data, 'id' => $data['id'] ?? $id, 'pid' => $data['pid'] ?? 0]])
         ;
 
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchAssociative')
-            ->willReturn($data)
-        ;
-
-        $queryBuilder = $this->createMock(QueryBuilder::class);
-        $queryBuilder
-            ->expects($this->once())
-            ->method('expr')
-            ->willReturn($expr)
-        ;
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('select')
-            ->with('id')
-            ->willReturnSelf()
-        ;
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('from')
-            ->with($table)
-            ->willReturnSelf()
-        ;
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('where')
-            ->with(\sprintf("%s.id = '%s'", $table, $id))
-            ->willReturnSelf()
-        ;
-
-        if ($ptable && null !== $dynamicPtable) {
-            $expected = ['pid', 'ptable'];
-
-            $queryBuilder
-                ->expects($this->exactly(2))
-                ->method('addSelect')
-                ->with($this->callback(
-                    static function (string $select) use (&$expected) {
-                        $pos = array_search($select, $expected, true);
-                        unset($expected[$pos]);
-
-                        return false !== $pos;
-                    },
-                ))
-                ->willReturnSelf()
-            ;
-        } elseif ($ptable) {
-            $queryBuilder
+        if (null !== $dynamicPtable) {
+            $expectation = $dcaHierarchy
                 ->expects($this->once())
-                ->method('addSelect')
-                ->with('pid')
-                ->willReturnSelf()
+                ->method('getParentTableAndId')
+                ->with($id, $table)
             ;
-        } elseif (null !== $dynamicPtable) {
-            $queryBuilder
-                ->expects($this->once())
-                ->method('addSelect')
-                ->with('ptable')
-                ->willReturnSelf()
-            ;
-        } else {
-            $queryBuilder
-                ->expects($this->never())
-                ->method('addSelect')
+
+            '' === $dynamicPtable
+                ? $expectation
+                    ->willThrowException(new \RuntimeException())
+                : $expectation
+                    ->willReturn([$dynamicPtable, 0])
             ;
         }
 
-        $queryBuilder
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder)
-        ;
-
-        if ($dynamicPtable) {
-            $connection
-                ->expects($this->once())
-                ->method('fetchAllAssociative')
-                ->willReturn([['ptable' => $dynamicPtable, 'pid' => 0]])
-            ;
-        }
-
-        return $connection;
+        return $dcaHierarchy;
     }
 
     private function mockTranslatorWithExpectedCalls(array $modules): TranslatorInterface&MockObject

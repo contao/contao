@@ -247,6 +247,26 @@ class HierarchyTest extends TestCase
         );
     }
 
+    public function testLimitsTheParentDepthUsingUnion(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->with($this->logicalNot($this->stringContains(' UNION SELECT ')), [5])
+            ->willReturn([['node_id' => 5, 'parent_id' => 3]])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $query = new ParentQuery()->withMaxDepth(1);
+
+        $this->assertSame(
+            [['category_id' => 5, 'parent_category_id' => 3]],
+            new Hierarchy($connection)->getParentRows(5, $definition, $query),
+        );
+    }
+
     private function configureConnection(Connection&MockObject $connection): void
     {
         $connection

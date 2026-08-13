@@ -12,22 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
-use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter implements ResetInterface
 {
-    use DynamicPtableTrait;
-
     private array $parents = [];
 
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private readonly DcaHierarchy $dcaHierarchy)
     {
     }
 
@@ -87,6 +84,6 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
      */
     private function fetchParentTableAndId(int $id): array
     {
-        return $this->parents[$id] ?? ($this->parents[$id] = $this->getParentTableAndId($this->connection, $this->getTable(), $id));
+        return $this->parents[$id] ?? ($this->parents[$id] = $this->dcaHierarchy->getParentTableAndId($id, $this->getTable()));
     }
 }

@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\DataContainer;
 
 use Doctrine\DBAL\Connection;
 
+/**
+ * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use DcaHierarchy::getParentTableAndId() instead.
+ */
 trait DynamicPtableTrait
 {
     /**
@@ -28,6 +31,8 @@ trait DynamicPtableTrait
      */
     private function getParentTableAndId(Connection $connection, string $table, int $id): array
     {
+        trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s" is deprecated and will no longer work in Contao 7. Use "%s::getParentTableAndId()" instead.', __TRAIT__, DcaHierarchy::class);
+
         // Limit to a nesting level of 10
         $records = $connection->fetchAllAssociative(
             "SELECT id, @pid := pid AS pid, ptable FROM $table WHERE id = :id".str_repeat(" UNION SELECT id, @pid := pid AS pid, ptable FROM $table WHERE id = @pid AND ptable = :ptable", 9),

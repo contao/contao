@@ -21,6 +21,8 @@ final class ParentQuery
 
     private bool $includeBoundary = false;
 
+    private int|null $maxDepth = null;
+
     public function withColumns(string ...$columns): self
     {
         $clone = clone $this;
@@ -37,6 +39,18 @@ final class ParentQuery
         return $clone;
     }
 
+    public function withMaxDepth(int $maxDepth): self
+    {
+        if ($maxDepth < 1) {
+            throw new \InvalidArgumentException('The maximum depth must be greater than zero.');
+        }
+
+        $clone = clone $this;
+        $clone->maxDepth = $maxDepth;
+
+        return $clone;
+    }
+
     /**
      * @return list<string>
      */
@@ -48,5 +62,10 @@ final class ParentQuery
     public function includesBoundaryRow(): bool
     {
         return $this->includeBoundary;
+    }
+
+    public function maxDepth(): int|null
+    {
+        return $this->maxDepth;
     }
 }

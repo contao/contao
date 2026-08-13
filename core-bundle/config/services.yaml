@@ -857,7 +857,7 @@ services:
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
@@ -1165,6 +1165,7 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.content_alias_delete_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
@@ -1263,7 +1264,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ThemeContentVoter
         arguments:
             - '@security.access.decision_manager'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.undo_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter

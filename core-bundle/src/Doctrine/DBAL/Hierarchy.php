@@ -185,15 +185,16 @@ class Hierarchy
         $fieldNames = $this->getFieldNames($query->columns());
         $anchorScope = $query->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
         $recursiveScope = $query->includesBoundaryRow() ? ' AND child.continue_traversal = 1' : $this->getScopeCondition($definition, 'parent');
+        $recursiveDepth = null === $query->maxDepth() ? '' : ' AND child.depth < '.$query->maxDepth();
         $continuation = $this->getScopeExpression($definition);
         $parentContinuation = $this->getScopeExpression($definition, 'parent');
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal) AS (
-                SELECT $idColumn, $parentColumn$fields, $continuation FROM $table WHERE $idColumn = ?$anchorScope
+            WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal, depth) AS (
+                SELECT $idColumn, $parentColumn$fields, $continuation, 1 FROM $table WHERE $idColumn = ?$anchorScope
                 UNION DISTINCT
-                SELECT parent.$idColumn, parent.$parentColumn$parentFields, $parentContinuation FROM $table parent
+                SELECT parent.$idColumn, parent.$parentColumn$parentFields, $parentContinuation, child.depth + 1 FROM $table parent
                     INNER JOIN contao_tree child ON parent.$idColumn = child.parent_id
-                    WHERE 1 = 1$recursiveScope
+                    WHERE 1 = 1$recursiveScope$recursiveDepth
             )
             SELECT node_id, parent_id$fieldNames, continue_traversal FROM contao_tree
             SQL;
@@ -206,14 +207,16 @@ class Hierarchy
      */
     private function fetchParentRowsUsingUnion(int|string $id, HierarchyDefinition $definition, ParentQuery $query): array
     {
-        $select = $this->getParentUnionSelect($definition, $query, true);
-        $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $query, false), 9);
         $rows = [];
         $queried = [];
         $currentId = $id;
+        $fetched = 0;
 
         while (!isset($queried[$this->getIdKey($currentId)])) {
             $queried[$this->getIdKey($currentId)] = true;
+            $batchSize = $this->getParentBatchSize($query, $fetched);
+            $select = $this->getParentUnionSelect($definition, $query, true);
+            $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $query, false), $batchSize - 1);
             $batch = $this->connection->fetchAllAssociative($querySql, [$currentId]);
 
             foreach ($batch as $row) {
@@ -221,8 +224,9 @@ class Hierarchy
             }
 
             $last = end($batch);
+            $fetched += \count($batch) - (0 === $fetched ? 0 : 1);
 
-            if (10 !== \count($batch) || ($query->includesBoundaryRow() && !(bool) ($last['continue_traversal'] ?? false))) {
+            if ($batchSize !== \count($batch) || $fetched === $query->maxDepth() || ($query->includesBoundaryRow() && !(bool) ($last['continue_traversal'] ?? false))) {
                 break;
             }
 
@@ -230,6 +234,15 @@ class Hierarchy
         }
 
         return array_values($rows);
+    }
+
+    private function getParentBatchSize(ParentQuery $query, int $fetched): int
+    {
+        if (null === $query->maxDepth()) {
+            return 10;
+        }
+
+        return min(10, $query->maxDepth() - $fetched + (0 === $fetched ? 0 : 1));
     }
 
     /**
