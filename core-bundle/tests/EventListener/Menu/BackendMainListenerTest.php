@@ -12,35 +12,81 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMainListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Translator;
 
 class BackendMainListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['BE_MOD']);
+    }
+
     public function testBuildsTheMainMenu(): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user
-            ->expects($this->once())
-            ->method('navigation')
-            ->willReturn($this->getNavigation())
-        ;
+        $GLOBALS['BE_MOD'] = [
+            'group' => [
+                'module1' => [],
+                'module2' => [],
+            ],
+        ];
 
         $security = $this->createStub(Security::class);
         $security
-            ->method('getUser')
-            ->willReturn($user)
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturn('__link__')
+        ;
+
+        $messageCatalogue = $this->createStub(MessageCatalogueInterface::class);
+        $messageCatalogue
+            ->method('has')
+            ->willReturn(true)
+        ;
+
+        $translator = $this->createStub(Translator::class);
+        $translator
+            ->method('getCatalogue')
+            ->willReturn($messageCatalogue)
+        ;
+
+        $translator
+            ->method('trans')
+            ->willReturnMap([
+                ['MSC.collapseNode', [], 'contao_default', 'collapse'],
+                ['MSC.expandNode', [], 'contao_default', 'expand'],
+                ['MOD.group.0', [], 'contao_default', 'Group'],
+                ['MOD.group.1', [], 'contao_default', 'Group Title'],
+                ['MOD.module1.0', [], 'contao_default', 'Module 1'],
+                ['MOD.module1.1', [], 'contao_default', 'Module 1 Title'],
+                ['MOD.module2.0', [], 'contao_default', 'Module 2'],
+                ['MOD.module2.1', [], 'contao_default', 'Module 2 Title'],
+            ])
         ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
-        $listener = new BackendMainListener($security);
+        $listener = new BackendMainListener(
+            $security,
+            $this->createStub(RequestStack::class),
+            $urlGenerator,
+            $translator,
+        );
+
         $listener($event);
 
         $tree = $event->getTree();
@@ -49,98 +95,166 @@ class BackendMainListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertCount(2, $children);
-        $this->assertSame(['category1', 'category2'], array_keys($children));
+        $this->assertCount(1, $children);
+        $this->assertSame(['group'], array_keys($children));
 
-        // Category 1
-        $this->assertSame('Category 1', $children['category1']->getLabel());
-        $this->assertSame([], $children['category1']->getAttributes());
-        $this->assertSame(['id' => 'category1'], $children['category1']->getChildrenAttributes());
-        $this->assertSame(['translation_domain' => false], $children['category1']->getExtras());
+        $this->assertSame('Group', $children['group']->getLabel());
+        $this->assertSame([], $children['group']->getAttributes());
+        $this->assertSame(['id' => 'group'], $children['group']->getChildrenAttributes());
+        $this->assertSame(['translation_domain' => false], $children['group']->getExtras());
 
         $this->assertSame(
             [
-                'class' => 'group-category1 custom-class',
-                'title' => 'Category 1 Title',
+                'class' => 'group-group',
+                'title' => 'collapse',
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
-                'data-contao--toggle-navigation-category-param' => 'category1',
+                'data-contao--toggle-navigation-category-param' => 'group',
                 'data-contao--tooltips-target' => 'tooltip',
-                'aria-controls' => 'category1',
+                'aria-controls' => 'group',
                 'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'true',
             ],
-            $children['category1']->getLinkAttributes(),
+            $children['group']->getLinkAttributes(),
         );
 
-        $grandChildren = $children['category1']->getChildren();
+        $grandChildren = $children['group']->getChildren();
 
         $this->assertCount(2, $grandChildren);
-        $this->assertSame(['node1', 'node2'], array_keys($grandChildren));
+        $this->assertSame(['module1', 'module2'], array_keys($grandChildren));
 
         // Node 1
-        $this->assertSame('Node 1', $grandChildren['node1']->getLabel());
-        $this->assertSame('/node1', $grandChildren['node1']->getUri());
-        $this->assertSame(['class' => 'node1', 'title' => 'Node 1 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['node1']->getLinkAttributes());
-        $this->assertSame(['translation_domain' => false], $grandChildren['node1']->getExtras());
+        $this->assertSame('Module 1', $grandChildren['module1']->getLabel());
+        $this->assertSame('__link__', $grandChildren['module1']->getUri());
+        $this->assertSame(['class' => 'navigation module1', 'title' => 'Module 1 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['module1']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $grandChildren['module1']->getExtras());
 
         // Node 1
-        $this->assertSame('Node 2', $grandChildren['node2']->getLabel());
-        $this->assertSame('/node2', $grandChildren['node2']->getUri());
-        $this->assertSame(['class' => 'node2', 'title' => 'Node 2 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['node2']->getLinkAttributes());
-        $this->assertSame(['translation_domain' => false], $grandChildren['node2']->getExtras());
-
-        // Category 2
-        $this->assertSame('Category 2', $children['category2']->getLabel());
-        $this->assertSame(['class' => 'collapsed'], $children['category2']->getAttributes());
-        $this->assertSame(['id' => 'category2'], $children['category2']->getChildrenAttributes());
-        $this->assertSame(['translation_domain' => false], $children['category2']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'group-category2',
-                'title' => 'Category 2 Title',
-                'data-action' => 'contao--toggle-navigation#toggle:prevent',
-                'data-contao--toggle-navigation-category-param' => 'category2',
-                'data-contao--tooltips-target' => 'tooltip',
-                'aria-controls' => 'category2',
-                'data-turbo-prefetch' => 'false',
-                'aria-expanded' => 'false',
-            ],
-            $children['category2']->getLinkAttributes(),
-        );
+        $this->assertSame('Module 2', $grandChildren['module2']->getLabel());
+        $this->assertSame('__link__', $grandChildren['module2']->getUri());
+        $this->assertSame(['class' => 'navigation module2', 'title' => 'Module 2 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['module2']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $grandChildren['module2']->getExtras());
     }
 
-    public function testDoesNotBuildTheMainMenuIfNoUserIsGiven(): void
+    public function testDoesNotRenderEmptyModuleGroups(): void
     {
+        $GLOBALS['BE_MOD'] = [
+            'group1' => [
+                'module1' => [],
+                'module2' => [],
+            ],
+            'group2' => [],
+        ];
+
         $security = $this->createStub(Security::class);
         $security
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->never())
-            ->method('generate')
+            ->method('isGranted')
+            ->willReturn(true)
         ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
-        $listener = new BackendMainListener($security);
+        $listener = new BackendMainListener(
+            $security,
+            $this->createStub(RequestStack::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Translator::class),
+        );
+
         $listener($event);
 
         $tree = $event->getTree();
 
-        $this->assertCount(0, $tree->getChildren());
+        $this->assertSame('mainMenu', $tree->getName());
+
+        $children = $tree->getChildren();
+
+        $this->assertCount(1, $children);
+        $this->assertSame(['group1'], array_keys($children));
+
+        $grandChildren = $children['group1']->getChildren();
+
+        $this->assertCount(2, $grandChildren);
+        $this->assertSame(['module1', 'module2'], array_keys($grandChildren));
+    }
+
+    public function testFallsBackToStringModuleTranslation(): void
+    {
+        $GLOBALS['BE_MOD'] = [
+            'group' => [
+                'module1' => [],
+                'module2' => [],
+            ],
+        ];
+
+        $security = $this->createStub(Security::class);
+        $security
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        $messageCatalogue = $this->createStub(MessageCatalogueInterface::class);
+        $messageCatalogue
+            ->method('has')
+            ->willReturnCallback(static fn (string $id) => !str_ends_with($id, '.0') && !str_ends_with($id, '.1'))
+        ;
+
+        $translator = $this->createStub(Translator::class);
+        $translator
+            ->method('getCatalogue')
+            ->willReturn($messageCatalogue)
+        ;
+
+        $translator
+            ->method('trans')
+            ->willReturnMap([
+                ['MSC.collapseNode', [], 'contao_default', 'collapse'],
+                ['MSC.expandNode', [], 'contao_default', 'expand'],
+                ['MOD.group', [], 'contao_default', 'Group'],
+                ['MOD.module1', [], 'contao_default', 'Module 1'],
+                ['MOD.module2', [], 'contao_default', 'Module 2'],
+            ])
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
+
+        $listener = new BackendMainListener(
+            $security,
+            $this->createStub(RequestStack::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $translator,
+        );
+
+        $listener($event);
+
+        $tree = $event->getTree();
+
+        $this->assertSame('mainMenu', $tree->getName());
+
+        $children = $tree->getChildren();
+
+        $this->assertSame('Group', $children['group']->getLabel());
+
+        $grandChildren = $children['group']->getChildren();
+
+        $this->assertSame('Module 1', $grandChildren['module1']->getLabel());
+        $this->assertSame('Module 2', $grandChildren['module2']->getLabel());
     }
 
     public function testDoesNotBuildTheMainMenuIfTheNameDoesNotMatch(): void
     {
-        $security = $this->createStub(Security::class);
+        $GLOBALS['BE_MOD'] = [
+            'group' => [
+                'module1' => [],
+                'module2' => [],
+            ],
+        ];
+
+        $security = $this->createMock(Security::class);
         $security
-            ->method('getUser')
-            ->willReturn(null)
+            ->expects($this->never())
+            ->method('isGranted')
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -152,49 +266,17 @@ class BackendMainListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new BackendMainListener($security);
+        $listener = new BackendMainListener(
+            $security,
+            $this->createStub(RequestStack::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Translator::class),
+        );
+
         $listener($event);
 
         $tree = $event->getTree();
 
         $this->assertCount(0, $tree->getChildren());
-    }
-
-    /**
-     * @return array<string, array<string, array<string, array<string, bool|string>>|string>>
-     */
-    private function getNavigation(): array
-    {
-        return [
-            'category1' => [
-                'label' => 'Category 1',
-                'title' => 'Category 1 Title',
-                'href' => '/',
-                'class' => 'group-category1 node-expanded trail custom-class',
-                'modules' => [
-                    'node1' => [
-                        'label' => 'Node 1',
-                        'title' => 'Node 1 Title',
-                        'href' => '/node1',
-                        'class' => 'node1',
-                        'isActive' => true,
-                    ],
-                    'node2' => [
-                        'label' => 'Node 2',
-                        'title' => 'Node 2 Title',
-                        'href' => '/node2',
-                        'class' => 'node2',
-                        'isActive' => false,
-                    ],
-                ],
-            ],
-            'category2' => [
-                'label' => 'Category 2',
-                'title' => 'Category 2 Title',
-                'href' => '/',
-                'class' => 'group-category2 node-collapsed',
-                'modules' => [],
-            ],
-        ];
     }
 }
