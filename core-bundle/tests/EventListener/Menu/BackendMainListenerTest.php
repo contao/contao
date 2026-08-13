@@ -27,6 +27,8 @@ class BackendMainListenerTest extends TestCase
 {
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['BE_MOD']);
     }
 
