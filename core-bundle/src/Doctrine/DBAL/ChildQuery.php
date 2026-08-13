@@ -14,6 +14,11 @@ namespace Contao\CoreBundle\Doctrine\DBAL;
 
 final class ChildQuery
 {
+    /**
+     * @var list<string>
+     */
+    private array $columns = [];
+
     public function __construct(
         private string|null $orderBy = null,
         private string $where = '',
@@ -39,6 +44,14 @@ final class ChildQuery
         return $clone;
     }
 
+    public function withColumns(string ...$columns): self
+    {
+        $clone = clone $this;
+        $clone->columns = array_values(array_unique($columns));
+
+        return $clone;
+    }
+
     public function orderBy(): string|null
     {
         return $this->orderBy;
@@ -47,5 +60,13 @@ final class ChildQuery
     public function where(): string
     {
         return $this->where;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function columns(): array
+    {
+        return $this->columns;
     }
 }

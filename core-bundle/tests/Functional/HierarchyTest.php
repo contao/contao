@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Functional;
 use Contao\CoreBundle\Doctrine\DBAL\ChildQuery;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
+use Contao\CoreBundle\Doctrine\DBAL\ParentQuery;
 use Contao\TestCase\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
 
@@ -63,6 +64,22 @@ class HierarchyTest extends FunctionalTestCase
         $this->assertSame([9, 8], $this->hierarchy->getChildIds(8, $definition));
     }
 
+    public function testGetsChildRowsUsingARecursiveCommonTableExpression(): void
+    {
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $query = new ChildQuery()->withOrderBy('sorting')->withColumns('title');
+
+        $this->assertSame(
+            [
+                ['id' => 4, 'pid' => 1, 'title' => 'Page 4'],
+                ['id' => 7, 'pid' => 4, 'title' => 'Page 7'],
+                ['id' => 3, 'pid' => 1, 'title' => 'Page 3'],
+                ['id' => 5, 'pid' => 3, 'title' => 'Page 5'],
+            ],
+            $this->hierarchy->getChildRows(1, $definition, $query),
+        );
+    }
+
     public function testGetsParentIdsUsingARecursiveCommonTableExpression(): void
     {
         $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
@@ -71,6 +88,36 @@ class HierarchyTest extends FunctionalTestCase
         $this->assertSame([3, 1], $this->hierarchy->getParentIds(5, $definition, true));
         $this->assertSame([], $this->hierarchy->getParentIds(99, $definition));
         $this->assertSame([8, 9], $this->hierarchy->getParentIds(8, $definition));
+    }
+
+    public function testGetsParentRowsUsingARecursiveCommonTableExpression(): void
+    {
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $query = new ParentQuery()->withColumns('title');
+
+        $this->assertSame(
+            [
+                ['id' => 5, 'pid' => 3, 'title' => 'Page 5'],
+                ['id' => 3, 'pid' => 1, 'title' => 'Page 3'],
+                ['id' => 1, 'pid' => 0, 'title' => 'Page 1'],
+            ],
+            $this->hierarchy->getParentRows(5, $definition, $query),
+        );
+    }
+
+    public function testIncludesTheFirstParentRowOutsideTheScope(): void
+    {
+        $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScope('ptable', 'tl_content');
+        $query = new ParentQuery()->withColumns('ptable')->withBoundaryRow();
+
+        $this->assertSame(
+            [
+                ['id' => 12, 'pid' => 11, 'ptable' => 'tl_content'],
+                ['id' => 11, 'pid' => 10, 'ptable' => 'tl_content'],
+                ['id' => 10, 'pid' => 42, 'ptable' => 'tl_article'],
+            ],
+            $this->hierarchy->getParentRows(12, $definition, $query),
+        );
     }
 
     private function insertRows(): void
@@ -87,8 +134,16 @@ class HierarchyTest extends FunctionalTestCase
         ] as $row) {
             $this->connection->insert(
                 'tl_page',
-                array_combine(['id', 'pid', 'sorting'], $row),
+                [...array_combine(['id', 'pid', 'sorting'], $row), 'title' => 'Page '.$row[0]],
             );
+        }
+
+        foreach ([
+            [10, 42, 'tl_article'],
+            [11, 10, 'tl_content'],
+            [12, 11, 'tl_content'],
+        ] as $row) {
+            $this->connection->insert('tl_content', array_combine(['id', 'pid', 'ptable'], $row));
         }
     }
 }
