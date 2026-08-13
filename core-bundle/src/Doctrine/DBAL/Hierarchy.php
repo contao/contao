@@ -188,14 +188,17 @@ class Hierarchy
         $fieldNames = $this->getFieldNames($options->columns());
         $anchorScope = $options->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
         $recursiveScope = $options->includesBoundaryRow() ? ' AND child.continue_traversal = 1' : $this->getScopeCondition($definition, 'parent');
+        $depthColumn = null === $options->maxDepth() ? '' : ', depth';
+        $anchorDepth = null === $options->maxDepth() ? '' : ', 1';
+        $parentDepth = null === $options->maxDepth() ? '' : ', child.depth + 1';
         $recursiveDepth = null === $options->maxDepth() ? '' : ' AND child.depth < '.$options->maxDepth();
         $continuation = $this->getScopeExpression($definition);
         $parentContinuation = $this->getScopeExpression($definition, 'parent');
         $sql = <<<SQL
-            WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal, depth) AS (
-                SELECT $idColumn, $parentColumn$fields, $continuation, 1 FROM $table WHERE $idColumn = ?$anchorScope
+            WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal$depthColumn) AS (
+                SELECT $idColumn, $parentColumn$fields, $continuation$anchorDepth FROM $table WHERE $idColumn = ?$anchorScope
                 UNION DISTINCT
-                SELECT parent.$idColumn, parent.$parentColumn$parentFields, $parentContinuation, child.depth + 1 FROM $table parent
+                SELECT parent.$idColumn, parent.$parentColumn$parentFields, $parentContinuation$parentDepth FROM $table parent
                     INNER JOIN contao_tree child ON parent.$idColumn = child.parent_id
                     WHERE 1 = 1$recursiveScope$recursiveDepth
             )
