@@ -5767,13 +5767,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$db = Database::getInstance();
+		$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 		$allParents = array();
 
 		foreach ($ids as $id)
 		{
 			if (!isset($this->parentPagesCache[$table][$id]))
 			{
-				$parents = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIds($id, $table, true);
+				$parents = $hierarchy->getParentIds($id, $table, true);
 				$this->parentPagesCache[$table][$id] = $parents;
 
 				// Get all IDs on that level, they all have the same parents
@@ -5865,10 +5866,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
 			if (!empty($this->root) && $arrRoot != $this->root)
 			{
+				$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 				$arrRoot = $this->eliminateNestedPages(
 					array_intersect(
-						array_merge($arrRoot, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrRoot, $this->strTable)),
-						array_merge($this->root, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->root, $this->strTable))
+						array_merge($arrRoot, $hierarchy->getChildIds($arrRoot, $this->strTable)),
+						array_merge($this->root, $hierarchy->getChildIds($this->root, $this->strTable))
 					),
 					$this->strTable,
 					$blnHasSorting
