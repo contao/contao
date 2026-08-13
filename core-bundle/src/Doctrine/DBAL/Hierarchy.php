@@ -19,11 +19,6 @@ use Doctrine\DBAL\Platforms\MySQL80Platform;
 
 class Hierarchy
 {
-    /**
-     * @var array<string, bool>
-     */
-    private array $hasScopeColumn = [];
-
     public function __construct(private readonly Connection $connection)
     {
     }
@@ -451,10 +446,6 @@ class Hierarchy
             return '';
         }
 
-        if ($definition->hasOptionalScope() && !$this->hasScopeColumn($definition)) {
-            return '';
-        }
-
         $column = (null === $alias ? '' : $alias.'.').$this->connection->quoteIdentifier($definition->scopeColumn());
         $value = $definition->scopeValue();
         $value = \is_int($value) ? (string) $value : $this->connection->getDatabasePlatform()->quoteStringLiteral($value);
@@ -467,17 +458,6 @@ class Hierarchy
         $condition = $this->getScopeCondition($definition, $alias);
 
         return '' === $condition ? '1' : substr($condition, 5);
-    }
-
-    private function hasScopeColumn(HierarchyDefinition $definition): bool
-    {
-        $key = $definition->table().':'.$definition->scopeColumn();
-
-        return $this->hasScopeColumn[$key] ??= $this->connection
-            ->createSchemaManager()
-            ->introspectTable($definition->table())
-            ->hasColumn($definition->scopeColumn())
-        ;
     }
 
     private function getWhereCondition(ChildTraversalOptions $options): string

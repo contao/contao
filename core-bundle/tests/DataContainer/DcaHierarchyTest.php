@@ -17,10 +17,12 @@ use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DcaLoader;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Constraint\Callback;
-use PHPUnit\Framework\TestCase;
 
-class DcaHierarchyTest extends TestCase
+class DcaHierarchyTest extends ContaoTestCase
 {
     public function testGetsChildIds(): void
     {
@@ -36,7 +38,7 @@ class DcaHierarchyTest extends TestCase
             ])
         ;
 
-        $this->assertSame([3, 4], new DcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $options));
+        $this->assertSame([3, 4], $this->createDcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $options));
     }
 
     public function testGetsParentIds(): void
@@ -57,7 +59,7 @@ class DcaHierarchyTest extends TestCase
             ])
         ;
 
-        $this->assertSame([3, 1], new DcaHierarchy($hierarchy)->getParentIds(5, 'tl_page', true));
+        $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds(5, 'tl_page', true));
     }
 
     public function testIgnoresZeroChildIds(): void
@@ -68,7 +70,7 @@ class DcaHierarchyTest extends TestCase
             ->method('getChildRows')
         ;
 
-        $this->assertSame([], new DcaHierarchy($hierarchy)->getChildIds([0, '0'], 'tl_page'));
+        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getChildIds([0, '0'], 'tl_page'));
     }
 
     public function testIgnoresZeroParentId(): void
@@ -79,18 +81,36 @@ class DcaHierarchyTest extends TestCase
             ->method('getParentRows')
         ;
 
-        $this->assertSame([], new DcaHierarchy($hierarchy)->getParentIds(0, 'tl_page'));
+        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getParentIds(0, 'tl_page'));
     }
 
     public function testGetsParentTableAndId(): void
     {
+        $previousDca = $GLOBALS['TL_DCA']['tl_content'] ?? null;
+        $dcaLoader = $this->createMock(DcaLoader::class);
+        $dcaLoader
+            ->expects($this->once())
+            ->method('load')
+            ->willReturnCallback(
+                static function (): void {
+                    $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+                },
+            )
+        ;
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(DcaLoader::class, ['tl_content'])
+            ->willReturn($dcaLoader)
+        ;
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
             ->method('getParentRows')
             ->with(
                 5,
-                $this->isDcaDefinition('tl_content'),
+                $this->isDcaDefinition('tl_content', true),
                 $this->callback(static fn (ParentTraversalOptions $options): bool => ['ptable'] === $options->columns() && $options->includesBoundaryRow()),
             )
             ->willReturn([
@@ -99,7 +119,15 @@ class DcaHierarchyTest extends TestCase
             ])
         ;
 
-        $this->assertSame(['tl_article', 10], new DcaHierarchy($hierarchy)->getParentTableAndId(5, 'tl_content'));
+        try {
+            $this->assertSame(['tl_article', 10], new DcaHierarchy($hierarchy, $framework)->getParentTableAndId(5, 'tl_content'));
+        } finally {
+            if (null === $previousDca) {
+                unset($GLOBALS['TL_DCA']['tl_content']);
+            } else {
+                $GLOBALS['TL_DCA']['tl_content'] = $previousDca;
+            }
+        }
     }
 
     public function testGetsRowsWithAdditionalColumns(): void
@@ -124,7 +152,7 @@ class DcaHierarchyTest extends TestCase
             )
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
-        $dcaHierarchy = new DcaHierarchy($hierarchy);
+        $dcaHierarchy = $this->createDcaHierarchy($hierarchy);
         $expected = [['id' => 2, 'pid' => 1, 'title' => 'Child']];
 
         $this->assertSame($expected, $dcaHierarchy->getChildRows(1, 'tl_page', $childOptions));
@@ -134,13 +162,22 @@ class DcaHierarchyTest extends TestCase
     /**
      * @return Callback<HierarchyDefinition>
      */
-    private function isDcaDefinition(string $table): Callback
+    private function isDcaDefinition(string $table, bool $dynamicPtable = false): Callback
     {
-        return $this->callback(static fn (HierarchyDefinition $definition): bool => $table === $definition->table()
-            && 'id' === $definition->idColumn()
-            && 'pid' === $definition->parentColumn()
-            && 'ptable' === $definition->scopeColumn()
-            && $table === $definition->scopeValue()
-            && $definition->hasOptionalScope());
+        return $this->callback(
+            static fn (HierarchyDefinition $definition): bool => $table === $definition->table()
+                && 'id' === $definition->idColumn()
+                && 'pid' === $definition->parentColumn()
+                && ($dynamicPtable ? 'ptable' === $definition->scopeColumn() : null === $definition->scopeColumn())
+                && ($dynamicPtable ? $table === $definition->scopeValue() : null === $definition->scopeValue()),
+        );
+    }
+
+    private function createDcaHierarchy(Hierarchy $hierarchy): DcaHierarchy
+    {
+        $dcaLoader = $this->createStub(DcaLoader::class);
+        $framework = $this->createContaoFrameworkStub([], [DcaLoader::class => $dcaLoader]);
+
+        return new DcaHierarchy($hierarchy, $framework);
     }
 }

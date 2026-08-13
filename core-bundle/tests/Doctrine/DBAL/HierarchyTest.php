@@ -20,9 +20,6 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -317,20 +314,6 @@ class HierarchyTest extends TestCase
         $connection
             ->method('quoteIdentifier')
             ->willReturnCallback(static fn (string $identifier): string => "`$identifier`")
-        ;
-
-        $table = new Table('categories');
-        $table->addColumn('tree_type', Types::STRING);
-
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('introspectTable')
-            ->willReturn($table)
-        ;
-
-        $connection
-            ->method('createSchemaManager')
-            ->willReturn($schemaManager)
         ;
     }
 }

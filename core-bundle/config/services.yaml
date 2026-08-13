@@ -246,6 +246,7 @@ services:
         public: true
         arguments:
             - '@contao.doctrine.dbal.hierarchy'
+            - '@contao.framework'
 
     contao.data_container.dca_request_switcher:
         class: Contao\CoreBundle\DataContainer\DcaRequestSwitcher

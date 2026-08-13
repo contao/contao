@@ -18,8 +18,6 @@ final class HierarchyDefinition
 
     private int|string|null $scopeValue = null;
 
-    private bool $optionalScope = false;
-
     public function __construct(
         private readonly string $table,
         private readonly string $idColumn,
@@ -32,15 +30,6 @@ final class HierarchyDefinition
         $clone = clone $this;
         $clone->scopeColumn = $column;
         $clone->scopeValue = $value;
-        $clone->optionalScope = false;
-
-        return $clone;
-    }
-
-    public function withOptionalScope(string $column, int|string $value): self
-    {
-        $clone = $this->withScope($column, $value);
-        $clone->optionalScope = true;
 
         return $clone;
     }
@@ -68,10 +57,5 @@ final class HierarchyDefinition
     public function scopeValue(): int|string|null
     {
         return $this->scopeValue;
-    }
-
-    public function hasOptionalScope(): bool
-    {
-        return $this->optionalScope;
     }
 }

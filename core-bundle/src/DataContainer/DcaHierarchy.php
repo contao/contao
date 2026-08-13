@@ -16,11 +16,15 @@ use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DcaLoader;
 
 class DcaHierarchy
 {
-    public function __construct(private readonly Hierarchy $hierarchy)
-    {
+    public function __construct(
+        private readonly Hierarchy $hierarchy,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**
@@ -104,6 +108,13 @@ class DcaHierarchy
 
     private function createDefinition(string $table): HierarchyDefinition
     {
-        return new HierarchyDefinition($table, 'id', 'pid')->withOptionalScope('ptable', $table);
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+        $definition = new HierarchyDefinition($table, 'id', 'pid');
+
+        if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false) {
+            $definition = $definition->withScope('ptable', $table);
+        }
+
+        return $definition;
     }
 }

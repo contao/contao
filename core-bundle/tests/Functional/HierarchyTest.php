@@ -46,7 +46,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testGetsChildIdsUsingARecursiveCommonTableExpression(): void
     {
-        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid');
         $ids = $this->hierarchy->getChildIds(1, $definition);
         sort($ids);
 
@@ -67,7 +67,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testGetsChildRowsUsingARecursiveCommonTableExpression(): void
     {
-        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid');
         $options = new ChildTraversalOptions()->withOrderBy('sorting')->withColumns('title');
 
         $this->assertSame(
@@ -83,7 +83,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testGetsParentIdsUsingARecursiveCommonTableExpression(): void
     {
-        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid');
 
         $this->assertSame([5, 3, 1], $this->hierarchy->getParentIds(5, $definition));
         $this->assertSame([3, 1], $this->hierarchy->getParentIds(5, $definition, true));
@@ -93,7 +93,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testGetsParentRowsUsingARecursiveCommonTableExpression(): void
     {
-        $definition = new HierarchyDefinition('tl_page', 'id', 'pid')->withOptionalScope('ptable', 'tl_page');
+        $definition = new HierarchyDefinition('tl_page', 'id', 'pid');
         $options = new ParentTraversalOptions()->withColumns('title');
 
         $this->assertSame(
