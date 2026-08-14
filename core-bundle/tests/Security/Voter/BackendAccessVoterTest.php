@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
@@ -352,6 +353,39 @@ class BackendAccessVoterTest extends TestCase
         ];
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $page, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
+    }
+
+    public function testGetsInheritedPagePermissionsUsingTheHierarchy(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'groups' => [1]]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                2,
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => ['includeChmod', 'chmod', 'cuser', 'cgroup'] === $options->columns()),
+            )
+            ->willReturn([
+                ['id' => 2, 'pid' => 1, 'includeChmod' => false, 'chmod' => '', 'cuser' => 0, 'cgroup' => 0],
+                ['id' => 1, 'pid' => 0, 'includeChmod' => true, 'chmod' => ['g1'], 'cuser' => 0, 'cgroup' => 1],
+            ])
+        ;
+
+        $voter = new BackendAccessVoter($this->createContaoFrameworkStub(), $hierarchy);
+        $page = ['id' => 3, 'pid' => 2, 'includeChmod' => false];
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, $page, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, $page, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }
 
     public function testGrantsAccessToPageFromModel(): void

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -166,33 +167,9 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
         }
 
         if (!($row['includeChmod'] ?? false)) {
-            $pid = $row['pid'] ?? null;
-
-            $row['chmod'] = false;
-            $row['cuser'] = false;
-            $row['cgroup'] = false;
-
-            $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
-
-            while ($parentPage && false === $row['chmod'] && $pid > 0) {
-                $cacheIds[] = $parentPage->id;
-                $pid = $parentPage->pid;
-
-                $row['chmod'] = $parentPage->includeChmod ? $parentPage->chmod : false;
-                $row['cuser'] = $parentPage->includeChmod ? $parentPage->cuser : false;
-                $row['cgroup'] = $parentPage->includeChmod ? $parentPage->cgroup : false;
-
-                $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
-            }
-
-            // Set default values
-            if (false === $row['chmod']) {
-                $config = $this->framework->getAdapter(Config::class);
-
-                $row['chmod'] = $config->get('defaultChmod');
-                $row['cuser'] = (int) $config->get('defaultUser');
-                $row['cgroup'] = (int) $config->get('defaultGroup');
-            }
+            [$permissions, $parentIds] = $this->getInheritedPagePermissions((int) ($row['pid'] ?? 0));
+            $row = [...$row, ...$permissions];
+            $cacheIds = [...$cacheIds, ...$parentIds];
         }
 
         $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize($row['chmod'] ?? null, true)];
@@ -202,5 +179,31 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
         }
 
         return $result;
+    }
+
+    /**
+     * @return array{array{chmod: mixed, cuser: mixed, cgroup: mixed}, list<int>}
+     */
+    private function getInheritedPagePermissions(int $pid): array
+    {
+        $options = new ParentTraversalOptions()->withColumns('includeChmod', 'chmod', 'cuser', 'cgroup');
+        $parentIds = [];
+
+        foreach ($this->hierarchy->getParentRows($pid, 'tl_page', $options) as $parentPage) {
+            $parentIds[] = (int) $parentPage['id'];
+
+            if ($parentPage['includeChmod']) {
+                return [array_intersect_key($parentPage, array_flip(['chmod', 'cuser', 'cgroup'])), $parentIds];
+            }
+        }
+
+        // Set default values
+        $config = $this->framework->getAdapter(Config::class);
+
+        return [[
+            'chmod' => $config->get('defaultChmod'),
+            'cuser' => (int) $config->get('defaultUser'),
+            'cgroup' => (int) $config->get('defaultGroup'),
+        ], $parentIds];
     }
 }
