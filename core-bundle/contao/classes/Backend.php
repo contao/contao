@@ -476,6 +476,7 @@ abstract class Backend extends Controller
 		$arrIds   = array();
 		$arrLinks = array();
 		$objUser  = BackendUser::getInstance();
+		$security = $container->get('security.helper');
 
 		// Generate breadcrumb trail
 		if ($intNode)
@@ -496,7 +497,7 @@ abstract class Backend extends Controller
 				$arrIds[] = $arrPage['id'];
 
 				// No link for the active page or pages in the trail
-				if ($arrPage['id'] == $intNode || !$objUser->hasAccess($arrPage['id'], 'pagemounts'))
+				if ($arrPage['id'] == $intNode || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $arrPage['id']))
 				{
 					$arrLinks[] = self::addPageIcon($arrPage, '', null, '', true) . ' ' . StringUtil::specialchars($arrPage['title']);
 				}
