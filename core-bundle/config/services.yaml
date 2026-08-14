@@ -23,15 +23,6 @@ services:
             - staticFiles
             - '%kernel.debug%'
 
-    contao.cache.shared:
-        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
-        arguments:
-            - contao
-            - 0
-            - '%kernel.project_dir%/var/cache/shared'
-        tags:
-            - cache.pool
-
     contao.cache.clearer:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         public: true
@@ -45,6 +36,15 @@ services:
             - '@doctrine.orm.default_entity_manager'
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
+
+    contao.cache.shared:
+        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+        arguments:
+            - contao
+            - 0
+            - '%kernel.project_dir%/var/cache/shared'
+        tags:
+            - { name: cache.pool, namespace: 'contao' }
 
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
