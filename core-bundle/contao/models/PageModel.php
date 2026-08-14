@@ -835,7 +835,14 @@ class PageModel extends Model
 
 			foreach (System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentRows($intId, 'tl_page', $options) as $arrPage)
 			{
-				$arrModels[] = $objRegistry->fetch('tl_page', $arrPage['id']) ?? static::createModelFromDbResult(new Result(array($arrPage), ''));
+				$objPage = $objRegistry->fetch('tl_page', $arrPage['id']);
+
+				if ($objPage === null)
+				{
+					$objPage = static::createModelFromDbResult(new Result(array($arrPage), ''));
+				}
+
+				$arrModels[] = $objPage;
 			}
 		}
 

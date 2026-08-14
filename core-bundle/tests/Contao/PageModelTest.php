@@ -174,6 +174,35 @@ class PageModelTest extends TestCase
         $this->assertSame($parents[1], Registry::getInstance()->fetch('tl_page', 1));
     }
 
+    public function testUsesRegisteredModelsWithinTheQueriedParentHierarchy(): void
+    {
+        $registeredParent = new PageModel(['id' => 2, 'pid' => 1]);
+
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                3,
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesAllColumns()),
+            )
+            ->willReturn([
+                ['id' => 3, 'pid' => 2],
+                ['id' => 2, 'pid' => 1],
+                ['id' => 1, 'pid' => 0],
+            ])
+        ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
+
+        $parents = PageModel::findParentsById(3)->getModels();
+
+        $this->assertSame(3, $parents[0]->id);
+        $this->assertSame($registeredParent, $parents[1]);
+        $this->assertSame(1, $parents[2]->id);
+    }
+
     #[DataProvider('similarAliasProvider')]
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
