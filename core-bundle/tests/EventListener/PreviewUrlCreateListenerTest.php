@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\ArticleModel;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Constraint\Callback;
 
 class PreviewUrlCreateListenerTest extends TestCase
 {
@@ -43,21 +42,19 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn(['tl_article', 3])
         ;
 
-        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
-        $dcaHierarchy
+        $article = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
+        $articleAdapter = $this->createAdapterMock(['findById']);
+        $articleAdapter
             ->expects($this->once())
-            ->method('getParentRows')
-            ->with(
-                3,
-                'tl_article',
-                $this->isSingleParentRowQuery(),
-            )
-            ->willReturn([['id' => 3, 'pid' => 42]])
+            ->method('findById')
+            ->with(3)
+            ->willReturn($article)
         ;
+        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $dcaHierarchy);
+        $listener = new PreviewUrlCreateListener($framework, $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -80,20 +77,19 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn(['tl_article', 3])
         ;
 
-        $dcaHierarchy
+        $article = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
+        $articleAdapter = $this->createAdapterMock(['findById']);
+        $articleAdapter
             ->expects($this->once())
-            ->method('getParentRows')
-            ->with(
-                3,
-                'tl_article',
-                $this->isSingleParentRowQuery(),
-            )
-            ->willReturn([['id' => 3, 'pid' => 42]])
+            ->method('findById')
+            ->with(3)
+            ->willReturn($article)
         ;
+        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $dcaHierarchy);
+        $listener = new PreviewUrlCreateListener($framework, $dcaUrlAnalyzer, $dcaHierarchy);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -155,13 +151,5 @@ class PreviewUrlCreateListenerTest extends TestCase
         yield [''];
         yield ['news'];
         yield ['calendar'];
-    }
-
-    /**
-     * @return Callback<ParentTraversalOptions>
-     */
-    private function isSingleParentRowQuery(): Callback
-    {
-        return $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesBoundaryRow() && 1 === $options->maxDepth());
     }
 }

@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
+use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -33,6 +33,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private readonly FactoryInterface $menuFactory,
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
         private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
@@ -219,10 +220,15 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $data = false;
 
         if ($id) {
-            $options = new ParentTraversalOptions()->withBoundaryRow()->withMaxDepth(1);
+            $qb = $this->connection->createQueryBuilder();
+            $qb->select('id')->from($table)->where($qb->expr()->eq('id', (string) $id));
+
+            if ($ptable || $dynamicPtable) {
+                $qb->addSelect('pid');
+            }
 
             if ($dynamicPtable) {
-                $options = $options->withColumns('ptable');
+                $qb->addSelect('ptable');
 
                 try {
                     [$ptable] = $this->dcaHierarchy->getParentTableAndId($id, $table);
@@ -230,12 +236,12 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 }
             }
 
-            $data = $this->dcaHierarchy->getParentRows($id, $table, $options)[0] ?? false;
+            $data = $qb->executeQuery()->fetchAssociative();
         }
 
         return [
             $ptable ?? $data['ptable'] ?? null,
-            (int) ($ptable || $dynamicPtable ? ($data['pid'] ?? 0) : 0) ?: null,
+            (int) ($data['pid'] ?? 0) ?: null,
             (int) ($data['id'] ?? 0) ?: null,
             $data['ptable'] ?? null,
         ];

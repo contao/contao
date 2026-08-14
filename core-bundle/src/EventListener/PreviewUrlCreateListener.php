@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\ArticleModel;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -59,8 +59,7 @@ class PreviewUrlCreateListener
                 return;
             }
 
-            $options = new ParentTraversalOptions()->withBoundaryRow()->withMaxDepth(1);
-            $pageId = $this->dcaHierarchy->getParentRows($id, 'tl_article', $options)[0]['pid'] ?? null;
+            $pageId = $this->framework->getAdapter(ArticleModel::class)->findById($id)?->pid;
         }
 
         if ($pageId) {

@@ -859,6 +859,7 @@ services:
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
+            - '@database_connection'
             - '@contao.data_container.dca_hierarchy'
 
     contao.process_util:
