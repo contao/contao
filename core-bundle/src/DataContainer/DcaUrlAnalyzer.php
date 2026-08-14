@@ -600,10 +600,9 @@ class DcaUrlAnalyzer
         $options = new ChildTraversalOptions()->withMaxDepth(1)->withAllColumns();
         $rows = array_filter(
             $this->dcaHierarchy->getChildRows($pid, $table, $options),
-            function (array $row) use ($table): bool {
+            
                 // Skip tree siblings without read permission
-                return $this->isGrantedReadAccess($table, $row);
-            },
+                fn(array $row): bool => $this->isGrantedReadAccess($table, $row),
         );
 
         return array_values(array_map(
