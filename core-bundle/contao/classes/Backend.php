@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
@@ -479,43 +480,36 @@ abstract class Backend extends Controller
 		// Generate breadcrumb trail
 		if ($intNode)
 		{
-			$intId = $intNode;
-			$objDatabase = Database::getInstance();
+			$options = (new ParentTraversalOptions())->withAllColumns();
+			$arrPages = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentRows($intNode, 'tl_page', $options);
 
-			do
+			if (empty($arrPages))
 			{
-				$objPage = $objDatabase->prepare("SELECT * FROM tl_page WHERE id=?")
-									   ->limit(1)
-									   ->execute($intId);
+				// The currently selected page does not exist
+				$objSession->set($strKey, 0);
 
-				if ($objPage->numRows < 1)
-				{
-					// The currently selected page does not exist
-					if ($intId == $intNode)
-					{
-						$objSession->set($strKey, 0);
+				return;
+			}
 
-						return;
-					}
-
-					break;
-				}
-
-				$arrIds[] = $intId;
+			foreach ($arrPages as $arrPage)
+			{
+				$arrIds[] = $arrPage['id'];
 
 				// No link for the active page or pages in the trail
-				if ($objPage->id == $intNode || !$objUser->hasAccess($objPage->id, 'pagemounts'))
+				if ($arrPage['id'] == $intNode || !$objUser->hasAccess($arrPage['id'], 'pagemounts'))
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . StringUtil::specialchars($objPage->title);
+					$arrLinks[] = self::addPageIcon($arrPage, '', null, '', true) . ' ' . StringUtil::specialchars($arrPage['title']);
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $objPage->id)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($objPage->title) . '</a>';
+					$arrLinks[] = self::addPageIcon($arrPage, '', null, '', true) . ' <a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $arrPage['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($arrPage['title']) . '</a>';
 				}
 
-				$intId = $objPage->pid;
+				if ($arrPage['type'] == 'root')
+				{
+					break;
+				}
 			}
-			while ($intId > 0 && $objPage->type != 'root');
 		}
 
 		// Check whether the node is mounted
