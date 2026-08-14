@@ -3567,11 +3567,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
 			{
-				while ($objFound->next())
+				$foundIds = array_map('intval', $objFound->fetchEach('id'));
+				$parentIdTrails = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIdTrails($foundIds, $table);
+
+				foreach ($foundIds as $index => $id)
 				{
-					if (\count(array_intersect($this->root, $this->getParentRecordIds(array($objFound->id), $table))) > 0)
+					if (\count(array_intersect($this->root, $parentIdTrails[$index])) > 0)
 					{
-						$arrFound[] = $objFound->id;
+						$arrFound[] = $id;
 					}
 				}
 
@@ -5766,29 +5769,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return array();
 		}
 
-		$db = Database::getInstance();
 		$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 		$allParents = array();
+		$uncachedIds = array_values(array_filter($ids, fn ($id) => !isset($this->parentPagesCache[$table][$id])));
+
+		if ($uncachedIds)
+		{
+			$parentIdTrails = $hierarchy->getParentIdTrails($uncachedIds, $table, true);
+
+			foreach ($uncachedIds as $index => $id)
+			{
+				$this->parentPagesCache[$table][$id] = $parentIdTrails[$index];
+			}
+		}
 
 		foreach ($ids as $id)
 		{
-			if (!isset($this->parentPagesCache[$table][$id]))
-			{
-				$parents = $hierarchy->getParentIds($id, $table, true);
-				$this->parentPagesCache[$table][$id] = $parents;
-
-				// Get all IDs on that level, they all have the same parents
-				$siblingsOnThisLevel = $db
-					->prepare("SELECT id FROM $table WHERE id != ? AND pid = (SELECT pid FROM $table WHERE id = ?)")
-					->execute($id, $id)
-					->fetchEach('id');
-
-				foreach ($siblingsOnThisLevel as $siblingId)
-				{
-					$this->parentPagesCache[$table][$siblingId] = $parents;
-				}
-			}
-
 			foreach ($this->parentPagesCache[$table][$id] as $parent)
 			{
 				$allParents[$parent] = true;

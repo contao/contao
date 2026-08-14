@@ -974,19 +974,10 @@ class PagePermissionVoterTest extends TestCase
             ;
         } else {
             $hierarchy
-                ->expects($this->exactly(\count($pagemountTrail)))
+                ->expects($this->once())
                 ->method('getParentIds')
-                ->willReturnCallback(
-                    static function (int $id) use ($pagemountTrail): array {
-                        foreach ($pagemountTrail as [$expectedId, , $result]) {
-                            if ($expectedId === $id) {
-                                return $result;
-                            }
-                        }
-
-                        return [];
-                    },
-                )
+                ->with(array_column($pagemountTrail, 0), 'tl_page')
+                ->willReturn(array_merge(...array_column($pagemountTrail, 2)))
             ;
         }
 
