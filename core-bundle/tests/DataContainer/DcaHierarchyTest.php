@@ -41,6 +41,19 @@ class DcaHierarchyTest extends ContaoTestCase
         $this->assertSame([3, 4], $this->createDcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $options));
     }
 
+    public function testGetsChildIdsForAStringParentId(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getChildRows')
+            ->with([1], $this->isDcaDefinition('tl_page'), null)
+            ->willReturn([['id' => 2, 'pid' => 1]])
+        ;
+
+        $this->assertSame([2], $this->createDcaHierarchy($hierarchy)->getChildIds('1', 'tl_page'));
+    }
+
     public function testGetsParentIds(): void
     {
         $hierarchy = $this->createMock(Hierarchy::class);
@@ -60,6 +73,23 @@ class DcaHierarchyTest extends ContaoTestCase
         ;
 
         $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds(5, 'tl_page', true));
+    }
+
+    public function testGetsParentIdsForAStringId(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with([5], $this->isDcaDefinition('tl_page'), null)
+            ->willReturn([
+                ['id' => 5, 'pid' => 3],
+                ['id' => 3, 'pid' => 1],
+                ['id' => 1, 'pid' => 0],
+            ])
+        ;
+
+        $this->assertSame([5, 3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds('5', 'tl_page'));
     }
 
     public function testGetsParentIdsForMultipleRecords(): void

@@ -28,21 +28,21 @@ class DcaHierarchy
     }
 
     /**
-     * @param int|list<int|string> $parentIds
+     * @param int|string|list<int|string> $parentIds
      *
      * @return list<int>
      */
-    public function getChildIds(array|int $parentIds, string $table, ChildTraversalOptions|null $options = null): array
+    public function getChildIds(array|int|string $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
         return array_map(static fn (array $row): int => (int) $row['id'], $this->getChildRows($parentIds, $table, $options));
     }
 
     /**
-     * @param int|list<int|string> $parentIds
+     * @param int|string|list<int|string> $parentIds
      *
      * @return list<array<string, mixed>>
      */
-    public function getChildRows(array|int $parentIds, string $table, ChildTraversalOptions|null $options = null): array
+    public function getChildRows(array|int|string $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
         $parentIds = array_values(array_filter(array_map(intval(...), (array) $parentIds)));
 
@@ -54,11 +54,11 @@ class DcaHierarchy
     }
 
     /**
-     * @param int|list<int|string> $ids
+     * @param int|string|list<int|string> $ids
      *
      * @return list<int>
      */
-    public function getParentIds(array|int $ids, string $table, bool $skipIds = false): array
+    public function getParentIds(array|int|string $ids, string $table, bool $skipIds = false): array
     {
         $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
 
@@ -93,11 +93,11 @@ class DcaHierarchy
     }
 
     /**
-     * @param int|list<int|string> $ids
+     * @param int|string|list<int|string> $ids
      *
      * @return list<array<string, mixed>>
      */
-    public function getParentRows(array|int $ids, string $table, ParentTraversalOptions|null $options = null): array
+    public function getParentRows(array|int|string $ids, string $table, ParentTraversalOptions|null $options = null): array
     {
         $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
 
