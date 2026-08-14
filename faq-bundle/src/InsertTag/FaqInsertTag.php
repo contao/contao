@@ -67,7 +67,7 @@ class FaqInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return match ($key) {
             'faq' => new InsertTagResult(
-                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_raw }}</a>')->render([
+                $this->twig->createTemplate('<a href="{{ url }}"{{ attributes }}>{{ label|insert_tag_html }}</a>')->render([
                     'url' => $url ?: './',
                     'attributes' => new HtmlAttributes($blank ? 'target="_blank" rel="noreferrer noopener"' : ''),
                     'label' => $faq->question,

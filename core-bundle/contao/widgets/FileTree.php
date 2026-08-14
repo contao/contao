@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
@@ -185,6 +186,7 @@ class FileTree extends Widget
 			$objFiles = FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+			$fileImageAttributes = (new HtmlAttributes())->addClass('type-image');
 
 			if ($objFiles !== null)
 			{
@@ -203,7 +205,7 @@ class FileTree extends Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg') . ' ' . StringUtil::specialchars($objFiles->path);
+							$arrValues[$objFiles->uuid] = Image::getHtml('folderC.svg', attributes: $fileImageAttributes) . ' ' . StringUtil::specialchars($objFiles->path);
 						}
 						else
 						{
@@ -216,7 +218,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
@@ -259,7 +261,7 @@ class FileTree extends Widget
 								}
 								else
 								{
-									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 								}
 							}
 						}
@@ -286,7 +288,7 @@ class FileTree extends Widget
 							}
 							else
 							{
-								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon, attributes: $fileImageAttributes) . ' ' . $strInfo;
 							}
 						}
 					}
