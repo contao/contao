@@ -48,7 +48,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getParentRows')
             ->with(
-                5,
+                [5],
                 $this->isDcaDefinition('tl_page'),
                 null,
             )
@@ -60,6 +60,37 @@ class DcaHierarchyTest extends ContaoTestCase
         ;
 
         $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds(5, 'tl_page', true));
+    }
+
+    public function testGetsParentIdsForMultipleRecords(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with([5, 4], $this->isDcaDefinition('tl_page'), null)
+            ->willReturn([
+                ['id' => 5, 'pid' => 3],
+                ['id' => 3, 'pid' => 1],
+                ['id' => 1, 'pid' => 0],
+                ['id' => 4, 'pid' => 1],
+            ])
+        ;
+
+        $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds([5, 4], 'tl_page', true));
+    }
+
+    public function testGetsParentIdTrails(): void
+    {
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentIdTrails')
+            ->with([5, 4], $this->isDcaDefinition('tl_page'), true)
+            ->willReturn([[3, 1], [1]])
+        ;
+
+        $this->assertSame([[3, 1], [1]], $this->createDcaHierarchy($hierarchy)->getParentIdTrails([5, 4], 'tl_page', true));
     }
 
     public function testIgnoresZeroChildIds(): void
@@ -110,7 +141,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getParentRows')
             ->with(
-                5,
+                [5],
                 $this->isDcaDefinition('tl_content', true),
                 $this->callback(static fn (ParentTraversalOptions $options): bool => ['ptable'] === $options->columns() && $options->includesBoundaryRow()),
             )
@@ -147,7 +178,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->expects($this->once())
             ->method('getParentRows')
             ->with(
-                2,
+                [2],
                 $this->isDcaDefinition('tl_page'),
                 $parentOptions,
             )

@@ -239,6 +239,98 @@ class HierarchyTest extends TestCase
         $this->assertSame([5, 3, 1], new Hierarchy($connection)->getParentIds(5, $definition));
     }
 
+    public function testGetsParentIdsForMultipleBranchesUsingUnion(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    ['node_id' => 5, 'parent_id' => 3],
+                    ['node_id' => 3, 'parent_id' => 1],
+                    ['node_id' => 1, 'parent_id' => 0],
+                ],
+                [
+                    ['node_id' => 4, 'parent_id' => 1],
+                    ['node_id' => 1, 'parent_id' => 0],
+                ],
+            )
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+
+        $this->assertSame([5, 3, 1, 4], new Hierarchy($connection)->getParentIds([5, 4], $definition));
+    }
+
+    public function testGetsParentIdsForMultipleBranchesUsingACommonTableExpression(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection, new MySQL80Platform());
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->with(
+                $this->stringContains('WHERE `category_id` IN (?)'),
+                [[5, 4]],
+                [ArrayParameterType::INTEGER],
+            )
+            ->willReturn([
+                ['node_id' => 1, 'parent_id' => 0],
+                ['node_id' => 4, 'parent_id' => 1],
+                ['node_id' => 3, 'parent_id' => 1],
+                ['node_id' => 5, 'parent_id' => 3],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $hierarchy = new Hierarchy($connection);
+
+        $this->assertSame([5, 3, 1, 4], $hierarchy->getParentIds([5, 4], $definition));
+        $this->assertSame([], $hierarchy->getParentIds([], $definition));
+    }
+
+    public function testGetsIndividualParentIdTrailsInOneQuery(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection, new MySQL80Platform());
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn([
+                ['node_id' => 1, 'parent_id' => 0],
+                ['node_id' => 3, 'parent_id' => 1],
+                ['node_id' => 5, 'parent_id' => 3],
+                ['node_id' => 4, 'parent_id' => 1],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+        $hierarchy = new Hierarchy($connection);
+
+        $this->assertSame([[3, 1], [1]], $hierarchy->getParentIdTrails([5, 4], $definition, true));
+    }
+
+    public function testSkipsNestedStartingIds(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection, new MySQL80Platform());
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn([
+                ['node_id' => 1, 'parent_id' => 0],
+                ['node_id' => 3, 'parent_id' => 1],
+                ['node_id' => 5, 'parent_id' => 3],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+
+        $this->assertSame([1], new Hierarchy($connection)->getParentIds([5, 3], $definition, true));
+    }
+
     public function testGetsMoreThanTenParentIdsUsingUnion(): void
     {
         $connection = $this->createMock(Connection::class);

@@ -54,25 +54,58 @@ class DcaHierarchy
     }
 
     /**
+     * @param int|list<int|string> $ids
+     *
      * @return list<int>
      */
-    public function getParentIds(int $id, string $table, bool $skipId = false): array
+    public function getParentIds(array|int $ids, string $table, bool $skipIds = false): array
     {
-        $ids = array_map(static fn (array $row): int => (int) $row['id'], $this->getParentRows($id, $table));
+        $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
 
-        return $skipId ? array_values(array_filter($ids, static fn (int $parentId): bool => $parentId !== $id)) : $ids;
-    }
-
-    /**
-     * @return list<array<string, mixed>>
-     */
-    public function getParentRows(int $id, string $table, ParentTraversalOptions|null $options = null): array
-    {
-        if ($id <= 0) {
+        if ([] === $ids) {
             return [];
         }
 
-        return $this->normalizeRows($this->hierarchy->getParentRows($id, $this->createDefinition($table), $options));
+        $parentIds = array_map(static fn (array $row): int => (int) $row['id'], $this->getParentRows($ids, $table));
+
+        return $skipIds ? array_values(array_diff($parentIds, $ids)) : $parentIds;
+    }
+
+    /**
+     * Returns one parent ID trail for each given ID, in the same order as the IDs.
+     *
+     * @param list<int|string> $ids
+     *
+     * @return list<list<int>>
+     */
+    public function getParentIdTrails(array $ids, string $table, bool $skipIds = false): array
+    {
+        $ids = array_values(array_filter(array_map(intval(...), $ids)));
+
+        if ([] === $ids) {
+            return [];
+        }
+
+        return array_map(
+            static fn (array $trail): array => array_map(intval(...), $trail),
+            $this->hierarchy->getParentIdTrails($ids, $this->createDefinition($table), $skipIds),
+        );
+    }
+
+    /**
+     * @param int|list<int|string> $ids
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getParentRows(array|int $ids, string $table, ParentTraversalOptions|null $options = null): array
+    {
+        $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
+
+        if ([] === $ids) {
+            return [];
+        }
+
+        return $this->normalizeRows($this->hierarchy->getParentRows($ids, $this->createDefinition($table), $options));
     }
 
     /**

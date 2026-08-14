@@ -62,38 +62,78 @@ class Hierarchy
     }
 
     /**
+     * @param int|string|list<int|string> $ids
+     *
      * @return list<int|string>
      */
-    public function getParentIds(int|string $id, HierarchyDefinition $definition, bool $skipId = false): array
+    public function getParentIds(array|int|string $ids, HierarchyDefinition $definition, bool $skipIds = false): array
     {
-        $ids = array_map(
+        $parentIds = array_map(
             static fn (array $row): int|string => $row[$definition->idColumn()],
-            $this->getParentRows($id, $definition),
+            $this->getParentRows($ids, $definition),
         );
 
-        return $skipId ? array_values(array_filter($ids, static fn (int|string $parentId): bool => $parentId !== $id)) : $ids;
+        if (!$skipIds) {
+            return $parentIds;
+        }
+
+        $rootIds = array_fill_keys(array_map($this->getIdKey(...), (array) $ids), true);
+
+        return array_values(array_filter($parentIds, fn (int|string $parentId): bool => !isset($rootIds[$this->getIdKey($parentId)])));
     }
 
     /**
+     * Returns one parent ID trail for each given ID, in the same order as the IDs.
+     *
+     * @param list<int|string> $ids
+     *
+     * @return list<list<int|string>>
+     */
+    public function getParentIdTrails(array $ids, HierarchyDefinition $definition, bool $skipIds = false): array
+    {
+        $ids = $this->normalizeIds($ids);
+
+        if ([] === $ids) {
+            return [];
+        }
+
+        $rows = $this->getParentRows($ids, $definition);
+        $parents = [];
+
+        foreach ($rows as $row) {
+            $parents[$this->getIdKey($this->getRowId($row, $definition->idColumn()))] = $this->getRowId($row, $definition->parentColumn());
+        }
+
+        return array_map(
+            fn (int|string $id): array => $this->getParentIdTrail($id, $parents, $skipIds),
+            $ids,
+        );
+    }
+
+    /**
+     * @param int|string|list<int|string> $ids
+     *
      * @return list<array<string, mixed>>
      */
-    public function getParentRows(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions|null $options = null): array
+    public function getParentRows(array|int|string $ids, HierarchyDefinition $definition, ParentTraversalOptions|null $options = null): array
     {
-        if ('' === $id) {
+        $ids = $this->normalizeIds((array) $ids);
+
+        if ([] === $ids) {
             return [];
         }
 
         $options ??= new ParentTraversalOptions();
         $supportsCommonTableExpressions = $this->supportsRecursiveCommonTableExpressions();
         $rows = $supportsCommonTableExpressions
-            ? $this->fetchParentRowsUsingCommonTableExpression($id, $definition, $options)
-            : $this->fetchParentRowsUsingUnion($id, $definition, $options);
+            ? $this->fetchParentRowsUsingCommonTableExpression($ids, $definition, $options)
+            : $this->fetchParentRowsUsingUnion($ids, $definition, $options);
 
         if ($supportsCommonTableExpressions && $options->includesAllColumns()) {
-            return $this->sortParentRows($rows, $id, $definition);
+            return $this->sortParentRows($rows, $ids, $definition);
         }
 
-        return $this->mapRows($this->sortParentRows($rows, $id), $definition, $options);
+        return $this->mapRows($this->sortParentRows($rows, $ids), $definition, $options);
     }
 
     /**
@@ -178,9 +218,11 @@ class Hierarchy
     }
 
     /**
+     * @param non-empty-list<int|string> $ids
+     *
      * @return list<array<string, mixed>>
      */
-    private function fetchParentRowsUsingCommonTableExpression(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions $options): array
+    private function fetchParentRowsUsingCommonTableExpression(array $ids, HierarchyDefinition $definition, ParentTraversalOptions $options): array
     {
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
@@ -199,9 +241,10 @@ class Hierarchy
         $select = $options->includesAllColumns()
             ? "SELECT source.* FROM contao_tree INNER JOIN $table source ON source.$idColumn = contao_tree.node_id"
             : "SELECT node_id, parent_id$fieldNames, continue_traversal FROM contao_tree";
+        $anchor = 1 === \count($ids) ? "$idColumn = ?" : "$idColumn IN (?)";
         $sql = <<<SQL
             WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal$depthColumn) AS (
-                SELECT $idColumn, $parentColumn$fields, $continuation$anchorDepth FROM $table WHERE $idColumn = ?$anchorScope
+                SELECT $idColumn, $parentColumn$fields, $continuation$anchorDepth FROM $table WHERE $anchor$anchorScope
                 UNION DISTINCT
                 SELECT parent.$idColumn, parent.$parentColumn$parentFields, $parentContinuation$parentDepth FROM $table parent
                     INNER JOIN contao_tree child ON parent.$idColumn = child.parent_id
@@ -210,13 +253,33 @@ class Hierarchy
             $select
             SQL;
 
-        return $this->connection->fetchAllAssociative($sql, [$id]);
+        return 1 === \count($ids)
+            ? $this->connection->fetchAllAssociative($sql, $ids)
+            : $this->connection->fetchAllAssociative($sql, [$ids], [$this->getArrayParameterType($ids)]);
+    }
+
+    /**
+     * @param non-empty-list<int|string> $ids
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function fetchParentRowsUsingUnion(array $ids, HierarchyDefinition $definition, ParentTraversalOptions $options): array
+    {
+        $rows = [];
+
+        foreach ($ids as $id) {
+            foreach ($this->fetchSingleParentRowsUsingUnion($id, $definition, $options) as $row) {
+                $rows[$this->getIdKey($this->getRowId($row, 'node_id'))] = $row;
+            }
+        }
+
+        return array_values($rows);
     }
 
     /**
      * @return list<array<string, mixed>>
      */
-    private function fetchParentRowsUsingUnion(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions $options): array
+    private function fetchSingleParentRowsUsingUnion(int|string $id, HierarchyDefinition $definition, ParentTraversalOptions $options): array
     {
         $rows = [];
         $queried = [];
@@ -367,10 +430,11 @@ class Hierarchy
 
     /**
      * @param list<array<string, mixed>> $rows
+     * @param non-empty-list<int|string> $ids
      *
      * @return list<array<string, mixed>>
      */
-    private function sortParentRows(array $rows, int|string $id, HierarchyDefinition|null $definition = null): array
+    private function sortParentRows(array $rows, array $ids, HierarchyDefinition|null $definition = null): array
     {
         $idColumn = $definition?->idColumn() ?? 'node_id';
         $parentColumn = $definition?->parentColumn() ?? 'parent_id';
@@ -383,14 +447,40 @@ class Hierarchy
         $sorted = [];
         $seen = [];
 
-        while (isset($parents[$this->getIdKey($id)]) && !isset($seen[$this->getIdKey($id)])) {
-            $row = $parents[$this->getIdKey($id)];
-            $seen[$this->getIdKey($id)] = true;
-            $sorted[] = $row;
-            $id = $this->getRowId($row, $parentColumn);
+        foreach ($ids as $id) {
+            while (isset($parents[$this->getIdKey($id)]) && !isset($seen[$this->getIdKey($id)])) {
+                $row = $parents[$this->getIdKey($id)];
+                $seen[$this->getIdKey($id)] = true;
+                $sorted[] = $row;
+                $id = $this->getRowId($row, $parentColumn);
+            }
         }
 
         return $sorted;
+    }
+
+    /**
+     * @param array<string, int|string> $parents
+     *
+     * @return list<int|string>
+     */
+    private function getParentIdTrail(int|string $id, array $parents, bool $skipId): array
+    {
+        $trail = [];
+        $seen = [];
+
+        while (isset($parents[$key = $this->getIdKey($id)]) && !isset($seen[$key])) {
+            $seen[$key] = true;
+
+            if (!$skipId) {
+                $trail[] = $id;
+            }
+
+            $skipId = false;
+            $id = $parents[$key];
+        }
+
+        return $trail;
     }
 
     /**

@@ -93,6 +93,9 @@ class HierarchyTest extends FunctionalTestCase
 
         $this->assertSame([5, 3, 1], $this->hierarchy->getParentIds(5, $definition));
         $this->assertSame([3, 1], $this->hierarchy->getParentIds(5, $definition, true));
+        $this->assertSame([5, 3, 1, 4], $this->hierarchy->getParentIds([5, 4], $definition));
+        $this->assertSame([1], $this->hierarchy->getParentIds([5, 3], $definition, true));
+        $this->assertSame([[3, 1], [1]], $this->hierarchy->getParentIdTrails([5, 4], $definition, true));
         $this->assertSame([], $this->hierarchy->getParentIds(99, $definition));
         $this->assertSame([8, 9], $this->hierarchy->getParentIds(8, $definition));
     }
