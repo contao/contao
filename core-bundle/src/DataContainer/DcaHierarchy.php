@@ -34,7 +34,7 @@ class DcaHierarchy
      */
     public function getChildIds(array|int|string $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
-        return array_map(static fn (array $row): int => (int) $row['id'], $this->getChildRows($parentIds, $table, $options));
+        return array_column($this->getChildRows($parentIds, $table, $options), 'id');
     }
 
     /**
@@ -66,7 +66,7 @@ class DcaHierarchy
             return [];
         }
 
-        $parentIds = array_map(static fn (array $row): int => (int) $row['id'], $this->getParentRows($ids, $table));
+        $parentIds = array_column($this->getParentRows($ids, $table), 'id');
 
         return $skipIds ? array_values(array_diff($parentIds, $ids)) : $parentIds;
     }
