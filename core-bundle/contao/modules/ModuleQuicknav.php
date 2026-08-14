@@ -113,8 +113,6 @@ class ModuleQuicknav extends Module
 		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
-		$hierarchy = $container->get('contao.data_container.dca_hierarchy');
-		$db = Database::getInstance();
 		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($objSubpages as $objSubpage)
@@ -160,7 +158,7 @@ class ModuleQuicknav extends Module
 					);
 
 					// Subpages
-					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $hierarchy->getChildIds($objSubpage->id, 'tl_page')))))
+					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && \in_array($objSubpage->id, $objPage->trail)))
 					{
 						$subpages = $this->getQuicknavPages($objSubpage->id, $level);
 

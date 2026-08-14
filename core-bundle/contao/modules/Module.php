@@ -302,10 +302,7 @@ abstract class Module extends Frontend
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155
 
-		$db = Database::getInstance();
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
-		$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
-
 		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Browse subpages
@@ -337,7 +334,7 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
-				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $hierarchy->getChildIds($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && \in_array($objSubpage->id, $objPage->trail))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
