@@ -44,7 +44,7 @@ class DcaHierarchy
      */
     public function getChildRows(array|int|string $parentIds, string $table, ChildTraversalOptions|null $options = null): array
     {
-        $parentIds = array_values(array_filter(array_map(intval(...), (array) $parentIds)));
+        $parentIds = $this->normalizeIds($parentIds);
 
         if ([] === $parentIds) {
             return [];
@@ -60,7 +60,7 @@ class DcaHierarchy
      */
     public function getParentIds(array|int|string $ids, string $table, bool $skipIds = false): array
     {
-        $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
+        $ids = $this->normalizeIds($ids);
 
         if ([] === $ids) {
             return [];
@@ -80,7 +80,7 @@ class DcaHierarchy
      */
     public function getParentIdTrails(array $ids, string $table, bool $skipIds = false): array
     {
-        $ids = array_values(array_filter(array_map(intval(...), $ids)));
+        $ids = $this->normalizeIds($ids);
 
         if ([] === $ids) {
             return [];
@@ -99,7 +99,7 @@ class DcaHierarchy
      */
     public function getParentRows(array|int|string $ids, string $table, ParentTraversalOptions|null $options = null): array
     {
-        $ids = array_values(array_filter(array_map(intval(...), (array) $ids)));
+        $ids = $this->normalizeIds($ids);
 
         if ([] === $ids) {
             return [];
@@ -137,6 +137,16 @@ class DcaHierarchy
             static fn (array $row): array => [...$row, 'id' => (int) $row['id'], 'pid' => (int) $row['pid']],
             $rows,
         );
+    }
+
+    /**
+     * @param int|string|list<int|string> $ids
+     *
+     * @return list<int>
+     */
+    private function normalizeIds(array|int|string $ids): array
+    {
+        return array_values(array_unique(array_filter(array_map(intval(...), (array) $ids))));
     }
 
     private function createDefinition(string $table): HierarchyDefinition

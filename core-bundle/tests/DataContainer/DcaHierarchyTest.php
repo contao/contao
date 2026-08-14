@@ -38,7 +38,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ])
         ;
 
-        $this->assertSame([3, 4], $this->createDcaHierarchy($hierarchy)->getChildIds([1, 2], 'tl_page', $options));
+        $this->assertSame([3, 4], $this->createDcaHierarchy($hierarchy)->getChildIds([1, '1', 2, 2], 'tl_page', $options));
     }
 
     public function testGetsChildIdsForAStringParentId(): void
@@ -107,7 +107,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ])
         ;
 
-        $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds([5, 4], 'tl_page', true));
+        $this->assertSame([3, 1], $this->createDcaHierarchy($hierarchy)->getParentIds([5, '5', 4, 4], 'tl_page', true));
     }
 
     public function testGetsParentIdTrails(): void
@@ -131,7 +131,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->method('getChildRows')
         ;
 
-        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getChildIds([0, '0'], 'tl_page'));
+        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getChildIds([0, '0', 'invalid'], 'tl_page'));
     }
 
     public function testIgnoresZeroParentId(): void
@@ -142,7 +142,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->method('getParentRows')
         ;
 
-        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getParentIds(0, 'tl_page'));
+        $this->assertSame([], $this->createDcaHierarchy($hierarchy)->getParentIds([0, '0', 'invalid'], 'tl_page'));
     }
 
     public function testGetsParentTableAndId(): void
