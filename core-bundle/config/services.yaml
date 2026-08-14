@@ -44,7 +44,7 @@ services:
             - 0
             - '%kernel.project_dir%/var/cache/shared'
         tags:
-            - { name: cache.pool, namespace: 'contao' }
+            - { name: cache.pool, namespace: contao }
 
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
