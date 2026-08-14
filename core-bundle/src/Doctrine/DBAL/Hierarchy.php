@@ -84,9 +84,14 @@ class Hierarchy
         }
 
         $options ??= new ParentTraversalOptions();
-        $rows = $this->supportsRecursiveCommonTableExpressions()
+        $supportsCommonTableExpressions = $this->supportsRecursiveCommonTableExpressions();
+        $rows = $supportsCommonTableExpressions
             ? $this->fetchParentRowsUsingCommonTableExpression($id, $definition, $options)
             : $this->fetchParentRowsUsingUnion($id, $definition, $options);
+
+        if ($supportsCommonTableExpressions && $options->includesAllColumns()) {
+            return $this->sortParentRows($rows, $id, $definition);
+        }
 
         return $this->mapRows($this->sortParentRows($rows, $id), $definition, $options);
     }
@@ -191,6 +196,9 @@ class Hierarchy
         $recursiveDepth = null === $options->maxDepth() ? '' : ' AND child.depth < '.$options->maxDepth();
         $continuation = $this->getScopeExpression($definition);
         $parentContinuation = $this->getScopeExpression($definition, 'parent');
+        $select = $options->includesAllColumns()
+            ? "SELECT source.* FROM contao_tree INNER JOIN $table source ON source.$idColumn = contao_tree.node_id"
+            : "SELECT node_id, parent_id$fieldNames, continue_traversal FROM contao_tree";
         $sql = <<<SQL
             WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal$depthColumn) AS (
                 SELECT $idColumn, $parentColumn$fields, $continuation$anchorDepth FROM $table WHERE $idColumn = ?$anchorScope
@@ -199,7 +207,7 @@ class Hierarchy
                     INNER JOIN contao_tree child ON parent.$idColumn = child.parent_id
                     WHERE 1 = 1$recursiveScope$recursiveDepth
             )
-            SELECT node_id, parent_id$fieldNames, continue_traversal FROM contao_tree
+            $select
             SQL;
 
         return $this->connection->fetchAllAssociative($sql, [$id]);
@@ -362,12 +370,14 @@ class Hierarchy
      *
      * @return list<array<string, mixed>>
      */
-    private function sortParentRows(array $rows, int|string $id): array
+    private function sortParentRows(array $rows, int|string $id, HierarchyDefinition|null $definition = null): array
     {
+        $idColumn = $definition?->idColumn() ?? 'node_id';
+        $parentColumn = $definition?->parentColumn() ?? 'parent_id';
         $parents = [];
 
         foreach ($rows as $row) {
-            $parents[$this->getIdKey($this->getRowId($row, 'node_id'))] = $row;
+            $parents[$this->getIdKey($this->getRowId($row, $idColumn))] = $row;
         }
 
         $sorted = [];
@@ -377,7 +387,7 @@ class Hierarchy
             $row = $parents[$this->getIdKey($id)];
             $seen[$this->getIdKey($id)] = true;
             $sorted[] = $row;
-            $id = $this->getRowId($row, 'parent_id');
+            $id = $this->getRowId($row, $parentColumn);
         }
 
         return $sorted;

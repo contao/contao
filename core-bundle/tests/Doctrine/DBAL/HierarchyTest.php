@@ -328,6 +328,31 @@ class HierarchyTest extends TestCase
         );
     }
 
+    public function testGetsParentRowsWithAllColumnsUsingACommonTableExpression(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $this->configureConnection($connection, new MySQL80Platform());
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->with($this->stringContains('SELECT source.* FROM contao_tree INNER JOIN `categories` source'))
+            ->willReturn([
+                ['category_id' => 1, 'parent_category_id' => 0, 'title' => 'Parent', 'published' => 1],
+                ['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1],
+            ])
+        ;
+
+        $definition = new HierarchyDefinition('categories', 'category_id', 'parent_category_id');
+
+        $this->assertSame(
+            [
+                ['category_id' => 3, 'parent_category_id' => 1, 'title' => 'Child', 'published' => 1],
+                ['category_id' => 1, 'parent_category_id' => 0, 'title' => 'Parent', 'published' => 1],
+            ],
+            new Hierarchy($connection)->getParentRows(3, $definition, new ParentTraversalOptions()->withAllColumns()),
+        );
+    }
+
     public function testLimitsTheParentDepthUsingUnion(): void
     {
         $connection = $this->createMock(Connection::class);
