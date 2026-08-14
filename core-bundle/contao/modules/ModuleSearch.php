@@ -120,20 +120,7 @@ class ModuleSearch extends Module
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$arrPages = array();
-
-				foreach ($this->pages as $intPageId)
-				{
-					$arrPages[] = array($intPageId);
-					$arrPages[] = $hierarchy->getChildIds($intPageId, 'tl_page');
-				}
-
-				if (!empty($arrPages))
-				{
-					$arrPages = array_merge(...$arrPages);
-				}
-
-				$arrPages = array_unique($arrPages);
+				$arrPages = array_unique(array_merge($this->pages, $hierarchy->getChildIds($this->pages, 'tl_page')));
 			}
 			// Website root
 			else
