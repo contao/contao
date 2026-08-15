@@ -20,9 +20,19 @@
         {% block head_tags %}
             {% for identifier, head_tag in response_context.head.all(app.request) %}
                 {% if identifier == 'contao.title' %}
-                    {% block title %}{{ head_tag|contao_html_tag(identifier) }}{% endblock %}
+                    {% block title %}
+                        {{ include('@Contao/component/_html_tag.html.twig', {
+                            tag: head_tag,
+                            identifier,
+                            debug: app.debug|default(false),
+                        }, false) }}
+                    {% endblock %}
                 {% else %}
-                    {{ head_tag|contao_html_tag(identifier) }}
+                    {{ include('@Contao/component/_html_tag.html.twig', {
+                        tag: head_tag,
+                        identifier,
+                        debug: app.debug|default(false),
+                    }, false) }}
                 {% endif %}
             {% endfor %}
         {% endblock %}
@@ -65,7 +75,11 @@
     {% defer %}
         {% block end_of_body %}
             {% for identifier, element in response_context.body|default %}
-                {{ element|contao_html_tag(identifier) }}
+                {{ include('@Contao/component/_html_tag.html.twig', {
+                    tag: element,
+                    identifier,
+                    debug: app.debug|default(false),
+                }, false) }}
             {% endfor %}
 
             {# @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. #}

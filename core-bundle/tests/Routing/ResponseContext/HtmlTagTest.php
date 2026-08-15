@@ -65,13 +65,6 @@ class HtmlTagTest extends TestCase
         $this->assertFalse(isset($attributes['mutated']));
     }
 
-    public function testSerializesVoidAndNormalElements(): void
-    {
-        $this->assertSame('<meta name="robots" content="noindex">', HtmlTag::meta(['name' => 'robots', 'content' => 'noindex'])->toHtml());
-        $this->assertSame('<script src="/app.js"></script>', HtmlTag::script('/app.js')->toHtml());
-        $this->assertSame('<title>&lt;Title&gt;</title>', HtmlTag::title('<Title>')->toHtml());
-    }
-
     public function testSuggestsSemanticIdentifiers(): void
     {
         $this->assertSame('script[src="/app.js"]', HtmlTag::script('/app.js', ['defer' => true])->getSuggestedIdentifier());

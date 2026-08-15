@@ -16,11 +16,6 @@ use Contao\CoreBundle\String\HtmlAttributes;
 
 final class HtmlTag
 {
-    private const VOID_ELEMENTS = [
-        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'source', 'track', 'wbr',
-    ];
-
     private HtmlAttributes $attributes;
 
     private function __construct(
@@ -211,25 +206,12 @@ final class HtmlTag
             return 'title';
         }
 
-        return "{$this->name}[".hash('xxh3', $this->toHtml()).']';
-    }
+        $payload = json_encode(
+            [$this->name, $this->attributes, $this->content, $this->escapeContent],
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+        );
 
-    /**
-     * @internal
-     */
-    public function toHtml(): string
-    {
-        if (\in_array($this->name, self::VOID_ELEMENTS, true)) {
-            return "<{$this->name}{$this->attributes}>";
-        }
-
-        $content = $this->content ?? '';
-
-        if ($this->escapeContent) {
-            $content = htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        }
-
-        return "<{$this->name}{$this->attributes}>$content</{$this->name}>";
+        return "{$this->name}[".hash('xxh3', $payload).']';
     }
 
     private function getAttributeIdentifier(string ...$attributes): string|null

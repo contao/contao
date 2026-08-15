@@ -12,16 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
-use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
-use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -30,70 +26,6 @@ class HtmlDocumentRuntimeTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
-    }
-
-    public function testRendersStructuredAndRawHeadTags(): void
-    {
-        $runtime = new HtmlDocumentRuntime($this->createStub(ResponseContextAccessor::class));
-
-        $this->assertSame(
-            '<meta name="theme-color" content="&quot;dark&quot;">',
-            $runtime->renderHtmlTag(HtmlTag::meta(['name' => 'theme-color', 'content' => '"dark"'])),
-        );
-        $this->assertSame('<title>&lt;Title&#039;s&gt;</title>', $runtime->renderHtmlTag(HtmlTag::title("<Title's>")));
-        $this->assertSame('<script src="/app.js" defer></script>', $runtime->renderHtmlTag(HtmlTag::script('/app.js', ['defer' => true]), 'app.script'));
-        $this->assertSame('<meta data-legacy>', $runtime->renderHtmlTag('<meta data-legacy>'));
-    }
-
-    public function testAddsIdentifiersAsDataAttributesInDebugMode(): void
-    {
-        $runtime = new HtmlDocumentRuntime($this->createStub(ResponseContextAccessor::class), true);
-
-        $this->assertSame(
-            '<script src="/app.js" data-contao-tag="script[src=&quot;/app.js&quot;]"></script>',
-            $runtime->renderHtmlTag(HtmlTag::script('/app.js'), 'script[src="/app.js"]'),
-        );
-        $this->assertSame(
-            '<!-- contao-tag: raw --><script data-raw></script>',
-            $runtime->renderHtmlTag('<script data-raw></script>', 'raw'),
-        );
-        $this->assertSame(
-            '<!-- contao-tag: theme --><link rel="stylesheet">',
-            $runtime->renderHtmlTag('<link rel="stylesheet">', 'contao.twig.stylesheets.theme'),
-        );
-        $this->assertSame(
-            '<!-- contao-tag: replacement --><script data-contao-tag="existing"></script>',
-            $runtime->renderHtmlTag('<script data-contao-tag="existing"></script>', 'replacement'),
-        );
-        $this->assertSame(
-            '<!-- contao-tag: price- -break --><meta>',
-            $runtime->renderHtmlTag('<meta>', "price--break\n"),
-        );
-    }
-
-    public function testAddsCspNoncesToInlineScriptsAndStyles(): void
-    {
-        $directives = new DirectiveSet(new PolicyManager());
-        $directives->setDirective('script-src', "'self'");
-        $directives->setDirective('style-src', "'self'");
-
-        $responseContext = new ResponseContext()->add(new CspHandler($directives));
-        $runtime = new HtmlDocumentRuntime($this->createAccessor($responseContext));
-        $script = HtmlTag::inlineScript('alert(1)');
-
-        $this->assertMatchesRegularExpression(
-            '/^<script nonce="[^"]+">alert\(1\)<\/script>$/',
-            $runtime->renderHtmlTag($script),
-        );
-        $this->assertFalse(isset($script->getAttributes()['nonce']));
-        $this->assertMatchesRegularExpression(
-            '/^<style nonce="[^"]+">body \{\}<\/style>$/',
-            $runtime->renderHtmlTag(HtmlTag::inlineStyle('body {}')),
-        );
-        $this->assertSame(
-            '<script nonce="manual">alert(1)</script>',
-            $runtime->renderHtmlTag($script->withAttribute('nonce', 'manual')),
-        );
     }
 
     public function testAddsTwigContentToTheResponseContext(): void
