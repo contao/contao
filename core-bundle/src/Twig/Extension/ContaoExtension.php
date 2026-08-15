@@ -32,7 +32,6 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
-use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -301,11 +300,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'autolink_url',
                 [AutolinkRuntime::class, 'linkUrls'],
                 ['pre_escape' => 'html', 'is_safe' => ['html']],
-            ),
-            new TwigFilter(
-                'contao_html_tag',
-                [HtmlDocumentRuntime::class, 'renderHtmlTag'],
-                ['is_safe' => ['html']],
             ),
         ];
     }

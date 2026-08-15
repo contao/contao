@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
@@ -30,12 +32,15 @@ use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Renderer\DeferredRenderer;
+use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
 use Contao\System;
 use Highlight\Highlighter;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -166,7 +171,10 @@ class TwigIntegrationTest extends TestCase
     public function testRendersHtmlTags(): void
     {
         $environment = $this->createHeadEnvironment([
-            'test.html.twig' => '{{ tag|contao_html_tag }}{{ raw_tag|contao_html_tag }}',
+            'test.html.twig' => <<<'TWIG'
+                {{ include('@Contao/component/_html_tag.html.twig', {tag, identifier: null, debug: false}, false) }}
+                {{- include('@Contao/component/_html_tag.html.twig', {tag: raw_tag, identifier: null, debug: false}, false) }}
+                TWIG,
         ]);
 
         $this->assertSame(
@@ -176,6 +184,65 @@ class TwigIntegrationTest extends TestCase
                 'raw_tag' => '<meta data-legacy>',
             ]),
         );
+    }
+
+    public function testCanCustomizeTheHtmlTagComponent(): void
+    {
+        $environment = $this->createHeadEnvironment([
+            'test.html.twig' => "{{ include('@Contao/component/_html_tag.html.twig', {tag, identifier: null, debug: false}, false) }}",
+            'component/_html_tag.html.twig' => '<custom-tag data-name="{{ tag.name }}">{{ tag.content }}</custom-tag>',
+        ]);
+
+        $this->assertSame(
+            '<custom-tag data-name="title">Page title</custom-tag>',
+            $environment->render('test.html.twig', ['tag' => HtmlTag::title('Page title')]),
+        );
+    }
+
+    public function testRendersDebugIdentifiersAndCspNoncesInTheHtmlTagComponent(): void
+    {
+        $directives = new DirectiveSet(new PolicyManager());
+        $directives->setDirective('script-src', "'self'");
+        $directives->setDirective('style-src', "'self'");
+
+        $responseContext = new ResponseContext()->add(new CspHandler($directives));
+        $request = Request::create('https://example.com/');
+        $accessor = new ResponseContextAccessor(new RequestStack([$request]));
+        $accessor->setResponseContext($responseContext);
+
+        $environment = $this->createHeadEnvironment(
+            [
+                'test.html.twig' => <<<'TWIG'
+                    {{ include('@Contao/component/_html_tag.html.twig', {tag: external_script, identifier: external_identifier, debug: true}, false) }}
+                    {{- include('@Contao/component/_html_tag.html.twig', {tag: raw_tag, identifier: raw_identifier, debug: true}, false) }}
+                    {{- include('@Contao/component/_html_tag.html.twig', {tag: inline_script, identifier: null, debug: false}, false) }}
+                    {{- include('@Contao/component/_html_tag.html.twig', {tag: inline_style, identifier: null, debug: false}, false) }}
+                    {{- include('@Contao/component/_html_tag.html.twig', {tag: manual_script, identifier: null, debug: false}, false) }}
+                    TWIG,
+            ],
+            $accessor,
+        );
+        $inlineScript = HtmlTag::inlineScript('alert(1)');
+
+        $output = $environment->render('test.html.twig', [
+            'external_script' => HtmlTag::script('/app.js'),
+            'external_identifier' => 'script[src="/app.js"]',
+            'raw_tag' => '<meta data-raw>',
+            'raw_identifier' => "contao.twig.head.price--break\n",
+            'inline_script' => $inlineScript,
+            'inline_style' => HtmlTag::inlineStyle('body {}'),
+            'manual_script' => $inlineScript->withAttribute('nonce', 'manual'),
+        ]);
+
+        $this->assertMatchesRegularExpression(
+            '/^<script src="\/app\.js" data-contao-tag="script\[src=&quot;\/app\.js&quot;\]"><\/script>/',
+            $output,
+        );
+        $this->assertStringContainsString('<!-- contao-tag (URL-encoded): price%2D%2Dbreak%0A --><meta data-raw>', $output);
+        $this->assertMatchesRegularExpression('/<script nonce="[^"]+">alert\(1\)<\/script>/', $output);
+        $this->assertMatchesRegularExpression('/<style nonce="[^"]+">body \{\}<\/style>/', $output);
+        $this->assertStringContainsString('<script nonce="manual">alert(1)</script>', $output);
+        $this->assertFalse(isset($inlineScript->getAttributes()['nonce']));
     }
 
     public function testRendersAndOverridesHeadTagBlocksWhenDeferred(): void
@@ -240,7 +307,6 @@ class TwigIntegrationTest extends TestCase
                     TWIG,
             ],
             $accessor,
-            true,
         );
 
         $output = new DeferredRenderer($environment)->render('child.html.twig', [
@@ -251,25 +317,25 @@ class TwigIntegrationTest extends TestCase
                 'body' => $body,
                 'end_of_body' => ['<script data-legacy-body></script>'],
             ],
-            'app' => ['request' => $request],
+            'app' => ['request' => $request, 'debug' => true],
         ]);
 
         $this->assertStringContainsString('<meta charset="UTF-8">', $output);
         $this->assertStringContainsString('<meta name="generator" content="Contao Open Source CMS">', $output);
         $this->assertStringContainsString('width=device-width,initial-scale=1.0,shrink-to-fit=no', $output);
         $this->assertMatchesRegularExpression(
-            '/<!-- contao-tag: module --><script src="\/module\.js"><\/script>\s*<!-- contao-tag: vendor --><script src="\/vendor\.js"><\/script>/',
+            '/<!-- contao-tag \(URL-encoded\): module --><script src="\/module\.js"><\/script>\s*<!-- contao-tag \(URL-encoded\): vendor --><script src="\/vendor\.js"><\/script>/',
             $output,
         );
         $this->assertMatchesRegularExpression(
-            '/<!-- contao-tag: footer --><script src="\/footer\.js"><\/script>\s*<script src="\/structured\.js" data-contao-tag="script\[src=&quot;\/structured\.js&quot;\]"><\/script>/',
+            '/<!-- contao-tag \(URL-encoded\): footer --><script src="\/footer\.js"><\/script>\s*<script src="\/structured\.js" data-contao-tag="script\[src=&quot;\/structured\.js&quot;\]"><\/script>/',
             $output,
         );
         $this->assertMatchesRegularExpression(
             '/<script src="\/structured\.js"[^>]*><\/script>\s*<script data-legacy-body><\/script>/',
             $output,
         );
-        $this->assertStringContainsString('<!-- contao-tag: theme --><link rel="stylesheet" href="/theme.css">', $output);
+        $this->assertStringContainsString('<!-- contao-tag (URL-encoded): theme --><link rel="stylesheet" href="/theme.css">', $output);
         $this->assertArrayNotHasKey('TL_HEAD', $GLOBALS);
         $this->assertArrayNotHasKey('TL_STYLE_SHEETS', $GLOBALS);
         $this->assertArrayNotHasKey('TL_BODY', $GLOBALS);
@@ -488,19 +554,25 @@ class TwigIntegrationTest extends TestCase
     /**
      * @param array<string, string> $templates
      */
-    private function createHeadEnvironment(array $templates, ResponseContextAccessor|null $accessor = null, bool $debug = false): Environment
+    private function createHeadEnvironment(array $templates, ResponseContextAccessor|null $accessor = null): Environment
     {
         $accessor ??= $this->createStub(ResponseContextAccessor::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
+            ->willReturnCallback(static fn (string $name): array => ['' => $name])
+        ;
         $environment = new Environment(new ChainLoader([
             new ArrayLoader($templates),
             new FilesystemLoader(__DIR__.'/../../contao/templates'),
         ]));
         $environment->addRuntimeLoader(new FactoryRuntimeLoader([
-            HtmlDocumentRuntime::class => static fn () => new HtmlDocumentRuntime($accessor, $debug),
+            CspRuntime::class => static fn () => new CspRuntime($accessor, new WysiwygStyleProcessor([])),
+            HtmlDocumentRuntime::class => static fn () => new HtmlDocumentRuntime($accessor),
         ]));
         $extension = new ContaoExtension(
             $environment,
-            $this->createStub(ContaoFilesystemLoader::class),
+            $filesystemLoader,
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );

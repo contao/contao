@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
@@ -25,27 +23,8 @@ final class HtmlDocumentRuntime implements RuntimeExtensionInterface
 {
     private int $unnamedTagCounter = 0;
 
-    public function __construct(
-        private readonly ResponseContextAccessor $responseContextAccessor,
-        private readonly bool $debug = false,
-    ) {
-    }
-
-    public function renderHtmlTag(HtmlTag|string $tag, int|string|null $identifier = null): string
+    public function __construct(private readonly ResponseContextAccessor $responseContextAccessor)
     {
-        if (\is_string($tag)) {
-            if ($this->debug && null !== $identifier) {
-                return $this->addDebugIdentifierComment($tag, $identifier);
-            }
-
-            return $tag;
-        }
-
-        if ($this->debug && null !== $identifier) {
-            $tag = $tag->withAttribute('data-contao-tag', (string) $identifier);
-        }
-
-        return $this->addCspNonce($tag)->toHtml();
     }
 
     /**
@@ -82,25 +61,6 @@ final class HtmlDocumentRuntime implements RuntimeExtensionInterface
         }
 
         $this->addLegacyContent($options['identifier'] ?? null, $content, $location);
-    }
-
-    private function addDebugIdentifierComment(string $markup, int|string $identifier): string
-    {
-        $identifier = $this->normalizeDebugIdentifier((string) $identifier);
-        $identifier = trim(str_replace(['--', "\r", "\n"], ['- -', ' ', ' '], $identifier));
-
-        return "<!-- contao-tag: $identifier -->$markup";
-    }
-
-    private function normalizeDebugIdentifier(string $identifier): string
-    {
-        foreach (['contao.twig.head.', 'contao.twig.stylesheets.'] as $prefix) {
-            if (str_starts_with($identifier, $prefix)) {
-                return substr($identifier, \strlen($prefix));
-            }
-        }
-
-        return $identifier;
     }
 
     /**
@@ -145,26 +105,5 @@ final class HtmlDocumentRuntime implements RuntimeExtensionInterface
         } else {
             $GLOBALS[$global][] = $content;
         }
-    }
-
-    private function addCspNonce(HtmlTag $tag): HtmlTag
-    {
-        if (isset($tag->getAttributes()['nonce']) || (!$tag->isInlineScript() && !$tag->isInlineStyle())) {
-            return $tag;
-        }
-
-        $responseContext = $this->responseContextAccessor->getResponseContext();
-
-        if (!$responseContext?->has(CspHandler::class)) {
-            return $tag;
-        }
-
-        $directive = $tag->isInlineScript() ? 'script-src' : 'style-src';
-
-        if ($nonce = $responseContext->get(CspHandler::class)->getNonce($directive)) {
-            return $tag->withAttribute('nonce', $nonce);
-        }
-
-        return $tag;
     }
 }
