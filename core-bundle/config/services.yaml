@@ -866,11 +866,6 @@ services:
         arguments:
             - '@doctrine'
 
-    contao.repository.job:
-        class: Contao\CoreBundle\Repository\JobRepository
-        arguments:
-            - '@doctrine'
-
     contao.repository.webauthn_credential:
         class: Contao\CoreBundle\Repository\WebauthnCredentialRepository
         public: true
