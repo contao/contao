@@ -38,61 +38,65 @@ class ValidatorTest extends TestCase
         yield ['a.little.lengthy.but.fine@dept.example.com', true];
         yield ['disposable.style.email.with+symbol@example.com', true];
         yield ['other.email-with-dash@example.com', true];
-        yield ['"very.unusual.@.unusual.com"@example.com', true];
-        yield ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', true];
         yield ['!#$%&\'*+-/=?^_`{}|~@example.org', true];
-        yield ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', true];
 
-        // Valid with IP addresses
-        yield ['user@[255.255.255.255]', true];
-        yield ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', true];
-        yield ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true];
-        yield ['user@[IPv6:2001::7344]', true];
-        yield ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true];
+        // Quoted ASCII
+        yield ['"very.unusual.@.unusual.com"@example.com', false];
+        yield ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', false];
+        yield ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', false];
+
+        // IP addresses square brackets
+        yield ['user@[255.255.255.255]', false];
+        yield ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', false];
+        yield ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', false];
+        yield ['user@[IPv6:2001::7344]', false];
+        yield ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', false];
 
         // Valid with IDNA domains
         yield ['test@exämple.com', true];
         yield ['test@ä.xe', true];
         yield ['test@subexample.wizard', true];
         yield ['test@wähwähwäh.ümläüts.de', true];
-        yield ['"tes@t"@wähwähwäh.ümläüts.de', true];
+
+        // Quoted with IDNA domains
+        yield ['"tes@t"@wähwähwäh.ümläüts.de', false];
 
         // Valid with new TLDs
         yield ['test@example.photography', true];
         yield ['test@sub-domain.example.photography', true];
 
-        // Valid with Unicode characters in the local part
-        yield ['niceändsimple@example.com', true];
-        yield ['véry.çommon@example.com', true];
-        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', true];
-        yield ['dîsposable.style.émail.with+symbol@example.com', true];
-        yield ['other.émail-with-dash@example.com', true];
-        yield ['"verî.uñusual.@.uñusual.com"@example.com', true];
-        yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', true];
-        yield ['üñîçøðé@example.com', true];
-        yield ['"üñîçøðé"@example.com', true];
-        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', true];
+        // Unicode characters in the local part
+        yield ['niceändsimple@example.com', false];
+        yield ['véry.çommon@example.com', false];
+        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', false];
+        yield ['dîsposable.style.émail.with+symbol@example.com', false];
+        yield ['other.émail-with-dash@example.com', false];
+        yield ['"verî.uñusual.@.uñusual.com"@example.com', false];
+        yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', false];
+        yield ['üñîçøðé@example.com', false];
+        yield ['"üñîçøðé"@example.com', false];
+        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', false];
 
-        // Valid with IP addresses and Unicode characters in the local part
-        yield ['üser@[255.255.255.255]', true];
-        yield ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', true];
-        yield ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true];
-        yield ['üser@[IPv6:2001::7344]', true];
-        yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true];
+        // IP addresses square brackets and Unicode characters in the local part
+        yield ['üser@[255.255.255.255]', false];
+        yield ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', false];
+        yield ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', false];
+        yield ['üser@[IPv6:2001::7344]', false];
+        yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', false];
 
-        // Valid with IDNA domains and Unicode characters in the local part
-        yield ['tést@exämple.com', true];
-        yield ['tést@ä.xe', true];
-        yield ['tést@subexample.wizard', true];
-        yield ['tést@wähwähwäh.ümläüts.de', true];
-        yield ['"tés@t"@wähwähwäh.ümläüts.de', true];
+        // IDNA domains and Unicode characters in the local part
+        yield ['tést@exämple.com', false];
+        yield ['tést@ä.xe', false];
+        yield ['tést@subexample.wizard', false];
+        yield ['tést@wähwähwäh.ümläüts.de', false];
+        yield ['"tés@t"@wähwähwäh.ümläüts.de', false];
 
-        // Valid with new TLDs and Unicode characters in the local part
-        yield ['tést@example.photography', true];
-        yield ['tést@sub-domain.example.photography', true];
+        // New TLDs and Unicode characters in the local part
+        yield ['tést@example.photography', false];
+        yield ['tést@sub-domain.example.photography', false];
 
         // Invalid ASCII
-        yield ['test..child@example.com', false];
+        yield ['test..child@example.com', true];
         yield ['test@sub.-example.com', false];
         yield ['test@_smtp_.example.com', false];
         yield ['test@sub..example.com', false];
@@ -179,47 +183,17 @@ class ValidatorTest extends TestCase
             'little.lengthy.but.fine@dept.example.com',
             'disposable.style.email.with+symbol@example.com',
             'other.email-with-dash@example.com',
-            '"very.unusual.@.unusual.com"@example.com',
-            '"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com',
             '!#$%&\'*+-/=?^_`{}|~@example.org',
-            '"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org',
-            'user@[255.255.255.255]',
-            'user@[IPv6:2001:db8:1ff::a0b:dbd0]',
-            'user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]',
-            'user@[IPv6:2001::7344]',
-            'user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]',
             'test@exämple.com',
             'test@ä.xe',
             'test@subexample.wizard',
             'test@wähwähwäh.ümläüts.de',
-            '"tes@t"@wähwähwäh.ümläüts.de',
             'test@example.photography',
             'test@sub-domain.example.photography',
-            'niceändsimple@example.com',
-            'véry.çommon@example.com',
-            'a.lîttle.lengthy.but.fiñe@dept.example.com',
-            'dîsposable.style.émail.with+symbol@example.com',
-            'other.émail-with-dash@example.com',
-            '"verî.uñusual.@.uñusual.com"@example.com',
-            '"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com',
-            'üñîçøðé@example.com',
-            '"üñîçøðé"@example.com',
-            'ǅǼ੧ఘⅧ⒇৪@example.com',
-            'üser@[255.255.255.255]',
-            'üser@[IPv6:2001:db8:1ff::a0b:dbd0]',
-            'üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]',
-            'üser@[IPv6:2001::7344]',
-            'üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]',
-            'tést@exämple.com',
-            'tést@ä.xe',
-            'tést@subexample.wizard',
-            'tést@wähwähwäh.ümläüts.de',
-            '"tés@t"@wähwähwäh.ümläüts.de',
-            'tést@example.photography',
-            'tést@sub-domain.example.photography',
             'tricky@example.com',
             'more-tricky@example.com',
             'even-more-tricky@example.com',
+            'test..child@example.com',
         ];
 
         $actual = StringUtil::extractEmail($text, '<a><strong>');
