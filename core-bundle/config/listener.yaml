@@ -604,6 +604,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
             - '@contao.data_container.dca_hierarchy'
 
     contao.listener.request_token:

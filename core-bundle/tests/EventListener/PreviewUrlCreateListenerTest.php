@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class PreviewUrlCreateListenerTest extends TestCase
@@ -27,7 +27,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent('page', 42);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(DcaHierarchy::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -42,19 +42,17 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn(['tl_article', 3])
         ;
 
-        $article = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
-        $articleAdapter = $this->createAdapterMock(['findById']);
-        $articleAdapter
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('findById')
-            ->with(3)
-            ->willReturn($article)
+            ->method('fetchOne')
+            ->with('SELECT pid FROM tl_article WHERE id = ?', [3])
+            ->willReturn(42)
         ;
-        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($framework, $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -77,19 +75,17 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn(['tl_article', 3])
         ;
 
-        $article = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
-        $articleAdapter = $this->createAdapterMock(['findById']);
-        $articleAdapter
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('findById')
-            ->with(3)
-            ->willReturn($article)
+            ->method('fetchOne')
+            ->with('SELECT pid FROM tl_article WHERE id = ?', [3])
+            ->willReturn(42)
         ;
-        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($framework, $dcaUrlAnalyzer, $dcaHierarchy);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection, $dcaHierarchy);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -106,7 +102,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(DcaHierarchy::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -117,7 +113,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(DcaHierarchy::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -134,7 +130,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

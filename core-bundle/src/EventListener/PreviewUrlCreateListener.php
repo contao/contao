@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
@@ -28,6 +28,7 @@ class PreviewUrlCreateListener
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly Connection $connection,
         private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
@@ -59,7 +60,7 @@ class PreviewUrlCreateListener
                 return;
             }
 
-            $pageId = $this->framework->getAdapter(ArticleModel::class)->findById($id)?->pid;
+            $pageId = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id = ?', [$id]);
         }
 
         if ($pageId) {
