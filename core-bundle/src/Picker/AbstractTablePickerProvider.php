@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
@@ -24,6 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
+    use DynamicPtableTrait;
+
     private const PREFIX = 'dc.';
 
     private const PREFIX_LENGTH = 3;
@@ -34,8 +37,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly Connection $connection,
-        private readonly DcaHierarchy $dcaHierarchy,
+        private readonly DcaHierarchy|null $dcaHierarchy = null,
     ) {
+        if (!$dcaHierarchy) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Not passing an instance of "%s" to "%s::__construct()" is deprecated and will no longer work in Contao 7.', DcaHierarchy::class, self::class);
+        }
     }
 
     public function getUrl(PickerConfig $config): string
@@ -231,7 +237,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 $qb->addSelect('ptable');
 
                 try {
-                    [$ptable] = $this->dcaHierarchy->getParentTableAndId($id, $table);
+                    [$ptable] = $this->dcaHierarchy
+                        ? $this->dcaHierarchy->getParentTableAndId($id, $table)
+                        : $this->getParentTableAndId($this->connection, $table, $id);
                 } catch (\RuntimeException) {
                 }
             }

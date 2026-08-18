@@ -51,6 +51,21 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tablePicker', $provider->getName());
     }
 
+    public function testDeprecatesTheLegacyConstructor(): void
+    {
+        $this->expectUserDeprecationMessage(
+            'Since contao/core-bundle 6.1: Not passing an instance of "Contao\CoreBundle\DataContainer\DcaHierarchy" to "Contao\CoreBundle\Picker\AbstractTablePickerProvider::__construct()" is deprecated and will no longer work in Contao 7.',
+        );
+
+        new TablePickerProvider(
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(FactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+        );
+    }
+
     public function testSupportsContext(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
@@ -574,12 +589,16 @@ class TablePickerProviderTest extends ContaoTestCase
 
     private function createTableProvider(ContaoFramework|null $framework = null, RouterInterface|null $router = null, Connection|null $connection = null): TablePickerProvider
     {
+        $framework ??= $this->createStub(ContaoFramework::class);
+        $router ??= $this->createStub(RouterInterface::class);
+        $connection ??= $this->createStub(Connection::class);
+
         return new TablePickerProvider(
-            $framework ?: $this->createStub(ContaoFramework::class),
+            $framework,
             $this->createStub(FactoryInterface::class),
-            $router ?: $this->createStub(RouterInterface::class),
+            $router,
             $this->createStub(TranslatorInterface::class),
-            $connection ?: $this->createStub(Connection::class),
+            $connection,
             $this->dcaHierarchy ?? $this->createStub(DcaHierarchy::class),
         );
     }
