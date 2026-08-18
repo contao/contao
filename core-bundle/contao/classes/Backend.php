@@ -475,7 +475,6 @@ abstract class Backend extends Controller
 
 		$arrIds   = array();
 		$arrLinks = array();
-		$objUser  = BackendUser::getInstance();
 		$security = $container->get('security.helper');
 
 		// Generate breadcrumb trail
@@ -514,7 +513,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check whether the node is mounted
-		if (!$objUser->hasAccess($arrIds, 'pagemounts'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $arrIds))
 		{
 			$objSession->set($strKey, 0);
 
