@@ -219,10 +219,6 @@ class ValueFormatter implements ResetInterface
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
     {
-        if (null === $value || '' === $value) {
-            return '';
-        }
-
         $value = StringUtil::deserialize($value);
 
         // Translate UUIDs to paths
@@ -292,7 +288,7 @@ class ValueFormatter implements ResetInterface
             }
         }
 
-        if (\is_scalar($value) && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
+        if (\is_scalar($value) && '' !== (string) $value && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
             $label = $this->findOptionLabel($callbackOptions, $value);
 
             if (null !== $label) {
