@@ -288,7 +288,7 @@ class ValueFormatter implements ResetInterface
             }
         }
 
-        if (\is_scalar($value) && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
+        if (\is_scalar($value) && '' !== (string) $value && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
             $label = $this->findOptionLabel($callbackOptions, $value);
 
             if (null !== $label) {
