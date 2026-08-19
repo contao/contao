@@ -219,6 +219,10 @@ class ValueFormatter implements ResetInterface
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
     {
+        if (null === $value || '' === $value) {
+            return '';
+        }
+
         $value = StringUtil::deserialize($value);
 
         // Translate UUIDs to paths
