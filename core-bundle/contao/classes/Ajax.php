@@ -183,7 +183,7 @@ class Ajax extends Backend
 				$parts = null;
 
 				// Row wizard check
-				if (preg_match_all('/[a-zA-Z][a-zA-Z0-9]*/', $strField, $matches))
+				if (preg_match_all('/[^\[\]]+/', $strField, $matches))
 				{
 					$parts = $matches[0] ?? null;
 					$field = $parts[0] ?? null;
