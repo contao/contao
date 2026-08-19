@@ -188,10 +188,16 @@ class Ajax extends Backend
 					$parts = $matches[0] ?? null;
 					$field = $parts[0] ?? null;
 
+					// Handle the field in "edit multiple" mode
+					if (Input::get('act') == 'editAll')
+					{
+						$field = preg_replace('/(.*)_[0-9a-zA-Z]+$/', '$1', $field);
+					}
+
 					if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['inputType'] ?? null) === 'rowWizard')
 					{
 						$boolRowWizard = true;
-						$strField = $field;
+						$strField = $parts[0];
 					}
 				}
 
