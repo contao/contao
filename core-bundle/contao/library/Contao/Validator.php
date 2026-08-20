@@ -135,11 +135,11 @@ class Validator
 	{
 		/*
 		 * The regex below is based on the HTML standard with the modification
-		 * that we do not allow dotless domains.
+		 * that we do allow Unicode letters do not allow dotless domains.
 		 *
 		 * @see https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 		 */
-		return 1 === preg_match('/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/', Idna::encodeEmail($varValue));
+		return 1 === preg_match('/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~\p{L}-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/u', Idna::encodeEmail($varValue));
 	}
 
 	/**

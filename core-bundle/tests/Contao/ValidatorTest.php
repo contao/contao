@@ -66,16 +66,16 @@ class ValidatorTest extends TestCase
         yield ['test@sub-domain.example.photography', true];
 
         // Unicode characters in the local part
-        yield ['niceändsimple@example.com', false];
-        yield ['véry.çommon@example.com', false];
-        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', false];
-        yield ['dîsposable.style.émail.with+symbol@example.com', false];
-        yield ['other.émail-with-dash@example.com', false];
+        yield ['niceändsimple@example.com', true];
+        yield ['véry.çommon@example.com', true];
+        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', true];
+        yield ['dîsposable.style.émail.with+symbol@example.com', true];
+        yield ['other.émail-with-dash@example.com', true];
+        yield ['üñîçøðé@example.com', true];
+        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', false];
         yield ['"verî.uñusual.@.uñusual.com"@example.com', false];
         yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', false];
-        yield ['üñîçøðé@example.com', false];
         yield ['"üñîçøðé"@example.com', false];
-        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', false];
 
         // IP addresses square brackets and Unicode characters in the local part
         yield ['üser@[255.255.255.255]', false];
@@ -85,15 +85,15 @@ class ValidatorTest extends TestCase
         yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', false];
 
         // IDNA domains and Unicode characters in the local part
-        yield ['tést@exämple.com', false];
-        yield ['tést@ä.xe', false];
-        yield ['tést@subexample.wizard', false];
-        yield ['tést@wähwähwäh.ümläüts.de', false];
+        yield ['tést@exämple.com', true];
+        yield ['tést@ä.xe', true];
+        yield ['tést@subexample.wizard', true];
+        yield ['tést@wähwähwäh.ümläüts.de', true];
         yield ['"tés@t"@wähwähwäh.ümläüts.de', false];
 
         // New TLDs and Unicode characters in the local part
-        yield ['tést@example.photography', false];
-        yield ['tést@sub-domain.example.photography', false];
+        yield ['tést@example.photography', true];
+        yield ['tést@sub-domain.example.photography', true];
 
         // Invalid ASCII
         yield ['test..child@example.com', true];
@@ -132,7 +132,7 @@ class ValidatorTest extends TestCase
         yield [' test@sub-domain.example.photography', false];
 
         // Invalid with Unicode characters in the local part
-        yield ['tést..child@example.com', false];
+        yield ['tést..child@example.com', true];
         yield ['tést@sub.-example.com', false];
         yield ['tést@_smtp_.example.com', false];
         yield ['tést@sub..example.com', false];
@@ -190,6 +190,18 @@ class ValidatorTest extends TestCase
             'test@wähwähwäh.ümläüts.de',
             'test@example.photography',
             'test@sub-domain.example.photography',
+            'niceändsimple@example.com',
+            'véry.çommon@example.com',
+            'a.lîttle.lengthy.but.fiñe@dept.example.com',
+            'dîsposable.style.émail.with+symbol@example.com',
+            'other.émail-with-dash@example.com',
+            'üñîçøðé@example.com',
+            'tést@exämple.com',
+            'tést@ä.xe',
+            'tést@subexample.wizard',
+            'tést@wähwähwäh.ümläüts.de',
+            'tést@example.photography',
+            'tést@sub-domain.example.photography',
             'tricky@example.com',
             'more-tricky@example.com',
             'even-more-tricky@example.com',
