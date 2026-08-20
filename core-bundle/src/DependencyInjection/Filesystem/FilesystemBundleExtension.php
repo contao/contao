@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleExtension;
 class FilesystemBundleExtension extends BundleExtension implements ConfigureFilesystemInterface
 {
     public function __construct(
-        private ConfigurableExtensionInterface&ConfigureFilesystemInterface $subject,
+        private readonly ConfigurableExtensionInterface&ConfigureFilesystemInterface $subject,
         string $alias,
     ) {
         parent::__construct($subject, $alias);

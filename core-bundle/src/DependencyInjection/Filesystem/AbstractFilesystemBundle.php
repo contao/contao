@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 abstract class AbstractFilesystemBundle extends AbstractBundle implements ConfigureFilesystemInterface
 {
-    public function getContainerExtension(): ?ExtensionInterface
+    public function getContainerExtension(): ExtensionInterface|null
     {
         if ('' === $this->extensionAlias) {
             $this->extensionAlias = Container::underscore(preg_replace('/Bundle$/', '', $this->getName()));
