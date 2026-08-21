@@ -53,19 +53,23 @@ class DropZone extends FileUpload
       dictFileTooBig: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . ',
       dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
     }).on("addedfile", function() {
-      $$(".dz-message").setStyle("display", "none");
+      document.querySelectorAll(".dz-message")?.forEach(function(el) {
+        el.style.display = "none";
+      });
     }).on("success", function(file, message) {
       if (!message) return;
-      var container = $("tl_message");
+      var container = document.getElementById("tl_message");
       if (!container) {
-        container = new Element("div", {
-          "id": "tl_message",
-          "class": "tl_message"
-        }).inject($("tl_buttons"), "before");
+        container = document.createElement("div");
+        container.id = "tl_message";
+        container.className = "tl_message";
+        document.getElementById("tl_buttons").before(container);
       }
-      container.appendHTML(message);
+      container.insertAdjacentHTML("beforeend", message);
     });
-    $$("div.tl_formbody_submit").setStyle("display", "none");
+    document.querySelectorAll("div.tl_formbody_submit").forEach(function(el) {
+      el.style.display = "none";
+    });
   </script>';
 
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
