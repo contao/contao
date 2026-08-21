@@ -57,6 +57,7 @@ services:
             - '@security.helper'
             - '@security.authenticator.firewall_aware_login_link_handler'
             - '@uri_signer'
+            - '@contao.security.token_checker'
         tags:
             - controller.service_arguments
 

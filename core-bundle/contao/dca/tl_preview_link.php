@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{url_legend},url;{config_legend},showUnpublished,restrictToUrl,expiresAt,createdAt;{publishing_legend},published',
+		'default'                     => '{url_legend},url;{config_legend},showUnpublished,restrictToUrl,expiresAt,previewTime,createdAt;{publishing_legend},published',
 	),
 
 	// Fields
@@ -107,6 +107,13 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'readonly'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+		),
+		'previewTime' => array
+		(
+			'exclude'                 => false,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'expiresAt' => array
 		(

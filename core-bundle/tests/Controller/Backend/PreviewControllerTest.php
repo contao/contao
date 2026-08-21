@@ -17,6 +17,7 @@ use Contao\CoreBundle\Controller\Backend\PreviewController;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
@@ -43,6 +44,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $response = $controller(new Request());
@@ -60,6 +62,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
@@ -81,6 +84,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(false),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -114,6 +118,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $response = $controller($request);
@@ -137,6 +142,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -179,6 +185,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(true, $this->createClassWithPropertiesStub(BackendUser::class), $twoFactorComplete),
             $loginLinkHandler,
             $uriSigner,
+            $this->createStub(TokenChecker::class),
         );
 
         $request = Request::create($requestUrl);
@@ -230,6 +237,7 @@ class PreviewControllerTest extends TestCase
             $this->mockSecurityHelper(),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(UriSigner::class),
+            $this->createStub(TokenChecker::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');

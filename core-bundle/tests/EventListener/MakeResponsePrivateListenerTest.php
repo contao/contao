@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -295,6 +297,65 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertFalse($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
     }
 
+    public function testAddsNoStoreIfClockIsMocked(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        $listener = new MakeResponsePrivateListener(
+            $this->createScopeMatcher(true),
+            $this->createTokenCheckerStub(new \DateTimeImmutable('@637974000')),
+        );
+
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+    }
+
+    public function testDoesNotAddNoStoreIfClockIsNotMocked(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true), $this->createTokenCheckerStub(null));
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+    }
+
+    public function testDoesNotAddNoStoreIfIsNotAContaoMainRequest(): void
+    {
+        $response = new Response();
+
+        $event = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            new Request(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        $listener = new MakeResponsePrivateListener(
+            $this->createScopeMatcher(false),
+            $this->createTokenCheckerStub(new \DateTimeImmutable('@637974000')),
+        );
+
+        $listener->disableSymfonyAutoCacheControl($event);
+
+        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+    }
+
     private function createScopeMatcher(bool $isContaoMainRequest): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -305,5 +366,16 @@ class MakeResponsePrivateListenerTest extends TestCase
         ;
 
         return $scopeMatcher;
+    }
+
+    private function createTokenCheckerStub(\DateTimeImmutable|null $previewTime): TokenChecker&Stub
+    {
+        $tokenChecker = $this->createStub(TokenChecker::class);
+        $tokenChecker
+            ->method('getPreviewTime')
+            ->willReturn($previewTime)
+        ;
+
+        return $tokenChecker;
     }
 }

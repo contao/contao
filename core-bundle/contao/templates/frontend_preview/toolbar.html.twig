@@ -34,6 +34,11 @@
                         </div>
                     {% endif %}
                     <div>
+                        <label for="ctrl_preview_time">{{ 'MSC.previewTime'|trans }}:</label>
+                        <input type="datetime-local" name="previewTime" id="ctrl_preview_time" class="tl_text" value="{{ previewTime }}">
+                        <button type="button" id="ctrl_preview_time_reset" class="tl_submit">{{ 'MSC.reset'|trans }}</button>
+                    </div>
+                    <div>
                         <label for="ctrl_unpublished">{{ 'MSC.hiddenElements'|trans }}:</label>
                         <select name="unpublished" id="ctrl_unpublished" class="tl_select">
                             <option value="hide">{{ 'MSC.hiddenHide'|trans }}</option>
