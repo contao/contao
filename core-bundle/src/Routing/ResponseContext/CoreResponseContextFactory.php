@@ -61,6 +61,7 @@ class CoreResponseContextFactory
     {
         $context = $this->createResponseContext();
         $context->add($this->eventDispatcher);
+        $context->addLazy(HtmlBodyBag::class);
         $context->addLazy(HtmlHeadBag::class);
 
         $context->addLazy(

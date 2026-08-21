@@ -12,6 +12,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -22,6 +23,7 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\ThemeModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Request;
@@ -185,6 +187,7 @@ class ContentCompositionBuilderTest extends TestCase
     public function testAddsResponseContextDataToTemplate(): void
     {
         $responseContext = new ResponseContext();
+        $responseContext->add(new HtmlBodyBag()->add('<script>/* response context script */</script>'));
         $responseContext->add($htmlHeadBag = new HtmlHeadBag());
         $responseContext->add($jsonLdManager = new JsonLdManager($responseContext));
 
@@ -206,12 +209,6 @@ class ContentCompositionBuilderTest extends TestCase
             ->set($jsonLdManager->createSchemaOrgTypeFromArray(['@type' => 'ImageObject', 'name' => 'Name']), Graph::IDENTIFIER_DEFAULT)
         ;
 
-        $GLOBALS['TL_HEAD'][] = '<meta content="additional-tag">';
-        $GLOBALS['TL_BODY'][] = '<script>/* additional script */</script>';
-        $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="additional_stylesheet.css">';
-        $GLOBALS['TL_CSS'][] = 'additional_stylesheet_filename.css|123';
-        $GLOBALS['TL_JAVASCRIPT'][] = 'additional_javascript_filename.js|123|async|defer';
-
         $parameters = $this
             ->getContentCompositionBuilder(
                 responseContextAccessor: $responseContextAccessor,
@@ -223,15 +220,9 @@ class ContentCompositionBuilderTest extends TestCase
 
         $expectedResponseContextData = [
             'head' => $htmlHeadBag,
-            'end_of_head' => [
-                '<link rel="stylesheet" href="https://static-url/additional_stylesheet_filename.css?v=202cb962">',
-                '<script src="https://static-url/additional_javascript_filename.js?v=202cb962" async defer></script>',
-                '<link rel="stylesheet" href="additional_stylesheet.css">',
-                '<meta content="additional-tag">',
-            ],
-            'end_of_body' => [
-                '<script>/* additional script */</script>',
-            ],
+            'body' => $responseContext->get(HtmlBodyBag::class),
+            'end_of_head' => [],
+            'end_of_body' => [],
             'json_ld_scripts' => <<<'EOF'
                 <script type="application/ld+json">
                 {
@@ -249,6 +240,114 @@ class ContentCompositionBuilderTest extends TestCase
 
         $this->assertArrayHasKey('response_context', $parameters);
         $this->assertSame($expectedResponseContextData, iterator_to_array($parameters['response_context']->all()));
+        $this->assertSame(
+            ['<script>/* response context script */</script>'],
+            $parameters['response_context']->body->all(),
+        );
+    }
+
+    #[DataProvider('providePageTitles')]
+    public function testStoresTheFinalPageTitleInTheHeadBag(string $title, string $rootPageTitle, string $expected): void
+    {
+        $responseContext = new ResponseContext()->add($head = new HtmlHeadBag()->setTitle($title));
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
+            'layout' => 1,
+            'language' => 'en',
+            'rootPageTitle' => $rootPageTitle,
+        ]);
+
+        $template = $this->getContentCompositionBuilder($this->mockFramework(), $page, responseContextAccessor: $responseContextAccessor)
+            ->buildLayoutTemplate()
+        ;
+
+        $this->assertSame($title, $head->getTitle());
+        $this->assertSame($head, $template->getData()['response_context']->head);
+        $this->assertSame($expected, $head->getTitle());
+        $this->assertSame($expected, $head->all()[HtmlHeadBag::TAG_TITLE]->getContent());
+    }
+
+    public function testFinalizesThePageTitleAfterContentRendering(): void
+    {
+        $responseContext = new ResponseContext()->add($head = new HtmlHeadBag()->setTitle('Page title'));
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
+            'layout' => 1,
+            'language' => 'en',
+            'rootPageTitle' => 'Root title',
+        ]);
+
+        $template = $this->getContentCompositionBuilder($this->mockFramework(), $page, responseContextAccessor: $responseContextAccessor)
+            ->buildLayoutTemplate()
+        ;
+
+        // Simulate a reader module overwriting the title while its content is rendered.
+        $head->setTitle('Reader title');
+
+        $this->assertSame($head, $template->getData()['response_context']->head);
+        $this->assertSame('Reader title - Root title', $head->getTitle());
+        $this->assertSame('Reader title - Root title', $head->all()[HtmlHeadBag::TAG_TITLE]->getContent());
+    }
+
+    public static function providePageTitles(): iterable
+    {
+        yield 'page and root title' => ['Page title', 'Root title', 'Page title - Root title'];
+        yield 'root title only' => ['', 'Root title', 'Root title'];
+        yield 'page title only' => ['Page title', '', 'Page title'];
+    }
+
+    public function testSupportsAndDeprecatesLegacyDocumentContentGlobals(): void
+    {
+        $responseContext = new ResponseContext()
+            ->add(new HtmlBodyBag())
+            ->add(new HtmlHeadBag())
+        ;
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->never())
+            ->method('createContaoWebpageResponseContext')
+        ;
+
+        $parameters = $this
+            ->getContentCompositionBuilder(
+                responseContextAccessor: $responseContextAccessor,
+                responseContextFactory: $responseContextFactory,
+            )
+            ->buildLayoutTemplate()
+            ->getData()
+        ;
+
+        $GLOBALS['TL_HEAD'][] = '<meta data-legacy>';
+        $GLOBALS['TL_BODY'][] = '<script data-legacy></script>';
+        $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="legacy.css">';
+        $GLOBALS['TL_CSS'][] = 'legacy.css|123';
+        $GLOBALS['TL_JAVASCRIPT'][] = 'legacy.js|123|async|defer';
+
+        $this->expectUserDeprecationMessageMatches('/Using legacy document content globals is deprecated/');
+
+        $this->assertSame(
+            [
+                '<link rel="stylesheet" href="https://static-url/legacy.css?v=202cb962">',
+                '<script src="https://static-url/legacy.js?v=202cb962" async defer></script>',
+                '<link rel="stylesheet" href="legacy.css">',
+                '<meta data-legacy>',
+            ],
+            $parameters['response_context']->end_of_head,
+        );
+        $this->assertSame(['<script data-legacy></script>'], $parameters['response_context']->end_of_body);
     }
 
     public function testAddsCompositedContentToTemplate(): void

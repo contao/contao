@@ -1524,6 +1524,11 @@ services:
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
+    contao.twig.html_document_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime
+        arguments:
+            - '@contao.routing.response_context_accessor'
+
     contao.twig.ide.namespace_lookup_file_generator:
         class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
         arguments:
