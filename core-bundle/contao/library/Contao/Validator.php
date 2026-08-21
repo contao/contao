@@ -135,7 +135,8 @@ class Validator
 	{
 		/*
 		 * The regex below is based on the HTML standard with the modification
-		 * that we do allow Unicode letters do not allow dotless domains.
+		 * that we do allow Unicode letters and numbers and do not allow
+		 * consecutive dots and dotless domains.
 		 *
 		 * @see https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 		 */
