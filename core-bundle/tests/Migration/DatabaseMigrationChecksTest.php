@@ -30,8 +30,7 @@ class DatabaseMigrationChecksTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
-            ->willReturn('5.0.10')
+            ->willReturnMap([['SELECT @@version', '5.0.10']])
         ;
 
         $checks = $this->createChecks($connection);
@@ -52,8 +51,7 @@ class DatabaseMigrationChecksTest extends TestCase
         $compiler
             ->expects($this->once())
             ->method('compileTargetSchema')
-            ->with(true)
-            ->willReturn($schema)
+            ->willReturnMap([[true, $schema]])
         ;
 
         $calculator = $this->createStub(MysqlInnodbRowSizeCalculator::class);
@@ -88,8 +86,7 @@ class DatabaseMigrationChecksTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@sql_mode')
-            ->willReturn($sqlMode)
+            ->willReturnMap([['SELECT @@sql_mode', $sqlMode]])
         ;
 
         $connection

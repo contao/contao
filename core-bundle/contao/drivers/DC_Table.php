@@ -2294,13 +2294,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Tree view
 				if ($this->treeView)
 				{
-					$strUrl .= '&act=create&mode=1&pid=' . $this->intId;
+					$strUrl .= '&act=create&mode=' . self::PASTE_AFTER . '&pid=' . $this->intId;
 				}
 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=create&mode=1&pid=' . $this->intId : '&act=create&mode=2&pid=' . ($currentRecord['pid'] ?? null);
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=create&mode=' . self::PASTE_AFTER . '&pid=' . $this->intId : '&act=create&mode=' . self::PASTE_INTO . '&pid=' . ($currentRecord['pid'] ?? null);
 
 					if (($currentRecord['ptable'] ?? null) === $this->strTable)
 					{
@@ -2311,7 +2311,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&act=create&mode=2&pid=' . $this->intCurrentPid : '&act=create';
+					$strUrl .= $this->ptable ? '&act=create&mode=' . self::PASTE_INTO . '&pid=' . $this->intCurrentPid : '&act=create';
 				}
 
 				$this->redirect($strUrl . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
@@ -2330,13 +2330,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Tree view
 				if ($this->treeView)
 				{
-					$strUrl .= '&act=copy&mode=1&id=' . $this->intId . '&pid=' . $this->intId;
+					$strUrl .= '&act=copy&mode=' . self::PASTE_AFTER . '&id=' . $this->intId . '&pid=' . $this->intId;
 				}
 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=copy&mode=1&pid=' . $this->intId . '&id=' . $this->intId : '&act=copy&mode=2&pid=' . $this->intCurrentPid . '&id=' . $this->intId;
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=copy&mode=' . self::PASTE_AFTER . '&pid=' . $this->intId . '&id=' . $this->intId : '&act=copy&mode=' . self::PASTE_INTO . '&pid=' . $this->intCurrentPid . '&id=' . $this->intId;
 
 					if (($currentRecord['ptable'] ?? null) === $this->strTable)
 					{
@@ -2347,7 +2347,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&act=copy&mode=2&pid=' . $this->intCurrentPid . '&id=' . $this->intId : '&act=copy&id=' . $this->intId;
+					$strUrl .= $this->ptable ? '&act=copy&mode=' . self::PASTE_INTO . '&pid=' . $this->intCurrentPid . '&id=' . $this->intId : '&act=copy&id=' . $this->intId;
 				}
 
 				$this->redirect($strUrl . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
@@ -3668,7 +3668,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=0' . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
+					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO . '&pid=0' . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 				}
 			}
 			elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
@@ -4008,7 +4008,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_AFTER . '&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
@@ -4017,7 +4017,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO . '&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -4038,7 +4038,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_AFTER . '&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 
@@ -4051,7 +4051,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO . '&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -4245,7 +4245,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($blnClipboard)
 			{
 				$headerOperations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $objParent->id . (!$blnMultiboard ? '&id=' . $arrClipboard['id'] : '')));
+				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO . '&pid=' . $objParent->id . (!$blnMultiboard ? '&id=' . $arrClipboard['id'] : '')));
 			}
 			else
 			{
@@ -4470,13 +4470,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($blnMultiboard)
 							{
-								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']);
-								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&ptable=' . $this->strTable);
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_AFTER . '&pid=' . $row[$i]['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO_APPEND . '&pid=' . $row[$i]['id'] . '&ptable=' . $this->strTable);
 							}
 							else
 							{
-								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']);
-								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=3&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id'] . '&ptable=' . $this->strTable);
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_AFTER . '&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=' . self::PASTE_INTO_APPEND . '&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id'] . '&ptable=' . $this->strTable);
 							}
 
 							$recordOperations->addSeparator();

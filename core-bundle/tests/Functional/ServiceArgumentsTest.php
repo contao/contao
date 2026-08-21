@@ -123,7 +123,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         break;
 
                     case 'abstract':
-                    case 'service':
                         // noop
                         break;
 
