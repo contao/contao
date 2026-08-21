@@ -2414,6 +2414,12 @@
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
       </trans-unit>
+      <trans-unit id="MSC.outdent">
+        <source>Outdent</source>
+      </trans-unit>
+      <trans-unit id="MSC.indent">
+        <source>Indent</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
