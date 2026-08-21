@@ -71,7 +71,7 @@ class ValidatorTest extends TestCase
         yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', false];
         yield ['üñîçøðé@example.com', true];
         yield ['"üñîçøðé"@example.com', false];
-        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', false];
+        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', true];
 
         // Valid with IP addresses and Unicode characters in the local part
         yield ['üser@[255.255.255.255]', false];
@@ -92,7 +92,7 @@ class ValidatorTest extends TestCase
         yield ['tést@sub-domain.example.photography', true];
 
         // Invalid ASCII
-        yield ['test..child@example.com', true];
+        yield ['test..child@example.com', false];
         yield ['test@sub.-example.com', false];
         yield ['test@_smtp_.example.com', false];
         yield ['test@sub..example.com', false];
@@ -128,7 +128,7 @@ class ValidatorTest extends TestCase
         yield [' test@sub-domain.example.photography', false];
 
         // Invalid with Unicode characters in the local part
-        yield ['tést..child@example.com', true];
+        yield ['tést..child@example.com', false];
         yield ['tést@sub.-example.com', false];
         yield ['tést@_smtp_.example.com', false];
         yield ['tést@sub..example.com', false];
@@ -192,6 +192,7 @@ class ValidatorTest extends TestCase
             'dîsposable.style.émail.with+symbol@example.com',
             'other.émail-with-dash@example.com',
             'üñîçøðé@example.com',
+            'ǅǼ੧ఘⅧ⒇৪@example.com',
             'tést@exämple.com',
             'tést@ä.xe',
             'tést@subexample.wizard',
@@ -201,7 +202,6 @@ class ValidatorTest extends TestCase
             'tricky@example.com',
             'more-tricky@example.com',
             'even-more-tricky@example.com',
-            'test..child@example.com',
         ];
 
         $actual = StringUtil::extractEmail($text, '<a><strong>');
