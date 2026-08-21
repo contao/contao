@@ -200,6 +200,9 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.highlight_language:
+        class: Contao\CoreBundle\EventListener\DataContainer\HighlightLanguageListener
+
     contao.listener.data_container.item_sizes_save_callback:
         class: Contao\CoreBundle\EventListener\DataContainer\ItemSizesSaveCallbackListener
         arguments:
