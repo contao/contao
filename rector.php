@@ -16,12 +16,9 @@ use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
-use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
 
 return RectorConfig::configure()
     ->withPhpSets(php84: true)
@@ -51,7 +48,6 @@ return RectorConfig::configure()
         __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
-        AddOverrideAttributeToOverriddenMethodsRector::class,
         AddTypeToConstRector::class,
         ArrayToFirstClassCallableRector::class => [
             'core-bundle/tests/Contao/InsertTagsTest.php',
@@ -61,8 +57,6 @@ return RectorConfig::configure()
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
-        DeprecatedAnnotationToDeprecatedAttributeRector::class,
-        NullToStrictStringFuncCallArgRector::class,
         ReadOnlyAnonymousClassRector::class,
         ReadOnlyClassRector::class,
         SimplifyIfReturnBoolRector::class => [
