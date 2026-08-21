@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -24,9 +24,9 @@ class ThemeContentVoter extends AbstractDynamicPtableVoter
 {
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
-        Connection $connection,
+        DcaHierarchy $dcaHierarchy,
     ) {
-        parent::__construct($connection);
+        parent::__construct($dcaHierarchy);
     }
 
     protected function getTable(): string
