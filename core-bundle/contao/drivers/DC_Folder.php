@@ -394,7 +394,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$for = preg_quote($for, null);
 				}
 
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+				$strField = $session['search'][$this->strTable]['field'] ?? 'name';
+
+				if ('uuid' === $strField || !\in_array($strField, $this->getSearchFields(), true))
+				{
+					$strField = 'name';
+				}
+
+				// Regex search serialized meta field
+				if (str_contains($strField, 'meta.'))
+				{
+					list($strField, $strSubField) = explode('.', $strField, 2);
+					$for = preg_quote($strSubField, '/') . '";s:[0-9]+:"[^"]*' . $for;
+				}
+
+				$strPattern = "LOWER(CAST(" . Database::quoteIdentifier($strField) . " AS CHAR)) REGEXP LOWER(?)";
 
 				$objRoot = $db
 					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
@@ -3143,6 +3157,27 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	}
 
 	/**
+	 * Return searchable fields
+	 *
+	 * @return array
+	 */
+	protected function getSearchFields()
+	{
+		$arrFields = array('name', 'uuid');
+		$arrMeta = array('meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license');
+
+		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field => $config)
+		{
+			if (($config['search'] ?? null) && !\in_array($field, $arrFields, true))
+			{
+				$arrFields[] = $field;
+			}
+		}
+
+		return array_merge($arrFields, $arrMeta);
+	}
+
+	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
 	 * @return string
@@ -3152,7 +3187,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$searchFields = array('name', 'uuid');
+		$searchFields = $this->getSearchFields();
 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -3173,39 +3208,48 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$options = array();
+		$strSelected = $session['search'][$this->strTable]['field'] ?? null;
+		$translator = System::getContainer()->get('translator');
 
 		foreach ($searchFields as $field)
 		{
-			$option_label = $field;
-
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			if (str_contains($field, 'meta.'))
 			{
-				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+				$strLabel = 'MSC.aw_' . explode('.', $field)[1];
+				$strGroup = $this->strTable . '.' . explode('.', $field)[0] . '.0';
 			}
-			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			else
 			{
-				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+				$strLabel = match ($field)
+				{
+					'name' => 'MSC.name',
+					'uuid' => 'MSC.fileUuid',
+					default => $this->strTable . '.' . $field . '.0',
+				};
+
+				$strGroup = 'MSC.field';
 			}
 
-			$options[] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? null) === $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options[] = array(
+				'value' => $field,
+				'selected' => $strSelected === $field,
+				'label' => $translator->trans($strLabel, array(), 'contao_default'),
+				'group' => $translator->trans($strGroup, array(), 'contao_default'),
+			);
 		}
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		$this->setPanelState($active);
 
-		return '
-    <fieldset class="tl_search tl_subpanel">
-      <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
-      <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
-      <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="tl_search" name="tl_search" class="tl_select">
-            ' . implode("\n", $options) . '
-          </select>
-      </div>
-      <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
-      <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
-    </fieldset>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
+				'options' => $options,
+				'active' => $active,
+				'value' => $session['search'][$this->strTable]['value'] ?? '',
+			))
+		;
 	}
 
 	/**
