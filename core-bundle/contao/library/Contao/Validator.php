@@ -140,7 +140,7 @@ class Validator
 		 *
 		 * @see https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 		 */
-		return 1 === preg_match('/^[a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\pL\pN-]+(?:\.[a-zA-Z0-9!#$%&\'*+\/=?^_`{|}~\pL\pN-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/u', Idna::encodeEmail($varValue));
+		return 1 === preg_match('/^[\pL\pN!#$%&\'*+\/=?^_`{|}~-]+(?:\.[\pL\pN!#$%&\'*+\/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/u', Idna::encodeEmail($varValue));
 	}
 
 	/**
