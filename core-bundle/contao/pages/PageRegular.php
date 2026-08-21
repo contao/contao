@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -244,22 +245,15 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-
-		// Remove shy-entities (see #2709)
-		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
-		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
+		$this->Template->pageTitle = $headBag->getTitle() ?? '';
 
 		// Meta robots tag
-		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->robots = $headBag->getMetaRobots() ?? '';
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = htmlspecialchars(
-				str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request) ?? ''),
-				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5
-			);
+			$this->Template->canonical = str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request) ?? '');
 		}
 
 		// Fall back to the default title tag
@@ -271,12 +265,12 @@ class PageRegular extends Frontend
 		$parser = System::getContainer()->get('contao.insert_tag.parser');
 
 		// Assign the title and description
-		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag, OutputType::text));
+		$this->Template->description = $headBag->getMetaDescription() ?? '';
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = htmlspecialchars(trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->class = trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass));
 
 		// Additional meta tags
 		$this->Template->metaTags = $headBag->getMetaTags();
