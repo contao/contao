@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\CoreBundle\Exception\ResponseException;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
 
 /**
  * Front end module "registration".
@@ -589,10 +591,11 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objEmail = new Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-		$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
+		$objEmail = new EmailMessage()
+			->to($GLOBALS['TL_ADMIN_EMAIL'])
+			->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''))
+			->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host'))))
+		;
 
 		$strData = "\n\n";
 
@@ -614,7 +617,8 @@ class ModuleRegistration extends Module
 			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
-		$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
-		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
+		$objEmail->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n"));
+
+		System::getContainer()->get('mailer')->send($objEmail);
 	}
 }
