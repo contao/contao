@@ -34,6 +34,13 @@
                     .addClass('tl_tree', not extended_mode)
                     .addClass('tl_tree_xtnd', extended_mode)
                     .addClass(['picker', 'unselectable'], as_picker)
+                    .set('data-id', '0')
+                    .set('data-controller', 'contao--sortable', is_sortable)
+                    .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
+                    .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
+                    .set('data-contao--sortable-group-value', 'tree', is_sortable)
+                    .set('data-contao--sortable-draggable-value', 'li[data-id]', is_sortable)
+                    .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
                 %}
                 <ul{{ tree_attributes }}>
                     <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
