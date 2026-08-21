@@ -3569,8 +3569,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$foundIds = array_map('intval', $objFound->fetchEach('id'));
 				$parentIdTrails = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIdTrails($foundIds, $table);
-
 				$root = $this->root;
+
 				$arrFound = array_values(array_filter(
 					$foundIds,
 					static fn ($id, $index) => array_intersect($root, $parentIdTrails[$index]) !== array(),

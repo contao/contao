@@ -598,9 +598,9 @@ class DcaUrlAnalyzer
     private function getTreeSiblingRows(string $table, int $pid): array
     {
         $options = new ChildTraversalOptions()->withMaxDepth(1)->withAllColumns();
+
         $rows = array_filter(
             $this->dcaHierarchy->getChildRows($pid, $table, $options),
-
             // Skip tree siblings without read permission
             fn (array $row): bool => $this->isGrantedReadAccess($table, $row),
         );

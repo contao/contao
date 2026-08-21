@@ -15,7 +15,8 @@ namespace Contao\CoreBundle\DataContainer;
 use Doctrine\DBAL\Connection;
 
 /**
- * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use DcaHierarchy::getParentTableAndId() instead.
+ * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+ *             use DcaHierarchy::getParentTableAndId() instead.
  */
 trait DynamicPtableTrait
 {

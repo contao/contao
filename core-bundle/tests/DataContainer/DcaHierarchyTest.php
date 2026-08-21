@@ -27,6 +27,7 @@ class DcaHierarchyTest extends ContaoTestCase
     public function testGetsChildIds(): void
     {
         $options = new ChildTraversalOptions();
+
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
@@ -149,6 +150,7 @@ class DcaHierarchyTest extends ContaoTestCase
     {
         $hadDca = \array_key_exists('TL_DCA', $GLOBALS);
         $previousDca = $GLOBALS['TL_DCA'] ?? null;
+
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
             ->expects($this->once())
@@ -159,6 +161,7 @@ class DcaHierarchyTest extends ContaoTestCase
                 },
             )
         ;
+
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
@@ -166,6 +169,7 @@ class DcaHierarchyTest extends ContaoTestCase
             ->with(DcaLoader::class, ['tl_content'])
             ->willReturn($dcaLoader)
         ;
+
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
@@ -196,6 +200,7 @@ class DcaHierarchyTest extends ContaoTestCase
     {
         $childOptions = new ChildTraversalOptions()->withColumns('title');
         $parentOptions = new ParentTraversalOptions()->withColumns('title');
+
         $hierarchy = $this->createMock(Hierarchy::class);
         $hierarchy
             ->expects($this->once())
@@ -214,6 +219,7 @@ class DcaHierarchyTest extends ContaoTestCase
             )
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
+
         $dcaHierarchy = $this->createDcaHierarchy($hierarchy);
         $expected = [['id' => 2, 'pid' => 1, 'title' => 'Child']];
 

@@ -113,6 +113,7 @@ class HierarchyTest extends FunctionalTestCase
             ],
             $this->hierarchy->getParentRows(5, $definition, $options),
         );
+
         $this->assertSame(
             [['id' => 5, 'pid' => 3, 'title' => 'Page 5']],
             $this->hierarchy->getParentRows(5, $definition, $options->withMaxDepth(1)),

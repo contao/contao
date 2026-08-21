@@ -53,9 +53,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
     public function testDeprecatesTheLegacyConstructor(): void
     {
-        $this->expectUserDeprecationMessage(
-            'Since contao/core-bundle 6.1: Not passing an instance of "Contao\CoreBundle\DataContainer\DcaHierarchy" to "Contao\CoreBundle\Picker\AbstractTablePickerProvider::__construct()" is deprecated and will no longer work in Contao 7.',
-        );
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 6.1: Not passing an instance of "Contao\CoreBundle\DataContainer\DcaHierarchy" to "Contao\CoreBundle\Picker\AbstractTablePickerProvider::__construct()" is deprecated and will no longer work in Contao 7.');
 
         new TablePickerProvider(
             $this->createStub(ContaoFramework::class),

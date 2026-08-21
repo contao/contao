@@ -125,6 +125,7 @@ class Hierarchy
 
         $options ??= new ParentTraversalOptions();
         $supportsCommonTableExpressions = $this->supportsRecursiveCommonTableExpressions();
+
         $rows = $supportsCommonTableExpressions
             ? $this->fetchParentRowsUsingCommonTableExpression($ids, $definition, $options)
             : $this->fetchParentRowsUsingUnion($ids, $definition, $options);
@@ -197,6 +198,7 @@ class Hierarchy
                 [$pendingIds],
                 [$this->getArrayParameterType($pendingIds)],
             );
+
             $pendingIds = [];
 
             foreach ($result as $row) {
@@ -238,10 +240,12 @@ class Hierarchy
         $recursiveDepth = null === $options->maxDepth() ? '' : ' AND child.depth < '.$options->maxDepth();
         $continuation = $this->getScopeExpression($definition);
         $parentContinuation = $this->getScopeExpression($definition, 'parent');
+        $anchor = 1 === \count($ids) ? "$idColumn = ?" : "$idColumn IN (?)";
+
         $select = $options->includesAllColumns()
             ? "SELECT source.* FROM contao_tree INNER JOIN $table source ON source.$idColumn = contao_tree.node_id"
             : "SELECT node_id, parent_id$fieldNames, continue_traversal FROM contao_tree";
-        $anchor = 1 === \count($ids) ? "$idColumn = ?" : "$idColumn IN (?)";
+
         $sql = <<<SQL
             WITH RECURSIVE contao_tree (node_id, parent_id$fieldNames, continue_traversal$depthColumn) AS (
                 SELECT $idColumn, $parentColumn$fields, $continuation$anchorDepth FROM $table WHERE $anchor$anchorScope
@@ -337,6 +341,7 @@ class Hierarchy
         foreach ($children as &$siblings) {
             usort($siblings, static fn (array $a, array $b): int => [$a['order'], $a['id']] <=> [$b['order'], $b['id']]);
         }
+
         unset($siblings);
 
         return $this->sortChildrenDepthFirst($children, $this->getRootParentIds($children, $parentIds));
@@ -568,11 +573,13 @@ class Hierarchy
         $ids = array_map(fn (array $row): int|string => $this->getRowId($row, 'node_id'), $rows);
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
+
         $fetchedRows = $this->connection->fetchAllAssociative(
             "SELECT * FROM $table WHERE $idColumn IN (?)",
             [$ids],
             [$this->getArrayParameterType($ids)],
         );
+
         $indexed = [];
 
         foreach ($fetchedRows as $row) {

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\Database\Result;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
@@ -460,11 +461,12 @@ class Database
 	 *
 	 * @return array An array of child record IDs
 	 *
-	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use Hierarchy::getChildIds() instead.
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             use Hierarchy::getChildIds() instead.
 	 */
 	public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
-		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getChildIds()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "%s::getChildIds()" instead.', __METHOD__, Hierarchy::class);
 
 		if (empty($arrReturn))
 		{

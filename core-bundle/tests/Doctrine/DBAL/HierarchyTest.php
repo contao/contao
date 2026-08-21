@@ -28,8 +28,7 @@ class HierarchyTest extends TestCase
 {
     public function testGetsUnsortedChildIdsInResultOrder(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(3))
             ->method('fetchAllAssociative')
@@ -57,8 +56,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsChildIdsIteratively(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(3))
             ->method('fetchAllAssociative')
@@ -84,8 +82,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsChildRowsWithAdditionalColumns(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
@@ -107,8 +104,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsChildRowsWithAllColumns(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
@@ -129,8 +125,7 @@ class HierarchyTest extends TestCase
 
     public function testLimitsTheChildDepthIteratively(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -148,8 +143,7 @@ class HierarchyTest extends TestCase
 
     public function testLimitsTheChildDepthUsingACommonTableExpression(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection, new MySQL80Platform());
+        $connection = $this->mockConnection(new MySQL80Platform());
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -169,8 +163,7 @@ class HierarchyTest extends TestCase
     #[DataProvider('nestedParentIdsProvider')]
     public function testGetsSortedChildIdsWithNestedParentIds(array $parentIds): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(3))
             ->method('fetchAllAssociative')
@@ -201,8 +194,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentIdsUsingUnion(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -221,8 +213,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsIntegerParentIdsUsingUnion(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -241,8 +232,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentIdsForMultipleBranchesUsingUnion(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
@@ -266,8 +256,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentIdsForMultipleBranchesUsingACommonTableExpression(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection, new MySQL80Platform());
+        $connection = $this->mockConnection(new MySQL80Platform());
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -293,8 +282,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsIndividualParentIdTrailsInOneQuery(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection, new MySQL80Platform());
+        $connection = $this->mockConnection(new MySQL80Platform());
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -314,8 +302,7 @@ class HierarchyTest extends TestCase
 
     public function testSkipsNestedStartingIds(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection, new MySQL80Platform());
+        $connection = $this->mockConnection(new MySQL80Platform());
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -333,8 +320,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsMoreThanTenParentIdsUsingUnion(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
@@ -369,8 +355,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentRowsWithAdditionalColumnsAndBoundaryRow(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -400,8 +385,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentRowsWithAllColumns(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
@@ -422,8 +406,7 @@ class HierarchyTest extends TestCase
 
     public function testGetsParentRowsWithAllColumnsUsingACommonTableExpression(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection, new MySQL80Platform());
+        $connection = $this->mockConnection(new MySQL80Platform());
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -447,8 +430,7 @@ class HierarchyTest extends TestCase
 
     public function testLimitsTheParentDepthUsingUnion(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $this->configureConnection($connection);
+        $connection = $this->mockConnection();
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
@@ -465,8 +447,9 @@ class HierarchyTest extends TestCase
         );
     }
 
-    private function configureConnection(Connection&MockObject $connection, MySQLPlatform|null $platform = null): void
+    private function mockConnection(MySQLPlatform|null $platform = null): Connection&MockObject
     {
+        $connection = $this->createMock(Connection::class);
         $connection
             ->method('getDatabasePlatform')
             ->willReturn($platform ?? new MySQLPlatform())
@@ -476,5 +459,7 @@ class HierarchyTest extends TestCase
             ->method('quoteIdentifier')
             ->willReturnCallback(static fn (string $identifier): string => "`$identifier`")
         ;
+
+        return $connection;
     }
 }
