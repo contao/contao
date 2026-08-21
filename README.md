@@ -99,9 +99,13 @@ composer service-linter
 composer monorepo-tools
 composer unit-tests
 composer functional-tests
+composer e2e-tests
 composer phpstan
 composer depcheck
 ```
+
+The E2E tests use `contao/e2e-test-bundle` as a regular development dependency and run with the root PHPUnit
+installation. Their reusable Managed Editions and database files are stored in the ignored `.contao-e2e` directory.
 
 Use the `--` argument to pass additional flags to the underlying commands:
 
