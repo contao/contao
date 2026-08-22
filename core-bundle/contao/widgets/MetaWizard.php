@@ -67,6 +67,17 @@ class MetaWizard extends Widget
 		}
 	}
 
+	public function __get($strKey)
+	{
+		if ('allowHtml' === $strKey)
+		{
+			// Return true if any field is set to allowHtml to make sure postHtml is called
+			return parent::__get($strKey) || array_any($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
+		}
+
+		return parent::__get($strKey);
+	}
+
 	/**
 	 * Trim the values and add new languages if necessary
 	 *
@@ -236,5 +247,30 @@ class MetaWizard extends Widget
 		});
 
 		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . implode('', $items) . '</ul>';
+	}
+
+	protected function getPost($strKey): mixed
+	{
+		$varValue = parent::getPost($strKey);
+
+		$arrHtmlFields = array_filter($this->metaFields, static fn ($c) => $c['allowHtml'] ?? false);
+
+		if (!$arrHtmlFields || $this->allowHtml || !\is_array($varValue) || \is_callable($this->inputCallback))
+		{
+			return $varValue;
+		}
+
+		foreach ($varValue as $lang => $meta)
+		{
+			if (\is_array($meta))
+			{
+				foreach (array_intersect_key($meta, $arrHtmlFields) as $field => $v)
+				{
+					$varValue[$lang][$field] = Input::encodeInputRecursive($v, InputEncodingMode::sanitizeHtml, false);
+				}
+			}
+		}
+
+		return $varValue;
 	}
 }
