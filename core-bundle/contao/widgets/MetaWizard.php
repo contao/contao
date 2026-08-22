@@ -71,7 +71,7 @@ class MetaWizard extends Widget
 	{
 		if ('allowHtml' === $strKey)
 		{
-			// Set allowHtml if any field has it to make sure getPost is called
+			// Set allowHtml if any field has it to make sure postHtml is called for fields
 			return parent::__get($strKey) || array_any($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
 		}
 
@@ -253,27 +253,21 @@ class MetaWizard extends Widget
 	{
 		$varValue = parent::getPost($strKey);
 
-		if (\is_callable($this->inputCallback) || !\is_array($varValue))
+		$arrHtmlFields = array_filter($this->metaFields, static fn ($c) => $c['allowHtml'] ?? false);
+
+		if (!$arrHtmlFields || $this->allowHtml || !\is_array($varValue) || \is_callable($this->inputCallback))
 		{
 			return $varValue;
 		}
 
-		$allowHtmlFields = array_filter($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
-
-		if (array() === $allowHtmlFields)
-		{
-			return $varValue;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		$raw = $request->request->all()[$strKey] ?? array();
-
-		foreach ($varValue as $language => $meta)
+		foreach ($varValue as $lang => $meta)
 		{
 			if (\is_array($meta))
 			{
-				$varValue[$language] = array_replace($meta, array_diff_key($raw[$language] ?? array(), $allowHtmlFields));
+				foreach (array_intersect_key($meta, $arrHtmlFields) as $field => $v)
+				{
+					$varValue[$lang][$field] = Input::encodeInputRecursive($v, InputEncodingMode::sanitizeHtml, false);
+				}
 			}
 		}
 
