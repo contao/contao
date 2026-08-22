@@ -71,7 +71,7 @@ class MetaWizard extends Widget
 	{
 		if ('allowHtml' === $strKey)
 		{
-			// Set allowHtml if any field has it to make sure postHtml is called for fields
+			// Return true if any field is set to allowHtml to make sure postHtml is called
 			return parent::__get($strKey) || array_any($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
 		}
 
