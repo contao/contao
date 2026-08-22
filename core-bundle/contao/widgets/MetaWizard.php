@@ -67,6 +67,17 @@ class MetaWizard extends Widget
 		}
 	}
 
+	public function __get($strKey)
+	{
+		if ('allowHtml' === $strKey)
+		{
+			// Set allowHtml if any field has it to make sure getPost is called
+			return parent::__get($strKey) || array_any($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
+		}
+
+		return parent::__get($strKey);
+	}
+
 	/**
 	 * Trim the values and add new languages if necessary
 	 *
@@ -236,5 +247,36 @@ class MetaWizard extends Widget
 		});
 
 		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . implode('', $items) . '</ul>';
+	}
+
+	protected function getPost($strKey): mixed
+	{
+		$varValue = parent::getPost($strKey);
+
+		if (\is_callable($this->inputCallback) || !\is_array($varValue))
+		{
+			return $varValue;
+		}
+
+		$allowHtmlFields = array_filter($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
+
+		if (array() === $allowHtmlFields)
+		{
+			return $varValue;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		$raw = $request->request->all()[$strKey] ?? array();
+
+		foreach ($varValue as $language => $meta)
+		{
+			if (\is_array($meta))
+			{
+				$varValue[$language] = array_replace($meta, array_diff_key($raw[$language] ?? array(), $allowHtmlFields));
+			}
+		}
+
+		return $varValue;
 	}
 }
