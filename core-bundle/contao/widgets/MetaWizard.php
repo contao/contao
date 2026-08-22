@@ -67,17 +67,6 @@ class MetaWizard extends Widget
 		}
 	}
 
-	public function __get($strKey)
-	{
-		if ('allowHtml' === $strKey)
-		{
-			// Return true if any field is set to allowHtml to make sure postHtml is called
-			return parent::__get($strKey) || array_any($this->metaFields, static fn ($field) => $field['allowHtml'] ?? false);
-		}
-
-		return parent::__get($strKey);
-	}
-
 	/**
 	 * Trim the values and add new languages if necessary
 	 *
@@ -121,7 +110,7 @@ class MetaWizard extends Widget
 
 					if ($this->metaFields[$kk]['basicEntities'] ?? false)
 					{
-						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->allowHtml);
+						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->metaFields[$kk]['allowHtml'] ?? false);
 					}
 				}
 
@@ -201,7 +190,7 @@ class MetaWizard extends Widget
 
 				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
 				{
-					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $this->allowHtml);
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $fieldConfig['allowHtml'] ?? false);
 				}
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
