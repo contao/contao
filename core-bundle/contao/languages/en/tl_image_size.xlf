@@ -89,6 +89,18 @@
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.fetchPriority.0">
+        <source>Fetch priority</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.fetchPriority.1">
+        <source>Hint to the browser about the priority for fetching the image.</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.decoding.0">
+        <source>Decoding</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.decoding.1">
+        <source>Hint to the browser about how the image should be decoded.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
       </trans-unit>

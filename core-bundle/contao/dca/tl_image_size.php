@@ -63,8 +63,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('preserveMetadata'),
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
-		'overwrite'                   => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,preserveMetadataFields;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading,fetchPriority,decoding;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
+		'overwrite'                   => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading,fetchPriority,decoding;{metadata_legend},preserveMetadata,preserveMetadataFields;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Fields
@@ -177,6 +177,20 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type'=>'boolean', 'default'=>false)
+		),
+		'fetchPriority' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('high', 'low'),
+			'eval'                    => array('tl_class'=>'w50 clr', 'includeBlankOption'=>true),
+			'sql'                     => array('type'=>'string', 'length'=>8, 'notnull'=>false)
+		),
+		'decoding' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('sync', 'async'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'sql'                     => array('type'=>'string', 'length'=>8, 'notnull'=>false)
 		)
 	)
 );
