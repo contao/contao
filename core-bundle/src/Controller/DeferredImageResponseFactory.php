@@ -12,23 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Messenger\Message\ResizeDeferredImageMessage;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ResizerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DeduplicateStamp;
 
 /**
  * @internal
  */
 class DeferredImageResponseFactory
 {
+    private readonly Filesystem $filesystem;
+
     public function __construct(
-        private readonly Cron $cron,
+        private readonly MessageBusInterface $messageBus,
         private readonly ResizerInterface $resizer,
-        private readonly Filesystem $filesystem,
+        private readonly WebWorker|null $webWorker = null,
     ) {
+        $this->filesystem = new Filesystem();
     }
 
     public function create(DeferredImageInterface $image): Response|null
@@ -37,7 +43,7 @@ class DeferredImageResponseFactory
             return null;
         }
 
-        if (!$this->cron->hasMinutelyCliCron()) {
+        if (($this->webWorker && !$this->webWorker->hasCliWorkersRunning()) || !$this->dispatch($image->getPath())) {
             if ($this->resizer instanceof DeferredResizerInterface) {
                 $this->resizer->resizeDeferredImage($image);
             }
@@ -61,5 +67,19 @@ class DeferredImageResponseFactory
                 'X-Content-Type-Options' => 'nosniff',
             ],
         );
+    }
+
+    private function dispatch(string $path): bool
+    {
+        try {
+            $this->messageBus->dispatch(
+                new ResizeDeferredImageMessage($path),
+                [new DeduplicateStamp('contao-deferred-image-'.hash('sha256', $path))],
+            );
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return true;
     }
 }

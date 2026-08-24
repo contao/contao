@@ -228,7 +228,7 @@ services:
         public: true
         arguments:
             - '@contao.image.factory'
-            - '@contao.image.deferred_image_response_factory'
+            - '@contao.controller.deferred_image_response_factory'
             - '%contao.image.target_dir%'
         tags:
             - controller.service_arguments
