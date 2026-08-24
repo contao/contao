@@ -292,7 +292,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             array_column($analyzer->getTrail(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&act=edit'), loadLabels: false), 'url'),
         );
 
-        // Only one parent so parameter is ommited
+        // Only one parent so parameter is omitted
         $this->assertSame('/contao?do=article&table=tl_content&id=1', $analyzer->getViewUrl('tl_content', 1));
     }
 
