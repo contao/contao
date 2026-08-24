@@ -86,6 +86,13 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@contao.routing.response_context_factory'
 
+    contao.controller.deferred_image_response_factory:
+        class: Contao\CoreBundle\Controller\DeferredImageResponseFactory
+        arguments:
+            - '@messenger.bus.default'
+            - '@contao.image.resizer'
+            - '@?contao.messenger.web_worker'
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -177,12 +184,6 @@ services:
             - '@filesystem'
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
-
-    contao.cron.resize_images:
-        class: Contao\CoreBundle\Cron\ResizeImagesCron
-        arguments:
-            - '@contao.process_util'
-            - '@contao.image.deferred_image_storage'
 
     contao.cron.supervise_workers:
         class: Contao\CoreBundle\Cron\SuperviseWorkersCron
@@ -575,13 +576,6 @@ services:
             - '%contao.image.preview.default_size%'
             - '%contao.image.preview.max_size%'
 
-    contao.image.deferred_image_response_factory:
-        class: Contao\CoreBundle\Controller\DeferredImageResponseFactory
-        arguments:
-            - '@contao.cron'
-            - '@contao.image.resizer'
-            - '@filesystem'
-
     contao.image.resizer:
         class: Contao\CoreBundle\Image\Resizer
         public: true
@@ -785,6 +779,13 @@ services:
             - '@messenger.bus.default'
             - '%kernel.project_dir%'
             - '%contao.backend.crawl_concurrency%'
+
+    contao.messenger.resize_deferred_image_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\ResizeDeferredImageMessageHandler
+        arguments:
+            - '@contao.image.factory'
+            - '@contao.image.resizer'
+            - '@lock.factory'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler

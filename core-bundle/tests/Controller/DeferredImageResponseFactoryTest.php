@@ -13,27 +13,57 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\DeferredImageResponseFactory;
-use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Messenger\Message\ResizeDeferredImageMessage;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Imagine\Image\Box;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DeduplicateStamp;
 
 class DeferredImageResponseFactoryTest extends TestCase
 {
-    public function testReturnsPlaceholderIfCliCronIsActive(): void
+    public function testReturnsPlaceholderWithoutWebWorker(): void
     {
-        $cron = $this->createStub(Cron::class);
-        $cron
-            ->method('hasMinutelyCliCron')
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message))
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $this->createStub(DeferredResizerInterface::class));
+        $response = $factory->create($this->createDeferredImage());
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_ACCEPTED, $response->getStatusCode());
+    }
+
+    public function testReturnsPlaceholderIfAsyncProcessingIsAvailable(): void
+    {
+        $webWorker = $this->createStub(WebWorker::class);
+        $webWorker
+            ->method('hasCliWorkersRunning')
             ->willReturn(true)
         ;
 
-        $factory = new DeferredImageResponseFactory($cron, $this->createStub(DeferredResizerInterface::class), new Filesystem());
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->callback(fn (ResizeDeferredImageMessage $message): bool => $this->getTempDir().'/missing.jpg' === $message->getPath()),
+                $this->callback(static fn (array $stamps): bool => $stamps[0] instanceof DeduplicateStamp),
+            )
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message))
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $this->createStub(DeferredResizerInterface::class), $webWorker);
         $response = $factory->create($this->createDeferredImage());
 
         $this->assertInstanceOf(Response::class, $response);
@@ -46,9 +76,20 @@ class DeferredImageResponseFactoryTest extends TestCase
         $this->assertStringContainsString('<path fill="#687787"', $response->getContent());
     }
 
-    public function testResizesSynchronouslyWithoutCliCron(): void
+    public function testResizesSynchronouslyWithoutAsyncProcessing(): void
     {
-        $cron = $this->createStub(Cron::class);
+        $webWorker = $this->createStub(WebWorker::class);
+        $webWorker
+            ->method('hasCliWorkersRunning')
+            ->willReturn(false)
+        ;
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->never())
+            ->method('dispatch')
+        ;
+
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $image = $this->createDeferredImage();
 
@@ -59,7 +100,7 @@ class DeferredImageResponseFactoryTest extends TestCase
             ->willReturn($this->createStub(ImageInterface::class))
         ;
 
-        $factory = new DeferredImageResponseFactory($cron, $resizer, new Filesystem());
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer, $webWorker);
 
         $this->assertNull($factory->create($image));
     }
