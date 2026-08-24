@@ -228,9 +228,8 @@ services:
         public: true
         arguments:
             - '@contao.image.factory'
-            - '@contao.image.resizer'
+            - '@contao.image.deferred_image_response_factory'
             - '%contao.image.target_dir%'
-            - '@?filesystem'
         tags:
             - controller.service_arguments
 
