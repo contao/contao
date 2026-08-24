@@ -322,10 +322,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'tableWizard',
 			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
-			'xlabel' => array
-			(
-				array('tl_content', 'tableImportWizard')
-			),
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		),
 		'summary' => array
@@ -1275,9 +1271,13 @@ class tl_content extends Backend
 	 * Add a link to the table items import wizard
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated in Contao 6.1, to be removed in Contao 7.
 	 */
 	public function tableImportWizard()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
 		return ' <a href="' . StringUtil::ampersand($this->addToUrl('key=table')) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '</a> ' . Image::getHtml('demagnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_shrink'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)" data-contao--tooltips-target="tooltip"') . Image::getHtml('magnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_expand'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)" data-contao--tooltips-target="tooltip"');
 	}
 

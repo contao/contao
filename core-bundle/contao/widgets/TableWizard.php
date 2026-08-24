@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -28,13 +30,24 @@ class TableWizard extends Widget
 	 * Rows
 	 * @var integer
 	 */
-	protected $intRows = 12;
+	protected int $intRows = 12;
 
 	/**
 	 * Columns
 	 * @var integer
 	 */
-	protected $intCols = 80;
+	protected int $intCols = 80;
+
+	/**
+	 * Label that is passed to the widget template
+	 * @var string
+	 */
+	protected string $widgetLabel = '';
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected array $arrAppearance = array('head' => 'thead', 'foot' => 'tfoot', 'left' => 'tleft');
 
 	/**
 	 * Template
@@ -60,6 +73,10 @@ class TableWizard extends Widget
 				$this->intCols = $varValue;
 				break;
 
+			case 'appearance':
+				$this->arrAppearance = \is_array($varValue) ? $varValue : array();
+				break;
+
 			default:
 				parent::__set($strKey, $varValue);
 				break;
@@ -73,81 +90,77 @@ class TableWizard extends Widget
 	 */
 	public function generate()
 	{
-		$arrColButtons = array('ccopy', 'cmovel', 'cmover', 'cdelete');
-		$arrRowButtons = array('rcopy', 'rdelete', 'rdrag');
+		$rows = $this->normalizeValue();
+		$colCount = \count($rows[0]);
 
-		// Make sure there is at least an empty array
+		$tableRows = array();
+
+		foreach ($rows as $i => $cells)
+		{
+			$tableCells = array();
+
+			foreach ($cells as $j => $value)
+			{
+				$tableCells[] = array(
+					'name' => $this->strId . '[' . $i . '][' . $j . ']',
+					'value' => $value,
+				);
+			}
+
+			$tableRows[] = array('cells' => $tableCells);
+		}
+
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/table_wizard.html.twig', array(
+			'id' => $this->strId,
+			'class' => $this->strClass,
+			'rows' => $tableRows,
+			'row_count' => \count($tableRows),
+			'col_count' => $colCount,
+			'textarea_rows' => $this->intRows,
+			'textarea_cols' => $this->intCols,
+			'cell_attributes' => $this->arrAttributes,
+			'appearance' => $this->arrAppearance,
+			'import_url' => Backend::addToUrl('key=table'),
+		));
+	}
+
+	/**
+	 * Make sure there is at least an empty array
+	 *
+	 * @return array<int, array<int, string>>
+	 */
+	private function normalizeValue(): array
+	{
 		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			$this->varValue = array(array(''));
 		}
 
-		// Begin the table
-		$return = '<div id="tl_tablewizard">
-  <table id="ctrl_' . $this->strId . '" class="tl_tablewizard">
-  <thead>
-    <tr>';
+		$colCount = 1;
 
-		// Add column buttons
-		for ($i=0, $c=\count($this->varValue[0]); $i<$c; $i++)
+		foreach ($this->varValue as $row)
 		{
-			$return .= '
-      <td>';
-
-			// Add column buttons
-			foreach ($arrColButtons as $button)
+			if (\is_array($row))
 			{
-				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
+				$colCount = max($colCount, \count($row));
 			}
-
-			$return .= '</td>';
 		}
 
-		$return .= '
-      <td></td>
-    </tr>
-  </thead>
-  <tbody class="sortable">';
+		$rows = array();
 
-		// Add rows
-		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
+		foreach ($this->varValue as $row)
 		{
-			$return .= '
-    <tr>';
+			$row = \is_array($row) ? array_values($row) : array((string) $row);
+			$cells = array();
 
-			// Add cells
-			for ($j=0, $d=\count($this->varValue[$i]); $j<$d; $j++)
+			for ($j = 0; $j < $colCount; ++$j)
 			{
-				$return .= '
-      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . self::specialcharsValue($this->varValue[$i][$j] ?? '') . '</textarea></td>';
+				$cells[] = (string) ($row[$j] ?? '');
 			}
 
-			$return .= '
-      <td class="tl_right">';
-
-			// Add row buttons
-			foreach ($arrRowButtons as $button)
-			{
-				if ($button == 'rdrag')
-				{
-					$return .= ' <button type="button" class="drag-handle">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
-				}
-				else
-				{
-					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
-				}
-			}
-
-			$return .= '</td>
-    </tr>';
+			$rows[] = $cells;
 		}
 
-		$return .= '
-  </tbody>
-  </table>
-  </div>
-  <script>Backend.tableWizard("ctrl_' . $this->strId . '")</script>';
-
-		return $return;
+		return $rows;
 	}
 }

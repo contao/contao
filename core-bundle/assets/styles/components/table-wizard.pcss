@@ -1,0 +1,292 @@
+.table-wizard {
+    --tw-add-size: 24px;
+    --tw-gap: 3px;
+    --tw-gutter: calc(var(--tw-add-size) + var(--tw-gap));
+
+    position: relative;
+}
+
+.table-wizard-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--tw-gap);
+    margin: 8px 0;
+    height: 24px;
+}
+
+.table-wizard-toolbar-button {
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--content-bg);
+    padding: 2px 6px;
+    cursor: pointer;
+}
+
+.table-wizard-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    padding-right: calc(var(--tw-add-size) + var(--tw-gap));
+    padding-bottom: 3px;
+}
+
+.table-wizard-grid {
+    position: relative;
+    padding-bottom: calc(var(--tw-add-size) + var(--tw-gap));
+    width: fit-content;
+}
+
+.table-wizard-table {
+    border-collapse: collapse;
+}
+
+.table-wizard-cell {
+    border: 1px solid var(--border);
+    padding: 0;
+    vertical-align: top;
+
+    &.active {
+        background: color-mix(in srgb, var(--blue) 7%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blue) 40%, transparent);
+    }
+}
+
+.table-wizard-input {
+    display: block;
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+    resize: both;
+    background: transparent;
+    width: 142px;
+    min-width: 142px;
+    max-width: 284px;
+    height: 66px;
+    min-height: 66px;
+    max-height: 132px;
+
+    &:focus {
+        outline: 2px solid var(--blue);
+        outline-offset: -2px;
+    }
+}
+
+.table-wizard-has-head .table-wizard-row:first-child .table-wizard-cell,
+.table-wizard-has-foot .table-wizard-row:last-child .table-wizard-cell,
+.table-wizard-has-left .table-wizard-cell:first-of-type {
+    background: color-mix(in srgb, var(--border) 25%, transparent);
+}
+
+.table-wizard-has-head .table-wizard-row:first-child .table-wizard-input,
+.table-wizard-has-foot .table-wizard-row:last-child .table-wizard-input,
+.table-wizard-has-left .table-wizard-cell:first-of-type .table-wizard-input {
+    font-weight: 700;
+}
+
+.table-wizard-corner,
+.table-wizard-handle-cell {
+    position: relative;
+    padding: 0;
+    border: 0;
+}
+
+.table-wizard-corner,
+.table-wizard-handle-cell-row {
+    width: var(--tw-gutter);
+    min-width: var(--tw-gutter);
+}
+
+.table-wizard-handle-row .table-wizard-handle-cell {
+    height: var(--tw-gutter);
+}
+
+.table-wizard-handle {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    background: var(--form-button);
+    color: var(--gray);
+    cursor: grab;
+}
+
+.table-wizard-handle-row {
+    width: var(--tw-add-size);
+    inset: 1px var(--tw-gap) 1px 0;
+}
+
+.table-wizard-handle-column {
+    height: var(--tw-add-size);
+    inset: 0 1px var(--tw-gap) 1px;
+}
+
+/* Don't allow pan on touch devices */
+.table-wizard-handle-column,
+.table-wizard-handle-row {
+    touch-action: none;
+}
+
+.table-wizard-handle {
+    &:hover,
+    &:focus-visible,
+    &[aria-expanded="true"] {
+        background: color-mix(in srgb, var(--blue) 20%, transparent);
+        color: var(--blue);
+        outline: none;
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px var(--blue);
+    }
+
+    img,
+    svg {
+        pointer-events: none;
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.table-wizard-row:focus-within .table-wizard-handle-row {
+    opacity: 1;
+    color: var(--blue);
+}
+
+.table-wizard-handle-cell-dragging .table-wizard-handle {
+    opacity: 1;
+    color: var(--blue);
+}
+
+.table-wizard-add {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--border-radius);
+    background: var(--form-button);
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+        opacity: 1;
+        background: color-mix(in srgb, var(--blue) 20%, transparent);
+        color: var(--blue);
+    }
+}
+
+.table-wizard-add-row {
+    left: var(--tw-gutter);
+    right: 0;
+    bottom: 0;
+    height: var(--tw-add-size);
+    cursor: ns-resize;
+}
+
+.table-wizard-add-column {
+    top: var(--tw-gutter);
+    right: calc(-1 * (var(--tw-add-size) + var(--tw-gap)));
+    bottom: calc(var(--tw-add-size) + var(--tw-gap));
+    width: var(--tw-add-size);
+    cursor: ew-resize;
+}
+
+.table-wizard-add-both {
+    right: calc(-1 * (var(--tw-add-size) + var(--tw-gap)));
+    bottom: 0;
+    width: var(--tw-add-size);
+    height: var(--tw-add-size);
+    cursor: nwse-resize;
+}
+
+.table-wizard-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    min-width: 180px;
+    padding: 10px 15px;
+    border: 1px solid var(--content-border);
+    border-radius: var(--border-radius);
+    background: var(--content-bg);
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%);
+}
+
+.table-wizard-menu-item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    line-height: 18px;
+    white-space: nowrap;
+    background-color: transparent;
+    width: 100%;
+    padding: 3px 0;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--contao);
+    }
+
+    &[aria-checked="true"] .table-wizard-switch {
+        background: var(--blue);
+
+        &::after {
+            transform: translateX(12px);
+        }
+    }
+
+    &.has-checkbox {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+    }
+
+    .table-wizard-menu-separator {
+        height: 1px;
+        margin: 4px 0;
+        border: 0;
+        background: var(--border);
+    }
+}
+
+.table-header-item {
+    margin-bottom: 5px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.table-wizard-switch {
+    margin-left: auto;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--border);
+    position: relative;
+    transition: background 0.1s ease-in-out;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--content-bg);
+        transition: transform 0.1s ease-in-out;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .table-wizard-switch,
+    .table-wizard-switch::after {
+        transition: none;
+    }
+}
