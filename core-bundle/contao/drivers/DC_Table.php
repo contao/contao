@@ -121,7 +121,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected $arrSubmit = array();
 
 	/**
-	 * Cache for the getParentRecords() calls for root trail calculation.
+	 * Cache for the getParentIds() calls for root trail calculation.
 	 * @var array<string, array<<int, array<int>>
 	 */
 	private $parentPagesCache = array();
@@ -942,7 +942,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Avoid circular references when there is no parent table or the table references itself
 		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
 		{
-			$cr = $db->getChildRecords($this->intId, $this->strTable);
+			$cr = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->intId, $this->strTable);
 			$cr[] = $this->intId;
 		}
 
@@ -1791,7 +1791,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// If there is a PID field but no parent table
 		if (!$this->ptable && self::MODE_TREE === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $db->fieldExists('pid', $this->strTable))
 		{
-			$delete[$this->strTable] = $db->getChildRecords($this->intId, $this->strTable);
+			$delete[$this->strTable] = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->intId, $this->strTable);
 			array_unshift($delete[$this->strTable], $this->intId);
 		}
 		else
@@ -3567,13 +3567,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
 			{
-				while ($objFound->next())
-				{
-					if (\count(array_intersect($this->root, $this->getParentRecordIds(array($objFound->id), $table))) > 0)
-					{
-						$arrFound[] = $objFound->id;
-					}
-				}
+				$foundIds = array_map('intval', $objFound->fetchEach('id'));
+				$parentIdTrails = System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIdTrails($foundIds, $table);
+				$root = $this->root;
+
+				$arrFound = array_values(array_filter(
+					$foundIds,
+					static fn ($id, $index) => array_intersect($root, $parentIdTrails[$index]) !== array(),
+					ARRAY_FILTER_USE_BOTH
+				));
 
 				$this->updateRoot($arrFound, true);
 			}
@@ -3909,7 +3911,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					->fetchEach('pid');
 			}
 
-			if (!empty(array_intersect($db->getChildRecords(array($id), $table), $selected)))
+			if (!empty(array_intersect(System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds(array($id), $table), $selected)))
 			{
 				$blnIsOpen = true;
 			}
@@ -5523,7 +5525,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Also add the child records of the table (see #1811)
 				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					$rootIds = array_merge($rootIds, $db->getChildRecords($rootIds, $table));
+					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
 				}
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
@@ -5766,28 +5768,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return array();
 		}
 
-		$db = Database::getInstance();
+		$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 		$allParents = array();
+		$uncachedIds = array_values(array_filter($ids, fn ($id) => !isset($this->parentPagesCache[$table][$id])));
+
+		if ($uncachedIds)
+		{
+			$parentIdTrails = $hierarchy->getParentIdTrails($uncachedIds, $table, true);
+
+			foreach ($uncachedIds as $index => $id)
+			{
+				$this->parentPagesCache[$table][$id] = $parentIdTrails[$index];
+			}
+		}
 
 		foreach ($ids as $id)
 		{
-			if (!isset($this->parentPagesCache[$table][$id]))
-			{
-				$parents = $db->getParentRecords($id, $table, true);
-				$this->parentPagesCache[$table][$id] = $parents;
-
-				// Get all IDs on that level, they all have the same parents
-				$siblingsOnThisLevel = $db
-					->prepare("SELECT id FROM $table WHERE id != ? AND pid = (SELECT pid FROM $table WHERE id = ?)")
-					->execute($id, $id)
-					->fetchEach('id');
-
-				foreach ($siblingsOnThisLevel as $siblingId)
-				{
-					$this->parentPagesCache[$table][$siblingId] = $parents;
-				}
-			}
-
 			foreach ($this->parentPagesCache[$table][$id] as $parent)
 			{
 				$allParents[$parent] = true;
@@ -5823,7 +5819,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Fetch all children of the root
-			$this->rootChildren = $db->getChildRecords($this->root, $table);
+			$this->rootChildren = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->root, $table);
 
 			if ($isSearch)
 			{
@@ -5865,10 +5861,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
 			if (!empty($this->root) && $arrRoot != $this->root)
 			{
+				$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 				$arrRoot = $this->eliminateNestedPages(
 					array_intersect(
-						array_merge($arrRoot, $db->getChildRecords($arrRoot, $this->strTable)),
-						array_merge($this->root, $db->getChildRecords($this->root, $this->strTable))
+						array_merge($arrRoot, $hierarchy->getChildIds($arrRoot, $this->strTable)),
+						array_merge($this->root, $hierarchy->getChildIds($this->root, $this->strTable))
 					),
 					$this->strTable,
 					$blnHasSorting

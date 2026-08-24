@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -27,8 +28,11 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
 
     private array $parents = [];
 
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private readonly Connection|DcaHierarchy $connection)
     {
+        if ($connection instanceof Connection) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Passing an instance of "%s" to "%s::__construct()" is deprecated and will no longer work in Contao 7. Pass an instance of "%s" instead.', Connection::class, self::class, DcaHierarchy::class);
+        }
     }
 
     public function reset(): void
@@ -87,6 +91,10 @@ abstract class AbstractDynamicPtableVoter extends AbstractDataContainerVoter imp
      */
     private function fetchParentTableAndId(int $id): array
     {
+        if ($this->connection instanceof DcaHierarchy) {
+            return $this->parents[$id] ?? ($this->parents[$id] = $this->connection->getParentTableAndId($id, $this->getTable()));
+        }
+
         return $this->parents[$id] ?? ($this->parents[$id] = $this->getParentTableAndId($this->connection, $this->getTable(), $id));
     }
 }

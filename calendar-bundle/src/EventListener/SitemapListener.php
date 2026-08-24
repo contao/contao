@@ -14,11 +14,11 @@ namespace Contao\CalendarBundle\EventListener;
 
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\Database;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -32,15 +32,16 @@ class SitemapListener
         private readonly ContaoFramework $framework,
         private readonly Security $security,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly DcaHierarchy $hierarchy,
     ) {
     }
 
     public function __invoke(SitemapEvent $event): void
     {
-        $arrRoot = $this->framework->createInstance(Database::class)->getChildRecords($event->getRootPageIds(), 'tl_page');
+        $arrRoot = $this->hierarchy->getChildIds($event->getRootPageIds(), 'tl_page');
 
         // Early return here in the unlikely case that there are no pages
-        if (empty($arrRoot)) {
+        if ([] === $arrRoot) {
             return;
         }
 
