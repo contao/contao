@@ -311,7 +311,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'listitems' => array
 		(
 			'inputType'               => 'listWizard',
-			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
+			'eval'                    => array('multiple'=>true, 'nesting'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
 			(
 				array('tl_content', 'listImportWizard')
