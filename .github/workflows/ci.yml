@@ -150,6 +150,29 @@ jobs:
             - name: Run PHPStan
               run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
 
+    e2e:
+        name: E2E tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: dom, intl, mbstring, pdo_mysql
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  show-progress: false
+                  persist-credentials: false
+
+            - name: Install the dependencies
+              uses: ramsey/composer-install@v4
+
+            - name: Run the E2E tests
+              run: composer e2e-tests
+
     yamllint:
         name: YAMLlint
         runs-on: ubuntu-latest
