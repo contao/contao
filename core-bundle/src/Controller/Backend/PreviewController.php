@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\Backend;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -41,6 +42,7 @@ class PreviewController
         private readonly Security $security,
         private readonly LoginLinkHandlerInterface $loginLinkHandler,
         private readonly UriSigner $uriSigner,
+        private readonly TokenChecker|null $tokenChecker,
     ) {
     }
 
@@ -60,9 +62,13 @@ class PreviewController
 
         $frontendUser = $request->query->get('user');
 
+        $previewTime = $this->tokenChecker?->getPreviewTime();
+
         // Switch to a particular member (see contao/core#6546)
         if ($frontendUser && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)) {
             $this->previewAuthenticator->removeFrontendAuthentication();
+        } elseif ($frontendUser) {
+            $this->previewAuthenticator->setPreviewTime($previewTime);
         }
 
         $urlConvertEvent = new PreviewUrlConvertEvent($request);

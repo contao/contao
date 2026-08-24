@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,8 +27,10 @@ class MakeResponsePrivateListener
 {
     final public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
 
-    public function __construct(private readonly ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenChecker|null $tokenChecker = null,
+    ) {
     }
 
     /**
@@ -40,8 +43,15 @@ class MakeResponsePrivateListener
             return;
         }
 
+        $response = $event->getResponse();
+
         // Disable the default Symfony auto cache control
-        $event->getResponse()->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, '1');
+
+        // Set no-store when the clock is mocked
+        if ($this->tokenChecker?->getPreviewTime()) {
+            $response->headers->addCacheControlDirective('no-store');
+        }
     }
 
     /**

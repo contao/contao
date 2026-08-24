@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Clock\Clock;
+
 /**
  * Converts dates and date format string
  *
@@ -626,7 +628,8 @@ class Date
 	{
 		if ($intTime === null)
 		{
-			$intTime = time();
+			// Get time from the clock component (see #10108)
+			$intTime = Clock::get()->now()->getTimestamp();
 		}
 
 		return $intTime - ($intTime % 60);

@@ -128,7 +128,8 @@
                 margin: 0 3px 0 0;
             }
 
-            .cto-toolbar input[type="text"] {
+            .cto-toolbar input[type="text"],
+            .cto-toolbar input[type="datetime-local"] {
                 margin: 0;
                 width: auto;
                 box-sizing: border-box;
@@ -285,6 +286,12 @@
                 }
 
                 const userField = form.querySelector('input[name="user"]');
+                const timeField = form.querySelector('input[name="previewTime"]');
+
+                form.querySelector('#ctrl_preview_time_reset')?.addEventListener('click', function () {
+                    timeField.value = '';
+                    form.requestSubmit();
+                });
 
                 form.addEventListener('submit', function (e) {
                     e.preventDefault();

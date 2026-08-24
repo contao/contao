@@ -480,6 +480,7 @@ services:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
             - '@contao.routing.scope_matcher'
+            - '@contao.security.token_checker'
 
     contao.listener.menu.backend_breadcrumb:
         class: Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener
@@ -579,6 +580,12 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
+
+    contao.listener.preview_time:
+        class: Contao\CoreBundle\EventListener\PreviewTimeListener
+        arguments:
+            - '@contao.security.token_checker'
+            - '@clock'
 
     contao.listener.preview_toolbar:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener

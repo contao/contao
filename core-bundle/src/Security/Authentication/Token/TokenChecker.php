@@ -141,25 +141,21 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request?->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$preview = $this->getPreviewRequest()) {
             return false;
         }
 
-        if (!$request->hasPreviousSession()) {
+        // Unpublished also handled in getPreviewTimeFromRequest
+        if ($this->getPreviewTimeFromRequest($preview)) {
             return false;
         }
-
-        $session = $request->getSession();
-
-        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
-            return false;
-        }
-
-        $preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
 
         return (bool) $preview['showUnpublished'];
+    }
+
+    public function getPreviewTime(): \DateTimeImmutable|null
+    {
+        return $this->getPreviewTimeFromRequest($this->getPreviewRequest());
     }
 
     public function isFrontendFirewall(): bool
@@ -251,26 +247,7 @@ class TokenChecker
             return false;
         }
 
-        $id = (int) $token['previewLinkId'];
-
-        if (!isset($this->previewLinks[$id])) {
-            $this->previewLinks[$id] = $this->connection->fetchAssociative(
-                <<<'SQL'
-                    SELECT
-                        url,
-                        showUnpublished,
-                        restrictToUrl
-                    FROM tl_preview_link
-                    WHERE
-                        id = :id
-                        AND published = 1
-                        AND expiresAt > UNIX_TIMESTAMP()
-                    SQL,
-                ['id' => $id],
-            );
-        }
-
-        $previewLink = $this->previewLinks[$id];
+        $previewLink = $this->getPreviewLink((int) $token['previewLinkId']);
 
         if (!$previewLink) {
             return false;
@@ -287,5 +264,73 @@ class TokenChecker
         $request = $this->requestStack->getMainRequest();
 
         return $request && strtok($request->getUri(), '?') === strtok(Request::create($previewLink['url'])->getUri(), '?');
+    }
+
+    private function getPreviewRequest(): array|null
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request?->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+            return null;
+        }
+
+        if (!$request->hasPreviousSession()) {
+            return null;
+        }
+
+        $session = $request->getSession();
+
+        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return null;
+        }
+
+        return $session->get(FrontendPreviewAuthenticator::SESSION_NAME) ?: null;
+    }
+
+    private function getPreviewLink(int $id): array|false
+    {
+        if (!isset($this->previewLinks[$id])) {
+            $this->previewLinks[$id] = $this->connection->fetchAssociative(
+                <<<'SQL'
+                    SELECT
+                        url,
+                        showUnpublished,
+                        previewTime,
+                        restrictToUrl
+                    FROM tl_preview_link
+                    WHERE
+                        id = :id
+                        AND published = 1
+                        AND expiresAt > UNIX_TIMESTAMP()
+                    SQL,
+                ['id' => $id],
+            );
+        }
+
+        return $this->previewLinks[$id];
+    }
+
+    private function getPreviewTimeFromRequest(array|null $preview): \DateTimeImmutable|null
+    {
+        if (!$preview) {
+            return null;
+        }
+
+        if (isset($preview['previewLinkId'])) {
+            $previewLink = $this->getPreviewLink((int) $preview['previewLinkId']);
+
+            // Unpublished links should ignore previewTime completely
+            if (!$previewLink || $previewLink['showUnpublished'] || !$previewLink['previewTime']) {
+                return null;
+            }
+
+            return new \DateTimeImmutable('@'.$previewLink['previewTime']);
+        }
+
+        if (!isset($preview['previewTime'])) {
+            return null;
+        }
+
+        return new \DateTimeImmutable('@'.$preview['previewTime']);
     }
 }

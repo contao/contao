@@ -219,6 +219,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/',
                 'showUnpublished' => true,
                 'restrictToUrl' => false,
+                'previewTime' => '',
             ],
             null,
             true,
@@ -230,6 +231,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/page1?foo=bar',
                 'showUnpublished' => true,
                 'restrictToUrl' => true,
+                'previewTime' => '',
             ],
             'https://localhost/page1?bar=baz',
             true,
@@ -241,6 +243,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://example.com:443/page1',
                 'showUnpublished' => true,
                 'restrictToUrl' => true,
+                'previewTime' => '',
             ],
             'https://example.com/page1?foo=bar',
             true,
@@ -252,6 +255,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/page2',
                 'showUnpublished' => true,
                 'restrictToUrl' => true,
+                'previewTime' => '',
             ],
             'https://localhost/page1',
             false,
@@ -263,6 +267,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/',
                 'showUnpublished' => true,
                 'restrictToUrl' => false,
+                'previewTime' => '',
             ],
             null,
             false,
@@ -276,6 +281,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/',
                 'showUnpublished' => false,
                 'restrictToUrl' => false,
+                'previewTime' => '',
             ],
             null,
             false,
@@ -297,10 +303,10 @@ class TokenCheckerTest extends TestCase
     }
 
     #[DataProvider('getPreviewModeData')]
-    public function testChecksIfThePreviewModeIsActive(bool $isPreview, bool $expect): void
+    public function testChecksIfThePreviewModeIsActive(bool $isPreview, int|null $previewTime, bool $expect): void
     {
         $request = new Request();
-        $session = $this->mockSessionWithPreview($isPreview);
+        $session = $this->mockSessionWithPreview($isPreview, $previewTime);
 
         if ($isPreview) {
             $request->attributes->set('_preview', true);
@@ -316,6 +322,7 @@ class TokenCheckerTest extends TestCase
                 'url' => 'https://localhost/',
                 'showUnpublished' => $isPreview,
                 'restrictToUrl' => false,
+                'previewTime' => '',
             ])
         ;
 
@@ -333,8 +340,120 @@ class TokenCheckerTest extends TestCase
 
     public static function getPreviewModeData(): iterable
     {
-        yield [false, false];
-        yield [true, true];
+        yield 'No preview' => [false, null, false];
+        yield 'Show unpublished' => [true, null, true];
+        // Mocked time should turn preview mode off
+        yield 'Mocked time' => [true, 637974000, false];
+    }
+
+    #[DataProvider('getPreviewTimeData')]
+    public function testReturnsThePreviewTime(bool $isPreview, int|null $previewTime, int|null $expect): void
+    {
+        $request = new Request();
+        $session = $this->mockSessionWithPreview($isPreview, $previewTime);
+
+        if ($isPreview) {
+            $request->attributes->set('_preview', true);
+            $request->cookies->set($session->getName(), 'foo');
+        }
+
+        $request->setSession($session);
+
+        $tokenChecker = new TokenChecker(
+            new RequestStack([$request]),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->createTokenStorageStub(BackendUser::class),
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $this->createStub(Connection::class),
+        );
+
+        $this->assertSame($expect, $tokenChecker->getPreviewTime()?->getTimestamp());
+    }
+
+    public static function getPreviewTimeData(): iterable
+    {
+        yield 'Not in preview' => [false, 637974000, null];
+        yield 'No time set' => [true, null, null];
+        yield 'Time set' => [true, 637974000, 637974000];
+    }
+
+    #[DataProvider('getPreviewLinkTimeData')]
+    public function testReadsPreviewTimeFromPreviewLink(array|null $previewLinkRow, int|null $expect): void
+    {
+        $request = Request::create('https://localhost/');
+        $request->attributes->set('_preview', true);
+
+        $session = $this->createStub(Session::class);
+        $session
+            ->method('has')
+            ->willReturn(true)
+        ;
+
+        $session
+            ->method('get')
+            ->willReturnMap([[FrontendPreviewAuthenticator::SESSION_NAME, [
+                'showUnpublished' => false,
+                'previewLinkId' => 1,
+                'previewTime' => 1600000000,
+            ]]])
+        ;
+
+        $request->setSession($session);
+        $request->cookies->set($session->getName(), 'foo');
+
+        $connection = $this->createStub(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn($previewLinkRow ?? false)
+        ;
+
+        $tokenChecker = new TokenChecker(
+            new RequestStack([$request]),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->createTokenStorageStub(FrontendUser::class),
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $connection,
+        );
+
+        // The time saved in the preview link is the source of the truth.
+        $this->assertSame($expect, $tokenChecker->getPreviewTime()?->getTimestamp());
+    }
+
+    public static function getPreviewLinkTimeData(): iterable
+    {
+        yield 'Preview link time' => [
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => false,
+                'restrictToUrl' => false,
+                'previewTime' => 637974000,
+            ],
+            637974000,
+        ];
+
+        yield 'Preview link without time' => [
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => false,
+                'restrictToUrl' => false,
+                'previewTime' => '',
+            ],
+            null,
+        ];
+
+        yield 'Preview link that shows all unpublished' => [
+            [
+                'url' => 'https://localhost/',
+                'showUnpublished' => true,
+                'restrictToUrl' => false,
+                'previewTime' => 637974000,
+            ],
+            null,
+        ];
+
+        yield 'Preview link expired' => [null, null];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -512,6 +631,7 @@ class TokenCheckerTest extends TestCase
             ->willReturn([
                 'url' => 'https://localhost/',
                 'showUnpublished' => false,
+                'previewTime' => '',
                 'restrictToUrl' => false,
             ])
         ;
@@ -586,7 +706,7 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    private function mockSessionWithPreview(bool $isPreview): SessionInterface&MockObject
+    private function mockSessionWithPreview(bool $isPreview, int|null $previewTime = null): SessionInterface&MockObject
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -606,7 +726,10 @@ class TokenCheckerTest extends TestCase
             ->expects($isPreview ? $this->once() : $this->never())
             ->method('get')
             ->with(FrontendPreviewAuthenticator::SESSION_NAME)
-            ->willReturn(['showUnpublished' => $isPreview])
+            ->willReturn([
+                'showUnpublished' => $isPreview,
+                'previewTime' => $previewTime,
+            ])
         ;
 
         return $session;
