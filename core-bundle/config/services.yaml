@@ -178,6 +178,12 @@ services:
             - '%kernel.project_dir%'
             - '@monolog.logger.contao.cron'
 
+    contao.cron.resize_images:
+        class: Contao\CoreBundle\Cron\ResizeImagesCron
+        arguments:
+            - '@contao.process_util'
+            - '@contao.image.deferred_image_storage'
+
     contao.cron.supervise_workers:
         class: Contao\CoreBundle\Cron\SuperviseWorkersCron
         arguments:
@@ -568,6 +574,13 @@ services:
             - '%contao.image.valid_extensions%'
             - '%contao.image.preview.default_size%'
             - '%contao.image.preview.max_size%'
+
+    contao.image.deferred_image_response_factory:
+        class: Contao\CoreBundle\Controller\DeferredImageResponseFactory
+        arguments:
+            - '@contao.cron'
+            - '@contao.image.resizer'
+            - '@filesystem'
 
     contao.image.resizer:
         class: Contao\CoreBundle\Image\Resizer

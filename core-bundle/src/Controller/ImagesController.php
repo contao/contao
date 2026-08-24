@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\Image\DeferredImageInterface;
-use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
-use Contao\Image\ResizerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -28,12 +26,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ImagesController
 {
+    private readonly Filesystem $filesystem;
+
     public function __construct(
         private readonly ImageFactoryInterface $imageFactory,
-        private readonly ResizerInterface $resizer,
+        private readonly DeferredImageResponseFactory $deferredImageResponseFactory,
         private readonly string $targetDir,
-        private readonly Filesystem $filesystem = new Filesystem(),
     ) {
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -49,8 +49,10 @@ class ImagesController
                 throw new NotFoundHttpException($exception->getMessage(), $exception);
             }
 
-            if ($image instanceof DeferredImageInterface && $this->resizer instanceof DeferredResizerInterface) {
-                $this->resizer->resizeDeferredImage($image);
+            if ($image instanceof DeferredImageInterface) {
+                if ($response = $this->deferredImageResponseFactory->create($image)) {
+                    return $response;
+                }
             } elseif (!$this->filesystem->exists($image->getPath())) {
                 throw new NotFoundHttpException('Image does not exist');
             }

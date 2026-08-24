@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\CoreBundle\Controller\DeferredImageResponseFactory;
 use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImageInterface;
-use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
-use Contao\Image\ImageInterface;
-use Contao\Image\ResizerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ImagesControllerTest extends TestCase
@@ -39,13 +38,8 @@ class ImagesControllerTest extends TestCase
             ->willReturn($image)
         ;
 
-        $resizer = $this->createStub(DeferredResizerInterface::class);
-        $resizer
-            ->method('resizeDeferredImage')
-            ->willReturn($this->createStub(ImageInterface::class))
-        ;
-
-        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
+        $responseFactory = $this->createStub(DeferredImageResponseFactory::class);
+        $controller = new ImagesController($factory, $responseFactory, $this->getFixturesDir().'/images');
 
         $response = $controller('image.jpg');
 
@@ -69,36 +63,38 @@ class ImagesControllerTest extends TestCase
             ->willThrowException($exception)
         ;
 
-        $resizer = $this->createStub(ResizerInterface::class);
-        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
+        $controller = new ImagesController($factory, $this->createStub(DeferredImageResponseFactory::class), $this->getFixturesDir().'/images');
 
         $this->expectException(NotFoundHttpException::class);
 
         $controller('image.jpg');
     }
 
-    public function testReturns404IfImageDoesNotExistOnResize(): void
+    public function testReturnsUncachedPlaceholderForDeferredImage(): void
     {
-        if (!class_exists(FileNotExistsException::class)) {
-            $this->markTestSkipped();
-        }
+        $image = $this->createStub(DeferredImageInterface::class);
+        $image
+            ->method('getPath')
+            ->willReturn($this->getTempDir().'/missing.jpg')
+        ;
 
         $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createStub(DeferredImageInterface::class))
+            ->willReturn($image)
         ;
 
-        $resizer = $this->createStub(DeferredResizerInterface::class);
-        $resizer
-            ->method('resizeDeferredImage')
-            ->willThrowException(new FileNotExistsException('Image does not exist'))
+        $response = new Response('', Response::HTTP_ACCEPTED);
+        $responseFactory = $this->createMock(DeferredImageResponseFactory::class);
+        $responseFactory
+            ->method('create')
+            ->with($image)
+            ->willReturn($response)
         ;
 
-        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
+        $controller = new ImagesController($factory, $responseFactory, $this->getFixturesDir().'/images');
+        $response = $controller('image.jpg');
 
-        $this->expectException(NotFoundHttpException::class);
-
-        $controller('image.jpg');
+        $this->assertSame(Response::HTTP_ACCEPTED, $response->getStatusCode());
     }
 }
