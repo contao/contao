@@ -441,6 +441,7 @@ services:
               contao.framework: '@contao.framework'
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               event_dispatcher: '@event_dispatcher'
+              contao.string.html_decoder: '@contao.string.html_decoder'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.web_dir%'
