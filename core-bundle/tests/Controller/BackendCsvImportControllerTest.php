@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
@@ -42,7 +43,15 @@ class BackendCsvImportControllerTest extends TestCase
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->method('isGranted')
+            ->with('contao_dc.tl_content')
+            ->willReturn(true)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
@@ -108,6 +117,8 @@ class BackendCsvImportControllerTest extends TestCase
             $this->getFixturesDir(),
         );
 
+        $controller->setContainer(System::getContainer());
+
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -162,6 +173,8 @@ class BackendCsvImportControllerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->getFixturesDir(),
         );
+
+        $controller->setContainer(System::getContainer());
 
         $response = $controller->importTableWizardAction($this->mockDataContainer());
 
@@ -221,6 +234,8 @@ class BackendCsvImportControllerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->getFixturesDir(),
         );
+
+        $controller->setContainer(System::getContainer());
 
         $response = $controller->importOptionWizardAction($this->mockDataContainer());
 
@@ -386,6 +401,11 @@ class BackendCsvImportControllerTest extends TestCase
         $mock = $this->mockClassWithProperties(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';
+
+        $mock
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 1, 'table' => 'tl_content'])
+        ;
 
         return $mock;
     }
