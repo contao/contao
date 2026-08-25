@@ -1,0 +1,13 @@
+{% set title = item.extra('title', item.label) %}
+
+<a
+    href="{{ item.uri }}"
+    class="icon-alert"
+    title="{{ title }}"
+    data-turbo-prefetch="false"
+    data-contao--tooltips-target="tooltip"
+    onclick="Backend.openModalIframe({'title':'{{ title|e('js') }}','url':this.href});return false"
+>{{ item.label }}</a>
+{% if item.extra('alerts_count', 0) > 0 %}
+    <sup>{{ item.extra('alerts_count') }}</sup>
+{% endif %}

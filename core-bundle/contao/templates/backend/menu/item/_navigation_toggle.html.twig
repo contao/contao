@@ -1,0 +1,13 @@
+{% trans_default_domain 'contao_default' %}
+
+<button
+    id="burger"
+    type="button"
+    title="{{ 'MSC.showMainNavigation'|trans }}"
+    data-controller="contao--toggle-sender"
+    data-action="contao--toggle-sender#toggle:prevent"
+    data-contao--toggle-sender-active-title-value="{{ 'MSC.hideMainNavigation'|trans }}"
+    data-contao--toggle-sender-inactive-title-value="{{ 'MSC.showMainNavigation'|trans }}"
+    data-contao--toggle-sender-contao--toggle-receiver-outlet="#left"
+    data-contao--tooltips-target="tooltip"
+><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>

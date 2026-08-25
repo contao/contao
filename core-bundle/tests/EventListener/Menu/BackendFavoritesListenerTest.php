@@ -18,11 +18,9 @@ use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -55,8 +53,7 @@ class BackendFavoritesListenerTest extends TestCase
         $listener($event);
     }
 
-    #[DataProvider('getCollapsedStatus')]
-    public function testAddsTheMainMenu(bool $collapsed): void
+    public function testAddsTheMainMenu(): void
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
@@ -74,15 +71,7 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn('/contao?do=pages&mtg=favorites')
         ;
 
-        $session = $this->mockSession();
-        $bag = $session->getBag('contao_backend');
-
-        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
-
-        $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
-
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->setSession($session);
 
         $requestStack = new RequestStack([$request]);
 
@@ -114,9 +103,9 @@ class BackendFavoritesListenerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('trans')
-            ->willReturnOnConsecutiveCalls('Favorites', $collapsed ? 'Expand node' : 'Collapse node')
+            ->willReturn('Favorites')
         ;
 
         $factory = new MenuFactory();
@@ -143,21 +132,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('Favorites', $children[0]->getLabel());
         $this->assertSame('/contao?do=pages&mtg=favorites', $children[0]->getUri());
 
-        $linkAttributes = [
-            'class' => 'group-favorites',
-            'title' => $collapsed ? 'Expand node' : 'Collapse node',
-            'data-action' => 'contao--toggle-navigation#toggle:prevent',
-            'data-contao--toggle-navigation-category-param' => 'favorites',
-            'data-contao--tooltips-target' => 'tooltip',
-            'data-turbo-prefetch' => 'false',
-            'aria-controls' => 'favorites',
-        ];
-
-        if (!$collapsed) {
-            $linkAttributes['aria-expanded'] = 'true';
-        }
-
-        $this->assertSame($linkAttributes, $children[0]->getLinkAttributes());
+        $this->assertSame([], $children[0]->getLinkAttributes());
 
         $grandChildren = array_values($children[0]->getChildren());
 
@@ -166,35 +141,17 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('Edit page 3', $grandChildren[0]->getLabel());
         $this->assertSame('/contao?do=pages&act=edit&id=3', $grandChildren[0]->getUri());
 
-        $this->assertSame(
-            [
-                'class' => 'navigation',
-                'title' => 'Edit page 3',
-                'data-contao--tooltips-target' => 'tooltip',
-            ],
-            $grandChildren[0]->getLinkAttributes(),
-        );
+        $this->assertSame([], $grandChildren[0]->getLinkAttributes());
+        $this->assertSame(['title' => 'Edit page 3', 'translation_domain' => false], $grandChildren[0]->getExtras());
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
         $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
         $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $grandChildren[1]->getUri());
 
-        $this->assertSame(
-            [
-                'class' => 'navigation',
-                'title' => 'Edit "fe_page"',
-                'data-contao--tooltips-target' => 'tooltip',
-            ],
-            $grandChildren[1]->getLinkAttributes(),
-        );
+        $this->assertSame([], $grandChildren[1]->getLinkAttributes());
+        $this->assertSame(['title' => 'Edit "fe_page"', 'translation_domain' => false], $grandChildren[1]->getExtras());
 
         $this->assertSame('content', $children[1]->getName());
-    }
-
-    public static function getCollapsedStatus(): iterable
-    {
-        yield [false];
-        yield [true];
     }
 
     public function testDoesNotAddTheMainMenuIfThereIsNoRequest(): void
@@ -267,9 +224,9 @@ class BackendFavoritesListenerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('trans')
-            ->willReturnOnConsecutiveCalls('Favorites', 'Collapse node')
+            ->willReturn('Favorites')
         ;
 
         $factory = new MenuFactory();

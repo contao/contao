@@ -509,7 +509,6 @@ services:
         class: Contao\CoreBundle\EventListener\Menu\BackendJobsListener
         arguments:
             - '@security.helper'
-            - '@twig'
             - '@router'
             - '@contao.job.jobs'
 

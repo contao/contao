@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendTemplateStudioListener;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuFactory;
@@ -188,13 +189,10 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $this->assertArrayHasKey('template-studio', $children);
         $this->assertSame('MOD.template_studio.0', $children['template-studio']->getLabel());
 
+        $this->assertSame([], $children['template-studio']->getLinkAttributes());
         $this->assertSame(
-            [
-                'class' => 'navigation template-studio',
-                'title' => 'MOD.template_studio.1',
-                'data-contao--tooltips-target' => 'tooltip',
-            ],
-            $children['template-studio']->getLinkAttributes(),
+            [BackendMenuBuilder::EXTRA_ICON => 'template-studio', 'translation_domain' => 'contao_modules', 'title' => 'MOD.template_studio.1'],
+            $children['template-studio']->getExtras(),
         );
 
         $this->assertTrue($children['template-studio']->isCurrent());

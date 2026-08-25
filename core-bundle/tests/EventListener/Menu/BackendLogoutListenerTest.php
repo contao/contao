@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -203,11 +204,10 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $this->assertSame($label, $children['logout']->getLabel());
         $this->assertSame($url, $children['logout']->getUri());
-        $this->assertSame(['translation_domain' => false], $children['logout']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'logout', BackendMenuBuilder::EXTRA_HAS_DIVIDER => true, 'translation_domain' => false], $children['logout']->getExtras());
 
         $this->assertSame(
             [
-                'class' => 'icon-logout',
                 'accesskey' => 'q',
                 'data-turbo-prefetch' => 'false',
             ],

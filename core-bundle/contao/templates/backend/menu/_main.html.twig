@@ -1,0 +1,73 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% trans_default_domain 'contao_default' %}
+
+{% block item %}
+    {% set is_group = item.extra('contao_backend_menu_is_group', item.level == 1 and item.hasChildren) %}
+    {% set group = is_group ? item.name : null %}
+    {% set classes = item.attribute('class') is not empty ? item.attribute('class')|split(' ') : [] %}
+
+    {% if is_group %}
+        {% set backend_modules = app.session.getBag('contao_backend').get('backend_modules')|default({}) %}
+        {% set is_collapsed = (backend_modules[group]|default(1)) == 0 or 'collapsed' in classes %}
+        {% if is_collapsed and 'collapsed' not in classes %}
+            {% set classes = classes|merge(['collapsed']) %}
+        {% endif %}
+
+        {% set children_id = item.childrenAttribute('id')|default(group) %}
+        {% set item = item.setChildrenAttribute('id', children_id) %}
+    {% elseif item.hasChildren and 'has-children' not in classes %}
+        {% set classes = classes|merge(['has-children']) %}
+    {% endif %}
+
+    {% if classes is not empty %}
+        {% set item = item.setAttribute('class', classes|join(' ')) %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% if item.extra('contao_backend_menu_is_group', item.level == 1 and item.hasChildren) %}
+        {{ block('linkElement') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+    {% set is_group = item.extra('contao_backend_menu_is_group', item.level == 1 and item.hasChildren) %}
+    {% set group = is_group ? item.name : null %}
+    {% set default_classes = is_group ? ['group-' ~ group] : ['navigation'] %}
+    {% if item.extra('contao_backend_menu_icon') %}
+        {% set default_classes = default_classes|merge([item.extra('contao_backend_menu_icon')]) %}
+    {% endif %}
+
+    {% set custom_classes = item.linkAttribute('class') is not empty ? item.linkAttribute('class')|split(' ') : [] %}
+    {% set default_classes = default_classes|filter(value => value not in custom_classes) %}
+    {% set link_attributes = item.linkAttributes|merge({class: default_classes|merge(custom_classes)|filter(value => value)|join(' ')}) %}
+
+    {% if is_group %}
+        {% set is_collapsed = 'collapsed' in (item.attribute('class')|default('')|split(' ')) %}
+        {% set children_id = item.childrenAttribute('id')|default(group) %}
+        {% set link_attributes = {
+            title: (is_collapsed ? 'MSC.expandNode' : 'MSC.collapseNode')|trans,
+            'data-action': 'contao--toggle-navigation#toggle:prevent',
+            'data-contao--toggle-navigation-category-param': group,
+            'data-contao--tooltips-target': 'tooltip',
+            'data-turbo-prefetch': 'false',
+            'aria-controls': children_id,
+            'aria-expanded': is_collapsed ? 'false' : 'true',
+        }|merge(link_attributes) %}
+    {% else %}
+        {% set translation_domain = item.extra('translation_domain', 'messages') %}
+        {% set default_title = translation_domain is same as(false) ? item.label : item.label|trans(item.extra('translation_params', {}), translation_domain) %}
+        {% set link_attributes = {
+            title: item.extra('title', default_title),
+            'data-contao--tooltips-target': 'tooltip',
+        }|merge(link_attributes) %}
+    {% endif %}
+
+    {% import _self as knp_menu %}
+    <a href="{{ item.uri ?: path('contao_backend', {do: app.request.query.get('do'), mtg: group}) }}"{{ knp_menu.attributes(link_attributes) }}>{{ block('label') }}</a>
+{% endblock %}

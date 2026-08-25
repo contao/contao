@@ -23,7 +23,6 @@ use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -70,34 +69,13 @@ class BackendFavoritesListener
             'mtg' => 'favorites',
         ];
 
-        $bag = $this->requestStack->getSession()->getBag('contao_backend');
-
-        if (!$bag instanceof AttributeBagInterface) {
-            return;
-        }
-
-        $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
-
         $tree = $factory
             ->createItem('favorites')
             ->setAttribute('id', 'favorites-menu')
             ->setLabel($this->translator->trans('MSC.favorites', [], 'contao_default'))
             ->setUri($this->router->generate('contao_backend', $params))
-            ->setLinkAttribute('class', 'group-favorites')
-            ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
-            ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
-            ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-            ->setLinkAttribute('data-turbo-prefetch', 'false')
-            ->setLinkAttribute('aria-controls', 'favorites')
             ->setExtra('translation_domain', false)
         ;
-
-        if ($collapsed) {
-            $tree->setAttribute('class', 'collapsed');
-        } else {
-            $tree->setLinkAttribute('aria-expanded', 'true');
-        }
 
         $requestUri = UrlUtil::getNormalizePathAndQuery($request->getRequestUri());
 
@@ -105,12 +83,6 @@ class BackendFavoritesListener
 
         if (!$tree->hasChildren()) {
             return;
-        }
-
-        foreach ($tree->getChildren() as $children) {
-            if ($children->hasChildren()) {
-                $children->setAttribute('class', 'has-children');
-            }
         }
 
         $event->getTree()->addChild($tree);
@@ -140,10 +112,8 @@ class BackendFavoritesListener
                 ->setAttribute('id', 'favorites-menu-'.$node['id'])
                 ->setLabel(StringUtil::decodeEntities($node['title']))
                 ->setUri($node['url'])
-                ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
-                ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
                 ->setCurrent($node['url'] === $requestUri)
+                ->setExtra('title', StringUtil::decodeEntities($node['title']))
                 ->setExtra('translation_domain', false)
             ;
 

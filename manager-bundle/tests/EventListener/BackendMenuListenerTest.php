@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
@@ -87,8 +88,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $this->assertSame('debug_mode', $debug->getLabel());
         $this->assertSame('/contao?do=debug&key=enable&referer=ZG89cGFnZQ==', $debug->getUri());
-        $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode', 'data-contao--tooltips-target' => 'tooltip', 'data-turbo-prefetch' => 'false'], $debug->getLinkAttributes());
-        $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
+        $this->assertSame(['data-turbo-prefetch' => 'false'], $debug->getLinkAttributes());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'debug', BackendMenuBuilder::EXTRA_IS_HIGHLIGHTED => false, 'title' => 'debug_mode', 'translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }
 
     public function testAddsTheHoverClassIfTheDebugModeIsEnabled(): void
@@ -110,7 +111,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $event->getTree()->getChildren();
 
-        $this->assertSame(['class' => 'icon-debug hover', 'title' => 'debug_mode', 'data-contao--tooltips-target' => 'tooltip', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
+        $this->assertSame(['data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'debug', BackendMenuBuilder::EXTRA_IS_HIGHLIGHTED => true, 'title' => 'debug_mode', 'translation_domain' => 'ContaoManagerBundle'], $children['debug']->getExtras());
     }
 
     public function testDoesNotAddTheDebugButtonIfTheJwtManagerIsNotSet(): void
@@ -213,8 +215,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $this->assertSame('Contao Manager', $manager->getLabel());
         $this->assertSame('/contao-manager.phar.php', $manager->getUri());
-        $this->assertSame(['class' => 'navigation contao_manager', 'title' => 'contao_manager_title'], $manager->getLinkAttributes());
-        $this->assertSame(['translation_domain' => false], $manager->getExtras());
+        $this->assertSame([], $manager->getLinkAttributes());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'contao_manager', 'title' => 'contao_manager_title', 'translation_domain' => false], $manager->getExtras());
     }
 
     public function testDoesNotAddTheManagerLinkIfTheManagerPathIsEmpty(): void

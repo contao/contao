@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\RouterInterface;
@@ -52,10 +53,10 @@ class BackendLogoutListener
             ->createItem('logout')
             ->setLabel($this->getLogoutLabel())
             ->setUri($this->getLogoutUrl())
-            ->setAttribute('class', 'separator')
-            ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
             ->setLinkAttribute('data-turbo-prefetch', 'false')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'logout')
+            ->setExtra(BackendMenuBuilder::EXTRA_HAS_DIVIDER, true)
             ->setExtra('translation_domain', false)
         ;
 
