@@ -311,7 +311,6 @@ class StringUtil
 	 */
 	public static function generateAlias($strString)
 	{
-		$strString = static::decodeEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
 		// Remove the prefix if the alias is not numeric (see #707)
@@ -332,10 +331,7 @@ class StringUtil
 	 */
 	public static function prepareSlug($strSlug)
 	{
-		$strSlug = static::stripInsertTags($strSlug);
-		$strSlug = static::decodeEntities($strSlug);
-
-		return $strSlug;
+		return static::stripInsertTags($strSlug);
 	}
 
 	/**
