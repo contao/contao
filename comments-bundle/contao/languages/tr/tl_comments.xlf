@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_content">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_page">
         <source>Page</source>

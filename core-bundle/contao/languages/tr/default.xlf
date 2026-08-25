@@ -381,15 +381,16 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
       </trans-unit>
-      <trans-unit id="ERR.grantTemplateEditor">
-        <source>You can only grant access to the template editor if you are an admin.</source>
-        <target>Kalıp düzenleyiciye erişme iznini yalnızca bir yöneticiyseniz verebilirsiniz.</target>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>&quot;Auto&quot; anahtar sözcüğü yalnızca sizes özniteliğinin başında kullanılabilir ve ek değerleri varsa virgül ile eklenmelidir.</target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Sizes özniteliği &quot;auto&quot; olarak ayarlanmışsa yavaş yükleme etkinleştirilmelidir.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -649,11 +650,11 @@
       </trans-unit>
       <trans-unit id="CTE.article.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="CTE.article.1">
         <source>Includes another article.</source>
-        <target>Başka bir makaleyi katar.</target>
+        <target>Başka bir yazıyı katar.</target>
       </trans-unit>
       <trans-unit id="CTE.alias.0">
         <source>Content element</source>
@@ -681,11 +682,11 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.0">
         <source>Article teaser</source>
-        <target>Makale tanıtımı</target>
+        <target>Yazı tanıtımı</target>
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
-        <target>Bir makalenin tanıtım yazısını görüntüler.</target>
+        <target>Bir yazının tanıtım yazısını görüntüler.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -817,7 +818,7 @@
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>Bir normal sayfa makale ve içerik bileşenlerinden oluşur. Varsayılan sayfa türüdür.</target>
+        <target>Bir normal sayfa yazı ve içerik bileşenlerinden oluşur. Varsayılan sayfa türüdür.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
@@ -929,15 +930,15 @@
       </trans-unit>
       <trans-unit id="CHMOD.editarticles">
         <source>Edit articles</source>
-        <target>Makaleleri düzenleme</target>
+        <target>Yazıları düzenleme</target>
       </trans-unit>
       <trans-unit id="CHMOD.movearticles">
         <source>Edit article hierarchy</source>
-        <target>Makale hiyerarşisini düzenleme</target>
+        <target>Yazı hiyerarşisini düzenleme</target>
       </trans-unit>
       <trans-unit id="CHMOD.deletearticles">
         <source>Delete articles</source>
-        <target>Makale silme</target>
+        <target>Yazı silme</target>
       </trans-unit>
       <trans-unit id="CHMOD.cuser">
         <source>Owner</source>
@@ -2117,7 +2118,7 @@
       </trans-unit>
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
-        <target>Makaleler</target>
+        <target>Yazılar</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2533,7 +2534,7 @@
       </trans-unit>
       <trans-unit id="MSC.readMore">
         <source>Read the article: %s</source>
-        <target>Makaleyi okuyun: %s</target>
+        <target>Yazıyı okuyun: %s</target>
       </trans-unit>
       <trans-unit id="MSC.targetPage">
         <source>Target page</source>
@@ -2603,6 +2604,9 @@
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
         <target>Çok fazla sayıda parola sıfırlama isteğinde bulundunuz. Lütfen 15 dakika sonra yeniden deneyin.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Sürüm çakışması</target>
@@ -2649,7 +2653,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
-        <target>Sayfalandırma menüsü</target>
+        <target>Sayfalama menüsü</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2763,9 +2767,17 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Temaları içe aktarma izni verilmiş en az bir kullanıcı grubu var. Temalar rastgele kalıplar içerebildiğinden ve kalıplar PHP dosyaları olduğundan, bu gruplardaki kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>Ön yüz modülü &quot;Listeleme&quot; ve &quot;list_*&quot; alanlarını kullanmasına izin verilmiş en az bir kullanıcı grubu var. Bu modüller rastgele SQL sorguları içerebildiğinden, bu gruplardaki kullanıcılar sistem üzerinde üstü kapalı olarak tam denetime sahip olur!</target>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>

@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="MOD.article.0">
         <source>Articles</source>
-        <target>Makaleler</target>
+        <target>Yazılar</target>
       </trans-unit>
       <trans-unit id="MOD.article.1">
         <source>Manage articles and content elements</source>
-        <target>Makale ve içerik bileşenlerini yönetin</target>
+        <target>Yazı ve içerik bileşenlerini yönetin</target>
       </trans-unit>
       <trans-unit id="MOD.form.0">
         <source>Forms</source>
@@ -267,11 +267,11 @@
       </trans-unit>
       <trans-unit id="FMD.articlenav.0">
         <source>Article navigation</source>
-        <target>Makale gezinmesi</target>
+        <target>Yazı gezinmesi</target>
       </trans-unit>
       <trans-unit id="FMD.articlenav.1">
         <source>Generates a pagination menu to navigate articles</source>
-        <target>Makalelerde gezinmek için bir sayfalandırma menüsü oluşturur</target>
+        <target>Yazılarda gezinmek için bir sayfalama menüsü oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
         <source>HTML sitemap</source>
@@ -363,11 +363,11 @@
       </trans-unit>
       <trans-unit id="FMD.articlelist.0">
         <source>Article list</source>
-        <target>Makale listesi</target>
+        <target>Yazı listesi</target>
       </trans-unit>
       <trans-unit id="FMD.articlelist.1">
         <source>Generates a list of articles of a column</source>
-        <target>Bir sutunun makale listesini oluşturur</target>
+        <target>Bir sutunun yazı listesini oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>

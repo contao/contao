@@ -381,9 +381,9 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%dのIDの要素は既存の要素と競合するため、ここには挿入できません。</target>
       </trans-unit>
-      <trans-unit id="ERR.grantTemplateEditor">
-        <source>You can only grant access to the template editor if you are an admin.</source>
-        <target>管理者の場合だけテンプレートエディターにアクセスできます。</target>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+        <target>管理者の場合だけ&quot;%s&quot;へのアクセスを許可できます。</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
@@ -2605,6 +2605,9 @@
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
         <target>パスワードを何回も再設定し過ぎです。15分待ってから再度試してください。</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>バージョンの競合</target>
@@ -2751,31 +2754,43 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>テンプレートエディターにアクセス権のある通常ユーザーが存在します。テンプレートはPHPファイルですので、これらのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+        <target>テンプレートエディターにアクセス権のある通常ユーザーが少なくとも1名います。テンプレートはPHPファイルですので、それらのユーザーは暗黙の内にシステム全体に渡る制御をできることになります!!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>テンプレートエディターにアクセス権のあるユーザーグループが存在します。テンプレートはPHPファイルですので、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+        <target>テンプレートエディターにアクセス権のあるユーザーグループが少なくとも1つあります。テンプレートはPHPファイルですので、それらのグループのユーザーは暗黙の内にシステム全体に渡る制御をできることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>テーマをインポートする権限を持った通常ユーザーがいます。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのユーザーは暗黙の内にシステム全体を制御できます!</target>
+        <target>テーマをインポートする権限を持った通常ユーザーが少なくとも1名います。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、それらのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>テーマをインポートする権限を持ったユーザーグループがあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+        <target>テーマをインポートする権限を持ったユーザーグループが少なくとも1つあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、それらのグループのユーザーには暗黙の内にシステム全体を制御できることになります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+        <target>ページレイアウトを編集する権限を持った通常ユーザーが少なくとも1名います。ページレイアウトには任意のスクリプトを含めることができるので、それらのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+        <target>ページレイアウトを編集する権限を持ったユーザーグループが少なくとも1つあります。ページレイアウトには任意のスクリプトを含めることができるので、それらのグループのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+        <target>リスティングモジュールを編集する権限を持った通常ユーザーが少なくとも1名います。このモジュールには任意のSQLの問い合わせを含めることができるので、それらのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>フロントエンドモジュールの「リスティング」と、その&quot;list_*&quot;の項目にアクセス権のあるユーザーグループが存在します。これらには任意のSQLの問い合わせを含めることができるため、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>リスティングモジュールを編集する権限を持ったユーザーグループが少なくとも1つあります。ページレイアウトには任意のSQLの問い合わせを含めることができるので、それらのグループのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
-        <target>フィルターしないHTMLコンテント要素にアクセスを許可したユーザーグループが存在します。このコンテント要素のHTMLコードはフィルターされないので、これらのグループのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+        <target>フィルターしないHTMLコンテント要素にアクセスを許可したユーザーグループが少なくとも1つあります。このコンテント要素のHTMLコードはフィルターされないので、これらのグループのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.userUnfilteredHtml">
         <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
-        <target>フィルターしないHTMLコンテント要素にアクセスできる通常ユーザーが存在します。このコンテント要素のHTMLコードはフィルターされないので、これらのユーザーには暗黙の内にシステムの完全な制御権があります!</target>
+        <target>フィルターしないHTMLコンテント要素にアクセスできる通常ユーザーが存在します。このコンテント要素のHTMLコードはフィルターされないので、これらのユーザーは暗黙の内にシステム全体を制御できることになります!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
