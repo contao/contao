@@ -101,4 +101,20 @@ class ImagesControllerTest extends TestCase
 
         $controller('image.jpg');
     }
+
+    public function testReturns404IfImageIsOutsidePath(): void
+    {
+        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $resizer = $this->createMock(ResizerInterface::class);
+        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images/sub-directory');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller('../dummy.jpg');
+    }
 }
