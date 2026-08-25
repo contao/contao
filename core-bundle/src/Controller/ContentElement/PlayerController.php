@@ -23,7 +23,6 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\StringUtil;
-use Contao\Validator;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,7 +83,7 @@ class PlayerController extends AbstractContentElementController
         $poster = null;
 
         if ($uuid = $model->posterSRC) {
-            $poster = $this->filesStorage->generatePublicUri(Validator::isStringUuid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid));
+            $poster = $this->filesStorage->generatePublicUri(Uuid::fromString($uuid));
         }
 
         $size = StringUtil::deserialize($model->playerSize, true);

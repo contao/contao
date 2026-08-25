@@ -50,12 +50,19 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         }
 
         $cssID = StringUtil::deserialize($contentModel->cssID, true);
+        $modelCssID = StringUtil::deserialize($model->cssID, true);
+
+        // Override the CSS ID (see #305)
+        if (!empty($modelCssID[0])) {
+            $cssID[0] = $modelCssID[0];
+        }
 
         if ($idAttribute = $request->attributes->get('templateProperties', [])['cssID'] ?? null) {
             $cssID[0] = substr($idAttribute, 5, -1);
         }
 
-        $cssID[1] = trim(\sprintf('%s %s', $cssID[1] ?? '', implode(' ', (array) $model->classes)));
+        // Merge the CSS classes (see #6011)
+        $cssID[1] = implode(' ', array_filter(array_map(trim(...), [$cssID[1] ?? '', $modelCssID[1] ?? '', ...(array) $model->classes])));
 
         $contentModel->cssID = $cssID;
 
