@@ -469,7 +469,9 @@ class tl_user extends Backend
 			SELECT
 				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning,
 				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND themes LIKE '%\"theme_import\"%') as showThemeWarning,
-				EXISTS(SELECT * FROM tl_user WHERE inherit != 'group' AND elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND themes LIKE '%\"layout\"%') as showLayoutWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND frontendModules LIKE '%\"listing\"%') as showListingWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND (elements LIKE '%\"unfiltered_html\"%' OR frontendModules LIKE '%\"unfiltered_html\"%')) as showUnfilteredHtmlWarning
 		");
 
 		if ($objResult->showTemplateWarning)
@@ -480,6 +482,16 @@ class tl_user extends Backend
 		if ($objResult->showThemeWarning)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+		}
+
+		if ($objResult->showLayoutWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeLayout']);
+		}
+
+		if ($objResult->showListingWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userListingModule']);
 		}
 
 		if ($objResult->showUnfilteredHtmlWarning)

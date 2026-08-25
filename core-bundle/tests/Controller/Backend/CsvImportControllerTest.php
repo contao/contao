@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CsvImportControllerTest extends TestCase
@@ -285,19 +286,31 @@ class CsvImportControllerTest extends TestCase
 
         System::getContainer()->set('request_stack', $requestStack);
 
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        System::getContainer()->set('security.authorization_checker', $authorizationChecker);
+
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnArgument(0)
         ;
 
-        return new CsvImportController(
+        $controller = new CsvImportController(
             $framework ?? $this->mockFrameworkWithUploader(),
             $connection ?? $this->createStub(Connection::class),
             $requestStack,
             $translator,
             $this->getFixturesDir(),
         );
+
+        $controller->setContainer(System::getContainer());
+
+        return $controller;
     }
 
     private function mockDataContainer(): DataContainer&Stub
@@ -305,6 +318,11 @@ class CsvImportControllerTest extends TestCase
         $mock = $this->createClassWithPropertiesStub(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';
+
+        $mock
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 1, 'table' => 'tl_content'])
+        ;
 
         return $mock;
     }
