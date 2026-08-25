@@ -119,15 +119,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.1">
         <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Etkinlik tanıtımı, etkinlik listesinde tüm yazının yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
-        <target>Etkinlik yazısı</target>
+        <target>Etkinlik içeriği</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.1">
         <source>Here you can enter the event text.</source>
-        <target>Buraya etkinlik yazısını yazabilirsiniz.</target>
+        <target>Buraya etkinlik içeriğini yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.0">
         <source>Add an image</source>
@@ -207,11 +207,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>&quot;Devamını oku…&quot; düğmesine tıklayan ziyaretçiler bir makaleye yönlendirilir.</target>
+        <target>&quot;Devamını oku…&quot; düğmesine tıklayan ziyaretçiler bir yazıya yönlendirilir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
         <source>Custom URL</source>
@@ -239,11 +239,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
-        <target>Lütfen ziyaretçiler etkinliğe tıkladığında yönlendirilecekleri makaleyi seçin.</target>
+        <target>Lütfen ziyaretçiler etkinliğe tıkladığında yönlendirilecekleri yazıyı seçin.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
@@ -267,7 +267,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, etkinlik sitede herkesin görebileceği şekilde yayınlanır.</target>
+        <target>Etkinleştirildiğinde, etkinlik sitede herkesin görebileceği şekilde yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.0">
         <source>Show from</source>
@@ -307,7 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.text_legend">
         <source>Event text</source>
-        <target>Etkinlik yazısı</target>
+        <target>Etkinlik içeriği</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>
@@ -363,6 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.versions.1">
         <source>Show the versions of event ID %s</source>
+        <target>%s kimlikli etkinliğin sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>

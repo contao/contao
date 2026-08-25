@@ -171,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.versions.1">
         <source>Show the versions of comment ID %s</source>
+        <target>Mostra le versioni dell&apos;ID del commento %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
@@ -194,9 +195,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.3">
         <source>Unpublish</source>
+        <target>Non pubblicato</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
+        <target>Pubblicato</target>
       </trans-unit>
       <trans-unit id="tl_comments.tableLabel">
         <source>Comment</source>
