@@ -590,6 +590,7 @@ services:
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               contao.insert_tag.parser: '@contao.insert_tag.parser'
               event_dispatcher: '@event_dispatcher'
+              contao.string.html_decoder: '@contao.string.html_decoder'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.web_dir%'
