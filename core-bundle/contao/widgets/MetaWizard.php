@@ -110,7 +110,7 @@ class MetaWizard extends Widget
 
 					if ($this->metaFields[$kk]['basicEntities'] ?? false)
 					{
-						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->metaFields[$kk]['allowHtml'] ?? false);
+						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->metaFields[$kk]['allowHtml'] ?? $this->allowHtml);
 					}
 				}
 
@@ -190,7 +190,7 @@ class MetaWizard extends Widget
 
 				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
 				{
-					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $fieldConfig['allowHtml'] ?? false);
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $fieldConfig['allowHtml'] ?? $this->allowHtml);
 				}
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
