@@ -163,6 +163,12 @@ class ModuleSearch extends Module
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
+			else
+			{
+				$objResult->applyFilter(static function ($v) {
+					return empty($v['protected']);
+				});
+			}
 
 			$count = $objResult->getCount();
 
