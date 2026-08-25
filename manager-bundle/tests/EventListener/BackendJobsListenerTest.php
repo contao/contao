@@ -19,6 +19,7 @@ use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\TestCase\ContaoTestCase;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\MenuFactory;
 use Knp\Menu\Renderer\TwigRenderer;
@@ -88,8 +89,10 @@ class BackendJobsListenerTest extends ContaoTestCase
     {
         $loader = new FilesystemLoader();
         $loader->addPath(__DIR__.'/../../../core-bundle/contao/templates', 'Contao');
-        $loader->addPath(__DIR__.'/../../../vendor/knplabs/knp-menu-bundle/templates', 'KnpMenu');
-        $loader->addPath(__DIR__.'/../../../vendor/knplabs/knp-menu/src/Knp/Menu/Resources/views');
+
+        $bundlePath = new KnpMenuBundle()->getPath();
+        $loader->addPath($bundlePath.'/templates', 'KnpMenu');
+        $loader->addPath(\dirname($bundlePath).'/knp-menu/src/Knp/Menu/Resources/views');
 
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

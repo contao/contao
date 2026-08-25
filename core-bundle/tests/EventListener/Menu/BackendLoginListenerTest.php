@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendLoginListener;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\TestCase\ContaoTestCase;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\MenuFactory;
 use Knp\Menu\Renderer\TwigRenderer;
@@ -67,8 +68,10 @@ class BackendLoginListenerTest extends ContaoTestCase
     {
         $loader = new FilesystemLoader();
         $loader->addPath(__DIR__.'/../../../contao/templates', 'Contao');
-        $loader->addPath(__DIR__.'/../../../../vendor/knplabs/knp-menu-bundle/templates', 'KnpMenu');
-        $loader->addPath(__DIR__.'/../../../../vendor/knplabs/knp-menu/src/Knp/Menu/Resources/views');
+
+        $bundlePath = new KnpMenuBundle()->getPath();
+        $loader->addPath($bundlePath.'/templates', 'KnpMenu');
+        $loader->addPath(\dirname($bundlePath).'/knp-menu/src/Knp/Menu/Resources/views');
 
         $twig = new Environment($loader);
         $twig->addExtension(new MenuExtension());
