@@ -49,6 +49,11 @@ class OutputEncodingMigration extends AbstractMigration
                     $column,
                     $virtualTarget,
                     static function (string $value): string {
+                        // Decoding JSON potentially breaks the JSON structure so we skip them
+                        if (json_validate($value)) {
+                            return $value;
+                        }
+
                         $value = str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $value);
 
                         return html_entity_decode($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
