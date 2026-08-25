@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
@@ -44,6 +45,7 @@ final class Figure
         private \Closure|array|null $linkAttributes = null,
         private \Closure|LightboxResult|null $lightbox = null,
         private \Closure|array|null $options = null,
+        private readonly HtmlDecoder|null $htmlDecoder = null,
     ) {
     }
 
@@ -106,17 +108,27 @@ final class Figure
 
         $jsonLd = [
             '@type' => 'ImageObject',
-            'identifier' => $imageIdentifier,
             'contentUrl' => $this->getImage()->getImageSrc(),
+            'identifier' => $imageIdentifier,
         ];
 
         if (!$this->hasMetadata()) {
-            ksort($jsonLd);
-
             return $jsonLd;
         }
 
-        $jsonLd = [...$this->getMetadata()->getSchemaOrgData('ImageObject'), ...$jsonLd];
+        $imageJsonLd = $this->getMetadata()->getSchemaOrgData('ImageObject');
+
+        // Process the JSON-LD data (#10081)
+        if ($this->htmlDecoder) {
+            foreach ($imageJsonLd as $key => $value) {
+                $imageJsonLd[$key] = match ($key) {
+                    'caption' => $this->htmlDecoder->htmlToPlainText($value),
+                    default => $this->htmlDecoder->inputEncodedToPlainText($value),
+                };
+            }
+        }
+
+        $jsonLd = [...$imageJsonLd, ...$jsonLd];
         ksort($jsonLd);
 
         return $jsonLd;
