@@ -31,13 +31,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CsvImportControllerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        System::setContainer($this->getContainerWithFixtures());
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
@@ -284,15 +277,17 @@ class CsvImportControllerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        System::getContainer()->set('request_stack', $requestStack);
-
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
             ->willReturn(true)
         ;
 
-        System::getContainer()->set('security.authorization_checker', $authorizationChecker);
+        $container = $this->getContainerWithFixtures();
+        $container->set('security.authorization_checker', $authorizationChecker);
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
 
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
@@ -308,7 +303,7 @@ class CsvImportControllerTest extends TestCase
             $this->getFixturesDir(),
         );
 
-        $controller->setContainer(System::getContainer());
+        $controller->setContainer($container);
 
         return $controller;
     }
