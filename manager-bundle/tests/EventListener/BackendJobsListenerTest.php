@@ -16,11 +16,21 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendJobsListener;
 use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\TestCase\ContaoTestCase;
+use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\MenuFactory;
+use Knp\Menu\Renderer\TwigRenderer;
+use Knp\Menu\Twig\MenuExtension;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Runtime\EscaperRuntime;
+use Twig\TwigFunction;
 
 class BackendJobsListenerTest extends ContaoTestCase
 {
@@ -52,23 +62,9 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->willReturn($this->createStub(BackendUser::class))
         ;
 
-        $twig = $this->createMock(Environment::class);
-        $twig
-            ->expects($this->once())
-            ->method('render')
-            ->with(
-                '@Contao/backend/jobs/menu_item.html.twig',
-                [
-                    'jobs_link' => '/contao?do=jobs',
-                    'has_pending_jobs' => false,
-                ],
-            )
-            ->willReturn('<twig html>')
-        ;
-
         $jobs = $this->createStub(Jobs::class);
 
-        $listener = new BackendJobsListener($security, $twig, $router, $jobs);
+        $listener = new BackendJobsListener($security, $router, $jobs);
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -78,7 +74,36 @@ class BackendJobsListenerTest extends ContaoTestCase
 
         $jobs = $children['jobs'];
 
-        $this->assertSame('<twig html>', $jobs->getLabel());
-        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $jobs->getExtras());
+        $this->assertSame('MSC.jobs', $jobs->getLabel());
+        $this->assertSame('/contao?do=jobs', $jobs->getUri());
+        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/jobs/menu_item.html.twig', 'has_pending_jobs' => false, 'translation_domain' => 'contao_default'], $jobs->getExtras());
+
+        $html = $this->createRenderer()->render($menu);
+        $this->assertStringContainsString('class="icon-jobs"', $html);
+        $this->assertStringContainsString('data-controller="contao--jobs"', $html);
+        $this->assertStringContainsString('href="/contao?do=jobs"', $html);
+    }
+
+    private function createRenderer(): TwigRenderer
+    {
+        $loader = new FilesystemLoader();
+        $loader->addPath(__DIR__.'/../../../core-bundle/contao/templates', 'Contao');
+        $loader->addPath(__DIR__.'/../../../vendor/knplabs/knp-menu-bundle/templates', 'KnpMenu');
+        $loader->addPath(__DIR__.'/../../../vendor/knplabs/knp-menu/src/Knp/Menu/Resources/views');
+
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(static fn (string $id): string => $id)
+        ;
+
+        $twig = new Environment($loader);
+        $twig->addExtension(new MenuExtension());
+        $twig->addExtension(new TranslationExtension($translator));
+        $twig->addFunction(new TwigFunction('path', static fn (): string => '/jobs/pending'));
+        $twig->addFunction(new TwigFunction('attrs', static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes)));
+        $twig->getRuntime(EscaperRuntime::class)->addSafeClass(HtmlAttributes::class, ['html']);
+
+        return new TwigRenderer($twig, '@Contao/backend/menu/_header.html.twig', new Matcher());
     }
 }

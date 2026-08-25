@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -62,11 +63,10 @@ class BackendTemplateStudioListener
         $templateStudioNode = $event->getFactory()
             ->createItem('template-studio')
             ->setLabel('MOD.template_studio.0')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'template-studio')
             ->setExtra('translation_domain', 'contao_modules')
+            ->setExtra('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
             ->setUri($this->router->generate('contao_template_studio'))
-            ->setLinkAttribute('class', 'navigation template-studio')
-            ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
             ->setCurrent(TemplateStudioController::class === $request->attributes->get('_controller'))
         ;
 

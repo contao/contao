@@ -1,0 +1,54 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% trans_default_domain 'contao_default' %}
+
+{% block item %}
+    {% set classes = item.attribute('class') is not empty ? item.attribute('class')|split(' ') : [] %}
+    {% if item.extra('contao_backend_menu_has_divider', false) and 'separator' not in classes %}
+        {% set classes = ['separator']|merge(classes) %}
+    {% endif %}
+    {% if classes is not empty %}
+        {% set item = item.setAttribute('class', classes|join(' ')) %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% set label_attributes = item.labelAttributes %}
+
+    {% import _self as knp_menu %}
+    <span{{ knp_menu.attributes(label_attributes) }}>
+        {% if item.extra('contao_backend_menu_content_template') %}
+            {{ include(item.extra('contao_backend_menu_content_template')) }}
+        {% else %}
+            {{ block('label') }}
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block linkElement %}
+    {% if item.extra('contao_backend_menu_content_template') %}
+        {{ block('spanElement') }}
+    {% else %}
+        {% set icon = item.extra('contao_backend_menu_icon') %}
+        {% set default_classes = icon ? ['icon-' ~ icon] : [] %}
+        {% if item.extra('contao_backend_menu_is_highlighted', false) %}
+            {% set default_classes = default_classes|merge(['hover']) %}
+        {% endif %}
+
+        {% set custom_classes = item.linkAttribute('class') is not empty ? item.linkAttribute('class')|split(' ') : [] %}
+        {% set default_classes = default_classes|filter(value => value not in custom_classes) %}
+        {% set translation_domain = item.extra('translation_domain', 'messages') %}
+        {% set default_title = translation_domain is same as(false) ? item.label : item.label|trans(item.extra('translation_params', {}), translation_domain) %}
+        {% set link_attributes = {
+            title: item.extra('title', default_title),
+            'data-contao--tooltips-target': 'tooltip',
+        }|merge(item.linkAttributes)|merge({
+            class: default_classes|merge(custom_classes)|filter(value => value)|join(' '),
+        }) %}
+
+        {% import _self as knp_menu %}
+        <a href="{{ item.uri }}"{{ knp_menu.attributes(link_attributes) }}>{{ block('label') }}</a>
+    {% endif %}
+{% endblock %}

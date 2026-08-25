@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
@@ -51,57 +54,63 @@ class BackendMainListener
             $categoryNode = $tree->getChild($categoryName);
 
             if (!$categoryNode) {
-                $categoryNode = $factory
-                    ->createItem($categoryName)
-                    ->setLabel($categoryData['label'])
-                    ->setUri($categoryData['href'])
-                    ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
-                    ->setLinkAttribute('title', $categoryData['title'])
-                    ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
-                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
-                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-                    ->setLinkAttribute('aria-controls', $categoryName)
-                    ->setLinkAttribute('data-turbo-prefetch', 'false')
-                    ->setChildrenAttribute('id', $categoryName)
-                    ->setExtra('translation_domain', false)
-                ;
-
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
-                    $categoryNode->setAttribute('class', 'collapsed');
-                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
-                } else {
-                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
-                }
-
+                $categoryNode = $this->createCategory($factory, $categoryName, $categoryData);
                 $tree->addChild($categoryNode);
             }
 
-            // Create the child nodes
-            foreach ($categoryData['modules'] as $nodeName => $nodeData) {
-                $moduleNode = $factory
-                    ->createItem($nodeName)
-                    ->setLabel($nodeData['label'])
-                    ->setUri($nodeData['href'])
-                    ->setLinkAttribute('class', $this->getClassFromAttributes($nodeData))
-                    ->setLinkAttribute('title', $nodeData['title'])
-                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-                    ->setCurrent((bool) $nodeData['isActive'])
-                    ->setExtra('translation_domain', false)
-                ;
-
-                $categoryNode->addChild($moduleNode);
-            }
+            $this->addModules($factory, $categoryNode, $categoryData['modules']);
         }
     }
 
-    private function getClassFromAttributes(array $attributes): string
+    private function createCategory(FactoryInterface $factory, string $name, array $data): ItemInterface
+    {
+        $node = $factory
+            ->createItem($name)
+            ->setLabel($data['label'])
+            ->setUri($data['href'])
+            ->setExtra('translation_domain', false)
+        ;
+
+        if ($class = $this->getCustomClass($data, ['group-'.$name])) {
+            $node->setLinkAttribute('class', $class);
+        }
+
+        return $node;
+    }
+
+    private function addModules(FactoryInterface $factory, ItemInterface $category, array $modules): void
+    {
+        // Create the child nodes
+        foreach ($modules as $name => $data) {
+            $node = $factory
+                ->createItem($name)
+                ->setLabel($data['label'])
+                ->setUri($data['href'])
+                ->setCurrent((bool) $data['isActive'])
+                ->setExtra(BackendMenuBuilder::EXTRA_ICON, $name)
+                ->setExtra('title', $data['title'])
+                ->setExtra('translation_domain', false)
+            ;
+
+            if ($class = $this->getCustomClass($data, ['navigation', $name])) {
+                $node->setLinkAttribute('class', $class);
+            }
+
+            $category->addChild($node);
+        }
+    }
+
+    private function getCustomClass(array $attributes, array $defaultClasses): string
     {
         $classes = [];
 
         // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
         if (isset($attributes['class'])) {
             $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
-            unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
+
+            foreach (['node-expanded', 'node-collapsed', 'trail', ...$defaultClasses] as $class) {
+                unset($classes[$class]);
+            }
         }
 
         return implode(' ', array_keys($classes));
