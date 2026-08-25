@@ -53,7 +53,7 @@ class TemplateOptionsListener
             ? $this->getCommonOverrideAllType($dc)
             : $dc->getActiveRecord()['type'] ?? null;
 
-        if (null === $type || 'root_page_dependent_modules' == $type) {
+        if (null === $type || 'root_page_dependent_modules' === $type) {
             // Add a blank option that allows to reset all custom templates to the default
             // one when in "overrideAll" mode
             return $overrideAll ? ['' => '-'] : [];
