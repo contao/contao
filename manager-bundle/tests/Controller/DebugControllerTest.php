@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Controller;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\ManagerBundle\Controller\DebugController;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
@@ -29,6 +30,8 @@ class DebugControllerTest extends ContaoTestCase
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
             $this->mockJwtManager(true, true),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
         );
 
         $listener->enableAction();
@@ -40,6 +43,8 @@ class DebugControllerTest extends ContaoTestCase
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
             $this->mockJwtManager(true, false),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
         );
 
         $listener->disableAction();
@@ -51,6 +56,8 @@ class DebugControllerTest extends ContaoTestCase
             $this->mockSecurityHelper(),
             $this->mockRequestStack('https://example.com/foo/bar.html', 'foo=bar'),
             $this->mockJwtManager(true, true),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
         );
 
         $response = $listener->enableAction();
@@ -64,6 +71,8 @@ class DebugControllerTest extends ContaoTestCase
             $this->mockSecurityHelper(false),
             new RequestStack(),
             $this->mockJwtManager(false),
+            $this->mockTokenManager(false),
+            'contao_csrf_token',
         );
 
         $this->expectException(AccessDeniedException::class);
@@ -77,6 +86,8 @@ class DebugControllerTest extends ContaoTestCase
             $this->mockSecurityHelper(),
             new RequestStack(),
             $this->mockJwtManager(false),
+            $this->mockTokenManager(false),
+            'contao_csrf_token',
         );
 
         $this->expectException('RuntimeException');
@@ -125,5 +136,17 @@ class DebugControllerTest extends ContaoTestCase
         ;
 
         return $jwtManager;
+    }
+
+    private function mockTokenManager(bool $expectsToBeValidated): ContaoCsrfTokenManager&MockObject
+    {
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($expectsToBeValidated ? $this->once() : $this->never())
+            ->method('isTokenValid')
+            ->willReturn(true)
+        ;
+
+        return $tokenManager;
     }
 }

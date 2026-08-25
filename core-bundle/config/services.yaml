@@ -1221,8 +1221,8 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
-    contao.security.data_container.preview_access_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+    contao.security.data_container.preview_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewVoter
         arguments:
             - '@security.access.decision_manager'
 
