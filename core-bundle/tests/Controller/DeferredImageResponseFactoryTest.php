@@ -21,6 +21,7 @@ use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Imagine\Image\Box;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -30,6 +31,14 @@ class DeferredImageResponseFactoryTest extends TestCase
 {
     public function testReturnsPlaceholderWithoutWebWorker(): void
     {
+        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer
+            ->expects($this->once())
+            ->method('resizeDeferredImage')
+            ->with($this->isInstanceOf(DeferredImageInterface::class), false)
+            ->willReturn(null)
+        ;
+
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus
             ->expects($this->once())
@@ -37,7 +46,7 @@ class DeferredImageResponseFactoryTest extends TestCase
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message))
         ;
 
-        $factory = new DeferredImageResponseFactory($messageBus, $this->createStub(DeferredResizerInterface::class));
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer);
         $response = $factory->create($this->createDeferredImage());
 
         $this->assertInstanceOf(Response::class, $response);
@@ -63,7 +72,13 @@ class DeferredImageResponseFactoryTest extends TestCase
             ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message))
         ;
 
-        $factory = new DeferredImageResponseFactory($messageBus, $this->createStub(DeferredResizerInterface::class), $webWorker);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
+        $resizer
+            ->method('resizeDeferredImage')
+            ->willReturn(null)
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer, $webWorker);
         $response = $factory->create($this->createDeferredImage());
 
         $this->assertInstanceOf(Response::class, $response);
@@ -76,7 +91,81 @@ class DeferredImageResponseFactoryTest extends TestCase
         $this->assertStringContainsString('<path fill="#687787"', $response->getContent());
     }
 
-    public function testResizesSynchronouslyWithoutAsyncProcessing(): void
+    public function testReturnsImageAfterInlineResize(): void
+    {
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->never())
+            ->method('dispatch')
+        ;
+
+        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $image = $this->createDeferredImage();
+
+        $resizer
+            ->expects($this->once())
+            ->method('resizeDeferredImage')
+            ->with($image, false)
+            ->willReturn($this->createStub(ImageInterface::class))
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer);
+
+        $this->assertNull($factory->create($image));
+    }
+
+    public function testReturnsImageIfAnotherProcessCompletesTheResize(): void
+    {
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->never())
+            ->method('dispatch')
+        ;
+
+        $image = $this->createDeferredImage();
+        $filesystem = new Filesystem();
+        $resizer = $this->createStub(DeferredResizerInterface::class);
+        $resizer
+            ->method('resizeDeferredImage')
+            ->willReturnCallback(
+                static function () use ($filesystem, $image): null {
+                    $filesystem->touch($image->getPath());
+
+                    return null;
+                },
+            )
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer);
+
+        try {
+            $this->assertNull($factory->create($image));
+        } finally {
+            $filesystem->remove($image->getPath());
+        }
+    }
+
+    public function testReturnsPlaceholderAndDispatchesAfterInlineResizeFailure(): void
+    {
+        $resizer = $this->createStub(DeferredResizerInterface::class);
+        $resizer
+            ->method('resizeDeferredImage')
+            ->willThrowException(new \RuntimeException('Resize failed.'))
+        ;
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(static fn (object $message): Envelope => new Envelope($message))
+        ;
+
+        $factory = new DeferredImageResponseFactory($messageBus, $resizer);
+
+        $this->assertInstanceOf(Response::class, $factory->create($this->createDeferredImage()));
+    }
+
+    public function testDoesNotDispatchWithoutRealWorkers(): void
     {
         $webWorker = $this->createStub(WebWorker::class);
         $webWorker
@@ -90,19 +179,9 @@ class DeferredImageResponseFactoryTest extends TestCase
             ->method('dispatch')
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
-        $image = $this->createDeferredImage();
+        $factory = new DeferredImageResponseFactory($messageBus, $this->createStub(DeferredResizerInterface::class), $webWorker);
 
-        $resizer
-            ->expects($this->once())
-            ->method('resizeDeferredImage')
-            ->with($image)
-            ->willReturn($this->createStub(ImageInterface::class))
-        ;
-
-        $factory = new DeferredImageResponseFactory($messageBus, $resizer, $webWorker);
-
-        $this->assertNull($factory->create($image));
+        $this->assertInstanceOf(Response::class, $factory->create($this->createDeferredImage()));
     }
 
     private function createDeferredImage(): DeferredImageInterface

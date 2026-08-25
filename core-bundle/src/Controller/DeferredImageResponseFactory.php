@@ -43,12 +43,12 @@ class DeferredImageResponseFactory
             return null;
         }
 
-        if (($this->webWorker && !$this->webWorker->hasCliWorkersRunning()) || !$this->dispatch($image->getPath())) {
-            if ($this->resizer instanceof DeferredResizerInterface) {
-                $this->resizer->resizeDeferredImage($image);
-            }
-
+        if ($this->resize($image)) {
             return null;
+        }
+
+        if (!$this->webWorker || $this->webWorker->hasCliWorkersRunning()) {
+            $this->dispatch($image->getPath());
         }
 
         $size = $image->getDimensions()->getSize();
@@ -69,7 +69,21 @@ class DeferredImageResponseFactory
         );
     }
 
-    private function dispatch(string $path): bool
+    private function resize(DeferredImageInterface $image): bool
+    {
+        if (!$this->resizer instanceof DeferredResizerInterface) {
+            return false;
+        }
+
+        try {
+            return $this->resizer->resizeDeferredImage($image, false)
+                || $this->filesystem->exists($image->getPath());
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    private function dispatch(string $path): void
     {
         try {
             $this->messageBus->dispatch(
@@ -77,9 +91,6 @@ class DeferredImageResponseFactory
                 [new DeduplicateStamp('contao-deferred-image-'.hash('sha256', $path))],
             );
         } catch (\Throwable) {
-            return false;
         }
-
-        return true;
     }
 }
