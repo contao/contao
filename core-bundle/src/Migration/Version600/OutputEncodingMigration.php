@@ -49,7 +49,7 @@ class OutputEncodingMigration extends AbstractMigration
                     $column,
                     $virtualTarget,
                     static function (string $value): string {
-                        // Decoding JSON potentially breaks the JSON structure so we skip them
+                        // Decoding JSON potentially breaks the JSON structure
                         if (json_validate($value)) {
                             return $value;
                         }
