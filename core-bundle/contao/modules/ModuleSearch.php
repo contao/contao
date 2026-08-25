@@ -166,6 +166,12 @@ class ModuleSearch extends Module
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
+			else
+			{
+				$objResult->applyFilter(static function ($v) {
+					return empty($v['protected']);
+				});
+			}
 
 			$count = $objResult->getCount();
 
@@ -238,8 +244,8 @@ class ModuleSearch extends Module
 			{
 				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
-				$objTemplate->href = $arrResult[$i]['url'];
-				$objTemplate->link = $arrResult[$i]['title'];
+				$objTemplate->href = StringUtil::specialchars($arrResult[$i]['url']);
+				$objTemplate->link = StringUtil::specialchars($arrResult[$i]['title']);
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
 				$objTemplate->relevance = \sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
@@ -296,7 +302,7 @@ class ModuleSearch extends Module
 			}
 
 			$figureMeta = new Metadata(array_filter(array(
-				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_CAPTION => Input::encodeInput($v['https://schema.org/primaryImageOfPage']['caption'] ?? '', InputEncodingMode::sanitizeHtml),
 				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
 				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
 			)));

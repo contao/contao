@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_feed.source_text">
         <source>Full articles</source>
-        <target>Tam makaleler</target>
+        <target>Tam yazılar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>

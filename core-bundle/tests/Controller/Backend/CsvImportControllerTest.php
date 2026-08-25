@@ -26,17 +26,11 @@ use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CsvImportControllerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        System::setContainer($this->getContainerWithFixtures());
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
@@ -283,7 +277,17 @@ class CsvImportControllerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        System::getContainer()->set('request_stack', $requestStack);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        $container = $this->getContainerWithFixtures();
+        $container->set('security.authorization_checker', $authorizationChecker);
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
 
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
@@ -291,13 +295,17 @@ class CsvImportControllerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        return new CsvImportController(
+        $controller = new CsvImportController(
             $framework ?? $this->mockFrameworkWithUploader(),
             $connection ?? $this->createStub(Connection::class),
             $requestStack,
             $translator,
             $this->getFixturesDir(),
         );
+
+        $controller->setContainer($container);
+
+        return $controller;
     }
 
     private function mockDataContainer(): DataContainer&Stub
@@ -305,6 +313,11 @@ class CsvImportControllerTest extends TestCase
         $mock = $this->createClassWithPropertiesStub(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';
+
+        $mock
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 1, 'table' => 'tl_content'])
+        ;
 
         return $mock;
     }
