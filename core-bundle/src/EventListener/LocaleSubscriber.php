@@ -54,6 +54,10 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     public function setTranslatorLocale(RequestEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
     }
 
