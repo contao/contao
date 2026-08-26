@@ -54,6 +54,11 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     public function setTranslatorLocale(RequestEvent $event): void
     {
+        // Do not overwrite the page locale before Symfony stores it for a subrequest
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
     }
 
