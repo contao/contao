@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'name' => array
 		(
