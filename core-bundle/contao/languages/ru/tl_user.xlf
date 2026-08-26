@@ -33,14 +33,6 @@
         <source>Here you can choose the back end language.</source>
         <target>Вы можете выбрать язык панели управления.</target>
       </trans-unit>
-      <trans-unit id="tl_user.backendTheme.0">
-        <source>Back end theme</source>
-        <target>Тема панели управления</target>
-      </trans-unit>
-      <trans-unit id="tl_user.backendTheme.1">
-        <source>Here you can override the global back end theme.</source>
-        <target>Вы можете изменить тему панели управления.</target>
-      </trans-unit>
       <trans-unit id="tl_user.backendWidth.0">
         <source>Maximum width</source>
         <target>Maximum width (Максимальная ширина)</target>
@@ -324,10 +316,6 @@
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
         <target>Настройки панели управления</target>
-      </trans-unit>
-      <trans-unit id="tl_user.theme_legend">
-        <source>Back end theme</source>
-        <target>Тема панели управления</target>
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>

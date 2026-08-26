@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.0] (2026-08-26)
+
+**Fixed issues:**
+
+- [#10144] Support `allowHtml` on only the `caption` field in the meta wizard ([zoglo])
+- [#10152] Skip JSON values in the output encoding migration ([ausi])
+- [#10148] Remove redundant entity decoding ([Toflar])
+- [#10143] Remove usage of the obsolete `$strTagEnding` ([ausi])
+- [#10141] Fix double encoded values in the calendar and news bundle ([zoglo])
+- [#10133] Move the `backendWidth` field into the back end settings ([zoglo])
+- [#10114] Do not double encode the page title and description ([ausi])
+- [#10099] Do not deprecate `Input::get()` for dynamic URL parameters like `auto_item` ([ausi])
+- [#10096] Use the existing close and chevron icons in the form stylesheets ([leofeyer])
+- [#10098] Replace the `doctrine/orm` conflict with `symfony/doctrine-bridge` ([ausi])
+
 ## [6.0.0-RC2] (2026-08-06)
 
 **Fixed issues:**
@@ -119,6 +134,7 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.0]: https://github.com/contao/contao/releases/tag/6.0.0
 [6.0.0-RC2]: https://github.com/contao/contao/releases/tag/6.0.0-RC2
 [6.0.0-RC1]: https://github.com/contao/contao/releases/tag/6.0.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -233,3 +249,13 @@ This project adheres to [Semantic Versioning].
 [#10085]: https://github.com/contao/contao/pull/10085
 [#10087]: https://github.com/contao/contao/pull/10087
 [#10092]: https://github.com/contao/contao/pull/10092
+[#10096]: https://github.com/contao/contao/pull/10096
+[#10098]: https://github.com/contao/contao/pull/10098
+[#10099]: https://github.com/contao/contao/pull/10099
+[#10114]: https://github.com/contao/contao/pull/10114
+[#10133]: https://github.com/contao/contao/pull/10133
+[#10141]: https://github.com/contao/contao/pull/10141
+[#10143]: https://github.com/contao/contao/pull/10143
+[#10144]: https://github.com/contao/contao/pull/10144
+[#10148]: https://github.com/contao/contao/pull/10148
+[#10152]: https://github.com/contao/contao/pull/10152

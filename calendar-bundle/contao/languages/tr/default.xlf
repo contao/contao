@@ -6,12 +6,12 @@
         <target>%d etkinlik</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
-        <source>&amp;lt;</source>
-        <target>&amp;lt;</target>
+        <source>&lt;</source>
+        <target>&lt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
-        <source>&amp;gt;</source>
-        <target>&amp;gt;</target>
+        <source>&gt;</source>
+        <target>&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
-        <target>Etkinlik özetine geri dön</target>
+        <target>Etkinlik özetine dön</target>
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.0">
         <source>Calendar feed</source>

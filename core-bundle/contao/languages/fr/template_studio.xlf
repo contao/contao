@@ -23,9 +23,11 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>Rechercher des modèles…</target>
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
         <source>Show only my templates</source>
+        <target>Afficher uniquement mes modèles</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
@@ -113,6 +115,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_variant.1">
         <source>Create a new variant template for the %s legacy template</source>
+        <target>Créer un nouveau modèle de variante pour l’ancien modèle %s</target>
       </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>

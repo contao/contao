@@ -1034,7 +1034,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addPaginationNode(): ArrayNodeDefinition
     {
-        return (new TreeBuilder('pagination'))
+        return new TreeBuilder('pagination')
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()

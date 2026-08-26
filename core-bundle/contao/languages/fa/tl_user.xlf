@@ -33,14 +33,6 @@
         <source>Here you can choose the back end language.</source>
         <target>اینجا می‌توانید زبان بخش مدیریت را انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_user.backendTheme.0">
-        <source>Back end theme</source>
-        <target>پوسته بخش مدیریت</target>
-      </trans-unit>
-      <trans-unit id="tl_user.backendTheme.1">
-        <source>Here you can override the global back end theme.</source>
-        <target>اینجا می‌توانید پوسته بخش مدیریت کلی را لغو کنید.</target>
-      </trans-unit>
       <trans-unit id="tl_user.backendWidth.0">
         <source>Maximum width</source>
         <target>عرض بیشینه</target>
@@ -324,10 +316,6 @@
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
         <target>تنظیمات بخش مدیریت</target>
-      </trans-unit>
-      <trans-unit id="tl_user.theme_legend">
-        <source>Back end theme</source>
-        <target>پوسته بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>

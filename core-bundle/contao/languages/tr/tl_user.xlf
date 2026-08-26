@@ -33,14 +33,6 @@
         <source>Here you can choose the back end language.</source>
         <target>Buradan yönetim bölümü dilini seçebilirsiniz.</target>
       </trans-unit>
-      <trans-unit id="tl_user.backendTheme.0">
-        <source>Back end theme</source>
-        <target>Yönetim bölümü teması</target>
-      </trans-unit>
-      <trans-unit id="tl_user.backendTheme.1">
-        <source>Here you can override the global back end theme.</source>
-        <target>Buradan genel yönetim bölümü temasını değiştirebilirsiniz.</target>
-      </trans-unit>
       <trans-unit id="tl_user.backendWidth.0">
         <source>Maximum width</source>
         <target>En fazla genişlik</target>
@@ -63,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_user.showHelp.1">
         <source>Show a short explanation text below each input field.</source>
-        <target>Bu seçenek etkinleştirildiğinde, her giriş alanının altında kısa bir açıklama yazısı görüntülenir.</target>
+        <target>Etkinleştirildiğinde, her giriş alanının altında kısa bir açıklama yazısı görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.0">
         <source>Show thumbnail images</source>
@@ -71,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.1">
         <source>Show thumbnail images in the file manager.</source>
-        <target>Bu seçenek etkinleştirildiğinde, dosya yöneticisinde küçük görseller görüntülenir.</target>
+        <target>Etkinleştirildiğinde, dosya yöneticisinde küçük görseller görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
@@ -79,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useRTE.1">
         <source>Use the rich text editor to format text elements.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yazı bileşenlerini biçimlendirmek için zengin yazı düzenleyici kullanılır.</target>
+        <target>Etkinleştirildiğinde, yazı bileşenlerini biçimlendirmek için zengin yazı düzenleyici kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_user.useCE.0">
         <source>Enable the code editor</source>
@@ -87,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useCE.1">
         <source>Use the code editor to modify code elements.</source>
-        <target>Bu seçenek etkinleştirildiğinde, kod bileşenlerini düzenlemek için kod düzenleyici kullanılır.</target>
+        <target>Etkinleştirildiğinde, kod bileşenlerini düzenlemek için kod düzenleyici kullanılır.</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.0">
         <source>Do not collapse content elements</source>
@@ -95,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yönetim bölümü ön izlemesinde içerik bileşenleri daraltılmaz.</target>
+        <target>Etkinleştirildiğinde, yönetim bölümü ön izlemesinde içerik bileşenleri daraltılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.0">
         <source>Keep pop-up messages</source>
@@ -103,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.1">
         <source>Do not automatically hide pop-up messages.</source>
-        <target>Bu seçenek etkinleştirildiğinde, açılan iletiler otomatik olarak gizlenmez.</target>
+        <target>Etkinleştirildiğinde, açılan iletiler otomatik olarak gizlenmez.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -111,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_user.pwChange.1">
         <source>Make the user change his password upon the next login.</source>
-        <target>Bu seçenek etkinleştirildiğinde, kullanıcıdan sonraki oturum açmasında parolasını değiştirmesi istenir.</target>
+        <target>Etkinleştirildiğinde, kullanıcıdan sonraki oturum açmasında parolasını değiştirmesi istenir.</target>
       </trans-unit>
       <trans-unit id="tl_user.admin.0">
         <source>Make the user an administrator</source>
@@ -143,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_user.group.1">
         <source>The user inherits only group permissions.</source>
-        <target>Bu seçenek etkinleştirildiğinde, kullanıcı yalnızca grup izinlerini devralır.</target>
+        <target>Etkinleştirildiğinde, kullanıcı yalnızca grup izinlerini devralır.</target>
       </trans-unit>
       <trans-unit id="tl_user.extend.0">
         <source>Extend group settings</source>
@@ -151,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_user.extend.1">
         <source>The group permissions are extended by individual ones.</source>
-        <target>Bu seçenek etkinleştirildiğinde, grup izinleri bireysel olanlar ile genişletilir.</target>
+        <target>Etkinleştirildiğinde, grup izinleri bireysel olanlar ile genişletilir.</target>
       </trans-unit>
       <trans-unit id="tl_user.custom.0">
         <source>Use individual settings only</source>
@@ -159,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_user.custom.1">
         <source>Only individual permissions are applied.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnızca bireysel izinler uygulanır.</target>
+        <target>Etkinleştirildiğinde, yalnızca bireysel izinler uygulanır.</target>
       </trans-unit>
       <trans-unit id="tl_user.modules.0">
         <source>Back end modules</source>
@@ -324,10 +316,6 @@
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
         <target>Yönetim bölümü ayarları</target>
-      </trans-unit>
-      <trans-unit id="tl_user.theme_legend">
-        <source>Back end theme</source>
-        <target>Yönetim bölümü teması</target>
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>

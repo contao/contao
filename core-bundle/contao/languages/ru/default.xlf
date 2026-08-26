@@ -405,9 +405,8 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
       </trans-unit>
-      <trans-unit id="ERR.grantTemplateEditor">
-        <source>You can only grant access to the template editor if you are an admin.</source>
-        <target>Вы можете предоставить доступ к редактору шаблонов только, если у вас есть права администратора.</target>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
@@ -2717,6 +2716,9 @@
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
         <target>Вы превысили количество попыток сброса пароля. Повторите попытку через 15 минут.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Конфликт версий</target>
@@ -2909,9 +2911,17 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Существует как минимум одна группа пользователей, предоставляющая разрешение на импорт тем. Поскольку темы могут содержать произвольные шаблоны, а шаблоны - файлы PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
       </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>Существует как минимум одна группа пользователей, предоставляющая доступ к модулю &quot;Listing&quot; внешнего интерфейса и его полям &quot;list_*&quot;. Поскольку они могут содержать произвольные SQL-запросы, пользователи этих групп неявно получают полный контроль над системой!</target>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>

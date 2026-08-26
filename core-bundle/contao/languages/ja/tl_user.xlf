@@ -33,14 +33,6 @@
         <source>Here you can choose the back end language.</source>
         <target>バックエンドの言語を選択します。</target>
       </trans-unit>
-      <trans-unit id="tl_user.backendTheme.0">
-        <source>Back end theme</source>
-        <target>バックエンドのテーマ</target>
-      </trans-unit>
-      <trans-unit id="tl_user.backendTheme.1">
-        <source>Here you can override the global back end theme.</source>
-        <target>全体的なバックエンドのテーマを上書きできます。</target>
-      </trans-unit>
       <trans-unit id="tl_user.backendWidth.0">
         <source>Maximum width</source>
         <target>最大の幅(max-width)</target>
@@ -324,10 +316,6 @@
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
         <target>バックエンドの設定</target>
-      </trans-unit>
-      <trans-unit id="tl_user.theme_legend">
-        <source>Back end theme</source>
-        <target>バックエンドのテーマ</target>
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>

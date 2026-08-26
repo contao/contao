@@ -33,14 +33,6 @@
         <source>Here you can choose the back end language.</source>
         <target>Choisir une langue pour le back office.</target>
       </trans-unit>
-      <trans-unit id="tl_user.backendTheme.0">
-        <source>Back end theme</source>
-        <target>Thème du back office</target>
-      </trans-unit>
-      <trans-unit id="tl_user.backendTheme.1">
-        <source>Here you can override the global back end theme.</source>
-        <target>Outrepasser le thème global du back office.</target>
-      </trans-unit>
       <trans-unit id="tl_user.backendWidth.0">
         <source>Maximum width</source>
         <target>Largeur maximale</target>
@@ -251,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.0">
         <source>Table permissions</source>
+        <target>Autorisations des tables</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.1">
         <source>Here you can select which operations are allowed for which table.</source>
+        <target>Vous pouvez sélectionner ici les opérations autorisées pour chaque table.</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.create">
         <source>Create</source>
@@ -261,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.update">
         <source>Update</source>
+        <target>Mettre à jour</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.delete">
         <source>Delete</source>
@@ -268,15 +263,20 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.other">
         <source>Additional permissions</source>
+        <target>Autorisations supplémentaires
+</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_create">
         <source>Create records in &quot;%s&quot;</source>
+        <target>Créer des enregistrements dans &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_update">
         <source>Update records of &quot;%s&quot;</source>
+        <target>Mettre à jour les enregistrements de &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_delete">
         <source>Delete records of &quot;%s&quot;</source>
+        <target>Supprimer les enregistrements de &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -317,10 +317,6 @@
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
         <target>Paramètres du back office</target>
-      </trans-unit>
-      <trans-unit id="tl_user.theme_legend">
-        <source>Back end theme</source>
-        <target>Thème du back office</target>
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>
@@ -364,6 +360,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud_legend">
         <source>Table permissions</source>
+        <target>Autorisations des tables</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -423,6 +420,7 @@
       </trans-unit>
       <trans-unit id="tl_user.versions.1">
         <source>Show the versions of user ID %s</source>
+        <target>Afficher les versions de l’utilisateur ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>
