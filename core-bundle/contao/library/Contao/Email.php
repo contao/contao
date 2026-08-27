@@ -376,46 +376,12 @@ class Email
 		// HTML e-mail
 		if ($this->strHtml)
 		{
+			$this->objMessage->html($this->strHtml, $this->strCharset);
+
 			// Embed images
 			if ($this->blnEmbedImages)
 			{
-				if (!$this->strImageDir)
-				{
-					$this->strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
-				}
-
-				$arrCid = array();
-				$arrMatches = array();
-				$strBase = Environment::get('base');
-
-				// Thanks to @ofriedrich and @aschempp (see #4562)
-				preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $this->strHtml, $arrMatches);
-
-				// Check for internal images
-				if (!empty($arrMatches) && isset($arrMatches[0]))
-				{
-					for ($i=0, $c=\count($arrMatches[0]); $i<$c; $i++)
-					{
-						$url = $arrMatches[3][$i];
-
-						// Try to remove the base URL
-						$src = str_replace($strBase, '', $url);
-						$src = rawurldecode($src); // see #3713
-
-						// Embed the image if the URL is now relative
-						if (!preg_match('@^https?://@', $src) && ($objFile = new File(StringUtil::stripRootDir($this->strImageDir . $src))) && ($objFile->exists() || $objFile->createIfDeferred()))
-						{
-							if (!isset($arrCid[$src]))
-							{
-								// See https://symfony.com/doc/current/mailer.html#embedding-images
-								$this->objMessage->embedFromPath($this->strImageDir . $src, $src);
-								$arrCid[$src] = 'cid:' . $src;
-							}
-
-							$this->strHtml = str_replace($arrMatches[1][$i] . $arrMatches[3][$i] . $arrMatches[5][$i], $arrMatches[1][$i] . $arrCid[$src] . $arrMatches[5][$i], $this->strHtml);
-						}
-					}
-				}
+				System::getContainer()->get('contao.mailer.inline_image_embedder')->embedImages($this->objMessage, Environment::get('base'), $this->strImageDir ?: null);
 			}
 
 			$this->objMessage->html($this->strHtml, $this->strCharset);

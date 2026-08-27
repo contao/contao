@@ -452,40 +452,7 @@ class Newsletter extends Backend
 
 		if (!$objNewsletter->externalImages)
 		{
-			$strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
-
-			$arrCid = array();
-			$arrMatches = array();
-			$strBase = Environment::get('base');
-
-			// Thanks to @ofriedrich and @aschempp (see #4562)
-			preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $objEmail->getHtmlBody(), $arrMatches);
-
-			// Check for internal images
-			if (!empty($arrMatches) && isset($arrMatches[0]))
-			{
-				for ($i=0, $c=\count($arrMatches[0]); $i<$c; $i++)
-				{
-					$url = $arrMatches[3][$i];
-
-					// Try to remove the base URL
-					$src = str_replace($strBase, '', $url);
-					$src = rawurldecode($src); // see #3713
-
-					// Embed the image if the URL is now relative
-					if (!preg_match('@^https?://@', $src) && ($objFile = new File(StringUtil::stripRootDir($strImageDir . $src))) && ($objFile->exists() || $objFile->createIfDeferred()))
-					{
-						if (!isset($arrCid[$src]))
-						{
-							// See https://symfony.com/doc/current/mailer.html#embedding-images
-							$objEmail->embedFromPath($strImageDir . $src, $src);
-							$arrCid[$src] = 'cid:' . $src;
-						}
-
-						$objEmail->html(str_replace($arrMatches[1][$i] . $arrMatches[3][$i] . $arrMatches[5][$i], $arrMatches[1][$i] . $arrCid[$src] . $arrMatches[5][$i], $objEmail->getHtmlBody()));
-					}
-				}
-			}
+			System::getContainer()->get('contao.mailer.inline_image_embedder')->embedImages($objEmail, Environment::get('base'));
 		}
 
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
