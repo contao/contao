@@ -94,6 +94,7 @@ export default class extends Controller {
 
         const btn = this.#btn.cloneNode();
         btn.textContent = start ? this.prevLabelValue : this.nextLabelValue;
+        btn.setAttribute('data-contao--tooltips-target', 'tooltip');
         btn.title = start ? this.prevLabelValue : this.nextLabelValue;
 
         btn.addEventListener('click', () => {

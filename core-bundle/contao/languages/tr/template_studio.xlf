@@ -185,10 +185,6 @@
         <source>Please define a new unique name for the variant template %s.</source>
         <target>Lütfen %s çeşit kalıbına yeni bir benzersiz ad verin.</target>
       </trans-unit>
-      <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
-        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
-        <target>%identifier% kalıbı iki biçimde sunulur. Ayarlarken  Contao 6 ile uyumlu kalmak için Twig biçimini kullanın.</target>
-      </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
         <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>Kalıp ilişkisi hatalar bulunduğundan incelenemedi.</target>

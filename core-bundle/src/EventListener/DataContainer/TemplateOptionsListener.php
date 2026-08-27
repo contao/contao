@@ -173,7 +173,7 @@ class TemplateOptionsListener
     private function getCommonOverrideAllType(DataContainer $dc): string|null
     {
         $affectedIds = $this->requestStack->getSession()->all()['CURRENT']['IDS'] ?? [];
-        $table = $this->connection->quoteIdentifier($dc->table);
+        $table = $this->connection->quoteSingleIdentifier($dc->table);
 
         $result = $this->connection->executeQuery(
             "SELECT type FROM $table WHERE id IN (?) GROUP BY type LIMIT 2",

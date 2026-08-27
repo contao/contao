@@ -322,6 +322,10 @@ class ContentUrlGeneratorTest extends TestCase
     private function mockPageModel(): PageModel
     {
         return $this->createModel(PageModel::class, [
+            'id' => 1,
+            'alias' => 'id-1',
+            'domain' => '',
+            'rootUseSSL' => true,
             'urlPrefix' => '',
             'urlSuffix' => '',
         ]);

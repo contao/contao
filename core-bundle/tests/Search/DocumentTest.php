@@ -328,6 +328,22 @@ class DocumentTest extends TestCase
             ],
             '',
         ];
+
+        yield 'Test with an object context definition' => [
+            '<html><body><script type="application/ld+json">{"@context":{"schema":{"@id":"https:\/\/schema.org\/"}},"@type":"schema:WebPage","schema:name":"Foobar"}</script></body></html>',
+            [
+                [
+                    '@context' => [
+                        'schema' => [
+                            '@id' => 'https://schema.org/',
+                        ],
+                    ],
+                    '@type' => 'schema:WebPage',
+                    'schema:name' => 'Foobar',
+                ],
+            ],
+            '',
+        ];
     }
 
     public function testDoesNotExtractTheJsdonLdScriptIfTheContextOrTypeDoesNotMatch(): void

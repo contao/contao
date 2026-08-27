@@ -393,10 +393,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA не доступен без безопасного HTTPS-соединения. Если ваш производственный сайт не использует HTTPS (не рекомендуется), пожалуйста, используйте вместо этого секретный вопрос.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-        <target>Существует как минимум один модуль &quot;личных данных&quot;, позволяющий изменить пароль. Это уязвимость безопасности, которая больше не будет работать в Contao 6. Вместо этого используйте модуль &quot;изменить пароль&quot;.</target>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>Ключ доступа (passkey) не поддерживается на этом устройстве.</target>
@@ -416,6 +412,14 @@
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
         <target>Вы можете предоставить доступ к редактору шаблонов только, если у вас есть права администратора.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Ключевое слово &quot;auto&quot; допускается использовать только в начале атрибута sizes, при наличии дополнительных значений за ним обязательно должна следовать запятая.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>При установке значения &quot;auto&quot; для атрибута sizes необходимо включить ленивую загрузку (lazy loading).</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1875,6 +1879,7 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Доступно больше записей, но они скрыты для повышения производительности. Сверните дерево или примените фильтры, чтобы ограничить выборку.</target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -2123,6 +2128,14 @@
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Версия</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+        <target>Версия A</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+        <target>Версия B</target>
       </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
@@ -2567,10 +2580,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
         <target>Страница %s из %s</target>
-      </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>глобальный</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
@@ -3097,8 +3106,8 @@
         <target>Имя/ID</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>Назовите этот ключ доступа (passkey)…</target>
+        <source>Name this passkey</source>
+        <target>Назовите этот ключ доступа (passkey)</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

@@ -59,6 +59,7 @@ class BackendMainListener
                     ->setLinkAttribute('title', $categoryData['title'])
                     ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
                     ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
+                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
                     ->setLinkAttribute('aria-controls', $categoryName)
                     ->setLinkAttribute('data-turbo-prefetch', 'false')
                     ->setChildrenAttribute('id', $categoryName)
@@ -83,6 +84,7 @@ class BackendMainListener
                     ->setUri($nodeData['href'])
                     ->setLinkAttribute('class', $this->getClassFromAttributes($nodeData))
                     ->setLinkAttribute('title', $nodeData['title'])
+                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
                     ->setCurrent((bool) $nodeData['isActive'])
                     ->setExtra('translation_domain', false)
                 ;

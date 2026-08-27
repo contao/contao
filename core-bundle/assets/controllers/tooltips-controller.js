@@ -1,239 +1,152 @@
+import { computePosition, flip, offset, shift } from '@floating-ui/dom';
 import { Controller } from '@hotwired/stimulus';
 
-export default class TooltipsController extends Controller {
-    #tooltip = null;
-    #timer = null;
-    #activeTargets = new Set();
-    #removeClickTargetHandlerDelegates = new Map();
-
-    static defaultOptionsMap = {
-        'a img[alt]': { x: -9, y: 30 },
-        '.sgallery img[alt]': { x: 0, y: 75 },
-        'p.tl_tip': { x: 0, y: 23, useContent: true },
-        '#home[title]': { x: 6, y: 42 },
-        '#tmenu a[title]': { x: 0, y: 42 },
-        '#tmenu button[title]': { x: 0, y: 42 },
-        'a[title][class^="group-"]': { x: -6, y: 27 },
-        'a[title].navigation': { x: 25, y: 32 },
-        'img[title].gimage': { x: -9, y: 60 },
-        'img[title]:not(.gimage)': { x: -9, y: 30 },
-        'a[title].picker-wizard': { x: -4, y: 30 },
-        'button img[alt]': { x: -9, y: 30 },
-        '.tl_panel button[title]': { x: 0, y: 36 },
-        '.jump-target-scroll button[title]': { x: -4, y: 36 },
-        'button[title].unselectable': { x: -4, y: 20 },
-        'button[title]:not(.unselectable)': { x: -9, y: 30 },
-        'a[title]:not(.picker-wizard)': { x: -9, y: 30 },
-        'input[title]': { x: -9, y: 30 },
-        'time[title]': { x: -9, y: 26 },
-        'span[title]': { x: -9, y: 26 },
-        'label.mw_enable': { x: -9, y: 30, useContent: true },
+function positionAt(element, clientX, clientY) {
+    const anchor = {
+        getBoundingClientRect: () => new DOMRect(clientX, clientY, 0, 0),
     };
 
-    /**
-     * There is one controller handling multiple tooltip targets. The tooltip
-     * DOM element is shared across targets.
-     */
+    computePosition(anchor, element, {
+        placement: 'bottom-start',
+        middleware: [offset(18), flip(), shift({ padding: 10 })],
+    }).then(({ x, y }) => {
+        Object.assign(element.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+        });
+    });
+}
+
+export default class extends Controller {
+    #timer = null;
+    #current = null;
+    #pointer = null;
+    #targetSelector = null;
+    #contentTargetSelector = null;
+
+    static targets = ['tooltip', 'content', 'popup', 'popupContent'];
+
+    initialize() {
+        this.#contentTargetSelector = `[data-${this.identifier}-target~="content"]`;
+        this.#targetSelector = `[data-${this.identifier}-target~="tooltip"], ${this.#contentTargetSelector}`;
+    }
+
     connect() {
-        this.#tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this.#createTipContainer();
+        this.element.addEventListener('pointerover', this.#show);
+        this.element.addEventListener('pointermove', this.#setPosition);
+        this.element.addEventListener('pointerout', this.#hide);
+        this.element.addEventListener('click', this.#hide);
     }
 
     disconnect() {
-        this.#tooltip.remove();
-    }
+        this.element.removeEventListener('pointerover', this.#show);
+        this.element.removeEventListener('pointermove', this.#setPosition);
+        this.element.removeEventListener('pointerout', this.#hide);
+        this.element.removeEventListener('click', this.#hide);
 
-    tooltipTargetConnected(el) {
-        el.addEventListener('mouseenter', (e) => this.#showTooltip(e.target, 1000));
-        el.addEventListener('touchend', (e) => this.#showTooltip(e.target));
-        el.addEventListener('mouseleave', (e) => this.#hideTooltip(e.target));
-
-        // In case the tooltip target is inside a link or button, also close it
-        // when a click happened
-        const clickTarget = el.closest('button, a');
-
-        if (clickTarget) {
-            const handler = () => this.#hideTooltip(el);
-
-            clickTarget.addEventListener('click', handler);
-            this.#removeClickTargetHandlerDelegates.set(el, () => el.removeEventListener('click', handler));
-        }
+        this.#hide();
     }
 
     tooltipTargetDisconnected(el) {
-        if (this.#activeTargets.has(el)) {
-            this.#hideTooltip(el);
-        }
-
-        if (this.#removeClickTargetHandlerDelegates.has(el)) {
-            this.#removeClickTargetHandlerDelegates.get(el)();
-            this.#removeClickTargetHandlerDelegates.delete(el);
+        if (el === this.#current) {
+            this.#hide();
         }
     }
 
-    touchStart(e) {
-        [...this.#activeTargets].filter((el) => !el.contains(e.target)).forEach(this.#hideTooltip.bind(this));
+    contentTargetDisconnected(el) {
+        if (el === this.#current) {
+            this.#hide();
+        }
     }
 
-    #createTipContainer() {
-        const tooltip = document.createElement('div');
-        tooltip.setAttribute('role', 'tooltip');
-        tooltip.classList.add('tip');
-        tooltip.style.position = 'absolute';
-        tooltip.style.display = 'none';
+    #show = (event) => {
+        // Bail on touch devices
+        if ('touch' === event.pointerType) return;
 
-        document.body.appendChild(tooltip);
+        const el = event.target instanceof Element ? event.target.closest(this.#targetSelector) : null;
 
-        return tooltip;
-    }
-
-    #showTooltip(el, delay = 0) {
-        const options = this.#getOptionsForElement(el);
-        let text;
-
-        if (options.useContent) {
-            text = el.innerHTML;
-        } else if (el instanceof HTMLImageElement) {
-            text = el.getAttribute('alt');
-            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-        } else {
-            text = el.getAttribute('title');
-            el.setAttribute('data-original-title', text);
-            el.removeAttribute('title');
-            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+        if (!el || el === this.#current) {
+            return;
         }
 
-        if (!text) {
+        this.#hide();
+
+        if (!this.#updateContent(el)) {
+            return;
+        }
+
+        this.#migrateElementTitle(el, true);
+        this.#current = el;
+
+        this.#pointer = { x: event.clientX, y: event.clientY };
+
+        this.#timer = setTimeout(() => {
+            this.#positionTooltip();
+            this.popupTarget.style.display = 'block';
+        }, 1000);
+    };
+
+    #setPosition = (event) => {
+        if ('touch' === event.pointerType) return;
+
+        this.#pointer = { x: event.clientX, y: event.clientY };
+
+        if (this.#current && this.popupTarget.style.display === 'block') {
+            this.#positionTooltip();
+        }
+    };
+
+    #hide = (event = null) => {
+        if (this.#current === null) {
+            return;
+        }
+
+        // Ignore pointerout events that only move within the current element
+        if (event?.type === 'pointerout' && this.#current.contains(event.relatedTarget)) {
             return;
         }
 
         clearTimeout(this.#timer);
-        this.#tooltip.style.willChange = 'display,contents';
+        this.#migrateElementTitle(this.#current, false);
+        this.#current = null;
+        this.popupTarget.style.display = 'none';
+    };
 
-        this.#timer = setTimeout(() => {
-            this.#activeTargets.add(el);
-
-            const position = el.getBoundingClientRect();
-            const rtl = getComputedStyle(el).direction === 'rtl';
-            const clientWidth = document.documentElement.clientWidth;
-
-            if ((rtl && position.x < 200) || (!rtl && position.x < clientWidth - 200)) {
-                this.#tooltip.style.left = `${window.scrollX + position.left + options.x}px`;
-                this.#tooltip.style.right = 'auto';
-                this.#tooltip.classList.remove('tip--rtl');
-            } else {
-                this.#tooltip.style.left = 'auto';
-                this.#tooltip.style.right = `${clientWidth - window.scrollX - position.right + options.x}px`;
-                this.#tooltip.classList.add('tip--rtl');
-            }
-
-            this.#tooltip.innerHTML = `<div>${text}</div>`;
-            this.#tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
-            this.#tooltip.style.display = 'block';
-            this.#tooltip.style.willChange = 'auto';
-        }, delay);
+    #positionTooltip() {
+        positionAt(this.popupTarget, this.#pointer.x, this.#pointer.y);
     }
 
-    #hideTooltip(el, delay = 0) {
-        if (el.hasAttribute('data-original-title')) {
-            if (!el.hasAttribute('title')) {
-                el.setAttribute('title', el.getAttribute('data-original-title'));
-            }
+    #updateContent(el) {
+        if (el.matches(this.#contentTargetSelector)) {
+            this.popupContentTarget.innerHTML = el.innerHTML;
 
+            return this.popupContentTarget.textContent.trim() !== '';
+        }
+
+        const text = this.#contentFor(el);
+        this.popupContentTarget.textContent = text;
+
+        return text !== '';
+    }
+
+    #contentFor(el) {
+        return (
+            el.getAttribute('data-tooltip') ??
+            el.getAttribute('aria-label') ??
+            el.getAttribute('title') ??
+            el.querySelector('img[alt]')?.getAttribute('alt') ??
+            (el instanceof HTMLImageElement ? el.getAttribute('alt') : null) ??
+            ''
+        );
+    }
+
+    #migrateElementTitle(el, setTitle) {
+        if (setTitle && el.hasAttribute('title')) {
+            el.setAttribute('data-original-title', el.getAttribute('title'));
+            el.removeAttribute('title');
+        } else if (!setTitle && el.hasAttribute('data-original-title')) {
+            el.setAttribute('title', el.getAttribute('data-original-title'));
             el.removeAttribute('data-original-title');
-        }
-
-        clearTimeout(this.#timer);
-        this.#tooltip.style.willChange = 'auto';
-
-        if (this.#tooltip.style.display === 'block') {
-            this.#activeTargets.delete(el);
-
-            this.#tooltip.style.willChange = 'display';
-            this.#timer = setTimeout(() => {
-                this.#tooltip.style.display = 'none';
-                this.#tooltip.style.willChange = 'auto';
-            }, delay);
-        }
-    }
-
-    #getOptionsForElement(el) {
-        for (const [criteria, defaultOptions] of Object.entries(TooltipsController.defaultOptionsMap)) {
-            if (el.matches(criteria)) {
-                return defaultOptions;
-            }
-        }
-
-        return { x: -9, y: 30 };
-    }
-
-    /**
-     * Migrate legacy targets to proper controller targets.
-     */
-    static afterLoad(identifier) {
-        const targetAttribute = `data-${identifier}-target`;
-        const targetSelector = Object.keys(TooltipsController.defaultOptionsMap).join(',');
-        const pendingNodes = new Set();
-        let flushQueued = false;
-
-        const migrateTarget = (el) => {
-            if (!el.hasAttribute(targetAttribute)) {
-                el.setAttribute(targetAttribute, 'tooltip');
-            }
-        };
-
-        const migrateTargets = (el) => {
-            if (el.matches(targetSelector)) {
-                migrateTarget(el);
-            }
-
-            for (const target of el.querySelectorAll(targetSelector)) {
-                migrateTarget(target);
-            }
-        };
-
-        const flushPendingNodes = () => {
-            flushQueued = false;
-
-            for (const node of pendingNodes) {
-                migrateTargets(node);
-            }
-
-            pendingNodes.clear();
-        };
-
-        const queueMigrateTargets = (node) => {
-            pendingNodes.add(node);
-
-            if (flushQueued) {
-                return;
-            }
-
-            flushQueued = true;
-            requestAnimationFrame(flushPendingNodes);
-        };
-
-        new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type !== 'childList') {
-                    continue;
-                }
-
-                for (const node of mutation.addedNodes) {
-                    if (!(node instanceof HTMLElement)) {
-                        continue;
-                    }
-
-                    queueMigrateTargets(node);
-                }
-            }
-        }).observe(document, {
-            childList: true,
-            subtree: true,
-        });
-
-        // Initially migrate all targets that are already in the DOM
-        for (const el of document.querySelectorAll(targetSelector)) {
-            migrateTarget(el);
         }
     }
 }

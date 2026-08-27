@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -19,7 +20,6 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\ThemeContentVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -29,7 +29,7 @@ class ThemeContentVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new ThemeContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class));
+        $voter = new ThemeContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(DcaHierarchy::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -66,43 +66,21 @@ class ThemeContentVoterTest extends TestCase
             ->willReturnMap($accessDecisionMap)
         ;
 
-        $fetchAllAssociativeMap = [];
-        $fetchAssociativeMap = [];
+        $parentMap = [];
 
-        foreach ($parentRecords as $id => &$records) {
-            if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
-                $parent = array_pop($records);
-
-                $fetchAssociativeMap[] = [
-                    'SELECT id, pid, ptable FROM tl_content WHERE id = ?',
-                    [(int) end($records)['pid']],
-                    [],
-                    $parent,
-                ];
-            }
-
-            $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = :id'.str_repeat(' UNION SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = @pid AND ptable = :ptable', 9),
-                ['id' => $id, 'ptable' => 'tl_content'],
-                [],
-                $records,
-            ];
+        foreach ($parentRecords as $id => $records) {
+            $parent = end($records);
+            $parentMap[] = [$id, 'tl_content', [$parent['ptable'], (int) $parent['pid']]];
         }
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
             ->expects($this->exactly(\count($parentRecords)))
-            ->method('fetchAllAssociative')
-            ->willReturnMap($fetchAllAssociativeMap)
+            ->method('getParentTableAndId')
+            ->willReturnMap($parentMap)
         ;
 
-        $connection
-            ->expects($this->exactly(\count($fetchAssociativeMap)))
-            ->method('fetchAssociative')
-            ->willReturnMap($fetchAssociativeMap)
-        ;
-
-        $voter = new ThemeContentVoter($accessDecisionManager, $connection);
+        $voter = new ThemeContentVoter($accessDecisionManager, $dcaHierarchy);
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
@@ -188,7 +166,7 @@ class ThemeContentVoterTest extends TestCase
 
         $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
 
-        $voter = new ThemeContentVoter($accessDecisionManager, $this->createStub(Connection::class));
+        $voter = new ThemeContentVoter($accessDecisionManager, $this->createStub(DcaHierarchy::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);

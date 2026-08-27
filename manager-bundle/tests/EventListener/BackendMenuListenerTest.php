@@ -87,7 +87,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $this->assertSame('debug_mode', $debug->getLabel());
         $this->assertSame('/contao?do=debug&key=enable&referer=ZG89cGFnZQ==', $debug->getUri());
-        $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode', 'data-turbo-prefetch' => 'false'], $debug->getLinkAttributes());
+        $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode', 'data-contao--tooltips-target' => 'tooltip', 'data-turbo-prefetch' => 'false'], $debug->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }
 
@@ -110,7 +110,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $event->getTree()->getChildren();
 
-        $this->assertSame(['class' => 'icon-debug hover', 'title' => 'debug_mode', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
+        $this->assertSame(['class' => 'icon-debug hover', 'title' => 'debug_mode', 'data-contao--tooltips-target' => 'tooltip', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
     }
 
     public function testDoesNotAddTheDebugButtonIfTheJwtManagerIsNotSet(): void

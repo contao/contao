@@ -148,6 +148,7 @@ class BackendFavoritesListenerTest extends TestCase
             'title' => $collapsed ? 'Expand node' : 'Collapse node',
             'data-action' => 'contao--toggle-navigation#toggle:prevent',
             'data-contao--toggle-navigation-category-param' => 'favorites',
+            'data-contao--tooltips-target' => 'tooltip',
             'data-turbo-prefetch' => 'false',
             'aria-controls' => 'favorites',
         ];
@@ -169,6 +170,7 @@ class BackendFavoritesListenerTest extends TestCase
             [
                 'class' => 'navigation',
                 'title' => 'Edit page 3',
+                'data-contao--tooltips-target' => 'tooltip',
             ],
             $grandChildren[0]->getLinkAttributes(),
         );
@@ -181,6 +183,7 @@ class BackendFavoritesListenerTest extends TestCase
             [
                 'class' => 'navigation',
                 'title' => 'Edit "fe_page"',
+                'data-contao--tooltips-target' => 'tooltip',
             ],
             $grandChildren[1]->getLinkAttributes(),
         );

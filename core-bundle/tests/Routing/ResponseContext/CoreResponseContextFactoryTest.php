@@ -21,6 +21,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
@@ -29,7 +30,6 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -66,7 +66,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($this->createStub(InsertTagParser::class)),
             $this->createStub(RequestStack::class),
             $this->createStub(InsertTagParser::class),
             $this->createStub(CspHandlerFactory::class),
@@ -90,7 +89,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($this->createStub(InsertTagParser::class)),
             $this->createStub(RequestStack::class),
             $this->createStub(InsertTagParser::class),
             $this->createStub(CspHandlerFactory::class),
@@ -148,12 +146,12 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
-                ['My title', 'My title'],
-                ['My description', 'My description'],
-                ['{{link_url::42}}', 'de/foobar.html'],
+                ['My title', OutputType::text, 'My title'],
+                ['My description', OutputType::text, 'My description'],
+                ['{{link_url::42}}', OutputType::url, 'de/foobar.html'],
             ])
         ;
 
@@ -198,7 +196,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $cpHandlerFactory,
@@ -255,11 +252,11 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('replaceInline')
             ->willReturnMap([
-                ['My title', 'My title'],
-                ['My description', 'My description'],
+                ['My title', OutputType::text, 'My title'],
+                ['My description', OutputType::text, 'My description'],
             ])
         ;
 
@@ -312,7 +309,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -355,12 +351,12 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('replaceInline')
             ->willReturnMap([
-                ['', 'My title'],
-                ['', 'My description'],
-                ['{{link_url::42}}', $url],
+                ['', OutputType::text, 'My title'],
+                ['', OutputType::text, 'My description'],
+                ['{{link_url::42}}', OutputType::url, $url],
             ])
         ;
 
@@ -377,7 +373,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $responseAccessor,
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -410,7 +405,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
-        $pageModel->title = 'We went from Alpha &#62; Omega';
+        $pageModel->title = 'We went from Alpha > Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
         $pageModel->searchIndexer = '';
         $pageModel->protected = false;
@@ -425,7 +420,6 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(ResponseContextAccessor::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(TokenChecker::class),
-            new HtmlDecoder($insertTagsParser),
             $this->createStub(RequestStack::class),
             $insertTagsParser,
             $this->createStub(CspHandlerFactory::class),
@@ -439,7 +433,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $this->assertInstanceOf(HtmlHeadBag::class, $htmlBag);
         $this->assertSame('We went from Alpha > Omega', $htmlBag->getTitle());
-        $this->assertSame('My description contains HTML.', $htmlBag->getMetaDescription());
+        $this->assertSame('My description <strong>contains</strong> HTML<br>.', $htmlBag->getMetaDescription());
 
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
 

@@ -72,10 +72,10 @@ class MigrateCommandTest extends FunctionalTestCase
             'Without deletes the table is too large and a warning should be shown',
         );
 
-        $columns = $connection->createSchemaManager()->listTableColumns('tl_content');
-        $this->assertArrayHasKey('test_1', $columns);
-        $this->assertArrayHasKey('test_50', $columns);
-        $this->assertArrayHasKey('text', $columns);
+        $table = $connection->createSchemaManager()->introspectTableByUnquotedName('tl_content');
+        $this->assertTrue($table->hasColumn('test_1'));
+        $this->assertTrue($table->hasColumn('test_50'));
+        $this->assertTrue($table->hasColumn('text'));
 
         $connection->executeStatement('SET SESSION innodb_strict_mode = 0');
         $connection->executeStatement('ALTER TABLE tl_content DROP text');
@@ -95,9 +95,9 @@ class MigrateCommandTest extends FunctionalTestCase
             'With deletes the table is small enough and no warning should be shown',
         );
 
-        $columns = $connection->createSchemaManager()->listTableColumns('tl_content');
-        $this->assertArrayNotHasKey('test_1', $columns);
-        $this->assertArrayNotHasKey('test_50', $columns);
-        $this->assertArrayHasKey('text', $columns);
+        $table = $connection->createSchemaManager()->introspectTableByUnquotedName('tl_content');
+        $this->assertFalse($table->hasColumn('test_1'));
+        $this->assertFalse($table->hasColumn('test_50'));
+        $this->assertTrue($table->hasColumn('text'));
     }
 }

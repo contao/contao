@@ -192,6 +192,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             [
                 'class' => 'navigation template-studio',
                 'title' => 'MOD.template_studio.1',
+                'data-contao--tooltips-target' => 'tooltip',
             ],
             $children['template-studio']->getLinkAttributes(),
         );

@@ -26,7 +26,7 @@
         <target>Došlo k chybě během spouštění tohoto skriptu. Něco nepracuje správným způsobem.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <source>Open the current log file in the &lt;code&gt;var/log&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
         <target>Otevřete současný soubor log ve složce &lt;code&gt;var/logs&lt;/code&gt; a najděte dané chybové hlášení (pravděpodobně jedno z posledních)</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">

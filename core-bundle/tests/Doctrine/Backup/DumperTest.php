@@ -82,7 +82,7 @@ class DumperTest extends ContaoTestCase
             ],
             [],
             [
-                'SELECT `foobar` AS `foobar` FROM `tl_page`' => [],
+                'SELECT `foobar` FROM `tl_page`' => [],
             ],
             [
                 'SET FOREIGN_KEY_CHECKS = 0;',
@@ -111,7 +111,7 @@ class DumperTest extends ContaoTestCase
             ],
             [],
             [
-                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol`, `booleanCol` AS `booleanCol` FROM `tl_page`' => [
+                'SELECT `stringCol`, `integerCol`, `booleanCol` FROM `tl_page`' => [
                     [
                         'stringCol' => 'value1',
                         'integerCol' => '42',
@@ -156,7 +156,7 @@ class DumperTest extends ContaoTestCase
             ],
             [],
             [
-                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol`, `floatCol` AS `floatCol`, `bigintCol` AS `bigintCol`, `decimalCol` AS `decimalCol`, `booleanCol` AS `booleanCol` FROM `tl_page`' => [
+                'SELECT `stringCol`, `integerCol`, `floatCol`, `bigintCol`, `decimalCol`, `booleanCol` FROM `tl_page`' => [
                     [
                         'stringCol' => 'value1',
                         'integerCol' => '42',
@@ -208,12 +208,12 @@ class DumperTest extends ContaoTestCase
             ],
             [],
             [
-                'SELECT `foobar` AS `foobar` FROM `tl_news`' => [
+                'SELECT `foobar` FROM `tl_news`' => [
                     [
                         'foobar' => 'value1',
                     ],
                 ],
-                'SELECT `foobar` AS `foobar` FROM `tl_page`' => [
+                'SELECT `foobar` FROM `tl_page`' => [
                     [
                         'foobar' => 'value1',
                     ],
@@ -252,7 +252,7 @@ class DumperTest extends ContaoTestCase
             ],
             [new View('view_name', 'SELECT `tl_page`.`id` AS `id` FROM `tl_page`')],
             [
-                'SELECT `foobar` AS `foobar` FROM `tl_page`' => [],
+                'SELECT `foobar` FROM `tl_page`' => [],
             ],
             [
                 'SET FOREIGN_KEY_CHECKS = 0;',
@@ -284,7 +284,7 @@ class DumperTest extends ContaoTestCase
             )],
             [],
             [
-                'SELECT `x_string` AS `x_string`, `x_json` AS `x_json`, `x_ascii` AS `x_ascii`, `x_binary` AS `x_binary`, `x_blob` AS `x_blob`, `x_simple_array` AS `x_simple_array` FROM `tl_page`' => [
+                'SELECT `x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array` FROM `tl_page`' => [
                     [
                         'x_string' => 'ascii',
                         'x_json' => serialize(['ascii']),
@@ -334,13 +334,13 @@ class DumperTest extends ContaoTestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('listTables')
+            ->method('introspectTables')
             ->willReturn($tables)
         ;
 
         $schemaManager
             ->expects($this->once())
-            ->method('listViews')
+            ->method('introspectViews')
             ->willReturn($views)
         ;
 

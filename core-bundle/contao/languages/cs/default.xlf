@@ -393,10 +393,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA není dostupná bez bezpečného připojení pomocí HTTPS. Pokud ho vaše webová stránka nepoužívá, což není doporučené, použijte místo toho bezpečností otázku.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-        <target>Existuje alespoň jeden &quot;osobní datový&quot; modul, který umožňuje změnu hesla. To je bezpečností riziko a nebude nadále fungovat v Contau 6. Použijte místo toho modul &quot;Změna hesla&quot;.</target>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>Passkeys není na tomto zařízení podporován.</target>
@@ -415,6 +411,15 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+        <target>Můžete pouze poskytnout přístup k editoru předloh, pokud jste administrátor.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>Lze použít &quot;auto&quot; jen na začátku atributu rozměru musí být zakončený čárkou, existují-li další poté následující hodnoty. </target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Musí být povolené pozvolné načítání (lazy loud), pokud je atribut rozměru &quot;auto&quot;. </target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -438,6 +443,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Vytvoří formulář pro změnu hesla</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -445,6 +451,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Vytvoří formulář pro smazání členského účtu.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -732,6 +739,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Vytvoří formulář pro nastavení nebo změnu dvoufázové autorizace</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1870,6 +1878,7 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Více záznamů je k dispozici, ale jsou skryté z výkonnostních důvodů. Rozbalte seznam nebo aplikujte filtry pro omezení zobrazení. </target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -1909,6 +1918,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Žádný záznam odpovídá danému filtru. </target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2117,6 +2127,14 @@
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Verze</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+        <target>Verze A</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+        <target>Verze B</target>
       </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
@@ -2562,10 +2580,6 @@
         <source>Page %s of %s</source>
         <target>Strana %s z %s</target>
       </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>všeobecné</target>
-      </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
         <target>Soubor %s byl nahrán úspěšně</target>
@@ -2861,9 +2875,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Zobrazit cestu</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Zobrazit podsložky</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2979,6 +2995,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpIndexSetting">
         <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>Daná URL se nebude indexovat kvůli nastavení robotických tagů. </target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -3089,8 +3106,8 @@
         <target>Jméno/ID</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>Pojmenujte tento passkey...</target>
+        <source>Name this passkey</source>
+        <target>Pojmenujte tento passkey</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>
@@ -3122,12 +3139,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
+        <target>Načítám výsledky...</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3207,9 +3227,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Skrolovat doleva</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Skrolovat doprava</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3529,15 +3551,19 @@
       </trans-unit>
       <trans-unit id="DCA.permissions_legend">
         <source>Permissions</source>
+        <target>Povolení</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.0">
         <source>Back end permissions</source>
+        <target>Povolení pro backend</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.1">
         <source>The changes made here are saved in the user and group settings.</source>
+        <target>Tyto změny se uloží do uživatelských a skupinových nastavení. </target>
       </trans-unit>
       <trans-unit id="DCA.permissions.groups">
         <source>Groups</source>
+        <target>Skupiny</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.users">
         <source>Users</source>

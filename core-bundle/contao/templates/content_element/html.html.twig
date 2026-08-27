@@ -4,6 +4,6 @@
     {% endblock %}
 {% else %}
     {% block html %}
-        {{- html|default|sanitize_html('contao')|insert_tag_raw -}}
+        {{- html|default|sanitize_html('contao')|insert_tag_html -}}
     {% endblock %}
 {% endif %}

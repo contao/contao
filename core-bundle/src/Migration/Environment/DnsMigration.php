@@ -37,9 +37,9 @@ class DnsMigration extends AbstractMigration
             return false;
         }
 
-        $columns = $schemaManager->listTableColumns('tl_page');
+        $table = $schemaManager->introspectTableByUnquotedName('tl_page');
 
-        if (!isset($columns['dns']) || !isset($columns['type']) || !isset($columns['usessl'])) {
+        if (!$table->hasColumn('dns') || !$table->hasColumn('type') || !$table->hasColumn('usessl')) {
             return false;
         }
 

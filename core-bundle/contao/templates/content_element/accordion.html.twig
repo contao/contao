@@ -16,7 +16,7 @@
                         .mergeWith(accordion_header_button_attributes|default)
                     %}
                     <button{{ accordion_header_button_attributes }}>
-                        {{- element.header|insert_tag_raw -}}
+                        {{- element.header|insert_tag_html -}}
                     </button>
                 </{{ element.header_tag }}>
             {% endblock %}

@@ -14,7 +14,6 @@
     .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -59,7 +58,7 @@
         <script src="{{ asset('js/choices.min.js', 'contao-components/choices') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/simplemodal.min.js', 'contao-components/simplemodal') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/datepicker.min.js', 'contao-components/datepicker') }}" data-turbo-track="reload"></script>
-        <script src="{{ asset('js/tinymce.min.js', 'contao-components/tinymce4') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/tinymce.min.js', 'contao-components/tinymce') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/ace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/ext-language_tools.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/ext-whitespace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
@@ -144,6 +143,10 @@
             </turbo-frame>
         {% endblock %}
 
+    </div>
+
+    <div role="tooltip" id="tooltip" data-contao--tooltips-target="popup">
+        <div id="tooltip_content" data-contao--tooltips-target="popupContent"></div>
     </div>
 {% endblock %}
 

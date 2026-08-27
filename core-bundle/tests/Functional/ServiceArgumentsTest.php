@@ -159,6 +159,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                 continue;
             }
 
+            if (str_starts_with($argument, '@=')) {
+                continue;
+            }
+
             if ('@' === ($argument[0] ?? '')) {
                 $optional = '?' === $argument[1];
                 $service = $container->get(substr($argument, $optional ? 2 : 1), ContainerInterface::NULL_ON_INVALID_REFERENCE);

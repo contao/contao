@@ -393,10 +393,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA بدون اتصال ایمن HTTPS در دسترس نیست. اگر وب‌سایت شما از HTTPS استفاده نمی‌کند (توصیه نمی‌شود)، لطفاً به جای این از سؤال امنیتی استفاده کنید.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-        <target>حداقل یک ماژول &quot;داده‌های شخصی&quot; وجود دارد که اجازه می‌دهد گذرواژه را تغییر دهید. این یک ضعف امنیتی است و دیگر در Contao 6 کار نخواهد کرد. به جای آن از ماژول &quot;تغییر گذرواژه&quot; استفاده کنید.</target>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>کلیدهای عبور در این دستگاه پشتیبانی نمی‌شوند.</target>
@@ -415,6 +411,12 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2123,6 +2125,12 @@
         <source>Version</source>
         <target>نسخه</target>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
         <target>بازگردانی</target>
@@ -2566,10 +2574,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
         <target>برگه %s از %s</target>
-      </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>سراسری</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
@@ -3096,8 +3100,7 @@
         <target>نام/شناسه</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>برای این کلیدعبور یک نام وارد کنید…</target>
+        <source>Name this passkey</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

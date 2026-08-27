@@ -16,6 +16,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -254,7 +256,13 @@ class DcaSchemaProvider
                 throw new \RuntimeException(\sprintf('Primary key definition "%s" could not be parsed.', $sql));
             }
 
-            $table->setPrimaryKey($matches[1]);
+            $editor = PrimaryKeyConstraint::editor();
+
+            foreach ($matches[1] as $column) {
+                $editor->addColumnName(UnqualifiedName::unquoted($column));
+            }
+
+            $table->addPrimaryKeyConstraint($editor->create());
 
             return;
         }
@@ -317,13 +325,8 @@ class DcaSchemaProvider
             return null;
         }
 
-        if ($col->hasPlatformOption('collation')) {
-            $collation = $col->getPlatformOption('collation');
-        } else {
-            $collation = $table->getOption('collate');
-        }
-
         $defaultLength = $this->getDefaultIndexLength($table);
+        $collation = $col->getCollation() ?? $table->getOption('collate');
         $bytes = str_starts_with($collation, 'utf8mb4') ? 4 : 3;
         $indexLength = (int) floor($defaultLength / $bytes);
 

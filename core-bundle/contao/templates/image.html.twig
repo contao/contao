@@ -14,7 +14,7 @@
     {% endif %}
 
     {% if caption|default %}
-        <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_raw }}</figcaption>
+        <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_html }}</figcaption>
     {% endif %}
 </figure>
 

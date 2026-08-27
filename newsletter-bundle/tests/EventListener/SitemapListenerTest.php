@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\Database;
 use Contao\NewsletterBundle\EventListener\SitemapListener;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
@@ -79,17 +79,13 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters): SitemapListener
     {
-        $database = $this->createStub(Database::class);
-        $database
-            ->method('getChildRecords')
+        $framework = $this->createContaoFrameworkStub($adapters);
+
+        $hierarchy = $this->createStub(DcaHierarchy::class);
+        $hierarchy
+            ->method('getChildIds')
             ->willReturn($allPages)
         ;
-
-        $instances = [
-            Database::class => $database,
-        ];
-
-        $framework = $this->createContaoFrameworkStub($adapters, $instances);
 
         if ([] === $allPages) {
             $security = $this->createStub(Security::class);
@@ -109,7 +105,7 @@ class SitemapListenerTest extends ContaoTestCase
             ->willReturn('https://contao.org')
         ;
 
-        return new SitemapListener($framework, $security, $urlGenerator);
+        return new SitemapListener($framework, $security, $urlGenerator, $hierarchy);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

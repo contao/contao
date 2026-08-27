@@ -6,9 +6,9 @@
         {% if this.label %}
             <legend>
                 {% if this.mandatory|default %}
-                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
+                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_html }}<span class="mandatory">*</span>
                 {% else %}
-                    {{ this.label|insert_tag_raw }}
+                    {{ this.label|insert_tag_html }}
                 {% endif %}
             </legend>
         {% endif %}
@@ -32,7 +32,7 @@
                         .set('value', option.value)
                         .mergeWith(option.checked)
                         .mergeWith(option.attributes)
-                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|sanitize_html('contao')|insert_tag_raw }}</label></span>
+                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|sanitize_html('contao')|insert_tag_html }}</label></span>
             {% endif %}
 
             {% if option.type == 'group_end' %}
@@ -41,7 +41,7 @@
         {% endfor %}
 
         {% if this.help|default %}
-            <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
+            <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_html }}</p>
         {% endif %}
 
     </fieldset>

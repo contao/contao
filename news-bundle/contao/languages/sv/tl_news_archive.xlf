@@ -33,6 +33,14 @@
         <source>These groups will be able to see the news items in this archive.</source>
         <target>Här kan du välja vilka grupper som ska ha rätt att läsa nyhetsartiklarna.</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.0">
+        <source>JSON-LD type</source>
+        <target>JSON-LD typ</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.1">
+        <source>Please choose the JSON-LD type for the news items in this archive.</source>
+        <target>Välj JSON-LD-typ för nyhetsartiklarna i detta arkiv.</target>
+      </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
         <target>Ändringsdatum</target>
@@ -48,6 +56,10 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
         <target>Åtkomstkydd</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.expert_legend">
+        <source>Expert settings</source>
+        <target>Expertinställningar</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
@@ -67,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.versions.1">
         <source>Show the versions of news archive ID %s</source>
+        <target>Visa versionerna av nyhetsarkiv ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>

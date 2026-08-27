@@ -24,6 +24,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
+ *
+ * @internal
  */
 class InsertTags extends Controller
 {

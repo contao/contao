@@ -18,8 +18,6 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
-use Contao\Environment;
-use Contao\Input;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,9 +44,9 @@ abstract class AbstractBackendController extends AbstractController
      */
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
-        $getBackendContext = function () {
-            $template = new class() extends BackendMain {
-                public function __invoke(): BackendTemplate
+        $getBackendContext = function (Request $request) {
+            $templateClosure = new class() extends BackendMain {
+                public function __invoke(Request $request): BackendTemplate
                 {
                     // Create an empty template, so that the template engine's parse() method won't
                     // do anything
@@ -56,8 +54,8 @@ abstract class AbstractBackendController extends AbstractController
                     $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
 
                     // Handle Ajax request
-                    if (Input::post('action') && Environment::get('isAjaxRequest')) {
-                        $this->objAjax = new Ajax(Input::post('action'));
+                    if ($request->isXmlHttpRequest() && $action = $request->request->get('action')) {
+                        $this->objAjax = new Ajax($action);
                         $this->objAjax->executePreActions();
                     }
 
@@ -68,11 +66,11 @@ abstract class AbstractBackendController extends AbstractController
 
                     return $this->Template;
                 }
-            }();
+            };
 
             return $this->container
                 ->get('contao.twig.interop.context_factory')
-                ->fromContaoTemplate($template)
+                ->fromContaoTemplate($templateClosure($request))
             ;
         };
 
@@ -91,7 +89,7 @@ abstract class AbstractBackendController extends AbstractController
         }
 
         if ($includeChromeContext ?? true) {
-            $parameters = [...$getBackendContext(), ...$parameters];
+            $parameters = [...$getBackendContext($request), ...$parameters];
         }
 
         $response = parent::render($view, $parameters, $response);

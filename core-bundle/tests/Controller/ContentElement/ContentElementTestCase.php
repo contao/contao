@@ -86,6 +86,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 abstract class ContentElementTestCase extends TestCase
@@ -176,6 +177,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('contao.twig.filesystem_loader', $loader);
         $container->set('contao.twig.interop.context_factory', new ContextFactory($scopeMatcher));
         $container->set('twig', $environment);
+        $container->set('twig.runtime.escaper', new EscaperRuntime());
         $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));

@@ -1,0 +1,5 @@
+mcp:
+    resource: .
+    type: mcp
+    defaults:
+        _scope: backend

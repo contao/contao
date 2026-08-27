@@ -49,21 +49,4 @@ class FormHtml extends Widget
 
 		return parent::parse($arrAttributes);
 	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-		{
-			return htmlspecialchars($this->html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-		}
-
-		return $this->html;
-	}
 }

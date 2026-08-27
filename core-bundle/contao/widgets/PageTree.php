@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlAttributes;
+
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -102,7 +104,7 @@ class PageTree extends Widget
 			$arrIds = array_map('\intval', array_filter(explode(',', $varInput)));
 		}
 
-		if (\count(array_diff($arrIds, array_merge($this->rootNodes, Database::getInstance()->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		if (\count(array_diff($arrIds, array_merge($this->rootNodes, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->rootNodes, 'tl_page')))) > 0)
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
@@ -125,12 +127,14 @@ class PageTree extends Widget
 
 			if ($objPages !== null)
 			{
+				$pageImageAttributes = (new HtmlAttributes())->addClass('type-image');
+
 				foreach ($objPages as $objPage)
 				{
 					$objPage->loadDetails();
 
 					$arrSet[] = $objPage->id;
-					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . StringUtil::specialchars($objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')');
+					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage), attributes: $pageImageAttributes) . ' ' . StringUtil::specialchars($objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')');
 				}
 			}
 		}

@@ -64,6 +64,7 @@ class BackendMainListenerTest extends TestCase
                 'title' => 'Category 1 Title',
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category1',
+                'data-contao--tooltips-target' => 'tooltip',
                 'aria-controls' => 'category1',
                 'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'true',
@@ -79,13 +80,13 @@ class BackendMainListenerTest extends TestCase
         // Node 1
         $this->assertSame('Node 1', $grandChildren['node1']->getLabel());
         $this->assertSame('/node1', $grandChildren['node1']->getUri());
-        $this->assertSame(['class' => 'node1', 'title' => 'Node 1 Title'], $grandChildren['node1']->getLinkAttributes());
+        $this->assertSame(['class' => 'node1', 'title' => 'Node 1 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['node1']->getLinkAttributes());
         $this->assertSame(['translation_domain' => false], $grandChildren['node1']->getExtras());
 
         // Node 1
         $this->assertSame('Node 2', $grandChildren['node2']->getLabel());
         $this->assertSame('/node2', $grandChildren['node2']->getUri());
-        $this->assertSame(['class' => 'node2', 'title' => 'Node 2 Title'], $grandChildren['node2']->getLinkAttributes());
+        $this->assertSame(['class' => 'node2', 'title' => 'Node 2 Title', 'data-contao--tooltips-target' => 'tooltip'], $grandChildren['node2']->getLinkAttributes());
         $this->assertSame(['translation_domain' => false], $grandChildren['node2']->getExtras());
 
         // Category 2
@@ -100,6 +101,7 @@ class BackendMainListenerTest extends TestCase
                 'title' => 'Category 2 Title',
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category2',
+                'data-contao--tooltips-target' => 'tooltip',
                 'aria-controls' => 'category2',
                 'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'false',

@@ -16,17 +16,16 @@ use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
-use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
 
 return RectorConfig::configure()
     ->withPhpSets(php84: true)
     ->withSets([SetList::CONTAO])
     ->withPaths([
+        __DIR__.'/api-bundle/src',
+        __DIR__.'/api-bundle/tests',
         __DIR__.'/calendar-bundle/src',
         __DIR__.'/calendar-bundle/tests',
         __DIR__.'/comments-bundle/src',
@@ -41,6 +40,8 @@ return RectorConfig::configure()
         __DIR__.'/manager-bundle/bin',
         __DIR__.'/manager-bundle/src',
         __DIR__.'/manager-bundle/tests',
+        __DIR__.'/mcp-bundle/src',
+        __DIR__.'/mcp-bundle/tests',
         __DIR__.'/news-bundle/src',
         __DIR__.'/news-bundle/tests',
         __DIR__.'/newsletter-bundle/src',
@@ -51,7 +52,6 @@ return RectorConfig::configure()
         __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
-        AddOverrideAttributeToOverriddenMethodsRector::class,
         AddTypeToConstRector::class,
         ArrayToFirstClassCallableRector::class => [
             'core-bundle/tests/Contao/InsertTagsTest.php',
@@ -61,8 +61,6 @@ return RectorConfig::configure()
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
-        DeprecatedAnnotationToDeprecatedAttributeRector::class,
-        NullToStrictStringFuncCallArgRector::class,
         ReadOnlyAnonymousClassRector::class,
         ReadOnlyClassRector::class,
         SimplifyIfReturnBoolRector::class => [
@@ -74,5 +72,5 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withParallel()
-    ->withCache(sys_get_temp_dir().'/rector/contao60')
+    ->withCache(sys_get_temp_dir().'/rector/contao')
 ;

@@ -393,10 +393,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA güvenli bir HTTPS bağlantısı olmadan kullanılamaz. Üretim siteniz HTTPS kullanmıyorsa (önerilmez), bunun yerine güvenlik sorusunu kullanın.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-        <target>Parolanın değiştirilmesine izin veren en az bir &quot;kişisel veri&quot; modülü var. Bu bir güvenlik riski oluşturduğundan Contao 6 üzerinde çalışmayacak. Bunun yerine &quot;parolayı değiştir&quot; modülünü kullanın.</target>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>Bu aygıtta geçiş anahtarları desteklenmiyor.</target>
@@ -416,6 +412,12 @@
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
         <target>Kalıp düzenleyiciye erişme iznini yalnızca bir yöneticiyseniz verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2124,6 +2126,12 @@
         <source>Version</source>
         <target>Sürüm</target>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
         <target>Geri yükleme</target>
@@ -2567,10 +2575,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
         <target>Sayfa %s / %s</target>
-      </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>genel</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
@@ -3097,8 +3101,7 @@
         <target>Ad/Kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>Geçiş anahtarına ad verin…</target>
+        <source>Name this passkey</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

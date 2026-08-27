@@ -51,7 +51,7 @@ class InheritanceTest extends TestCase
 
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getCurrentPage')
             ->willReturn($page)
         ;

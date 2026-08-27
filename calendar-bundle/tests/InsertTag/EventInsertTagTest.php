@@ -14,13 +14,24 @@ namespace Contao\CalendarBundle\Tests\InsertTag;
 
 use Contao\CalendarBundle\InsertTag\EventInsertTag;
 use Contao\CalendarEventsModel;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class EventInsertTagTest extends ContaoTestCase
 {
@@ -43,7 +54,7 @@ class EventInsertTagTest extends ContaoTestCase
             ->willReturn($url ?? '')
         ;
 
-        $listener = new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $listener = $this->createEventInsertTag($adapters, $urlGenerator);
         $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
         $this->assertSame($expectedValue, $result->getValue());
@@ -57,7 +68,7 @@ class EventInsertTagTest extends ContaoTestCase
             ['2'],
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
-            '<a href="events/the-foobar-event.html">The "foobar" event</a>',
+            '<a href="events/the-foobar-event.html">The &quot;foobar&quot; event</a>',
             OutputType::html,
         ];
 
@@ -66,7 +77,7 @@ class EventInsertTagTest extends ContaoTestCase
             ['2', 'blank'],
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
-            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
+            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The &quot;foobar&quot; event</a>',
             OutputType::html,
         ];
 
@@ -168,8 +179,42 @@ class EventInsertTagTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
-        $listener = new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $listener = $this->createEventInsertTag($adapters, $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['3']), []))->getValue());
+    }
+
+    private function createEventInsertTag(array $adapters, ContentUrlGenerator $urlGenerator): EventInsertTag
+    {
+        $twig = new Environment($this->createStub(LoaderInterface::class));
+
+        $twig->addExtension(
+            new ContaoExtension(
+                $twig,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $twig),
+            ),
+        );
+
+        $insertTagParser = $this->createStub(InsertTagParser::class);
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
+
+        $twig->addRuntimeLoader(
+            new FactoryRuntimeLoader([
+                InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
+            ]),
+        );
+
+        $htmlSanitizer = $this->createStub(HtmlSanitizerInterface::class);
+        $htmlSanitizer
+            ->method('sanitize')
+            ->willReturnArgument(0)
+        ;
+
+        return new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator, $twig, $htmlSanitizer);
     }
 }

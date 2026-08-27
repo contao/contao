@@ -1,7 +1,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
     .addStyle(style|default)
-    .setIfExists('aria-label', ariaLabel)
+    .setIfExists('aria-label', ariaLabel|insert_tag)
     .mergeWith(wrapperAttributes|default)
 %}
 
@@ -9,7 +9,7 @@
 <nav{{ wrapperAttributes }}>
 
     {% if headline %}
-        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
+        <{{ hl }}>{{ headline|insert_tag_html }}</{{ hl }}>
     {% endif %}
 
     <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>

@@ -38,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'cacheTagsInvalidation'       => array('start', 'stop'),
 		'markAsCopy'                  => 'title',
 		'permissions'                 => array(),
 		'onload_callback' => array
@@ -302,7 +303,7 @@ class tl_article extends Backend
 		}
 
 		$attributes = sprintf(
-			'data-icon="%s" data-icon-disabled="%s"',
+			'data-icon="%s" data-icon-disabled="%s" class="type-image"',
 			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
 			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);

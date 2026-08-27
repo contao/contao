@@ -155,7 +155,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
     {
         $session = new Session(new MockArraySessionStorage());
         $session->set('foobar', 'foobaz'); // This starts the session
-        $session->remove('foobar'); // This removes the value but the session remains started
+        $session->remove('foobar'); // This removes the value, but the session remains started
 
         $request = Request::create('https://foobar.com');
         $request->setSession($session);

@@ -33,6 +33,14 @@
         <source>These groups will be able to see the news items in this archive.</source>
         <target>これらのグループが、このアーカイブのニュース項目を参照できます。</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.0">
+        <source>JSON-LD type</source>
+        <target>JSON-LD型</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.1">
+        <source>Please choose the JSON-LD type for the news items in this archive.</source>
+        <target>このアーカイブのニュース項目のためのJSON-LD型を選択してください。</target>
+      </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
         <target>改訂日</target>
@@ -48,6 +56,10 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
         <target>アクセスの保護</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.expert_legend">
+        <source>Expert settings</source>
+        <target>専門的な設定</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>

@@ -16,6 +16,7 @@
         .set('title', 'MSC.jobs'|trans)
         .set('class', 'icon-jobs')
         .set('data-turbo-prefetch', false)
+        .set('data-contao--tooltips-target', 'tooltip')
         .mergeWith(menu_item_attributes|default) %}
     <a{{ menu_item_attributes }}>{{ 'MSC.jobs'|trans }}</a>
     <sup data-contao--jobs-target="count"></sup>

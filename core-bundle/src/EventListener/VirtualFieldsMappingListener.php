@@ -20,9 +20,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
- * Adds "targetColumn" automatically to fields without an "sql" definition.
- * Defines "targetColumn" fields automatically as "virtualTarget". Adds an "sql"
- * definition automatically to virtual field targets.
+ * Adds "targetColumn" automatically to fields without an SQL definition. Defines
+ * "targetColumn" fields automatically as "virtualTarget". Adds an SQL definition
+ * automatically to virtual field targets.
  */
 #[AsHook('loadDataContainer', priority: -4096)]
 class VirtualFieldsMappingListener

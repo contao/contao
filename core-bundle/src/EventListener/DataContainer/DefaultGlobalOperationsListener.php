@@ -104,7 +104,7 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
-                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll:prevent keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
+                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-contao--tooltips-target="tooltip" data-action="contao--toggle-nodes#toggleAll:prevent keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
                     'showOnSelect' => true,
                     'primary' => true,
                 ],
@@ -112,7 +112,7 @@ class DefaultGlobalOperationsListener
         } elseif ($hasLimitHeight) {
             $operations += [
                 'toggleNodes' => [
-                    'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button>'),
+                    'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none" data-contao--tooltips-target="tooltip">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button>'),
                     'listAttributes' => ' style="display:none"',
                     'showOnSelect' => true,
                     'primary' => true,
@@ -126,7 +126,7 @@ class DefaultGlobalOperationsListener
                     'href' => 'act=select',
                     'prefetch' => true,
                     'class' => 'header_edit_all',
-                    'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e"',
+                    'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e" data-contao--tooltips-target="tooltip"',
                     'primary' => true,
                 ],
             ];

@@ -29,11 +29,19 @@ class DecodeHtmlCommentsMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (
-            !$schemaManager->tablesExist(['tl_module', 'tl_comments'])
-            || !\array_key_exists('com_bbcode', $schemaManager->listTableColumns('tl_module'))
-            || !\array_key_exists('comment', $schemaManager->listTableColumns('tl_comments'))
-        ) {
+        if (!$schemaManager->tablesExist(['tl_module', 'tl_comments'])) {
+            return false;
+        }
+
+        $moduleTable = $schemaManager->introspectTableByUnquotedName('tl_module');
+
+        if (!$moduleTable->hasColumn('com_bbcode')) {
+            return false;
+        }
+
+        $commentsTable = $schemaManager->introspectTableByUnquotedName('tl_comments');
+
+        if (!$commentsTable->hasColumn('comment')) {
             return false;
         }
 

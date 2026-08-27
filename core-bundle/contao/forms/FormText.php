@@ -266,26 +266,6 @@ class FormText extends Widget
 	}
 
 	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate()
-	{
-		return \sprintf(
-			'<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
-			$this->type,
-			$this->strName,
-			$this->strId,
-			$this->hideInput ? ' password' : '',
-			$this->strClass ? ' ' . $this->strClass : '',
-			StringUtil::specialchars($this->convertDate($this->value)),
-			$this->getAttributes(),
-			$this->strTagEnding
-		);
-	}
-
-	/**
 	 * Convert date values into the HTML5 date format (see #6389)
 	 */
 	protected function convertDate($varValue)

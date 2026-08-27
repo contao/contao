@@ -82,7 +82,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->with('tl_form')
             ->willReturn('tl_form')
         ;
@@ -140,7 +140,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->with('tl_user')
             ->willReturn('tl_user')
         ;
@@ -201,7 +201,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->with('tl_user')
             ->willReturn('tl_user')
         ;
@@ -263,7 +263,7 @@ class RecordPreviewListenerTest extends TestCase
 
         $connection
             ->expects($this->once())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->with('tl_content')
             ->willReturn('tl_content')
         ;

@@ -43,16 +43,6 @@ class FormAltcha extends Widget
 	}
 
 	/**
-	 * Generate the widget and return it as string.
-	 *
-	 * @return string The widget markup
-	 */
-	public function generate(): string
-	{
-		return \sprintf('<altcha-widget%s></altcha-widget>', $this->altchaAttributes);
-	}
-
-	/**
 	 * Parse the template file and return it as string.
 	 *
 	 * @param array $arrAttributes An optional attributes array
@@ -73,13 +63,34 @@ class FormAltcha extends Widget
 
 		$this->altchaAttributes = new HtmlAttributes();
 		$this->altchaAttributes->set('name', $this->name);
-		$this->altchaAttributes->set('maxnumber', $this->getContainer()->get('contao.altcha')->getRangeMax());
-		$this->altchaAttributes->set('challengeurl', $this->getContainer()->get('router')->generate(AltchaController::class));
-		$this->altchaAttributes->set('strings', $this->getLocalization());
-		$this->altchaAttributes->setIfExists('auto', $this->altchaAuto);
-		$this->altchaAttributes->setIfExists('hidelogo', $this->altchaHideLogo);
-		$this->altchaAttributes->setIfExists('hidefooter', $this->altchaHideFooter);
-		$this->altchaAttributes->setIfExists('floating', $this->altchaFloating);
+		$this->altchaAttributes->set('challenge', $this->getContainer()->get('router')->generate(AltchaController::class));
+
+		$config = array();
+
+		if ($this->altchaAuto)
+		{
+			$config['auto'] = $this->altchaAuto;
+		}
+
+		if ($this->altchaHideLogo)
+		{
+			$config['hideLogo'] = true;
+		}
+
+		if ($this->altchaHideFooter)
+		{
+			$config['hideFooter'] = true;
+		}
+
+		if ($this->altchaFloating)
+		{
+			$config['display'] = 'floating';
+		}
+
+		if ($config)
+		{
+			$this->altchaAttributes->set('configuration', json_encode($config));
+		}
 
 		$this->canUseAltcha = $request->isSecure();
 
@@ -108,17 +119,5 @@ class FormAltcha extends Widget
 		}
 
 		return $varInput;
-	}
-
-	protected function getLocalization(): string
-	{
-		return StringUtil::specialchars(json_encode(array(
-			'error' => $GLOBALS['TL_LANG']['ERR']['altchaWidgetError'],
-			'footer' => $GLOBALS['TL_LANG']['MSC']['altchaFooter'],
-			'label' => $GLOBALS['TL_LANG']['MSC']['altchaLabel'],
-			'verified' => $GLOBALS['TL_LANG']['MSC']['altchaVerified'],
-			'verifying' => $GLOBALS['TL_LANG']['MSC']['altchaVerifying'],
-			'waitAlert' => $GLOBALS['TL_LANG']['MSC']['altchaWaitAlert'],
-		)));
 	}
 }

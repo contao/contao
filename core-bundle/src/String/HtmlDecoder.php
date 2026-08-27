@@ -29,20 +29,21 @@ class HtmlDecoder
      *
      * @see StringUtil::revertInputEncoding()
      *
-     * @param bool $removeInsertTags True to remove insert tags instead of replacing them
+     * @param bool $removeInsertTags True to remove insert tags instead of replacing them, null to neither remove or replace them
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
      */
-    public function inputEncodedToPlainText(string $val, bool $removeInsertTags = false): string
+    public function inputEncodedToPlainText(string $val, bool|null $removeInsertTags = false): string
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
         if ($removeInsertTags) {
             $val = StringUtil::stripInsertTags($val);
-        } else {
+        } elseif (false === $removeInsertTags) {
             $val = $this->insertTagParser->replaceInline($val);
         }
 
-        $val = strip_tags($val);
-        $val = StringUtil::revertInputEncoding($val);
-
-        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
+        return $this->stripTagsDecodeEntities($val);
     }
 
     /**
@@ -52,11 +53,13 @@ class HtmlDecoder
      * and encoded entities and is meant to be used with content from fields that have
      * the allowHtml flag enabled.
      *
-     * @param bool $removeInsertTags True to remove insert tags instead of replacing them
+     * @param bool $removeInsertTags True to remove insert tags instead of replacing them, null to neither remove or replace them
      */
-    public function htmlToPlainText(string $val, bool $removeInsertTags = false): string
+    public function htmlToPlainText(string $val, bool|null $removeInsertTags = false, bool $trim = true): string
     {
-        if (!$removeInsertTags) {
+        if ($removeInsertTags) {
+            $val = StringUtil::stripInsertTags($val);
+        } elseif (false === $removeInsertTags) {
             $val = $this->insertTagParser->replaceInline($val);
         }
 
@@ -75,9 +78,23 @@ class HtmlDecoder
             $val,
         );
 
-        $val = $this->inputEncodedToPlainText($val, true);
+        $val = $this->stripTagsDecodeEntities($val);
 
         // Remove duplicate line breaks and spaces
-        return trim(preg_replace(['/[^\S\n]+/', '/\s*\n\s*/'], [' ', "\n"], $val));
+        $val = preg_replace(['/[^\S\n]+/', '/\s*\n\s*/'], [' ', "\n"], $val);
+
+        if ($trim) {
+            $val = trim($val);
+        }
+
+        return $val;
+    }
+
+    private function stripTagsDecodeEntities(string $val): string
+    {
+        $val = strip_tags($val);
+        $val = StringUtil::revertInputEncoding($val);
+
+        return str_replace(['{{', '}}'], ['[{]', '[}]'], $val);
     }
 }

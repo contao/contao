@@ -76,6 +76,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "6.1-dev"
+        },
         "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin"
     }
 }

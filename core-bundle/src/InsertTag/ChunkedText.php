@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
+trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s" is deprecated and will no longer work in Contao 7.', ChunkedText::class);
+
 /**
  * @implements \IteratorAggregate<int, array{0: self::TYPE_*, 1: string}>
+ *
+ * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
  */
 final class ChunkedText implements \IteratorAggregate, \Stringable
 {

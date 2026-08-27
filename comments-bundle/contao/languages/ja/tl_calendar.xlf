@@ -41,14 +41,6 @@
         <source>Approve comments before they are published on the website.</source>
         <target>ウェブサイトで公開する前にコメントを審査します。</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>BBコードを許可</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>コメントの書き込みに、書式を整形するBBコードを使用できるようにします。</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
         <target>コメントにログインを必要</target>

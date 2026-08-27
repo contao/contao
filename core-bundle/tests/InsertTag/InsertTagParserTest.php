@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
@@ -30,6 +31,7 @@ use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -201,6 +203,98 @@ class InsertTagParserTest extends TestCase
 
         $result = $parser->replaceInline('foo {{tag}} bar');
         $this->assertSame('foo baz bar', $result);
+    }
+
+    #[DataProvider('getInsertTagOutputTypes')]
+    public function testInsertTagOutputTypes(OutputType $outputType, string $source, string $expected): void
+    {
+        $parser = $this->getInsertTagParser();
+        $parser->addSubscription(
+            new InsertTagSubscription(
+                new class() implements InsertTagResolverNestedResolvedInterface {
+                    public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
+                    {
+                        return new InsertTagResult($insertTag->getParameters()->get(1), OutputType::{$insertTag->getParameters()->get(0)});
+                    }
+                },
+                '__invoke',
+                'type',
+                null,
+                true,
+                false,
+            ),
+        );
+
+        $this->assertSame($expected, $parser->replaceInline($source, $outputType));
+    }
+
+    public static function getInsertTagOutputTypes(): iterable
+    {
+        yield [
+            OutputType::html,
+            '<div>{{type::html::<br>}}</div>',
+            '<div><br></div>',
+        ];
+
+        yield [
+            OutputType::html,
+            '<div>{{type::text::<br>}}</div>',
+            '<div>&lt;br&gt;</div>',
+        ];
+
+        yield [
+            OutputType::html,
+            '<div>{{type::url::<br>}}</div>',
+            '<div>&lt;br&gt;</div>',
+        ];
+
+        yield [
+            OutputType::text,
+            '<< {{type::text::I <3 Contao}} >>',
+            '<< I <3 Contao >>',
+        ];
+
+        yield [
+            OutputType::text,
+            '<< {{type::html::I &lt;3<br foo="bar">Contao}} >>',
+            "<< I <3\nContao >>",
+        ];
+
+        yield [
+            OutputType::url,
+            '{{type::url::https://example.com/foo?bar=baz}}',
+            'https://example.com/foo?bar=baz',
+        ];
+
+        yield [
+            OutputType::url,
+            '/foo?bar={{type::html::<b>baz&amp;foo</b>}}',
+            '/foo?bar=%3Cb%3Ebaz%26amp%3Bfoo%3C%2Fb%3E',
+        ];
+
+        yield [
+            OutputType::js,
+            'var foo = "{{type::text::bar"baz}}";',
+            'var foo = "bar\u0022baz";',
+        ];
+
+        yield [
+            OutputType::js,
+            'var foo = "{{type::html::<div title="bar">baz</div>}}";',
+            'var foo = "\u003Cdiv\u0020title\u003D\u0022bar\u0022\u003Ebaz\u003C\/div\u003E";',
+        ];
+
+        yield [
+            OutputType::css,
+            'color: #{{type::text::BA3BA5}};',
+            'color: #BA3BA5;',
+        ];
+
+        yield [
+            OutputType::css,
+            'content: "{{type::html::<div title="bar">baz</div>}}";',
+            'content: "\3C div\20 title\3D \22 bar\22 \3E baz\3C \2F div\3E ";',
+        ];
     }
 
     public function testNestedInsertTags(): void

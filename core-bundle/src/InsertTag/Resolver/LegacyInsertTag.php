@@ -278,7 +278,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if (false !== ($strOutput = Controller::getArticle($insertTag->getParameters()->get(0), false, true))) {
                     $result = ltrim($strOutput);
                 } else {
-                    $result = '<p class="error">'.\sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
+                    $result = '<p class="error">'.\sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], StringUtil::specialchars($insertTag->getParameters()->get(0))).'</p>';
                 }
                 break;
 
@@ -318,11 +318,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = \sprintf('<a href="%s"%s>%s</a>', $strUrl, $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s"%s>%s</a>', StringUtil::specialchars($strUrl), $strTarget, StringUtil::specialchars($objArticle->title));
                         break;
 
                     case 'article_open':
-                        $result = \sprintf('<a href="%s"%s>', $strUrl, $strTarget);
+                        $result = \sprintf('<a href="%s"%s>', StringUtil::specialchars($strUrl), $strTarget);
                         break;
 
                     case 'article_url':
@@ -341,7 +341,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             // Article teaser
             case 'article_teaser':
                 if ($objTeaser = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
-                    $result = $objTeaser->teaser;
+                    $result = System::getContainer()->get('contao.html_sanitizer')->sanitize($objTeaser->teaser);
                 }
                 break;
 
@@ -433,6 +433,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
             // Page
             case 'page':
+                $outputType = OutputType::text;
                 $property = $insertTag->getParameters()->get(0);
                 $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
 
@@ -450,15 +451,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
                     $result = match ($property) {
-                        'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
-                        'description' => htmlspecialchars($htmlHeadBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
+                        'pageTitle' => $htmlHeadBag->getTitle(),
+                        'description' => $htmlHeadBag->getMetaDescription(),
                     };
                 } elseif ($pageModel) {
-                    // Do not use StringUtil::specialchars() here (see #4687)
-                    if (!\in_array($property, ['title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'], true)) {
-                        $outputType = OutputType::text;
-                    }
-
                     $result = $pageModel->{$property};
                 }
                 break;

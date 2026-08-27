@@ -246,7 +246,7 @@ abstract class Hybrid extends Frontend
 
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
 		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . ($this->cssID[1] ?? ''));
-		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
+		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . StringUtil::specialchars($this->cssID[0]) . '"' : '';
 
 		$this->Template->inColumn = $this->strColumn;
 

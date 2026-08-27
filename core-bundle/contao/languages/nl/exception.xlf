@@ -26,8 +26,8 @@
         <target>Er is een fout opgetreden tijdens het uitvoeren van het script. Iets werkt niet helemaal correct.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
-        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
-        <target>Open het huidige log bestand in de &lt;code&gt;var/logs&lt;/code&gt;  map en zoek naar de bijbehorende foutmelding (meestal de laatste).</target>
+        <source>Open the current log file in the &lt;code&gt;var/log&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Open het huidige logbestand in de map &lt;code&gt;var/log&lt;/code&gt; en zoek het bijbehorende foutbericht (meestal het laatste).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>

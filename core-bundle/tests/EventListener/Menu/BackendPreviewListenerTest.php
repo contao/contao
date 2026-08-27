@@ -96,6 +96,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
                 'title' => 'MSC.fePreviewTitle',
                 'target' => '_blank',
                 'accesskey' => 'f',
+                'data-contao--tooltips-target' => 'tooltip',
             ],
             $children['preview']->getLinkAttributes(),
         );

@@ -5,7 +5,7 @@
     <h1>{{ subject }}</h1>
 
     <div class="newsletter">
-        {{ content|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_raw|simple_token_html }}
+        {{ content|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_html|simple_token_html }}
     </div>
 
     {% if enclosure|default %}

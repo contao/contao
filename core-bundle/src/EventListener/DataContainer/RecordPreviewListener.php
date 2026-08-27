@@ -49,7 +49,7 @@ class RecordPreviewListener
     public function storePrecompiledRecordPreview(DataContainer $dc, string $undoId): void
     {
         $row = $this->connection
-            ->executeQuery('SELECT * FROM '.$this->connection->quoteIdentifier($dc->table).' WHERE id = ?', [$dc->id])
+            ->executeQuery('SELECT * FROM '.$this->connection->quoteSingleIdentifier($dc->table).' WHERE id = ?', [$dc->id])
             ->fetchAssociative()
         ;
 

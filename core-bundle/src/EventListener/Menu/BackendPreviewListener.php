@@ -59,6 +59,7 @@ class BackendPreviewListener
             ->setLinkAttribute('title', $this->translator->trans('MSC.fePreviewTitle', [], 'contao_default'))
             ->setLinkAttribute('target', '_blank')
             ->setLinkAttribute('accesskey', 'f')
+            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
             ->setExtra('translation_domain', 'contao_default')
         ;
 

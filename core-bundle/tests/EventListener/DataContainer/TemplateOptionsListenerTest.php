@@ -130,7 +130,7 @@ class TemplateOptionsListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->atLeastOnce())
-            ->method('quoteIdentifier')
+            ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
 

@@ -254,7 +254,7 @@ class tl_newsletter extends Backend
 	public function listNewsletters($arrRow)
 	{
 		$label = RecordLabel::fromHtml('<strong>' . StringUtil::specialchars($arrRow['subject']) . '</strong> - ' . StringUtil::specialchars(($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']));
-		$label->htmlPreview = (!$arrRow['sendText'] ? StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . StringUtil::specialchars($arrRow['text']) . '</pre>';
+		$label->htmlPreview = (!$arrRow['sendText'] ? System::getContainer()->get('contao.html_sanitizer')->sanitize(StringUtil::insertTagToSrc($arrRow['content'])) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . StringUtil::specialchars($arrRow['text']) . '</pre>';
 		$label->state = ($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished';
 
 		return $label;

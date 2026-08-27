@@ -11,6 +11,8 @@ parameters:
     level: 6
 
     paths:
+        - %currentWorkingDirectory%/api-bundle/src
+        - %currentWorkingDirectory%/api-bundle/tests
         - %currentWorkingDirectory%/calendar-bundle/src
         - %currentWorkingDirectory%/calendar-bundle/tests
         - %currentWorkingDirectory%/comments-bundle/src
@@ -22,6 +24,8 @@ parameters:
         - %currentWorkingDirectory%/listing-bundle/src
         - %currentWorkingDirectory%/maker-bundle/src
         - %currentWorkingDirectory%/maker-bundle/tests
+        - %currentWorkingDirectory%/mcp-bundle/src
+        - %currentWorkingDirectory%/mcp-bundle/tests
         - %currentWorkingDirectory%/news-bundle/src
         - %currentWorkingDirectory%/news-bundle/tests
         - %currentWorkingDirectory%/newsletter-bundle/src

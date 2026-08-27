@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>Tento modul vám umožní spravovat události z různých kalendářů</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>Kanály Kalendáře</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>Kalendář/Události</target>

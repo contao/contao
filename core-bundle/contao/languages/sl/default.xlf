@@ -392,9 +392,6 @@
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
         <target>ALTCHA ni na voljo brez varne povezave HTTPS. Če vaše produkcijsko spletno mesto ne uporablja HTTPS (ni priporočljivo), prosimo, namesto tega uporabite varnostno vprašanje.</target>
       </trans-unit>
-      <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
-      </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
         <target>Ključi Passkeys niso podprti na tej napravi.</target>
@@ -413,6 +410,12 @@
       </trans-unit>
       <trans-unit id="ERR.grantTemplateEditor">
         <source>You can only grant access to the template editor if you are an admin.</source>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2106,6 +2109,12 @@
         <source>Version</source>
         <target>Različica</target>
       </trans-unit>
+      <trans-unit id="MSC.versionA">
+        <source>Version A</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionB">
+        <source>Version B</source>
+      </trans-unit>
       <trans-unit id="MSC.restore">
         <source>Restore</source>
         <target>Razveljavi</target>
@@ -2549,10 +2558,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
         <target>Stran %s od %s</target>
-      </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-        <target>globalno</target>
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
@@ -3074,8 +3079,7 @@
         <target>Ime/ID</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
-        <source>Name this passkey …</source>
-        <target>Poimenuj ta ključ Passkey ...</target>
+        <source>Name this passkey</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>

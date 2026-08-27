@@ -557,7 +557,7 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: "files/media" must not be reported as a directory here, because it is virtual
+                // Note: "files/media" must not be reported as a directory here because it is virtual
                 // and implicit (i.e. only the explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',

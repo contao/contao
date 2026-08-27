@@ -251,9 +251,11 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.0">
         <source>Table permissions</source>
+        <target>Tabulka povolení</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.1">
         <source>Here you can select which operations are allowed for which table.</source>
+        <target>Zde můžete vybrat, jaké operace jsou povolené pro jakou tabulku.</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.create">
         <source>Create</source>
@@ -261,6 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.update">
         <source>Update</source>
+        <target>Zaktualizovat</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.delete">
         <source>Delete</source>
@@ -268,15 +271,19 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.other">
         <source>Additional permissions</source>
+        <target>Dodatečná povolení</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_create">
         <source>Create records in &quot;%s&quot;</source>
+        <target>Vytvořit záznam v &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_update">
         <source>Update records of &quot;%s&quot;</source>
+        <target>Zaktualizovat záznam v &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_delete">
         <source>Delete records of &quot;%s&quot;</source>
+        <target>Smazat záznam &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -364,6 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud_legend">
         <source>Table permissions</source>
+        <target>Tabulka povolení</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -423,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_user.versions.1">
         <source>Show the versions of user ID %s</source>
+        <target>Zobrazit verze uživatele ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>

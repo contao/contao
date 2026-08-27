@@ -41,14 +41,6 @@
         <source>Approve comments before they are published on the website.</source>
         <target>Дозволи коментаре пре него што буду објављени на сајту.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.0">
-        <source>Allow BBCode</source>
-        <target>Дозволи BBCode</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.bbcode.1">
-        <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Дозволи корисницима да користе BBCode у својим коментарима.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
         <target>Захтевај пријављивање ради коментарисања</target>

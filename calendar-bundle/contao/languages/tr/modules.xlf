@@ -9,10 +9,6 @@
         <source>Manage events and display them in a calendar or event list</source>
         <target>Etkinlikleri yönetir ve takvim ya da etkinlik listesi düzeninde görüntüler</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_calendar_feed">
-        <source>Calendar feeds</source>
-        <target>Takvim akışları</target>
-      </trans-unit>
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
         <target>Etkinlikler</target>

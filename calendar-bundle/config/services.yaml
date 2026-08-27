@@ -39,6 +39,8 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+            - '@twig'
+            - '@contao.html_sanitizer'
 
     contao_calendar.listener.add_feeds_from_layout:
         class: Contao\CalendarBundle\EventListener\AddFeedsFromLayoutListener
@@ -97,7 +99,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.data_container.dca_url_analyzer'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_calendar.listener.sitemap:
         class: Contao\CalendarBundle\EventListener\SitemapListener
@@ -105,6 +107,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_calendar.listener.title_tag:
         class: Contao\CalendarBundle\EventListener\TitleTagListener
@@ -132,6 +135,7 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_calendar.security.calendar_events_access_voter:
         class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter

@@ -20,7 +20,7 @@
                 <div class="widget w50 clr">
                     <h3><label for="verify"{% if error|default %} class="error"{% endif %}>{{ 'MSC.twoFactorVerification'|trans }}</label></h3>
                     <input type="text" name="verify" id="verify" class="tl_text{% if error|default %} error{% endif %}" value="" autocapitalize="off" autocomplete="one-time-code" required>
-                    <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
+                    <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip" data-contao--tooltips-target="content">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
                 </div>
                 <div class="submit_container cf">
                     <button type="submit" class="tl_submit">{{ 'MSC.enable'|trans }}</button>
@@ -154,7 +154,7 @@
                                     {% else %}
                                         <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
                                     {% endif %}
-                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)])|e('js')|e('html') }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
                                 </form>
                             </td>
                         </tr>
@@ -165,16 +165,16 @@
         </turbo-frame>
     </div>
     <div class="add_passkey"
-         data-controller="contao--webauthn contao--webauthn-error"
-         data-contao--webauthn-creation-result-url-value="{{ path('webauthn.controller.creation.response.contao_backend_add_authenticator') }}"
-         data-contao--webauthn-creation-options-url-value="{{ path('webauthn.controller.creation.request.contao_backend_add_authenticator') }}"
-         data-contao--webauthn-creation-success-redirect-uri-value="{{ webauthnCreationSuccessRedirectUri }}"
+         data-controller="contao--webauthn-registration contao--webauthn-error"
+         data-contao--webauthn-registration-result-url-value="{{ path('webauthn.controller.creation.response.contao_backend_add_authenticator') }}"
+         data-contao--webauthn-registration-options-url-value="{{ path('webauthn.controller.creation.request.contao_backend_add_authenticator') }}"
+         data-contao--webauthn-registration-success-redirect-uri-value="{{ webauthnCreationSuccessRedirectUri }}"
          data-contao--webauthn-error-unsupported-message-value="{{ 'ERR.passkeysUnsupported'|trans }}"
          data-contao--webauthn-error-attestation-failure-message-value="{{ 'ERR.passkeyAttestationFailure'|trans }}"
          data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure"
     >
         <div class="tl_submit_container">
-            <button class="tl_submit" type="submit" data-action="contao--webauthn#signup">{{ 'MSC.addPasskey'|trans }}</button>
+            <button class="tl_submit" type="submit" data-action="contao--webauthn-registration#register">{{ 'MSC.addPasskey'|trans }}</button>
         </div>
         <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
     </div>

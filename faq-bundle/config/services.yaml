@@ -16,6 +16,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
+            - '@twig'
 
     contao_faq.listener.data_container.faq_search:
         class: Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener
@@ -30,6 +31,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_faq.listener.title_tag:
         class: Contao\FaqBundle\EventListener\TitleTagListener
