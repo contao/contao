@@ -26,7 +26,7 @@ final class InlineImageEmbedder
         }
 
         // Thanks to @ofriedrich and @aschempp (see #4562)
-        if (!preg_match('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $html, $matches, PREG_SET_ORDER)) {
+        if (!preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $html, $matches, PREG_SET_ORDER)) {
             return;
         }
 
