@@ -290,7 +290,7 @@ class ModuleUnsubscribe extends Module
 			->text(StringUtil::decodeEntities(System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData)))
 		;
 
-		if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+		if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
 		{
 			$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 		}

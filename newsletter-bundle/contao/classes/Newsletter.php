@@ -431,8 +431,24 @@ class Newsletter extends Backend
 			$objTemplate->recipient = $arrRecipient['email'];
 
 			// Parse the template
-			$objEmail->html(new CssToInlineStyles())->convert($objTemplate->parse());
+			$objEmail->html(new CssToInlineStyles()->convert($objTemplate->parse()));
 		}
+
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->getTextBody(), $objEmail->getHtmlBody() ?? ''))
+			->setHtmlAllowed(!$objNewsletter->sendText)
+			->setNewsletterData($objNewsletter->row())
+			->setRecipientData($arrRecipient);
+
+		System::getContainer()->get('event_dispatcher')->dispatch($event);
+
+		if ($event->isSkipSending())
+		{
+			return false;
+		}
+
+		$objEmail->text(StringUtil::decodeEntities($event->getText()));
+		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
+		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
 		if (!$objNewsletter->externalImages)
 		{
@@ -462,7 +478,7 @@ class Newsletter extends Backend
 						if (!isset($arrCid[$src]))
 						{
 							// See https://symfony.com/doc/current/mailer.html#embedding-images
-							$objEmail->embedFromPath($this->strImageDir . $src, $src);
+							$objEmail->embedFromPath($strImageDir . $src, $src);
 							$arrCid[$src] = 'cid:' . $src;
 						}
 
@@ -471,22 +487,6 @@ class Newsletter extends Backend
 				}
 			}
 		}
-
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->getTextBody(), $objEmail->getHtmlBody() ?? ''))
-			->setHtmlAllowed(!$objNewsletter->sendText)
-			->setNewsletterData($objNewsletter->row())
-			->setRecipientData($arrRecipient);
-
-		System::getContainer()->get('event_dispatcher')->dispatch($event);
-
-		if ($event->isSkipSending())
-		{
-			return false;
-		}
-
-		$objEmail->text(StringUtil::decodeEntities($event->getText()));
-		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
-		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$arrRejected = $objSession->get('rejected_recipients', array());
