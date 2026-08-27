@@ -552,17 +552,17 @@ class Form extends Hybrid
 					]>
 					DTD;
 
-				$email->embed(str_replace('<form>', "$dtd\n<form>", $dom->saveXML()), 'form.xml', 'application/xml');
+				$email->attach(str_replace('<form>', "$dtd\n<form>", $dom->saveXML()), 'form.xml', 'application/xml');
 			}
 
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->embed(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->attach(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
 			elseif ($this->format == 'csv_excel')
 			{
-				$email->embed(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
+				$email->attach(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -586,7 +586,7 @@ class Form extends Hybrid
 							continue;
 						}
 
-						$email->embedFromPath($file['tmp_name'], $file['name'], $file['type']);
+						$email->attachFromPath($file['tmp_name'], $file['name'], $file['type']);
 					}
 				}
 			}
