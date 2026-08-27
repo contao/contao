@@ -245,7 +245,7 @@ class tl_comments extends Backend
 					->text(StringUtil::decodeEntities(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
 				;
 
-				if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
 				{
 					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 				}

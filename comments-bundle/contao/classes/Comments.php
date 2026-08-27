@@ -380,11 +380,11 @@ class Comments extends Frontend
 			$objEmail->text($strText);
 
 			// Do not send notifications twice
-			$varNotifies = array_unique(array($varNotifies));
+			$arrNotifies = array_values(array_filter(array_unique((array) $varNotifies)));
 
-			if (!empty($varNotifies))
+			if ($arrNotifies)
 			{
-				$objEmail->to(...$varNotifies);
+				$objEmail->to(...$arrNotifies);
 
 				System::getContainer()->get('mailer')->send($objEmail);
 			}
@@ -548,7 +548,7 @@ class Comments extends Frontend
 					->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
 				;
 
-				if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
 				{
 					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 				}
