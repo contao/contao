@@ -46,7 +46,7 @@ final class RecordLabel implements \Stringable
         return $this->htmlLabel ?? StringUtil::specialchars($this->label);
     }
 
-    public static function fromCallback(self|array|string $callbackReturnValue, bool $asColumns = false): self
+    public static function fromCallback(array|self|string $callbackReturnValue, bool $asColumns = false): self
     {
         if ($callbackReturnValue instanceof self) {
             return $callbackReturnValue;

@@ -52,7 +52,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         );
     }
 
-    protected function mockSecurity(int|null $userId = null): Security&MockObject
+    protected function mockSecurity(int|null $userId = null): MockObject&Security
     {
         $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 

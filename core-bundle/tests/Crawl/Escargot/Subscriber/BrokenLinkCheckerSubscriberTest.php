@@ -391,7 +391,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         return $response;
     }
 
-    private function mockTranslator(): TranslatorInterface&Stub
+    private function mockTranslator(): Stub&TranslatorInterface
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

@@ -826,7 +826,7 @@ class RouteProviderTest extends TestCase
         return $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
     }
 
-    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel&MockObject
+    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): MockObject&PageModel
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
@@ -852,7 +852,7 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel&MockObject
+    private function mockRootPage(string $language, string $alias, bool $fallback = true): MockObject&PageModel
     {
         $page = $this->createClassWithPropertiesMock(PageModel::class);
         $page->id = ++$this->pageModelAutoIncrement;
