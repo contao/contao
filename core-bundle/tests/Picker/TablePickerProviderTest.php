@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
@@ -34,6 +35,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TablePickerProviderTest extends ContaoTestCase
 {
+    private DcaHierarchy|null $dcaHierarchy = null;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -46,6 +49,19 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider();
 
         $this->assertSame('tablePicker', $provider->getName());
+    }
+
+    public function testDeprecatesTheLegacyConstructor(): void
+    {
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 6.1: Not passing an instance of "Contao\CoreBundle\DataContainer\DcaHierarchy" to "Contao\CoreBundle\Picker\AbstractTablePickerProvider::__construct()" is deprecated and will no longer work in Contao 7.');
+
+        new TablePickerProvider(
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(FactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+        );
     }
 
     public function testSupportsContext(): void
@@ -571,12 +587,17 @@ class TablePickerProviderTest extends ContaoTestCase
 
     private function createTableProvider(ContaoFramework|null $framework = null, RouterInterface|null $router = null, Connection|null $connection = null): TablePickerProvider
     {
+        $framework ??= $this->createStub(ContaoFramework::class);
+        $router ??= $this->createStub(RouterInterface::class);
+        $connection ??= $this->createStub(Connection::class);
+
         return new TablePickerProvider(
-            $framework ?: $this->createStub(ContaoFramework::class),
+            $framework,
             $this->createStub(FactoryInterface::class),
-            $router ?: $this->createStub(RouterInterface::class),
+            $router,
             $this->createStub(TranslatorInterface::class),
-            $connection ?: $this->createStub(Connection::class),
+            $connection,
+            $this->dcaHierarchy ?? $this->createStub(DcaHierarchy::class),
         );
     }
 
@@ -627,6 +648,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $this->mockRouterWithExpectedParams(...$expectedParams),
             $this->mockTranslatorWithExpectedCalls($modules),
             $this->createStub(Connection::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 
@@ -826,12 +848,19 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($queryBuilder)
         ;
 
-        if ($dynamicPtable) {
-            $connection
+        if (null !== $dynamicPtable) {
+            $this->dcaHierarchy = $this->createMock(DcaHierarchy::class);
+            $expectation = $this->dcaHierarchy
                 ->expects($this->once())
-                ->method('fetchAllAssociative')
-                ->willReturn([['ptable' => $dynamicPtable, 'pid' => 0]])
+                ->method('getParentTableAndId')
+                ->with($id, $table)
             ;
+
+            if ('' === $dynamicPtable) {
+                $expectation->willThrowException(new \RuntimeException());
+            } else {
+                $expectation->willReturn([$dynamicPtable, 0]);
+            }
         }
 
         return $connection;

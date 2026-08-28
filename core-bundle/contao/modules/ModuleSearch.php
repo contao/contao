@@ -115,30 +115,18 @@ class ModuleSearch extends Module
 		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			$db = Database::getInstance();
+			$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$arrPages = array();
-
-				foreach ($this->pages as $intPageId)
-				{
-					$arrPages[] = array($intPageId);
-					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
-				}
-
-				if (!empty($arrPages))
-				{
-					$arrPages = array_merge(...$arrPages);
-				}
-
-				$arrPages = array_unique($arrPages);
+				$arrPages = array_unique(array_merge($this->pages, $hierarchy->getChildIds($this->pages, 'tl_page')));
 			}
 			// Website root
 			else
 			{
 				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
-				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = $hierarchy->getChildIds($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)

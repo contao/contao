@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\Security\Voter;
 
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDynamicPtableVoter;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -28,8 +29,9 @@ class CalendarContentVoter extends AbstractDynamicPtableVoter
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly Connection $connection,
+        DcaHierarchy $dcaHierarchy,
     ) {
-        parent::__construct($connection);
+        parent::__construct($dcaHierarchy);
     }
 
     public function reset(): void

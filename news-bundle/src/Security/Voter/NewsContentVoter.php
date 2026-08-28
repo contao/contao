@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Security\Voter;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDynamicPtableVoter;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Doctrine\DBAL\Connection;
@@ -28,8 +29,9 @@ class NewsContentVoter extends AbstractDynamicPtableVoter
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly Connection $connection,
+        DcaHierarchy $dcaHierarchy,
     ) {
-        parent::__construct($connection);
+        parent::__construct($dcaHierarchy);
     }
 
     public function reset(): void
