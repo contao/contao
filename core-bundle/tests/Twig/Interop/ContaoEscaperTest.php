@@ -136,7 +136,7 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
-    private function executeReplaceInsertTagsCallback(string $tag, bool $cache): string|false
+    private function executeReplaceInsertTagsCallback(string $tag, bool $cache): false|string
     {
         if ('bar' !== $tag) {
             return false;

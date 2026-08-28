@@ -34,7 +34,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
-    public function __construct(self|iterable|string|null $attributes = null)
+    public function __construct(iterable|self|string|null $attributes = null)
     {
         $this->mergeWith($attributes);
     }
@@ -57,7 +57,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
-    public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
+    public function mergeWith(iterable|self|string|null $attributes = null, mixed $condition = true): self
     {
         if (empty($attributes) || !$this->test($condition)) {
             return $this;

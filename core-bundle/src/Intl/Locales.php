@@ -29,7 +29,7 @@ class Locales
     private readonly array $enabledLocales;
 
     public function __construct(
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         array $defaultLocales,
         array $defaultEnabledLocales,
         array $configLocales,
