@@ -25,8 +25,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
-use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
-use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -56,7 +54,7 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Toflar\CronjobSupervisor\Supervisor;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 {
     public function getAlias(): string
     {
@@ -229,47 +227,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         if (false === $config['auto_refresh_template_hierarchy'] || (null === $config['auto_refresh_template_hierarchy'] && !$container->getParameter('kernel.debug'))) {
             $container->removeDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener');
         }
-    }
-
-    public function configureFilesystem(FilesystemConfiguration $config): void
-    {
-        // TODO: Deprecate the "contao.upload_path" config key. In the next major
-        // version, $uploadPath can then be replaced with "files" and the redundant
-        // "files" attribute removed when mounting the local adapter.
-        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
-
-        // User uploads
-        $config
-            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
-            ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
-            ->setPublic(true)
-        ;
-
-        $config
-            ->addDefaultDbafs($filesStorageName, 'tl_files')
-            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
-        ;
-
-        $config->addVirtualFilesystem($readonlyFilesStorageName = "$filesStorageName#readonly", $uploadPath, true);
-        $config->addAssetPackage($readonlyFilesStorageName, $filesStorageName);
-
-        // Backups
-        $config
-            ->mountLocalAdapter('var/backups', 'backups', 'backups')
-            ->addVirtualFilesystem('backups', 'backups')
-        ;
-
-        // Job attachments
-        $config
-            ->mountLocalAdapter('var/job-attachments', 'job-attachments', 'job-attachments')
-            ->addVirtualFilesystem('job-attachments', 'job-attachments')
-        ;
-
-        // User templates
-        $config
-            ->mountLocalAdapter('templates', 'user_templates', 'user_templates')
-            ->addVirtualFilesystem('user_templates', 'user_templates')
-        ;
     }
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
