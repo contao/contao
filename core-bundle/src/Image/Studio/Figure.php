@@ -140,10 +140,7 @@ final class Figure
     public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
         $this->resolveIfClosure($this->linkAttributes);
-
-        if (null === $this->linkAttributes) {
-            $this->linkAttributes = [];
-        }
+        $this->linkAttributes ??= [];
 
         // Generate the href attribute
         if (!\array_key_exists('href', $this->linkAttributes)) {

@@ -96,7 +96,7 @@ class DebugControllerTest extends ContaoTestCase
         $listener->enableAction();
     }
 
-    private function mockSecurityHelper(bool $isAdmin = true): Security&MockObject
+    private function mockSecurityHelper(bool $isAdmin = true): MockObject&Security
     {
         $security = $this->createMock(Security::class);
         $security
@@ -108,7 +108,7 @@ class DebugControllerTest extends ContaoTestCase
         return $security;
     }
 
-    private function mockRequestStack(string $path = '', string|null $referer = null): RequestStack&MockObject
+    private function mockRequestStack(string $path = '', string|null $referer = null): MockObject&RequestStack
     {
         $request = Request::create($path);
 
