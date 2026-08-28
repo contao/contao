@@ -270,7 +270,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         return $connection;
     }
 
-    private function createTranslatorStub(): TranslatorInterface&Stub
+    private function createTranslatorStub(): Stub&TranslatorInterface
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

@@ -64,7 +64,7 @@ class FavoriteControllerTest extends TestCase
     }
 
     #[DataProvider('favoriteProvider')]
-    public function testRendersAddToFavoriteButton(Request $request, int|false $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
+    public function testRendersAddToFavoriteButton(Request $request, false|int $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
     {
         $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
         $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class);
@@ -237,7 +237,7 @@ class FavoriteControllerTest extends TestCase
             ?? $request->request->get('target_path');
     }
 
-    private function mockRouter(string|null $url): UrlGeneratorInterface&Stub
+    private function mockRouter(string|null $url): Stub&UrlGeneratorInterface
     {
         $router = $this->createStub(UrlGeneratorInterface::class);
 

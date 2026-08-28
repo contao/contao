@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TableAccessVoterTest extends TestCase
 {
-    private TokenInterface&Stub $token;
+    private Stub&TokenInterface $token;
 
     protected function setUp(): void
     {
