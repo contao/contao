@@ -21,7 +21,7 @@ class ItemToUpdate
         private readonly string $existingPath,
         private readonly string|null $newHash,
         private readonly string|null $newPath,
-        private readonly int|false|null $lastModified = false,
+        private readonly false|int|null $lastModified = false,
     ) {
     }
 

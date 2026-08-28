@@ -212,7 +212,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             foreach ($previews as $image) {
                 yield $figureBuilder->fromImage($image)->build();
             }
-        } catch (UnableToGeneratePreviewException|MissingPreviewProviderException) {
+        } catch (MissingPreviewProviderException|UnableToGeneratePreviewException) {
             // ignore
         }
     }

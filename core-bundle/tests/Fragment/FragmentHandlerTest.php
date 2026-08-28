@@ -263,7 +263,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator<mixed>&MockObject
      */
-    private function mockServiceLocatorWithRenderer(string $name, array|null $with = null, Response|null $response = null): ServiceLocator&MockObject
+    private function mockServiceLocatorWithRenderer(string $name, array|null $with = null, Response|null $response = null): MockObject&ServiceLocator
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer
@@ -288,7 +288,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator<mixed>&MockObject
      */
-    private function mockServiceLocator(string $name, object $service): ServiceLocator&MockObject
+    private function mockServiceLocator(string $name, object $service): MockObject&ServiceLocator
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator
