@@ -250,9 +250,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     private function getPageType(int $id): string
     {
-        if (!isset($this->pageTypeCache[$id])) {
-            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$id]);
-        }
+        $this->pageTypeCache[$id] ??= $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$id]);
 
         if (false === $this->pageTypeCache[$id]) {
             throw new \UnexpectedValueException('Page ID "'.$id.'" not found');
