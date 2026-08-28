@@ -22,9 +22,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 #[AsEventListener('scheb_two_factor.authentication.code_valid')]
 class CompleteTwoFactorProviderListener
 {
-    public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-    ) {
+    public function __construct(private readonly TokenStorageInterface $tokenStorage)
+    {
     }
 
     public function __invoke(): void

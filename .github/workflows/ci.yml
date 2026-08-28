@@ -3,12 +3,8 @@ name: CI
 on:
     pull_request: ~
 
-permissions: read-all
-
-defaults:
-    run:
-        # Simulate an interactive terminal with color support
-        shell: script -q -e -c "export TERM=xterm; bash {0}"
+permissions:
+    contents: read
 
 jobs:
     rector:
