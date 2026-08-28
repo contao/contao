@@ -2,7 +2,7 @@
 
 {# Add the colorbox style sheet #}
 {% add 'colorbox' to stylesheets %}
-    {% with {file: 'assets/colorbox/css/colorbox.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% with {file: asset('css/colorbox.min.css', 'contao-components/colorbox')} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 
 <script src="{{ asset('js/colorbox.min.js', 'contao-components/colorbox') }}"></script>

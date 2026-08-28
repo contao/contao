@@ -719,7 +719,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $framework;
     }
 
-    private function mockRouterWithExpectedParams(array ...$consecutive): RouterInterface&MockObject
+    private function mockRouterWithExpectedParams(array ...$consecutive): MockObject&RouterInterface
     {
         $expected = [];
 
@@ -866,7 +866,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $connection;
     }
 
-    private function mockTranslatorWithExpectedCalls(array $modules): TranslatorInterface&MockObject
+    private function mockTranslatorWithExpectedCalls(array $modules): MockObject&TranslatorInterface
     {
         $expected = [];
 

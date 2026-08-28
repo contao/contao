@@ -37,7 +37,7 @@ use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
-    private string|false $cwdBackup = false;
+    private false|string $cwdBackup = false;
 
     protected function setUp(): void
     {

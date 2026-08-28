@@ -69,9 +69,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             $schemaName = str_replace('/', '_', $schemaPath);
             $schemaRef = '#/components/schemas/'.$schemaName;
 
-            if (!isset($schemas[$schemaName])) {
-                $schemas[$schemaName] = $this->createComponentSchema($schema);
-            }
+            $schemas[$schemaName] ??= $this->createComponentSchema($schema);
 
             foreach ($resource->getOperations() as $operation) {
                 if ($operation instanceof GetCollection) {

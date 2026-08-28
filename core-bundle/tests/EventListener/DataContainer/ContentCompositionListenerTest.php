@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
-    private Security&MockObject $security;
+    private MockObject&Security $security;
 
     private array $pageRecord = [
         'id' => 17,
@@ -1046,7 +1046,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function mockPageWithRow(): PageModel&MockObject
+    private function mockPageWithRow(): MockObject&PageModel
     {
         $page = $this->createClassWithPropertiesMock(PageModel::class, $this->pageRecord);
         $page

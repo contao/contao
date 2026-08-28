@@ -471,9 +471,6 @@ class Search
 	 */
 	public static function query(string $strKeywords, bool $blnOrSearch=false, array $arrPid=array(), bool $blnFuzzy=false, int $intMinlength=0): SearchResult
 	{
-		// Clean the keywords
-		$strKeywords = StringUtil::decodeEntities($strKeywords);
-
 		// Check keyword string
 		if (!\strlen($strKeywords))
 		{
