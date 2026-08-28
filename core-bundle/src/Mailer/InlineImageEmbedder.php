@@ -73,10 +73,6 @@ final class InlineImageEmbedder
             return true;
         }
 
-        if (!Path::isBasePath($this->projectDir, $path)) {
-            return false;
-        }
-
         try {
             $file = $this->framework->createInstance(File::class, [Path::makeRelative($path, $this->projectDir)]);
 
