@@ -149,7 +149,7 @@ class Email
 				break;
 
 			case 'text':
-				$this->strText = StringUtil::decodeEntities($varValue);
+				$this->strText = $varValue;
 				break;
 
 			case 'html':

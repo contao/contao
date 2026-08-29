@@ -617,7 +617,7 @@ class ModuleRegistration extends Module
 			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
-		$objEmail->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n"));
+		$objEmail->text(\sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n");
 
 		System::getContainer()->get('mailer')->send($objEmail);
 	}

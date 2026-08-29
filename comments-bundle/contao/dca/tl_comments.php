@@ -242,7 +242,7 @@ class tl_comments extends Backend
 				$objEmail = new Email()
 					->to($objNotify->email)
 					->subject(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host'))))
-					->text(StringUtil::decodeEntities(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
+					->text(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove))
 				;
 
 				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))

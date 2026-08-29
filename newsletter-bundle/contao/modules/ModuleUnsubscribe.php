@@ -287,7 +287,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail = new Email()
 			->to($strEmail)
 			->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))))
-			->text(StringUtil::decodeEntities(System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData)))
+			->text(System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData))
 		;
 
 		if (!empty($GLOBALS['TL_ADMIN_EMAIL']))

@@ -418,7 +418,7 @@ class Newsletter extends Backend
 		}
 
 		// Prepare the text content
-		$objEmail->text(StringUtil::decodeEntities($simpleTokenParser->parse($text, $arrRecipient)));
+		$objEmail->text($simpleTokenParser->parse($text, $arrRecipient));
 
 		if (!$objNewsletter->sendText)
 		{
@@ -446,7 +446,7 @@ class Newsletter extends Backend
 			return false;
 		}
 
-		$objEmail->text(StringUtil::decodeEntities($event->getText()));
+		$objEmail->text($event->getText());
 		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 

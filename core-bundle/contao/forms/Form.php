@@ -506,7 +506,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->getSubject())
 			{
-				$email->subject(html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8'));
+				$email->subject(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject));
 			}
 
 			// Send copy to sender
@@ -558,11 +558,11 @@ class Form extends Hybrid
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->attach(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->attach('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"', 'form.csv', 'text/comma-separated-values');
 			}
 			elseif ($this->format == 'csv_excel')
 			{
-				$email->attach(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
+				$email->attach(mb_convert_encoding("\u{FEFF}sep=;\n" . '"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"', 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -592,7 +592,7 @@ class Form extends Hybrid
 			}
 
 			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
-			$email->text(StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n");
+			$email->text(trim($message) . $uploaded . "\n\n");
 
 			// Set the transport
 			if (!empty($this->mailerTransport))

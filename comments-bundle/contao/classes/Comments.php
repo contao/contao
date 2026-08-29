@@ -545,7 +545,7 @@ class Comments extends Frontend
 				$objEmail = new EmailMessage()
 					->to($objNotify->email)
 					->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host'))))
-					->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
+					->text(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove))
 				;
 
 				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
