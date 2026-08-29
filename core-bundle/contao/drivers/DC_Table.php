@@ -5635,7 +5635,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
-		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds();
+		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))
+			->withIgnoreOutOfBounds()
+			->withPageRange(7);
 
 		if ($limit)
 		{

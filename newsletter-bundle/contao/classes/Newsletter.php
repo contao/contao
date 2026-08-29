@@ -11,6 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
@@ -19,6 +23,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
@@ -35,6 +40,8 @@ class Newsletter extends Backend
 	 */
 	public function send(DataContainer $dc)
 	{
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $dc->table, new ReadAction($dc->table, $dc->getCurrentRecord()));
+
 		$db = Database::getInstance();
 
 		$objNewsletter = $db
@@ -485,6 +492,8 @@ class Newsletter extends Backend
 	 */
 	public function importRecipients()
 	{
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . 'tl_newsletter_recipients', new CreateAction('tl_newsletter_recipients', array('pid' => Input::get('id'))));
+
 		if (Input::get('key') != 'import')
 		{
 			return '';
@@ -507,6 +516,7 @@ class Newsletter extends Backend
 			$intTotal = 0;
 			$intInvalid = 0;
 			$db = Database::getInstance();
+			$security = System::getContainer()->get('security.helper');
 
 			foreach ($arrUploaded as $strCsvFile)
 			{
@@ -584,9 +594,20 @@ class Newsletter extends Backend
 						continue;
 					}
 
-					$db
-						->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
-						->execute(Input::get('id'), $strRecipient);
+					$new = array
+					(
+						'pid' => Input::get('id'),
+						'tstamp' => $time,
+						'email' => $strRecipient,
+						'active' => 1,
+					);
+
+					if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_newsletter_recipients', new CreateAction('tl_newsletter_recipients', $new)))
+					{
+						continue;
+					}
+
+					$db->prepare("INSERT INTO tl_newsletter_recipients %s")->set($new)->execute();
 
 					++$intTotal;
 				}
@@ -1027,5 +1048,17 @@ class Newsletter extends Backend
 		natsort($arrNewsletters); // see #7864
 
 		return $arrNewsletters;
+	}
+
+	private function denyAccessUnlessGranted(mixed $attribute, mixed $subject = null): void
+	{
+		if (!System::getContainer()->get('security.helper')->isGranted($attribute, $subject))
+		{
+			$exception = new AccessDeniedException(\sprintf('Not enough permissions to access %s.', $subject));
+			$exception->setAttributes(array($attribute));
+			$exception->setSubject($subject);
+
+			throw $exception;
+		}
 	}
 }

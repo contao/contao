@@ -526,7 +526,7 @@ abstract class Widget extends Controller
 	{
 		if ($strSeparator === null)
 		{
-			$strSeparator = '<br' . $this->strTagEnding . "\n";
+			$strSeparator = "<br>\n";
 		}
 
 		return $this->hasErrors() ? implode($strSeparator, $this->arrErrors) : '';

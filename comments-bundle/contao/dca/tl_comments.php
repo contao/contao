@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'name' => array
 		(
@@ -363,7 +363,7 @@ class tl_comments extends Backend
 		$key = ($arrRow['published'] ? 'published' : 'unpublished') . ($arrRow['addReply'] ? ' replied' : '');
 
 		return RecordLabel::fromHtml('
-<div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialchars($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
+<div class="cte_type ' . $key . '"><a href="mailto:' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . StringUtil::specialchars($arrRow['name']) . '</a>' . ($arrRow['website'] ? ' (<a href="' . StringUtil::specialcharsUrl($arrRow['website']) . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['com_website']) . '</a>)' : '') . ' – ' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $arrRow['date'])) . ' – IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
 <div class="cte_preview">
 ' . nl2br(StringUtil::specialchars($arrRow['comment'])) . '
 </div>' . "\n    ");

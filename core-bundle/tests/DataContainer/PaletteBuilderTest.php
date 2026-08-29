@@ -580,7 +580,7 @@ class PaletteBuilderTest extends TestCase
         ];
     }
 
-    private function mockRequestStackWithFieldsetState(array $fieldsetStates): RequestStack&MockObject
+    private function mockRequestStackWithFieldsetState(array $fieldsetStates): MockObject&RequestStack
     {
         $sessionBag = $this->createMock(AttributeBag::class);
         $sessionBag
