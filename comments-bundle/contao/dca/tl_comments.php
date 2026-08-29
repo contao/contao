@@ -28,7 +28,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 $GLOBALS['TL_DCA']['tl_comments'] = array

@@ -17,7 +17,6 @@ use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 
 /**

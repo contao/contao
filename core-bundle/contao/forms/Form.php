@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 
 /**

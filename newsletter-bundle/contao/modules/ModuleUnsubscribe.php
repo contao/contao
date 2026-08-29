@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
