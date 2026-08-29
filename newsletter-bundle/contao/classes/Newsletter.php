@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
@@ -472,7 +471,7 @@ class Newsletter extends Backend
 
 			System::getContainer()->get('mailer')->send($objEmail);
 		}
-		catch (RfcComplianceException|HandlerFailedException|TransportException $e)
+		catch (HandlerFailedException|RfcComplianceException|TransportException $e)
 		{
 			// Rejected recipients
 			$arrRejected[] = $arrRecipient['email'];
