@@ -357,11 +357,6 @@ class Comments extends Frontend
 				->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host'))))
 			;
 
-			if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
-			{
-				$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
-			}
-
 			// Add the comment details
 			$strText = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
@@ -547,11 +542,6 @@ class Comments extends Frontend
 					->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host'))))
 					->text(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove))
 				;
-
-				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
-				{
-					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
-				}
 
 				System::getContainer()->get('mailer')->send($objEmail);
 			}

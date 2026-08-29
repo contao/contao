@@ -245,11 +245,6 @@ class tl_comments extends Backend
 					->text(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove))
 				;
 
-				if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
-				{
-					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
-				}
-
 				System::getContainer()->get('mailer')->send($objEmail);
 			}
 		}

@@ -290,11 +290,6 @@ class ModuleUnsubscribe extends Module
 			->text(System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData))
 		;
 
-		if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
-		{
-			$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
-		}
-
 		System::getContainer()->get('mailer')->send($objEmail);
 
 		// Redirect to the jumpTo page
