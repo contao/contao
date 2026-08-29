@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
@@ -19,6 +18,9 @@ use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
@@ -371,22 +373,14 @@ class Newsletter extends Backend
 	 * @param Result $objNewsletter
 	 * @param array  $arrAttachments
 	 *
-	 * @return Email
+	 * @return EmailMessage
 	 */
 	protected function generateEmailObject(Result $objNewsletter, $arrAttachments)
 	{
-		$objEmail = new Email();
-		$objEmail->from = $objNewsletter->sender;
-		$objEmail->subject = $objNewsletter->subject;
-
-		// Add sender name
-		if ($objNewsletter->senderName)
-		{
-			$objEmail->fromName = $objNewsletter->senderName;
-		}
-
-		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
+		$objEmail = new EmailMessage()
+			->from(new Address($objNewsletter->sender, $objNewsletter->senderName))
+			->subject($objNewsletter->subject)
+		;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
@@ -395,14 +389,14 @@ class Newsletter extends Backend
 
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile($projectDir . '/' . $strAttachment);
+				$objEmail->attachFromPath($projectDir . '/' . $strAttachment, basename($strAttachment), 'application/octet-stream');
 			}
 		}
 
 		// Add transport
 		if (!empty($objNewsletter->mailerTransport) || !empty($objNewsletter->channelMailerTransport))
 		{
-			$objEmail->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
+			$objEmail->getHeaders()->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
 		return $objEmail;
@@ -411,26 +405,26 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email  $objEmail
-	 * @param Result $objNewsletter
-	 * @param array  $arrRecipient
-	 * @param string $text
-	 * @param string $html
+	 * @param EmailMessage $objEmail
+	 * @param Result       $objNewsletter
+	 * @param array        $arrRecipient
+	 * @param string       $text
+	 * @param string       $html
 	 *
 	 * @return boolean
 	 */
-	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
+	protected function sendNewsletter(EmailMessage $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
 	{
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
 		if (isset($arrRecipient['recipient']))
 		{
-			$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
+			$objEmail->getHeaders()->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe%20ID%20' . $arrRecipient['recipient'] . '%20Channel%20' . $objNewsletter->pid . '>');
 		}
 
 		// Prepare the text content
-		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
+		$objEmail->text($simpleTokenParser->parse($text, $arrRecipient));
 
 		if (!$objNewsletter->sendText)
 		{
@@ -443,11 +437,10 @@ class Newsletter extends Backend
 			$objTemplate->recipient = $arrRecipient['email'];
 
 			// Parse the template
-			$objEmail->html = (new CssToInlineStyles())->convert($objTemplate->parse());
-			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
+			$objEmail->html(new CssToInlineStyles()->convert($objTemplate->parse()));
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->getTextBody(), $objEmail->getHtmlBody() ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
@@ -459,9 +452,14 @@ class Newsletter extends Backend
 			return false;
 		}
 
-		$objEmail->text = $event->getText();
-		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
+		$objEmail->text($event->getText());
+		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
+
+		if (!$objNewsletter->externalImages)
+		{
+			System::getContainer()->get('contao.mailer.inline_image_embedder')->embedImages($objEmail, Environment::get('base'));
+		}
 
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$arrRejected = $objSession->get('rejected_recipients', array());
@@ -469,18 +467,16 @@ class Newsletter extends Backend
 		// Deactivate invalid addresses
 		try
 		{
-			$objEmail->sendTo($arrRecipient['email']);
-		}
-		catch (RfcComplianceException|TransportException $e)
-		{
-			$arrRejected[] = $arrRecipient['email'];
-			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
-		}
+			$objEmail->to($arrRecipient['email']);
 
-		// Rejected recipients
-		if ($objEmail->hasFailures())
+			System::getContainer()->get('mailer')->send($objEmail);
+		}
+		catch (HandlerFailedException|RfcComplianceException|TransportException $e)
 		{
+			// Rejected recipients
 			$arrRejected[] = $arrRecipient['email'];
+
+			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
 		}
 
 		$objSession->set('rejected_recipients', $arrRejected);
