@@ -514,6 +514,9 @@ services:
         class: Contao\CoreBundle\EventListener\Menu\BackendMainListener
         arguments:
             - '@security.helper'
+            - '@request_stack'
+            - '@router'
+            - '@translator'
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener

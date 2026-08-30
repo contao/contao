@@ -336,9 +336,13 @@ class BackendUser extends User
 	 * @param boolean $blnShowAll
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
 	 */
 	public function navigation($blnShowAll=false)
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
 		$arrModules = array();
 		$arrStatus = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('backend_modules');
 		$router = System::getContainer()->get('router');
