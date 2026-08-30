@@ -693,6 +693,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'backend_search' => [
                         'dsn' => 'whatever://search-adapter-you-like',
                         'index_name' => 'my_backend_search_index',
+                        'permission_aware_facets' => [
+                            'max_groups' => 42,
+                        ],
                     ],
                 ],
             ],
@@ -707,6 +710,15 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
         $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
         $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
+
+        $allowedGroupsResolver = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+        $this->assertSame(42, $allowedGroupsResolver->getArgument('$maxGroups'));
+
+        $documentAccessEvaluator = $container->getDefinition('contao.search.backend.security.document_access_evaluator');
+        $this->assertSame(
+            'contao.security.authentication.contao_strategy_context',
+            (string) $documentAccessEvaluator->getArgument(1),
+        );
     }
 
     public function testCspConfiguration(): void
