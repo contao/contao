@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
 use Contao\Input;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ThemeLayoutListener
 {
@@ -27,20 +28,23 @@ class ThemeLayoutListener
         private readonly FinderFactory $finderFactory,
         private readonly Inspector $inspector,
         private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
     #[AsCallback(table: 'tl_layout', target: 'fields.template.options')]
     public function getTemplateOptions(DataContainer $dc): array
     {
+        $legacyOptions = $this->framework
+            ->getAdapter(Controller::class)
+            ->getTemplateGroup('fe_')
+        ;
+
         if ($this->isLegacy($dc)) {
-            return $this->framework
-                ->getAdapter(Controller::class)
-                ->getTemplateGroup('fe_')
-            ;
+            return $legacyOptions;
         }
 
-        return $this->finderFactory
+        $modernOptions = $this->finderFactory
             ->create()
             ->identifier('page/layout')
             ->extension('html.twig')
@@ -48,6 +52,12 @@ class ThemeLayoutListener
             ->excludePartials()
             ->asTemplateOptions(false)
         ;
+
+        if ($this->isOverrideAll()) {
+            return ['' => '-', ...$legacyOptions, ...$modernOptions];
+        }
+
+        return $modernOptions;
     }
 
     #[AsCallback(table: 'tl_layout', target: 'fields.modules.load')]
@@ -74,7 +84,7 @@ class ThemeLayoutListener
     #[AsCallback(table: 'tl_layout', target: 'fields.template.attributes')]
     public function adjustFieldsForLegacyType(array $attributes, DataContainer $dc): array
     {
-        if ($this->isLegacy($dc)) {
+        if ($this->isLegacy($dc) || $this->isOverrideAll()) {
             $attributes['mandatory'] = false;
             $attributes['submitOnChange'] = false;
         }
@@ -116,5 +126,10 @@ class ThemeLayoutListener
         $input = $this->framework->getAdapter(Input::class);
 
         return $input->post('template') ?? $dc->getCurrentRecord()['template'] ?? null;
+    }
+
+    private function isOverrideAll(): bool
+    {
+        return 'overrideAll' === $this->requestStack->getCurrentRequest()?->query->get('act');
     }
 }
