@@ -2607,6 +2607,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyResendActivationAttempts">
         <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+        <target>アクティベーションの電子メールの再送信を何回も行いすぎです。15分待ってから再度行ってください。</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

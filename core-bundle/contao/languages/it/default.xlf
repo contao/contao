@@ -375,18 +375,23 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Esiste almeno un modulo “dati personali” che consente di modificare la password. Si tratta di una vulnerabilità di sicurezza e non funzionerà più in Contao 6. Utilizzate invece il modulo “modifica password”.</target>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element ID %d non può essere inserito qui perché è in conflitto con un elemento esistente.</target>
       </trans-unit>
       <trans-unit id="ERR.grantAdminOnly">
         <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+        <target>Puoi concedere l&apos;accesso a “%s” solo se sei un amministratore.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>La parola chiave “auto” è consentita solo all&apos;inizio dell&apos;attributo “sizes” e deve essere seguita da una virgola se sono presenti altri valori.</target>
       </trans-unit>
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>Il caricamento differito deve essere abilitato se l&apos;attributo “sizes” è impostato su “auto”.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2598,9 +2603,11 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Hai tentato di reimpostare la password un numero eccessivo di volte. Ti preghiamo di riprovare tra 15 minuti.</target>
       </trans-unit>
       <trans-unit id="MSC.tooManyResendActivationAttempts">
         <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+        <target>Hai tentato di inviare nuovamente l&apos;e-mail di attivazione troppe volte. Riprova tra 15 minuti.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2764,15 +2771,19 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeLayout">
         <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+        <target>Esiste almeno un utente regolare con l&apos;autorizzazione a modificare i layout delle pagine. Poiché i layout possono contenere script arbitrari, questi utenti hanno implicitamente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeLayout">
         <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti a cui è concessa l&apos;autorizzazione a modificare i layout delle pagine. Poiché i layout possono contenere script arbitrari, gli utenti di questi gruppi hanno implicitamente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.userListingModule">
         <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+        <target>Esiste almeno un utente regolare con accesso al modulo di elenco. Poiché il modulo può contenere query SQL arbitrarie, questi utenti hanno implicitamente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti a cui è concesso l&apos;accesso al modulo di elenco. Poiché il modulo può contenere query SQL arbitrarie, gli utenti di questi gruppi hanno implicitamente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
@@ -2844,6 +2855,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Non è possibile generare l&apos;URL di anteprima perché il modulo presenta degli errori.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

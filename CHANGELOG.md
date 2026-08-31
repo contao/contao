@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.51] (2026-08-31)
+
+**Fixed issues:**
+
+- [#10111] Use consistent `datim` field definitions ([fritzmg])
+- [#10158] Check for the main request in more listeners ([fritzmg])
+- [#10157] Do not set the translator locale for subrequests ([Toflar])
+- [#10138] Process JSON-LD data for figures ([fritzmg])
+- [#10059] Merge the module CSS classes for root page dependent modules ([bennyborn])
+- [#10123] Backport the `BackendHelperRuntime` ([zoglo])
+- [#10122] Optimize file counting in the maintenance module ([Toflar])
+- [#10101] Use `Uuid::fromString()` for UUIDs with an unknown format ([ausi])
+
 ## [5.3.50] (2026-08-25)
 
 **Security fixes:**
@@ -992,6 +1005,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.51]: https://github.com/contao/contao/releases/tag/5.3.51
 [5.3.50]: https://github.com/contao/contao/releases/tag/5.3.50
 [5.3.49]: https://github.com/contao/contao/releases/tag/5.3.49
 [5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
@@ -1760,9 +1774,17 @@ This project adheres to [Semantic Versioning].
 [#10004]: https://github.com/contao/contao/pull/10004
 [#10007]: https://github.com/contao/contao/pull/10007
 [#10046]: https://github.com/contao/contao/pull/10046
+[#10059]: https://github.com/contao/contao/pull/10059
 [#10063]: https://github.com/contao/contao/pull/10063
 [#10065]: https://github.com/contao/contao/pull/10065
 [#10067]: https://github.com/contao/contao/pull/10067
 [#10076]: https://github.com/contao/contao/pull/10076
 [#10080]: https://github.com/contao/contao/pull/10080
 [#10086]: https://github.com/contao/contao/pull/10086
+[#10101]: https://github.com/contao/contao/pull/10101
+[#10111]: https://github.com/contao/contao/pull/10111
+[#10122]: https://github.com/contao/contao/pull/10122
+[#10123]: https://github.com/contao/contao/pull/10123
+[#10138]: https://github.com/contao/contao/pull/10138
+[#10157]: https://github.com/contao/contao/pull/10157
+[#10158]: https://github.com/contao/contao/pull/10158

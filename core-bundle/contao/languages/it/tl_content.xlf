@@ -479,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
         <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Larghezza e altezza del lettore multimediale in pixel (ad es. 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
