@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\SearchResultEvent;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
@@ -102,10 +103,12 @@ class ModuleSearch extends Module
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
 		$this->Template->advanced = $this->searchType == 'advanced';
 
+		$container = System::getContainer();
+
 		// Redirect page
 		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
-			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			$this->Template->action = $container->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 
 		$this->Template->pagination = '';
@@ -152,7 +155,7 @@ class ModuleSearch extends Module
 			}
 			catch (\Exception $e)
 			{
-				System::getContainer()->get('monolog.logger.contao.error')->error('Website search failed: ' . $e->getMessage());
+				$container->get('monolog.logger.contao.error')->error('Website search failed: ' . $e->getMessage());
 
 				$objResult = new SearchResult(array());
 			}
@@ -160,10 +163,10 @@ class ModuleSearch extends Module
 			$query_endtime = microtime(true);
 
 			// Sort out protected pages
-			if (System::getContainer()->getParameter('contao.search.index_protected'))
+			if ($container->getParameter('contao.search.index_protected'))
 			{
-				$objResult->applyFilter(static function ($v) {
-					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
+				$objResult->applyFilter(static function ($v) use ($container) {
+					return empty($v['protected']) || $container->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
 			else
@@ -172,6 +175,15 @@ class ModuleSearch extends Module
 					return empty($v['protected']);
 				});
 			}
+
+			// Dispatch event for additional filtering
+			$container->get('event_dispatcher')->dispatch(new SearchResultEvent(
+				$objResult,
+				$this->objModel,
+				$arrPages,
+				$strKeywords,
+				$strQueryType,
+			));
 
 			$count = $objResult->getCount();
 
