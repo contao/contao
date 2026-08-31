@@ -65,8 +65,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\CalendarBundle\\Tests\\": "tests/",
-            "Contao\\CoreBundle\\Tests\\": "../core-bundle/tests/"
+            "Contao\\CalendarBundle\\Tests\\": "tests/"
         }
     },
     "config": {
