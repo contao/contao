@@ -54,7 +54,7 @@ class ThemeLayoutListener
         ;
 
         if ($this->isOverrideAll()) {
-            return ['' => '-', ...$legacyOptions, ...$modernOptions];
+            return [...$legacyOptions, ...$modernOptions];
         }
 
         return $modernOptions;
