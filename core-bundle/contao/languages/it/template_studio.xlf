@@ -1,0 +1,214 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/template_studio.php" source-language="en" target-language="it">
+    <body>
+      <trans-unit id="template_studio.getting-started.0">
+        <source>Getting started</source>
+        <target>Per iniziare</target>
+      </trans-unit>
+      <trans-unit id="template_studio.getting-started.1">
+        <source>Select a template from the browser. You can then inspect all its representations and create your own versions and variants.</source>
+        <target>Seleziona un modello dal browser. Potrai quindi esaminarne tutte le rappresentazioni e creare le tue versioni e varianti personalizzate.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.theme-selector">
+        <source>Theme context</source>
+        <target>Contesto del tema</target>
+      </trans-unit>
+      <trans-unit id="template_studio.no_theme_context">
+        <source>Default/None</source>
+        <target>Predefinito/Nessuno</target>
+      </trans-unit>
+      <trans-unit id="template_studio.not_prefixed">
+        <source>without prefix</source>
+        <target>senza prefisso</target>
+      </trans-unit>
+      <trans-unit id="template_studio.search_filter">
+        <source>Search templates…</source>
+        <target>Cerca modelli…</target>
+      </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+        <target>Mostra solo i miei modelli</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.save.0">
+        <source>Save</source>
+        <target>Salva</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.save.1">
+        <source>Save your template for %s</source>
+        <target>Salva il tuo modello per %s</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.delete.0">
+        <source>Delete</source>
+        <target>Elimina</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.delete.1">
+        <source>Delete your template for %s</source>
+        <target>Elimina il tuo modello per %s</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create.0">
+        <source>Create your template</source>
+        <target>Crea il tuo modello</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create.1">
+        <source>Modify %s by creating your own template</source>
+        <target>Modifica %s creando un modello personalizzato</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_content_element_variant.0">
+        <source>Create variant</source>
+        <target>Crea variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_content_element_variant.1">
+        <source>Create a new variant template for the %s content element</source>
+        <target>Crea un nuovo modello di variante per l&apos;elemento %s content</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_content_element_variant.0">
+        <source>Rename variant</source>
+        <target>Rinomina variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_content_element_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Rinomina il modello %s di variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>Crea variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>Crea un nuovo modello di variante per il modulo %s front-end</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_frontend_module_variant.0">
+        <source>Rename variant</source>
+        <target>Rinomina variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_frontend_module_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Rinomina il modello %s di variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.0">
+        <source>Rename variant</source>
+        <target>Rinomina variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_legacy_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Rinomina il modello %s di variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Crea variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Crea un nuovo modello di variante per il layout %s</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Rinomina variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Rinomina il modello %s di variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_variant.0">
+        <source>Create variant</source>
+        <target>Crea variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_variant.1">
+        <source>Create a new variant template for the %s legacy template</source>
+        <target>Crea un nuovo modello di variante per il modello legacy %s</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.create.success">
+        <source>Your template for %s was created.</source>
+        <target>Il tuo modello per %s è stato creato.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.create.error">
+        <source>Your template for %s could not be created.</source>
+        <target>Non è stato possibile creare il tuo modello per %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.create_variant.success">
+        <source>The %s variant template was created.</source>
+        <target>Il modello della variante %s è stato creato.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.create_variant.error">
+        <source>A variant template for %s could not be created.</source>
+        <target>Non è stato possibile creare un modello variante per %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.rename_variant.success">
+        <source>The variant template was renamed to %s.</source>
+        <target>Il modello della variante è stato rinominato in %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.rename_variant.error">
+        <source>The variant template %s could not be renamed.</source>
+        <target>Non è stato possibile rinominare il modello variante %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.save.success">
+        <source>Your template for %s was saved.</source>
+        <target>Il tuo modello per %s è stato salvato.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.save.error">
+        <source>Your template for %s could not be saved.</source>
+        <target>Non è stato possibile salvare il tuo modello per %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.delete.success">
+        <source>Your template for %s was deleted.</source>
+        <target>Il tuo modello per %s è stato eliminato.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.delete.error">
+        <source>Your template for %s could not be deleted.</source>
+        <target>Non è stato possibile eliminare il tuo modello per %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.open_tab.error">
+        <source>The template %s cannot be found or opened in an editor tab.</source>
+        <target>Il modello %s non è stato trovato né è possibile aprirlo in una scheda dell&apos;editor.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.message.open_block_info.error">
+        <source>The block %s was not found yet. Did you save the template?</source>
+        <target>Il blocco %s non è stato ancora trovato. Hai salvato il modello?</target>
+      </trans-unit>
+      <trans-unit id="template_studio.dialog.delete.confirm">
+        <source>This deletes your template for %s and cannot be undone.</source>
+        <target>Questa operazione elimina il tuo modello per %s e non può essere annullata.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.dialog.create_variant">
+        <source>You are creating a new variant template for %s. Please define a unique name.</source>
+        <target>Stai creando un nuovo modello di variante per %s. Ti preghiamo di specificare un nome unico.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.dialog.rename_variant">
+        <source>Please define a new unique name for the variant template %s.</source>
+        <target>Si prega di definire un nuovo nome unico per il modello di variante %s.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
+        <target>Il template %i  è disponibile in due formati. Quando si apportano modifiche, è preferibile utilizzare il formato Twig per garantire la compatibilità con Contao 6.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
+        <target>Non è possibile analizzare la relazione del modello poiché contiene errori.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">
+        <source>This template overwrites all previously defined content because it does not extend %previous%.</source>
+        <target>Questo modello sovrascrive tutti i contenuti definiti in precedenza poiché non estende %p.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.editor_tab.relation.no_use_warning">
+        <source>This template ignores all previously defined content because it does not use %previous%.</source>
+        <target>Questo modello ignora tutti i contenuti definiti in precedenza poiché non utilizza %p.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.info.block.title">
+        <source>Hierarchy of block %block%</source>
+        <target>Gerarchia del blocco %block%</target>
+      </trans-unit>
+      <trans-unit id="template_studio.info.block.hierarchy">
+        <source>Block %block% is originally defined in the %namespace% namespace and is modified %modify_count% time(s) when rendering the %target_template% template.</source>
+        <target>Il blocco %block% è originariamente definito nello spazio dei nomi %n amespace% ed è stato modificato %modify_count% volte durante il rendering del modello %ta rget_template%.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.info.block.flat_hierarchy">
+        <source>Block %block% is originally defined in the %target_template% template.</source>
+        <target>Il blocco %block% è definito originariamente nel template %target_template%.</target>
+      </trans-unit>
+      <trans-unit id="template_studio.info.block.overwrite_warning">
+        <source>This template defines content for the %block% block without using the %expression_to_use% expression. This overwrites previously defined content.</source>
+        <target>Questo modello definisce il contenuto del blocco %block% senza utilizzare l&apos;espressione %e xpression_to_use%. Ciò sovrascrive il contenuto definito in precedenza.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
