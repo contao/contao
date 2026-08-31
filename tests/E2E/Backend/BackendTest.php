@@ -18,7 +18,6 @@ use Contao\E2eTestBundle\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\File\FileMapping;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
-use Facebook\WebDriver\WebDriverDimension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
@@ -26,19 +25,22 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testBackendLogin(): void
     {
-        $backend = self::managedEdition()->createFirefoxBackendBrowser();
-        $client = $backend->client();
-        $client->request('GET', '/contao');
+        $backend = self::managedEdition()->createBackendBrowser();
+        $backend->visit('/contao');
 
-        $this->assertMatchesRegularExpression('#/contao/login(?:$|\?)#', $client->getCurrentURL());
+        $this->assertMatchesRegularExpression('#/contao/login(?:$|\?)#', $backend->page()->url());
         $backend->submitLogin('k.jones', 'kevinjones');
 
-        $client->waitFor('h1');
+        $backend->waitFor('h1');
         $this->assertSelectorTextContains('h1', 'Dashboard');
-        $this->assertNotNull($client->getCookieJar()->get('PHPSESSID'));
+        $cookies = $backend->browser()->context()->cookies();
         $this->assertNotEmpty(array_filter(
-            $client->getCookieJar()->all(),
-            static fn ($cookie) => str_ends_with($cookie->getName(), 'contao_csrf_token'),
+            $cookies,
+            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
+        ));
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
         ));
         $this->assertSelectorTextContains('#tmenu', 'k.jones');
     }
@@ -47,9 +49,8 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     public function testFailedLoginUsesAcceptedLanguage(string $acceptLanguage, string $message): void
     {
         $options = BrowserOptions::create()->withAcceptLanguage($acceptLanguage);
-        $backend = self::managedEdition()->createFirefoxBackendBrowser(options: $options);
-        $client = $backend->client();
-        $client->request('GET', '/contao/login');
+        $backend = self::managedEdition()->createBackendBrowser(options: $options);
+        $backend->visit('/contao/login');
 
         $backend->submitLogin('k.jones', 'wrong');
 
@@ -67,20 +68,19 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCreatesAMinimalWebsite(): void
     {
-        $backend = self::managedEdition()->createFirefoxBackendBrowser();
-        $client = $backend->client();
-        $client->getWebDriver()->manage()->window()->setSize(new WebDriverDimension(1440, 1200));
-        $client->request('GET', '/contao/login');
+        $options = BrowserOptions::create()->withViewport(1440, 1200);
+        $backend = self::managedEdition()->createBackendBrowser(options: $options);
+        $backend->visit('/contao/login');
         $backend->submitLogin('k.jones', 'kevinjones');
-        $client->waitFor('h1');
+        $backend->waitFor('h1');
         $this->assertSelectorTextContains('h1', 'Dashboard');
         $this->createTheme($backend);
         $this->createLayout($backend);
         $this->createPages($backend);
         $this->createContent($backend, $this->registerDummyImage());
 
-        $client->request('GET', '/');
-        $client->waitFor('h1');
+        $backend->visit('/');
+        $backend->waitFor('h1');
         $this->assertSelectorTextContains('h1', 'Headline');
         $this->assertSelectorTextContains('p', 'Lorem ipsum dolor sit amet.');
         $this->assertSelectorExists('img[src*="dummy.jpg"]');
@@ -113,7 +113,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
             'Save and close',
             [
                 'name' => 'Theme',
-                'author' => 'Panther',
+                'author' => 'Playwright',
             ],
         );
     }
@@ -132,7 +132,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->submitAction('Paste at the top');
 
         $layout = self::managedEdition()->database()->connection()->fetchOne('SELECT id FROM tl_layout WHERE name = ?', ['Layout']);
-        $backend->check('includeLayout');
+        $backend->checkAndWaitForAjax('includeLayout');
         $backend->waitFor('select[name="layout"]');
         $backend->select('layout', (string) $layout);
         $backend->check('published');
@@ -161,9 +161,9 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->clickTitlePrefix('Edit the content elements');
         $backend->submitNew();
         $backend->submitAction('Paste at the top');
-        $backend->select('type', 'text');
+        $backend->selectAndWaitForAjax('type', 'text');
         $backend->waitFor('textarea[name="text"]');
-        $backend->check('addImage');
+        $backend->checkAndWaitForAjax('addImage');
         $backend->waitFor('#ctrl_singleSRC');
         $backend->fillRichText('text', 'Lorem ipsum dolor sit amet.');
         $backend->selectFile('singleSRC', 'files/images/dummy.jpg', $image->toRfc4122());
