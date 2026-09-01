@@ -143,7 +143,6 @@
                                             <input type="text" name="passkey_name" class="tl_text" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                                         </label>
                                     </form>
-                                    </form>
                                 {% else %}
                                     {{ credential.name|default(credential.id) }}
                                 {% endif %}
