@@ -185,7 +185,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
             return false;
         }
 
-        return 1 === preg_match('/^[a-z0-9_-]+$/i', $domain);
+        return 1 === preg_match('/^[a-z0-9_-]+$/i', substr($domain, 7));
     }
 
     private function loadMessage(string $id, string $domain): string|null
