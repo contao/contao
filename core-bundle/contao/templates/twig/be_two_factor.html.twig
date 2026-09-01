@@ -138,8 +138,11 @@
                                         <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                                         <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                         <input type="hidden" name="credential_id" value="{{ credential.id }}">
-                                        <input id="passkey_name_{{loop.index}}" type="text" name="passkey_name" class="tl_text" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
-                                        <label for="passkey_name_{{loop.index}}" class="invisible">{{ 'MSC.passkeysName'|trans }}</label>
+                                        <label>
+                                            <span class="invisible">{{ 'MSC.passkeysName'|trans }}</span>
+                                            <input type="text" name="passkey_name" class="tl_text" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
+                                        </label>
+                                    </form>
                                     </form>
                                 {% else %}
                                     {{ credential.name|default(credential.id) }}
