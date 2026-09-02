@@ -181,11 +181,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
 
     private function isContaoDomain(string|null $domain): bool
     {
-        if (!str_starts_with($domain ?? '', 'contao_')) {
-            return false;
-        }
-
-        return 1 === preg_match('/^[a-z0-9_-]+$/i', substr($domain, 7));
+        return 1 === preg_match('/^contao_[a-zA-Z0-9_-]+$/', $domain ?? '');
     }
 
     private function loadMessage(string $id, string $domain): string|null
