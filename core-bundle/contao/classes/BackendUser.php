@@ -354,7 +354,7 @@ class BackendUser extends User
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
-			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
+			if (!empty($arrGroupModules))
 			{
 				$arrModules[$strGroupName]['class'] = 'group-' . $strGroupName . ' node-expanded';
 				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
@@ -377,6 +377,12 @@ class BackendUser extends User
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
 					}
+				}
+
+				// Unset the group if there are no allowed modules
+				if (empty($arrModules[$strGroupName]['modules']))
+				{
+					unset($arrModules[$strGroupName]);
 				}
 			}
 		}
