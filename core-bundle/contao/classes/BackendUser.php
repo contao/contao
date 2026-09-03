@@ -190,19 +190,43 @@ class BackendUser extends User
 	}
 
 	/**
-	 * Restore the original numeric file mounts (see #5083)
+	 * Exclude permission fields while saving
 	 */
 	public function save()
 	{
-		$filemounts = $this->filemounts;
+		$arrData = $this->arrData;
+		$permissions = $this->getPermissionFields();
+		$permissionFields = array_unique(array(...$permissions['always'], ...$permissions['depends']));
 
-		if (!empty($this->arrFilemountIds))
+		$this->arrData = array_diff_key($this->arrData, array_flip($permissionFields));
+
+		try
 		{
-			$this->arrData['filemounts'] = $this->arrFilemountIds;
+			parent::save();
+		}
+		finally
+		{
+			$this->arrData = $arrData;
+		}
+	}
+
+	/**
+	 * @return array{always: array, depends: array}
+	 */
+	private function getPermissionFields(): array
+	{
+		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
+
+		// HOOK: Take custom permissions
+		if (\is_array($GLOBALS['TL_PERMISSIONS'] ?? null))
+		{
+			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
 
-		parent::save();
-		$this->filemounts = $filemounts;
+		return array(
+			'always' => array('alexf'),
+			'depends' => $depends,
+		);
 	}
 
 	/**
@@ -231,14 +255,10 @@ class BackendUser extends User
 		Config::set('backendTheme', $this->backendTheme);
 
 		// Inherit permissions
-		$always = array('alexf');
-		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
-
-		// HOOK: Take custom permissions
-		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
-		{
-			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
-		}
+		$permissions = $this->getPermissionFields();
+		$always = $permissions['always'];
+		$depends = $permissions['depends'];
+		$permissionFields = array_unique(array(...$always, ...$depends));
 
 		// Overwrite user permissions if only group permissions shall be inherited
 		if ($this->inherit == 'group')
@@ -250,7 +270,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? $permissionFields : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 
