@@ -56,6 +56,12 @@ class BackendUser extends User
 	protected $arrFilemountIds;
 
 	/**
+	 * Individual user permissions
+	 * @var array|null
+	 */
+	protected $arrUserPermissions;
+
+	/**
 	 * Symfony security roles
 	 * @var array
 	 */
@@ -190,19 +196,30 @@ class BackendUser extends User
 	}
 
 	/**
-	 * Restore the original numeric file mounts (see #5083)
+	 * Restore the original permission values and numeric file mounts while saving (see #5083)
 	 */
 	public function save()
 	{
-		$filemounts = $this->filemounts;
+		$arrData = $this->arrData;
 
 		if (!empty($this->arrFilemountIds))
 		{
 			$this->arrData['filemounts'] = $this->arrFilemountIds;
 		}
 
-		parent::save();
-		$this->filemounts = $filemounts;
+		if ($this->arrUserPermissions !== null)
+		{
+			$this->arrData = array_replace($this->arrData, $this->arrUserPermissions);
+		}
+
+		try
+		{
+			parent::save();
+		}
+		finally
+		{
+			$this->arrData = $arrData;
+		}
 	}
 
 	/**
@@ -240,6 +257,12 @@ class BackendUser extends User
 			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
 
+		$permissionFields = array_unique(array(...$always, ...$depends));
+		$this->arrUserPermissions = array_replace(
+			array_fill_keys($permissionFields, null),
+			array_intersect_key($this->arrData, array_flip($permissionFields))
+		);
+
 		// Overwrite user permissions if only group permissions shall be inherited
 		if ($this->inherit == 'group')
 		{
@@ -250,7 +273,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? $permissionFields : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 
