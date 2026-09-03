@@ -56,10 +56,10 @@ class BackendUser extends User
 	protected $arrFilemountIds;
 
 	/**
-	 * Individual user permissions
+	 * Permission fields
 	 * @var array|null
 	 */
-	protected $arrUserPermissions;
+	protected $arrPermissionFields;
 
 	/**
 	 * Symfony security roles
@@ -207,9 +207,9 @@ class BackendUser extends User
 			$this->arrData['filemounts'] = $this->arrFilemountIds;
 		}
 
-		if ($this->arrUserPermissions !== null)
+		if ($this->arrPermissionFields !== null)
 		{
-			$this->arrData = array_replace($this->arrData, $this->arrUserPermissions);
+			$this->arrData = array_diff_key($this->arrData, array_flip($this->arrPermissionFields));
 		}
 
 		try
@@ -258,10 +258,7 @@ class BackendUser extends User
 		}
 
 		$permissionFields = array_unique(array(...$always, ...$depends));
-		$this->arrUserPermissions = array_replace(
-			array_fill_keys($permissionFields, null),
-			array_intersect_key($this->arrData, array_flip($permissionFields))
-		);
+		$this->arrPermissionFields = $permissionFields;
 
 		// Overwrite user permissions if only group permissions shall be inherited
 		if ($this->inherit == 'group')
