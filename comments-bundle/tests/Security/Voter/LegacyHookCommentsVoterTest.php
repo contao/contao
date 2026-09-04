@@ -16,9 +16,9 @@ use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Contao\CommentsBundle\Security\Voter\LegacyHookCommentsVoter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Contao\TestCase\HookHelper;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
