@@ -240,6 +240,62 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         );
     }
 
+    public function testResolvesForeignDynamicPtableParent(): void
+    {
+        $container = self::createClient()->getContainer();
+        System::setContainer($container);
+
+        $container->set(
+            'security.authorization_checker',
+            new class() implements AuthorizationCheckerInterface {
+                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                {
+                    return true;
+                }
+            },
+        );
+
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('RT')
+        ;
+
+        $container->set(
+            'contao.csrf.token_manager',
+            $tokenManager,
+        );
+
+        $this->loadFixtureFile('default');
+
+        $analyzer = $container->get('contao.data_container.dca_url_analyzer');
+
+        // Second parent table for tl_content in the news table
+        $GLOBALS['BE_MOD']['content']['news']['tables'][] = 'tl_article';
+
+        // No ptable parameter, so the first parent table (tl_news) wins
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content')));
+
+        // ptable parameter set
+        $this->assertSame(['tl_article', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_article')));
+
+        // Ignore unknown
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_foobar')));
+
+        // Two parents so URLs carry the parameter
+        $this->assertSame(
+            [
+                '/contao?do=news&table=tl_article',
+                '/contao?do=news&id=1&table=tl_content&ptable=tl_article',
+                '/contao?do=news&id=1&table=tl_content&ptable=tl_content&act=edit',
+            ],
+            array_column($analyzer->getTrail(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&act=edit'), loadLabels: false), 'url'),
+        );
+
+        // Only one parent so parameter is omitted
+        $this->assertSame('/contao?do=article&table=tl_content&id=1', $analyzer->getViewUrl('tl_content', 1));
+    }
+
     public static function getTrail(): iterable
     {
         yield [

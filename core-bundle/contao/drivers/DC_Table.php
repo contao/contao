@@ -394,6 +394,30 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				return $this->strTable;
 			}
+
+			// Use the ptable query parameter if there is another possible dynamic parent within the back end module (see #10146)
+			if (($ptable = Input::get('ptable')) && $ptable !== $this->strTable && ($do = Input::get('do')))
+			{
+				foreach ($GLOBALS['BE_MOD'] ?? array() as $group)
+				{
+					if (!isset($group[$do]))
+					{
+						continue;
+					}
+
+					if (\in_array($ptable, (array) ($group[$do]['tables'] ?? array()), true))
+					{
+						Controller::loadDataContainer($ptable);
+
+						if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
+						{
+							return $ptable;
+						}
+					}
+
+					break;
+				}
+			}
 		}
 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
