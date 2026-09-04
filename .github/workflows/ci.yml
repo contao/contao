@@ -419,6 +419,7 @@ jobs:
                           if ("contao/core-bundle" !== $data["name"]) {
                               $data["repositories"][0]["type"] = "path";
                               $data["repositories"][0]["url"] = "../core-bundle";
+                              $data["autoload-dev"]["psr-4"]["Contao\\CoreBundle\\Tests\\"] = "../core-bundle/tests/";
                           }
                           if ("contao/news-bundle" !== $data["name"]) {
                               $data["repositories"][1]["type"] = "path";
