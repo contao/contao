@@ -172,15 +172,11 @@ webauthn:
     user_repository: contao.repository.webauthn_user_entity
     creation_profiles:
         contao_backend:
-            rp:
-                name: Contao Open Source CMS
             authenticator_selection_criteria:
                 require_resident_key: true
                 user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
                 resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
         contao_frontend:
-            rp:
-                name: Contao Open Source CMS
             authenticator_selection_criteria:
                 require_resident_key: true
                 user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
