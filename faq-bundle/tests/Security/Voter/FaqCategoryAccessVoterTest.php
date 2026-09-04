@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\Security\Voter;
 
-use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
+use Contao\TestCase\AbstractAccessVoterTestCase;
 
 class FaqCategoryAccessVoterTest extends AbstractAccessVoterTestCase
 {

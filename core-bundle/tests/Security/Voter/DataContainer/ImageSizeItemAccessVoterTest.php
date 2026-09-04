@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter;
+use Contao\TestCase\AbstractAccessVoterTestCase;
 
 class ImageSizeItemAccessVoterTest extends AbstractAccessVoterTestCase
 {
