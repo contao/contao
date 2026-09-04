@@ -48,7 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    private array|string|false $shellVerbosityBackup;
+    private array|false|string $shellVerbosityBackup;
 
     protected function setUp(): void
     {
