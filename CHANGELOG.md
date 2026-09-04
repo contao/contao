@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.13] (2026-08-31)
+
+**Fixed issues:**
+
+- [#10118] Introduce a config for the default range of pagination items ([fritzmg])
+- [#10132] Fix the picker reload for row wizard fields and in edit multiple mode ([zoglo])
+- [#10154] Reference CSS assets correctly in Twig templates ([fritzmg])
+- [#10137] Fix a copy and paste error in `moo_tablesort.html.twig` ([fritzmg])
+- [#10135] Fix a potential Twig error in the backend undo module ([qzminski])
+- [#10131] Reset the intrinsic width of `tl_tip` in tables ([zoglo])
+- [#10126] Remove the obsolete `contao.listener.insert_tags.*` listeners ([ausi])
+- [#10125] Remove the obsolete `contao.repository.job` service ([ausi])
+
 ## [5.7.12] (2026-08-25)
 
 **Security fixes:**
@@ -585,6 +598,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.13]: https://github.com/contao/contao/releases/tag/5.7.13
 [5.7.12]: https://github.com/contao/contao/releases/tag/5.7.12
 [5.7.11]: https://github.com/contao/contao/releases/tag/5.7.11
 [5.7.10]: https://github.com/contao/contao/releases/tag/5.7.10
@@ -1107,3 +1121,11 @@ This project adheres to [Semantic Versioning].
 [#10083]: https://github.com/contao/contao/pull/10083
 [#10095]: https://github.com/contao/contao/pull/10095
 [#10097]: https://github.com/contao/contao/pull/10097
+[#10118]: https://github.com/contao/contao/pull/10118
+[#10125]: https://github.com/contao/contao/pull/10125
+[#10126]: https://github.com/contao/contao/pull/10126
+[#10131]: https://github.com/contao/contao/pull/10131
+[#10132]: https://github.com/contao/contao/pull/10132
+[#10135]: https://github.com/contao/contao/pull/10135
+[#10137]: https://github.com/contao/contao/pull/10137
+[#10154]: https://github.com/contao/contao/pull/10154

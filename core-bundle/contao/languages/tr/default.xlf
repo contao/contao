@@ -415,6 +415,7 @@
       </trans-unit>
       <trans-unit id="ERR.grantAdminOnly">
         <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+        <target>Yalnızca bir yöneticiyseniz &quot;%s&quot; için erişme izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
@@ -2722,6 +2723,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyResendActivationAttempts">
         <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+        <target>Çok fazla sayıda etkinleştirme e-postası göndermeyi denediniz. Lütfen 15 dakika sonra yeniden deneyin.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2909,23 +2911,27 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>Temaları içe aktarma iznine sahip en az bir normal kullanıcı var. Temalar rastgele kalıplar içerebildiğinden ve kalıplar PHP dosyaları olduğundan, bu kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
+        <target>Temaları içe aktarma izni olan en az bir normal kullanıcı var. Temalar rastgele kalıplar içerebildiğinden ve kalıplar PHP dosyaları olduğundan, bu kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>Temaları içe aktarma izni verilmiş en az bir kullanıcı grubu var. Temalar rastgele kalıplar içerebildiğinden ve kalıplar PHP dosyaları olduğundan, bu gruplardaki kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
+        <target>Temaları içe aktarma izni olan en az bir kullanıcı grubu var. Temalar rastgele kalıplar içerebildiğinden ve kalıplar PHP dosyaları olduğundan, bu gruplardaki kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.userThemeLayout">
         <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+        <target>Sayfa yerleşimlerini düzenleme izni olan en az bir normal kullanıcı var. Yerleşimler rastgele betikler içerebileceğinden, bu kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeLayout">
         <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+        <target>Sayfa yerleşimlerini düzenleme izni olan en az bir kullanıcı grubu var. Yerleşimler rastgele betikler içerebileceğinden, bu grupların kullanıcıları sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.userListingModule">
         <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+        <target>Listeleme modülüne erişme izni olan en az bir normal kullanıcı var. Modül rastgele SQL sorguları içerebileceğinden, bu kullanıcılar sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Listeleme modülüne erişme izni olan en az bir kullanıcı grubu var. Modül rastgele SQL sorguları içerebileceğinden, bu grubun kullanıcıları sistem üzerinde dolaylı olarak tam denetime sahip olur!</target>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
