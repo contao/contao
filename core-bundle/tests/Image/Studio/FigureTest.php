@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\Files;
@@ -636,6 +637,45 @@ class FigureTest extends TestCase
                 'caption' => 'caption',
                 'contentUrl' => 'https://assets.url/files/public/foo.jpg',
                 'identifier' => '#/schema/image/uuid',
+            ],
+            $figure->getSchemaOrgData(),
+        );
+    }
+
+    public function testTransformsSchemaOrgData(): void
+    {
+        $htmlDecoder = $this->createMock(HtmlDecoder::class);
+        $htmlDecoder
+            ->expects($this->once())
+            ->method('htmlToPlainText')
+            ->with('caption')
+            ->willReturn('plain-text-caption')
+        ;
+
+        $htmlDecoder
+            ->expects($this->once())
+            ->method('inputEncodedToPlainText')
+            ->with('title')
+            ->willReturn('plain-text-title')
+        ;
+
+        $figure = new Figure(
+            $this->mockImage(),
+            new Metadata([
+                Metadata::VALUE_ALT => 'alt',
+                Metadata::VALUE_TITLE => 'title',
+                Metadata::VALUE_CAPTION => 'caption',
+            ]),
+            htmlDecoder: $htmlDecoder,
+        );
+
+        $this->assertSame(
+            [
+                '@type' => 'ImageObject',
+                'caption' => 'plain-text-caption',
+                'contentUrl' => 'https://assets.url/files/public/foo.jpg',
+                'identifier' => 'https://assets.url/files/public/foo.jpg',
+                'name' => 'plain-text-title',
             ],
             $figure->getSchemaOrgData(),
         );

@@ -90,8 +90,8 @@ services:
             - '@security.helper'
             - '@request_stack'
 
-    contao.listener.data_container.check_template_editor_save:
-        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+    contao.listener.data_container.check_implicit_admin_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckImplicitAdminSaveListener
         arguments:
             - '@security.helper'
             - '@translator'
@@ -425,22 +425,6 @@ services:
         arguments:
             - '%kernel.secret%'
             - '%contao.web_dir%'
-
-    contao.listener.insert_tags.asset:
-        class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
-        arguments:
-            - '@assets.packages'
-
-    contao.listener.insert_tags.date:
-        class: Contao\CoreBundle\EventListener\InsertTags\DateListener
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-
-    contao.listener.insert_tags.translation:
-        class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
-        arguments:
-            - '@translator'
 
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener

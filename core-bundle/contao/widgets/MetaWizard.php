@@ -110,7 +110,7 @@ class MetaWizard extends Widget
 
 					if ($this->metaFields[$kk]['basicEntities'] ?? false)
 					{
-						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->allowHtml);
+						$v[$kk] = StringUtil::restoreBasicEntities($vv, $this->metaFields[$kk]['allowHtml'] ?? $this->allowHtml);
 					}
 				}
 
@@ -190,7 +190,7 @@ class MetaWizard extends Widget
 
 				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
 				{
-					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $this->allowHtml);
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field], $fieldConfig['allowHtml'] ?? $this->allowHtml);
 				}
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
@@ -236,5 +236,30 @@ class MetaWizard extends Widget
 		});
 
 		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . implode('', $items) . '</ul>';
+	}
+
+	protected function getPost($strKey): mixed
+	{
+		$varValue = parent::getPost($strKey);
+
+		$arrHtmlFields = array_filter($this->metaFields, static fn ($c) => $c['allowHtml'] ?? false);
+
+		if (!$arrHtmlFields || $this->allowHtml || !\is_array($varValue) || \is_callable($this->inputCallback))
+		{
+			return $varValue;
+		}
+
+		foreach ($varValue as $lang => $meta)
+		{
+			if (\is_array($meta))
+			{
+				foreach (array_intersect_key($meta, $arrHtmlFields) as $field => $v)
+				{
+					$varValue[$lang][$field] = Input::encodeInputRecursive($v, InputEncodingMode::sanitizeHtml, false);
+				}
+			}
+		}
+
+		return $varValue;
 	}
 }

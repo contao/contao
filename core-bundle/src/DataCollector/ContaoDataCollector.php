@@ -24,7 +24,6 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\LayoutModel;
-use Contao\StringUtil;
 use Imagine\Driver\InfoProvider;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
@@ -252,7 +251,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return '';
         }
 
-        return \sprintf('%s (ID %s)', StringUtil::decodeEntities($page->title), $page->id);
+        return \sprintf('%s (ID %s)', $page->title, $page->id);
     }
 
     private function getPageUrl(): string
@@ -270,7 +269,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return '';
         }
 
-        return \sprintf('%s (ID %s)', StringUtil::decodeEntities($layout->name), $layout->id);
+        return \sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 
     private function getLayoutUrl(): string
@@ -294,7 +293,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         foreach ($models as $article) {
             $articles[] = [
                 'url' => $this->router->generate('contao_backend', ['do' => 'article', 'table' => 'tl_content', 'id' => $article->id]),
-                'label' => \sprintf('%s (ID %s)', StringUtil::decodeEntities($article->title), $article->id),
+                'label' => \sprintf('%s (ID %s)', $article->title, $article->id),
             ];
         }
 
