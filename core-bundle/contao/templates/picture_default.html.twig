@@ -20,6 +20,8 @@
     .setIfExists('height', (img.width|default and img.height|default) ? img.height : null)
     .set('alt', alt|default|insert_tag)
     .set('loading', img.loading|default, img.loading|default)
+    .setIfExists('fetchpriority', img.fetchpriority|default)
+    .setIfExists('decoding', img.decoding|default)
     .setIfExists('title', title|default|insert_tag)
     .addClass(class|default)
     .addClass(img.class|default)

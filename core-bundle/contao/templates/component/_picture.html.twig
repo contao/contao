@@ -37,6 +37,8 @@
                 .setIfExists('width', define_proportions ? img.width : null)
                 .setIfExists('height', define_proportions ? img.height : null)
                 .setIfExists('loading', img.loading|default)
+                .setIfExists('fetchpriority', img.fetchpriority|default)
+                .setIfExists('decoding', img.decoding|default)
                 .addClass(img.class|default)
                 .mergeWith(figure.options.img_attr|default)
                 .mergeWith(img_attributes|default)
