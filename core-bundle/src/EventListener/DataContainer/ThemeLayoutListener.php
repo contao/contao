@@ -41,40 +41,26 @@ class ThemeLayoutListener implements ResetInterface
     #[AsCallback(table: 'tl_layout', target: 'fields.template.options')]
     public function getTemplateOptions(DataContainer $dc): array
     {
-        $legacyOptions = $this->framework
-            ->getAdapter(Controller::class)
-            ->getTemplateGroup('fe_')
-        ;
-
         if ($this->isLegacy($dc)) {
-            return $legacyOptions;
+            return $this->getLegacyOptions();
         }
 
-        $modernOptions = $this->finderFactory
-            ->create()
-            ->identifier('page/layout')
-            ->extension('html.twig')
-            ->withVariants()
-            ->excludePartials()
-            ->asTemplateOptions(false)
-        ;
-
         if (!$this->isOverrideAll()) {
-            return $modernOptions;
+            return $this->getModernOptions();
         }
 
         $selectedLayoutTypes = $this->getSelectedLayoutTypes();
 
         if ([] === $selectedLayoutTypes) {
-            return $modernOptions;
+            return $this->getModernOptions();
         }
 
         $options = [];
 
         foreach ($selectedLayoutTypes as $type) {
             $options += match ($type) {
-                'default' => $legacyOptions,
-                default => $modernOptions,
+                'default' => $this->getLegacyOptions(),
+                default => $this->getModernOptions(),
             };
         }
 
@@ -175,9 +161,29 @@ class ThemeLayoutListener implements ResetInterface
             return $this->selectedLayoutTypes = [];
         }
 
-        return $this->selectedLayoutTypes = $this->connection->fetchFirstColumn('SELECT DISTINCT type FROM tl_layout WHERE id IN (?)',
+        return $this->selectedLayoutTypes = $this->connection->fetchFirstColumn('SELECT DISTINCT type FROM tl_layout WHERE id IN (?) ORDER BY type ASC',
             [$selectedIds],
             [ArrayParameterType::INTEGER],
         );
+    }
+
+    private function getLegacyOptions(): array
+    {
+        return $this->framework
+            ->getAdapter(Controller::class)
+            ->getTemplateGroup('fe_')
+        ;
+    }
+
+    private function getModernOptions(): array
+    {
+        return $this->finderFactory
+            ->create()
+            ->identifier('page/layout')
+            ->extension('html.twig')
+            ->withVariants()
+            ->excludePartials()
+            ->asTemplateOptions(false)
+        ;
     }
 }
