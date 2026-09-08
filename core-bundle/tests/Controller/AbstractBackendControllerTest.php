@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
@@ -139,6 +140,19 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->willReturnCallback(
+                static fn (string $identifier) => "templates/$identifier.html5",
+            )
+        ;
+
         $requestStack = new RequestStack();
         $requestStack->push(new Request(server: $_SERVER));
 
@@ -148,6 +162,7 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('database_connection', $this->createMock(Connection::class));
         $container->set('session', $this->createMock(Session::class));
         $container->set('twig', $twig);
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
         $container->set('router', $this->createMock(RouterInterface::class));
         $container->set('request_stack', $requestStack);
 
