@@ -223,10 +223,7 @@ class BackendUser extends User
 			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
 
-		return array(
-			'always' => array('alexf'),
-			'depends' => $depends,
-		);
+		return array('always' => array('alexf'), 'depends' => $depends);
 	}
 
 	/**
@@ -258,7 +255,6 @@ class BackendUser extends User
 		$permissions = $this->getPermissionFields();
 		$always = $permissions['always'];
 		$depends = $permissions['depends'];
-		$permissionFields = array_unique(array(...$always, ...$depends));
 
 		// Overwrite user permissions if only group permissions shall be inherited
 		if ($this->inherit == 'group')
@@ -270,7 +266,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? $permissionFields : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_unique(array(...$always, ...$depends)) : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 
