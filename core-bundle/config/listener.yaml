@@ -350,6 +350,8 @@ services:
             - '@contao.twig.finder_factory'
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.theme_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
