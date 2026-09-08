@@ -1411,8 +1411,15 @@ abstract class Widget extends Controller
 		// Convert timestamps
 		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, array('date', 'time', 'datim')))
 		{
-			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
-			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
+			try
+			{
+				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
+				$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
+			}
+			catch (\OutOfBoundsException)
+			{
+				// ignore if date could not be converted
+			}
 		}
 
 		// Convert URL insert tags

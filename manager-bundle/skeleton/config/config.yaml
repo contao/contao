@@ -140,9 +140,6 @@ nelmio_security:
         policies:
             - no-referrer-when-downgrade
             - strict-origin-when-cross-origin
-    xss_protection:
-        enabled: true
-        mode_block: true
 
 # FOS HttpCache configuration
 fos_http_cache:
