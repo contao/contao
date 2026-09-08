@@ -161,7 +161,8 @@ class ThemeLayoutListener implements ResetInterface
             return $this->selectedLayoutTypes = [];
         }
 
-        return $this->selectedLayoutTypes = $this->connection->fetchFirstColumn('SELECT DISTINCT type FROM tl_layout WHERE id IN (?) ORDER BY type ASC',
+        return $this->selectedLayoutTypes = $this->connection->fetchFirstColumn(
+            'SELECT DISTINCT type FROM tl_layout WHERE id IN (?) ORDER BY type ASC',
             [$selectedIds],
             [ArrayParameterType::INTEGER],
         );
