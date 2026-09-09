@@ -196,11 +196,11 @@ class ContentCompositionBuilder
             // Add slot content
             foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
                 if ($definition['enable'] ?? false) {
-                    $isContentElement = str_starts_with((string) $definition['mod'], 'content-');
+                    $isContentElement = \is_string($definition['mod']) && str_starts_with($definition['mod'], 'content-');
 
                     $this->addElementToSlot(
                         $definition['col'],
-                        (int) ($isContentElement ? substr((string) $definition['mod'], 8) : $definition['mod']),
+                        (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
                         $isContentElement,
                     );
                 }
