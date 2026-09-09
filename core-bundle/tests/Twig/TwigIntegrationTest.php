@@ -23,6 +23,7 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Runtime\AutolinkRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
@@ -361,5 +362,40 @@ class TwigIntegrationTest extends TestCase
                 </ul>
                 HTML,
         ];
+    }
+
+    public function testAutolinkUrls(): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            <div class="comment">
+                {{ comment|autolink_url }}
+            </div>
+            TEMPLATE;
+
+        $expectedOutput = <<<'TEMPLATE'
+            <div class="comment">
+                Also see &lt;b&gt;<a href="https://example.com" target="_blank" rel="noreferrer noopener">https://example.com</a>&lt;/b&gt; for the full setup guide. If that one is down, the mirror at <a href="https://example.org" target="_blank" rel="noreferrer noopener">example.org</a> has the same content, just a &lt;b&gt;slightly older version&lt;/b&gt;.
+            </div>
+            TEMPLATE;
+
+        $runtime = $this->getContainerWithContaoConfiguration()->get('contao.twig.autolink_runtime');
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+        $environment->addRuntimeLoader(new FactoryRuntimeLoader([AutolinkRuntime::class => static fn () => $runtime]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        $output = $environment->render('test.html.twig', [
+            'comment' => 'Also see <b>https://example.com</b> for the full setup guide. If that one is down, the mirror at example.org has the same content, just a <b>slightly older version</b>.',
+        ]);
+
+        $this->assertSame($expectedOutput, $output);
     }
 }
