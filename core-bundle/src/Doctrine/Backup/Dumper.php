@@ -129,7 +129,7 @@ class Dumper implements DumperInterface
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
 
             $charset = strtolower($column->getPlatformOptions()['charset'] ?? '');
-            $columnUtf8Charsets[$columnName] = \in_array($charset, ['utf8', 'utf8mb4'], true) || (\in_array($charset, ['', 'binary'], true) && $column->getType() instanceof JsonType);
+            $columnUtf8Charsets[$columnName] = \in_array($charset, ['utf8', 'utf8mb4'], true) || $column->getType() instanceof JsonType);
         }
 
         $values = implode(', ', $values);
