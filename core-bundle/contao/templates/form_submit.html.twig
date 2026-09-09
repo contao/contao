@@ -7,8 +7,8 @@
             .set('src', this.src)
             .set('id', "ctrl_#{this.id}")
             .addClass('submit')
-            .set('title', this.slabel)
-            .set('alt', this.slabel)
+            .set('title', this.slabel|insert_tag)
+            .set('alt', this.slabel|insert_tag)
             .mergeWith(getAttributes.invoke())
         }}>
     {% else %}
@@ -17,6 +17,6 @@
             .set('id', "ctrl_#{this.id}")
             .addClass('submit')
             .mergeWith(getAttributes.invoke())
-        }}>{{ this.slabel }}</button>
+        }}>{{ this.slabel|insert_tag_html }}</button>
     {% endif %}
 {% endblock %}

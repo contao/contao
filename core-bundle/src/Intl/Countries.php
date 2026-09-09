@@ -24,7 +24,7 @@ class Countries
     private readonly array $countries;
 
     public function __construct(
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         array $defaultCountries,
         array $configCountries,
     ) {

@@ -42,9 +42,15 @@ class ImagesController
      */
     public function __invoke(string $path): Response
     {
+        $path = Path::join($this->targetDir, $path);
+
+        if (!Path::isBasePath($this->targetDir, $path)) {
+            throw new NotFoundHttpException('Image does not exist');
+        }
+
         try {
             try {
-                $image = $this->imageFactory->create(Path::join($this->targetDir, $path));
+                $image = $this->imageFactory->create($path);
             } catch (\InvalidArgumentException $exception) {
                 throw new NotFoundHttpException($exception->getMessage(), $exception);
             }

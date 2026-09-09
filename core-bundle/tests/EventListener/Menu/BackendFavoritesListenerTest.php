@@ -103,7 +103,7 @@ class BackendFavoritesListenerTest extends TestCase
                         'id' => 8,
                         'pid' => 7,
                         'tstamp' => 1671538402,
-                        'title' => 'Edit &quot;fe_page&quot;',
+                        'title' => 'Edit "fe_page"',
                         'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
                     ],
                 ],

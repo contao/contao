@@ -17,8 +17,6 @@ use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
-use Contao\NewsletterDenyListModel;
-use Contao\NewsletterRecipientsModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -81,7 +79,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'href'                => 'key=block',
 				'icon'                => 'bundles/contaonewsletter/block.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['tl_newsletter_recipients']['blockConfirm'] ?? null) . '\'))return false"'
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['tl_newsletter_recipients']['blockConfirm'] ?? null) . '\'))return false"',
+				'method'              => 'POST',
 			)
 		)
 	),
@@ -137,7 +136,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		)
 	)
 );
@@ -268,30 +267,5 @@ class tl_newsletter_recipients extends Backend
 			$icond,
 			$label
 		));
-	}
-
-	/**
-	 * Add a recipient to the deny list
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function blockRecipient(DataContainer $dc): void
-	{
-		$referer = $this->getReferer();
-
-		$objRecipient = NewsletterRecipientsModel::findById($dc->id);
-		$hashedEmail = md5($objRecipient->email);
-
-		if (!NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid))
-		{
-			$objDenyList = new NewsletterDenyListModel();
-			$objDenyList->pid = $objRecipient->pid;
-			$objDenyList->hash = $hashedEmail;
-			$objDenyList->save();
-		}
-
-		$objRecipient->delete();
-
-		$this->redirect($referer);
 	}
 }

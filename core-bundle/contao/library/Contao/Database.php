@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
 use Contao\Database\Result;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
@@ -458,9 +460,28 @@ class Database
 	 * @param string  $strWhere     Additional WHERE condition
 	 *
 	 * @return array An array of child record IDs
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             use Hierarchy::getChildIds() instead.
 	 */
 	public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "%s::getChildIds()" instead.', __METHOD__, Hierarchy::class);
+
+		if (empty($arrReturn))
+		{
+			$options = new ChildTraversalOptions()
+				->withWhere($strWhere)
+			;
+
+			if ($blnSorting)
+			{
+				$options = $options->withOrderBy('sorting');
+			}
+
+			return System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrParentIds, $strTable, $options);
+		}
+
 		if (!\is_array($arrParentIds))
 		{
 			$arrParentIds = array($arrParentIds);
@@ -515,26 +536,14 @@ class Database
 	 * @param bool    $skipId   Omit the provided ID in the result set
 	 *
 	 * @return array An array of parent record IDs
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use Hierarchy::getParentIds() instead.
 	 */
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
-		// Limit to a nesting level of 10
-		$ids = $this->prepare("SELECT id, @pid := pid FROM $strTable WHERE id = ?" . str_repeat(" UNION SELECT id, @pid := pid FROM $strTable WHERE id = @pid", 9))
-					->execute($intId)
-					->fetchEach('id');
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "Contao\\CoreBundle\\Doctrine\\DBAL\\Hierarchy::getParentIds()" instead.', __METHOD__);
 
-		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
-		if (\count($ids) === 10)
-		{
-			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, true));
-		}
-
-		if ($skipId && ($key = array_search($intId, $ids)) !== false)
-		{
-			unset($ids[$key]);
-		}
-
-		return array_map('\intval', array_values($ids));
+		return System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentIds($intId, $strTable, $skipId);
 	}
 
 	/**

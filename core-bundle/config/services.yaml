@@ -238,8 +238,15 @@ services:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
         public: true
         arguments:
-            - '@contao.framework'
+            - '@contao.data_container.dca_hierarchy'
             - '@request_stack'
+
+    contao.data_container.dca_hierarchy:
+        class: Contao\CoreBundle\DataContainer\DcaHierarchy
+        public: true
+        arguments:
+            - '@contao.doctrine.dbal.hierarchy'
+            - '@contao.framework'
 
     contao.data_container.dca_request_switcher:
         class: Contao\CoreBundle\DataContainer\DcaRequestSwitcher
@@ -258,9 +265,10 @@ services:
             - '@translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
             - '@contao.csrf.token_manager'
             - '@request_stack'
+            - '@contao.data_container.virtual_fields_handler'
 
     contao.data_container.foreign_key_parser:
         class: Contao\CoreBundle\DataContainer\ForeignKeyParser
@@ -334,6 +342,12 @@ services:
             - '@contao.filesystem.virtual.backups'
             - []
             - '@contao.doctrine.backup.retention_policy'
+
+    contao.doctrine.dbal.hierarchy:
+        class: Contao\CoreBundle\Doctrine\DBAL\Hierarchy
+        public: true
+        arguments:
+            - '@database_connection'
 
     contao.doctrine.dca_schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
@@ -592,6 +606,7 @@ services:
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               contao.insert_tag.parser: '@contao.insert_tag.parser'
               event_dispatcher: '@event_dispatcher'
+              contao.string.html_decoder: '@contao.string.html_decoder'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.web_dir%'
@@ -846,6 +861,7 @@ services:
             - '@router'
             - '@translator'
             - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
@@ -877,11 +893,6 @@ services:
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
-        arguments:
-            - '@doctrine'
-
-    contao.repository.job:
-        class: Contao\CoreBundle\Repository\JobRepository
         arguments:
             - '@doctrine'
 
@@ -1140,6 +1151,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
         arguments:
             - '@contao.framework'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -1152,6 +1164,7 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.content_alias_delete_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
@@ -1224,7 +1237,7 @@ services:
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
-            - '@contao.framework'
+            - '@contao.data_container.dca_hierarchy'
             - '@security.access.decision_manager'
             - '@database_connection'
 
@@ -1234,8 +1247,8 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
-    contao.security.data_container.preview_access_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+    contao.security.data_container.preview_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewVoter
         arguments:
             - '@security.access.decision_manager'
 
@@ -1250,7 +1263,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ThemeContentVoter
         arguments:
             - '@security.access.decision_manager'
-            - '@database_connection'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.undo_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter
@@ -1636,10 +1649,12 @@ services:
     Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
+    Contao\CoreBundle\DataContainer\DcaHierarchy: '@contao.data_container.dca_hierarchy'
     Contao\CoreBundle\DataContainer\ForeignKeyParser: '@contao.data_container.foreign_key_parser'
     Contao\CoreBundle\DataContainer\RecordLabeler: '@contao.data_container.record_labeler'
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'

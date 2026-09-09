@@ -686,7 +686,9 @@ class Versions extends Controller
 								->execute(...$params);
 
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
-			(new PaginationConfig('vp', $objTotal->count, 15))->withIgnoreOutOfBounds()
+			(new PaginationConfig('vp', $objTotal->count, 15))
+				->withIgnoreOutOfBounds()
+				->withPageRange(7)
 		);
 
 		$intOffset = $pagination->getOffset();

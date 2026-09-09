@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -1354,7 +1355,14 @@ abstract class Controller extends System
 
 		// Thanks to Andreas Schempp (see #2475 and #3423)
 		$arrPages = array_filter(array_map('intval', $arrPages));
-		$arrPages = array_values(array_diff($arrPages, Database::getInstance()->getChildRecords($arrPages, $strTable, $blnSorting)));
+		$options = new ChildTraversalOptions();
+
+		if ($blnSorting)
+		{
+			$options = $options->withOrderBy('sorting');
+		}
+
+		$arrPages = array_values(array_diff($arrPages, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($arrPages, $strTable, $options)));
 
 		return $arrPages;
 	}

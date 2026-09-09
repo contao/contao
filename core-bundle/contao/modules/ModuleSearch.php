@@ -115,30 +115,18 @@ class ModuleSearch extends Module
 		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			$db = Database::getInstance();
+			$hierarchy = System::getContainer()->get('contao.data_container.dca_hierarchy');
 
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$arrPages = array();
-
-				foreach ($this->pages as $intPageId)
-				{
-					$arrPages[] = array($intPageId);
-					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
-				}
-
-				if (!empty($arrPages))
-				{
-					$arrPages = array_merge(...$arrPages);
-				}
-
-				$arrPages = array_unique($arrPages);
+				$arrPages = array_unique(array_merge($this->pages, $hierarchy->getChildIds($this->pages, 'tl_page')));
 			}
 			// Website root
 			else
 			{
 				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
-				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = $hierarchy->getChildIds($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)
@@ -176,6 +164,12 @@ class ModuleSearch extends Module
 			{
 				$objResult->applyFilter(static function ($v) {
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
+				});
+			}
+			else
+			{
+				$objResult->applyFilter(static function ($v) {
+					return empty($v['protected']);
 				});
 			}
 
@@ -250,8 +244,8 @@ class ModuleSearch extends Module
 			{
 				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
-				$objTemplate->href = $arrResult[$i]['url'];
-				$objTemplate->link = $arrResult[$i]['title'];
+				$objTemplate->href = StringUtil::specialchars($arrResult[$i]['url']);
+				$objTemplate->link = StringUtil::specialchars($arrResult[$i]['title']);
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
 				$objTemplate->relevance = \sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
@@ -308,7 +302,7 @@ class ModuleSearch extends Module
 			}
 
 			$figureMeta = new Metadata(array_filter(array(
-				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_CAPTION => Input::encodeInput($v['https://schema.org/primaryImageOfPage']['caption'] ?? '', InputEncodingMode::sanitizeHtml),
 				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
 				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
 			)));

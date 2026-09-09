@@ -209,7 +209,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
     }
 
-    private function mockSecurity(int $userId = 42): Security&MockObject
+    private function mockSecurity(int $userId = 42): MockObject&Security
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 

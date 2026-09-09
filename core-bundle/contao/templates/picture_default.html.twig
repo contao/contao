@@ -7,7 +7,7 @@
                 .setIfExists('media', source.media|default)
                 .setIfExists('type', source.type|default)
                 .setIfExists('width', (source.width|default and source.height|default) ? source.width : null)
-            .setIfExists('height', (source.width|default and source.height|default) ? source.height : null)
+                .setIfExists('height', (source.width|default and source.height|default) ? source.height : null)
             }}>
         {% endfor %}
 {% endif %}
