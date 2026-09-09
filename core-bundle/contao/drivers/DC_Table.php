@@ -395,27 +395,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				return $this->strTable;
 			}
 
-			// Use the ptable query parameter if there is another possible dynamic parent within the back end module (see #10146)
-			if (($ptable = Input::get('ptable')) && $ptable !== $this->strTable && ($do = Input::get('do')))
+			// Find the parent table within the backend module
+			if ($do = Input::get('do'))
 			{
+				$tables = array();
+
 				foreach ($GLOBALS['BE_MOD'] ?? array() as $group)
 				{
-					if (!isset($group[$do]))
+					if (isset($group[$do]))
 					{
-						continue;
+						$tables = (array) ($group[$do]['tables'] ?? array());
+						break;
 					}
+				}
 
-					if (\in_array($ptable, (array) ($group[$do]['tables'] ?? array()), true))
+				// Use the ptable query parameter if there is another possible dynamic parent within the back end module (see #10146)
+				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
+				{
+					array_unshift($tables, $ptable);
+				}
+
+				foreach ($tables as $ptable)
+				{
+					$this->loadDataContainer($ptable);
+
+					if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
 					{
-						Controller::loadDataContainer($ptable);
-
-						if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
-						{
-							return $ptable;
-						}
+						return $ptable;
 					}
-
-					break;
 				}
 			}
 		}
