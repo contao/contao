@@ -94,8 +94,7 @@ tl_user:
         useRTE: 1
         useCE: 1
         password: $argon2id$v=19$m=65536,t=4,p=1$KtVG/rsaYC1BY48jQNDgNg$ROCOHE3uh8Al1vH+AkVzYX1YirS2q28VpHJRfPDjiBY
-        groups:
-            - '@editors'
+        groups: ['@editors']
         inherit: extend
         disable: 0
         dateAdded: 1259754527
@@ -111,8 +110,7 @@ tl_user:
         useRTE: 1
         useCE: 1
         password: $argon2id$v=19$m=65536,t=4,p=1$Kwd39s0EBayBe+63POnPqw$QMQKLMcKdvDdBbySlV5+cE+hk+rpBayospme0ZAtZiY
-        groups:
-            - '@editors'
+        groups: ['@editors']
         inherit: extend
         disable: 0
         dateAdded: 1259754527

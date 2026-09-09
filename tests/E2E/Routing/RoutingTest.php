@@ -27,6 +27,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesAliases(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
+
         $fixtureResult = $this->loadFixtureFiles($fixtures);
         $request = $fixtureResult->interpolate($request);
         $browser = $this->request($request, $host);
@@ -230,9 +231,16 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesAliasesWithLocale(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
+
         $fixtureResult = $this->loadFixtureFiles($fixtures);
         $request = $fixtureResult->interpolate($request);
-        self::managedEdition()->database()->connection()->executeStatement('UPDATE tl_page SET urlPrefix = language');
+
+        self::managedEdition()
+            ->database()
+            ->connection()
+            ->executeStatement('UPDATE tl_page SET urlPrefix = language')
+        ;
+
         $browser = $this->request($request, $host);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -443,8 +451,15 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesAliasesWithoutUrlSuffix(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
+
         $this->loadFixtureFiles($fixtures);
-        self::managedEdition()->database()->connection()->executeStatement("UPDATE tl_page SET urlSuffix = ''");
+
+        self::managedEdition()
+            ->database()
+            ->connection()
+            ->executeStatement("UPDATE tl_page SET urlSuffix = ''")
+        ;
+
         $browser = $this->request($request, $host);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -583,6 +598,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesTheRootPage(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
+
         $this->loadFixtureFiles($fixtures);
         $browser = $this->request($request, $host, $acceptLanguages);
 
@@ -659,8 +675,15 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testResolvesTheRootPageWithLocale(mixed ...$case): void
     {
         [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
+
         $this->loadFixtureFiles($fixtures);
-        self::managedEdition()->database()->connection()->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''");
+
+        self::managedEdition()
+            ->database()
+            ->connection()
+            ->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''")
+        ;
+
         $browser = $this->request($request, $host, $acceptLanguages);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -837,10 +860,12 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testCorrectHandlesDisabledLanguageRedirects(mixed ...$case): void
     {
         [$disableLanguageRedirects, $indexAlias, $requestLocale, $expectedLocation] = $case;
+
         $request = 'https://example.local/';
         $this->loadFixtureFiles(['disable-language-redirect']);
         $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
         $alias = $indexAlias ? 'index' : 'home';
+
         $connection = self::managedEdition()->database()->connection();
         $connection->update('tl_page', ['disableLanguageRedirect' => $disableLanguageRedirect], ['alias' => 'nl', 'type' => 'root']);
         $connection->update('tl_page', ['alias' => $alias], ['type' => 'regular']);
@@ -967,6 +992,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testUrlPrefixMix(mixed ...$case): void
     {
         [$request, $acceptLanguage, $statusCode, $pageTitle] = $case;
+
         $this->loadFixtureFiles(['theme', 'url-prefix-mix']);
         $browser = $this->request($request, 'example.local', $acceptLanguage);
 

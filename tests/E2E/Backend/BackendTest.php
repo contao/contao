@@ -29,19 +29,24 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->visit('/contao');
 
         $this->assertMatchesRegularExpression('#/contao/login(?:$|\?)#', $backend->page()->url());
-        $backend->submitLogin('k.jones', 'kevinjones');
 
+        $backend->submitLogin('k.jones', 'kevinjones');
         $backend->waitFor('h1');
+
         $this->assertSelectorTextContains('h1', 'Dashboard');
+
         $cookies = $backend->browser()->context()->cookies();
+
         $this->assertNotEmpty(array_filter(
             $cookies,
             static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
         ));
+
         $this->assertNotEmpty(array_filter(
             $cookies,
             static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
         ));
+
         $this->assertSelectorTextContains('#tmenu', 'k.jones');
     }
 
@@ -49,9 +54,9 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     public function testFailedLoginUsesAcceptedLanguage(string $acceptLanguage, string $message): void
     {
         $options = BrowserOptions::create()->withAcceptLanguage($acceptLanguage);
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
         $backend->visit('/contao/login');
-
         $backend->submitLogin('k.jones', 'wrong');
 
         $this->assertSelectorTextContains('.tl_error', $message);
@@ -69,11 +74,14 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     public function testCreatesAMinimalWebsite(): void
     {
         $options = BrowserOptions::create()->withViewport(1440, 1200);
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
         $backend->visit('/contao/login');
         $backend->submitLogin('k.jones', 'kevinjones');
         $backend->waitFor('h1');
+
         $this->assertSelectorTextContains('h1', 'Dashboard');
+
         $this->createTheme($backend);
         $this->createLayout($backend);
         $this->createPages($backend);
@@ -81,6 +89,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
         $backend->visit('/');
         $backend->waitFor('h1');
+
         $this->assertSelectorTextContains('h1', 'Headline');
         $this->assertSelectorTextContains('p', 'Lorem ipsum dolor sit amet.');
         $this->assertSelectorExists('img[src*="dummy.jpg"]');
@@ -89,6 +98,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     protected static function createManagedEditionConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig('core-bundle');
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
             ->withFileMapping(new FileMapping(
@@ -109,6 +119,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     {
         $backend->clickLink('Themes');
         $backend->submitNew();
+
         $backend->submitForm(
             'Save and close',
             [
@@ -131,20 +142,28 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->submitNew();
         $backend->submitAction('Paste at the top');
 
-        $layout = self::managedEdition()->database()->connection()->fetchOne('SELECT id FROM tl_layout WHERE name = ?', ['Layout']);
+        $layout = self::managedEdition()
+            ->database()
+            ->connection()
+            ->fetchOne('SELECT id FROM tl_layout WHERE name = ?', ['Layout'])
+        ;
+
         $backend->checkAndWaitForAjax('includeLayout');
         $backend->waitFor('select[name="layout"]');
         $backend->select('layout', (string) $layout);
         $backend->check('published');
         $backend->check('fallback');
+
         $backend->submitForm('Save', [
             'title' => 'Root Page',
             'language' => 'en',
         ]);
+
         $backend->clickLink('Pages');
         $backend->submitNew();
         $backend->submitAction('Paste into page');
         $backend->check('published');
+
         $backend->submitForm(
             'Save and close',
             [
@@ -167,6 +186,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->waitFor('#ctrl_singleSRC');
         $backend->fillRichText('text', 'Lorem ipsum dolor sit amet.');
         $backend->selectFile('singleSRC', 'files/images/dummy.jpg', $image->toRfc4122());
+
         $backend->submitForm(
             'Save and close',
             [
@@ -179,10 +199,12 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     private function registerDummyImage(): Uuid
     {
         self::managedEdition()->synchronizeFiles('files/images/dummy.jpg');
-        $uuid = self::managedEdition()->database()->connection()->fetchOne(
-            'SELECT uuid FROM tl_files WHERE path = ?',
-            ['files/images/dummy.jpg'],
-        );
+
+        $uuid = self::managedEdition()
+            ->database()
+            ->connection()
+            ->fetchOne('SELECT uuid FROM tl_files WHERE path = ?', ['files/images/dummy.jpg'])
+        ;
 
         if (!\is_string($uuid)) {
             throw new \LogicException('Could not find the synchronized dummy image.');
