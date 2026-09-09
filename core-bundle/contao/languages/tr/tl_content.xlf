@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
-        <target>Bu seçenek etkinleştirildiğinde, dosya tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
+        <target>Etkinleştirildiğinde, dosya tarayıcıda görüntülenir, indirme penceresi açılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata of the file.</source>
-        <target>Bu seçenek etkinleştirildiğinde, dosyanın üst verileri değiştirilir.</target>
+        <target>Etkinleştirildiğinde, dosyanın üst verileri değiştirilir.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -415,7 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalamayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_content.serverPagination.0">
         <source>Server-side pagination</source>
@@ -619,19 +619,19 @@
       </trans-unit>
       <trans-unit id="tl_content.articleAlias.0">
         <source>Referenced article</source>
-        <target>Başvurulan makale</target>
+        <target>Başvurulan yazı</target>
       </trans-unit>
       <trans-unit id="tl_content.articleAlias.1">
         <source>Please choose the article you want to insert.</source>
-        <target>Lütfen eklemek istediğiniz makaleyi seçin.</target>
+        <target>Lütfen eklemek istediğiniz yazıyı seçin.</target>
       </trans-unit>
       <trans-unit id="tl_content.article.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_content.article.1">
         <source>Please select an article.</source>
-        <target>Lütfen bir makale seçin.</target>
+        <target>Lütfen bir yazı seçin.</target>
       </trans-unit>
       <trans-unit id="tl_content.form.0">
         <source>Form</source>
@@ -1051,7 +1051,7 @@
       </trans-unit>
       <trans-unit id="tl_content.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
-        <target>Bu seçenek etkinleştirildiğinde, üye yönlendirilecek sayfa yerine son ziyaret ettiği sayfaya yönlendirilir.</target>
+        <target>Etkinleştirildiğinde, üye yönlendirilecek sayfa yerine son ziyaret ettiği sayfaya yönlendirilir.</target>
       </trans-unit>
       <trans-unit id="tl_content.config_legend">
         <source>Element configuration</source>
@@ -1063,7 +1063,7 @@
       </trans-unit>
       <trans-unit id="tl_content.autologin.1">
         <source>Allow members to log into the front end automatically.</source>
-        <target>Bu seçenek etkinleştirildiğinde, üyeler ön yüzde otomatik olarak oturum açabilir.</target>
+        <target>Etkinleştirildiğinde, üyeler ön yüzde otomatik olarak oturum açabilir.</target>
       </trans-unit>
       <trans-unit id="tl_content.pwResetPage.0">
         <source>Reset password page</source>
@@ -1087,7 +1087,7 @@
       </trans-unit>
       <trans-unit id="tl_content.reg_deleteDir.1">
         <source>Delete the home directory when the account is deleted.</source>
-        <target>Bu seçenek etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
+        <target>Etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
       </trans-unit>
       <trans-unit id="tl_content.close_deactivate">
         <source>Deactivate account</source>

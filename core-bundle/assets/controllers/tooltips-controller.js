@@ -38,13 +38,13 @@ export default class TooltipsController extends Controller {
 
         this.element.addEventListener('pointerover', this.#show);
         this.element.addEventListener('pointerout', this.#hide);
-        this.element.addEventListener('click', this.#hide);
+        this.element.addEventListener('click', this.#hide, true);
     }
 
     disconnect() {
         this.element.removeEventListener('pointerover', this.#show);
         this.element.removeEventListener('pointerout', this.#hide);
-        this.element.removeEventListener('click', this.#hide);
+        this.element.removeEventListener('click', this.#hide, true);
 
         this.#tooltip.remove();
     }

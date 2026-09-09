@@ -30,7 +30,7 @@ class FallbackRecordLabelListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly ValueFormatter $valueFormatter,
     ) {
     }

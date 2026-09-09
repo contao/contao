@@ -539,7 +539,7 @@ class SearchIndexSubscriberTest extends TestCase
         return $response;
     }
 
-    private function getTranslator(): TranslatorInterface&Stub
+    private function getTranslator(): Stub&TranslatorInterface
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

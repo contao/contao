@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.1">
         <source>Please assign the default access rights for pages and articles.</source>
-        <target>Lütfen sayfa ve makalelerin varsayılan erişim izinlerini ayarlayın.</target>
+        <target>Lütfen sayfa ve yazıların varsayılan erişim izinlerini ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>

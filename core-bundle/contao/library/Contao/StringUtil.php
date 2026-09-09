@@ -204,7 +204,7 @@ class StringUtil
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
-	 * @return string The decoded string
+	 * @return string|array<string|array<string|array<string|array>>> The decoded string
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
@@ -237,7 +237,7 @@ class StringUtil
 	 *
 	 * @param string|array $strBuffer The string with the entities to be replaced
 	 *
-	 * @return string|array The string with the tags in square brackets
+	 * @return ($strBuffer is string ? string : array) The string with the tags in square brackets
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
@@ -265,7 +265,7 @@ class StringUtil
 	 *
 	 * @param string|array $strBuffer The string with the tags to be replaced
 	 *
-	 * @return string|array The string with the original entities
+	 * @return ($strBuffer is string ? string : array) The string with the original entities
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
@@ -381,7 +381,7 @@ class StringUtil
 	 * @param string $strString      The string
 	 * @param string $strAllowedTags A list of allowed HTML tags
 	 *
-	 * @return array The e-mail addresses
+	 * @return array<string> The e-mail addresses
 	 */
 	public static function extractEmail($strString, $strAllowedTags='')
 	{
@@ -438,7 +438,7 @@ class StringUtil
 	 *
 	 * @param string $strEmail A friendly-name e-mail address
 	 *
-	 * @return array An array with name and e-mail address
+	 * @return array{0: string, 1: string} An array with name and e-mail address
 	 */
 	public static function splitFriendlyEmail($strEmail)
 	{
@@ -495,7 +495,7 @@ class StringUtil
 	 * @param string $strString    The string to split
 	 * @param string $strDelimiter An optional delimiter
 	 *
-	 * @return array The string chunks
+	 * @return list<string> The string chunks
 	 */
 	public static function splitCsv($strString, $strDelimiter=',')
 	{
@@ -1094,7 +1094,7 @@ class StringUtil
 	 * @param string $strPattern The split pattern
 	 * @param string $strString  The input string
 	 *
-	 * @return array The fragments array
+	 * @return list<string> The fragments array
 	 */
 	public static function trimsplit($strPattern, $strString)
 	{

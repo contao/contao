@@ -326,7 +326,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *
      * @return array<string, array<string, string>>
      */
-    public function getInheritanceChains(true|string|null $themeSlug = null): array
+    public function getInheritanceChains(string|true|null $themeSlug = null): array
     {
         $this->ensureHierarchyIsBuilt();
 
@@ -584,7 +584,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     /**
      * Returns and stores the current theme slug or false if not applicable.
      */
-    private function getThemeSlug(): string|false
+    private function getThemeSlug(): false|string
     {
         $path = $this->pageFinder->getCurrentPage()?->templateGroup;
 

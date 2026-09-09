@@ -89,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['type'],
-			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['jobs']['type_label'],
 			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),
@@ -106,7 +105,6 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'status' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['status'],
-			'inputType'               => 'select',
 			'enum'                    => Status::class,
 			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),

@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_member.login.1">
         <source>Allow the member to log into the front end.</source>
-        <target>Bu seçenek etkinleştirildiğinde, üye ön yüzde oturum açabilir.</target>
+        <target>Etkinleştirildiğinde, üye ön yüzde oturum açabilir.</target>
       </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>

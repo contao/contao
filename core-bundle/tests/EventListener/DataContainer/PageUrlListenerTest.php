@@ -1750,7 +1750,7 @@ class PageUrlListenerTest extends TestCase
         return $inputAdapter;
     }
 
-    private function mockTranslator(string|null $messageKey = null, array $arguments = []): TranslatorInterface&MockObject
+    private function mockTranslator(string|null $messageKey = null, array $arguments = []): MockObject&TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1803,7 +1803,7 @@ class PageUrlListenerTest extends TestCase
         return $pageRegistry;
     }
 
-    private function mockRouter(PageRoute|int|false|null $route = null): RouterInterface&MockObject
+    private function mockRouter(PageRoute|false|int|null $route = null): MockObject&RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 

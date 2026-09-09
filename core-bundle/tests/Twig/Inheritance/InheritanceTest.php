@@ -99,9 +99,7 @@ class InheritanceTest extends TestCase
             'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
         ];
 
-        if (!isset($paths['App'])) {
-            $paths['App'] = Path::join($projectDir, 'contao/templates');
-        }
+        $paths['App'] ??= Path::join($projectDir, 'contao/templates');
 
         $connection = $this->createStub(Connection::class);
         $connection

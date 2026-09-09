@@ -183,15 +183,21 @@ class Ajax extends Backend
 				$parts = null;
 
 				// Row wizard check
-				if (preg_match_all('/[a-zA-Z][a-zA-Z0-9]*/', $strField, $matches))
+				if (preg_match_all('/[^\[\]]+/', $strField, $matches))
 				{
 					$parts = $matches[0] ?? null;
 					$field = $parts[0] ?? null;
 
+					// Handle the field in "edit multiple" mode
+					if (Input::get('act') == 'editAll')
+					{
+						$field = preg_replace('/(.*)_[0-9a-zA-Z]+$/', '$1', $field);
+					}
+
 					if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['inputType'] ?? null) === 'rowWizard')
 					{
 						$boolRowWizard = true;
-						$strField = $field;
+						$strField = $parts[0];
 					}
 				}
 

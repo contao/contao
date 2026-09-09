@@ -449,7 +449,7 @@ class PreviewToolbarListenerTest extends TestCase
         return $router;
     }
 
-    private function mockTokenChecker(): TokenChecker&Stub
+    private function mockTokenChecker(): Stub&TokenChecker
     {
         $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker

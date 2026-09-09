@@ -115,6 +115,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_variant.1">
         <source>Create a new variant template for the %s legacy template</source>
+        <target>%s eski kalıbı için yeni bir çeşit kalıbı oluşturun</target>
       </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>

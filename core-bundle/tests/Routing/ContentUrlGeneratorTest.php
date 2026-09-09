@@ -270,7 +270,7 @@ class ContentUrlGeneratorTest extends TestCase
         $this->assertSame('tl_article.15', $route->getRouteKey());
     }
 
-    private function mockUrlGenerator(PageRoute|null $route, array $parameters = []): UrlGeneratorInterface&MockObject
+    private function mockUrlGenerator(PageRoute|null $route, array $parameters = []): MockObject&UrlGeneratorInterface
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
 
@@ -296,7 +296,7 @@ class ContentUrlGeneratorTest extends TestCase
         return $urlGenerator;
     }
 
-    private function mockPageRegistry(PageRoute|null $route): PageRegistry&MockObject
+    private function mockPageRegistry(PageRoute|null $route): MockObject&PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
 

@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2rwh.1">
         <source>Show a header above the main row.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana satırın üzerinde bir üst bilgi görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana satırın üzerinde bir üst bilgi görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwf.0">
         <source>Main row and footer</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2rwf.1">
         <source>Show a footer below the main row.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana satırın altında bir alt bilgi görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana satırın altında bir alt bilgi görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.3rw.0">
         <source>Header, main row and footer</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.3rw.1">
         <source>Show a header above and a footer below the main row.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana satırın üzerinde bir üst bilgi ve altında bir alt bilgi görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana satırın üzerinde bir üst bilgi ve altında bir alt bilgi görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.0">
         <source>Header height</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.1cl.1">
         <source>Show only one column.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnızca bir sütun görüntülenir.</target>
+        <target>Etkinleştirildiğinde, yalnızca bir sütun görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2cll.0">
         <source>Left and main column</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2cll.1">
         <source>Show two columns with the main column on the right side.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana sütun sağda olacak şekilde iki sütun görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana sütun sağda olacak şekilde iki sütun görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2clr.0">
         <source>Main and right column</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2clr.1">
         <source>Show two columns with the main column on the left side.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana sütun solda olacak şekilde iki sütun görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana sütun solda olacak şekilde iki sütun görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.3cl.0">
         <source>Main, left and right column</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.3cl.1">
         <source>Show three columns with the main column in the middle.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ana sütun ortada olacak şekilde üç sütun görüntülenir.</target>
+        <target>Etkinleştirildiğinde, ana sütun ortada olacak şekilde üç sütun görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthLeft.0">
         <source>Left column width</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>Bu seçenek etkinleştirildiğinde, farklı tarayıcılardaki tutarsız varsayılan HTML bileşeni biçimlendirmeleri kaldırılır.</target>
+        <target>Etkinleştirildiğinde, farklı tarayıcılardaki tutarsız varsayılan HTML bileşeni biçimlendirmeleri kaldırılır.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
-        <target>Bu seçenek etkinleştirildiğinde, temel form bileşenleri ve düğme biçimlendirmeleri eklenir.</target>
+        <target>Etkinleştirildiğinde, temel form bileşenleri ve düğme biçimlendirmeleri eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.1">
         <source>Adds basic mime icons for downloads and enclosures.</source>
-        <target>Bu seçenek etkinleştirildiğinde, indirmeler ve zarflar için temel MIME simgeleri eklenir.</target>
+        <target>Etkinleştirildiğinde, indirmeler ve dosyalar için temel MIME simgeleri eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.external.0">
         <source>External style sheets</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (recommended).</source>
-        <target>Bu seçenek etkinleştirildiğinde, .css ve .js dosyaları birleştirilir (önerilir).</target>
+        <target>Etkinleştirildiğinde, .css ve .js dosyaları birleştirilir (önerilir).</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Bu seçenek etkinleştirildiğinde, HTML markup kodu tarayıcıya gönderilmeden önce küçültülür.</target>
+        <target>Etkinleştirildiğinde, HTML markup kodu tarayıcıya gönderilmeden önce küçültülür.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yerleşime jQuery kitaplığı eklenir.</target>
+        <target>Etkinleştirildiğinde, yerleşime jQuery kitaplığı eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yerleşime MooTools kitaplığı eklenir.</target>
+        <target>Etkinleştirildiğinde, yerleşime MooTools kitaplığı eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>

@@ -33,8 +33,6 @@ class CountriesTest extends TestCase
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
         $this->assertNotEmpty($countryCodes);
-
-        /** @phpstan-ignore function.alreadyNarrowedType */
         $this->assertTrue(array_is_list($countryCodes));
 
         foreach ($countryCodes as $countryCode) {

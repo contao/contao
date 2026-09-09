@@ -237,7 +237,7 @@ class InsertTagParser implements ResetInterface
     /**
      * @internal
      */
-    public function renderFlagForLegacyResult(string $flag, string $result): string|false
+    public function renderFlagForLegacyResult(string $flag, string $result): false|string
     {
         if (!$callback = $this->flagCallbacks[strtolower($flag)] ?? null) {
             return false;
