@@ -106,7 +106,7 @@ class DcaUrlAnalyzer
             function () use ($table, $id, $do): array {
                 [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
-                $ptableParam = $ptable === $table || ($ptable && $this->needsPtableParameter($table, $ptable));
+                $ptableParam = $ptable && $this->needsPtableParameter($table, $ptable);
 
                 $query = [
                     'do' => $do,
@@ -170,7 +170,7 @@ class DcaUrlAnalyzer
             if ($childTable) {
                 $query['table'] = $childTable;
 
-                if ($childTable === $table || $this->needsPtableParameter($childTable, $table)) {
+                if ($this->needsPtableParameter($childTable, $table)) {
                     $query['ptable'] = $table;
                 }
             } else {
