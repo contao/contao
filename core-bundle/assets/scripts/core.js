@@ -1845,8 +1845,7 @@ window.Backend =
 				}
 
 				if (folder) {
-					var link = folder.getElement('img[src$="/icons/new.svg"]');
-					link = link && link.getParent('a');
+					var link = folder.getElement('a.upload');
 				}
 			}
 
