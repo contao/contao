@@ -328,7 +328,7 @@ class DumperTest extends ContaoTestCase
                 "CREATE TABLE `tl_page` (`x_string` VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL, `x_json` $jsonDecl, `x_ascii` VARCHAR(255) NOT NULL, `x_binary` VARBINARY(255) NOT NULL, `x_blob` LONGBLOB NOT NULL, `x_simple_array` $arrayDecl) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;",
                 '-- BEGIN DATA tl_page',
                 'INSERT INTO `tl_page` (`x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array`) VALUES (\'ascii\', \'a:1:{i:0;s:5:"ascii";}\', \'ascii\', \'ascii\', \'ascii\', \'asc,ii\');',
-                'INSERT INTO `tl_page` (`x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array`) VALUES (\'ütf-🎱\', 0x613a313a7b693a303b733a393a22c3bc74662df09f8eb1223b7d, 0xc3bc74662df09f8eb1, 0xc3bc74662df09f8eb1, 0xc3bc74662df09f8eb1, 0xc3bc74662cf09f8eb1);',
+                'INSERT INTO `tl_page` (`x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array`) VALUES (\'ütf-🎱\', \'a:1:{i:0;s:9:"ütf-🎱";}\', 0xc3bc74662df09f8eb1, 0xc3bc74662df09f8eb1, 0xc3bc74662df09f8eb1, 0xc3bc74662cf09f8eb1);',
                 'INSERT INTO `tl_page` (`x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array`) VALUES (0xb14ea559, 0x613a313a7b693a303b733a343a22b14ea559223b7d, 0xb14ea559, 0xb14ea559, 0xb14ea559, 0xb14ea559);',
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
