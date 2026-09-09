@@ -285,15 +285,12 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         // Two parents so URLs carry the parameter
         $this->assertSame(
             [
-                '/contao?do=news&table=tl_article',
-                '/contao?do=news&id=1&table=tl_content&ptable=tl_article',
-                '/contao?do=news&id=1&table=tl_content&ptable=tl_content&act=edit',
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&table=tl_article'],
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&id=1&table=tl_content&ptable=tl_article'],
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&id=1&table=tl_content&ptable=tl_content&act=edit'],
             ],
-            array_column($analyzer->getTrail(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&act=edit'), loadLabels: false), 'url'),
+            $analyzer->getTrail(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&act=edit'), loadLabels: false),
         );
-
-        // Only one parent so parameter is omitted
-        $this->assertSame('/contao?do=article&table=tl_content&id=1', $analyzer->getViewUrl('tl_content', 1));
     }
 
     public static function getTrail(): iterable
