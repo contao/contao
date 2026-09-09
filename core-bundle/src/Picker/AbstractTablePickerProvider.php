@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -36,7 +37,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly Connection $connection,
+        private readonly DcaHierarchy|null $dcaHierarchy = null,
     ) {
+        if (!$dcaHierarchy) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Not passing an instance of "%s" to "%s::__construct()" is deprecated and will no longer work in Contao 7.', DcaHierarchy::class, self::class);
+        }
     }
 
     public function getUrl(PickerConfig $config): string
@@ -232,7 +237,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 $qb->addSelect('ptable');
 
                 try {
-                    [$ptable] = $this->getParentTableAndId($this->connection, $table, $id);
+                    [$ptable] = $this->dcaHierarchy
+                        ? $this->dcaHierarchy->getParentTableAndId($id, $table)
+                        : $this->getParentTableAndId($this->connection, $table, $id);
                 } catch (\RuntimeException) {
                 }
             }

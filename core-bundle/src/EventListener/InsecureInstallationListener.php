@@ -33,6 +33,10 @@ class InsecureInstallationListener
      */
     public function __invoke(RequestEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
 
         // Skip the check on localhost

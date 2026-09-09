@@ -274,14 +274,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'inputType'               => 'metaWizard',
 			'eval'                    => array
 			(
-				'allowHtml'           => true,
 				'multiple'            => true,
 				'metaFields'          => array
 				(
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
-					'caption'         => array('type'=>'textarea', 'basicEntities'=>true),
+					'caption'         => array('type'=>'textarea', 'basicEntities'=>true, 'allowHtml' => true),
 					'license'         => array(
 						'attributes'  => 'maxlength="255"',
 						'dcaPicker'   => true,

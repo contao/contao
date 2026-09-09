@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\TestCase;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -112,7 +120,7 @@ abstract class AbstractOperationTestCase extends ContaoTestCase
         return $loader;
     }
 
-    protected function mockUserTemplatesStorage(array|null $existingFiles = null): VirtualFilesystemInterface&MockObject
+    protected function mockUserTemplatesStorage(array|null $existingFiles = null): MockObject&VirtualFilesystemInterface
     {
         $existingFiles ??= [
             'content_element/existing_user_template.html.twig',
@@ -130,7 +138,7 @@ abstract class AbstractOperationTestCase extends ContaoTestCase
         return $storage;
     }
 
-    protected function createTemplateSkeletonFactoryMock(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory&MockObject
+    protected function createTemplateSkeletonFactoryMock(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): MockObject&TemplateSkeletonFactory
     {
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
@@ -147,7 +155,7 @@ abstract class AbstractOperationTestCase extends ContaoTestCase
         return $factory;
     }
 
-    protected function createTemplateSkeletonFactoryStub(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory&Stub
+    protected function createTemplateSkeletonFactoryStub(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): Stub&TemplateSkeletonFactory
     {
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton

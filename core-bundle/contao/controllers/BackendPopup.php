@@ -169,7 +169,7 @@ class BackendPopup extends Backend
 						)
 					);
 				}
-				catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+				catch (MissingPreviewProviderException|UnableToGeneratePreviewException $exception)
 				{
 					$objTemplate->hasPreview = false;
 				}

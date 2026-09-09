@@ -13,15 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,9 +48,10 @@ class DcaUrlAnalyzer
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
         private readonly DcaRequestSwitcher $dcaRequestSwitcher,
-        private readonly Connection $connection,
+        private readonly DcaHierarchy $dcaHierarchy,
         private readonly ContaoCsrfTokenManager $tokenManager,
         private readonly RequestStack $requestStack,
+        private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {
     }
 
@@ -526,31 +528,22 @@ class DcaUrlAnalyzer
             return null;
         }
 
+        $options = new ParentTraversalOptions()->withAllColumns();
         $links = [];
 
-        try {
-            while ($id && $row = $this->getCurrentRecord($id, $table)) {
-                $pn = (int) $row['id'];
-
-                $link = [
-                    'url' => null,
-                    'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
-                ];
-
-                if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $pn)) {
-                    $link['url'] = $this->router->generate('contao_backend', [
-                        ...$query,
-                        'pn' => $pn,
-                        'rt' => $this->tokenManager->getDefaultTokenValue(),
-                    ]);
-                }
-
-                $links[] = $link;
-
-                $id = (int) $row['pid'];
+        foreach ($this->dcaHierarchy->getParentRows($id, $table, $options) as $row) {
+            if (!$this->isGrantedReadAccess($table, $row)) {
+                // Skip tree trail items without read permission
+                break;
             }
-        } catch (AccessDeniedException) {
-            // Skip tree trail items without read permission
+
+            $row = $this->virtualFieldsHandler->expandFields($row, $table);
+            $pn = (int) $row['id'];
+
+            $links[] = [
+                'url' => $this->getRootTrailUrl($pn, $query),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+            ];
         }
 
         return array_reverse($links);
@@ -567,24 +560,7 @@ class DcaUrlAnalyzer
 
         new DcaLoader($table)->load();
 
-        $tableQuoted = $this->connection->quoteSingleIdentifier($table);
-
-        $rows = $this->connection->fetchAllAssociative(
-            "SELECT id FROM $tableQuoted WHERE pid = ?",
-            [$pid],
-        );
-
-        $rows = array_filter(array_map(
-            function ($row) use ($table) {
-                try {
-                    return $this->getCurrentRecord((int) $row['id'], $table);
-                } catch (AccessDeniedException) {
-                    // Skip tree siblings without read permission
-                    return null;
-                }
-            },
-            $rows,
-        ));
+        $rows = $this->getTreeSiblingRows($table, $pid);
 
         usort(
             $rows,
@@ -617,5 +593,39 @@ class DcaUrlAnalyzer
         }
 
         return $links;
+    }
+
+    private function getTreeSiblingRows(string $table, int $pid): array
+    {
+        $options = new ChildTraversalOptions()->withMaxDepth(1)->withAllColumns();
+
+        $rows = array_filter(
+            $this->dcaHierarchy->getChildRows($pid, $table, $options),
+            // Skip tree siblings without read permission
+            fn (array $row): bool => $this->isGrantedReadAccess($table, $row),
+        );
+
+        return array_values(array_map(
+            fn (array $row): array => $this->virtualFieldsHandler->expandFields($row, $table),
+            $rows,
+        ));
+    }
+
+    private function isGrantedReadAccess(string $table, array $row): bool
+    {
+        return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new ReadAction($table, $row));
+    }
+
+    private function getRootTrailUrl(int $id, array $query): string|null
+    {
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $id)) {
+            return null;
+        }
+
+        return $this->router->generate('contao_backend', [
+            ...$query,
+            'pn' => $id,
+            'rt' => $this->tokenManager->getDefaultTokenValue(),
+        ]);
     }
 }

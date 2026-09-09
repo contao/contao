@@ -46,7 +46,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
 
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if ($this->backupName = $input->getArgument('name') ?? null) {
+        if ($this->backupName = $input->getArgument('name')) {
             return;
         }
 
