@@ -151,3 +151,8 @@ Use the `contao--toggle-receiver` and `contao--toggle-sender` Stimulus controlle
 `Theme.setupProfileToggle`, and `Theme.setupSplitButtonToggle`.
 
 All remaining `Theme.*` methods have been removed.
+
+### Margins widget
+
+The margins widget (`inputType => 'trbl'`) has been removed. Use the `text` widget with `'size' => 4'`, the RowWizard
+with a migration or your own implementation instead.
