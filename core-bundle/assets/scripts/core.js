@@ -1811,8 +1811,16 @@ window.Backend =
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;
 
+		options.paramName = 'files';
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
+
+		options.params = function() {
+			return {
+				FORM_SUBMIT: 'tl_upload',
+				action: 'fileupload'
+			};
+		};
 
 		var dz = new Dropzone(wrap, options);
 
