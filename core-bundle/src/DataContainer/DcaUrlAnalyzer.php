@@ -433,12 +433,8 @@ class DcaUrlAnalyzer
 
             $ptable = (string) $this->findGet('ptable');
 
-            // Use the ptable query parameter if it points to itself (nested elements case)
-            if ($ptable === $table && \in_array($table, $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                return $table;
-            }
+            // Use a foreign ptable query parameter if it declares this table as a child
             if ('' !== $ptable && \in_array($ptable, $this->getCurrentModuleTables(), true)) {
-                // Use a foreign ptable query parameter if it declares this table as a child
                 (new DcaLoader($ptable))->load();
 
                 if (\in_array($table, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [], true)) {
