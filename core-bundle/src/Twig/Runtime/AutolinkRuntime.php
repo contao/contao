@@ -27,7 +27,7 @@ final class AutolinkRuntime implements RuntimeExtensionInterface
      */
     public function __construct(private readonly UrlHighlight $urlHighlight)
     {
-        $this->highlighter = new CallbackHighlighter(fn (Url $url) => sprintf(
+        $this->highlighter = new CallbackHighlighter(static fn (Url $url) => \sprintf(
             '<a href="%s" target="_blank" rel="noreferrer noopener">%s</a>',
             htmlspecialchars($url->toHref('https')),
             htmlspecialchars($url->full),
