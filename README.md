@@ -104,14 +104,6 @@ composer phpstan
 composer depcheck
 ```
 
-The E2E tests use `contao/e2e-test-bundle` as a regular development dependency and run with the root PHPUnit
-installation. Their reusable Managed Editions and database files are stored in the ignored `.contao-e2e` directory.
-Browser tests require Node.js 20 or newer. Install the Playwright browsers once after updating the dependencies:
-
-```bash
-vendor/bin/playwright-install --browsers
-```
-
 Use the `--` argument to pass additional flags to the underlying commands:
 
 ```bash
@@ -154,14 +146,21 @@ npm run build
 ## End-to-end tests
 
 The end-to-end suite creates a fully isolated Contao Managed Edition, loads its fixtures, and runs both HTTP-level and
-Playwright browser tests. Docker supplies the default MariaDB database. After installing the Composer dependencies and
-Playwright browsers as described above, run the suite with:
+Playwright browser tests. Docker supplies the default MariaDB database. After installing the Composer dependencies,
+install the Playwright browsers once:
+
+```bash
+vendor/bin/playwright-install --browsers
+```
+
+Then run the end-to-end tests with Composer:
 
 ```bash
 composer e2e-tests
 ```
 
-Reusable installations and database files remain inside the ignored `.contao-e2e` directory.
+Reusable installations and database files remain inside the ignored `.contao-e2e` directory. Browser tests require
+Node.js 20 or newer.
 
 ## License
 
