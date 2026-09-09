@@ -333,6 +333,40 @@ class DumperTest extends ContaoTestCase
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
+
+        yield 'Table with JSON data containing umlauts' => [
+            [new Table(
+                'tl_page',
+                [
+                    new Column('jsonData', Type::getType(Types::JSON)),
+                ],
+                [],
+                [],
+                [],
+                $tableOptions,
+            )],
+            [],
+            [
+                'SELECT `jsonData` AS `jsonData` FROM `tl_page`' => [
+                    [
+                        'jsonData' => '{"foo": "bar"}',
+                    ],
+                    [
+                        'jsonData' => '{"foo": "bär"}',
+                    ],
+                ],
+            ],
+            [
+                'SET FOREIGN_KEY_CHECKS = 0;',
+                '-- BEGIN STRUCTURE tl_page',
+                'DROP TABLE IF EXISTS `tl_page`;',
+                "CREATE TABLE `tl_page` (`jsonData` $jsonDecl) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;",
+                '-- BEGIN DATA tl_page',
+                'INSERT INTO `tl_page` (`jsonData`) VALUES (\'{"foo": "bar"}\');',
+                'INSERT INTO `tl_page` (`jsonData`) VALUES (\'{"foo": "bär"}\');',
+                'SET FOREIGN_KEY_CHECKS = 1;',
+            ],
+        ];
     }
 
     /**
