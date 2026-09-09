@@ -19,6 +19,8 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\BinaryType;
+use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\JsonType;
 
 class Dumper implements DumperInterface
@@ -129,7 +131,7 @@ class Dumper implements DumperInterface
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
 
             $charset = strtolower($column->getPlatformOptions()['charset'] ?? '');
-            $columnUtf8Charsets[$columnName] = \in_array($charset, ['utf8', 'utf8mb4'], true) || $column->getType() instanceof JsonType);
+            $columnUtf8Charsets[$columnName] = \in_array($charset, ['utf8', 'utf8mb4'], true) || $column->getType() instanceof JsonType;
         }
 
         $values = implode(', ', $values);
