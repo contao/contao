@@ -1060,6 +1060,7 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
+		$intFilterPanel = 0;
 		$panels = StringUtil::trimsplit('[;,]', $panelLayout);
 
 		// Force consistent order in Contao 5.7+ because the filter panel has moved from the top to the right.
@@ -1069,6 +1070,7 @@ abstract class DataContainer extends Backend
 		if (empty(array_diff($panels, array('search', 'filter', 'sort', 'limit'))))
 		{
 			$panelLayout = implode(',', array_values(array_intersect(array('search', 'filter', 'sort', 'limit'), $panels)));
+			$intFilterPanel = -1;
 		}
 
 		// Reset all filters
@@ -1089,7 +1091,6 @@ abstract class DataContainer extends Backend
 			$this->reload();
 		}
 
-		$intFilterPanel = 0;
 		$arrPanels = array();
 		$arrPanes = StringUtil::trimsplit(';', $panelLayout);
 

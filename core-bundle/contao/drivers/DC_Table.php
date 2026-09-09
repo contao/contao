@@ -5333,7 +5333,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (($v['filter'] ?? null) == $intFilterPanel)
+			if (($v['filter'] ?? false) && ($intFilterPanel === 0 || $v['filter'] == $intFilterPanel))
 			{
 				$sortingFields[] = $k;
 			}
