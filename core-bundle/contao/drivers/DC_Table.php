@@ -3537,6 +3537,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
 		$arrFound = array();
 
 		if (!empty($this->procedure))
@@ -3620,6 +3621,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
+		$parameters['is_sortable'] = $blnIsSortable;
 
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
@@ -4076,9 +4078,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'id' => "{$node}_$id",
 			'record_id' => (int) $currentRecord['id'],
 			'record_table' => $table,
+			'records_group' => $this->strTable,
 			'level' => $intMargin / $intSpacing + 1,
 			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
 			'is_group' => ($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable,
+			'is_root_page' => ($currentRecord['type'] ?? null) === 'root',
+			'is_leaf_record' => $isCurrentTable && !$isTreeMode,
 			'is_expanded' => $blnIsOpen,
 			'enable_deeplink' => $isCurrentTable,
 			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
@@ -4086,6 +4091,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'records' => array(),
 			'children' => array(),
 		);
+
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
+
+		$parameters['is_sortable'] = $blnIsSortable;
+		$parameters['allow_dragging'] = false;
+
+		if ($blnIsSortable && $isCurrentTable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
+		{
+			$parameters['allow_dragging'] = true;
+		}
 
 		if ($table != $this->strTable)
 		{
@@ -5333,7 +5348,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (($v['filter'] ?? null) == $intFilterPanel)
+			if (($v['filter'] ?? false) && ($intFilterPanel === 0 || $v['filter'] == $intFilterPanel))
 			{
 				$sortingFields[] = $k;
 			}
@@ -5635,7 +5650,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
-		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds();
+		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))
+			->withIgnoreOutOfBounds()
+			->withPageRange(7);
 
 		if ($limit)
 		{

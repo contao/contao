@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
@@ -37,7 +38,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
     }
 
@@ -52,6 +53,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             'do' => 'debug',
             'key' => 'enable',
             'referer' => base64_encode('do=page'),
+            'rt' => 'request-token-value',
         ];
 
         $router = $this->createMock(RouterInterface::class);
@@ -72,7 +74,14 @@ class BackendMenuListenerTest extends ContaoTestCase
         $jwtManager = $this->createStub(JwtManager::class);
         $security = $this->getSecurity();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($this->once())
+            ->method('getDefaultTokenValue')
+            ->willReturn('request-token-value')
+        ;
+
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager, $tokenManager);
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -101,7 +110,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $jwtManager = $this->createStub(JwtManager::class);
         $security = $this->getSecurity();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, true, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, true, null, $jwtManager, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -122,7 +131,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
     }
 
@@ -145,7 +154,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $jwtManager = $this->createStub(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
     }
 
@@ -163,7 +172,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $jwtManager = $this->createStub(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager, $this->createStub(ContaoCsrfTokenManager::class));
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request stack did not contain a request');
@@ -194,7 +203,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
 
         $children = $event->getTree()->getChild('system')->getChildren();
@@ -224,7 +233,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $requestStack = new RequestStack([$this->createStub(Request::class)]);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
@@ -244,7 +253,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $managerPath = 'contao-manager.phar.php';
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
@@ -264,7 +273,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $managerPath = 'contao-manager.phar.php';
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null);
+        $listener = new BackendMenuListener($security, $router, $requestStack, false, $managerPath, null, $this->createStub(ContaoCsrfTokenManager::class));
         $listener($event);
 
         $this->assertNull($event->getTree()->getChild('system'));

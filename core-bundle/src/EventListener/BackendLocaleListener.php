@@ -37,6 +37,10 @@ class BackendLocaleListener
      */
     public function __invoke(RequestEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $user = $this->security->getUser();
 
         if (!$user instanceof BackendUser || !$user->language) {

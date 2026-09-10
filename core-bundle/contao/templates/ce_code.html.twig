@@ -4,7 +4,7 @@
 {% block content %}
 
     {% add 'highlight_php' to stylesheets %}
-        {% with {file: 'vendor/scrivo/highlight_php/styles/foundation.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+        {% with {file: asset('foundation.css', 'scrivo/highlight.php')} %}{{ block('stylesheet_component') }}{% endwith %}
     {% endadd %}
 
     <pre><code class="{{ cssClass }}">{{ code|raw }}</code></pre>

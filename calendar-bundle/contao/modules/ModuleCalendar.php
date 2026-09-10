@@ -285,7 +285,7 @@ class ModuleCalendar extends Events
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
 			{
-				$arrDays[$intWeek][$i]['label'] = '&nbsp;';
+				$arrDays[$intWeek][$i]['label'] = "\u{00A0}";
 				$arrDays[$intWeek][$i]['class'] = 'empty' . $strClass;
 				$arrDays[$intWeek][$i]['events'] = array();
 

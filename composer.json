@@ -51,7 +51,7 @@
         "contao-components/colorbox": "^1.6",
         "contao-components/contao": "^9.1",
         "contao-components/datepicker": "^3.0",
-        "contao-components/dropzone": "^5.0.1",
+        "contao-components/dropzone": "^6.0",
         "contao-components/handorgel": "^1.0",
         "contao-components/jquery": "^3.5",
         "contao-components/jquery-ui": "^1.11.4",
@@ -344,13 +344,11 @@
         ],
         "cs-fixer": [
             "@ecs-default",
-            "@ecs-legacy",
-            "@ecs-template"
+            "@ecs-legacy"
         ],
         "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
-        "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",

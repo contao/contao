@@ -93,7 +93,7 @@ class PreviewLinkControllerTest extends TestCase
         return $authenticator;
     }
 
-    private function mockUriSigner(bool $checkSuccessful): UriSigner&MockObject
+    private function mockUriSigner(bool $checkSuccessful): MockObject&UriSigner
     {
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner

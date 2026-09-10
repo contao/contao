@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\ContentComposition;
 
 use Contao\Config;
@@ -188,7 +196,7 @@ class ContentCompositionBuilder
             // Add slot content
             foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
                 if ($definition['enable'] ?? false) {
-                    $isContentElement = str_starts_with($definition['mod'], 'content-');
+                    $isContentElement = \is_string($definition['mod']) && str_starts_with($definition['mod'], 'content-');
 
                     $this->addElementToSlot(
                         $definition['col'],
