@@ -525,7 +525,7 @@ class Dbafs
 			\RecursiveIteratorIterator::SELF_FIRST
 		);
 
-		$strLog = 'system/tmp/' . md5(uniqid(mt_rand(), true));
+		$strLog = 'system/tmp/' . bin2hex(random_bytes(16));
 
 		// Open the log file
 		$objLog = new File($strLog);
