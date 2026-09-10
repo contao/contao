@@ -19,7 +19,7 @@ and follow the conventions of the area being edited. **Do not over-engineer!**
   infrastructure; `vendor-bin/` contains isolated dev tools.
 - New PHP code lives in a bundle's `src/` directory (PSR-4). Tests live in the corresponding `tests/` directory.
 - Standalone bundle tests exist only for bundles that contain a `tests/` directory.
-- Asset source files live in `core-bundle/assets/`.
+- If a bundle provides asset source files, they live in its `assets/` directory.
 - Do not manually edit generated or third-party files in `node_modules/` or `vendor/`.
 
 ## New code vs. Legacy code
