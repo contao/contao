@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -87,7 +86,6 @@ class BackendMainListener
                 ->setLabel($data['label'])
                 ->setUri($data['href'])
                 ->setCurrent((bool) $data['isActive'])
-                ->setExtra(BackendMenuBuilder::EXTRA_ICON, $name)
                 ->setExtra('title', $data['title'])
                 ->setExtra('translation_domain', false)
             ;

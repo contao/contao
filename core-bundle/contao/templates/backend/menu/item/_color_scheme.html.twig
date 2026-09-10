@@ -1,1 +1,9 @@
-<button class="icon-color-scheme" type="button" data-contao--color-scheme-target="label" data-action="contao--color-scheme#toggle:prevent">{{ item.label }}</button>
+{% trans_default_domain 'contao_default' %}
+
+{% set button_attributes = attrs()
+    .set('type', 'button')
+    .set('data-controller', 'contao--color-scheme')
+    .set('data-contao--color-scheme-i18n-value', {dark: 'MSC.darkMode'|trans, light: 'MSC.lightMode'|trans}|json_encode)
+    .set('data-action', 'contao--color-scheme#toggle:prevent')
+%}
+<button{{ button_attributes }}>{{ backend_icon('color_scheme.svg', attributes: attrs().addClass('icon')) }}<span class="label" data-contao--color-scheme-target="label">{{ label }}</span></button>

@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMainListener;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Menu\Matcher\Matcher;
@@ -34,6 +35,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFunction;
 
 class BackendMainListenerTest extends TestCase
@@ -88,13 +90,13 @@ class BackendMainListenerTest extends TestCase
         $this->assertSame('Node 1', $grandChildren['node1']->getLabel());
         $this->assertSame('/node1', $grandChildren['node1']->getUri());
         $this->assertSame([], $grandChildren['node1']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'node1', 'title' => 'Node 1 Title', 'translation_domain' => false], $grandChildren['node1']->getExtras());
+        $this->assertSame(['title' => 'Node 1 Title', 'translation_domain' => false], $grandChildren['node1']->getExtras());
 
         // Node 1
         $this->assertSame('Node 2', $grandChildren['node2']->getLabel());
         $this->assertSame('/node2', $grandChildren['node2']->getUri());
         $this->assertSame([], $grandChildren['node2']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'node2', 'title' => 'Node 2 Title', 'translation_domain' => false], $grandChildren['node2']->getExtras());
+        $this->assertSame(['title' => 'Node 2 Title', 'translation_domain' => false], $grandChildren['node2']->getExtras());
 
         // Category 2
         $this->assertSame('Category 2', $children['category2']->getLabel());
@@ -169,7 +171,6 @@ class BackendMainListenerTest extends TestCase
             ->createItem('module')
             ->setLabel('Module')
             ->setUri('/module')
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'module')
         ;
 
         $legacyModule = $factory
@@ -194,7 +195,7 @@ class BackendMainListenerTest extends TestCase
         $this->assertStringContainsString('aria-expanded="false"', $html);
         $this->assertStringContainsString('title="MSC.expandNode"', $html);
         $this->assertStringContainsString('<ul id="custom-children" class="menu_level_1">', $html);
-        $this->assertStringContainsString('class="navigation module"', $html);
+        $this->assertStringContainsString('class="navigation"', $html);
         $this->assertStringContainsString('title="Module"', $html);
         $this->assertStringContainsString('class="navigation legacy-class"', $html);
         $this->assertStringContainsString('class="first leaf"', $html);
@@ -263,6 +264,26 @@ class BackendMainListenerTest extends TestCase
         $twig->addExtension(new TranslationExtension($translator));
         $twig->addFunction(new TwigFunction('path', static fn (): string => '/backend'));
         $twig->addGlobal('app', $this->createAppVariable($backendModules));
+        $twig->addFunction(new TwigFunction('attrs', static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes)));
+        $twig->getRuntime(EscaperRuntime::class)->addSafeClass(HtmlAttributes::class, ['html']);
+        $twig->addFunction(new TwigFunction(
+            'backend_icon',
+            static function (string $src, string $alt = '', HtmlAttributes|null $attributes = null): string {
+                $dark = new HtmlAttributes($attributes)->addClass('color-scheme--dark');
+                $light = new HtmlAttributes($attributes)->addClass('color-scheme--light');
+
+                return \sprintf(
+                    '<img src="%s" alt="%s"%s><img src="%s" alt="%s"%s>',
+                    $src,
+                    $alt,
+                    $dark->toString(),
+                    $src,
+                    $alt,
+                    $light->toString(),
+                );
+            },
+            ['is_safe' => ['html']],
+        ));
 
         return new TwigRenderer($twig, '@Contao/backend/menu/_main.html.twig', new Matcher());
     }

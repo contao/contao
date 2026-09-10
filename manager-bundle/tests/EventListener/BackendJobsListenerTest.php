@@ -106,6 +106,24 @@ class BackendJobsListenerTest extends ContaoTestCase
         $twig->addFunction(new TwigFunction('path', static fn (): string => '/jobs/pending'));
         $twig->addFunction(new TwigFunction('attrs', static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes)));
         $twig->getRuntime(EscaperRuntime::class)->addSafeClass(HtmlAttributes::class, ['html']);
+        $twig->addFunction(new TwigFunction(
+            'backend_icon',
+            static function (string $src, string $alt = '', HtmlAttributes|null $attributes = null): string {
+                $dark = new HtmlAttributes($attributes)->addClass('color-scheme--dark');
+                $light = new HtmlAttributes($attributes)->addClass('color-scheme--light');
+
+                return \sprintf(
+                    '<img src="%s" alt="%s"%s><img src="%s" alt="%s"%s>',
+                    $src,
+                    $alt,
+                    $dark->toString(),
+                    $src,
+                    $alt,
+                    $light->toString(),
+                );
+            },
+            ['is_safe' => ['html']],
+        ));
 
         return new TwigRenderer($twig, '@Contao/backend/menu/_header.html.twig', new Matcher());
     }

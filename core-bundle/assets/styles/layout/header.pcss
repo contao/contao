@@ -47,9 +47,10 @@
 
 #tmenu a,
 #tmenu .profile button {
+    display: inline-flex;
+    align-items: center;
     margin: 5px 0;
     padding: 8px 12px;
-    display: inline-block;
     border-radius: 20px;
 }
 
@@ -144,10 +145,12 @@
 
 #tmenu ul.menu_level_1 li {
     :is(a, button) {
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: 8px;
         color: inherit;
         margin-block: 0;
-        padding: 6px 20px 6px 40px;
+        padding: 6px 20px;
         white-space: nowrap;
         border-radius: 0;
 
@@ -213,9 +216,7 @@
 }
 
 #tmenu {
-    .icon-alert,
     .icon-favorite,
-    .icon-manual,
     .icon-jobs {
         width: 16px;
         margin-bottom: -2px;
@@ -226,10 +227,6 @@
     }
 }
 
-#tmenu .icon-alert {
-    background: var(--icon-alert) center center no-repeat;
-}
-
 #tmenu .icon-favorite {
     background: var(--icon-favorite) center center no-repeat;
 }
@@ -238,30 +235,6 @@
     background: var(--icon-favorite-active) center center no-repeat;
 }
 
-#tmenu .icon-manual {
-    background: var(--icon-manual) center center no-repeat;
-}
-
 #tmenu .icon-jobs {
     background: var(--icon-jobs) center center no-repeat;
-}
-
-#tmenu .icon-profile {
-    background: var(--icon-profile) 20px center no-repeat;
-}
-
-#tmenu .icon-security {
-    background: var(--icon-security) 20px center no-repeat;
-}
-
-#tmenu .icon-color-scheme {
-    background: var(--icon-color-scheme) 20px center no-repeat;
-}
-
-#tmenu .icon-favorites {
-    background: var(--icon-favorites) 20px center no-repeat;
-}
-
-#tmenu .icon-logout {
-    background: var(--icon-logout) 20px center no-repeat;
 }

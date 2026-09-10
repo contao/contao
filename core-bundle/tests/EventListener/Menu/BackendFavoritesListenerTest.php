@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendFavoritesListenerTest extends TestCase
 {
@@ -47,7 +46,6 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
             $this->createStub(Connection::class),
-            $this->createStub(TranslatorInterface::class),
         );
 
         $listener($event);
@@ -101,13 +99,6 @@ class BackendFavoritesListenerTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('trans')
-            ->willReturn('Favorites')
-        ;
-
         $factory = new MenuFactory();
 
         $tree = $factory->createItem('mainMenu');
@@ -120,7 +111,6 @@ class BackendFavoritesListenerTest extends TestCase
             $router,
             $requestStack,
             $connection,
-            $translator,
         );
 
         $listener($event);
@@ -129,10 +119,12 @@ class BackendFavoritesListenerTest extends TestCase
 
         $this->assertCount(2, $children);
         $this->assertSame('favorites', $children[0]->getName());
-        $this->assertSame('Favorites', $children[0]->getLabel());
+        $this->assertSame('MSC.favorites', $children[0]->getLabel());
         $this->assertSame('/contao?do=pages&mtg=favorites', $children[0]->getUri());
 
         $this->assertSame([], $children[0]->getLinkAttributes());
+        $this->assertSame(['id' => 'favorites-menu'], $children[0]->getAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $children[0]->getExtras());
 
         $grandChildren = array_values($children[0]->getChildren());
 
@@ -142,14 +134,14 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('/contao?do=pages&act=edit&id=3', $grandChildren[0]->getUri());
 
         $this->assertSame([], $grandChildren[0]->getLinkAttributes());
-        $this->assertSame(['title' => 'Edit page 3', 'translation_domain' => false], $grandChildren[0]->getExtras());
+        $this->assertSame(['translation_domain' => false], $grandChildren[0]->getExtras());
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
         $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
         $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $grandChildren[1]->getUri());
 
         $this->assertSame([], $grandChildren[1]->getLinkAttributes());
-        $this->assertSame(['title' => 'Edit "fe_page"', 'translation_domain' => false], $grandChildren[1]->getExtras());
+        $this->assertSame(['translation_domain' => false], $grandChildren[1]->getExtras());
 
         $this->assertSame('content', $children[1]->getName());
     }
@@ -184,7 +176,6 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
             $this->createStub(Connection::class),
-            $this->createStub(TranslatorInterface::class),
         );
 
         $listener($event);
@@ -222,13 +213,6 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn([])
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('trans')
-            ->willReturn('Favorites')
-        ;
-
         $factory = new MenuFactory();
 
         $tree = $factory->createItem('mainMenu');
@@ -241,7 +225,6 @@ class BackendFavoritesListenerTest extends TestCase
             $router,
             $requestStack,
             $connection,
-            $translator,
         );
 
         $listener($event);

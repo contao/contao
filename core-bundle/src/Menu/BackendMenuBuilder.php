@@ -26,7 +26,7 @@ class BackendMenuBuilder
     public const EXTRA_IS_GROUP = 'contao_backend_menu_is_group';
 
     /**
-     * An icon identifier interpreted by the active backend menu template.
+     * An icon image interpreted by the active backend menu template.
      */
     public const EXTRA_ICON = 'contao_backend_menu_icon';
 
@@ -56,42 +56,29 @@ class BackendMenuBuilder
 
     public function buildMainMenu(): ItemInterface
     {
-        $tree = $this->factory
-            ->createItem('mainMenu')
-            ->setChildrenAttribute('class', 'menu_level_0')
-        ;
-
-        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
-
-        return $tree;
+        return $this->buildTree('mainMenu', ['class' => 'menu_level_0']);
     }
 
     public function buildHeaderMenu(): ItemInterface
     {
-        $tree = $this->factory
-            ->createItem('headerMenu')
-            ->setChildrenAttribute('id', 'tmenu')
-        ;
-
-        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
-
-        return $tree;
+        return $this->buildTree('headerMenu', ['id' => 'tmenu']);
     }
 
     public function buildLoginMenu(): ItemInterface
     {
-        $tree = $this->factory->createItem('loginMenu');
-
-        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
-
-        return $tree;
+        return $this->buildTree('loginMenu');
     }
 
     public function buildBreadcrumbMenu(): ItemInterface
     {
+        return $this->buildTree('breadcrumbMenu', ['id' => 'breadcrumb']);
+    }
+
+    private function buildTree(string $name, array $childrenAttributes = []): ItemInterface
+    {
         $tree = $this->factory
-            ->createItem('breadcrumbMenu')
-            ->setChildrenAttribute('id', 'breadcrumb')
+            ->createItem($name)
+            ->setChildrenAttributes($childrenAttributes)
         ;
 
         $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);

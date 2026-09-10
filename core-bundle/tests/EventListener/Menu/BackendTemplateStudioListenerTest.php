@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendTemplateStudioListener;
-use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuFactory;
@@ -23,7 +22,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendTemplateStudioListenerTest extends ContaoTestCase
 {
@@ -37,10 +35,9 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
 
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
-        $translator = $this->getTranslator();
         $event = $this->createStub(MenuEvent::class);
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, false);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, false);
         $listener($event);
     }
 
@@ -55,9 +52,8 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $security = $this->getSecurity(false);
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
-        $translator = $this->getTranslator();
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, true);
         $listener($event);
     }
 
@@ -85,9 +81,8 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $security = $this->getSecurity(true);
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
-        $translator = $this->getTranslator();
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, true);
         $listener($event);
     }
 
@@ -121,9 +116,8 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $security = $this->getSecurity(true);
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
-        $translator = $this->getTranslator();
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, true);
         $listener($event);
     }
 
@@ -157,9 +151,8 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $security = $this->getSecurity(true);
         $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
-        $translator = $this->getTranslator();
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, true);
         $listener($event);
     }
 
@@ -174,14 +167,13 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $event = new MenuEvent($nodeFactory, $mainMenu);
         $security = $this->getSecurity(true);
         $router = $this->createStub(RouterInterface::class);
-        $translator = $this->getTranslator();
 
         $request = new Request();
         $request->attributes->set('_controller', TemplateStudioController::class);
 
         $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
+        $listener = new BackendTemplateStudioListener($security, $router, $requestStack, true);
         $listener($event);
 
         $children = $event->getTree()->getChildren()['design']->getChildren();
@@ -191,7 +183,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
 
         $this->assertSame([], $children['template-studio']->getLinkAttributes());
         $this->assertSame(
-            [BackendMenuBuilder::EXTRA_ICON => 'template-studio', 'translation_domain' => 'contao_modules', 'title' => 'MOD.template_studio.1'],
+            ['translation_domain' => 'contao_modules', 'title' => 'MOD.template_studio.1'],
             $children['template-studio']->getExtras(),
         );
 
@@ -209,16 +201,5 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         ;
 
         return $security;
-    }
-
-    private function getTranslator(): TranslatorInterface
-    {
-        $translator = $this->createStub(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnCallback(static fn (string $id): string => $id)
-        ;
-
-        return $translator;
     }
 }

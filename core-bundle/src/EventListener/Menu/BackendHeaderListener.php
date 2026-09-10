@@ -22,7 +22,6 @@ use Knp\Menu\ItemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Make sure this listener comes before the other ones adding to its tree.
@@ -35,7 +34,6 @@ class BackendHeaderListener
     public function __construct(
         private readonly Security $security,
         private readonly RouterInterface $router,
-        private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
     ) {
     }
@@ -65,32 +63,26 @@ class BackendHeaderListener
 
     private function createManual(FactoryInterface $factory): ItemInterface
     {
-        $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
-
         return $factory
             ->createItem('manual')
-            ->setLabel($manualTitle)
+            ->setLabel('MSC.manual')
             ->setUri('https://to.contao.org/manual')
             ->setLinkAttribute('target', '_blank')
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'manual')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'manual.svg')
             ->setExtra('safe_label', true)
-            ->setExtra('title', $manualTitle)
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
     }
 
     private function createAlerts(FactoryInterface $factory): ItemInterface
     {
-        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
-
         return $factory
             ->createItem('alerts')
-            ->setLabel($systemMessages)
+            ->setLabel('MSC.systemMessages')
             ->setUri($this->router->generate('contao_backend_alerts'))
             ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/_alerts.html.twig')
             ->setExtra('alerts_count', $this->getAlertsCount())
-            ->setExtra('title', $systemMessages)
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
     }
 
@@ -119,22 +111,11 @@ class BackendHeaderListener
 
         $colorScheme = $factory
             ->createItem('color-scheme')
-            ->setLabel($this->translator->trans('MSC.lightMode', [], 'contao_default'))
-            ->setAttribute('data-controller', 'contao--color-scheme')
-            ->setAttribute(
-                'data-contao--color-scheme-i18n-value',
-                json_encode(
-                    [
-                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
-                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
-                    ],
-                    JSON_THROW_ON_ERROR,
-                ),
-            )
+            ->setLabel('MSC.lightMode')
             ->setLabelAttribute('class', 'color-scheme')
             ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_color_scheme.html.twig')
             ->setExtra(BackendMenuBuilder::EXTRA_HAS_DIVIDER, true)
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
 
         $submenu->addChild($colorScheme);
@@ -148,7 +129,7 @@ class BackendHeaderListener
             ->createItem('login')
             ->setLabel('MSC.profile')
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'nb' => '1']))
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'profile')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'profile_small.svg')
             ->setExtra(BackendMenuBuilder::EXTRA_HAS_DIVIDER, true)
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -159,7 +140,7 @@ class BackendHeaderListener
             ->createItem('security')
             ->setLabel('MSC.security')
             ->setUri($this->router->generate('contao_backend', ['do' => 'security']))
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'security')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'shield_small.svg')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
@@ -169,7 +150,7 @@ class BackendHeaderListener
             ->createItem('favorites')
             ->setLabel('MSC.favorites')
             ->setUri($this->router->generate('contao_backend', ['do' => 'favorites']))
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'favorites')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'favorites_small.svg')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
@@ -180,10 +161,10 @@ class BackendHeaderListener
     {
         return $factory
             ->createItem('burger')
-            ->setLabel($this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
+            ->setLabel('MSC.showMainNavigation')
             ->setAttribute('class', 'burger')
             ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_navigation_toggle.html.twig')
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
     }
 

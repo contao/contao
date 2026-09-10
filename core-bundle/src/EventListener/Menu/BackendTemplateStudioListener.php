@@ -14,13 +14,11 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -32,7 +30,6 @@ class BackendTemplateStudioListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly bool $templateStudioEnabled,
     ) {
     }
@@ -63,9 +60,8 @@ class BackendTemplateStudioListener
         $templateStudioNode = $event->getFactory()
             ->createItem('template-studio')
             ->setLabel('MOD.template_studio.0')
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'template-studio')
             ->setExtra('translation_domain', 'contao_modules')
-            ->setExtra('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
+            ->setExtra('title', 'MOD.template_studio.1')
             ->setUri($this->router->generate('contao_template_studio'))
             ->setCurrent(TemplateStudioController::class === $request->attributes->get('_controller'))
         ;

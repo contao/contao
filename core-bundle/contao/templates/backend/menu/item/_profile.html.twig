@@ -8,14 +8,15 @@
     .setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#profileButton')
 %}
 
-<button
-    id="profileButton"
-    type="button"
-    title="{{ 'MSC.showProfile'|trans }}"
-    data-controller="contao--toggle-sender"
-    data-action="contao--toggle-sender#toggle:prevent"
-    data-contao--toggle-sender-active-title-value="{{ 'MSC.hideProfile'|trans }}"
-    data-contao--toggle-sender-inactive-title-value="{{ 'MSC.showProfile'|trans }}"
-    data-contao--toggle-sender-contao--toggle-receiver-outlet="#profileMenu"
-    data-contao--tooltips-target="tooltip"
->{{ item.label }}</button>
+{% set button_attributes = attrs()
+    .set('id', 'profileButton')
+    .set('type', 'button')
+    .set('title', 'MSC.showProfile'|trans)
+    .set('data-controller', 'contao--toggle-sender')
+    .set('data-action', 'contao--toggle-sender#toggle:prevent')
+    .set('data-contao--toggle-sender-active-title-value', 'MSC.hideProfile'|trans)
+    .set('data-contao--toggle-sender-inactive-title-value', 'MSC.showProfile'|trans)
+    .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#profileMenu')
+    .set('data-contao--tooltips-target', 'tooltip')
+%}
+<button{{ button_attributes }}>{{ label }}</button>

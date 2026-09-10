@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -35,7 +34,6 @@ class BackendPreviewListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -58,8 +56,8 @@ class BackendPreviewListener
             ->setUri($this->getPreviewUrl())
             ->setLinkAttribute('target', '_blank')
             ->setLinkAttribute('accesskey', 'f')
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'preview')
-            ->setExtra('title', $this->translator->trans('MSC.fePreviewTitle', [], 'contao_default'))
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'preview.svg')
+            ->setExtra('title', 'MSC.fePreviewTitle')
             ->setExtra('translation_domain', 'contao_default')
         ;
 

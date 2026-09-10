@@ -24,7 +24,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -37,7 +36,6 @@ class BackendFavoritesListener
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
         private readonly Connection $connection,
-        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -72,9 +70,9 @@ class BackendFavoritesListener
         $tree = $factory
             ->createItem('favorites')
             ->setAttribute('id', 'favorites-menu')
-            ->setLabel($this->translator->trans('MSC.favorites', [], 'contao_default'))
+            ->setLabel('MSC.favorites')
             ->setUri($this->router->generate('contao_backend', $params))
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
 
         $requestUri = UrlUtil::getNormalizePathAndQuery($request->getRequestUri());
@@ -113,7 +111,6 @@ class BackendFavoritesListener
                 ->setLabel(StringUtil::decodeEntities($node['title']))
                 ->setUri($node['url'])
                 ->setCurrent($node['url'] === $requestUri)
-                ->setExtra('title', StringUtil::decodeEntities($node['title']))
                 ->setExtra('translation_domain', false)
             ;
 

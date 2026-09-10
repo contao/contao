@@ -20,7 +20,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -32,7 +31,6 @@ class BackendMenuListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly bool $debug,
         private readonly string|null $managerPath,
         private readonly JwtManager|null $jwtManager,
@@ -79,9 +77,8 @@ class BackendMenuListener
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('data-turbo-prefetch', 'false')
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'debug')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'debug.svg')
             ->setExtra(BackendMenuBuilder::EXTRA_IS_HIGHLIGHTED, $this->debug)
-            ->setExtra('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
@@ -110,9 +107,8 @@ class BackendMenuListener
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
             ->setUri($request->getUriForPath('/'.$this->managerPath))
-            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'contao_manager')
-            ->setExtra('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
-            ->setExtra('translation_domain', false)
+            ->setExtra('title', 'contao_manager_title')
+            ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
         $categoryNode->addChild($item);

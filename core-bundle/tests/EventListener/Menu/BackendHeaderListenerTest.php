@@ -18,6 +18,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendHeaderListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Menu\Matcher\Matcher;
@@ -30,6 +31,8 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\Runtime\EscaperRuntime;
+use Twig\TwigFunction;
 
 class BackendHeaderListenerTest extends TestCase
 {
@@ -75,7 +78,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->getTranslator(),
             $this->createContaoFrameworkStub([Backend::class => $systemMessages]),
         );
 
@@ -93,12 +95,12 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
         $this->assertSame('https://to.contao.org/manual', $children['manual']->getUri());
         $this->assertSame(['target' => '_blank'], $children['manual']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'manual', 'safe_label' => true, 'title' => 'MSC.manual', 'translation_domain' => false], $children['manual']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'manual.svg', 'safe_label' => true, 'translation_domain' => 'contao_default'], $children['manual']->getExtras());
 
         // Alerts
         $this->assertSame('MSC.systemMessages', $children['alerts']->getLabel());
         $this->assertSame('/contao/alerts', $children['alerts']->getUri());
-        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/_alerts.html.twig', 'alerts_count' => 1, 'title' => 'MSC.systemMessages', 'translation_domain' => false], $children['alerts']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/_alerts.html.twig', 'alerts_count' => 1, 'translation_domain' => 'contao_default'], $children['alerts']->getExtras());
 
         // Submenu
         $this->assertSame('fo<">o', $children['submenu']->getLabel());
@@ -121,30 +123,30 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
         $this->assertSame('/contao?do=login&act=edit&id=1&nb=1', $grandChildren['login']->getUri());
         $this->assertSame([], $grandChildren['login']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'profile', BackendMenuBuilder::EXTRA_HAS_DIVIDER => true, 'translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'profile_small.svg', BackendMenuBuilder::EXTRA_HAS_DIVIDER => true, 'translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
 
         // Security
         $this->assertSame('MSC.security', $grandChildren['security']->getLabel());
         $this->assertSame('/contao?do=security', $grandChildren['security']->getUri());
         $this->assertSame([], $grandChildren['security']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'security', 'translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'shield_small.svg', 'translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
         // Color scheme
         $this->assertSame('MSC.lightMode', $grandChildren['color-scheme']->getLabel());
-        $this->assertSame(['data-controller' => 'contao--color-scheme', 'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}'], $grandChildren['color-scheme']->getAttributes());
+        $this->assertSame([], $grandChildren['color-scheme']->getAttributes());
         $this->assertSame(['class' => 'color-scheme'], $grandChildren['color-scheme']->getLabelAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/item/_color_scheme.html.twig', BackendMenuBuilder::EXTRA_HAS_DIVIDER => true, 'translation_domain' => false], $grandChildren['color-scheme']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/item/_color_scheme.html.twig', BackendMenuBuilder::EXTRA_HAS_DIVIDER => true, 'translation_domain' => 'contao_default'], $grandChildren['color-scheme']->getExtras());
 
         // Favorites
         $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
         $this->assertSame('/contao?do=favorites', $grandChildren['favorites']->getUri());
         $this->assertSame([], $grandChildren['favorites']->getLinkAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'favorites', 'translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'favorites_small.svg', 'translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
         $this->assertSame('MSC.showMainNavigation', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
-        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/item/_navigation_toggle.html.twig', 'translation_domain' => false], $children['burger']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE => '@Contao/backend/menu/item/_navigation_toggle.html.twig', 'translation_domain' => 'contao_default'], $children['burger']->getExtras());
 
         $html = $this->createRenderer()->render($tree, ['allow_safe_labels' => true]);
         $this->assertStringContainsString('class="icon-manual"', $html);
@@ -154,9 +156,11 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertStringContainsString('id="profileMenu" data-controller="contao--toggle-receiver"', $html);
         $this->assertStringContainsString('data-controller="contao--color-scheme"', $html);
         $this->assertStringContainsString('id="burger"', $html);
-        $this->assertStringContainsString('class="icon-profile"', $html);
+        $this->assertStringContainsString('class="icon-profile_small"', $html);
         $this->assertStringContainsString('class="icon-alert"', $html);
         $this->assertStringContainsString('<sup>1</sup>', $html);
+        $this->assertStringContainsString('<span class="label invisible">', $html);
+        $this->assertStringNotContainsString('d-md-none', $html);
     }
 
     public function testDoesNotBuildTheHeaderMenuIfNoUserIsGiven(): void
@@ -179,7 +183,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createStub(TranslatorInterface::class),
             $this->createStub(ContaoFramework::class),
         );
 
@@ -210,7 +213,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createStub(TranslatorInterface::class),
             $this->createStub(ContaoFramework::class),
         );
 
@@ -244,6 +246,26 @@ class BackendHeaderListenerTest extends TestCase
         $twig = new Environment($loader);
         $twig->addExtension(new MenuExtension());
         $twig->addExtension(new TranslationExtension($this->getTranslator()));
+        $twig->addFunction(new TwigFunction('attrs', static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes)));
+        $twig->getRuntime(EscaperRuntime::class)->addSafeClass(HtmlAttributes::class, ['html']);
+        $twig->addFunction(new TwigFunction(
+            'backend_icon',
+            static function (string $src, string $alt = '', HtmlAttributes|null $attributes = null): string {
+                $dark = new HtmlAttributes($attributes)->addClass('color-scheme--dark');
+                $light = new HtmlAttributes($attributes)->addClass('color-scheme--light');
+
+                return \sprintf(
+                    '<img src="%s" alt="%s"%s><img src="%s" alt="%s"%s>',
+                    $src,
+                    $alt,
+                    $dark->toString(),
+                    $src,
+                    $alt,
+                    $light->toString(),
+                );
+            },
+            ['is_safe' => ['html']],
+        ));
 
         return new TwigRenderer($twig, '@Contao/backend/menu/_header.html.twig', new Matcher());
     }
