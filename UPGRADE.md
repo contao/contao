@@ -105,6 +105,10 @@ Missing values in models now return their default value instead of `null`.
 
 Frontend form widgets no longer implement the `Widget::generate()` method. Use `Widget::parse()` instead.
 
+### TrblWidget
+
+The TRBL widget has been removed. Use the `text` widget with `'size' => 4'` or the row wizard instead.
+
 ### Backend themes
 
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
@@ -151,8 +155,3 @@ Use the `contao--toggle-receiver` and `contao--toggle-sender` Stimulus controlle
 `Theme.setupProfileToggle`, and `Theme.setupSplitButtonToggle`.
 
 All remaining `Theme.*` methods have been removed.
-
-### Margins widget
-
-The margins widget (`inputType => 'trbl'`) has been removed. Use the `text` widget with `'size' => 4'`, the RowWizard
-with a migration or your own implementation instead.
