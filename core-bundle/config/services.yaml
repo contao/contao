@@ -1595,16 +1595,6 @@ services:
 
     contao.url_highlight:
         class: VStelmakh\UrlHighlight\UrlHighlight
-        arguments:
-            - ~
-            - '@contao.url_highlight.html_highlighter'
-            - !service { class: VStelmakh\UrlHighlight\Encoder\HtmlSpecialcharsEncoder }
-
-    contao.url_highlight.html_highlighter:
-        class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
-        arguments:
-            - https
-            - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
         class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
