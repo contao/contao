@@ -21,3 +21,11 @@
 
     {{ parent() }}
 {% endblock %}
+
+{% block spanElement %}
+    {% if item.extra('contao_backend_menu_content_template') %}
+        {{ include(item.extra('contao_backend_menu_content_template')) }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

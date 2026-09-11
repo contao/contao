@@ -1,0 +1,12 @@
+{% set alert_attributes = attrs()
+    .set('href', item.uri)
+    .addClass('icon-alert')
+    .set('title', label)
+    .set('data-turbo-prefetch', 'false')
+    .set('data-contao--tooltips-target', 'tooltip')
+    .set('onclick', "Backend.openModalIframe({'title': '#{label|e('js')}', 'url': this.href});return false")
+%}
+<a{{ alert_attributes }}>{{ backend_icon('alert.svg', attributes: attrs().addClass('icon')) }}<span class="invisible">{{ label }}</span></a>
+{% if item.extra('alerts_count', 0) > 0 %}
+    <sup>{{ item.extra('alerts_count') }}</sup>
+{% endif %}

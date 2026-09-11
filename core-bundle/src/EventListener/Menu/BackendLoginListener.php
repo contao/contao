@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -39,9 +40,9 @@ class BackendLoginListener
 
         $passkey = $factory
             ->createItem('passkey')
-            ->setLabel('<button type="button" class="tl_submit has-icon" data-action="contao--webauthn-authentication#authenticate">'.$passkeyLogin.'</button>')
+            ->setLabel($passkeyLogin)
             ->setAttribute('class', 'passkey')
-            ->setExtra('safe_label', true)
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_passkey.html.twig')
             ->setExtra('translation_domain', false)
         ;
 
