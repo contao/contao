@@ -45,8 +45,10 @@ class BackendMenuListenerTest extends ContaoTestCase
 
     public function testAddsTheDebugButton(): void
     {
-        $request = new Request();
-        $request->server->set('QUERY_STRING', 'do=page');
+        // Back end modules can also be addressed via a path (e.g. "/contao/page")
+        // instead of the "do" query parameter, so the referer has to be the full request
+        // URI and not just the query string.
+        $request = Request::create('https://example.com/contao/page?act=edit&id=1');
 
         $requestStack = new RequestStack([$request]);
 
@@ -55,7 +57,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $params = [
             'do' => 'debug',
             'key' => 'enable',
-            'referer' => base64_encode('do=page'),
+            'referer' => base64_encode('/contao/page?act=edit&id=1'),
             'rt' => 'request-token-value',
         ];
 
@@ -64,7 +66,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', $params)
-            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('do=page'))
+            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('/contao/page?act=edit&id=1'))
         ;
 
         $factory = new MenuFactory();
@@ -95,7 +97,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $debug = $children['debug'];
 
         $this->assertSame('debug_mode', $debug->getLabel());
-        $this->assertSame('/contao?do=debug&key=enable&referer=ZG89cGFnZQ==', $debug->getUri());
+        $this->assertSame('/contao?do=debug&key=enable&referer=L2NvbnRhby9wYWdlP2FjdD1lZGl0JmlkPTE=', $debug->getUri());
         $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode', 'data-contao--tooltips-target' => 'tooltip', 'data-turbo-prefetch' => 'false'], $debug->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }
