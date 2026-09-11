@@ -14,7 +14,7 @@ namespace App\Messenger;
 
 class UnionTypeMessage
 {
-    public function __construct(int|string $id)
+    public function __construct(public int|string $id)
     {
     }
 }

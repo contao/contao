@@ -56,8 +56,11 @@ class RouteLoader implements RouteLoaderInterface
             }
         }
 
+        /** @var array<RoutingPluginInterface> $plugins */
+        $plugins = $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true);
+
         $collection = array_reduce(
-            $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
+            $plugins,
             function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
 

@@ -98,13 +98,19 @@ class Application extends BaseApplication
         $commands = parent::getDefaultCommands();
         $commands[] = new VersionCommand($this);
 
-        foreach ($this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class) as $plugin) {
+        /** @var array<ApiPluginInterface> $plugins */
+        $plugins = $this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class);
+
+        foreach ($plugins as $plugin) {
             foreach ($plugin->getApiCommands() as $class) {
                 if (!is_a($class, Command::class, true)) {
                     throw new \RuntimeException(\sprintf('"%s" is not a console command.', $class));
                 }
 
-                $commands[] = new $class($this);
+                // API commands accept the application instance as their constructor argument, so
+                // ignore the inherited Command constructor signature until there is a dedicated
+                // API command interface to enforce this.
+                $commands[] = new $class($this); // @phpstan-ignore argument.type
             }
         }
 
