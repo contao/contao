@@ -663,7 +663,7 @@ class PageModel extends Model
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=CAST(? AS BINARY)") : array("$t.id=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
