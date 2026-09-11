@@ -66,7 +66,7 @@ class Dbafs
 
 		$objModel = FilesModel::findByPath($strResource);
 
-		// Return the model if it exists already
+		// Return the model if it already exists
 		if ($objModel !== null)
 		{
 			$strHash = ($objModel->type == 'folder') ? static::getFolderHash($objModel->path) : (new File($objModel->path))->hash;
@@ -693,7 +693,7 @@ class Dbafs
 						}
 					}
 
-					// If another file has been mapped already, delete the entry (see #6008)
+					// If another file has been already mapped, delete the entry (see #6008)
 					if (\in_array($objFound->path, $arrMapped))
 					{
 						$objLog->append("[Deleted] $objFiles->path");

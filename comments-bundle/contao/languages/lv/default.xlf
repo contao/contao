@@ -92,7 +92,7 @@ Noklikšķiniet šeit, lai rediģētu vai atbildētu uz komentāru:
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
-        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <source>This comment has to be published in the back end before it appears on the website!</source>
         <target>Šis komentārs ir jāpublicē aizmugurē, pirms tas parādīsies vietnē!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">

@@ -186,12 +186,12 @@
         <target>Zpravodaj byl rozeslán %s příjemcům.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
         <target>%s neplatné mailové adresy byly deaktivovány.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
-        <target>Počet neplatných emailů, které byly přeskočeny: %s </target>
+        <source>E-mail addresses skipped: %s.</source>
+        <target>Počet neplatných emailů, které byly přeskočeny: %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>

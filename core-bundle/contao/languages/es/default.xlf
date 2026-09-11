@@ -62,7 +62,7 @@
         <target>¡Por favor, introduce un número de teléfono válido!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <source>For security reasons, you cannot use the following characters here: #&lt;&gt;()\=</source>
         <target>Por razones de seguridad, no puede usar los siguientes caracteres aquí: # &lt;&gt; () \ =</target>
       </trans-unit>
       <trans-unit id="ERR.email">
@@ -749,7 +749,7 @@
         <target>Administrar claves de acceso</target>
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.1">
-        <source>Allows to manage the passkeys of a member.</source>
+        <source>Allows members to manage their passkeys.</source>
         <target>Permite administrar las claves de acceso de un miembro.</target>
       </trans-unit>
       <trans-unit id="CTE.login.0">
@@ -2351,7 +2351,7 @@
         <target>Darse de alta</target>
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
-        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <source>The activation mail has been resent to your e-mail address.</source>
         <target>El E-mail de activación ha sido reenviado a su dirección de corréo electrónico.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
@@ -2371,7 +2371,7 @@
         <target>TYPOlight :: nuevo registro el %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminText">
-        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
+        <source>A new member (ID %s) has registered on your website.%sIf you have not enabled e-mail activation, you must activate the account manually in the back end.</source>
         <target>Un usuario nuevo (ID %s) se ha registrado en tu web. Si no seleccionaste la activación por e-mail, deberás conectarte al back end para activar la cuenta manualmente.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
@@ -2703,7 +2703,7 @@
         <target>La dirección de correo electrónico del token no coincide</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
-        <source>The token has been re-sent to %s.</source>
+        <source>The token has been resent to %s.</source>
         <target>El token ha sido reenviado a %s.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
@@ -2842,8 +2842,8 @@
         <target>Códigos Backup</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
-        <target>Los códigos backup se pueden usar para acceder a su cuenta si ha perdido su dispositivo de autenticación y ya no puede generar códigos de dos factores. ¡Trate sus códigos de seguridad con el mismo nivel de atención que su contraseña! Se recomienda guardarlos con un administrador de contraseñas como Lastpass, 1Password o Keeper.</target>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as LastPass, 1Password or Keeper.</source>
+        <target>Los códigos backup se pueden usar para acceder a su cuenta si ha perdido su dispositivo de autenticación y ya no puede generar códigos de dos factores. ¡Trate sus códigos de seguridad con el mismo nivel de atención que su contraseña! Se recomienda guardarlos con un administrador de contraseñas como LastPass, 1Password o Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>

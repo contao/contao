@@ -186,11 +186,11 @@
         <target>ニュースレターを%sつの宛先に送信しました。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
         <target>%sつの正しくない電子メールアドレスの宛先を無効にしました。(システムログを参照してください。)</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
+        <source>E-mail addresses skipped: %s.</source>
         <target>%s個のメールアドレスを飛ばしました。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">

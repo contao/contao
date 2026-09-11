@@ -62,7 +62,7 @@
         <target>Wpisz prawidłowy numer telefonu!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <source>For security reasons, you cannot use the following characters here: #&lt;&gt;()\=</source>
         <target>Ze względów bezpieczeństwa nie można tu używać następujących znaków:: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
@@ -747,7 +747,7 @@
         <target>Zarządzanie kluczami dostępu</target>
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.1">
-        <source>Allows to manage the passkeys of a member.</source>
+        <source>Allows members to manage their passkeys.</source>
         <target>Pozwala zarządzać kluczami dostępu członka.</target>
       </trans-unit>
       <trans-unit id="CTE.login.0">
@@ -2347,7 +2347,7 @@
         <target>Rejestracja</target>
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
-        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <source>The activation mail has been resent to your e-mail address.</source>
         <target>E-mail aktywacyjny został ponownie wysłany na twój adres e-mail.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
@@ -2367,7 +2367,7 @@
         <target>Contao :: nowa rejestracja na %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminText">
-        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
+        <source>A new member (ID %s) has registered on your website.%sIf you have not enabled e-mail activation, you must activate the account manually in the back end.</source>
         <target>Nowy użytkownik (ID %s) zarejestrował się na twojej stronie internetowej. %s Jeżeli nie używasz automatycznego aktywowania nowych uzytkownikow przez email, musisz uaktywnić konto ręcznie w panelu.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
@@ -2699,7 +2699,7 @@
         <target>Adres e-mail tokena jest niezgodny</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
-        <source>The token has been re-sent to %s.</source>
+        <source>The token has been resent to %s.</source>
         <target>Token został ponownie wysłany do %s.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
@@ -2838,8 +2838,8 @@
         <target>Kody zapasowe</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
-        <target>Kody zapasowe można wykorzystać do uzyskania dostępu do konta, jeśli zgubiłeś urządzenie uwierzytelniające i nie możesz już wygenerować kodów dwuskładnikowych. Traktuj swoje kody zapasowe z takim samym poziomem uwagi jak hasło! Zalecamy zapisywanie ich za pomocą menedżera haseł, takiego jak Lastpass, 1Password lub Keeper.</target>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as LastPass, 1Password or Keeper.</source>
+        <target>Kody zapasowe można wykorzystać do uzyskania dostępu do konta, jeśli zgubiłeś urządzenie uwierzytelniające i nie możesz już wygenerować kodów dwuskładnikowych. Traktuj swoje kody zapasowe z takim samym poziomem uwagi jak hasło! Zalecamy zapisywanie ich za pomocą menedżera haseł, takiego jak LastPass, 1Password lub Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>

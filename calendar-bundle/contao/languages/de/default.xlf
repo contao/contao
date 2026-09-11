@@ -6,12 +6,12 @@
         <target>%d Event(s)</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
-        <source>&lt;</source>
-        <target>&lt;</target>
+        <source>‹</source>
+        <target>‹</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
-        <source>&gt;</source>
-        <target>&gt;</target>
+        <source>›</source>
+        <target>›</target>
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>

@@ -186,11 +186,11 @@
         <target>De nieuwsbrief is verstuurd naar %s abonnees.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
         <target>%s ongeldige e-mail adressen zijn geblokkeerd (zie systeemlog).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
+        <source>E-mail addresses skipped: %s.</source>
         <target>%s e-mailadres(sen) is/zijn overgeslagen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">

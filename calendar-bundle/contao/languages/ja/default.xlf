@@ -6,11 +6,11 @@
         <target>%d件のイベント</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
-        <source>&lt;</source>
+        <source>‹</source>
         <target>←</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
-        <source>&gt;</source>
+        <source>›</source>
         <target>→</target>
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">

@@ -59,7 +59,7 @@ class StringUtil
 				continue;
 			}
 
-			// If the first word is longer than $intNumberOfChars already, shorten it
+			// If the first word is already longer than $intNumberOfChars, shorten it
 			// with mb_substr() so the method does not return an empty string.
 			if (empty($arrWords))
 			{

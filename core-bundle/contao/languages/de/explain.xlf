@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
         <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Weitere Informationen zu Markdown finden Sie im &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=de&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao-Handbuch&lt;/a&gt;. </target>
+        <target>Weitere Informationen zu Markdown finden Sie im &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=de&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao-Handbuch&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>

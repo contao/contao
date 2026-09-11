@@ -186,11 +186,11 @@
         <target>Le bulletin d&apos;information a été envoyé à %s destinataire(s).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
         <target>%s adresse(s) e-mail(s) non valide(s) a/ont été désactivée(s) (voir le journal système).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
+        <source>E-mail addresses skipped: %s.</source>
         <target>%s adresse(s) e-mail(s) a/ont été ignorée(s).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">

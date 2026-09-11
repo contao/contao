@@ -674,7 +674,7 @@ class Database
 	 */
 	public static function quoteIdentifier($strName)
 	{
-		// Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+		// Already quoted or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
 		if (!preg_match('/^[A-Za-z0-9_$.]+$/', $strName))
 		{
 			return $strName;

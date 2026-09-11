@@ -924,7 +924,7 @@ class PageModel extends Model
 	 */
 	public function loadDetails()
 	{
-		// Loaded already
+		// Already loaded
 		if ($this->blnDetailsLoaded)
 		{
 			return $this;

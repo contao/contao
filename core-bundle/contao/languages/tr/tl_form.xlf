@@ -118,7 +118,7 @@
         <target>E-posta</target>
       </trans-unit>
       <trans-unit id="tl_form.email.1">
-        <source>Ignores all fields except &lt;em&gt;name&lt;/em&gt;, &lt;em&gt;email&lt;/em&gt;, &lt;em&gt;subject&lt;/em&gt;, &lt;em&gt;message&lt;/em&gt; and &lt;em&gt;cc&lt;/em&gt; (carbon copy) and sends the form data like it had been sent from a mail client. File uploads are allowed.</source>
+        <source>Ignores all fields except &lt;em&gt;name&lt;/em&gt;, &lt;em&gt;email&lt;/em&gt;, &lt;em&gt;subject&lt;/em&gt;, &lt;em&gt;message&lt;/em&gt; and &lt;em&gt;cc&lt;/em&gt; (carbon copy) and sends the form data as if it had been sent from a mail client. File uploads are allowed.</source>
         <target>&lt;em&gt;Ad&lt;/em&gt;, &lt;em&gt;e-posta&lt;/em&gt;, &lt;em&gt;konu&lt;/em&gt;, &lt;em&gt;ileti&lt;/em&gt; ve &lt;em&gt;kopya&lt;/em&gt; (karbon kopya) dışındaki tüm alanları yok sayar ve form verilerini bir e-posta istemcisi tarafından gönderiliyor gibi aktarır. Dosya yüklenmesine izin verilir.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmtpy.0">

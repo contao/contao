@@ -92,7 +92,7 @@ Kliko këtu për të redaktuar ose përgjigjur komentit:
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
-        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <source>This comment has to be published in the back end before it appears on the website!</source>
         <target>Ky koment duhet të publikohet në prapavijë, përpara se të shfaqet në faqen e internetit!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">

@@ -392,7 +392,7 @@ abstract class System
 			throw new \InvalidArgumentException(\sprintf('Invalid language file name "%s"', $strName));
 		}
 
-		// Return if the language file has been loaded already
+		// Return if the language file has already been loaded
 		if (!$blnNoCache && array_key_last(static::$arrLanguageFiles[$strName] ?? array()) === $strLanguage)
 		{
 			return;

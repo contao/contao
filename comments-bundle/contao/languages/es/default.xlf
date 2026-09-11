@@ -92,7 +92,7 @@ Haga clic aquí para editar o responder el comentario:
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
-        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <source>This comment has to be published in the back end before it appears on the website!</source>
         <target>¡Este comentario ha de ser publicado primero en el backend, para que aparezca en el sitio web!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">

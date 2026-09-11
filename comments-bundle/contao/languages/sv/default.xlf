@@ -92,7 +92,7 @@ Klicka här för att redigera eller svara på kommentaren:
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
-        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <source>This comment has to be published in the back end before it appears on the website!</source>
         <target>Denna kommentar måste publiceras i baksidan innan den kommer att visas på webbplatsen!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">

@@ -173,7 +173,7 @@ class Config
 	 */
 	protected function markModified()
 	{
-		// Return if marked as modified already
+		// Return if already marked as modified
 		if ($this->blnIsModified === true)
 		{
 			return;

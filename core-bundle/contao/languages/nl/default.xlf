@@ -62,7 +62,7 @@
         <target>Geef een geldig telefoonnummer op!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <source>For security reasons, you cannot use the following characters here: #&lt;&gt;()\=</source>
         <target>Om veiligheidsredenen kunt u de volgende karakters hier niet gebruiken: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
@@ -749,7 +749,7 @@
         <target>Beheer passkeys</target>
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.1">
-        <source>Allows to manage the passkeys of a member.</source>
+        <source>Allows members to manage their passkeys.</source>
         <target>Hiermee kunt u de passkeys van een lid beheren.</target>
       </trans-unit>
       <trans-unit id="CTE.login.0">
@@ -2353,7 +2353,7 @@
         <target>Registreer</target>
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
-        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <source>The activation mail has been resent to your e-mail address.</source>
         <target>De activatie mail is opnieuw verzonden naar uw e-mail adres.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
@@ -2373,7 +2373,7 @@
         <target>Contao :: Nieuwe registratie op %s</target>
       </trans-unit>
       <trans-unit id="MSC.adminText">
-        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
+        <source>A new member (ID %s) has registered on your website.%sIf you have not enabled e-mail activation, you must activate the account manually in the back end.</source>
         <target>Een nieuw lid (ID %s) registreerde op uw website.%sIn het geval dat u geen gebruik maakt van activatie via e-mail, moet u dit account handmatig activeren in het backend van de site.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
@@ -2705,7 +2705,7 @@
         <target>Het e-mail adres van het token komt niet overeen</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
-        <source>The token has been re-sent to %s.</source>
+        <source>The token has been resent to %s.</source>
         <target>Het token is opnieuw verstuurd naar %s.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
@@ -2844,8 +2844,8 @@
         <target>Back-upcodes</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
-        <target>Back-upcodes kunnen worden gebruikt om toegang te krijgen tot uw account als u uw authenticatieapparaat bent kwijtgeraakt en geen tweefactorcodes meer kunt genereren. Behandel uw back-upcodes even zorgvuldig als uw wachtwoord! Het wordt aanbevolen om ze op te slaan met een wachtwoordbeheerder zoals Lastpass, 1Password of Keeper.</target>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as LastPass, 1Password or Keeper.</source>
+        <target>Back-upcodes kunnen worden gebruikt om toegang te krijgen tot uw account als u uw authenticatieapparaat bent kwijtgeraakt en geen tweefactorcodes meer kunt genereren. Behandel uw back-upcodes even zorgvuldig als uw wachtwoord! Het wordt aanbevolen om ze op te slaan met een wachtwoordbeheerder zoals LastPass, 1Password of Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>

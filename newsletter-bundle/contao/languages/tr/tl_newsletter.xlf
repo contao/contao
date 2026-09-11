@@ -186,11 +186,11 @@
         <target>Haber bülteni %s alıcıya gönderildi.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
         <target>%s geçersiz e-posta adresi etkisizleştirildi sistem günlüğü bölümüne bakın).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
+        <source>E-mail addresses skipped: %s.</source>
         <target>%s e-posta adresi atlandı.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">

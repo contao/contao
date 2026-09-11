@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
         <source>Text content</source>
-        <target>Text-Inhalt</target>
+        <target>Textinhalt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
         <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
-        <target>Hier können Sie den Text-Inhalt des Newsletters eingeben. Benutzen Sie den Platzhalter &lt;em&gt;##email##&lt;/em&gt;, um die Empfängeradresse einzufügen.</target>
+        <target>Hier können Sie den TextInhalt des Newsletters eingeben. Benutzen Sie den Platzhalter &lt;em&gt;##email##&lt;/em&gt;, um die Empfängeradresse einzufügen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">
         <source>Add attachments</source>
@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.text_legend">
         <source>Text content</source>
-        <target>Text-Inhalt</target>
+        <target>TextInhalt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachment_legend">
         <source>Attachments</source>
@@ -186,12 +186,12 @@
         <target>Der Newsletter wurde an %s Empfänger versendet.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
-        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>%s ungültige E-Mail-Adresse(n) wurde(n) deaktiviert (siehe System-Log).</target>
+        <source>Invalid e-mail addresses disabled: %s (see system log).</source>
+        <target>Deaktivierte ungültige E-Mail-Adressen: %s (siehe System-Log).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
-        <source>%s e-mail address(es) has/have been skipped.</source>
-        <target>%s E-Mail-Adresse(n) wurde(n) übersprungen.</target>
+        <source>E-mail addresses skipped: %s.</source>
+        <target>Übersprungene E-Mail-Adressen: %s.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>

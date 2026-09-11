@@ -91,7 +91,7 @@ Klikněte na níže uvedený odkaz pro odpověď:
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
-        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <source>This comment has to be published in the back end before it appears on the website!</source>
         <target>Tento komentář bude zveřejněn na Vaší webové stránce, až to povolíte v backendu! </target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
