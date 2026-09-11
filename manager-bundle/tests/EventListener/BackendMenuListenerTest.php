@@ -46,8 +46,8 @@ class BackendMenuListenerTest extends ContaoTestCase
     public function testAddsTheDebugButton(): void
     {
         // Back end modules can also be addressed via a path (e.g. "/contao/page")
-        // instead of the "do" query parameter, so the referer has to be the full
-        // request URI and not just the query string.
+        // instead of the "do" query parameter, so the referer has to be the full request
+        // URI and not just the query string.
         $request = Request::create('https://example.com/contao/page?act=edit&id=1');
 
         $requestStack = new RequestStack([$request]);

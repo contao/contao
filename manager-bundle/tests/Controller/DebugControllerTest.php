@@ -69,8 +69,8 @@ class DebugControllerTest extends ContaoTestCase
 
     public function testResponseContainsRefererForPathBasedBackendRoute(): void
     {
-        // Back end modules can be addressed via a path (e.g. "/contao/page") instead
-        // of the "do" query parameter, in which case the module is not part of the
+        // Back end modules can be addressed via a path (e.g. "/contao/page") instead of
+        // the "do" query parameter, in which case the module is not part of the
         // referer's query string.
         $listener = new DebugController(
             $this->mockSecurityHelper(),
@@ -102,8 +102,8 @@ class DebugControllerTest extends ContaoTestCase
 
     public function testIgnoresARefererThatIsNotASameOriginPath(): void
     {
-        // A manipulated referer parameter must not be able to redirect to a foreign
-        // host (e.g. a protocol-relative "//evil.example.com/" URL).
+        // A manipulated referer parameter must not be able to redirect to a foreign host
+        // (e.g. a protocol-relative "//evil.example.com/" URL).
         $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack('https://example.com/contao', '//evil.example.com/'),

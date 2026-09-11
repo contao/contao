@@ -72,9 +72,9 @@ class BackendMenuListener
         $params = [
             'do' => 'debug',
             'key' => $this->debug ? 'disable' : 'enable',
-            // Use the full request URI (not just the query string), because back end
-            // modules can also be addressed via a path (e.g. "/contao/page") instead
-            // of the "do" query parameter.
+            // Use the full request URI (not just the query string), because back end modules
+            // can also be addressed via a path (e.g. "/contao/page") instead of the "do"
+            // query parameter.
             'referer' => base64_encode($request->getRequestUri()),
             'rt' => $this->tokenManager->getDefaultTokenValue(),
         ];
