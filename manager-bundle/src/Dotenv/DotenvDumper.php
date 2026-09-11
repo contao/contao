@@ -27,17 +27,19 @@ class DotenvDumper
         private readonly string $dotenvFile,
         private readonly Filesystem $filesystem = new Filesystem(),
     ) {
-        if (!file_exists($dotenvFile)) {
-            return;
+        $parameters = [];
+
+        if (file_exists($dotenvFile)) {
+            $dotenv = new Dotenv();
+            $dotenv->usePutenv(false);
+
+            $parameters = $dotenv->parse(file_get_contents($dotenvFile));
         }
 
-        $dotenv = new Dotenv();
-        $dotenv->usePutenv(false);
-
-        $this->parameters = $dotenv->parse(file_get_contents($dotenvFile));
+        $this->parameters = $parameters;
     }
 
-    public function setParameter(string $name, $value): void
+    public function setParameter(string $name, mixed $value): void
     {
         if (($this->parameters[$name] ?? null) === $value) {
             unset($this->setParameters[$name]);
@@ -106,7 +108,7 @@ class DotenvDumper
         $this->filesystem->dumpFile($this->dotenvFile, $file);
     }
 
-    private function escape($value): bool|int|string
+    private function escape(mixed $value): mixed
     {
         if (!\is_string($value) || !preg_match('/[$ "\']/', $value)) {
             return $value;
