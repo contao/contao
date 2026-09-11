@@ -2455,6 +2455,8 @@ ul.sortable button {
 	line-height: 9px;
 	cursor: pointer;
 	transition: all .1s linear;
+	width: 16px;
+	height: 16px;
 }
 
 ul.sortable button:hover {
