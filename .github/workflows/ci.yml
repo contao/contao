@@ -293,6 +293,37 @@ jobs:
               env:
                   DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
+    e2e:
+        name: E2E tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: dom, intl, mbstring, pdo_mysql
+                  coverage: none
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 20
+
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  show-progress: false
+                  persist-credentials: false
+
+            - name: Install the dependencies
+              uses: ramsey/composer-install@v4
+
+            - name: Install Playwright
+              run: vendor/bin/playwright-install --with-deps
+
+            - name: Run the E2E tests
+              run: vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit
+
     reverse:
         name: Reverse order
         runs-on: ubuntu-latest
