@@ -258,7 +258,7 @@ class Config
 			$strFile .= "\n" . $this->strBottom . "\n";
 		}
 
-		$strTemp = Path::join($this->strRootDir, 'system/tmp', md5(uniqid(mt_rand(), true)));
+		$strTemp = Path::join($this->strRootDir, 'system/tmp', bin2hex(random_bytes(16)));
 
 		// Write to a temp file first
 		$objFile = fopen($strTemp, 'w');

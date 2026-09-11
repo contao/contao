@@ -286,7 +286,7 @@ class ModuleLostPassword extends Module
 			}
 		}
 
-		$strToken = md5(uniqid(mt_rand(), true));
+		$strToken = bin2hex(random_bytes(16));
 		$objSession->set('setPasswordToken', $strToken);
 
 		$this->Template->formId = $strToken;

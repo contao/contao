@@ -820,7 +820,7 @@ class File extends System
 		{
 			$filesObj = Files::getInstance();
 
-			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
+			$this->strTmp = 'system/tmp/' . bin2hex(random_bytes(16));
 
 			// Copy the contents of the original file to append data
 			if (str_starts_with($strMode, 'a') && file_exists($this->strRootDir . '/' . $this->strFile))

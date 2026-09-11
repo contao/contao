@@ -1072,7 +1072,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Empty unique fields or add a unique identifier in copyAll mode
 					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] ?? null)
 					{
-						$v = (Input::get('act') == 'copyAll' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotCopy'] ?? null)) ? $v . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 8) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
+						$v = (Input::get('act') == 'copyAll' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotCopy'] ?? null)) ? $v . '-' . bin2hex(random_bytes(4)) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
 					}
 
 					// Reset doNotCopy and fallback fields to their default value
@@ -1310,7 +1310,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Empty unique fields or add a unique identifier in copyAll mode
 						elseif ($GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['unique'] ?? null)
 						{
-							$vv = (Input::get('act') == 'copyAll' && !$GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['doNotCopy']) ? $vv . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 8) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql'] ?? array());
+							$vv = (Input::get('act') == 'copyAll' && !$GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['doNotCopy']) ? $vv . '-' . bin2hex(random_bytes(4)) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql'] ?? array());
 						}
 
 						// Reset doNotCopy and fallback fields to their default value
