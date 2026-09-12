@@ -126,6 +126,7 @@
         "symfony/http-foundation": "^7.4 || ^8.0",
         "symfony/http-kernel": "^7.4.11 || ^8.0",
         "symfony/intl": "^7.4 || ^8.0",
+        "symfony/lock": "^7.4 || ^8.0",
         "symfony/mailer": "^7.4 || ^8.0",
         "symfony/messenger": "^7.4 || ^8.0",
         "symfony/mime": "^7.4 || ^8.0",
