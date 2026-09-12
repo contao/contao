@@ -389,12 +389,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Use the ptable query parameter if it points to itself (nested elements case)
-			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
-			{
-				return $this->strTable;
-			}
-
 			// Find the parent table within the backend module
 			if ($do = Input::get('do'))
 			{
@@ -409,10 +403,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
+				// Use the parent table if it has been set in the DCA file
 				if (($ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true))
 				{
 					array_unshift($tables, $ptable);
 				}
+
 				// Use the ptable query parameter if there is another possible dynamic parent within the back end module (see #10146)
 				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
 				{
