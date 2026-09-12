@@ -2290,7 +2290,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
 					}
@@ -2326,7 +2326,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
 					}
