@@ -31,6 +31,8 @@ use Contao\Model\Collection;
  * @property string       $preserveMetadataFields
  * @property boolean      $skipIfDimensionsMatch
  * @property boolean      $lazyLoading
+ * @property string       $fetchPriority
+ * @property string       $decoding
  * @property integer      $imageQuality
  *
  * @method static ImageSizeModel|null findById($id, array $opt=array())
@@ -52,6 +54,8 @@ use Contao\Model\Collection;
  * @method static ImageSizeModel|null findOneByPreserveMetadataFields($val, array $opt=array())
  * @method static ImageSizeModel|null findOneBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByLazyLoading($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneByFetchPriority($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneByDecoding($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByImageQuality($val, array $opt=array())
  *
  * @method static Collection<ImageSizeModel>|null findByPid($val, array $opt=array())
@@ -69,7 +73,8 @@ use Contao\Model\Collection;
  * @method static Collection<ImageSizeModel>|null findByPreserveMetadataFields($val, array $opt=array())
  * @method static Collection<ImageSizeModel>|null findBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static Collection<ImageSizeModel>|null findByLazyLoading($val, array $opt=array())
- * @method static Collection<ImageSizeModel>|null findByImageQuality($val, array $opt=array())
+ * @method static Collection<ImageSizeModel>|null findByFetchPriority($val, array $opt=array())
+ * @method static Collection<ImageSizeModel>|null findByDecoding($val, array $opt=array())
  * @method static Collection<ImageSizeModel>|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<ImageSizeModel>|null findBy($col, $val, array $opt=array())
  * @method static Collection<ImageSizeModel>|null findAll(array $opt=array())
@@ -90,6 +95,8 @@ use Contao\Model\Collection;
  * @method static integer countByPreserveMetadataFields($val, array $opt=array())
  * @method static integer countBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static integer countByLazyLoading($val, array $opt=array())
+ * @method static integer countByFetchPriority($val, array $opt=array())
+ * @method static integer countByDecoding($val, array $opt=array())
  * @method static integer countByImageQuality($val, array $opt=array())
  */
 class ImageSizeModel extends Model

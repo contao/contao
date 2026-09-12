@@ -226,6 +226,14 @@ class PictureFactory implements PictureFactoryInterface
                     if ($imageSizes->lazyLoading) {
                         $attributes['loading'] = 'lazy';
                     }
+
+                    if ($imageSizes->fetchPriority) {
+                        $attributes['fetchpriority'] = $imageSizes->fetchPriority;
+                    }
+
+                    if ($imageSizes->decoding) {
+                        $attributes['decoding'] = $imageSizes->decoding;
+                    }
                 }
 
                 if (!\array_key_exists($size[2], $this->imageSizeItemsCache)) {
@@ -275,6 +283,14 @@ class PictureFactory implements PictureFactoryInterface
 
                 if (!empty($imageSizes['lazyLoading'])) {
                     $attributes['loading'] = 'lazy';
+                }
+
+                if (!empty($imageSizes['fetchPriority'])) {
+                    $attributes['fetchpriority'] = (string) $imageSizes['fetchPriority'];
+                }
+
+                if (!empty($imageSizes['decoding'])) {
+                    $attributes['decoding'] = (string) $imageSizes['decoding'];
                 }
 
                 if (\count($imageSizes['items']) > 0) {
