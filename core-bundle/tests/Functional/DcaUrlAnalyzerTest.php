@@ -240,6 +240,107 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         );
     }
 
+    public function testResolvesForeignDynamicPtableParent(): void
+    {
+        $container = self::createClient()->getContainer();
+        System::setContainer($container);
+
+        $container->set(
+            'security.authorization_checker',
+            new class() implements AuthorizationCheckerInterface {
+                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                {
+                    return true;
+                }
+            },
+        );
+
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('RT')
+        ;
+
+        $container->set(
+            'contao.csrf.token_manager',
+            $tokenManager,
+        );
+
+        $this->loadFixtureFile('default');
+
+        $analyzer = $container->get('contao.data_container.dca_url_analyzer');
+
+        // Second parent table for tl_content in the news table
+        $GLOBALS['BE_MOD']['content']['news']['tables'][] = 'tl_article';
+
+        // No ptable parameter, so the first parent table (tl_news) wins
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content')));
+
+        // ptable parameter set
+        $this->assertSame(['tl_article', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_article')));
+
+        // Ignore unknown
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_foobar')));
+
+        // Two parents so URLs carry the parameter
+        $this->assertSame(
+            [
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&table=tl_article'],
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&id=1&table=tl_content&ptable=tl_article'],
+                ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&id=1&table=tl_content&ptable=tl_content&act=edit'],
+            ],
+            $analyzer->getTrail(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&act=edit'), loadLabels: false),
+        );
+    }
+
+    public function testUsesTheDynamicPtableParentFromTheDcaFile(): void
+    {
+        $container = self::createClient()->getContainer();
+        System::setContainer($container);
+
+        $container->set(
+            'security.authorization_checker',
+            new class() implements AuthorizationCheckerInterface {
+                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                {
+                    return true;
+                }
+            },
+        );
+
+        $this->loadFixtureFile('default');
+
+        $analyzer = $container->get('contao.data_container.dca_url_analyzer');
+        $requestStack = $container->get('request_stack');
+
+        // Second parent table for tl_content in the news table
+        $GLOBALS['BE_MOD']['content']['news']['tables'][] = 'tl_article';
+
+        // Push a request to bypass Analyzer switching and resetting the DCA
+        $request = Request::create('https://example.com/contao?do=news&id=1&table=tl_content');
+        $requestStack->push($request);
+
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId($request));
+
+        // Extension sets up ptable in the DCA file (see #10146)
+        $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
+
+        $this->assertSame(['tl_article', 1], $analyzer->getCurrentTableId($request));
+
+        $requestStack->pop();
+
+        // The ptable parameter wins over DCA file
+        $request = Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_news');
+        $requestStack->push($request);
+
+        $analyzer->getCurrentTableId($request);
+        $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
+
+        $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId($request));
+
+        $requestStack->pop();
+    }
+
     public static function getTrail(): iterable
     {
         yield [

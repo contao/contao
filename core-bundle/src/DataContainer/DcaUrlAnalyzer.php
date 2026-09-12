@@ -106,10 +106,12 @@ class DcaUrlAnalyzer
             function () use ($table, $id, $do): array {
                 [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
+                $ptableParam = $ptable && $this->needsPtableParameter($table, $ptable);
+
                 $query = [
                     'do' => $do,
                     'table' => $table,
-                    'ptable' => $ptable === $table ? $ptable : null,
+                    'ptable' => $ptableParam ? $ptable : null,
                     'id' => $pid,
                 ];
 
@@ -168,7 +170,7 @@ class DcaUrlAnalyzer
             if ($childTable) {
                 $query['table'] = $childTable;
 
-                if ($childTable === $table) {
+                if ($this->needsPtableParameter($childTable, $table)) {
                     $query['ptable'] = $table;
                 }
             } else {
@@ -364,6 +366,45 @@ class DcaUrlAnalyzer
         return [$table, $id];
     }
 
+    /**
+     * Check whether the URI would need a ptable parameter for a current dynamic
+     * parent (see #10146).
+     */
+    private function needsPtableParameter(string $childTable, string $ptable): bool
+    {
+        (new DcaLoader($childTable))->load();
+
+        if (!($GLOBALS['TL_DCA'][$childTable]['config']['dynamicPtable'] ?? null)) {
+            return false;
+        }
+
+        foreach ($this->getCurrentModuleTables() as $parentTable) {
+            (new DcaLoader($parentTable))->load();
+
+            if (\in_array($childTable, $GLOBALS['TL_DCA'][$parentTable]['config']['ctable'] ?? [], true)) {
+                return $parentTable !== $ptable;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getCurrentModuleTables(): array
+    {
+        $do = (string) $this->findGet('do');
+
+        if ('' === $do) {
+            return [];
+        }
+
+        $tables = $this->getModule($do)['tables'] ?? null;
+
+        return \is_array($tables) ? array_values($tables) : [];
+    }
+
     private function findPtable(string $table, int|null $id): string|null
     {
         (new DcaLoader($table))->load();
@@ -390,9 +431,27 @@ class DcaUrlAnalyzer
                 }
             }
 
-            // Use the ptable query parameter if it points to itself (nested elements case)
-            if ($this->findGet('ptable') === $table && \in_array($table, $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                return $table;
+            $tables = $this->getCurrentModuleTables();
+
+            // Use the parent table if it has been set in the DCA file
+            if (($ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            $ptable = (string) $this->findGet('ptable');
+
+            // Use a foreign ptable query parameter if it declares this table as a child
+            if ('' !== $ptable && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            // Find the parent table within the back end module
+            foreach ($tables as $ptable) {
+                (new DcaLoader($ptable))->load();
+
+                if (\in_array($table, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [], true)) {
+                    return $ptable;
+                }
             }
         }
 
