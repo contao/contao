@@ -28,4 +28,11 @@ interface PictureFactoryInterface
      * Creates a Picture object.
      */
     public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $options = null): PictureInterface;
+
+    /*
+     * TODO: enable in Contao 6.
+     *
+     * Creates a picture configuration.
+     */
+    /* public function createPictureConfiguration(array|int|string|null $size): PictureGenerationConfig; */
 }
