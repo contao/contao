@@ -18,6 +18,7 @@ use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
+use Contao\CoreBundle\Search\Backend\Security\DocumentAllowedGroupsResolver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -28,6 +29,7 @@ class SealReindexProviderTest extends TestCase
         $provider = new SealReindexProvider(
             [$this->createStub(ProviderInterface::class)],
             $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DocumentAllowedGroupsResolver::class),
         );
 
         $this->assertNull($provider->total());
@@ -46,6 +48,7 @@ class SealReindexProviderTest extends TestCase
         $provider = new SealReindexProvider(
             [$internalProvider],
             $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DocumentAllowedGroupsResolver::class),
         );
 
         $provider->provide($reindexConfig);
@@ -76,9 +79,18 @@ class SealReindexProviderTest extends TestCase
             )
         ;
 
+        $allowedGroupsResolver = $this->createMock(DocumentAllowedGroupsResolver::class);
+        $allowedGroupsResolver
+            ->expects($this->once())
+            ->method('resolveAllowedGroups')
+            ->with($internalProvider, $document)
+            ->willReturn([1, 2])
+        ;
+
         $provider = new SealReindexProvider(
             [$internalProvider],
             $eventDispatcher,
+            $allowedGroupsResolver,
         );
 
         $result = iterator_to_array($provider->provide(new SealReindexConfig()));
@@ -87,6 +99,7 @@ class SealReindexProviderTest extends TestCase
         $this->assertSame('type__42', $result[0]['id']);
         $this->assertSame('type', $result[0]['type']);
         $this->assertSame('searchable', $result[0]['searchableContent']);
+        $this->assertSame([1, 2], $result[0]['allowedGroups']);
     }
 
     public function testGetIndexReturnsCorrectValue(): void

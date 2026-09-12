@@ -20,6 +20,7 @@ use CmsIg\Seal\Schema\Schema;
 use CmsIg\Seal\Search\Condition\Condition;
 use CmsIg\Seal\Search\Facet\Facet;
 use CmsIg\Seal\Search\SearchBuilder;
+use Contao\BackendUser;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
@@ -257,6 +258,7 @@ class BackendSearch
                 'type' => new TextField('type', searchable: false, filterable: true),
                 'searchableContent' => new TextField('searchableContent', searchable: true),
                 'tags' => new TextField('tags', multiple: true, searchable: false, filterable: true),
+                'allowedGroups' => new TextField('allowedGroups', multiple: true, searchable: false, filterable: true),
                 'document' => new TextField('document', searchable: false),
             ]),
         ]);
@@ -279,6 +281,16 @@ class BackendSearch
 
         if ($query->getKeywords()) {
             $sb->addFilter(Condition::search($query->getKeywords()));
+        }
+
+        $user = $this->security->getUser();
+
+        if (
+            $user instanceof BackendUser
+            && !$this->security->isGranted('ROLE_ADMIN')
+            && [] !== $user->groups
+        ) {
+            $sb->addFilter(Condition::in('allowedGroups', array_map(intval(...), $user->groups)));
         }
 
         if ($query->getType()) {
