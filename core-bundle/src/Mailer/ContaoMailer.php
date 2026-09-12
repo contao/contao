@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Mailer;
 
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;
@@ -27,6 +29,7 @@ final class ContaoMailer implements MailerInterface
         private readonly AvailableTransports $transports,
         private readonly RequestStack $requestStack,
         private readonly string|null $overrideFrom = null,
+        private readonly ContaoFramework|null $framework = null,
     ) {
     }
 
@@ -52,23 +55,11 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        if (!$request = $this->requestStack->getCurrentRequest()) {
+        $page = $this->getCurrentPage();
+
+        if (!$page) {
             return;
         }
-
-        $attributes = $request->attributes;
-
-        if (!$attributes->has('pageModel')) {
-            return;
-        }
-
-        $page = $attributes->get('pageModel');
-
-        if (!$page instanceof PageModel) {
-            return;
-        }
-
-        $page->loadDetails();
 
         if (empty($page->mailerTransport) || !$this->transports->getTransport($page->mailerTransport)) {
             return;
@@ -86,23 +77,28 @@ final class ContaoMailer implements MailerInterface
             $this->doSetFrom($message, $this->overrideFrom);
         }
 
+        if (null !== $from = $this->getTransportFrom($message)) {
+            $this->doSetFrom($message, $from);
+        }
+
+        if (!$message->getFrom() && !$message->getSender()) {
+            $this->setDefaultFrom($message);
+        }
+    }
+
+    private function getTransportFrom(Email $message): string|null
+    {
         if (!$message->getHeaders()->has('X-Transport')) {
-            return;
+            return null;
         }
 
         $transportName = $message->getHeaders()->get('X-Transport')->getBodyAsString();
 
         if (!$transport = $this->transports->getTransport($transportName)) {
-            return;
+            return null;
         }
 
-        $from = $transport->getFrom();
-
-        if (null === $from) {
-            return;
-        }
-
-        $this->doSetFrom($message, $from);
+        return $transport->getFrom();
     }
 
     private function doSetFrom(Email $message, string $from): void
@@ -117,5 +113,54 @@ final class ContaoMailer implements MailerInterface
         if ($message->getSender()) {
             $message->sender($from);
         }
+    }
+
+    private function getCurrentPage(): PageModel|null
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return null;
+        }
+
+        $attributes = $request->attributes;
+
+        if (!$attributes->has('pageModel')) {
+            return null;
+        }
+
+        $page = $attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            return null;
+        }
+
+        $page->loadDetails();
+
+        return $page;
+    }
+
+    private function setDefaultFrom(Email $message): void
+    {
+        $page = $this->getCurrentPage();
+
+        if ($page && $page->adminEmail) {
+            $this->doSetFrom($message, $page->adminEmail);
+
+            return;
+        }
+
+        if ($this->framework) {
+            $this->framework->initialize();
+            $config = $this->framework->getAdapter(Config::class);
+
+            $adminEmail = $config->get('adminEmail');
+
+            if (!empty($adminEmail)) {
+                $this->doSetFrom($message, $adminEmail);
+
+                return;
+            }
+        }
+
+        throw new \LogicException('No administrator e-mail address has been set.');
     }
 }
