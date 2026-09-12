@@ -432,6 +432,12 @@ class DcaUrlAnalyzer
             }
 
             $tables = $this->getCurrentModuleTables();
+
+            // Use the parent table if it has been set in the DCA file
+            if (($ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
             $ptable = (string) $this->findGet('ptable');
 
             // Use a foreign ptable query parameter if it declares this table as a child
