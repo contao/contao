@@ -1,7 +1,9 @@
+{% trans_default_domain 'contao_default' %}
+
 {{ messages|raw }}
 
 <div id="tl_buttons">
-    <a href="{{ backUrl }}" class="header_back" title="{{ backBTTitle }}" accesskey="b">{{ backBT }}</a>
+    <a href="{{ backUrl }}" class="header_back" title="{{ 'MSC.backBTTitle'|trans }}" accesskey="b">{{ 'MSC.backBT'|trans }}</a>
 </div>
 
 <form id="{{ formId }}" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
@@ -12,23 +14,19 @@
 
         <fieldset class="tl_tbox nolegend">
             <div class="widget w50">
-                <h3><label for="separator">{{ separatorLabel }}</label></h3>
+                <h3><label for="separator">{{ 'MSC.separator.0'|trans }}</label></h3>
                 <select name="separator" id="separator" class="tl_select" data-action="focus->contao--scroll-offset#store">
                     {% for separator in separators %}
-                        <option value="{{ separator.value }}">{{ separator.label }}</option>
+                        <option value="{{ separator.value }}">{{ ('MSC.' ~ separator.value)|trans }}</option>
                     {% endfor %}
                 </select>
-                {% if separatorHelp|default %}
-                    <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ separatorHelp }}</p>
-                {% endif %}
+                <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ 'MSC.separator.1'|trans }}</p>
             </div>
 
             <div class="widget clr">
-                <h3>{{ sourceLabel }}</h3>
+                <h3>{{ 'MSC.source.0'|trans }}</h3>
                 {{ uploader|raw }}
-                {% if sourceLabelHelp|default %}
-                    <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ sourceLabelHelp }}</p>
-                {% endif %}
+                <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ 'MSC.source.1'|trans }}</p>
             </div>
         </fieldset>
     </div>
