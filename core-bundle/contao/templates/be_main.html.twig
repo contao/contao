@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' -%}
 
 {%- set rootAttributes = attrs()
-    .set('lang', app.locale)
+    .set('lang', app.locale|language_tag)
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
     .set('data-turbo-prefetch', 'false', isDebug)

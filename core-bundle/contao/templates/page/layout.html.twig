@@ -1,5 +1,5 @@
 {%- set html_attributes = attrs()
-    .set('lang', locale)
+    .set('lang', locale|language_tag)
     .set('dir', 'rtl', rtl)
     .mergeWith(html_attributes|default)
 -%}
