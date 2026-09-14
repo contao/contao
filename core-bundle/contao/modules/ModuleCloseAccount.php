@@ -146,6 +146,6 @@ class ModuleCloseAccount extends Module
 		$this->Template->fields = $objWidget->parse();
 
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['closeAccount'];
 	}
 }
