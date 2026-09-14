@@ -389,10 +389,41 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Use the ptable query parameter if it points to itself (nested elements case)
-			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			// Find the parent table in the backend module
+			if ($do = Input::get('do'))
 			{
-				return $this->strTable;
+				$tables = array();
+
+				foreach ($GLOBALS['BE_MOD'] ?? array() as $group)
+				{
+					if (isset($group[$do]))
+					{
+						$tables = (array) ($group[$do]['tables'] ?? array());
+						break;
+					}
+				}
+
+				// Use the parent table if it has been set in the DCA file
+				if (($ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true))
+				{
+					array_unshift($tables, $ptable);
+				}
+
+				// Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
+				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
+				{
+					array_unshift($tables, $ptable);
+				}
+
+				foreach ($tables as $ptable)
+				{
+					$this->loadDataContainer($ptable);
+
+					if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
+					{
+						return $ptable;
+					}
+				}
 			}
 		}
 
@@ -1254,7 +1285,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$children = Input::get('childs');
 		}
 
-		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
+		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && !($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
 		{
 			$ctable[] = $table;
 		}
@@ -2300,7 +2331,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=create&mode=1&pid=' . $this->intId : '&act=create&mode=2&pid=' . ($currentRecord['pid'] ?? null);
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
@@ -2336,7 +2367,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=copy&mode=1&pid=' . $this->intId . '&id=' . $this->intId : '&act=copy&mode=2&pid=' . $this->intCurrentPid . '&id=' . $this->intId;
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
