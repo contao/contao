@@ -398,4 +398,32 @@ class TwigIntegrationTest extends TestCase
 
         $this->assertSame($expectedOutput, $output);
     }
+
+    public function testLanguageTagFilter(): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            <html lang="{{ locale|language_tag }}">
+            TEMPLATE;
+
+        $expectedOutput = <<<'TEMPLATE'
+            <html lang="en-US">
+            TEMPLATE;
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        $output = $environment->render('test.html.twig', [
+            'locale' => 'en_US@currency=eur',
+        ]);
+
+        $this->assertSame($expectedOutput, $output);
+    }
 }

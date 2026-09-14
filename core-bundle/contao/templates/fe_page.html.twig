@@ -1,5 +1,5 @@
 {%- set rootAttributes = attrs()
-    .set('lang', app.locale)
+    .set('lang', app.locale|language_tag)
     .set('dir', 'rtl', isRTL)
     .mergeWith(rootAttributes|default)
 -%}
