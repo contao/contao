@@ -235,7 +235,7 @@ class ModuleLogin extends Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['login'];
-		$this->Template->value = StringUtil::specialchars($lastUsername);
+		$this->Template->value = Input::encodeInsertTags($lastUsername);
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->remembered = false;
@@ -245,7 +245,7 @@ class ModuleLogin extends Module
 			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['verify'];
 			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->reauthenticate = $GLOBALS['TL_LANG']['MSC']['reauthenticate'];
-			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
+			$this->Template->value = Input::encodeInsertTags($user->getUserIdentifier());
 			$this->Template->remembered = true;
 		}
 	}
