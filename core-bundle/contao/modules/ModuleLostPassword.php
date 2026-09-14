@@ -161,9 +161,9 @@ class ModuleLostPassword extends Module
 		}
 
 		$this->Template->formId = $strFormId;
-		$this->Template->username = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
-		$this->Template->email = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
+		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
+		$this->Template->email = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['requestPassword'];
 	}
 
 	/**
@@ -291,7 +291,7 @@ class ModuleLostPassword extends Module
 
 		$this->Template->formId = $strToken;
 		$this->Template->fields = $objWidget->parse();
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['setNewPassword'];
 	}
 
 	/**
