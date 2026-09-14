@@ -389,7 +389,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Find the parent table within the backend module
+			// Find the parent table in the backend module
 			if ($do = Input::get('do'))
 			{
 				$tables = array();
@@ -409,7 +409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					array_unshift($tables, $ptable);
 				}
 
-				// Use the ptable query parameter if there is another possible dynamic parent within the back end module (see #10146)
+				// Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
 				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
 				{
 					array_unshift($tables, $ptable);

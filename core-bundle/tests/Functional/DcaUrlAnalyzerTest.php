@@ -261,10 +261,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             ->willReturn('RT')
         ;
 
-        $container->set(
-            'contao.csrf.token_manager',
-            $tokenManager,
-        );
+        $container->set('contao.csrf.token_manager', $tokenManager);
 
         $this->loadFixtureFile('default');
 
@@ -282,7 +279,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         // Ignore unknown
         $this->assertSame(['tl_news', 1], $analyzer->getCurrentTableId(Request::create('https://example.com/contao?do=news&id=1&table=tl_content&ptable=tl_foobar')));
 
-        // Two parents so URLs carry the parameter
+        // Two parents, so the URLs carry the parameter
         $this->assertSame(
             [
                 ['label' => '', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=news&table=tl_article'],
@@ -316,7 +313,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         // Second parent table for tl_content in the news table
         $GLOBALS['BE_MOD']['content']['news']['tables'][] = 'tl_article';
 
-        // Push a request to bypass Analyzer switching and resetting the DCA
+        // Push a request to bypass analyzer switching and resetting the DCA
         $request = Request::create('https://example.com/contao?do=news&id=1&table=tl_content');
         $requestStack->push($request);
 

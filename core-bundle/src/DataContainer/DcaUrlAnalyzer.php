@@ -367,8 +367,8 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * Check whether the URI would need a ptable parameter for a current dynamic
-     * parent (see #10146).
+     * Checks whether the URI needs a ptable parameter for a current dynamic parent
+     * (see #10146).
      */
     private function needsPtableParameter(string $childTable, string $ptable): bool
     {
@@ -445,7 +445,7 @@ class DcaUrlAnalyzer
                 array_unshift($tables, $ptable);
             }
 
-            // Find the parent table within the back end module
+            // Find the parent table in the back end module
             foreach ($tables as $ptable) {
                 (new DcaLoader($ptable))->load();
 
