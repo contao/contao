@@ -1,15 +1,16 @@
-{%- set rootAttributes = attrs()
+{% set rootAttributes = attrs()
     .set('lang', app.locale|language_tag)
     .set('dir', 'rtl', isRTL)
     .mergeWith(rootAttributes|default)
 -%}
 
-{%- set bodyAttributes = attrs()
+{% set bodyAttributes = attrs()
     .set('id', 'top')
     .addClass(class)
     .setIfExists('onload', onload)
     .mergeWith(bodyAttributes|default)
 -%}
+
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
 <head>

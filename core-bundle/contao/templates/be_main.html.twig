@@ -1,6 +1,6 @@
 {% trans_default_domain 'contao_default' -%}
 
-{%- set rootAttributes = attrs()
+{% set rootAttributes = attrs()
     .set('lang', app.locale|language_tag)
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
@@ -8,7 +8,7 @@
     .mergeWith(rootAttributes|default)
 -%}
 
-{%- set bodyAttributes = attrs(attributes|default)
+{% set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
     .addClass(backendWidth)
@@ -21,7 +21,7 @@
     .set('id', 'main')
     .set('aria-labelledby', 'main_headline')
     .mergeWith(mainAttributes|default)
-%}
+-%}
 
 {% set asideAttributes = attrs()
     .set('id', 'left')
@@ -30,7 +30,7 @@
     .set('data-contao--toggle-receiver-active-class', 'active')
     .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
     .mergeWith(asideAttributes|default)
-%}
+-%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>

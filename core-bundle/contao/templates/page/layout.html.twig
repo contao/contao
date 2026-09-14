@@ -1,4 +1,4 @@
-{%- set html_attributes = attrs()
+{% set html_attributes = attrs()
     .set('lang', app.locale|language_tag)
     .set('dir', 'rtl', rtl)
     .mergeWith(html_attributes|default)
