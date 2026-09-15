@@ -8,6 +8,7 @@ export default class extends Controller {
     #pollInterval = null;
     #timer = null;
     #etag = null;
+    #connected = false;
 
     static values = {
         pendingJobsUrl: String,
@@ -20,22 +21,26 @@ export default class extends Controller {
     static targets = ['count', 'list'];
 
     connect() {
+        this.#connected = true;
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
         this.#etag = null;
 
-        if (this.enabledValue) {
+        if (this.enabledValue || this.hasListTarget) {
             this.enable();
         }
     }
 
     disconnect() {
+        this.#connected = false;
         clearTimeout(this.#timer);
         this.#timer = null;
+        this.#turboStreamConnection.abortPending();
     }
 
     enable() {
         clearTimeout(this.#timer);
+        this.#timer = null;
         this.#poll();
     }
 
@@ -65,6 +70,11 @@ export default class extends Controller {
     }
 
     #waitAndPoll() {
+        if (!this.#connected) {
+            return;
+        }
+
+        clearTimeout(this.#timer);
         this.#timer = setTimeout(() => {
             this.#timer = null;
             this.#poll();
@@ -72,12 +82,20 @@ export default class extends Controller {
     }
 
     async #poll() {
+        if (!this.#connected) {
+            return;
+        }
+
         const result = await this.#turboStreamConnection.get(
             this.pendingJobsUrlValue,
             { range: this.#pollInterval },
             true,
             this.#etag ? { 'If-None-Match': this.#etag } : {},
         );
+
+        if (!this.#connected || result.aborted) {
+            return;
+        }
 
         this.#etag = result.response?.headers.get('etag') || this.#etag;
 
