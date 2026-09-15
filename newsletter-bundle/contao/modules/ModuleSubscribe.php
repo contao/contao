@@ -160,11 +160,13 @@ class ModuleSubscribe extends Module
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
 		$this->Template->submit = $GLOBALS['TL_LANG']['MSC']['subscribe'];
-		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
-		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;
+
+		// Backwards compatibility
+		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
+		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 	}
 
 	/**

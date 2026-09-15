@@ -108,6 +108,7 @@ class ModuleNewsMenu extends ModuleNews
 				break;
 		}
 
+		// Backwards compatibility
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['emptyList'];
 	}
 
@@ -259,8 +260,10 @@ class ModuleNewsMenu extends ModuleNews
 		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][$prevMonth - 1] . ' ' . $prevYear;
 
 		$this->Template->prevHref = $this->strUrl . '?day=' . $prevYear . ((\strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
-		$this->Template->prevTitle = StringUtil::specialchars($lblPrevious);
+		$this->Template->prevTitle = $lblPrevious;
 		$this->Template->prevLink = $GLOBALS['TL_LANG']['MSC']['news_previous'] . ' ' . $lblPrevious;
+
+		// Backwards compatibility
 		$this->Template->prevLabel = $GLOBALS['TL_LANG']['MSC']['news_previous'];
 
 		// Current month
@@ -274,6 +277,8 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((\strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
 		$this->Template->nextTitle = StringUtil::specialchars($lblNext);
 		$this->Template->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['news_next'];
+
+		// Backwards compatibility
 		$this->Template->nextLabel = $GLOBALS['TL_LANG']['MSC']['news_next'];
 
 		// Set week start day
