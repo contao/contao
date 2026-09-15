@@ -174,7 +174,7 @@ class ModuleCalendar extends Events
 		if ($intPrevYm >= $firstMonth)
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
-			$objTemplate->prevTitle = StringUtil::specialchars($lblPrevious);
+			$objTemplate->prevTitle = $lblPrevious;
 			$objTemplate->prevLink = $GLOBALS['TL_LANG']['MSC']['cal_previous'] . ' ' . $lblPrevious;
 			$objTemplate->prevLabel = $GLOBALS['TL_LANG']['MSC']['cal_previous'];
 		}
@@ -192,7 +192,7 @@ class ModuleCalendar extends Events
 		if ($intNextYm <= $lastMonth)
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
-			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);
+			$objTemplate->nextTitle = $lblNext;
 			$objTemplate->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['cal_next'];
 			$objTemplate->nextLabel = $GLOBALS['TL_LANG']['MSC']['cal_next'];
 		}
@@ -325,7 +325,7 @@ class ModuleCalendar extends Events
 			$arrDays[$intWeek][$i]['label'] = $intDay;
 			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
 			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$intWeek][$i]['title'] = \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['title'] = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_events'], \count($arrEvents));
 			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 

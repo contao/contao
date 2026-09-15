@@ -202,7 +202,7 @@ class BackendPopup extends Backend
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = $container->getParameter('kernel.charset');
 		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];
-		$objTemplate->download = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
+		$objTemplate->download = $GLOBALS['TL_LANG']['MSC']['fileDownload'];
 
 		return $objTemplate->getResponse();
 	}

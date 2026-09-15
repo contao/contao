@@ -150,13 +150,13 @@ class Registry implements \Countable
 	 *
 	 * @param Model $objModel The model object
 	 *
-	 * @throws \RuntimeException If the instance exists already
+	 * @throws \RuntimeException If the instance already exists
 	 */
 	public function register(Model $objModel)
 	{
 		$intObjectId = spl_object_id($objModel);
 
-		// The model has been registered already
+		// The model has been already registered
 		if (isset($this->arrIdentities[$intObjectId]))
 		{
 			return;
@@ -182,7 +182,7 @@ class Registry implements \Countable
 			throw new \RuntimeException('The primary key has not been set');
 		}
 
-		// Another model object is pointing to the DB record already
+		// Another model object is already pointing to the DB record
 		if (isset($this->arrRegistry[$strTable][$varPk]))
 		{
 			throw new \RuntimeException("The registry already contains an instance for $strTable::$strPk($varPk)");

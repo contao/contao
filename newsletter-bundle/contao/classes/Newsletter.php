@@ -282,7 +282,7 @@ class Newsletter extends Backend
 			exit;
 		}
 
-		$strToken = md5(uniqid(mt_rand(), true));
+		$strToken = bin2hex(random_bytes(16));
 		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' <%s>' : '%s';
 

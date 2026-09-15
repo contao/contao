@@ -105,7 +105,7 @@ class RunTestsIsolatedCommand extends Command
         $failedTests = [];
 
         foreach ($tests as $test) {
-            // Skip if the whole class, or the test with all data sets failed already
+            // Skip if the whole class, or the test with all data sets already failed
             foreach ($failedTests as $failedTest) {
                 if (str_starts_with($test, $failedTest)) {
                     continue 2;
