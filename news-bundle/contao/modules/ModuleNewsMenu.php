@@ -275,7 +275,7 @@ class ModuleNewsMenu extends ModuleNews
 		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][$nextMonth - 1] . ' ' . $nextYear;
 
 		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((\strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
-		$this->Template->nextTitle = StringUtil::specialchars($lblNext);
+		$this->Template->nextTitle = $lblNext;
 		$this->Template->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['news_next'];
 
 		// Backwards compatibility
