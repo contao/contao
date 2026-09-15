@@ -51,7 +51,7 @@ abstract class AbstractBackendController extends AbstractController
                     // Create an empty template, so that the template engine's parse() method won't
                     // do anything
                     $this->Template = new BackendTemplate();
-                    $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
+                    $this->Template->version = ContaoCoreBundle::getVersion();
 
                     // Handle Ajax request
                     if ($request->isXmlHttpRequest() && $action = $request->request->get('action')) {

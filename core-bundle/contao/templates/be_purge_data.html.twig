@@ -2,7 +2,7 @@
 
 <div id="tl_maintenance_cache" class="maintenance_{{ isActive ? 'active' : 'inactive' }}">
 
-    <h2 class="sub_headline sub_headline_purge">{{ headline }}</h2>
+    <h2 class="sub_headline sub_headline_purge">{{ 'clearCache'|trans({}, 'contao_tl_maintenance') }}</h2>
 
     {% if message|default %}
         <div class="tl_message">
@@ -20,8 +20,8 @@
                         <thead>
                         <tr>
                             <th><input type="checkbox" id="check_all" class="tl_checkbox" aria-label="{{ 'MSC.selectAll'|trans }}" data-action="contao--check-all#toggleAll"></th>
-                            <th>{{ job }}</th>
-                            <th>{{ description }}</th>
+                            <th>{{ 'job'|trans({}, 'contao_tl_maintenance') }}</th>
+                            <th>{{ 'description'|trans({}, 'contao_tl_maintenance') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -35,13 +35,13 @@
                         </tbody>
                     </table>
                 </fieldset>
-                {% if help|default %}
+                {% if help %}
                     <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ help }}</p>
                 {% endif %}
             </div>
         </div>
         <div class="tl_submit_container">
-            <button type="submit" name="clear" class="tl_submit">{{ submit }}</button>
+            <button type="submit" name="clear" class="tl_submit">{{ 'clearCache'|trans({}, 'contao_tl_maintenance') }}</button>
         </div>
     </form>
 
