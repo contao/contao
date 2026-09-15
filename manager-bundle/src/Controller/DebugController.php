@@ -59,13 +59,23 @@ class DebugController
             throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
         }
 
-        $referer = '';
+        // Default to the back end root (e.g. if there is no or an invalid referer).
+        $target = $request->getBaseUrl().'/contao';
 
         if ($request->query->has('referer')) {
-            $referer = '?'.base64_decode($request->query->get('referer'), true);
+            $referer = base64_decode($request->query->get('referer'), true);
+
+            // The referer is the full request URI (path + query string) of the page the
+            // debug mode was toggled from, which also covers back end modules that are
+            // addressed via a path (e.g. "/contao/page") instead of the "do" query
+            // parameter. Only allow same-origin, absolute paths here, so a manipulated
+            // referer parameter cannot be used for an open redirect.
+            if (\is_string($referer) && str_starts_with($referer, '/') && !str_starts_with($referer, '//')) {
+                $target = $referer;
+            }
         }
 
-        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().$referer);
+        $response = new RedirectResponse($request->getSchemeAndHttpHost().$target);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);
 
