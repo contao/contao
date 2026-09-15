@@ -18,9 +18,10 @@ use Symfony\Component\Messenger\Attribute\AsMessage;
  * @internal
  */
 #[AsMessage('contao_prio_low')]
-class CrawlMessage implements JobIdAwareMessageInterface
+class CrawlMessage implements JobIdAwareMessageInterface, ScopeAwareMessageInterface
 {
     use JobIdAwareMessageTrait;
+    use ScopeAwareMessageTrait;
 
     public function __construct(
         public array $subscribers,
