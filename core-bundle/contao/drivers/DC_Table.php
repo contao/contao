@@ -5291,11 +5291,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$limit = $session['filter'][$filter]['limit'] ?? null;
 			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
 
-			// Only disable reset button if it is not on the first page
-			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
-			{
-				$this->setPanelState($active);
-			}
+			// Enable the reset button when the selected range differs from the default on the first page
+			$this->setPanelState($limit !== null && $limit !== ('0,' . $resultsPerPage));
 		}
 
 		return System::getContainer()
