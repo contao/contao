@@ -26,36 +26,36 @@
     <main id="main">
         <table class="tl_show with-padding with-zebra">
             <tr>
-                <td><span class="tl_label">{{ labels.fileCreated }}:</span></td>
+                <td><span class="tl_label">{{ 'MSC.fileCreated'|trans }}:</span></td>
                 <td>{{ ctime }}</td>
             </tr>
             <tr>
-                <td><span class="tl_label">{{ labels.fileModified }}:</span></td>
+                <td><span class="tl_label">{{ 'MSC.fileModified'|trans }}:</span></td>
                 <td>{{ mtime }}</td>
             </tr>
             <tr>
-                <td><span class="tl_label">{{ labels.fileAccessed }}:</span></td>
+                <td><span class="tl_label">{{ 'MSC.fileAccessed'|trans }}:</span></td>
                 <td>{{ atime }}</td>
             </tr>
             <tr>
-                <td><span class="tl_label">{{ labels.filePath }}:</span></td>
+                <td><span class="tl_label">{{ 'MSC.filePath'|trans }}:</span></td>
                 <td>{{ path }}</td>
             </tr>
             {% if uuid|default %}
                 <tr>
-                    <td><span class="tl_label">{{ labels.fileUuid }}:</span></td>
+                    <td><span class="tl_label">{{ 'MSC.fileUuid'|trans }}:</span></td>
                     <td>{{ uuid }}</td>
                 </tr>
             {% endif %}
             {% if filesize|default %}
                 <tr>
-                    <td><span class="tl_label">{{ labels.fileSize }}:</span></td>
+                    <td><span class="tl_label">{{ 'MSC.fileSize'|trans }}:</span></td>
                     <td>{{ filesize }}</td>
                 </tr>
             {% endif %}
             {% if src|default %}
                 <tr>
-                    <td><span class="tl_label">{{ labels.fileImageSize }}:</span></td>
+                    <td><span class="tl_label">{{ 'MSC.fileImageSize'|trans }}:</span></td>
                     {% if width|default and height|default %}
                         <td>{{ width }} x {{ height }}</td>
                     {% else %}
@@ -65,13 +65,13 @@
             {% endif %}
             {% if meta|default %}
                 <tr class="meta">
-                    <td><span class="tl_label">{{ labels.fileMeta }}:</span></td>
+                    <td><span class="tl_label">{{ 'MSC.fileMeta'|trans }}:</span></td>
                     <td>
                         {% for lang, data in meta %}
                             <p>{{ languages[lang] }}</p>
                             {% for field, value in data %}
                                 {% if value|default %}
-                                    {{ value }} ({{ labels['aw_' ~ field]|default }})<br>
+                                    {{ value }} ({{ 'MSC.aw_' ~ field|trans }})<br>
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
@@ -81,7 +81,7 @@
         </table>
         {% if href|default %}
             <div id="download">
-                <a href="{{ href }}" class="tl_submit" download="{{ path|split('/')|last }}">{{ backend_icon(icon, '', attrs().addClass('mime_icon')) }} {{ download }}</a>
+                <a href="{{ href }}" class="tl_submit" download="{{ path|split('/')|last }}">{{ backend_icon(icon, '', attrs().addClass('mime_icon')) }} {{ 'MSC.fileDownload'|trans }}</a>
             </div>
         {% endif %}
         {% if isImage|default %}

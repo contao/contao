@@ -1,7 +1,9 @@
+{% trans_default_domain 'contao_default' %}
+
 <!-- indexer::stop -->
 <div class="form">
     {% if requireLogin|default %}
-        <p class="info">{{ login }}</p>
+        <p class="info">{{ 'MSC.com_login' }}</p>
     {% else %}
         {% if confirm|default %}
             <p class="tl_confirm">{{ confirm }}</p>
@@ -14,7 +16,7 @@
                         {{ field.parse()|raw }}
                     {% endfor %}
                     <div class="widget widget-submit">
-                        <button type="submit" class="submit">{{ submit }}</button>
+                        <button type="submit" class="submit">{{ 'MSC.com_submit'|trans }}</button>
                     </div>
                 </div>
             </form>

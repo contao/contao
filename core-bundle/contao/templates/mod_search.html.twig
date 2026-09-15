@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
@@ -5,18 +6,18 @@
     <form{% if action|default %} action="{{ action }}"{% endif %} method="get">
         <div class="formbody">
             <div class="widget widget-text">
-                <label for="ctrl_keywords_{{ uniqueId }}" class="invisible">{{ keywordLabel }}</label>
+                <label for="ctrl_keywords_{{ uniqueId }}" class="invisible">{{ 'MSC.keywords'|trans }}</label>
                 <input type="search" name="keywords" id="ctrl_keywords_{{ uniqueId }}" class="text" value="{{ keyword }}" spellcheck="false">
             </div>
             <div class="widget widget-submit">
-                <button type="submit" id="ctrl_submit_{{ uniqueId }}" class="submit">{{ search }}</button>
+                <button type="submit" id="ctrl_submit_{{ uniqueId }}" class="submit">{{ 'MSC.searchLabel'|trans }}rch }}</button>
             </div>
             {% if advanced %}
                 <div class="widget widget-radio">
                     <fieldset class="radio_container">
-                        <legend class="invisible">{{ optionsLabel }}</legend>
-                        <span><input type="radio" name="query_type" id="matchAll_{{ uniqueId }}" class="radio" value="and"{% if 'and' == queryType %} checked{% endif %}> <label for="matchAll_{{ uniqueId }}">{{ matchAll }}</label></span>
-                        <span><input type="radio" name="query_type" id="matchAny_{{ uniqueId }}" class="radio" value="or"{% if 'or' == queryType %} checked{% endif %}> <label for="matchAny_{{ uniqueId }}">{{ matchAny }}</label></span>
+                        <legend class="invisible">{{ 'MSC.options'|trans }}</legend>
+                        <span><input type="radio" name="query_type" id="matchAll_{{ uniqueId }}" class="radio" value="and"{% if 'and' == queryType %} checked{% endif %}> <label for="matchAll_{{ uniqueId }}">{{ 'MSC.matchAll'|trans }}</label></span>
+                        <span><input type="radio" name="query_type" id="matchAny_{{ uniqueId }}" class="radio" value="or"{% if 'or' == queryType %} checked{% endif %}> <label for="matchAny_{{ uniqueId }}">{{ 'MSC.matchAny'|trans }}</label></span>
                     </fieldset>
                 </div>
             {% endif %}
