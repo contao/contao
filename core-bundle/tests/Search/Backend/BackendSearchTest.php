@@ -18,6 +18,7 @@ use CmsIg\Seal\Engine;
 use CmsIg\Seal\EngineInterface;
 use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
 use CmsIg\Seal\Schema\Index;
+use Contao\BackendUser;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
@@ -201,14 +202,33 @@ class BackendSearchTest extends TestCase
         ;
 
         $security = $this->createMock(Security::class);
+        $user = $this->createMock(BackendUser::class);
+        $user
+            ->method('__get')
+            ->with('groups')
+            ->willReturn([1])
+        ;
+
         $security
-            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+        $security
+            ->expects($this->exactly(4))
             ->method('isGranted')
-            ->with(
-                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
-                $this->callback(static fn (Document $document): bool => '42' === $document->getId()),
+            ->willReturnCallback(
+                function (string $attribute, mixed $subject = null): bool {
+                    if ('ROLE_ADMIN' === $attribute) {
+                        return false;
+                    }
+
+                    $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $attribute);
+                    $this->assertInstanceOf(Document::class, $subject);
+                    $this->assertSame('42', $subject->getId());
+
+                    return true;
+                },
             )
-            ->willReturn(true)
         ;
 
         $engine = new Engine(new MemoryAdapter(), BackendSearch::getSearchEngineSchema($indexName));
@@ -219,6 +239,7 @@ class BackendSearchTest extends TestCase
             'type' => 'type',
             'searchableContent' => 'search me',
             'tags' => ['tag-1'],
+            'allowedGroups' => [1],
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
