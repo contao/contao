@@ -1,0 +1,14 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set button_attributes = attrs()
+    .set('id', 'burger')
+    .set('type', 'button')
+    .set('title', label)
+    .set('data-controller', 'contao--toggle-sender')
+    .set('data-action', 'contao--toggle-sender#toggle:prevent')
+    .set('data-contao--toggle-sender-active-title-value', 'MSC.hideMainNavigation'|trans)
+    .set('data-contao--toggle-sender-inactive-title-value', label)
+    .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#left')
+    .set('data-contao--tooltips-target', 'tooltip')
+%}
+<button{{ button_attributes }}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
