@@ -9,6 +9,7 @@ export default class extends Controller {
     #timer = null;
     #etag = null;
     #connected = false;
+    #lastPollStartedAt = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -25,6 +26,7 @@ export default class extends Controller {
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
         this.#etag = null;
+        this.#lastPollStartedAt = Date.now();
 
         if (this.enabledValue || this.hasListTarget) {
             this.enable();
@@ -86,15 +88,23 @@ export default class extends Controller {
             return;
         }
 
+        const startedAt = Date.now();
+
+        // Include response time and delayed timers so completed jobs are not missed
+        const range = Math.max(this.#pollInterval, startedAt - this.#lastPollStartedAt);
         const result = await this.#turboStreamConnection.get(
             this.pendingJobsUrlValue,
-            { range: this.#pollInterval },
+            { range },
             true,
             this.#etag ? { 'If-None-Match': this.#etag } : {},
         );
 
         if (!this.#connected || result.aborted) {
             return;
+        }
+
+        if (result.ok) {
+            this.#lastPollStartedAt = startedAt;
         }
 
         this.#etag = result.response?.headers.get('etag') || this.#etag;
