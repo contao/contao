@@ -47,7 +47,7 @@ final class ApiRequestFactory
 
         // Subrequests share the authenticated token. Copy session and locale for API
         // listeners and voters, without inheriting transport or conditional headers.
-        $request->setLocale($parent->getLocale());
+        $request->attributes->set('_locale', $parent->getLocale());
 
         if ($parent->hasSession()) {
             $request->setSession($parent->getSession());

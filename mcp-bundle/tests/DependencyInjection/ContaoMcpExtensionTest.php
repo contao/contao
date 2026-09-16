@@ -147,7 +147,9 @@ final class ContaoMcpExtensionTest extends TestCase
                 return 'Frontend example';
             }
         };
-        $container->register('frontend_example', $otherTool::class)->setAutoconfigured(true);
+        // Older DI versions cannot autoconfigure anonymous classes because their names
+        // contain a null byte
+        $container->register('frontend_example', $otherTool::class)->addTag('mcp.tool', ['method' => '__invoke']);
 
         $container->register('event_dispatcher', EventDispatcher::class);
         $container->register('logger', NullLogger::class);

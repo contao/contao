@@ -28,6 +28,26 @@ use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
 
 final class ApiRequestFactoryTest extends TestCase
 {
+    private string $defaultLocale;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->defaultLocale = \ini_get('intl.default_locale');
+    }
+
+    protected function tearDown(): void
+    {
+        \Locale::setDefault($this->defaultLocale);
+
+        if ('' === $this->defaultLocale) {
+            ini_restore('intl.default_locale');
+        }
+
+        parent::tearDown();
+    }
+
     public function testKeepsSessionAndLocaleWithoutLeakingTransportHeaders(): void
     {
         $parent = Request::create('https://example.org/_mcp/backend', 'POST', cookies: ['session' => 'value'], server: [
@@ -48,10 +68,10 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('application/ld+json', $request->headers->get('Content-Type'));
         $this->assertSame('application/ld+json', $request->headers->get('Accept'));
         $this->assertSame($parent->getSession(), $request->getSession());
-        $this->assertSame('de', $request->getLocale());
+        $this->assertSame('de', $request->attributes->get('_locale'));
         $this->assertSame('value', $request->cookies->get('session'));
         $this->assertSame('192.0.2.1', $request->getClientIp());
-        $this->assertSame([], $request->attributes->all());
+        $this->assertSame(['_locale' => 'de'], $request->attributes->all());
 
         foreach (['Mcp-Session-Id', 'If-None-Match', 'Authorization', 'Content-Length'] as $header) {
             $this->assertFalse($request->headers->has($header));
@@ -75,6 +95,15 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('/app/index.php', $request->getBaseUrl());
         $this->assertSame('2', $request->query->get('page'));
         $this->assertFalse($request->headers->has('Content-Type'));
+    }
+
+    public function testDoesNotChangeTheGlobalLocaleWhenCreatingARequest(): void
+    {
+        $locale = \ini_get('intl.default_locale');
+        $request = $this->createFactory()->create(Request::create('/_mcp/backend'), new Get(name: 'records'));
+
+        $this->assertSame('en', $request->attributes->get('_locale'));
+        $this->assertSame($locale, \ini_get('intl.default_locale'));
     }
 
     public function testUsesOperationFormatsAndMergePatchPayload(): void
