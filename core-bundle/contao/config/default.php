@@ -19,30 +19,52 @@ $GLOBALS['TL_CONFIG']['timeFormat']  = 'H:i';
 $GLOBALS['TL_CONFIG']['timeZone']    = date_default_timezone_get();
 
 // Input and security
+
+/**
+ * Elements based on the safe default configuration from the HTML specification
+ * with the following modifications:
+ * - removed: <html><head><title><body><main><search>
+ * - added: <img><picture><source><map><area><audio><video><details><summary><style>
+ *
+ * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#built-in-safe-default-configuration
+ */
 $GLOBALS['TL_CONFIG']['allowedTags']
-	= '<a><abbr><acronym><address><area><article><aside><audio>'
-	. '<b><bdi><bdo><big><blockquote><br><button>'
+	= '<a><abbr><address><area><article><aside><audio>'
+	. '<b><bdi><bdo><blockquote><br>'
 	. '<caption><cite><code><col><colgroup>'
-	. '<data><datalist><dd><del><details><dfn><div><dl><dt>'
+	. '<data><dd><del><details><dfn><div><dl><dt>'
 	. '<em>'
-	. '<fieldset><figcaption><figure><footer><form>'
+	. '<figcaption><figure><footer>'
 	. '<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
-	. '<i><img><input><ins>'
+	. '<i><img><ins>'
 	. '<kbd>'
-	. '<label><legend><li>'
+	. '<li>'
 	. '<map><mark><menu>'
 	. '<nav>'
-	. '<ol><optgroup><option><output>'
+	. '<ol>'
 	. '<p><picture><pre>'
 	. '<q>'
-	. '<s><samp><section><select><small><source><span><strong><style><sub><summary><sup>'
-	. '<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
+	. '<rp><rt><ruby>'
+	. '<s><samp><section><small><source><span><strong><style><sub><summary><sup>'
+	. '<table><tbody><td><tfoot><th><thead><time><tr>'
 	. '<u><ul>'
 	. '<var><video>'
 	. '<wbr>';
+
+/**
+ * Attributes based on the safe default configuration from the HTML
+ * specification with the following modifications:
+ * - added for all elements: data-*,id,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
+ * - added for the a element: rel,target,download,referrerpolicy
+ * - added for the table element: border,cellspacing,cellpadding,width,height
+ * - added for the td and th element: width,height
+ * - added elements: img, map, area, video, audio, source, style, details
+ *
+ * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#built-in-safe-default-configuration
+ */
 $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
-	array('key' => 'a', 'value' => 'href,hreflang,rel,target,download,referrerpolicy'),
+	array('key' => 'a', 'value' => 'href,hreflang,type,rel,target,download,referrerpolicy'),
 	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'),
 	array('key' => 'map', 'value' => 'name'),
 	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'),
@@ -50,11 +72,16 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'),
 	array('key' => 'source', 'value' => 'src,srcset,media,sizes,type'),
 	array('key' => 'ol', 'value' => 'reversed,start,type'),
+	array('key' => 'li', 'value' => 'value'),
+	array('key' => 'blockquote', 'value' => 'cite'),
+	array('key' => 'data', 'value' => 'value'),
+	array('key' => 'ins', 'value' => 'cite,datetime'),
+	array('key' => 'del', 'value' => 'cite,datetime'),
 	array('key' => 'table', 'value' => 'border,cellspacing,cellpadding,width,height'),
 	array('key' => 'col', 'value' => 'span'),
 	array('key' => 'colgroup', 'value' => 'span'),
-	array('key' => 'td', 'value' => 'rowspan,colspan,width,height'),
-	array('key' => 'th', 'value' => 'rowspan,colspan,width,height'),
+	array('key' => 'td', 'value' => 'rowspan,colspan,headers,width,height'),
+	array('key' => 'th', 'value' => 'rowspan,colspan,headers,abbr,scope,width,height'),
 	array('key' => 'style', 'value' => 'media'),
 	array('key' => 'time', 'value' => 'datetime'),
 	array('key' => 'details', 'value' => 'open,name'),
