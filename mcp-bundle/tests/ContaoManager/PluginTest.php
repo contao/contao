@@ -86,6 +86,13 @@ final class PluginTest extends TestCase
         );
     }
 
+    public function testDisablesAutomaticApiToolRegistration(): void
+    {
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/api_platform.yaml');
+
+        $this->assertFalse($config['api_platform']['mcp']['enabled']);
+    }
+
     public function testRoutesToTheBackendController(): void
     {
         $route = Yaml::parseFile(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')['contao_mcp_backend'];

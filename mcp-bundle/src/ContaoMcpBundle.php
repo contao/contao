@@ -33,6 +33,8 @@ class ContaoMcpBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
+        $configurator->import('../config/services.yaml');
+
         $configurator->parameters()
             ->set('contao_mcp.backend_path', $config['backend_path'])
         ;

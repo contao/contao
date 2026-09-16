@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "api-platform/mcp": "^4.3",
+        "api-platform/metadata": "^4.3",
         "contao/api-bundle": "self.version",
         "contao/core-bundle": "self.version",
         "mcp/sdk": "^0.8.1",

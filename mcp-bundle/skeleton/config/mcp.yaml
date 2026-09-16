@@ -2,6 +2,9 @@ mcp:
     servers:
         contao_backend:
             name: Contao Backend
+            registry:
+                tools:
+                    - Contao\McpBundle\Tool\DataContainerTools
             transports:
                 http: true
                 stdio: false
