@@ -196,7 +196,7 @@ class ContentCompositionBuilder
             // Add slot content
             foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
                 if ($definition['enable'] ?? false) {
-                    $isContentElement = str_starts_with($definition['mod'], 'content-');
+                    $isContentElement = \is_string($definition['mod']) && str_starts_with($definition['mod'], 'content-');
 
                     $this->addElementToSlot(
                         $definition['col'],
@@ -287,7 +287,7 @@ class ContentCompositionBuilder
         $locale = LocaleUtil::formatAsLocale($page->language ?? '');
         $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);
 
-        $template->set('locale', $locale);
+        $template->set('locale', LocaleUtil::formatAsLanguageTag($locale));
         $template->set('rtl', $isRtl);
 
         $template->set('page', $page->row());

@@ -1009,7 +1009,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("CAST($t.alias AS BINARY) = ?") : array("$t.id = ?"),
+				'column' => $isAlias ? array("$t.alias = CAST(? AS BINARY)") : array("$t.id = ?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),

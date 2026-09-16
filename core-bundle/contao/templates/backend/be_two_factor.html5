@@ -137,7 +137,7 @@
                       <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                       <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
                       <input type="hidden" name="credential_id" value="<?= $credential->getId() ?>">
-                      <input type="text" name="passkey_name" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
+                      <input type="text" name="passkey_name" class="tl_text" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" aria-label="<?= $this->trans('MSC.passkeysName') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                     </form>
                   <?php else: ?>
                     <?= Contao\StringUtil::specialchars($credential->name ?: $credential->getId()) ?>
