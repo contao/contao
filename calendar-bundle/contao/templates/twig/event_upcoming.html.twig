@@ -1,7 +1,7 @@
 <div class="event layout_upcoming{{ classUpcoming|default }}">
 
     <time datetime="{{ datetime }}" class="date">{{ date }}{% if time %} {{ time }}{% endif %}</time>
-    <a href="{{ href|default }}" title="{{ title|default }} ({% if day|default %}{{ day }}, {% endif %}{{ date }} {% if time %} {{ time }}{% endif %})"{{ target }}>{{ link|default }}</a>
+    <a href="{{ href|default }}" title="{{ title|default }} ({% if day|default %}{{ day }}, {% endif %}{{ date }} {% if time %} {{ time }}{% endif %})"{{ target|raw }}>{{ link|default }}</a>
 
 </div>
 
