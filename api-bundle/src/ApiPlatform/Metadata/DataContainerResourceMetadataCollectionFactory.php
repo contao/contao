@@ -79,6 +79,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withProcessor(DataContainerStateProcessor::class)
             ->withRoutePrefix($this->getRoutePrefix($table))
             ->withDefaults(['_scope' => 'backend'])
+            ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
             ->withExtraProperties($this->getExtraProperties($table))
             ->withOperations($this->createOperations($table, $shortName, !($config['notDeletable'] ?? false)))
@@ -114,6 +115,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 ->withProvider(DataContainerStateProvider::class)
                 ->withProcessor(DataContainerStateProcessor::class)
                 ->withDefaults(['_scope' => 'backend'])
+                ->withSecurity("is_granted('ROLE_USER')")
                 ->withExtraProperties($this->getExtraProperties($table))
             ;
         }

@@ -31,6 +31,18 @@ class ContaoMcpBundle extends AbstractBundle
         ;
     }
 
+    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
+    {
+        if ($container->hasExtension('security')) {
+            // Match the route so custom paths remain protected before public fallback rules
+            $container->prependExtensionConfig('security', [
+                'access_control' => [
+                    ['route' => 'contao_mcp_backend', 'roles' => ['ROLE_USER']],
+                ],
+            ]);
+        }
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import('../config/services.yaml');
