@@ -23,9 +23,9 @@ class ContaoMcpBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-                ->scalarNode('path')
-                    ->defaultValue('/_mcp')
-                    ->info('The HTTP route at which Contao exposes the MCP server.')
+                ->scalarNode('backend_path')
+                    ->defaultValue('/_mcp/backend')
+                    ->info('The HTTP route at which Contao exposes the backend MCP server.')
                 ->end()
             ->end()
         ;
@@ -34,7 +34,7 @@ class ContaoMcpBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->parameters()
-            ->set('contao_mcp.path', $config['path'])
+            ->set('contao_mcp.backend_path', $config['backend_path'])
         ;
     }
 }

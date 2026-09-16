@@ -1,10 +1,13 @@
 mcp:
-    client_transports:
-        http: true
-        stdio: false
-    http:
-        path: '%contao_mcp.path%'
-        session:
-            store: file
-            directory: '%kernel.cache_dir%/mcp'
-            ttl: 3600
+    servers:
+        contao_backend:
+            name: Contao Backend
+            transports:
+                http: true
+                stdio: false
+            http:
+                path: '%contao_mcp.backend_path%'
+            session:
+                store: file
+                directory: '%kernel.cache_dir%/mcp/contao_backend'
+                ttl: 3600
