@@ -8,6 +8,7 @@ services:
 
     # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
+        decoration_priority: 750
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
             $decorated: '@.inner'
@@ -24,6 +25,15 @@ services:
             $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
             $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
             $apiPrefix: '%contao_api.api_prefix%'
+
+    Contao\ApiBundle\Http\ApiRequestFactory:
+        arguments:
+            $urlGenerator: '@router'
+
+    Contao\ApiBundle\Resource\DataContainerResourceRegistry:
+        arguments:
+            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
 
     Contao\ApiBundle\Schema\DataContainerSchemaFactory:
         arguments:
