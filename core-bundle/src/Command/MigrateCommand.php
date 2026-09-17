@@ -730,7 +730,6 @@ class MigrateCommand extends Command
             /** @phpstan-ignore method.notFound */
             $driverConnection = $this->connection->getWrappedConnection();
 
-            /** @phpstan-ignore class.notFound */
             if (!$driverConnection instanceof ServerInfoAwareConnection) {
                 return true;
             }
@@ -742,7 +741,6 @@ class MigrateCommand extends Command
                 return true;
             }
 
-            /** @phpstan-ignore class.notFound */
             $version = $driverConnection->getServerVersion();
 
             /** @phpstan-ignore class.notFound */

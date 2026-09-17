@@ -53,7 +53,7 @@ class InheritanceTest extends TestCase
 
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getCurrentPage')
             ->willReturn($page)
         ;
@@ -99,9 +99,7 @@ class InheritanceTest extends TestCase
             'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
         ];
 
-        if (!isset($paths['App'])) {
-            $paths['App'] = Path::join($projectDir, 'contao/templates');
-        }
+        $paths['App'] ??= Path::join($projectDir, 'contao/templates');
 
         $connection = $this->createStub(Connection::class);
         $connection

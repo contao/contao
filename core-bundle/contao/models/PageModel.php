@@ -659,7 +659,7 @@ class PageModel extends Model
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=CAST(? AS BINARY)") : array("$t.id=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -944,6 +944,7 @@ class PageModel extends Model
 		$ptitle = '';
 		$trail = array($this->id, $pid);
 		$time = time();
+		$cacheInherited = false;
 
 		// Inherit the settings
 		if ($this->type == 'root')
@@ -987,11 +988,13 @@ class PageModel extends Model
 					}
 
 					// Cache
-					if ($objParentPage->includeCache && !$this->includeCache)
+					if ($objParentPage->includeCache && !$this->includeCache && !$cacheInherited)
 					{
 						$this->cache = $objParentPage->cache;
 						$this->alwaysLoadFromCache = $objParentPage->alwaysLoadFromCache;
 						$this->clientCache = $objParentPage->clientCache;
+
+						$cacheInherited = true;
 					}
 
 					// Layout

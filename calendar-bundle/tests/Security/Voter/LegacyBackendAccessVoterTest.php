@@ -14,12 +14,12 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class LegacyBackendAccessVoterTest extends TestCase
+class LegacyBackendAccessVoterTest extends ContaoTestCase
 {
     public function testSupports(): void
     {

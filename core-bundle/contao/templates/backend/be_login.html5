@@ -29,10 +29,10 @@
 
   <?php $this->block('container'); ?>
     <div id="container"
-      data-controller="contao--webauthn contao--webauthn-error"
-      data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>"
-      data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>"
-      data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>"
+      data-controller="contao--webauthn-authentication contao--webauthn-error"
+      data-contao--webauthn-authentication-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>"
+      data-contao--webauthn-authentication-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>"
+      data-contao--webauthn-authentication-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>"
       data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
       data-contao--webauthn-error-assertion-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
       data-contao--webauthn-error-options-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"

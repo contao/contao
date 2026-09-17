@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "backend.css": "/system/themes/flexible/backend.3bf78d30.css",
   "confirm.css": "/system/themes/flexible/confirm.cf961606.css",
   "conflict.css": "/system/themes/flexible/conflict.ae85a288.css",
@@ -6,6 +7,15 @@
   "help.css": "/system/themes/flexible/help.a27c2fa6.css",
   "login.css": "/system/themes/flexible/login.a6f2572b.css",
   "popup.css": "/system/themes/flexible/popup.bd1da9dd.css",
+=======
+  "backend.css": "/system/themes/flexible/backend.acb2d422.css",
+  "confirm.css": "/system/themes/flexible/confirm.958f70d8.css",
+  "conflict.css": "/system/themes/flexible/conflict.6823b913.css",
+  "diff.css": "/system/themes/flexible/diff.cf0397ef.css",
+  "help.css": "/system/themes/flexible/help.fbaf1899.css",
+  "login.css": "/system/themes/flexible/login.96911d9e.css",
+  "popup.css": "/system/themes/flexible/popup.a5b98404.css",
+>>>>>>> upstream/5.7
   "tinymce.css": "/system/themes/flexible/tinymce.84b1625a.css",
   "tinymce-dark.css": "/system/themes/flexible/tinymce-dark.fbda69ff.css"
 }

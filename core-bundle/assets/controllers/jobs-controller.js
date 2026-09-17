@@ -7,6 +7,9 @@ export default class extends Controller {
     #runningJobs = false;
     #pollInterval = null;
     #timer = null;
+    #etag = null;
+    #connected = false;
+    #lastPollStartedAt = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -19,8 +22,11 @@ export default class extends Controller {
     static targets = ['count', 'list'];
 
     connect() {
+        this.#connected = true;
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
+        this.#etag = null;
+        this.#lastPollStartedAt = Date.now();
 
         if (this.enabledValue) {
             this.enable();
@@ -28,12 +34,15 @@ export default class extends Controller {
     }
 
     disconnect() {
+        this.#connected = false;
         clearTimeout(this.#timer);
         this.#timer = null;
+        this.#turboStreamConnection.abortPending();
     }
 
     enable() {
         clearTimeout(this.#timer);
+        this.#timer = null;
         this.#poll();
     }
 
@@ -63,10 +72,56 @@ export default class extends Controller {
     }
 
     #waitAndPoll() {
-        this.#timer = setTimeout(() => this.#poll(), this.#pollInterval);
+        if (!this.#connected) {
+            return;
+        }
+
+        clearTimeout(this.#timer);
+        this.#timer = setTimeout(() => {
+            this.#timer = null;
+            this.#poll();
+        }, this.#pollInterval);
     }
 
-    #poll() {
-        this.#turboStreamConnection.get(this.pendingJobsUrlValue, { range: this.#pollInterval }, true);
+    async #poll() {
+        if (!this.#connected) {
+            return;
+        }
+
+        const startedAt = Date.now();
+
+        // Include response time and delayed timers so completed jobs are not missed
+        const range = Math.max(this.#pollInterval, startedAt - this.#lastPollStartedAt);
+
+        const result = await this.#turboStreamConnection.get(
+            this.pendingJobsUrlValue,
+            { range },
+            true,
+            this.#etag ? { 'If-None-Match': this.#etag } : {},
+        );
+
+        if (!this.#connected || result.aborted) {
+            return;
+        }
+
+        if (result.ok) {
+            this.#lastPollStartedAt = startedAt;
+        }
+
+        this.#etag = result.response?.headers.get('etag') || this.#etag;
+
+        // Stop watching unchanged results when there are no jobs left to display
+        if (304 === result.response?.status && (!this.hasListTarget || '0' === this.listTarget.dataset.jobs)) {
+            clearTimeout(this.#timer);
+            this.#timer = null;
+
+            return;
+        }
+
+        // If no Turbo stream update happened (e.g. 204 no changes), schedule
+        // the next poll here.
+        if (!this.#timer) {
+            this.#waitAndPoll();
+        }
     }
 }

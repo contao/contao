@@ -21,7 +21,7 @@
   <?php if ($this->details): ?>
     <?= $this->details ?>
   <?php else: ?>
-    <div class="ce_text block">
+    <div class="ce_text content-text block">
       <?= $this->cspInlineStyles($this->teaser) ?>
     </div>
   <?php endif; ?>

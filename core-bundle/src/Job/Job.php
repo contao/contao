@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Job;
 
 use Symfony\Component\Uid\Uuid;
@@ -346,6 +354,14 @@ final class Job
         return $array;
     }
 
+    /**
+     * Returns a stable fingerprint of the mutable job state.
+     */
+    public function getStateFingerprint(): string
+    {
+        return hash('xxh3', json_encode($this->getMutableState(), JSON_THROW_ON_ERROR));
+    }
+
     public function markFailed(array $errors): self
     {
         $clone = clone $this;
@@ -359,5 +375,18 @@ final class Job
     public function markFailedBecauseRequiresCLI(): self
     {
         return $this->markFailed([self::ERROR_REQUIRES_CLI]);
+    }
+
+    private function getMutableState(): array
+    {
+        return [
+            'status' => $this->getStatus()->value,
+            'progress' => round($this->getProgress(), 2),
+            'isPublic' => $this->isPublic(),
+            'metadata' => $this->getMetadata(),
+            'errors' => $this->getErrors(),
+            'warnings' => $this->getWarnings(),
+            'children' => array_map(static fn (self $child): string => $child->getStateFingerprint(), $this->getChildren()),
+        ];
     }
 }

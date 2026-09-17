@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener;
 use Contao\NewsModel;
 use Contao\Search;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class NewsSearchListenerTest extends TestCase
+class NewsSearchListenerTest extends ContaoTestCase
 {
     #[DataProvider('purgeSearchEntryProvider')]
     public function testNewsChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void

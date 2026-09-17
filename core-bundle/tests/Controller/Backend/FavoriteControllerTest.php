@@ -64,7 +64,7 @@ class FavoriteControllerTest extends TestCase
     }
 
     #[DataProvider('favoriteProvider')]
-    public function testRendersAddToFavoriteButton(Request $request, int|false $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
+    public function testRendersAddToFavoriteButton(Request $request, false|int $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
     {
         $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
         $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class);
@@ -74,14 +74,14 @@ class FavoriteControllerTest extends TestCase
         $queries = [[
             'SELECT id FROM tl_favorites WHERE url = :url AND user = :user',
             [
-                'url' => UrlUtil::getNormalizePathAndQuery($request->get('target_path')),
+                'url' => UrlUtil::getNormalizePathAndQuery(self::getTargetPath($request)),
                 'user' => 42,
             ],
             $currentId,
         ]];
 
         if ($currentId && 'success_stream' === $block) {
-            $queries[] = ['SELECT COUNT(*) FROM tl_favorites WHERE user=?', [42], 0];
+            $queries[] = ['SELECT COUNT(*) FROM tl_favorites WHERE user = ?', [42], 0];
         }
 
         $connection = $this->createMock(Connection::class);
@@ -93,7 +93,7 @@ class FavoriteControllerTest extends TestCase
 
         $controller = new FavoriteController($framework, $connection);
 
-        $container = $this->getContainer($block, $parameters, $this->mockRouter(false === $currentId || $request->isMethod('POST') ? $request->get('target_path') : null));
+        $container = $this->getContainer($block, $parameters, $this->mockRouter(false === $currentId || $request->isMethod('POST') ? self::getTargetPath($request) : null));
         $controller->setContainer($container);
 
         $response = $controller($request);
@@ -230,7 +230,14 @@ class FavoriteControllerTest extends TestCase
         return $request;
     }
 
-    private function mockRouter(string|null $url): UrlGeneratorInterface&Stub
+    private static function getTargetPath(Request $request): string|null
+    {
+        return $request->attributes->get('target_path')
+            ?? $request->query->get('target_path')
+            ?? $request->request->get('target_path');
+    }
+
+    private function mockRouter(string|null $url): Stub&UrlGeneratorInterface
     {
         $router = $this->createStub(UrlGeneratorInterface::class);
 

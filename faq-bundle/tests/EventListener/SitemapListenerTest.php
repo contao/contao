@@ -120,7 +120,7 @@ class SitemapListenerTest extends ContaoTestCase
     private function createSitemapEvent(array $rootPages): SitemapEvent
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
-        $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
+        $urlSet = $sitemap->createElementNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
         $sitemap->appendChild($urlSet);
 
         return new SitemapEvent($sitemap, new Request(), $rootPages);

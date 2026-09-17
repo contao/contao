@@ -41,7 +41,7 @@ class FormatDateInsertTagTest extends TestCase
     }
 
     #[DataProvider('getConvertedInsertTags')]
-    public function testReplacedInsertTag(string $insertTag, string|false $expected): void
+    public function testReplacedInsertTag(string $insertTag, false|string $expected): void
     {
         $listener = new FormatDateInsertTag($this->getFramework(), new RequestStack());
 

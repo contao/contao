@@ -469,17 +469,6 @@ class DcaExtractor extends Controller
 					throw new InvalidConfigException(\sprintf('The target column of the virtual field %s.%s does not exist.', $this->strTable, $field));
 				}
 
-				// Validate the config for virtual fields
-				if ($config['filter'] ?? false)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "filter" on virtual field %s.%s is not supported.', $this->strTable, $field));
-				}
-
-				if ($config['search'] ?? false)
-				{
-					throw new InvalidConfigException(\sprintf('Enabling "search" on virtual field %s.%s is not supported.', $this->strTable, $field));
-				}
-
 				if ($config['eval']['fallback'] ?? false)
 				{
 					throw new InvalidConfigException(\sprintf('Enabling "eval.fallback" on virtual field %s.%s is not supported.', $this->strTable, $field));

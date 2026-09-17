@@ -130,7 +130,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string, string|bool>
+     * @return array<string, mixed>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
@@ -139,9 +139,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
-        if (!isset($attributes['fieldType'])) {
-            $attributes['fieldType'] = 'radio';
-        }
+        $attributes['fieldType'] ??= 'radio';
 
         $value = $config->getValue();
 

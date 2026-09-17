@@ -34,7 +34,7 @@ class PageCommentsVoter extends AbstractCommentsVoter
     protected function hasAccess(TokenInterface $token, string $source, int $parent): bool
     {
         $page = $this->connection->fetchAssociative(
-            'SELECT * FROM tl_page WHERE id=?',
+            'SELECT * FROM tl_page WHERE id = ?',
             [$parent],
         );
 

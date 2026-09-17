@@ -33,7 +33,8 @@ use Symfony\Component\Uid\Uuid;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>
+ *          sources: list<HtmlAttributes>,
+ *          tracks: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -82,7 +83,7 @@ class PlayerController extends AbstractContentElementController
         $poster = null;
 
         if ($uuid = $model->posterSRC) {
-            $poster = $this->filesStorage->generatePublicUri(Uuid::fromBinary($uuid));
+            $poster = $this->filesStorage->generatePublicUri(Uuid::fromString($uuid));
         }
 
         $size = StringUtil::deserialize($model->playerSize, true);
@@ -190,6 +191,7 @@ class PlayerController extends AbstractContentElementController
                 'type' => 'audio',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => [],
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',

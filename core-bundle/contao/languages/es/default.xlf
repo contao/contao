@@ -413,8 +413,16 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>El ID del elemento %d no se puede insertar aquí porque entra en conflicto con un elemento existente.</target>
       </trans-unit>
-      <trans-unit id="ERR.grantTemplateEditor">
-        <source>You can only grant access to the template editor if you are an admin.</source>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+        <target>La palabra clave &quot;auto&quot; solo está permitida al principio del atributo sizes y debe ir seguida de una coma si hay valores adicionales.</target>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
+        <target>La carga diferida debe estar habilitada si el atributo sizes está configurado como &quot;auto&quot;.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -438,6 +446,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Genera un formulario para cambiar la contraseña.</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -445,6 +454,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Genera un formulario para eliminar una cuenta de miembro.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -732,6 +742,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Genera un formulario para configurar o modificar la autenticación de dos factores.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1871,6 +1882,7 @@
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
         <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
+        <target>Hay más registros disponibles, pero están ocultos por motivos de rendimiento. Contrae el árbol o aplica filtros para restringir la vista.</target>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
@@ -1910,6 +1922,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>No se encontraron registros que coincidan con la configuración actual del filtro.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2707,6 +2720,9 @@
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
         <target>Ha intentado restablecer su contraseña demasiadas veces. Vuelva a intentarlo en 15 minutos.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Conflicto de versiones</target>
@@ -2861,9 +2877,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Mostrar ruta</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Mostrar elementos hermanos</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2897,9 +2915,17 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Hay al menos un grupo de usuarios que otorga permiso para importar temas. Dado que los temas pueden contener plantillas arbitrarias y las plantillas son archivos PHP, los usuarios de estos grupos tienen implícitamente un control total sobre el sistema.</target>
       </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>Hay al menos un grupo de usuarios que otorga permiso para el módulo front-end &quot;Listing&quot; y sus campos &quot;list_*&quot;. Dado que pueden contener consultas SQL arbitrarias, los usuarios de estos grupos implícitamente tienen control total sobre el sistema.</target>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
@@ -3127,9 +3153,11 @@
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3209,9 +3237,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Desplazar hacia la izquierda</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Desplazar hacia la derecha</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

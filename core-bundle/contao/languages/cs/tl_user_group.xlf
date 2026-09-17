@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.cud_legend">
         <source>Table permissions</source>
+        <target>Tabulka povolení</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
@@ -94,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.versions.1">
         <source>Show the versions of user group ID %s</source>
+        <target>Zobrazit verze uživatelské skupiny ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>

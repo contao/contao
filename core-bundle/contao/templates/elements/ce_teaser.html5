@@ -4,7 +4,7 @@
 
 $this->wrapperAttributes = $this
     ->attrs()
-    ->addClass('ce_text')
+    ->addClass(['ce_text', 'content-text'])
     ->mergeWith($this->wrapperAttributes)
 ;
 

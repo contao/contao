@@ -12,7 +12,7 @@
     {% elseif item.extra('index') %}
         {% set item = item.setAttributes(
             item.getAttributes()|merge({
-                style: 'margin-left:' ~ ((item.extra('index') - 1) * 10) ~ 'px',
+                style: '--trail-padding:' ~ (item.extra('index') * 12) ~ 'px',
             }),
         ) %}
     {% endif %}
@@ -29,7 +29,10 @@
 
 {% block linkElement %}
     {{ _self.generate_link_prefix(item) }}
-    {{ parent() }}
+    {% set link_attributes = attrs(item.linkAttributes)
+        .addClass('trail-icon', item.parent.name == 'ancestor_trail' and item.name != 'ancestor_trail_0')
+    %}
+    <a href="{{ item.uri }}"{{ link_attributes }}>{{ block('label') }}</a>
 {% endblock %}
 
 {% block list %}
@@ -67,7 +70,5 @@
 {% macro generate_link_prefix(item) %}
     {% if item.extra('has_siblings') %}
         {{ _self.generate_dropdown_button('MSC.siblings'|trans, '›', 'siblings') }}
-    {% elseif item.parent.name == 'ancestor_trail' and item.name != 'ancestor_trail_0' %}
-        {{ backend_icon('corner-down-right', attributes: attrs().set('width', 14).set('height', 14)) }}
     {% endif %}
 {% endmacro %}

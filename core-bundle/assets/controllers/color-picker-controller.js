@@ -1,6 +1,11 @@
 import ColorPicker from '@stimulus-components/color-picker';
 
 export default class extends ColorPicker {
+    initialize() {
+        super.initialize();
+        this.updateInteractionResult = this.updateInteractionResult.bind(this);
+    }
+
     connect() {
         let hexValueLoaded = false;
 
@@ -10,6 +15,11 @@ export default class extends ColorPicker {
         }
 
         super.connect();
+
+        this.picker.on('change', this.updateInteractionResult);
+
+        // Reapply the button target to the element as it got replaced by not using `useAsButton` (see #9985)
+        this.picker.getRoot().root.setAttribute(`data-${this.identifier}-target`, 'button');
 
         if (hexValueLoaded) {
             this.inputTarget.value = this.inputTarget.value.substring(1);
@@ -31,5 +41,10 @@ export default class extends ColorPicker {
         }
 
         this.picker.hide();
+    }
+
+    updateInteractionResult(color) {
+        // Updates the interactive result on change (see #9985)
+        this.picker.getRoot().interaction.result.value = color ? color.toHEXA().toString() : '';
     }
 }

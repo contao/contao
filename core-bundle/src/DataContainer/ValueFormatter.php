@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -7,8 +9,6 @@
  *
  * @license LGPL-3.0-or-later
  */
-
-declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
@@ -119,9 +119,11 @@ class ValueFormatter implements ResetInterface
 
         $length = match ($mode) {
             DataContainer::SORT_INITIAL_LETTER_ASC,
-            DataContainer::SORT_INITIAL_LETTER_DESC => 1,
+            DataContainer::SORT_INITIAL_LETTER_DESC,
+            DataContainer::SORT_INITIAL_LETTER_BOTH => 1,
             DataContainer::SORT_INITIAL_LETTERS_ASC,
-            DataContainer::SORT_INITIAL_LETTERS_DESC => max((int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['length'] ?? 2), 1),
+            DataContainer::SORT_INITIAL_LETTERS_DESC,
+            DataContainer::SORT_INITIAL_LETTERS_BOTH => max((int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['length'] ?? 2), 1),
             default => null,
         };
 
@@ -272,7 +274,8 @@ class ValueFormatter implements ResetInterface
         }
 
         if (
-            \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
+            \is_scalar($value)
+            && \is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
             && (
                 ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['isAssociative'] ?? null)
                 || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$field]['options'] ?? null)
@@ -285,7 +288,7 @@ class ValueFormatter implements ResetInterface
             }
         }
 
-        if ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc)) {
+        if (\is_scalar($value) && ($callbackOptions = $this->fetchOptionsCallback($table, $field, $dc))) {
             $label = $this->findOptionLabel($callbackOptions, $value);
 
             if (null !== $label) {
@@ -302,7 +305,12 @@ class ValueFormatter implements ResetInterface
             $this->framework->getAdapter(Controller::class)->loadDataContainer($ptable);
             $showField = $GLOBALS['TL_DCA'][$ptable]['list']['label']['fields'][0] ?? 'id';
 
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            // showField already has foreignKey format, no table needed
+            if (str_contains($showField, '.')) {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $showField;
+            } else {
+                $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
+            }
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {
@@ -445,7 +453,7 @@ class ValueFormatter implements ResetInterface
             $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
             $fk = $this->connection->quoteIdentifier($fk);
 
-            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk=?", [$id]);
+            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk = ?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? null : $value;
         }

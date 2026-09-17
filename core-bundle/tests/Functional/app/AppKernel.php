@@ -17,6 +17,7 @@ use Contao\NewsBundle\ContaoNewsBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use League\FlysystemBundle\FlysystemBundle;
 use Psr\Log\NullLogger;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -48,6 +49,7 @@ class AppKernel extends Kernel
             new KnpMenuBundle(),
             new CmfRoutingBundle(),
             new Terminal42ServiceAnnotationBundle(),
+            new FlysystemBundle(),
             new ContaoCoreBundle(),
             new ContaoNewsBundle(),
         ];

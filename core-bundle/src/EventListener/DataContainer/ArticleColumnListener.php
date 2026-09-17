@@ -97,21 +97,13 @@ class ArticleColumnListener
     private function getSlots(string $template): array
     {
         try {
-            $slots = $this->inspector
+            return $this->inspector
                 ->inspectTemplate("@Contao/$template.html.twig")
                 ->getSlots()
             ;
         } catch (InspectionException) {
-            $slots = [];
+            return [];
         }
-
-        $options = [];
-
-        foreach ($slots as $slot) {
-            $options[$slot] = "{% slot $slot %}";
-        }
-
-        return $options;
     }
 
     private function getLayoutSections(LayoutModel $layoutModel): array

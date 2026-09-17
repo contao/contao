@@ -414,6 +414,13 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
+			// Render the new breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
+
+			// Render the headline, which will be set as the page title in BackendMain::run()
 			$this->Template->headline = '';
 
 			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
@@ -422,12 +429,6 @@ abstract class Backend extends Controller
 			}
 
 			$do = Input::get('do');
-
-			// Only render the breadcrumb for DC_Table (see #9514)
-			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
-			{
-				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
-			}
 
 			// Add the current action
 			if (Input::get('id'))

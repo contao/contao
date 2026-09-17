@@ -11,7 +11,7 @@
 
   <h2><?= $this->linkHeadline ?></h2>
 
-  <div class="ce_text block">
+  <div class="ce_text content-text block">
     <?= $this->cspInlineStyles($this->teaser) ?>
   </div>
 

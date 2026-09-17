@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener]
 class ContentRecordLabelListener
 {
-    public function __construct(private readonly TranslatorInterface&TranslatorBagInterface $translator)
+    public function __construct(private readonly TranslatorBagInterface&TranslatorInterface $translator)
     {
     }
 
@@ -38,7 +38,7 @@ class ContentRecordLabelListener
         }
 
         if ($event->getData()['title'] ?? null) {
-            $event->setLabel($event->getData()['title']);
+            $event->setLabel(StringUtil::decodeEntities($event->getData()['title']));
 
             return;
         }

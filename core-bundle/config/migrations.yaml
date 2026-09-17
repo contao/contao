@@ -122,3 +122,10 @@ services:
         class: Contao\CoreBundle\Migration\Version507\FieldPermissionMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_507.prepare_for_output_encoding:
+        class: Contao\CoreBundle\Migration\Version507\PrepareForOutputEncodingMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.resource_finder'

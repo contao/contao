@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek yorum sayısını yazın. Sayfalamayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.moderate.0">
         <source>Moderate comments</source>

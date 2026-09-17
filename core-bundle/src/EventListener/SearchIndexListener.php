@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Search\Document;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,8 +35,8 @@ class SearchIndexListener
 
     public function __construct(
         private readonly MessageBusInterface $messageBus,
+        private readonly ScopeMatcher $scopeMatcher,
         private readonly string $fragmentPath = '_fragment',
-        private readonly string $contaoBackendRoutePrefix = '/contao',
         private readonly bool $debugMode = false,
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
         private readonly RateLimiterFactory|null $rateLimiterFactory = null,
@@ -69,13 +70,7 @@ class SearchIndexListener
             return;
         }
 
-        // Do not handle Contao backend requests
-        if (preg_match('~(?:^|/)'.preg_quote(ltrim($this->contaoBackendRoutePrefix, '/'), '~').'(?:$|/)~', $request->getPathInfo())) {
-            return;
-        }
-
-        // Do not handle profiler requests
-        if (preg_match('~(?:^|/)_wdt/~', $request->getPathInfo())) {
+        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 

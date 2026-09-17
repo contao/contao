@@ -61,7 +61,7 @@ class CombinedFileDumperTest extends TestCase
         return $filesystem;
     }
 
-    private function mockLoader(): PhpFileLoader&MockObject
+    private function mockLoader(): MockObject&PhpFileLoader
     {
         $loader = $this->createMock(PhpFileLoader::class);
         $loader

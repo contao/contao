@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Zarflar ekle</target>
+        <target>Dosyalar ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.1">
         <source>Add one or more downloadable files to the FAQ.</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.0">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.published.1">
         <source>Make the FAQ publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesi sitede herkese açık olarak yayınlanır.</target>
+        <target>Etkinleştirildiğinde, bu SSS ögesi sitede herkese açık olarak yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_faq.title_legend">
         <source>Title and author</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
@@ -123,6 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.versions.1">
         <source>Show the versions of question ID %s</source>
+        <target>%s kimlikli sorunun sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
@@ -178,9 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenewtop.1">
         <source>Add a new question at the top</source>
+        <target>En üste yeni bir soru ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenewafter.1">
         <source>Add a new question after question ID %s</source>
+        <target>%s kimlikli sorudan sonra yeni bir soru ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.tableLabel">
         <source>Question</source>

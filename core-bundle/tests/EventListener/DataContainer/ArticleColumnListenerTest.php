@@ -80,13 +80,7 @@ class ArticleColumnListenerTest extends TestCase
 
         $options = $articleColumnListener($dc);
 
-        $this->assertSame(
-            [
-                'foo' => '{% slot foo %}',
-                'bar' => '{% slot bar %}',
-            ],
-            $options,
-        );
+        $this->assertSame(['foo', 'bar'], $options);
     }
 
     public function testReturnsSectionsFromDefaultLayout(): void
@@ -154,13 +148,7 @@ class ArticleColumnListenerTest extends TestCase
 
         $options = $articleColumnListener($dc);
 
-        $this->assertSame(
-            [
-                'foo' => '{% slot foo %}',
-                'bar' => '{% slot bar %}',
-            ],
-            $options,
-        );
+        $this->assertSame(['foo', 'bar'], $options);
     }
 
     public function testReturnsSlotsFromModernLayout(): void

@@ -29,6 +29,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @phpstan-type TrailItem array{
+ *     url: string,
+ *     query: array,
+ *     label: string,
+ *     treeTrail: list<array{url: string|null, label: string}>|null,
+ *     treeSiblings: list<array{url: string|null, label: string, active: bool}>|null
+ * }
+ */
 class DcaUrlAnalyzer
 {
     public function __construct(
@@ -52,16 +61,16 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
-    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
+    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false, bool $loadLabels = true): array
     {
         return $this->dcaRequestSwitcher->runWithRequest(
             $request,
-            function () use ($limit, $withTreeTrail) {
+            function () use ($limit, $withTreeTrail, $loadLabels) {
                 [$table, $id] = $this->findTableAndId();
 
-                return $this->doGetTrail($table, $id, $limit, $withTreeTrail);
+                return $this->doGetTrail($table, $id, $limit, $withTreeTrail, $loadLabels);
             },
         );
     }
@@ -97,10 +106,12 @@ class DcaUrlAnalyzer
             function () use ($table, $id, $do): array {
                 [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
+                $ptableParam = $ptable && $this->needsPtableParameter($table, $ptable);
+
                 $query = [
                     'do' => $do,
                     'table' => $table,
-                    'ptable' => $ptable === $table ? $ptable : null,
+                    'ptable' => $ptableParam ? $ptable : null,
                     'id' => $pid,
                 ];
 
@@ -122,9 +133,9 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
+     * @return list<TrailItem>
      */
-    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
+    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail, bool $loadLabels): array
     {
         $do = $this->findGet('do');
         $trail = [];
@@ -136,9 +147,13 @@ class DcaUrlAnalyzer
         }
 
         $links = [];
+        $systemAdapter = $this->framework->getAdapter(System::class);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
-            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+            if ($loadLabels) {
+                $systemAdapter->loadLanguageFile($table);
+            }
+
             (new DcaLoader($table))->load();
 
             $query = [
@@ -155,7 +170,7 @@ class DcaUrlAnalyzer
             if ($childTable) {
                 $query['table'] = $childTable;
 
-                if ($childTable === $table) {
+                if ($this->needsPtableParameter($childTable, $table)) {
                     $query['ptable'] = $table;
                 }
             } else {
@@ -198,7 +213,7 @@ class DcaUrlAnalyzer
 
             $links[] = [
                 'query' => $query,
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'label' => $loadLabels ? $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row) : '',
                 'treeTrail' => $treeTrail,
                 'treeSiblings' => $treeSiblings,
             ];
@@ -206,7 +221,7 @@ class DcaUrlAnalyzer
 
         $links[] = [
             'query' => ['do' => $do, 'table' => $table],
-            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'label' => $loadLabels ? $this->translator->trans("MOD.$do.0", [], 'contao_modules') : '',
             'treeTrail' => null,
             'treeSiblings' => null,
         ];
@@ -351,6 +366,45 @@ class DcaUrlAnalyzer
         return [$table, $id];
     }
 
+    /**
+     * Checks whether the URI needs a ptable parameter for a current dynamic parent
+     * (see #10146).
+     */
+    private function needsPtableParameter(string $childTable, string $ptable): bool
+    {
+        (new DcaLoader($childTable))->load();
+
+        if (!($GLOBALS['TL_DCA'][$childTable]['config']['dynamicPtable'] ?? null)) {
+            return false;
+        }
+
+        foreach ($this->getCurrentModuleTables() as $parentTable) {
+            (new DcaLoader($parentTable))->load();
+
+            if (\in_array($childTable, $GLOBALS['TL_DCA'][$parentTable]['config']['ctable'] ?? [], true)) {
+                return $parentTable !== $ptable;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getCurrentModuleTables(): array
+    {
+        $do = (string) $this->findGet('do');
+
+        if ('' === $do) {
+            return [];
+        }
+
+        $tables = $this->getModule($do)['tables'] ?? null;
+
+        return \is_array($tables) ? array_values($tables) : [];
+    }
+
     private function findPtable(string $table, int|null $id): string|null
     {
         (new DcaLoader($table))->load();
@@ -377,9 +431,27 @@ class DcaUrlAnalyzer
                 }
             }
 
-            // Use the ptable query parameter if it points to itself (nested elements case)
-            if ($this->findGet('ptable') === $table && \in_array($table, $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                return $table;
+            $tables = $this->getCurrentModuleTables();
+
+            // Use the parent table if it has been set in the DCA file
+            if (($ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            $ptable = (string) $this->findGet('ptable');
+
+            // Use a foreign ptable query parameter if it declares this table as a child
+            if ('' !== $ptable && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            // Find the parent table in the back end module
+            foreach ($tables as $ptable) {
+                (new DcaLoader($ptable))->load();
+
+                if (\in_array($table, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [], true)) {
+                    return $ptable;
+                }
             }
         }
 
@@ -489,6 +561,9 @@ class DcaUrlAnalyzer
         return array_keys($modules)[0] ?? null;
     }
 
+    /**
+     * @return list<array{url: string|null, label: string}>|null
+     */
     private function getRootTrail(string $table, int $id, array $query): array|null
     {
         if (!$table || !$id) {
@@ -531,6 +606,9 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    /**
+     * @return list<array{url: string|null, label: string, active: bool}>|null
+     */
     private function getTreeSiblings(string $table, int $pid, int $id, array $query): array|null
     {
         if (!$table || !$pid) {

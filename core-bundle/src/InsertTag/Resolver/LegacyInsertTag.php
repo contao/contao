@@ -257,6 +257,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
+                    } elseif (Validator::isBinaryUuid($value)) {
+                        $result = StringUtil::binToUuid($value);
                     } else {
                         $result = $value;
                     }

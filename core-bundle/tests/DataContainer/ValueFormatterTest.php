@@ -407,7 +407,7 @@ class ValueFormatterTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT `name` FROM tl_foo WHERE id=?', [42])
+            ->with('SELECT `name` FROM tl_foo WHERE id = ?', [42])
             ->willReturn('bar')
         ;
 
@@ -472,7 +472,7 @@ class ValueFormatterTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT `name` FROM tl_foo WHERE bar=?', [42])
+            ->with('SELECT `name` FROM tl_foo WHERE bar = ?', [42])
             ->willReturn('bar')
         ;
 

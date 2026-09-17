@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\Tests\Util;
 
 use Contao\CommentsBundle\Util\BbCode;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class BbCodeTest extends TestCase
+class BbCodeTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
