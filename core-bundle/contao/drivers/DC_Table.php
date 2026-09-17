@@ -5064,6 +5064,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
+		$defaultSorting = $orderBy[0];
 
 		// Add PID to order fields
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && Database::getInstance()->fieldExists('pid', $this->strTable))
@@ -5094,6 +5095,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->firstOrderBy = $overwrite;
 			$this->orderBy = $orderBy;
+
+			$this->setPanelState($session['sorting'][$this->strTable] !== $defaultSorting);
 		}
 
 		$options_sorter = array();
@@ -5291,11 +5294,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$limit = $session['filter'][$filter]['limit'] ?? null;
 			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
 
-			// Only disable reset button if it is not on the first page
-			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
-			{
-				$this->setPanelState($active);
-			}
+			// Enable the reset button when the selected range differs from the default on the first page
+			$this->setPanelState($limit !== null && $limit !== ('0,' . $resultsPerPage));
 		}
 
 		return System::getContainer()

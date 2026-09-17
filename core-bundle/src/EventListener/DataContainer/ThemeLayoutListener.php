@@ -93,6 +93,7 @@ class ThemeLayoutListener implements ResetInterface
     {
         if ($this->isLegacy($dc)) {
             $attributes['mandatory'] = false;
+            $attributes['required'] = false;
             $attributes['submitOnChange'] = false;
         } elseif ($this->isOverrideAll()) {
             if (\in_array('default', $this->getSelectedLayoutTypes(), true)) {
