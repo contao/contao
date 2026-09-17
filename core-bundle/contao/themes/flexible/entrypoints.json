@@ -2,11 +2,7 @@
   "entrypoints": {
     "backend": {
       "css": [
-<<<<<<< HEAD
-        "/system/themes/flexible/backend.3bf78d30.css"
-=======
         "/system/themes/flexible/backend.acb2d422.css"
->>>>>>> upstream/5.7
       ]
     },
     "confirm": {
