@@ -39,7 +39,10 @@ final class DataContainerRecordSchemaValidator extends ConstraintValidator
             return;
         }
 
-        $schema = $this->toSchemaObject($this->schemaFactory->create($value->table));
+        $schema = $this->schemaFactory->create($value->table);
+
+        $schema = $this->toSchemaObject($schema);
+
         $data = $this->toJsonValue($value->data, true);
         $result = $this->validator->validate($data, $schema);
 

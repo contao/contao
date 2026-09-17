@@ -49,7 +49,7 @@ final class DataContainerToolsTest extends TestCase
         $description = $this->createTools()->describeResource('tl_news');
 
         $this->assertSame('tl_news', $description['resource']);
-        $this->assertSame(['list', 'read', 'create', 'update'], $description['operations']);
+        $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
     }
 
     public function testTranslatesUnknownResourceDescriptionsToToolErrors(): void
@@ -113,6 +113,43 @@ final class DataContainerToolsTest extends TestCase
         $this->assertSame('Updated', $result->structuredContent['data']->title);
     }
 
+    public function testDispatchesMovesThroughTheApi(): void
+    {
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel
+            ->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(
+                function (Request $request, int $type): Response {
+                    $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
+                    $this->assertSame('/_api/news/42/move', $request->getPathInfo());
+                    $this->assertSame('POST', $request->getMethod());
+                    $this->assertSame('application/ld+json', $request->headers->get('Content-Type'));
+                    $this->assertSame(['target' => 8, 'position' => 'after'], json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR));
+
+                    return new Response('{"id":42,"title":"Updated"}', 200);
+                },
+            )
+        ;
+        $router = $this->createMock(UrlGeneratorInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('news_move', ['id' => 42])
+            ->willReturn('/_api/news/42/move')
+        ;
+        $stack = new RequestStack();
+        $stack->push(Request::create('https://example.org/_mcp/backend'));
+
+        $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
+        $result = $tools->moveRecord('tl_news', 42, ['target' => 8, 'position' => 'after']);
+
+        $this->assertFalse($result->isError);
+        $this->assertSame(200, $result->structuredContent['status']);
+        $this->assertSame(42, $result->structuredContent['data']->id);
+        $this->assertSame('Updated', $result->structuredContent['data']->title);
+    }
+
     public function testRequiresHttpContextBeforeDispatch(): void
     {
         $this->expectException(ToolCallException::class);
@@ -134,7 +171,7 @@ final class DataContainerToolsTest extends TestCase
             $tools[$attributes[0]->newInstance()->name] = $generator->generate($method);
         }
 
-        $this->assertCount(7, $tools);
+        $this->assertCount(8, $tools);
         $this->assertSame('object', $tools['contao_dc_create_record']['properties']['data']['type']);
         $this->assertSame('object', $tools['contao_dc_update_record']['properties']['data']['type']);
         $this->assertSame(['resource', 'id', 'data'], $tools['contao_dc_update_record']['required']);
@@ -161,6 +198,7 @@ final class DataContainerToolsTest extends TestCase
                 'news_read' => new Get(name: 'news_read'),
                 'news_post' => new Post(name: 'news_post'),
                 'news_patch' => new Patch(name: 'news_patch'),
+                'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
             ],
             extraProperties: ['contao' => ['table' => 'tl_news']],
         )];
