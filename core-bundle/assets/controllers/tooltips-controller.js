@@ -103,6 +103,13 @@ export default class TooltipsController extends Controller {
         let text;
 
         if (options.useContent) {
+            const fullyVisible = el.scrollWidth <= el.clientWidth && parseFloat(getComputedStyle(el).textIndent) >= 0;
+            el.classList.toggle('cursor-auto', fullyVisible);
+
+            if (fullyVisible) {
+                return;
+            }
+
             text = el.innerHTML;
         } else if (el instanceof HTMLImageElement) {
             text = el.getAttribute('alt');
