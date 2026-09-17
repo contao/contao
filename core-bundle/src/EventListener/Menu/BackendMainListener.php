@@ -115,7 +115,7 @@ class BackendMainListener
         $arrModules = [];
 
         foreach ($GLOBALS['BE_MOD'] as $strGroupName => $arrGroupModules) {
-            if (!empty($arrGroupModules) && ('system' === $strGroupName || $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, array_keys($arrGroupModules)))) {
+            if (!empty($arrGroupModules)) {
                 $arrModules[$strGroupName]['class'] = 'group-'.$strGroupName;
                 $arrModules[$strGroupName]['title'] = $this->translator->trans('MSC.collapseNode', [], 'contao_default');
                 $arrModules[$strGroupName]['label'] = $this->translateModule($strGroupName);
@@ -134,6 +134,11 @@ class BackendMainListener
                         $arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation '.$strModuleName;
                         $arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $strModuleName]);
                     }
+                }
+
+                // Unset the group if there are no allowed modules
+                if (empty($arrModules[$strGroupName]['modules'])) {
+                    unset($arrModules[$strGroupName]);
                 }
             }
         }
