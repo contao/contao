@@ -109,6 +109,9 @@ class BackendMainListener
     /**
      * We have to keep this logic from BackendUser::navigation() until the
      * "getUserNavigation" hook is removed.
+     *
+     * @deprecated This method only exists for backwards compatibility with the "getUserNavigation" hook.
+     *             Restructure this once we remove the hook.
      */
     private function getBackendModules(Request|null $request): array
     {
