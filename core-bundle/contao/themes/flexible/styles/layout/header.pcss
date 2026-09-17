@@ -5,17 +5,6 @@
     border-bottom: 1px solid var(--content-border);
 }
 
-#home {
-    position: absolute;
-}
-
-#home {
-    display: block;
-    height: 16px;
-    padding: 12px 12px 12px 42px;
-    background: url("icons/logo.svg") no-repeat 10px center;
-}
-
 #home .app-title {
     font-size: 17px;
     color: var(--text);
@@ -264,4 +253,61 @@
 
 #tmenu .icon-logout {
     background: var(--icon-logout) 20px center no-repeat;
+}
+
+@media (width < 600px) {
+    #header {
+        .app-title {
+            display: none;
+        }
+
+        .app-badge {
+            position: absolute;
+            inset: 0 0 auto;
+            margin: -18px 0 0;
+            border-radius: 0;
+            padding: 3px 5px;
+            background-color: var(--text);
+            color: var(--white);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        &:has(.app-badge) {
+            padding-top: 18px;
+
+            + #container #left {
+                top: 58px;
+            }
+        }
+    }
+
+    html[data-color-scheme="dark"] {
+        #header .app-badge {
+            background-color: var(--invert-text);
+            color: var(--black);
+        }
+    }
+
+    #home {
+        position: absolute;
+        display: block;
+        height: 16px;
+        padding: 12px;
+        min-width: 22px;
+        background: url("icons/logo.svg") no-repeat 10px center;
+    }
+}
+
+@media (width >= 600px) {
+    #app-logo {
+        position: absolute;
+        display: grid;
+        align-content: center;
+        height: 16px;
+        padding: 12px 12px 12px 42px;
+        background: url("icons/logo.svg") no-repeat 10px center;
+    }
 }
