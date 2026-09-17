@@ -92,6 +92,7 @@ export default class extends Controller {
 
         // Include response time and delayed timers so completed jobs are not missed
         const range = Math.max(this.#pollInterval, startedAt - this.#lastPollStartedAt);
+
         const result = await this.#turboStreamConnection.get(
             this.pendingJobsUrlValue,
             { range },
