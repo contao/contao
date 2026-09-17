@@ -28,7 +28,7 @@ export default class extends Controller {
         this.#etag = null;
         this.#lastPollStartedAt = Date.now();
 
-        if (this.enabledValue || this.hasListTarget) {
+        if (this.enabledValue) {
             this.enable();
         }
     }
@@ -108,6 +108,14 @@ export default class extends Controller {
         }
 
         this.#etag = result.response?.headers.get('etag') || this.#etag;
+
+        // Stop watching unchanged results when there are no jobs left to display
+        if (304 === result.response?.status && (!this.hasListTarget || '0' === this.listTarget.dataset.jobs)) {
+            clearTimeout(this.#timer);
+            this.#timer = null;
+
+            return;
+        }
 
         // If no Turbo stream update happened (e.g. 204 no changes), schedule
         // the next poll here.
