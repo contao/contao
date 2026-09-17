@@ -50,8 +50,27 @@ services:
     Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer:
         tags:
             - { name: serializer.normalizer }
-    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider: ~
-    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor: ~
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
+        arguments:
+            $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
+    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
+        arguments:
+            $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
+
+    Contao\ApiBundle\DataContainer\DataContainerRecords:
+        arguments:
+            $mapper: '@Contao\ApiBundle\DataContainer\DataContainerRecordMapper'
+            $connection: '@database_connection'
+            $framework: '@contao.framework'
+            $requestStack: '@request_stack'
+            $requestSwitcher: '@contao.data_container.dca_request_switcher'
+            $urlAnalyzer: '@contao.data_container.dca_url_analyzer'
+            $urlGenerator: '@router'
+
+    Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
+        arguments:
+            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
+            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
 
     Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator:
         arguments:
