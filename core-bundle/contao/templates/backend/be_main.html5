@@ -83,12 +83,14 @@ $this->asideAttributes = $this
     <?php if (!$this->renderMainOnly): ?>
       <header id="header">
         <div class="inner">
-          <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
-            <span class="app-title">Contao</span>
+          <div id="app-logo">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
+              <span class="app-title">Contao</span>
+            </a>
             <?php if ($this->badgeTitle): ?>
-              <span class="badge-title"><?= $this->badgeTitle ?></span>
+              <span class="app-badge"><?= $this->badgeTitle ?></span>
             <?php endif; ?>
-          </a>
+          </div>
           <?= $this->headerMenu ?>
         </div>
       </header>
