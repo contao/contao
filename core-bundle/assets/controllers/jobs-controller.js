@@ -9,6 +9,7 @@ export default class extends Controller {
     #timer = null;
     #etag = null;
     #connected = false;
+    #lastPollStartedAt = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -25,8 +26,9 @@ export default class extends Controller {
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
         this.#etag = null;
+        this.#lastPollStartedAt = Date.now();
 
-        if (this.enabledValue || this.hasListTarget) {
+        if (this.enabledValue) {
             this.enable();
         }
     }
@@ -86,9 +88,14 @@ export default class extends Controller {
             return;
         }
 
+        const startedAt = Date.now();
+
+        // Include response time and delayed timers so completed jobs are not missed
+        const range = Math.max(this.#pollInterval, startedAt - this.#lastPollStartedAt);
+
         const result = await this.#turboStreamConnection.get(
             this.pendingJobsUrlValue,
-            { range: this.#pollInterval },
+            { range },
             true,
             this.#etag ? { 'If-None-Match': this.#etag } : {},
         );
@@ -97,7 +104,19 @@ export default class extends Controller {
             return;
         }
 
+        if (result.ok) {
+            this.#lastPollStartedAt = startedAt;
+        }
+
         this.#etag = result.response?.headers.get('etag') || this.#etag;
+
+        // Stop watching unchanged results when there are no jobs left to display
+        if (304 === result.response?.status && (!this.hasListTarget || '0' === this.listTarget.dataset.jobs)) {
+            clearTimeout(this.#timer);
+            this.#timer = null;
+
+            return;
+        }
 
         // If no Turbo stream update happened (e.g. 204 no changes), schedule
         // the next poll here.
