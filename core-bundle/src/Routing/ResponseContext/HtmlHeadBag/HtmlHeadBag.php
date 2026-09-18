@@ -54,6 +54,16 @@ final class HtmlHeadBag
      */
     private array $tags = [];
 
+    /**
+     * @var array<array-key, string>
+     */
+    private array $rawHeadTags = [];
+
+    /**
+     * @var array<array-key, string>
+     */
+    private array $rawStylesheetTags = [];
+
     private bool $canonicalEnabled = false;
 
     public function getName(): string
@@ -233,7 +243,27 @@ final class HtmlHeadBag
     }
 
     /**
-     * @return array<array-key, HtmlTag>
+     * @internal
+     */
+    public function addRawToHead(string $markup, string|null $identifier = null): self
+    {
+        $this->addRawContent($this->rawHeadTags, $markup, $identifier);
+
+        return $this;
+    }
+
+    /**
+     * @internal
+     */
+    public function addRawToStylesheets(string $markup, string|null $identifier = null): self
+    {
+        $this->addRawContent($this->rawStylesheetTags, $markup, $identifier);
+
+        return $this;
+    }
+
+    /**
+     * @return array<array-key, HtmlTag|string>
      */
     public function all(Request|null $request = null): array
     {
@@ -257,6 +287,26 @@ final class HtmlHeadBag
 
         array_push($tags, ...$this->tags);
 
+        foreach ($this->rawStylesheetTags as $identifier => $markup) {
+            $tags["contao.twig.stylesheets.$identifier"] = $markup;
+        }
+
+        foreach ($this->rawHeadTags as $identifier => $markup) {
+            $tags["contao.twig.head.$identifier"] = $markup;
+        }
+
         return $tags;
+    }
+
+    /**
+     * @param array<array-key, string> $content
+     */
+    private function addRawContent(array &$content, string $markup, string|null $identifier): void
+    {
+        if (null === $identifier) {
+            $content[] = $markup;
+        } else {
+            $content[$identifier] = $markup;
+        }
     }
 }

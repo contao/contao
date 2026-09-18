@@ -130,4 +130,21 @@ class HtmlHeadBagTest extends TestCase
         $this->assertSame('https://example.com/page', $tags[HtmlHeadBag::TAG_CANONICAL]->getAttributes()['href']);
         $this->assertSame('/app.js', $tags[0]->getAttributes()['src']);
     }
+
+    public function testCollectsRawTwigContentByLocation(): void
+    {
+        $manager = new HtmlHeadBag();
+        $manager
+            ->addRawToHead('<meta data-head>')
+            ->addRawToHead('<script>first()</script>', 'app')
+            ->addRawToHead('<script>replacement()</script>', 'app')
+            ->addRawToStylesheets('<link rel="stylesheet" href="theme.css">', 'theme')
+        ;
+
+        $tags = $manager->all();
+
+        $this->assertSame('<link rel="stylesheet" href="theme.css">', $tags['contao.twig.stylesheets.theme']);
+        $this->assertSame('<meta data-head>', $tags['contao.twig.head.0']);
+        $this->assertSame('<script>replacement()</script>', $tags['contao.twig.head.app']);
+    }
 }

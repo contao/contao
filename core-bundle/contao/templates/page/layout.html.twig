@@ -30,6 +30,7 @@
         {% endblock %}
 
         {% block end_of_head %}
+            {# @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. #}
             {% for element in response_context.end_of_head|default %}
                 {{ element|raw }}
             {% endfor %}
@@ -69,6 +70,7 @@
                 {{ include('@Contao/component/_html_tag.html.twig', {tag: element}, false) }}
             {% endfor %}
 
+            {# @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. #}
             {% for element in response_context.end_of_body|default %}
                 {{ element|raw }}
             {% endfor %}

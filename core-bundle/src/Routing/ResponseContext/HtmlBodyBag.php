@@ -18,22 +18,26 @@ namespace Contao\CoreBundle\Routing\ResponseContext;
 final class HtmlBodyBag implements \IteratorAggregate
 {
     /**
-     * @var list<HtmlTag|string>
+     * @var array<array-key, HtmlTag|string>
      */
     private array $content = [];
 
     /**
      * Adds trusted markup to the end of the HTML body.
      */
-    public function add(HtmlTag|string $content): self
+    public function add(HtmlTag|string $content, string|null $identifier = null): self
     {
-        $this->content[] = $content;
+        if (null === $identifier) {
+            $this->content[] = $content;
+        } else {
+            $this->content[$identifier] = $content;
+        }
 
         return $this;
     }
 
     /**
-     * @return list<HtmlTag|string>
+     * @return array<array-key, HtmlTag|string>
      */
     public function all(): array
     {

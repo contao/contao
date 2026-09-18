@@ -24,10 +24,13 @@ class HtmlBodyBagTest extends TestCase
         $bag
             ->add(HtmlTag::script('/app.js'))
             ->add('<script>legacy()</script>')
+            ->add('<script>first()</script>', 'named')
+            ->add('<script>replacement()</script>', 'named')
         ;
 
         $this->assertSame($bag->all(), iterator_to_array($bag));
         $this->assertSame('/app.js', $bag->all()[0]->getAttributes()['src']);
         $this->assertSame('<script>legacy()</script>', $bag->all()[1]);
+        $this->assertSame('<script>replacement()</script>', $bag->all()['named']);
     }
 }

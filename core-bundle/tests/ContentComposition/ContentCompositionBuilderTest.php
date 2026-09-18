@@ -292,6 +292,44 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame('Reader title - Root title', $head->all()[HtmlHeadBag::TAG_TITLE]->getContent());
     }
 
+    public function testSupportsAndDeprecatesLegacyDocumentContentGlobals(): void
+    {
+        $responseContext = new ResponseContext()
+            ->add(new HtmlBodyBag())
+            ->add(new HtmlHeadBag())
+        ;
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $parameters = $this
+            ->getContentCompositionBuilder(responseContextAccessor: $responseContextAccessor)
+            ->buildLayoutTemplate()
+            ->getData()
+        ;
+
+        $GLOBALS['TL_HEAD'][] = '<meta data-legacy>';
+        $GLOBALS['TL_BODY'][] = '<script data-legacy></script>';
+        $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="legacy.css">';
+        $GLOBALS['TL_CSS'][] = 'legacy.css|123';
+        $GLOBALS['TL_JAVASCRIPT'][] = 'legacy.js|123|async|defer';
+
+        $this->expectUserDeprecationMessageMatches('/Using legacy document content globals is deprecated/');
+
+        $this->assertSame(
+            [
+                '<link rel="stylesheet" href="https://static-url/legacy.css?v=202cb962">',
+                '<script src="https://static-url/legacy.js?v=202cb962" async defer></script>',
+                '<link rel="stylesheet" href="legacy.css">',
+                '<meta data-legacy>',
+            ],
+            $parameters['response_context']->end_of_head,
+        );
+        $this->assertSame(['<script data-legacy></script>'], $parameters['response_context']->end_of_body);
+    }
+
     public function testAddsCompositedContentToTemplate(): void
     {
         $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [

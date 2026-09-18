@@ -51,6 +51,8 @@ class ContentCompositionBuilder
 
     private string|null $defaultImageDensities = null;
 
+    private bool $legacyDocumentContentDeprecationTriggered = false;
+
     /**
      * Renderer used for the main layout template.
      */
@@ -315,35 +317,10 @@ class ContentCompositionBuilder
         $responseContextData = [
             'head' => fn () => $this->finalizePageTitle($htmlHeadBag),
             'body' => $responseContext->get(HtmlBodyBag::class),
-            'end_of_head' => fn () => [
-                ...array_map(
-                    function (string $url): string {
-                        $options = StringUtil::resolveFlaggedUrl($url);
-
-                        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
-                            $url = Path::join($staticUrl, $url);
-                        }
-
-                        return Template::generateStyleTag($url, $options->media, $options->mtime);
-                    },
-                    array_unique($GLOBALS['TL_CSS'] ?? []),
-                ),
-                ...array_map(
-                    function (string $url): string {
-                        $options = StringUtil::resolveFlaggedUrl($url);
-
-                        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
-                            $url = Path::join($staticUrl, $url);
-                        }
-
-                        return Template::generateScriptTag($url, $options->async, $options->mtime, defer: $options->defer);
-                    },
-                    array_unique($GLOBALS['TL_JAVASCRIPT'] ?? []),
-                ),
-                ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
-                ...$GLOBALS['TL_HEAD'] ?? [],
-            ],
-            'end_of_body' => static fn () => $GLOBALS['TL_BODY'] ?? [],
+            // @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+            'end_of_head' => $this->getLegacyHeadElements(...),
+            // @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+            'end_of_body' => $this->getLegacyBodyElements(...),
             'json_ld_scripts' => static fn () => $responseContext->isInitialized(JsonLdManager::class)
                 ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
                 : null,
@@ -404,6 +381,77 @@ class ContentCompositionBuilder
         }
 
         return $htmlHeadBag->setTitle($title.$rootPageTitle);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getLegacyHeadElements(): array
+    {
+        $elements = [
+            ...array_map($this->generateGlobalStyleTag(...), array_unique($GLOBALS['TL_CSS'] ?? [])),
+            ...array_map($this->generateGlobalScriptTag(...), array_unique($GLOBALS['TL_JAVASCRIPT'] ?? [])),
+            ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
+            ...$GLOBALS['TL_HEAD'] ?? [],
+        ];
+
+        if ($elements) {
+            $this->triggerLegacyDocumentContentDeprecation();
+        }
+
+        return $elements;
+    }
+
+    /**
+     * @return array<array-key, string>
+     */
+    private function getLegacyBodyElements(): array
+    {
+        $elements = $GLOBALS['TL_BODY'] ?? [];
+
+        if ($elements) {
+            $this->triggerLegacyDocumentContentDeprecation();
+        }
+
+        return $elements;
+    }
+
+    private function triggerLegacyDocumentContentDeprecation(): void
+    {
+        if ($this->legacyDocumentContentDeprecationTriggered) {
+            return;
+        }
+
+        $this->legacyDocumentContentDeprecationTriggered = true;
+
+        trigger_deprecation(
+            'contao/core-bundle',
+            '6.1',
+            'Using legacy document content globals is deprecated and will no longer work in Contao 7. Use HtmlHeadBag, HtmlBodyBag or the Twig "add" tag instead.',
+        );
+    }
+
+    private function generateGlobalStyleTag(string $url): string
+    {
+        $options = StringUtil::resolveFlaggedUrl($url);
+
+        return Template::generateStyleTag($this->prefixStaticUrl($url), $options->media, $options->mtime);
+    }
+
+    private function generateGlobalScriptTag(string $url): string
+    {
+        $options = StringUtil::resolveFlaggedUrl($url);
+
+        return Template::generateScriptTag($this->prefixStaticUrl($url), $options->async, $options->mtime, defer: $options->defer);
+    }
+
+    private function prefixStaticUrl(string $url): string
+    {
+        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
+            return Path::join($staticUrl, $url);
+        }
+
+        return $url;
     }
 
     private function addCompositedContentToTemplate(LayoutTemplate $template, array $elementReferencesBySlot): void
