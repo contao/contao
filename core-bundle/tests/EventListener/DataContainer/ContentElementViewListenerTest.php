@@ -186,7 +186,7 @@ class ContentElementViewListenerTest extends TestCase
             'Copyright <span class="tl_gray">[alias <a href="/contao?do=article&table=tl_content&act=edit&id=42" onclick="Backend.openModalIframe({ title: \'alias ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a> (text)]</span>',
             'published',
             '',
-            ['text', 'Copyright']
+            ['text', 'Copyright'],
         ];
 
         yield [
