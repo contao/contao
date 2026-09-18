@@ -174,7 +174,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install the Node packages
-              run: npm install
+              run: npm ci
 
             - name: Run Biome
               run: npx biome ci core-bundle/assets

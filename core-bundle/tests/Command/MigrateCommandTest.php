@@ -302,7 +302,7 @@ class MigrateCommandTest extends TestCase
         $connection
             ->method('fetchOne')
             ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
+                static fn (string $query): false|string => match ($query) {
                     'SELECT @@sql_mode' => 'TRADITIONAL',
                     'SELECT @@version' => '8.0.0',
                     default => false,
@@ -813,7 +813,7 @@ class MigrateCommandTest extends TestCase
         $connection
             ->method('fetchOne')
             ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
+                static fn (string $query): false|string => match ($query) {
                     'SELECT @@sql_mode' => $sqlMode,
                     'SELECT @@version' => '8.0.0',
                     default => false,

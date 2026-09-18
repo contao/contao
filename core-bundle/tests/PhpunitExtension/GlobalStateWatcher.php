@@ -223,6 +223,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
                 'Symfony\Polyfill\DeepClone\DeepClone',
+                'VStelmakh\UrlHighlight\Matcher\Domains\TopLevelDomains',
                 'Webmozart\PathUtil\\',
             ] as $ignorePrefix) {
                 if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {

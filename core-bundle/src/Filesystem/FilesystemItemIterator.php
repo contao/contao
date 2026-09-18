@@ -101,7 +101,7 @@ class FilesystemItemIterator implements \IteratorAggregate, \Countable
                 SortMode::pathNaturalDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath()),
                 SortMode::lastModifiedAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified(),
                 SortMode::lastModifiedDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified(),
-                SortMode::mediaTypePriority => static fn (FilesystemItem $a, FilesystemItem $b): int => self::sortByMediaTypePriority($a, $b),
+                SortMode::mediaTypePriority => self::sortByMediaTypePriority(...),
             },
         );
 

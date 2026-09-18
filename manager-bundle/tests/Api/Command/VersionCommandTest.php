@@ -24,7 +24,7 @@ class VersionCommandTest extends TestCase
 {
     private Application&MockObject $application;
 
-    private PluginLoader&MockObject $pluginLoader;
+    private MockObject&PluginLoader $pluginLoader;
 
     private VersionCommand $command;
 

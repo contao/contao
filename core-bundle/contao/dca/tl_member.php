@@ -249,7 +249,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_member', 'setNewPassword')
@@ -279,13 +279,13 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'dateAdded' => array
 		(

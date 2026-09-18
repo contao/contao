@@ -803,7 +803,7 @@ class SitemapControllerTest extends TestCase
 ';
     }
 
-    private function mockPageFinder(Request $request): PageFinder&MockObject
+    private function mockPageFinder(Request $request): MockObject&PageFinder
     {
         $rootPage1 = $this->createClassWithPropertiesStub(PageModel::class);
         $rootPage1->id = 42;
@@ -919,7 +919,7 @@ class SitemapControllerTest extends TestCase
         return $container;
     }
 
-    private function mockPage(array $data): PageModel&MockObject
+    private function mockPage(array $data): MockObject&PageModel
     {
         $page = $this->createClassWithPropertiesMock(PageModel::class, $data);
         $page

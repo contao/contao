@@ -101,7 +101,7 @@ class UserRootListener implements ResetInterface
             $root = [0];
         }
 
-        // The new element is enabled already
+        // The new element is already enabled
         if (\in_array($insertId, $root, false)) {
             return;
         }

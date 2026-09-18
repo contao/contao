@@ -255,7 +255,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env;
         }
 
-        $kernel = static::create($projectDir, $env);
+        $kernel = self::create($projectDir, $env);
 
         if ($parseJwt) {
             $kernel->setJwtManager($jwtManager);
@@ -275,7 +275,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         self::loadEnv($projectDir, $env ?: 'prod');
 
-        return static::create($projectDir, $env);
+        return self::create($projectDir, $env);
     }
 
     protected function getContainerBuilder(): PluginContainerBuilder
@@ -349,7 +349,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Debug::enable();
         }
 
-        return new static($env, 'dev' === $env);
+        return new self($env, 'dev' === $env);
     }
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void

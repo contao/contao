@@ -39,7 +39,7 @@ class WarnXdebugPhpunitExtension implements Extension
 
     public function executeBeforeFirstTest(): void
     {
-        if (\is_callable('xdebug_info') && [] !== xdebug_info('mode') && ['off'] !== xdebug_info('mode')) {
+        if (\extension_loaded('xdebug') && [] !== xdebug_info('mode') && ['off'] !== xdebug_info('mode')) {
             fwrite(STDERR, "XDebug is enabled, consider disabling it to speed up the unit tests.\n\n");
         }
     }

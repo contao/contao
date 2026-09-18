@@ -105,6 +105,10 @@ Missing values in models now return their default value instead of `null`.
 
 Frontend form widgets no longer implement the `Widget::generate()` method. Use `Widget::parse()` instead.
 
+### TrblWidget
+
+The TRBL widget has been removed. Use the `text` widget with `'size' => 4'` or the row wizard instead.
+
 ### Backend themes
 
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
