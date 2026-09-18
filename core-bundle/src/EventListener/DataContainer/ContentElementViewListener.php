@@ -210,7 +210,7 @@ class ContentElementViewListener
         ]);
 
         $label .= \sprintf(
-            ' <a href="%s"  onclick="Backend.openModalIframe({ title: \'%s ID %s\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID %s</a>',
+            ' <a href="%s" onclick="Backend.openModalIframe({ title: \'%s ID %s\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID %s</a>',
             $href,
             StringUtil::specialchars($label),
             $row['articleAlias'],

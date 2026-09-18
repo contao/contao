@@ -74,7 +74,7 @@ class ContentElementViewListenerTest extends TestCase
     }
 
     #[DataProvider('gridViewProvider')]
-    public function testGridView(array $row, string $expectedLabel, string $expectedClass, string $expectedPreview = ''): void
+    public function testGridView(array $row, string $expectedLabel, string $expectedClass, string $expectedPreview = '', string|array|false $queryResult = false): void
     {
         $contentModel = $this->createMock(ContentModel::class);
         $contentModel
@@ -109,6 +109,32 @@ class ContentElementViewListenerTest extends TestCase
             [ContentModel::class => $contentModel],
         );
 
+        $connection = $this->createStub(Connection::class);
+
+        if (\is_array($queryResult)) {
+            $connection
+                ->method('fetchNumeric')
+                ->willReturn($queryResult)
+            ;
+        } elseif (\is_string($queryResult)) {
+            $connection
+                ->method('fetchOne')
+                ->willReturn($queryResult)
+            ;
+        }
+
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturnArgument(0)
+        ;
+
+        $dcaUrlAnalyzer = $this->createStub(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->method('getEditUrl')
+            ->willReturn('/contao?do=article&table=tl_content&act=edit&id='.$row['cteAlias'])
+        ;
+
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
@@ -123,9 +149,9 @@ class ContentElementViewListenerTest extends TestCase
 
         $listener = new ContentElementViewListener(
             $framework,
-            $this->createStub(Connection::class),
-            $this->createStub(UrlGeneratorInterface::class),
-            $this->createStub(DcaUrlAnalyzer::class),
+            $connection,
+            $urlGenerator,
+            $dcaUrlAnalyzer,
             $translator,
         );
         $label = $listener->generateLabel($row, '', $dc);
@@ -151,8 +177,44 @@ class ContentElementViewListenerTest extends TestCase
 
         yield [
             ['type' => 'alias', 'cteAlias' => 42],
-            'alias <a href="" onclick="Backend.openModalIframe({ title: \'alias ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>',
+            'alias <a href="/contao?do=article&table=tl_content&act=edit&id=42" onclick="Backend.openModalIframe({ title: \'alias ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>',
             'published',
+        ];
+
+        yield [
+            ['type' => 'alias', 'cteAlias' => 42],
+            'Copyright <span class="tl_gray">[alias <a href="/contao?do=article&table=tl_content&act=edit&id=42" onclick="Backend.openModalIframe({ title: \'alias ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a> (text)]</span>',
+            'published',
+            '',
+            ['text', 'Copyright']
+        ];
+
+        yield [
+            ['type' => 'article', 'articleAlias' => 42],
+            'article <a href="contao_backend" onclick="Backend.openModalIframe({ title: \'article ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>',
+            'published',
+        ];
+
+        yield [
+            ['type' => 'article', 'articleAlias' => 42],
+            'Home <span class="tl_gray">[article <a href="contao_backend" onclick="Backend.openModalIframe({ title: \'article ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>]</span>',
+            'published',
+            '',
+            'Home',
+        ];
+
+        yield [
+            ['type' => 'module', 'module' => 42],
+            'module <a href="contao_backend" onclick="Backend.openModalIframe({ title: \'module ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>',
+            'published',
+        ];
+
+        yield [
+            ['type' => 'module', 'module' => 42],
+            'Main navigation <span class="tl_gray">[module <a href="contao_backend" onclick="Backend.openModalIframe({ title: \'module ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a> (navigation)]</span>',
+            'published',
+            '',
+            ['navigation', 'Main navigation'],
         ];
 
         yield [
