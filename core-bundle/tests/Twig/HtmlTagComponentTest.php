@@ -52,6 +52,36 @@ class HtmlTagComponentTest extends TestCase
         $this->assertFalse(isset($script->getAttributes()['nonce']));
     }
 
+    public function testEscapesContentUnlessExplicitlyMarkedAsRaw(): void
+    {
+        $tag = HtmlTag::create('div', '<b>A & B</b>');
+
+        $this->assertSame(
+            '<div>&lt;b&gt;A &amp; B&lt;/b&gt;</div><div><b>A & B</b></div>',
+            $this->createEnvironment()->render('test.html.twig', [
+                'tag' => $tag,
+                'raw_tag' => $tag->withRawContent('<b>A & B</b>'),
+            ]),
+        );
+    }
+
+    public function testRendersVoidElementsWithoutContentOrClosingTags(): void
+    {
+        $environment = $this->createEnvironment();
+
+        foreach (['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'] as $name) {
+            $tag = HtmlTag::create(strtoupper($name), 'Ignored');
+
+            $this->assertTrue($tag->isVoid());
+            $this->assertSame('<'.$name.'>', $environment->render('test.html.twig', ['tag' => $tag, 'raw_tag' => '']));
+        }
+
+        $tag = HtmlTag::create('div');
+
+        $this->assertFalse($tag->isVoid());
+        $this->assertSame('<div></div>', $environment->render('test.html.twig', ['tag' => $tag, 'raw_tag' => '']));
+    }
+
     private function createEnvironment(string|null $nonce = null): Environment
     {
         $filesystemLoader = new FilesystemLoader();

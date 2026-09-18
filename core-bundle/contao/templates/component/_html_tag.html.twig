@@ -8,18 +8,9 @@
         {%- do attributes.setIfExists('nonce', csp_nonce('style-src')) -%}
     {%- endif -%}
 
-    {%- set void_elements = [
-        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'source', 'track', 'wbr',
-    ] -%}
-
     <{{ tag.name }}{{ attributes }}>
-    {%- if tag.name not in void_elements -%}
-        {%- if tag.escapesContent() -%}
-            {{- tag.content -}}
-        {%- else -%}
-            {{- tag.content|raw -}}
-        {%- endif -%}
+    {%- if not tag.isVoid() -%}
+        {{- tag.escapesContent() ? tag.content|e : tag.content|raw -}}
         </{{ tag.name }}>
     {%- endif -%}
 {%- else -%}

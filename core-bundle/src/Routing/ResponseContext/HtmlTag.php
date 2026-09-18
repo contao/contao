@@ -16,6 +16,16 @@ use Contao\CoreBundle\String\HtmlAttributes;
 
 final class HtmlTag
 {
+    /**
+     * Current HTML void elements, excluding the obsolete param element listed by MDN.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+     */
+    private const array VOID_ELEMENTS = [
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+        'link', 'meta', 'source', 'track', 'wbr',
+    ];
+
     private HtmlAttributes $attributes;
 
     private function __construct(
@@ -169,6 +179,11 @@ final class HtmlTag
     public function escapesContent(): bool
     {
         return $this->escapeContent;
+    }
+
+    public function isVoid(): bool
+    {
+        return \in_array($this->name, self::VOID_ELEMENTS, true);
     }
 
     public function isInlineScript(): bool
