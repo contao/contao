@@ -269,7 +269,7 @@ class ContaoExtensionTest extends TestCase
             ]),
             null,
             new Node(),
-            class_exists(MacrosNode::class) ? new MacrosNode() : new Node(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new Node(),
             new Node(),
             null,
             new Source('<code>', 'foo.html.twig'),

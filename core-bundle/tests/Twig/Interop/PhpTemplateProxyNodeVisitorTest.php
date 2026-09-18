@@ -50,7 +50,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
             new BodyNode(),
             null,
             new Node(),
-            class_exists(MacrosNode::class) ? new MacrosNode() : new Node(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new Node(),
             new Node(),
             null,
             new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5'),
