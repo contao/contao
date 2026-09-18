@@ -18,6 +18,7 @@ use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
+use Contao\CoreBundle\Search\Backend\Security\DocumentAllowedGroupsResolver;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -35,6 +36,7 @@ class SealReindexProvider implements ReindexProviderInterface
     public function __construct(
         private readonly iterable $providers,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DocumentAllowedGroupsResolver $documentAllowedGroupsResolver,
     ) {
     }
 
@@ -62,6 +64,11 @@ class SealReindexProvider implements ReindexProviderInterface
                 if (!$document = $event->getDocument()) {
                     continue;
                 }
+
+                $document = $document->withMetadata([
+                    ...$document->getMetadata(),
+                    'allowedGroups' => $this->documentAllowedGroupsResolver->resolveAllowedGroups($provider, $document),
+                ]);
 
                 yield SealUtil::convertProviderDocumentForSearchIndex($document);
             }
