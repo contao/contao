@@ -5,6 +5,6 @@
     {% if searchEnabled %}
         {{ include('@Contao/backend/search/_container.html.twig') }}
     {% endif %}
-    {{ knp_menu_render('be_header_menu', {allow_safe_labels: true}) }}
+    {{ knp_menu_render('be_header_menu', {allow_safe_labels: true, template: '@Contao/backend/menu/_header.html.twig'}) }}
     <span id="skipHeaderNav" class="invisible"></span>
 </nav>

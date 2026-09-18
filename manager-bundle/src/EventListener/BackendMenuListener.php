@@ -14,13 +14,13 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -32,7 +32,6 @@ class BackendMenuListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly bool $debug,
         private readonly string|null $managerPath,
         private readonly JwtManager|null $jwtManager,
@@ -72,24 +71,17 @@ class BackendMenuListener
         $params = [
             'do' => 'debug',
             'key' => $this->debug ? 'disable' : 'enable',
-            'referer' => base64_encode($request->server->get('QUERY_STRING', '')),
+            'referer' => base64_encode((string) $request->server->get('QUERY_STRING', '')),
             'rt' => $this->tokenManager->getDefaultTokenValue(),
         ];
-
-        $class = 'icon-debug';
-
-        if ($this->debug) {
-            $class .= ' hover';
-        }
 
         $debug = $event->getFactory()
             ->createItem('debug')
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
-            ->setLinkAttribute('class', $class)
-            ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
             ->setLinkAttribute('data-turbo-prefetch', 'false')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'debug.svg')
+            ->setExtra(BackendMenuBuilder::EXTRA_IS_HIGHLIGHTED, $this->debug)
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
@@ -118,9 +110,8 @@ class BackendMenuListener
             ->createItem('contao_manager')
             ->setLabel('Contao Manager')
             ->setUri($request->getUriForPath('/'.$this->managerPath))
-            ->setLinkAttribute('class', 'navigation contao_manager')
-            ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
-            ->setExtra('translation_domain', false)
+            ->setExtra('title', 'contao_manager_title')
+            ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
         $categoryNode->addChild($item);
