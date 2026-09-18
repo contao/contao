@@ -35,17 +35,22 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testRegistersExactlySevenToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        $bundle = new McpBundle();
         $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+
+        $bundle = new McpBundle();
         $bundle->getContainerExtension()->load([$config], $container);
         $bundle->build($container);
+
         $container->getDefinition('mcp.server.contao_backend.builder')->setPublic(true);
         $container->compile();
+
         $this->assertSame('/_mcp/backend', $container->getParameter('contao_mcp.backend_path'));
         $this->assertInstanceOf(McpController::class, $container->get('mcp.server.contao_backend.controller'));
+
         $builder = $container->get('mcp.server.contao_backend.builder');
         $this->assertInstanceOf(Builder::class, $builder);
         $builder->build();
+
         $tools = [];
 
         foreach ($container->getDefinition('mcp.server.contao_backend.builder')->getMethodCalls() as [$method, $arguments]) {
@@ -71,16 +76,20 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testKeepsBackendToolsOutOfASecondServer(): void
     {
         $container = $this->getContainerBuilder();
-        $bundle = new McpBundle();
         $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+
         $config['servers']['frontend_example'] = [
             'name' => 'Frontend example',
             'registry' => ['tools' => ['frontend_example']],
         ];
+
+        $bundle = new McpBundle();
         $bundle->getContainerExtension()->load([$config], $container);
         $bundle->build($container);
+
         $container->getDefinition('mcp.server.frontend_example.builder')->setPublic(true);
         $container->compile();
+
         $tools = [];
 
         foreach ($container->getDefinition('mcp.server.frontend_example.builder')->getMethodCalls() as [$method, $arguments]) {
@@ -106,6 +115,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $publicRule = ['access_control' => [['path' => '^/', 'roles' => ['PUBLIC_ACCESS']]]];
         $container->loadFromExtension('security', $publicRule);
+
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
         $extension->prepend($container);
@@ -147,10 +157,10 @@ final class ContaoMcpExtensionTest extends TestCase
                 return 'Frontend example';
             }
         };
+
         // Older DI versions cannot autoconfigure anonymous classes because their names
         // contain a null byte
         $container->register('frontend_example', $otherTool::class)->addTag('mcp.tool', ['method' => '__invoke']);
-
         $container->register('event_dispatcher', EventDispatcher::class);
         $container->register('logger', NullLogger::class);
 

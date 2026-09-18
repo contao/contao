@@ -37,16 +37,19 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     public function testValidatesAPartialUpdateAgainstTheExistingRecord(): void
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'abc', 'published' => false], 17);
+
         $record = new DataContainerRecordNormalizer()->denormalize(
             ['published' => true],
             DataContainerRecord::class,
             context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
         );
+
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
             ->expects($this->never())
             ->method('buildViolation')
         ;
+
         $validator = $this->createValidator();
         $validator->initialize($context);
         $validator->validate($record, new DataContainerRecordSchema());
@@ -101,16 +104,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     {
         $validator = $this->createValidator();
 
-        $context = $this->createMock(ExecutionContextInterface::class);
         $builder = $this->createMock(ConstraintViolationBuilderInterface::class);
-
-        $context
-            ->expects($this->once())
-            ->method('buildViolation')
-            ->with($expectedMessage)
-            ->willReturn($builder)
-        ;
-
         $builder
             ->expects($this->once())
             ->method('atPath')
@@ -121,6 +115,14 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
         $builder
             ->expects($this->once())
             ->method('addViolation')
+        ;
+
+        $context = $this->createMock(ExecutionContextInterface::class);
+        $context
+            ->expects($this->once())
+            ->method('buildViolation')
+            ->with($expectedMessage)
+            ->willReturn($builder)
         ;
 
         $validator->initialize($context);

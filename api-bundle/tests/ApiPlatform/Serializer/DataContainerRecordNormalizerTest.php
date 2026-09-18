@@ -26,6 +26,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example', 'published' => false, 'tags' => ['old', 'other']], 17);
         $normalizer = new DataContainerRecordNormalizer();
+
         $result = $normalizer->denormalize(
             ['published' => true, 'tags' => ['new']],
             DataContainerRecord::class,
@@ -41,6 +42,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example'], 17);
         $normalizer = new DataContainerRecordNormalizer();
+
         $result = $normalizer->denormalize(
             ['title' => null],
             DataContainerRecord::class,
@@ -64,6 +66,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testAcceptsTheExistingIdentifierAsAString(): void
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example'], 17);
+
         $result = new DataContainerRecordNormalizer()->denormalize(
             ['id' => '17'],
             DataContainerRecord::class,
@@ -102,6 +105,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testDenormalizesTheRecordDataUsingTheOperationTable(): void
     {
         $normalizer = new DataContainerRecordNormalizer();
+
         $operation = new Get()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',

@@ -35,6 +35,7 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->expects($this->never())
             ->method('initialize')
         ;
+
         $registry = $this->createRegistry($framework);
 
         $this->assertSame(['resources' => [['resource' => 'tl_news', 'title' => 'News']]], $registry->discover('NEWS'));
@@ -49,6 +50,7 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->expects($this->once())
             ->method('initialize')
         ;
+
         $description = $this->createRegistry($framework)->describe('tl_news');
 
         $this->assertSame('tl_news', $description['resource']);

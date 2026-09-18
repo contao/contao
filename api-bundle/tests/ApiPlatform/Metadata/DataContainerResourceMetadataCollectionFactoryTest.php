@@ -137,12 +137,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                 },
             )
         ;
+
         $factory = new DataContainerResourceMetadataCollectionFactory(
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createContaoFrameworkStub([Controller::class => $adapter]),
             $this->createResourceFinder(['tl_article', 'tl_page']),
             'backend/dc',
         );
+
         $loader = $this->createApiLoader($factory);
         $routes = $loader->load(null);
         $routes->addPrefix('/custom_api');
@@ -164,11 +166,13 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             ->method('create')
             ->willReturn(new ResourceNameCollection([DataContainerRecord::class]))
         ;
+
         $kernel = $this->createStub(KernelInterface::class);
         $kernel
             ->method('locateResource')
             ->willReturn(\dirname(new \ReflectionClass(ApiLoader::class)->getFileName(), 2).'/Bundle/Resources/config/routing')
         ;
+
         $container = $this->createStub(ContainerInterface::class);
         $container
             ->method('has')

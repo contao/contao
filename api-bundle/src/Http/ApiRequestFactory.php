@@ -29,6 +29,7 @@ final class ApiRequestFactory
     public function create(Request $parent, HttpOperation $operation, array $parameters = [], array|null $payload = null): Request
     {
         $uri = $this->urlGenerator->generate($operation->getRouteName() ?? $operation->getName(), $parameters);
+
         $request = Request::create(
             $parent->getSchemeAndHttpHost().$uri,
             $operation->getMethod(),
@@ -36,6 +37,7 @@ final class ApiRequestFactory
             server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
             content: null === $payload ? null : json_encode((object) $payload, JSON_THROW_ON_ERROR),
         );
+
         $request->server->set('REMOTE_ADDR', $parent->getClientIp());
         $request->headers->set('Accept', $this->getJsonFormat($operation->getOutputFormats(), 'application/ld+json'));
 

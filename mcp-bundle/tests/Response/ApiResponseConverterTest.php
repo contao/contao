@@ -33,7 +33,6 @@ final class ApiResponseConverterTest extends TestCase
     public function testPreservesJsonObjectsAndLargeIdentifiers(): void
     {
         $response = new Response('{"empty":{},"list":[],"id":9223372036854775808}');
-
         $result = new ApiResponseConverter()->convert($response);
 
         $this->assertInstanceOf(TextContent::class, $result->content[0]);

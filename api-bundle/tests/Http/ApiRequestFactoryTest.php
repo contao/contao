@@ -57,6 +57,7 @@ final class ApiRequestFactoryTest extends TestCase
             'CONTENT_LENGTH' => 123,
             'REMOTE_ADDR' => '192.0.2.1',
         ], content: '{"jsonrpc":"2.0"}');
+
         $parent->setLocale('de');
         $parent->setSession(new Session(new MockArraySessionStorage()));
         $parent->attributes->set('_controller', 'mcp');
@@ -87,6 +88,7 @@ final class ApiRequestFactoryTest extends TestCase
             'SCRIPT_FILENAME' => '/var/www/app/index.php',
             'SCRIPT_NAME' => '/app/index.php',
         ]);
+
         $factory = $this->createFactory(new RequestContext('/app/index.php'));
         $request = $factory->create($parent, new Get(name: 'unused', routeName: 'records'), ['id' => 'an id', 'page' => 2]);
 

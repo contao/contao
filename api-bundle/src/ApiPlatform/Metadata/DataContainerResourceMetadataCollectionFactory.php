@@ -107,6 +107,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         foreach ($operations as $action => $operation) {
             $name = 'contao_api_'.$table.'_'.$action;
             $item = !$operation instanceof GetCollection && !$operation instanceof Post;
+
             $configured[$name] = $operation
                 ->withName($name)
                 ->withClass(DataContainerRecord::class)
