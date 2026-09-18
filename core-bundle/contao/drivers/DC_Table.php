@@ -435,6 +435,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function render(string $component, array $parameters): string
 	{
+		// API requests only need the selected IDs, so skip building and rendering the backend HTML
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		{
+			return '';
+		}
+
 		$defaultParameters = array(
 			'table' => $this->table,
 			'pid' => $this->intCurrentPid,
@@ -493,13 +499,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * List all records of a particular table
 	 *
+	 * With the internal _contao_api flag, collect IDs in _contao_listing_ids
+	 * without rendering or backend pagination, respecting the configured tree limit
+	 *
 	 * @return string
 	 */
 	public function showAll()
 	{
 		$this->limit = '';
 
-		$this->reviseTable();
+		// Reading records through the API must not run backend cleanup writes
+		if (!System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		{
+			$this->reviseTable();
+		}
 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
@@ -566,6 +579,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'panel' => $this->panel(),
 				'view' => ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView(),
 			);
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request?->attributes->getBoolean('_contao_api'))
+		{
+			$request->attributes->set('_contao_listing_ids', array_values(array_unique($this->current)));
 		}
 
 		return $this->render('show_all', $parameters);
@@ -3141,7 +3161,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$arrValues = $this->arrSubmit;
 		$this->arrSubmit = array();
 
-		if (!$this->noReload && !empty($arrValues))
+		// An API creation must finalize the record even when all submitted values match its defaults
+		if (!$this->noReload && (!empty($arrValues) || (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') && (int) ($this->objActiveRecord->tstamp ?? 1) === 0)))
 		{
 			$arrValues['tstamp'] = time();
 
@@ -3930,7 +3951,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
 		// Calculate label and add a toggle button
-		$blnIsOpen = !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
+		$blnIsOpen = System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') || !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
@@ -4186,6 +4207,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					break;
 				}
 			}
+		}
+
+		// The IDs are already collected, so skip label generation and rendering for each API tree node
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		{
+			return '';
 		}
 
 		$parameters['label'] = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
@@ -5220,6 +5247,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
+		// The API paginates the collected IDs, so skip the backend limit and its menu rendering
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		{
+			return '';
+		}
+
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 

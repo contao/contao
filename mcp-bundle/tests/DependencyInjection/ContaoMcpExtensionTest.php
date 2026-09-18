@@ -32,7 +32,7 @@ use Symfony\Component\Yaml\Yaml;
 
 final class ContaoMcpExtensionTest extends TestCase
 {
-    public function testRegistersExactlySevenToolsThroughTheBundleConfiguration(): void
+    public function testRegistersExactlyEightToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
         $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
@@ -68,6 +68,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_dc_create_record',
                 'contao_dc_update_record',
                 'contao_dc_delete_record',
+                'contao_dc_move_record',
             ],
             $tools,
         );

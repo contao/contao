@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Widget\ApiWidgetInterface;
+
 /**
  * Provide methods to handle check boxes.
  *
@@ -18,7 +20,7 @@ namespace Contao;
  * @property boolean $multiple
  * @property boolean $collapseUncheckedGroups
  */
-class CheckBox extends Widget
+class CheckBox extends Widget implements ApiWidgetInterface
 {
 	/**
 	 * Submit user input
@@ -250,5 +252,19 @@ class CheckBox extends Widget
 			$this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '',
 			!$this->multiple ? $this->xlabel : ''
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function getApiSchema(array $config, array $schema): array
+	{
+		if (!($config['eval']['multiple'] ?? false))
+		{
+			$schema['type'] = 'boolean';
+			unset($schema['maxLength'], $schema['minLength']);
+		}
+
+		return $schema;
 	}
 }

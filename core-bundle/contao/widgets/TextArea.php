@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Widget\ApiWidgetInterface;
+
 /**
  * Provide methods to handle textareas.
  *
@@ -19,7 +21,7 @@ namespace Contao;
  * @property integer $rows
  * @property integer $cols
  */
-class TextArea extends Widget
+class TextArea extends Widget implements ApiWidgetInterface
 {
 	/**
 	 * Submit user input
