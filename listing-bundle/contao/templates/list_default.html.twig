@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_searchable.html.twig' %}
 
 {% set wrapperAttributes = attrs()
@@ -15,17 +16,17 @@
                     <input type="hidden" name="sort" value="{{ sort }}">
                     <input type="hidden" name="per_page" value="{{ per_page }}">
                     <div class="widget widget-select">
-                        <label for="ctrl_search" class="invisible">{{ fields_label }}</label>
+                        <label for="ctrl_search" class="invisible">{{ 'MSC.all_fields.0'|trans }}</label>
                         <select name="search" id="ctrl_search" class="select">
                             {{ search_fields|raw }}
                         </select>
                     </div>
                     <div class="widget widget-text">
-                        <label for="ctrl_for" class="invisible">{{ keywords_label }}</label>
+                        <label for="ctrl_for" class="invisible">{{ 'MSC.keywords'|trans }}</label>
                         <input type="text" name="for" id="ctrl_for" class="text" value="{{ for }}">
                     </div>
                     <div class="widget widget-submit">
-                        <button type="submit" class="submit">{{ search_label }}</button>
+                        <button type="submit" class="submit">{{ 'MSC.search'|trans }}</button>
                     </div>
                 </div>
             </form>
@@ -41,7 +42,7 @@
                     <input type="hidden" name="search" value="{{ search }}">
                     <input type="hidden" name="for" value="{{ for }}">
                     <div class="widget widget-select">
-                        <label for="ctrl_per_page" class="invisible">{{ per_page_label }}</label>
+                        <label for="ctrl_per_page" class="invisible">{{ 'MSC.list_perPage'|trans }}</label>
                         <select name="per_page" id="ctrl_per_page" class="select">
                             <option value="10"{% if 10 == per_page %} selected{% endif %}>10</option>
                             <option value="20"{% if 20 == per_page %} selected{% endif %}>20</option>

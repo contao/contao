@@ -95,12 +95,14 @@ class ModuleSearch extends Module
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
 		$this->Template->keyword = StringUtil::specialchars($strKeywords);
+		$this->Template->advanced = $this->searchType == 'advanced';
+
+		// Backwards compatibility
 		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
 		$this->Template->search = $GLOBALS['TL_LANG']['MSC']['searchLabel'];
 		$this->Template->matchAll = $GLOBALS['TL_LANG']['MSC']['matchAll'];
 		$this->Template->matchAny = $GLOBALS['TL_LANG']['MSC']['matchAny'];
-		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page
 		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
