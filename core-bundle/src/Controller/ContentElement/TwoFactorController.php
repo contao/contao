@@ -110,7 +110,7 @@ class TwoFactorController extends AbstractContentElementController
         $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
         $template->set('show_backup_codes', $showBackupCodes);
         $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
-        $template->set('enable_url', $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable');
+        $template->set('enable_url', $this->generateContentUrl($pageModel, ['2fa' => 'enable'], UrlGeneratorInterface::ABSOLUTE_URL));
         $template->set('target_page', $targetPage);
 
         return $template->getResponse();

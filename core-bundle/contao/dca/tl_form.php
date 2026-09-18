@@ -166,6 +166,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'targetTable' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getAllTables'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),

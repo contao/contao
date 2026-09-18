@@ -299,7 +299,7 @@ class MigrateCommandTest extends TestCase
         $connection
             ->method('fetchOne')
             ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
+                static fn (string $query): false|string => match ($query) {
                     'SELECT @@sql_mode' => 'TRADITIONAL',
                     'SELECT @@version' => '8.0.0',
                     default => false,
@@ -456,10 +456,9 @@ class MigrateCommandTest extends TestCase
         $connection = $this->createDefaultConnection();
 
         if (interface_exists(ServerInfoAwareConnection::class)) {
-            /** @phpstan-ignore class.notFound */
             $driverConnection = $this->createStub(ServerInfoAwareConnection::class);
 
-            /** @phpstan-ignore class.notFound, phpunit.mockMethod */
+            /** @phpstan-ignore phpunit.mockMethod */
             $driverConnection
                 ->method('getServerVersion')
                 ->willReturn('8.0.29')
@@ -811,7 +810,7 @@ class MigrateCommandTest extends TestCase
         $connection
             ->method('fetchOne')
             ->willReturnCallback(
-                static fn (string $query): string|false => match ($query) {
+                static fn (string $query): false|string => match ($query) {
                     'SELECT @@sql_mode' => $sqlMode,
                     'SELECT @@version' => '8.0.0',
                     default => false,

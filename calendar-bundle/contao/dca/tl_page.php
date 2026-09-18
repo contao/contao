@@ -15,6 +15,7 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['calendar_feed'] = '{title_legend},tit
 $GLOBALS['TL_DCA']['tl_page']['fields']['eventCalendars'] = array(
 	'exclude' => true,
 	'search' => true,
+	'backendSearch' => false,
 	'inputType' => 'checkbox',
 	'eval' => array('multiple' => true, 'mandatory' => true),
 	'sql' => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),

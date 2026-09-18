@@ -7,6 +7,9 @@
     .addClass('draft', is_draft)
     .set('data-controller', 'contao--operations-menu' ~ (enable_deeplink ? ' contao--deeplink' : ''))
     .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+    .set('data-contao--operations-menu-record-id-value', record_id)
+    .set('data-contao--operations-menu-record-table-value', record_table)
+    .set('data-contao--operations-menu-primary-only-value', primary_only ? 'true' : 'false')
 %}
 <li{{ row_attributes }}>
     {% set has_children = children|length or toggler_url %}

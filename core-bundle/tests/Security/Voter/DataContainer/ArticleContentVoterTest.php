@@ -85,7 +85,7 @@ class ArticleContentVoterTest extends TestCase
 
         foreach ($articleParents as $id => $page) {
             $fetchAssociativeMap[] = [
-                'SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)',
+                'SELECT id, type FROM tl_page WHERE id = (SELECT pid FROM tl_article WHERE id = ?)',
                 [$id],
                 [],
                 $page,

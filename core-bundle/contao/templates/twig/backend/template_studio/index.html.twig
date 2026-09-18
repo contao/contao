@@ -18,9 +18,7 @@
     <main{{ template_studio_attributes }}>
         {# Headline #}
         <div class="content-top">
-            <h1 id="main_headline">
-                {{ headline }}
-            </h1>
+            <h1 id="main_headline">{{ headline }}</h1>
             {% set fullscreen_button_attributes = attrs()
                 .addClass('fullscreen')
                 .set('data-action', 'contao--template-studio#enterFullscreen')

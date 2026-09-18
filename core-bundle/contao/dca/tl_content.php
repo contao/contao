@@ -650,6 +650,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerColor' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
@@ -675,6 +676,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderDelay' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
@@ -682,6 +684,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
@@ -832,13 +835,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'reg_close' => array
 		(

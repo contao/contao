@@ -45,7 +45,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT pid FROM tl_article WHERE id=?', [3])
+            ->with('SELECT pid FROM tl_article WHERE id = ?', [3])
             ->willReturn(42)
         ;
 
@@ -76,7 +76,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT pid FROM tl_article WHERE id=?', [3])
+            ->with('SELECT pid FROM tl_article WHERE id = ?', [3])
             ->willReturn(42)
         ;
 

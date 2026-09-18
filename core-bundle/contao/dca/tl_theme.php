@@ -152,6 +152,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),

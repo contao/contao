@@ -68,7 +68,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			$headers = array();
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-			if ($indexProtected)
+			if ($indexProtected && $user)
 			{
 				if (!$objAuthenticator->authenticateFrontendUser($user, false))
 				{

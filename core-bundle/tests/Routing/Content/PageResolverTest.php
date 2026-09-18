@@ -64,10 +64,10 @@ class PageResolverTest extends TestCase
         $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
         $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $pageAdapter = $this->createAdapterMock(['findFirstPublishedRegularByPid']);
+        $pageAdapter = $this->createAdapterMock(['findFirstPublishedByPid']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findFirstPublishedRegularByPid')
+            ->method('findFirstPublishedByPid')
             ->with(42)
             ->willReturn($jumpTo)
         ;

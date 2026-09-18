@@ -23,7 +23,7 @@ abstract class AbstractDeleteVariantOperation extends DeleteOperation
 {
     public function canExecute(OperationContext $context): bool
     {
-        if ($context->isThemeContext()) {
+        if ($context->isThemeContext() || !$this->userTemplateExists($context)) {
             return false;
         }
 

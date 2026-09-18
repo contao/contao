@@ -12,6 +12,8 @@ export default class extends Controller {
         draggable: String,
     };
 
+    static targets = ['primaryHandle', 'fallbackHandle'];
+
     connect() {
         const options = {
             animation: 100,
@@ -29,21 +31,20 @@ export default class extends Controller {
         }
 
         this.sortable = new Sortable(this.element, options);
+    }
 
-        // Backwards compatibility for parent mode, will unhide the operation if no other drag handle is found
-        for (const el of [...this.element.children]) {
-            const handles = el.querySelectorAll('.drag-handle');
+    /**
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6.
+     */
+    fallbackHandleTargetConnected(el) {
+        // No need to remove the class if a primaryHandleTarget exists (see #8859)
+        if (this.hasPrimaryHandleTarget) {
+            return;
+        }
 
-            // There will always be at least 2 handles: one for the operations list and one for the operations menu (which is hidden)
-            if (handles.length === 2) {
-                handles[0].style.display = '';
-            }
-
-            for (const handle of handles) {
-                if (handle.style.display === 'none' && handle.parentNode.localName === 'li') {
-                    handle.parentNode.style = 'display: none !important';
-                }
-            }
+        // Backwards compatibility for parent mode, will unhide the operation that is not inside the operations menu
+        if (!el.closest('.operations-menu')) {
+            el.classList.remove('hidden');
         }
     }
 

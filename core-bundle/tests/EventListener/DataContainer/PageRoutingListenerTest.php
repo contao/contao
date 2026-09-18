@@ -587,7 +587,7 @@ class PageRoutingListenerTest extends TestCase
         $this->assertSame('', $listener->generateRouteConflicts($dc));
     }
 
-    private function mockPageRoute(string $path, array $requirements = []): PageRoute&MockObject
+    private function mockPageRoute(string $path, array $requirements = []): MockObject&PageRoute
     {
         $route = $this->createMock(PageRoute::class);
         $route

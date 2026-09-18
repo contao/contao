@@ -23,7 +23,7 @@
         {% block toggle %}
             {% set button_attributes = attrs()
                 .addClass('nav-burger')
-                .setIfExists('aria-label', ariaLabel|default)
+                .setIfExists('aria-label', ariaLabel|default|insert_tag)
                 .set('aria-haspopup', 'menu')
                 .set('aria-expanded', 'false')
                 .mergeWith(button_attributes|default)
@@ -40,7 +40,7 @@
             {% set nav_attributes = attrs()
                 .addClass('navigation-main')
                 .setIfExists('style', style)
-                .setIfExists('aria-label', ariaLabel|default)
+                .setIfExists('aria-label', ariaLabel|default|insert_tag)
                 .mergeWith(nav_attributes|default)
             %}
 

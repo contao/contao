@@ -1,8 +1,8 @@
 {% trans_default_domain 'contao_default' %}
 {% use '@Contao/component/_stylesheet.html.twig' %}
 
-{% add 'moo_mediabox' to stylesheets %}
-    {% with {file: 'assets/tablesort/css/tablesort.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+{% add 'moo_tablesort' to stylesheets %}
+    {% with {file: asset('css/tablesort.min.css', 'contao-components/tablesort')} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 
 <script src="{{ asset('js/tablesort.min.js', 'contao-components/tablesort') }}"></script>

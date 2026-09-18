@@ -7,6 +7,12 @@
     white-space: nowrap;
 }
 
+/* Reset the intrinsic width for help texts in tables (see #10131) */
+table .tl_tip {
+    width: 0;
+    min-width: 100%;
+}
+
 .tip {
     position: relative;
     max-width: 80vw;

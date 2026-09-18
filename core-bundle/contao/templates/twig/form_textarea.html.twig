@@ -29,7 +29,7 @@
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(textarea_attributes)
         .setIfExists('placeholder', textarea_attributes.placeholder|default|insert_tag)
-    }}>{{ this.value|insert_tag }}</textarea>
+    }}>{{ this.value }}</textarea>
 
     {% if this.help|default %}
         <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>

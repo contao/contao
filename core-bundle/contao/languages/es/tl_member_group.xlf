@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.versions.1">
         <source>Show the versions of member group ID %s</source>
+        <target>Mostrar las versiones del grupo de miembros con el ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>

@@ -166,6 +166,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
         $this->handleMailerConfig($config, $container);
+        $this->handlePagination($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -282,8 +283,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             if ([] === $config['messenger']['web_worker']['transports']) {
                 $container->removeDefinition('contao.messenger.web_worker');
             } else {
-                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
-                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+                $definition->setArgument('$transports', $config['messenger']['web_worker']['transports']);
+                $definition->setArgument('$gracePeriod', $config['messenger']['web_worker']['grace_period']);
             }
         }
 
@@ -722,6 +723,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->getDefinition('contao.mailer')
             ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
+    }
+
+    private function handlePagination(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.pagination.factory')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.pagination.factory')
+            ->setArgument('$defaultRange', $config['pagination']['default_range'])
         ;
     }
 

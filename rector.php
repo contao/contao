@@ -16,7 +16,6 @@ use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 
 return RectorConfig::configure()
     ->withSets([SetList::CONTAO])
@@ -56,7 +55,6 @@ return RectorConfig::configure()
         StringClassNameToClassConstantRector::class => [
             'core-bundle/tests/PhpunitExtension/GlobalStateWatcher.php',
         ],
-        NullToStrictStringFuncCallArgRector::class,
         SimplifyIfReturnBoolRector::class => [
             'core-bundle/src/EventListener/CommandSchedulerListener.php',
         ],

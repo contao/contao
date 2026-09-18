@@ -3,7 +3,7 @@
 {% set attributes = attrs()
     .addClass('tl_show_all')
     .set('data-controller', 'contao--element-count', panel)
-    .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term,#tl_limit)', panel)
+    .set('data-contao--element-count-selector-value', '.active:not(#tl_limit)', panel)
 %}
 <div{{ attributes }}>
     {{ panel|raw }}

@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Internal title</source>
+        <target>Interne titel</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -665,6 +666,7 @@ Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de
       </trans-unit>
       <trans-unit id="tl_module.versions.1">
         <source>Show the versions of module ID %s</source>
+        <target>Toon de versies van module ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>

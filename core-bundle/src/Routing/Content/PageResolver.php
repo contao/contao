@@ -30,7 +30,7 @@ class PageResolver implements ContentUrlResolverInterface
         switch ($content->type) {
             case 'root':
                 $pageAdapter = $this->framework->getAdapter(PageModel::class);
-                $forwardPage = $pageAdapter->findFirstPublishedRegularByPid($content->id);
+                $forwardPage = $pageAdapter->findFirstPublishedByPid($content->id);
 
                 return ContentUrlResult::redirect($forwardPage);
 

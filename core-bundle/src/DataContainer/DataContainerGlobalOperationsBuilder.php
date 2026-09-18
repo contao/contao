@@ -23,6 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
+ * @phpstan-import-type Operation from AbstractDataContainerOperationsBuilder
+ *
  * @internal
  */
 class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperationsBuilder
@@ -180,6 +182,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         return $this;
     }
 
+    /**
+     * @return Operation|null
+     */
     private function generateOperation(string $name, array $operation, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, null, $dataContainer);
@@ -208,13 +213,13 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $config['attributes']->addClass($name);
 
         return [
-            'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'] ?? null,
             'iconAttributes' => $config['iconAttributes'],
+            'href' => $href,
             'primary' => $config['primary'] ?? ('all' === $name ? true : null),
         ];
     }

@@ -195,7 +195,7 @@ class MetaWizard extends Widget
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{
-					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
+					$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . ' data-controller="contao--textarea-autogrow" data-contao--metawizard-target="input">' . ($meta[$field] ?? '') . '</textarea>';
 				}
 				else
 				{

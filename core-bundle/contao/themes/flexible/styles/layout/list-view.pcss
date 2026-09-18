@@ -328,6 +328,17 @@
     margin-left: 0;
 }
 
+/* Set pointer events none to allow closing the operations menu - See #9805 */
+#tl_buttons.operations {
+    > ul {
+        pointer-events: none;
+
+        > li {
+            pointer-events: auto;
+        }
+    }
+}
+
 /* ToDo: Move to components/operations-menu */
 .operations > ul {
     display: flex;
@@ -337,6 +348,11 @@
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+/* BC for fallback handles (see #9855) */
+.operations li:has(>.hidden) {
+    display: none;
 }
 
 .operations a,
@@ -437,7 +453,6 @@
 .cte_type {
     margin: 0 0 4px;
     font-size: 0.75rem;
-    color: var(--info);
 }
 
 .as-grid .cte_type {
@@ -658,7 +673,11 @@
 }
 
 .as-grid .cte_preview {
-    padding: 10px 10px 6px;
+    padding: 10px;
+}
+
+.as-grid .cte_preview:has(p, pre, figure, h1, h2, h3, h4, h5, h6, ol, ul, table, div) {
+    padding-bottom: 4px;
 }
 
 .cte_content {

@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Messenger\MessageHandler;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
@@ -164,7 +172,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
         return (new CrawlMessage(['subscriber-a'], 3, []))->setJobId($job?->getUuid() ?? 'i-do-not-exist');
     }
 
-    private function mockEscargotFactory(LazyQueue $lazyQueue): MockObject&Factory
+    private function mockEscargotFactory(LazyQueue $lazyQueue): Factory&MockObject
     {
         $escargotFactory = $this->createMock(Factory::class);
         $escargotFactory

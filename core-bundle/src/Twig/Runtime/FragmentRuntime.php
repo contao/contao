@@ -86,6 +86,51 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         } else {
             $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;
+
+            if ($model instanceof ContentModel) {
+                $model->addImage = false;
+                $model->showPreview = false;
+                $model->inline = false;
+                $model->overwriteMeta = false;
+                $model->fullsize = false;
+                $model->thead = false;
+                $model->tfoot = false;
+                $model->tleft = false;
+                $model->sortable = false;
+                $model->closeSections = false;
+                $model->target = false;
+                $model->overwriteLink = false;
+                $model->useImage = false;
+                $model->useHomeDir = false;
+                $model->metaIgnore = false;
+                $model->splashImage = false;
+                $model->sliderContinuous = false;
+                $model->protected = false;
+                $model->invisible = false;
+                $model->embed = '';
+                $model->vimeo = '';
+                $model->sortBy = '';
+            } elseif ($model instanceof ModuleModel) {
+                $model->hardLimit = false;
+                $model->showProtected = false;
+                $model->defineRoot = false;
+                $model->showHidden = false;
+                $model->autologin = false;
+                $model->redirectBack = false;
+                $model->reqFullAuth = false;
+                $model->fuzzy = false;
+                $model->loadFirst = false;
+                $model->useCaption = false;
+                $model->fullsize = false;
+                $model->disableCaptcha = false;
+                $model->reg_allowLogin = false;
+                $model->reg_skipName = false;
+                $model->reg_deleteDir = false;
+                $model->reg_assignDir = false;
+                $model->reg_activate = false;
+                $model->protected = false;
+                $model->rss_feed = '';
+            }
         }
 
         if (null === $model) {

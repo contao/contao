@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
@@ -196,7 +204,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             foreach ($previews as $image) {
                 yield $figureBuilder->fromImage($image)->build();
             }
-        } catch (UnableToGeneratePreviewException|MissingPreviewProviderException) {
+        } catch (MissingPreviewProviderException|UnableToGeneratePreviewException) {
             // ignore
         }
     }

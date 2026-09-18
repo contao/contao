@@ -327,7 +327,7 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1);
+				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1, loadLabels: false);
 
 				if ($trail[\count($trail) - $intLevel - 1]['url'] ?? null)
 				{

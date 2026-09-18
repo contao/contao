@@ -10,7 +10,7 @@
                 <section>
                     <h3 id="{{ faq.alias }}">{{ faq.question }}</h3>
 
-                    <div class="ce_text block">
+                    <div class="ce_text content-text block">
                         {% if not faq.addBefore %}
                             {{ faq.answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
                         {% endif %}

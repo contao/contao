@@ -222,7 +222,14 @@ class SerpPreview extends Widget
 
 		if (isset($chunks['host']))
 		{
-			$steps = array_merge(array($chunks['host']), $steps);
+			$host = $chunks['host'];
+
+			if (isset($chunks['scheme']))
+			{
+				$host = $chunks['scheme'] . '://' . $host;
+			}
+
+			$steps = array_merge(array($host), $steps);
 		}
 
 		return $steps;

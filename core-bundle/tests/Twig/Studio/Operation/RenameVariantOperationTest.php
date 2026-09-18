@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -18,11 +26,17 @@ use Twig\Environment;
 class RenameVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
-    public function testCanExecute(OperationContext $context, bool $canExecute): void
+    public function testCanExecute(OperationContext $context, bool $canExecute, array $chain): void
     {
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
+        $loader
+            ->method('getInheritanceChains')
+            ->willReturn([$context->getIdentifier() => $chain])
+        ;
+
         $this->assertSame(
             $canExecute,
-            $this->getRenameVariantOperation()->canExecute($context),
+            $this->getRenameVariantOperation($loader)->canExecute($context),
         );
     }
 
@@ -31,36 +45,64 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
         yield 'arbitrary identifier' => [
             static::getOperationContext('bar/foo'),
             false,
+            [
+                '/templates/bar/foo.html.twig' => '@Contao_Global/bar/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
+            ],
         ];
 
         yield 'identifier matching the prefix' => [
             static::getOperationContext('prefix/foo'),
             false,
+            [
+                '/templates/prefix/foo.html.twig' => '@Contao_Global/prefix/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
+            ],
         ];
 
         yield 'matching variant identifier' => [
             static::getOperationContext('prefix/foo/my_variant'),
             true,
+            [
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
+            ],
         ];
 
         yield 'matching nested variant identifier' => [
             static::getOperationContext('prefix/foo/bar/my_variant'),
             true,
+            [
+                '/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_Global/prefix/foo/bar/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/bar/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/bar/my_variant.html.twig',
+            ],
         ];
 
         yield 'arbitrary identifier in theme context' => [
             static::getOperationContext('bar/foo', 'theme'),
             false,
+            [
+                '/templates/bar/foo.html.twig' => '@Contao_Global/bar/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/bar/foo.html.twig' => '@Contao_ContaoCoreBundle/bar/foo.html.twig',
+            ],
         ];
 
         yield 'identifier matching the prefix in theme context' => [
             static::getOperationContext('prefix/foo', 'theme'),
             false,
+            [
+                '/templates/prefix/foo.html.twig' => '@Contao_Global/prefix/foo.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo.html.twig',
+            ],
         ];
 
         yield 'matching variant identifier in theme context' => [
             static::getOperationContext('prefix/foo/my_variant', 'theme'),
             false,
+            [
+                '/templates/prefix/foo/my_variant.html.twig' => '@Contao_Global/prefix/foo/my_variant.html.twig',
+                '/vendor/contao/core-bundle/contao/templates/prefix/foo/my_variant.html.twig' => '@Contao_ContaoCoreBundle/prefix/foo/my_variant.html.twig',
+            ],
         ];
     }
 

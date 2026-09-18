@@ -51,6 +51,7 @@ services:
         arguments:
             - '@contao.cron'
             - '@database_connection'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
             - false
 
@@ -89,8 +90,8 @@ services:
             - '@security.helper'
             - '@request_stack'
 
-    contao.listener.data_container.check_template_editor_save:
-        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+    contao.listener.data_container.check_implicit_admin_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckImplicitAdminSaveListener
         arguments:
             - '@security.helper'
             - '@translator'
@@ -166,11 +167,6 @@ services:
             - '@contao.framework'
             - '@translator'
 
-    contao.listener.data_container.dynamic_ptable:
-        class: Contao\CoreBundle\EventListener\DataContainer\DynamicPtableListener
-        arguments:
-            - '@contao.framework'
-
     contao.listener.data_container.enum_options:
         class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
         arguments:
@@ -179,6 +175,7 @@ services:
     contao.listener.data_container.fallback_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
+            - '@contao.framework'
             - '@translator'
             - '@contao.data_container.value_formatter'
 
@@ -348,6 +345,8 @@ services:
             - '@contao.twig.finder_factory'
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.theme_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
@@ -435,22 +434,6 @@ services:
         arguments:
             - '%kernel.secret%'
             - '%contao.web_dir%'
-
-    contao.listener.insert_tags.asset:
-        class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
-        arguments:
-            - '@assets.packages'
-
-    contao.listener.insert_tags.date:
-        class: Contao\CoreBundle\EventListener\InsertTags\DateListener
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-
-    contao.listener.insert_tags.translation:
-        class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
-        arguments:
-            - '@translator'
 
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
@@ -643,9 +626,14 @@ services:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
         arguments:
             - '@messenger.bus.default'
+            - '@contao.routing.scope_matcher'
             - '%fragment.path%'
-            - '%contao.backend.route_prefix%'
             - '%kernel.debug%'
+
+    contao.listener.security.complete_two_factor_provider:
+        class: Contao\CoreBundle\EventListener\Security\CompleteTwoFactorProviderListener
+        arguments:
+            - '@security.token_storage'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -738,6 +726,7 @@ services:
             - '@database_connection'
             - '@router'
             - '@translator'
+            - '@contao.data_container.record_labeler'
 
     contao.listener.widget.title_tag:
         class: Contao\CoreBundle\EventListener\Widget\TitleTagListener

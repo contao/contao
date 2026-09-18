@@ -215,15 +215,7 @@ final class Finder implements \IteratorAggregate, \Countable
         // Only include chains that contain at least one non-legacy template
         $chains = array_filter(
             $this->filesystem->getInheritanceChains($this->themeSlug),
-            static function (array $chain) {
-                foreach (array_keys($chain) as $path) {
-                    if ('html5' !== Path::getExtension($path, true)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            },
+            static fn (array $chain) => array_any(array_keys($chain), static fn ($path) => 'html5' !== Path::getExtension($path, true)),
         );
 
         $this->sources = [];

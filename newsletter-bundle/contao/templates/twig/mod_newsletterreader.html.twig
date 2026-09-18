@@ -5,7 +5,7 @@
     <h1>{{ subject }}</h1>
 
     <div class="newsletter">
-        {{ content|sanitize_html('contao') }}
+        {{ content|raw }}
     </div>
 
     {% if enclosure|default %}

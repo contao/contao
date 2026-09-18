@@ -138,6 +138,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -223,13 +224,13 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		)
 	)
 );
@@ -299,7 +300,7 @@ class tl_article extends Backend
 		}
 
 		$attributes = sprintf(
-			'data-icon="%s" data-icon-disabled="%s"',
+			'data-icon="%s" data-icon-disabled="%s" class="type-image"',
 			$row['protected'] ? 'articles_2.svg' : 'articles.svg',
 			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);

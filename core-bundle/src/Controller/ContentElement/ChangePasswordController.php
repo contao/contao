@@ -116,9 +116,11 @@ class ChangePasswordController extends AbstractContentElementController
         $this->framework->getAdapter(Controller::class)->loadDataContainer('tl_member');
 
         if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null)) {
+            $systemAdapter = $this->framework->getAdapter(System::class);
+
             foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback) {
                 if (\is_array($callback)) {
-                    $this->framework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}();
+                    $systemAdapter->importStatic($callback[0])->{$callback[1]}();
                 } elseif (\is_callable($callback)) {
                     $callback();
                 }

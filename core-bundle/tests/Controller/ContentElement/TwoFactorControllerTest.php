@@ -482,7 +482,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         return $authorizationChecker;
     }
 
-    private function mockTokenStorageWithToken(UserInterface|null $user = null): TokenStorageInterface&Stub
+    private function mockTokenStorageWithToken(UserInterface|null $user = null): Stub&TokenStorageInterface
     {
         $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $tokenStorage

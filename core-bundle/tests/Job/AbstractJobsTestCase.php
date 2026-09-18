@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
@@ -25,6 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -42,7 +51,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         );
     }
 
-    protected function mockSecurity(int|null $userId = null): Security&MockObject
+    protected function mockSecurity(int|null $userId = null): MockObject&Security
     {
         $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
@@ -81,6 +90,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
             $this->vfs,
             $router ?? $this->createStub(RouterInterface::class),
             $messageBus ?? $this->createStub(MessageBusInterface::class),
+            $this->createStub(UriSigner::class),
             $clock,
         );
     }

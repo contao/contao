@@ -222,29 +222,19 @@ class Factory
 
     private function cleanOptionsFromConfidentialData(array $options): array
     {
-        $cleanOptions = [];
-
-        foreach ($options as $k => $v) {
-            if ('headers' === $k) {
-                foreach ($v as $header => $value) {
-                    if (\in_array(strtolower($header), ['authorization', 'cookie'], true)) {
-                        continue;
-                    }
-
-                    $cleanOptions['headers'][$header] = $value;
-                }
-
-                continue;
+        foreach ($options as $key => $value) {
+            if (str_starts_with($key, 'auth_')) {
+                unset($options[$key]);
             }
-
-            if ('basic_auth' === $k || 'bearer_auth' === $k) {
-                continue;
-            }
-
-            $cleanOptions[$k] = $v;
         }
 
-        return $cleanOptions;
+        foreach ($options['headers'] ?? [] as $header => $value) {
+            if (\in_array(strtolower((string) $header), ['authorization', 'cookie'], true)) {
+                unset($options['headers'][$header]);
+            }
+        }
+
+        return $options;
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void
