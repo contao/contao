@@ -10,7 +10,7 @@ export default class TooltipsController extends Controller {
         '.sgallery img[alt]': { x: 0, y: 75 },
         'p.tl_tip': { x: 0, y: 23, useContent: true },
         '#home[title]': { x: 6, y: 42 },
-        '#app-logo .app-badge': { x: 6, y: 25, useContent: true },
+        '#app-logo .badge-title': { x: 6, y: 25, useContent: true },
         '#tmenu a[title]': { x: 0, y: 42 },
         '#tmenu button[title]': { x: 0, y: 42 },
         'a[title][class^="group-"]': { x: -6, y: 27 },

@@ -88,7 +88,7 @@ $this->asideAttributes = $this
               <span class="app-title">Contao</span>
             </a>
             <?php if ($this->badgeTitle): ?>
-              <span class="app-badge" data-contao--tooltips-target="tooltip"><?= $this->badgeTitle ?></span>
+              <span class="badge-title" data-contao--tooltips-target="tooltip"><?= $this->badgeTitle ?></span>
             <?php endif; ?>
           </div>
           <?= $this->headerMenu ?>
