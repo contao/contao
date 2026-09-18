@@ -36,7 +36,7 @@ class CombinedFileDumperTest extends TestCase
             <?php
             /*
              * Source files (line ranges in this cache file):
-             * 6-7: ../../source.php
+             * 6-7: source.php
              */
 
             echo 'test';
