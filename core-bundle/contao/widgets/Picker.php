@@ -211,7 +211,8 @@ class Picker extends Widget
 
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
 
-					if (\is_array($arrValues[$objRows->id])) {
+					if (\is_array($arrValues[$objRows->id]))
+					{
 						$arrValues[$objRows->id] = $arrValues[$objRows->id][0];
 					}
 				}

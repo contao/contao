@@ -14,11 +14,14 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
 use Contao\Image;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentElementViewListenerTest extends TestCase
@@ -38,7 +41,13 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_theme',
         ]);
 
-        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener = new ContentElementViewListener(
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
+        );
         $listener->adjustListView($dc);
 
         $this->assertIsArray($GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
@@ -52,7 +61,13 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_article',
         ]);
 
-        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener = new ContentElementViewListener(
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
+        );
         $listener->adjustListView($dc);
 
         $this->assertSame('foobar', $GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
@@ -106,7 +121,13 @@ class ContentElementViewListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = 'foobar';
 
-        $listener = new ContentElementViewListener($framework, $translator);
+        $listener = new ContentElementViewListener(
+            $framework,
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $translator,
+        );
         $label = $listener->generateLabel($row, '', $dc);
 
         $this->assertSame($expectedLabel, $label[0]);
@@ -130,7 +151,7 @@ class ContentElementViewListenerTest extends TestCase
 
         yield [
             ['type' => 'alias', 'cteAlias' => 42],
-            'alias ID 42',
+            'alias <a href="" onclick="Backend.openModalIframe({ title: \'alias ID 42\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID 42</a>',
             'published',
         ];
 
@@ -222,7 +243,13 @@ class ContentElementViewListenerTest extends TestCase
             'parentTable' => 'tl_article',
         ]);
 
-        $listener = new ContentElementViewListener($framework, $translator);
+        $listener = new ContentElementViewListener(
+            $framework,
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $translator,
+        );
         $label = $listener->generateLabel(['type' => 'text'], '', $dc);
 
         $this->assertSame('<p class="tl_error">foobar</p>', $label[1]);
