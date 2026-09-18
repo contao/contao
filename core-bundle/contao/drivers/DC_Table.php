@@ -1679,8 +1679,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// PID is set (insert after or into the parent record)
 			if (is_numeric($pid))
 			{
-				// Insert the current record into the parent record
-				if ($insertMode === self::PASTE_INTO)
+				// Without a sorting column, prepending and appending both just assign the parent
+				if ($insertMode === self::PASTE_INTO || $insertMode === self::PASTE_INTO_APPEND)
 				{
 					$this->set['pid'] = $pid;
 				}
