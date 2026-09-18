@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
 use Contao\CoreBundle\Tests\TestCase;
@@ -51,6 +52,30 @@ class HtmlHeadLayoutTest extends TestCase
 
         $this->assertStringContainsString('<title data-custom>Page title</title>', $output);
         $this->assertMatchesRegularExpression('/<meta name="description" content>\s*<script src="\/app\.js" defer><\/script>/', $output);
+    }
+
+    public function testRendersCollectedBodyTagsBeforeLegacyContent(): void
+    {
+        $environment = $this->createEnvironment([
+            'child.html.twig' => <<<'TWIG'
+                {% extends 'page/layout.html.twig' %}
+                {% block body_content %}{% endblock %}
+                TWIG,
+        ]);
+        $body = new HtmlBodyBag()->add(HtmlTag::script('/app.js'));
+
+        $output = new DeferredRenderer($environment)->render('child.html.twig', [
+            'rtl' => false,
+            'response_context' => [
+                'head' => new HtmlHeadBag(),
+                'body' => $body,
+                'end_of_head' => [],
+                'end_of_body' => ['<script data-legacy></script>'],
+            ],
+            'app' => ['locale' => 'en', 'request' => Request::create('https://example.com/')],
+        ]);
+
+        $this->assertMatchesRegularExpression('/<script src="\/app\.js"><\/script>\s*<script data-legacy><\/script>/', $output);
     }
 
     /**

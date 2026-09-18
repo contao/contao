@@ -65,6 +65,10 @@
     {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
     {% defer %}
         {% block end_of_body %}
+            {% for element in response_context.body|default %}
+                {{ include('@Contao/component/_html_tag.html.twig', {tag: element}, false) }}
+            {% endfor %}
+
             {% for element in response_context.end_of_body|default %}
                 {{ element|raw }}
             {% endfor %}

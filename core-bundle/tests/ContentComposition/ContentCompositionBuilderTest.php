@@ -20,6 +20,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -193,6 +194,7 @@ class ContentCompositionBuilderTest extends TestCase
     public function testAddsResponseContextDataToTemplate(): void
     {
         $responseContext = new ResponseContext();
+        $responseContext->add(new HtmlBodyBag()->add('<script>/* response context script */</script>'));
         $responseContext->add($htmlHeadBag = new HtmlHeadBag());
         $responseContext->add($jsonLdManager = new JsonLdManager($responseContext));
 
@@ -231,6 +233,7 @@ class ContentCompositionBuilderTest extends TestCase
 
         $expectedResponseContextData = [
             'head' => $htmlHeadBag,
+            'body' => $responseContext->get(HtmlBodyBag::class),
             'end_of_head' => [
                 '<link rel="stylesheet" href="https://static-url/additional_stylesheet_filename.css?v=202cb962">',
                 '<script src="https://static-url/additional_javascript_filename.js?v=202cb962" async defer></script>',
@@ -257,6 +260,10 @@ class ContentCompositionBuilderTest extends TestCase
 
         $this->assertArrayHasKey('response_context', $parameters);
         $this->assertSame($expectedResponseContextData, iterator_to_array($parameters['response_context']->all()));
+        $this->assertSame(
+            ['<script>/* response context script */</script>'],
+            $parameters['response_context']->body->all(),
+        );
     }
 
     public function testFinalizesThePageTitleAfterContentRendering(): void

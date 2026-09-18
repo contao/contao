@@ -20,6 +20,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -300,6 +301,10 @@ class ContentCompositionBuilder
 
     private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
     {
+        if (!$responseContext->has(HtmlBodyBag::class)) {
+            $responseContext->add(new HtmlBodyBag());
+        }
+
         if (!$responseContext->has(HtmlHeadBag::class)) {
             $responseContext->add(new HtmlHeadBag());
         }
@@ -309,6 +314,7 @@ class ContentCompositionBuilder
 
         $responseContextData = [
             'head' => fn () => $this->finalizePageTitle($htmlHeadBag),
+            'body' => $responseContext->get(HtmlBodyBag::class),
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
