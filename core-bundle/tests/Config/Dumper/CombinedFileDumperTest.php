@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Config\Dumper;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -23,7 +24,7 @@ class CombinedFileDumperTest extends TestCase
 {
     public function testDumpsTheDataIntoAFile(): void
     {
-        $filesystem = $this->mockFilesystem("<?php\n\necho 'test';\n");
+        $filesystem = $this->mockFilesystem("<?php\n/*\n * Source files (line ranges in this cache file):\n * 6-7: test.php\n */\n\necho 'test';\n");
 
         $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
         $dumper->dump(['test.php'], 'test.php');
@@ -31,7 +32,7 @@ class CombinedFileDumperTest extends TestCase
 
     public function testHandlesCustomHeaders(): void
     {
-        $filesystem = $this->mockFilesystem("<?php\necho 'foo';\necho 'test';\n");
+        $filesystem = $this->mockFilesystem("<?php\necho 'foo';\n/*\n * Source files (line ranges in this cache file):\n * 7-8: test.php\n */\n\necho 'test';\n");
 
         $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
         $dumper->setHeader("<?php\necho 'foo';");
@@ -47,6 +48,30 @@ class CombinedFileDumperTest extends TestCase
         $this->expectException('InvalidArgumentException');
 
         $dumper->setHeader('No opening PHP tag');
+    }
+
+    #[DataProvider('provideSourceContents')]
+    public function testIndexesMultipleSources(string $first, string $second): void
+    {
+        $loader = $this->createStub(PhpFileLoader::class);
+        $loader
+            ->method('load')
+            ->willReturnMap([
+                ['first.php', null, $first],
+                ['empty.php', null, ''],
+                ['second.php', null, $second],
+            ])
+        ;
+
+        $expected = "<?php\n/*\n * Source files (line ranges in this cache file):\n * 7-8: first.php\n * 9-9: second.php\n */\n\necho 'first';\necho 'second';\n";
+        $dumper = new CombinedFileDumper($this->mockFilesystem($expected), $loader, $this->getTempDir());
+        $dumper->dump(['first.php', 'empty.php', 'second.php'], 'test.php');
+    }
+
+    public static function provideSourceContents(): iterable
+    {
+        yield 'with trailing newlines' => ["\necho 'first';\n", "echo 'second';\n"];
+        yield 'without trailing newlines' => ["\necho 'first';", "echo 'second';"];
     }
 
     private function mockFilesystem(string $expects): Filesystem&MockObject
