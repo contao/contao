@@ -73,6 +73,169 @@ class ArrayUtil
 	}
 
 	/**
+	 * Stably sorts an associative array according to before and after constraints.
+	 * References to keys that do not exist are ignored.
+	 *
+	 * @template TKey of array-key
+	 * @template TValue
+	 *
+	 * @param array<TKey, TValue>                                                 $items
+	 * @param array<TKey, array{before?: array-key|null, after?: array-key|null}> $constraints
+	 *
+	 * @return array<TKey, TValue>
+	 */
+	public static function sortByOrderConstraints(array $items, array $constraints): array
+	{
+		$graph = self::buildOrderGraph($items, $constraints);
+		$positions = array_flip(array_keys($items));
+		$available = array_keys(array_filter($graph['indegrees'], static fn (int $degree): bool => 0 === $degree));
+		$sorted = array();
+
+		while ($available)
+		{
+			usort($available, static fn ($a, $b): int => $positions[$a] <=> $positions[$b]);
+			$key = array_shift($available);
+			$sorted[$key] = $items[$key];
+
+			foreach ($graph['edges'][$key] as $target)
+			{
+				if (0 === --$graph['indegrees'][$target])
+				{
+					$available[] = $target;
+				}
+			}
+		}
+
+		if (\count($sorted) !== \count($items))
+		{
+			$cyclic = array_keys(array_filter($graph['indegrees']));
+
+			throw new \LogicException(\sprintf('Cyclic array ordering constraints involving "%s".', implode('", "', $cyclic)));
+		}
+
+		return $sorted;
+	}
+
+	/**
+	 * @param array<array-key, mixed>                                                  $items
+	 * @param array<array-key, array{before?: array-key|null, after?: array-key|null}> $constraints
+	 *
+	 * @return array{edges: array<array-key, list<array-key>>, indegrees: array<array-key, int>}
+	 */
+	private static function buildOrderGraph(array $items, array $constraints): array
+	{
+		$graph = array(
+			'edges' => array_fill_keys(array_keys($items), array()),
+			'indegrees' => array_fill_keys(array_keys($items), 0),
+		);
+
+		foreach ($constraints as $key=>$constraint)
+		{
+			if (!\array_key_exists($key, $items))
+			{
+				continue;
+			}
+
+			if (isset($constraint['before']) && \array_key_exists($constraint['before'], $items))
+			{
+				self::addOrderEdge($graph, $key, $constraint['before']);
+			}
+
+			if (isset($constraint['after']) && \array_key_exists($constraint['after'], $items))
+			{
+				self::addOrderEdge($graph, $constraint['after'], $key);
+			}
+		}
+
+		self::addStableOrderEdges($graph, $items, $constraints);
+
+		return $graph;
+	}
+
+	/**
+	 * @param array{edges: array<array-key, list<array-key>>, indegrees: array<array-key, int>} $graph
+	 * @param array<array-key, mixed>                                                           $items
+	 * @param array<array-key, array{before?: array-key|null, after?: array-key|null}>          $constraints
+	 */
+	private static function addStableOrderEdges(array &$graph, array $items, array $constraints): void
+	{
+		$previous = null;
+
+		foreach (array_keys($items) as $key)
+		{
+			$constraint = $constraints[$key] ?? array();
+			$hasBefore = isset($constraint['before']) && \array_key_exists($constraint['before'], $items);
+			$hasAfter = isset($constraint['after']) && \array_key_exists($constraint['after'], $items);
+
+			if ($hasBefore || $hasAfter)
+			{
+				continue;
+			}
+
+			if (null !== $previous)
+			{
+				self::addStableOrderEdge($graph, $previous, $key);
+			}
+
+			$previous = $key;
+		}
+	}
+
+	/**
+	 * @param array{edges: array<array-key, list<array-key>>, indegrees: array<array-key, int>} $graph
+	 */
+	private static function addStableOrderEdge(array &$graph, int|string $source, int|string $target): void
+	{
+		if (self::hasOrderPath($graph['edges'], $target, $source))
+		{
+			return;
+		}
+
+		self::addOrderEdge($graph, $source, $target);
+	}
+
+	/**
+	 * @param array<array-key, list<array-key>> $edges
+	 */
+	private static function hasOrderPath(array $edges, int|string $source, int|string $target): bool
+	{
+		$pending = array($source);
+		$visited = array();
+
+		while ($pending)
+		{
+			$key = array_pop($pending);
+
+			if ($key === $target)
+			{
+				return true;
+			}
+
+			if (!isset($visited[$key]))
+			{
+				$visited[$key] = true;
+				array_push($pending, ...$edges[$key]);
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param array{edges: array<array-key, list<array-key>>, indegrees: array<array-key, int>} $graph
+	 */
+	private static function addOrderEdge(array &$graph, int|string $source, int|string $target): void
+	{
+		if (\in_array($target, $graph['edges'][$source], true))
+		{
+			return;
+		}
+
+		$graph['edges'][$source][] = $target;
+		++$graph['indegrees'][$target];
+	}
+
+	/**
 	 * Return true if an array is associative
 	 *
 	 * @param mixed $arrArray

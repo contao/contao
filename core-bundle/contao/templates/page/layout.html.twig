@@ -15,31 +15,29 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
     {% endblock %}
 
-    {# Defer accessing the response context, so that elements coming after it can still affect it. #}
     {% defer %}
-        {% block title %}
-            {% set title = response_context.head.title|default %}
-            {% if title and contao.page.rootPageTitle|default %}
-                {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
-            {% endif %}
-             <title>{{ title }}</title>
+        {# Resolve dynamic head tags after rendering all elements so their additions are included. #}
+        {% block head_tags %}
+            {% for identifier, head_tag in response_context.head.all(app.request) %}
+                {% if identifier == 'contao.title' %}
+                    {% block title %}
+                        {{ include('@Contao/component/_html_tag.html.twig', {
+                            tag: head_tag,
+                            identifier,
+                            debug: app.debug|default(false),
+                        }, false) }}
+                    {% endblock %}
+                {% else %}
+                    {{ include('@Contao/component/_html_tag.html.twig', {
+                        tag: head_tag,
+                        identifier,
+                        debug: app.debug|default(false),
+                    }, false) }}
+                {% endif %}
+            {% endfor %}
         {% endblock %}
 
-        {% if response_context.head %}
-            <meta name="robots" content="{{ response_context.head.metaRobots }}">
-            <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
-            {% for meta_tag in response_context.head.metaTags %}
-                <meta{{ meta_tag }}>
-            {% endfor %}
-
-            {% if page['enableCanonical'] %}
-                <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request)|default }}">
-            {% endif %}
-            {% for link_tag in response_context.head.linkTags %}
-                <link{{ link_tag }}>
-            {% endfor %}
-        {% endif %}
-
+        {# @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. #}
         {% block end_of_head %}
             {% for element in response_context.end_of_head|default %}
                 {{ element|raw }}
@@ -76,6 +74,15 @@
     {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
     {% defer %}
         {% block end_of_body %}
+            {% for identifier, element in response_context.body|default %}
+                {{ include('@Contao/component/_html_tag.html.twig', {
+                    tag: element,
+                    identifier,
+                    debug: app.debug|default(false),
+                }, false) }}
+            {% endfor %}
+
+            {# @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. #}
             {% for element in response_context.end_of_body|default %}
                 {{ element|raw }}
             {% endfor %}
