@@ -5,20 +5,15 @@
     border-bottom: 1px solid var(--content-border);
 }
 
-#home {
-    position: absolute;
-}
-
-#home {
-    display: block;
-    height: 16px;
-    padding: 12px 12px 12px 42px;
-    background: url("icons/logo.svg") no-repeat 10px center;
-}
-
 #home .app-title {
     font-size: 17px;
     color: var(--text);
+}
+
+#header .badge-title {
+    text-overflow: ellipsis;
+    overflow-x: clip;
+    white-space: nowrap;
 }
 
 #header .inner {
@@ -264,4 +259,87 @@
 
 #tmenu .icon-logout {
     background: var(--icon-logout) 20px center no-repeat;
+}
+
+@media (width < 600px) {
+    #header {
+        &:has(.badge-title) {
+            padding-top: 18px;
+
+            + #container #left {
+                top: 58px;
+            }
+        }
+
+        .badge-title {
+            position: absolute;
+            inset: 0 0 auto;
+            margin: -18px 0 0;
+            border-radius: 0;
+            padding: 3px 5px;
+            background-color: var(--text);
+            color: var(--white);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    html[data-color-scheme="dark"] {
+        #header .badge-title {
+            background-color: var(--invert-text);
+            color: var(--black);
+        }
+    }
+
+    #home {
+        position: absolute;
+        display: block;
+        height: 16px;
+        padding: 12px;
+        min-width: 22px;
+        background: url("icons/logo.svg") no-repeat 10px center;
+    }
+}
+
+@media (width < 768px) {
+    #header .app-title {
+        display: none;
+    }
+}
+
+@media (width >= 600px) {
+    /* Make sure the empty link sits over the logo so it is still clickable due to the hidden app-title */
+    #home {
+        display: inline-block;
+        height: 40px;
+        width: 46px;
+        margin: -12px;
+    }
+
+    #app-logo {
+        position: absolute;
+        height: 16px;
+        padding: 12px;
+        background: url("icons/logo.svg") no-repeat 10px center;
+    }
+
+    #header .badge-title {
+        margin-left: 10px;
+
+        /* Limit the badge-title width - see #9680 */
+        max-width: 106px;
+    }
+}
+
+@media (width >= 768px) {
+    #home {
+        height: initial;
+        width: initial;
+        padding: 12px 12px 12px 42px;
+    }
+
+    #header .badge-title {
+        margin-left: 8px;
+    }
 }
