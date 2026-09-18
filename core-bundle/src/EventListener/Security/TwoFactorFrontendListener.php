@@ -95,7 +95,7 @@ class TwoFactorFrontendListener
 
         $currentPage = $request->attributes->get('pageModel');
 
-        // Return if we are on the 401 target page already
+        // Return if we already are on the 401 target page
         if ($currentPage instanceof PageModel) {
             $page401 = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_401');
 

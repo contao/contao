@@ -27,7 +27,7 @@ class PageUrlGeneratorTest extends TestCase
 {
     private PageUrlGenerator $generator;
 
-    private PageRegistry&MockObject $pageRegistry;
+    private MockObject&PageRegistry $pageRegistry;
 
     protected function setUp(): void
     {

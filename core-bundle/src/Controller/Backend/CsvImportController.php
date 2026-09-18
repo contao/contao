@@ -15,11 +15,15 @@ namespace Contao\CoreBundle\Controller\Backend;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +31,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class CsvImportController
+class CsvImportController extends AbstractController
 {
     final public const SEPARATOR_COMMA = 'comma';
 
@@ -51,11 +55,15 @@ class CsvImportController
 
     public function importListWizardAction(DataContainer $dc): Response
     {
+        if (!$currentRecord = $dc->getCurrentRecord()) {
+            throw new NotFoundException('Cannot load record "'.$dc->table.'.id='.$dc->id.'".');
+        }
+
         return $this->importFromTemplate(
             static fn (array $data, array $row): array => [...$data, ...$row],
             $dc->table,
             'listitems',
-            (int) $dc->id,
+            $currentRecord,
             $this->translator->trans('MSC.lw_import.0', [], 'contao_default'),
             true,
         );
@@ -63,6 +71,10 @@ class CsvImportController
 
     public function importTableWizardAction(DataContainer $dc): Response
     {
+        if (!$currentRecord = $dc->getCurrentRecord()) {
+            throw new NotFoundException('Cannot load record "'.$dc->table.'.id='.$dc->id.'".');
+        }
+
         return $this->importFromTemplate(
             static function (array $data, array $row): array {
                 $data[] = $row;
@@ -71,13 +83,17 @@ class CsvImportController
             },
             $dc->table,
             'tableitems',
-            (int) $dc->id,
+            $currentRecord,
             $this->translator->trans('MSC.tw_import.0', [], 'contao_default'),
         );
     }
 
     public function importOptionWizardAction(DataContainer $dc): Response
     {
+        if (!$currentRecord = $dc->getCurrentRecord()) {
+            throw new NotFoundException('Cannot load record "'.$dc->table.'.id='.$dc->id.'".');
+        }
+
         return $this->importFromTemplate(
             static function (array $data, array $row): array {
                 $data[] = [
@@ -91,12 +107,12 @@ class CsvImportController
             },
             $dc->table,
             'options',
-            (int) $dc->id,
+            $currentRecord,
             $this->translator->trans('MSC.ow_import.0', [], 'contao_default'),
         );
     }
 
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string|null $submitLabel = null, bool $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, array $currentRecord, string|null $submitLabel = null, bool $allowLinebreak = false): Response
     {
         if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new InternalServerErrorException('No request object given.');
@@ -107,9 +123,7 @@ class CsvImportController
         $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
-        if (null !== $submitLabel) {
-            $template->submitLabel = $submitLabel;
-        }
+        $template->submitLabel = $submitLabel ?? $this->translator->trans('MSC.apply', [], 'contao_default');
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
             try {
@@ -121,7 +135,8 @@ class CsvImportController
                 return new RedirectResponse($request->getUri());
             }
 
-            $this->connection->update($table, [$field => serialize($data)], ['id' => $id]);
+            $this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$table, new UpdateAction($table, $currentRecord, [$field => serialize($data)]));
+            $this->connection->update($table, [$field => serialize($data)], ['id' => $currentRecord['id']]);
 
             return new RedirectResponse($this->getBackUrl($request));
         }
@@ -139,14 +154,15 @@ class CsvImportController
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
-        $template->submitLabel = $this->translator->trans('MSC.apply', [], 'contao_default');
+        $template->messages = Message::generate();
+
+        // Backwards compatibility
         $template->backBT = $this->translator->trans('MSC.backBT', [], 'contao_default');
         $template->backBTTitle = $this->translator->trans('MSC.backBTTitle', [], 'contao_default');
         $template->separatorLabel = $this->translator->trans('MSC.separator.0', [], 'contao_default');
         $template->separatorHelp = $this->translator->trans('MSC.separator.1', [], 'contao_default');
         $template->sourceLabel = $this->translator->trans('MSC.source.0', [], 'contao_default');
         $template->sourceLabelHelp = $this->translator->trans('MSC.source.1', [], 'contao_default');
-        $template->messages = Message::generate();
 
         return $template;
     }
@@ -192,16 +208,19 @@ class CsvImportController
             self::SEPARATOR_COMMA => [
                 'delimiter' => ',',
                 'value' => self::SEPARATOR_COMMA,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.comma', [], 'contao_default'),
             ],
             self::SEPARATOR_SEMICOLON => [
                 'delimiter' => ';',
                 'value' => self::SEPARATOR_SEMICOLON,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.semicolon', [], 'contao_default'),
             ],
             self::SEPARATOR_TABULATOR => [
                 'delimiter' => "\t",
                 'value' => self::SEPARATOR_TABULATOR,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.tabulator', [], 'contao_default'),
             ],
         ];

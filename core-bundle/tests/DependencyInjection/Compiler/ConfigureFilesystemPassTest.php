@@ -37,7 +37,7 @@ use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
-    private string|false $cwdBackup = false;
+    private false|string $cwdBackup = false;
 
     protected function setUp(): void
     {
@@ -251,8 +251,6 @@ class ConfigureFilesystemPassTest extends TestCase
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
-
-            /** @phpstan-ignore filesystemcall.unsafe */
             symlink($target, $link);
         }
     }

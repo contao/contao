@@ -8,6 +8,16 @@ services:
             - '@contao.framework'
             - '@?monolog.logger.contao.cron'
 
+    contao_newsletter.listener.block_recipient:
+        class: Contao\NewsletterBundle\EventListener\BlockRecipientListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@request_stack'
+            - '@router'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+
     contao_newsletter.listener.member_activation_mail:
         class: Contao\NewsletterBundle\EventListener\MemberActivationMailListener
         arguments:

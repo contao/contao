@@ -36,9 +36,7 @@ class BackendRebuildCacheMessageListener
 
     public function __invoke(RequestEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if (!$this->scopeMatcher->isBackendRequest($request)) {
+        if (!$this->scopeMatcher->isBackendMainRequest($event)) {
             return;
         }
 
@@ -46,7 +44,7 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        $session = $request->getSession();
+        $session = $event->getRequest()->getSession();
 
         if (!$session instanceof Session) {
             return;

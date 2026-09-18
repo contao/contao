@@ -99,12 +99,12 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
     private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
         $tokenHash = hash('xxh128', serialize($token));
-
-        if (isset($this->canAccessTable[$tokenHash]) || ($subject instanceof ReadAction && isset($this->canReadAccessTable[$tokenHash]))) {
-            return $this->canAccessTable[$tokenHash] ?? $this->canReadAccessTable[$tokenHash];
-        }
-
         $table = $subject->getDataSource();
+        $cacheKey = $tokenHash.' '.$table;
+
+        if (isset($this->canAccessTable[$cacheKey]) || ($subject instanceof ReadAction && isset($this->canReadAccessTable[$cacheKey]))) {
+            return $this->canAccessTable[$cacheKey] ?? $this->canReadAccessTable[$cacheKey];
+        }
 
         foreach ($GLOBALS['BE_MOD'] as $modules) {
             foreach ($modules as $name => $config) {
@@ -113,7 +113,7 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
                     && \in_array($table, $config['tables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return $this->canAccessTable[$tokenHash] = true;
+                    return $this->canAccessTable[$cacheKey] = true;
                 }
 
                 if (
@@ -122,11 +122,11 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
                     && \in_array($table, $config['ptables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return $this->canReadAccessTable[$tokenHash] = true;
+                    return $this->canReadAccessTable[$cacheKey] = true;
                 }
             }
         }
 
-        return $this->canAccessTable[$tokenHash] = false;
+        return $this->canAccessTable[$cacheKey] = false;
     }
 }

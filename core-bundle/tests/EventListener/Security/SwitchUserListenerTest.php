@@ -64,7 +64,7 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    private function mockTokenStorage(string $username): TokenStorageInterface&MockObject
+    private function mockTokenStorage(string $username): MockObject&TokenStorageInterface
     {
         $token = $this->createMock(TokenInterface::class);
         $token

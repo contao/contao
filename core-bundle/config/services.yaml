@@ -613,6 +613,7 @@ services:
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               contao.insert_tag.parser: '@contao.insert_tag.parser'
               event_dispatcher: '@event_dispatcher'
+              contao.string.html_decoder: '@contao.string.html_decoder'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.web_dir%'
@@ -906,11 +907,6 @@ services:
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
-        arguments:
-            - '@doctrine'
-
-    contao.repository.job:
-        class: Contao\CoreBundle\Repository\JobRepository
         arguments:
             - '@doctrine'
 
@@ -1265,8 +1261,8 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
-    contao.security.data_container.preview_access_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+    contao.security.data_container.preview_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewVoter
         arguments:
             - '@security.access.decision_manager'
 
@@ -1643,16 +1639,6 @@ services:
 
     contao.url_highlight:
         class: VStelmakh\UrlHighlight\UrlHighlight
-        arguments:
-            - ~
-            - '@contao.url_highlight.html_highlighter'
-            - !service { class: VStelmakh\UrlHighlight\Encoder\HtmlSpecialcharsEncoder }
-
-    contao.url_highlight.html_highlighter:
-        class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
-        arguments:
-            - https
-            - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
         class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser

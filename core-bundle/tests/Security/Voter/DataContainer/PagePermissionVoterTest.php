@@ -927,7 +927,7 @@ class PagePermissionVoterTest extends TestCase
         ];
     }
 
-    private function mockToken(array|null $pagemounts = null): TokenInterface&MockObject
+    private function mockToken(array|null $pagemounts = null): MockObject&TokenInterface
     {
         $token = $this->createMock(TokenInterface::class);
 

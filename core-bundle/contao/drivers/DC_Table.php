@@ -389,10 +389,41 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Use the ptable query parameter if it points to itself (nested elements case)
-			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			// Find the parent table in the backend module
+			if ($do = Input::get('do'))
 			{
-				return $this->strTable;
+				$tables = array();
+
+				foreach ($GLOBALS['BE_MOD'] ?? array() as $group)
+				{
+					if (isset($group[$do]))
+					{
+						$tables = (array) ($group[$do]['tables'] ?? array());
+						break;
+					}
+				}
+
+				// Use the parent table if it has been set in the DCA file
+				if (($ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true))
+				{
+					array_unshift($tables, $ptable);
+				}
+
+				// Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
+				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
+				{
+					array_unshift($tables, $ptable);
+				}
+
+				foreach ($tables as $ptable)
+				{
+					$this->loadDataContainer($ptable);
+
+					if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
+					{
+						return $ptable;
+					}
+				}
 			}
 		}
 
@@ -1072,7 +1103,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Empty unique fields or add a unique identifier in copyAll mode
 					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] ?? null)
 					{
-						$v = (Input::get('act') == 'copyAll' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotCopy'] ?? null)) ? $v . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 8) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
+						$v = (Input::get('act') == 'copyAll' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['doNotCopy'] ?? null)) ? $v . '-' . bin2hex(random_bytes(4)) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql'] ?? array());
 					}
 
 					// Reset doNotCopy and fallback fields to their default value
@@ -1254,7 +1285,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$children = Input::get('childs');
 		}
 
-		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
+		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && !($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
 		{
 			$ctable[] = $table;
 		}
@@ -1310,7 +1341,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Empty unique fields or add a unique identifier in copyAll mode
 						elseif ($GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['unique'] ?? null)
 						{
-							$vv = (Input::get('act') == 'copyAll' && !$GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['doNotCopy']) ? $vv . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 8) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql'] ?? array());
+							$vv = (Input::get('act') == 'copyAll' && !$GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['doNotCopy']) ? $vv . '-' . bin2hex(random_bytes(4)) : Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql'] ?? array());
 						}
 
 						// Reset doNotCopy and fallback fields to their default value
@@ -2250,7 +2281,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$objTemplate = new BackendTemplate('be_conflict');
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
+				$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->host = Backend::getDecodedHostname();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
@@ -2302,7 +2333,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=create&mode=' . self::PASTE_AFTER . '&pid=' . $this->intId : '&act=create&mode=' . self::PASTE_INTO . '&pid=' . ($currentRecord['pid'] ?? null);
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
@@ -2338,7 +2369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=copy&mode=' . self::PASTE_AFTER . '&pid=' . $this->intId . '&id=' . $this->intId : '&act=copy&mode=' . self::PASTE_INTO . '&pid=' . $this->intCurrentPid . '&id=' . $this->intId;
 
-					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					if ($currentRecord['ptable'] ?? null)
 					{
 						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
@@ -3537,6 +3568,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
 		$arrFound = array();
 
 		if (!empty($this->procedure))
@@ -3620,6 +3652,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$parameters['primary_only'] = $this->shouldRenderPrimaryOperationsOnly();
+		$parameters['is_sortable'] = $blnIsSortable;
 
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
@@ -4076,9 +4109,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'id' => "{$node}_$id",
 			'record_id' => (int) $currentRecord['id'],
 			'record_table' => $table,
+			'records_group' => $this->strTable,
 			'level' => $intMargin / $intSpacing + 1,
 			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
 			'is_group' => ($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable,
+			'is_root_page' => ($currentRecord['type'] ?? null) === 'root',
+			'is_leaf_record' => $isCurrentTable && !$isTreeMode,
 			'is_expanded' => $blnIsOpen,
 			'enable_deeplink' => $isCurrentTable,
 			'primary_only' => $this->shouldRenderPrimaryOperationsOnly(),
@@ -4086,6 +4122,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'records' => array(),
 			'children' => array(),
 		);
+
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
+
+		$parameters['is_sortable'] = $blnIsSortable;
+		$parameters['allow_dragging'] = false;
+
+		if ($blnIsSortable && $isCurrentTable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
+		{
+			$parameters['allow_dragging'] = true;
+		}
 
 		if ($table != $this->strTable)
 		{
@@ -5333,7 +5379,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (($v['filter'] ?? null) == $intFilterPanel)
+			if (($v['filter'] ?? false) && ($intFilterPanel === 0 || $v['filter'] == $intFilterPanel))
 			{
 				$sortingFields[] = $k;
 			}
@@ -5635,7 +5681,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
-		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds();
+		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))
+			->withIgnoreOutOfBounds()
+			->withPageRange(7);
 
 		if ($limit)
 		{
