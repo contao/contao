@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**

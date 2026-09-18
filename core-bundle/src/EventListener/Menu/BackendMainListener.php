@@ -36,7 +36,7 @@ class BackendMainListener
         private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
     ) {
     }
 
