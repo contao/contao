@@ -1,7 +1,7 @@
 {% use '@Contao/component/_stylesheet.html.twig' %}
 
 {% add 'moo_mediabox' to stylesheets %}
-    {% with {file: 'assets/mediabox/css/mediabox-black.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% with {file: asset('css/mediabox-black.min.css', 'contao-components/mediabox')} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 
 <script src="{{ asset('js/mediabox.min.js', 'contao-components/mediabox') }}"></script>

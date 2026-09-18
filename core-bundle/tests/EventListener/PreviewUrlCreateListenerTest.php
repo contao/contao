@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
@@ -26,7 +27,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent('page', 42);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -51,7 +52,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -66,13 +67,15 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn(['tl_content', 18])
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
             ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn([['pid' => 3, 'ptable' => 'tl_article']])
+            ->method('getParentTableAndId')
+            ->with(18, 'tl_content')
+            ->willReturn(['tl_article', 3])
         ;
 
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -82,7 +85,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection, $dcaHierarchy);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -99,7 +102,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -110,7 +113,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -127,7 +130,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

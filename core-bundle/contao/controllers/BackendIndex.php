@@ -81,7 +81,7 @@ class BackendIndex extends Backend
 
 		$objTemplate = new BackendTemplate('be_login');
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
-		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['loginBT']);
+		$objTemplate->loginButton = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
 		$token = $container->get('security.token_storage')->getToken();
 
@@ -95,7 +95,7 @@ class BackendIndex extends Backend
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
-			$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+			$objTemplate->loginButton = $GLOBALS['TL_LANG']['MSC']['continue'];
 		}
 
 		$objTemplate->messages = Message::generate();
