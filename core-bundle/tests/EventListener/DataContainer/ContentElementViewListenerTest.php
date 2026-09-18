@@ -74,7 +74,7 @@ class ContentElementViewListenerTest extends TestCase
     }
 
     #[DataProvider('gridViewProvider')]
-    public function testGridView(array $row, string $expectedLabel, string $expectedClass, string $expectedPreview = '', string|array|false $queryResult = false): void
+    public function testGridView(array $row, string $expectedLabel, string $expectedClass, string $expectedPreview = '', array|false|string $queryResult = false): void
     {
         $contentModel = $this->createMock(ContentModel::class);
         $contentModel
