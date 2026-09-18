@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class DataContainerRecordNormalizerTest extends TestCase
 {
-    public function testPopulatesTheExistingRecordWithoutLosingOmittedFields(): void
+    public function testKeepsOnlyExplicitlySubmittedFieldsForTheUpdate(): void
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example', 'published' => false, 'tags' => ['old', 'other']], 17);
         $normalizer = new DataContainerRecordNormalizer();
@@ -35,7 +35,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
         $this->assertSame($record, $result);
         $this->assertSame(17, $result->id);
-        $this->assertSame(['title' => 'Example', 'published' => true, 'tags' => ['new']], $result->data);
+        $this->assertSame(['published' => true, 'tags' => ['new']], $result->data);
     }
 
     public function testPreservesExplicitNullValuesForValidation(): void
@@ -74,7 +74,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
         );
 
         $this->assertSame($record, $result);
-        $this->assertSame(['title' => 'Example'], $result->data);
+        $this->assertSame([], $result->data);
     }
 
     public function testRejectsPopulatingARecordFromAnotherTable(): void
