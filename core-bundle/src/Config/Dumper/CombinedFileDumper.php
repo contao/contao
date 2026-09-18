@@ -94,7 +94,7 @@ class CombinedFileDumper implements DumperInterface
                 $file = Path::makeRelative($file, $cacheDirectory);
             }
 
-            $file = str_replace(["\r", "\n", '*/'], ['\\r', '\\n', '* /'], $file);
+            $file = str_replace(['../', "\r", "\n", '*/'], ['', '\\r', '\\n', '* /'], $file);
             $header .= \sprintf(" * %d-%d: %s\n", $start + $offset, $end + $offset, $file);
         }
 
