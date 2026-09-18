@@ -24,15 +24,41 @@ class CombinedFileDumperTest extends TestCase
 {
     public function testDumpsTheDataIntoAFile(): void
     {
-        $filesystem = $this->mockFilesystem("<?php\n/*\n * Source files (line ranges in this cache file):\n * 6-7: test.php\n */\n\necho 'test';\n");
+        $filesystem = new Filesystem();
+        $source = $this->getTempDir().'/source.php';
+        $cacheDirectory = $this->getTempDir().'/cache';
+        $filesystem->dumpFile($source, "<?php\necho 'test';\n");
 
-        $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
-        $dumper->dump(['test.php'], 'test.php');
+        $dumper = new CombinedFileDumper($filesystem, new PhpFileLoader(), $cacheDirectory);
+        $dumper->dump([$source], 'dca/test.php');
+
+        $expected = <<<'PHP'
+            <?php
+            /*
+             * Source files (line ranges in this cache file):
+             * 6-7: ../../source.php
+             */
+
+            echo 'test';
+            PHP;
+
+        $this->assertSame($expected."\n", file_get_contents($cacheDirectory.'/dca/test.php'));
     }
 
     public function testHandlesCustomHeaders(): void
     {
-        $filesystem = $this->mockFilesystem("<?php\necho 'foo';\n/*\n * Source files (line ranges in this cache file):\n * 7-8: test.php\n */\n\necho 'test';\n");
+        $expected = <<<'PHP'
+            <?php
+            echo 'foo';
+            /*
+             * Source files (line ranges in this cache file):
+             * 7-8: test.php
+             */
+
+            echo 'test';
+            PHP;
+
+        $filesystem = $this->mockFilesystem($expected."\n");
 
         $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
         $dumper->setHeader("<?php\necho 'foo';");
@@ -63,8 +89,19 @@ class CombinedFileDumperTest extends TestCase
             ])
         ;
 
-        $expected = "<?php\n/*\n * Source files (line ranges in this cache file):\n * 7-8: first.php\n * 9-9: second.php\n */\n\necho 'first';\necho 'second';\n";
-        $dumper = new CombinedFileDumper($this->mockFilesystem($expected), $loader, $this->getTempDir());
+        $expected = <<<'PHP'
+            <?php
+            /*
+             * Source files (line ranges in this cache file):
+             * 7-8: first.php
+             * 9-9: second.php
+             */
+
+            echo 'first';
+            echo 'second';
+            PHP;
+
+        $dumper = new CombinedFileDumper($this->mockFilesystem($expected."\n"), $loader, $this->getTempDir());
         $dumper->dump(['first.php', 'empty.php', 'second.php'], 'test.php');
     }
 

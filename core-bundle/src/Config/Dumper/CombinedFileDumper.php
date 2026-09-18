@@ -66,13 +66,14 @@ class CombinedFileDumper implements DumperInterface
             $buffer .= $code;
         }
 
-        $this->filesystem->dumpFile(Path::join($this->cacheDir, $cacheFile), $this->generateHeader($sources).$buffer);
+        $cachePath = Path::join($this->cacheDir, $cacheFile);
+        $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, Path::getDirectory($cachePath)).$buffer);
     }
 
     /**
      * @param list<array{string, int, int}> $sources
      */
-    private function generateHeader(array $sources): string
+    private function generateHeader(array $sources, string $cacheDirectory): string
     {
         if ([] === $sources) {
             return $this->header;
@@ -89,6 +90,10 @@ class CombinedFileDumper implements DumperInterface
         $header .= "/*\n * Source files (line ranges in this cache file):\n";
 
         foreach ($sources as [$file, $start, $end]) {
+            if (Path::isAbsolute($file)) {
+                $file = Path::makeRelative($file, $cacheDirectory);
+            }
+
             $file = str_replace(["\r", "\n", '*/'], ['\\r', '\\n', '* /'], $file);
             $header .= \sprintf(" * %d-%d: %s\n", $start + $offset, $end + $offset, $file);
         }
