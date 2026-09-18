@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -23,12 +24,17 @@ use Contao\DC_Table;
 use Contao\Image;
 use Contao\MemberGroupModel;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentElementViewListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -100,26 +106,23 @@ class ContentElementViewListener
 
     private function generateContentTypeLabel(array $row): string
     {
-        $transId = "CTE.$row[type].0";
-        $label = $this->translator->trans($transId, [], 'contao_default');
+        $label = $this->trans("CTE.$row[type].0", $row['type']);
+        $title = null;
 
-        if ($transId === $label) {
-            $label = $row['type'];
-        }
+        match ($row['type']) {
+            'alias' => $this->updateElement($row, $label, $title),
+            'module' => $this->updateModule($row, $label, $title),
+            'article' => $this->updateArticle($row, $label, $title),
+            'headline' => $this->updateHeadline($row, $label),
+            default => null,
+        };
 
-        // Add the ID of the aliased element
-        if ('alias' === $row['type']) {
-            $label .= ' ID '.($row['cteAlias'] ?? 0);
-        }
-
-        // Add the headline level (see #5858)
-        if ('headline' === $row['type'] && \is_array($headline = StringUtil::deserialize($row['headline']))) {
-            $label .= ' ('.$headline['unit'].')';
-        }
-
-        // Show the title
         if ($row['title'] ?? null) {
-            $label = $row['title'].' <span class="tl_gray">['.$label.']</span>';
+            $title = $row['title'];
+        }
+
+        if ($title) {
+            $label = $title.' <span class="tl_gray">['.$label.']</span>';
         }
 
         // Add the protection status
@@ -150,6 +153,87 @@ class ContentElementViewListener
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFrom', [Date::parse(Config::get('datimFormat'), $row['start'])], 'contao_default').')</span>';
         } elseif ($row['stop'] ?? null) {
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showTo', [Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
+        }
+
+        return $label;
+    }
+
+    private function updateElement(array $row, string &$label, string|null &$title): void
+    {
+        $href = $this->dcaUrlAnalyzer->getEditUrl('tl_content', $row['cteAlias']);
+
+        $label .= \sprintf(
+            ' <a href="%s" onclick="Backend.openModalIframe({ title: \'%s ID %s\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID %s</a>',
+            $href,
+            StringUtil::specialchars($label),
+            $row['cteAlias'],
+            $row['cteAlias'],
+        );
+
+        [$type, $title] = ($this->connection->fetchNumeric('SELECT type, title FROM tl_content WHERE id=?', [$row['cteAlias']]) ?: []) + ['', null];
+
+        if ($type) {
+            $label .= ' ('.$this->trans('CTE.'.$type.'.0', $type).')';
+        }
+    }
+
+    private function updateModule(array $row, string &$label, string|null &$title): void
+    {
+        $href = $this->urlGenerator->generate('contao_backend', [
+            'do' => 'themes',
+            'table' => 'tl_module',
+            'act' => 'edit',
+            'id' => $row['module'],
+        ]);
+
+        $label .= \sprintf(
+            ' <a href="%s" onclick="Backend.openModalIframe({ title: \'%s ID %s\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID %s</a>',
+            $href,
+            StringUtil::specialchars($label),
+            $row['module'],
+            $row['module'],
+        );
+
+        [$type, $title] = ($this->connection->fetchNumeric('SELECT type, name FROM tl_module WHERE id=?', [$row['module']]) ?: []) + ['', null];
+
+        if ($type) {
+            $label .= ' ('.$this->trans('FMD.'.$type.'.0', $type, 'contao_modules').')';
+        }
+    }
+
+    private function updateArticle(array $row, string &$label, string|null &$title): void
+    {
+        $href = $this->urlGenerator->generate('contao_backend', [
+            'do' => 'article',
+            'act' => 'edit',
+            'id' => $row['articleAlias'],
+        ]);
+
+        $label .= \sprintf(
+            ' <a href="%s"  onclick="Backend.openModalIframe({ title: \'%s ID %s\', url:this.href + \'&amp;popup=1&amp;nb=1\' });return false">ID %s</a>',
+            $href,
+            StringUtil::specialchars($label),
+            $row['articleAlias'],
+            $row['articleAlias'],
+        );
+
+        $title = (string) $this->connection->fetchOne('SELECT title FROM tl_article WHERE id=?', [$row['articleAlias']]) ?: null;
+    }
+
+    private function updateHeadline(array $row, string &$label): void
+    {
+        // Add the headline level (see #5858)
+        if (\is_array($headline = StringUtil::deserialize($row['headline']))) {
+            $label .= ' ('.$headline['unit'].')';
+        }
+    }
+
+    private function trans(string $transId, string $default, string $domain = 'contao_default'): string
+    {
+        $label = $this->translator->trans($transId, [], $domain);
+
+        if ($transId === $label) {
+            return $default;
         }
 
         return $label;
