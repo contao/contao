@@ -312,7 +312,7 @@ export default class extends Controller {
         positionAt(menu, handle, 'row' === axis ? 'right-start' : 'bottom-start');
         handle.setAttribute('aria-expanded', 'true');
         this.#setActive(axis, index);
-        menu.querySelector('.table-wizard-menu-item')?.focus();
+        menu.querySelector('.table-wizard-menu-item')?.focus({ preventScroll: true });
         this.#menu = { element: menu, handle, axis, index };
     }
 
