@@ -143,7 +143,7 @@ class ModuleLogin extends Module
 
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
-			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
+			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['logout'];
 			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
@@ -220,7 +220,7 @@ class ModuleLogin extends Module
 
 			$this->Template->twoFactorEnabled = true;
 			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
-			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['continue'];
 			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 
@@ -234,18 +234,18 @@ class ModuleLogin extends Module
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['login'];
+		$this->Template->value = Input::encodeInsertTags($lastUsername);
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->remembered = false;
 
 		if ($isRemembered)
 		{
-			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['verify']);
+			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['verify'];
 			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
-			$this->Template->reauthenticate = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reauthenticate']);
-			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
+			$this->Template->reauthenticate = $GLOBALS['TL_LANG']['MSC']['reauthenticate'];
+			$this->Template->value = Input::encodeInsertTags($user->getUserIdentifier());
 			$this->Template->remembered = true;
 		}
 	}

@@ -75,13 +75,18 @@ class PreviewLinkListener
     #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function createFromUrl(DataContainer $dc): void
     {
+        $user = $this->security->getUser();
+
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy = ?', $user instanceof BackendUser ? (int) $user->id : 0];
+        }
+
         $request = $this->requestStack->getCurrentRequest();
 
         if (!$request) {
             return;
         }
 
-        $user = $this->security->getUser();
         $act = $request->query->get('act');
         $url = $request->query->getString('url');
         $now = $this->clock->now();

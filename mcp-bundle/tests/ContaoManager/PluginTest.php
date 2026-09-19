@@ -86,10 +86,21 @@ final class PluginTest extends TestCase
         );
     }
 
-    public function testProtectsTheMcpRouteWithBackendScope(): void
+    public function testDisablesAutomaticApiToolRegistration(): void
     {
-        $route = Yaml::parseFile(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/api_platform.yaml');
+
+        $this->assertFalse($config['api_platform']['mcp']['enabled']);
+    }
+
+    public function testRoutesToTheBackendController(): void
+    {
+        $route = Yaml::parseFile(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')['contao_mcp_backend'];
 
         $this->assertSame(['_scope' => 'backend'], $route['defaults']);
+        $this->assertSame('%contao_mcp.backend_path%', $route['path']);
+        $this->assertSame('mcp.server.contao_backend.controller::handle', $route['controller']);
+        $this->assertSame(['GET', 'POST', 'DELETE', 'OPTIONS'], $route['methods']);
+        $this->assertArrayNotHasKey('resource', $route);
     }
 }

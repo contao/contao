@@ -1817,8 +1817,16 @@ window.Backend =
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;
 
+		options.paramName = 'files';
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
+
+		options.params = function() {
+			return {
+				FORM_SUBMIT: 'tl_upload',
+				action: 'fileupload'
+			};
+		};
 
 		var dz = new Dropzone(wrap, options);
 
@@ -1843,8 +1851,7 @@ window.Backend =
 				}
 
 				if (folder) {
-					var link = folder.getElement('img[src$="/icons/new.svg"]');
-					link = link && link.getParent('a');
+					var link = folder.getElement('a.upload');
 				}
 			}
 

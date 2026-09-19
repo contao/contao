@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Util\UrlUtil;
-use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -138,10 +137,10 @@ class BackendFavoritesListener
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
                 ->setAttribute('id', 'favorites-menu-'.$node['id'])
-                ->setLabel(StringUtil::decodeEntities($node['title']))
+                ->setLabel($node['title'])
                 ->setUri($node['url'])
                 ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
+                ->setLinkAttribute('title', $node['title'])
                 ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
                 ->setCurrent($node['url'] === $requestUri)
                 ->setExtra('translation_domain', false)

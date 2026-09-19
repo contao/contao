@@ -233,7 +233,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
-    private function mockSecurity(): Security&MockObject
+    private function mockSecurity(): MockObject&Security
     {
         $security = $this->createMock(Security::class);
         $security

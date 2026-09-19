@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Database;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -35,7 +33,7 @@ class ClipboardManager
     private const SESSION_KEY = 'CLIPBOARD';
 
     public function __construct(
-        private readonly ContaoFramework $framework,
+        private readonly DcaHierarchy $hierarchy,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -150,8 +148,7 @@ class ClipboardManager
             return false;
         }
 
-        $db = $this->framework->createInstance(Database::class);
-        $childrenOfClipboard = $db->getChildRecords($clipboard['id'], $table);
+        $childrenOfClipboard = $this->hierarchy->getChildIds($clipboard['id'], $table);
 
         return \in_array($id, $childrenOfClipboard, false);
     }
