@@ -64,7 +64,7 @@ class ContentElementNestingVoterTest extends TestCase
     }
 
     #[DataProvider('nestedElementsProvider')]
-    public function testNestedElements(CreateAction|DeleteAction|ReadAction|UpdateAction $action, string|false $databaseResult, bool $supportsNesting, bool $isGranted): void
+    public function testNestedElements(CreateAction|DeleteAction|ReadAction|UpdateAction $action, false|string $databaseResult, bool $supportsNesting, bool $isGranted): void
     {
         $connection = $this->createStub(Connection::class);
         $connection

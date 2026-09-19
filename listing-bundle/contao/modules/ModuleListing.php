@@ -331,8 +331,8 @@ class ModuleListing extends Module
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
 		$this->Template->details = (bool) $this->list_info;
-		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
-		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
+		$this->Template->search_label = $GLOBALS['TL_LANG']['MSC']['search'];
+		$this->Template->per_page_label = $GLOBALS['TL_LANG']['MSC']['list_perPage'];
 		$this->Template->fields_label = $GLOBALS['TL_LANG']['MSC']['all_fields'][0];
 		$this->Template->keywords_label = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->search = $strSearch;

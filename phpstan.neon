@@ -5,7 +5,6 @@ includes:
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
-    - vendor-bin/phpstan/vendor/slam/phpstan-extensions/conf/symfony-rules.neon
 
 parameters:
     level: 6
@@ -24,12 +23,15 @@ parameters:
         - %currentWorkingDirectory%/listing-bundle/src
         - %currentWorkingDirectory%/maker-bundle/src
         - %currentWorkingDirectory%/maker-bundle/tests
+        - %currentWorkingDirectory%/manager-bundle/src
+        - %currentWorkingDirectory%/manager-bundle/tests
         - %currentWorkingDirectory%/mcp-bundle/src
         - %currentWorkingDirectory%/mcp-bundle/tests
         - %currentWorkingDirectory%/news-bundle/src
         - %currentWorkingDirectory%/news-bundle/tests
         - %currentWorkingDirectory%/newsletter-bundle/src
         - %currentWorkingDirectory%/newsletter-bundle/tests
+        - %currentWorkingDirectory%/test-case/src
 
     universalObjectCratesClasses:
         - Contao\BackendUser

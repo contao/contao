@@ -209,7 +209,7 @@ class ContentDownload extends ContentElement
 
 			return $previews;
 		}
-		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+		catch (MissingPreviewProviderException|UnableToGeneratePreviewException $exception)
 		{
 			return array();
 		}

@@ -186,7 +186,7 @@ class RouteLoaderTest extends ContaoTestCase
         $this->assertSame(3, array_search('contao_catch_all', array_keys($routes), true));
     }
 
-    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface&MockObject
+    private function mockRoutePlugin(string $routeName, string $routePath): MockObject&RoutingPluginInterface
     {
         $collection = new RouteCollection();
         $collection->add($routeName, new Route($routePath));

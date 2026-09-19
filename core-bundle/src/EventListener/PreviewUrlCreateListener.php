@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
@@ -25,12 +25,11 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 #[AsEventListener]
 class PreviewUrlCreateListener
 {
-    use DynamicPtableTrait;
-
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly Connection $connection,
+        private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
 
@@ -54,7 +53,7 @@ class PreviewUrlCreateListener
             }
 
             if ('tl_content' === $table) {
-                [$table, $id] = $this->getParentTableAndId($this->connection, $table, $id);
+                [$table, $id] = $this->dcaHierarchy->getParentTableAndId($id, $table);
             }
 
             if ('tl_article' !== $table) {

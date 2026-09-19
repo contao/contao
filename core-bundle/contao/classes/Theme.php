@@ -822,7 +822,7 @@ class Theme extends Backend
 		$this->addTableTlLayout($xml, $tables, $objTheme);
 
 		// Generate the archive
-		$strTmp = md5(uniqid(mt_rand(), true));
+		$strTmp = bin2hex(random_bytes(16));
 		$objArchive = new ZipWriter('system/tmp/' . $strTmp);
 
 		// Add the files

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\Validator\Constraints;
 
+use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
@@ -20,6 +21,7 @@ use Contao\Controller;
 use Contao\TestCase\ContaoTestCase;
 use Contao\Validator;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
@@ -30,6 +32,38 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
         unset($GLOBALS['TL_DCA']);
 
         parent::tearDown();
+    }
+
+    public function testValidatesAPartialUpdateAgainstTheExistingRecord(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['title' => 'abc', 'published' => false], 17);
+
+        $record = new DataContainerRecordNormalizer()->denormalize(
+            ['published' => true],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
+        );
+
+        $context = $this->createMock(ExecutionContextInterface::class);
+        $context
+            ->expects($this->never())
+            ->method('buildViolation')
+        ;
+
+        $validator = $this->createValidator();
+        $validator->initialize($context);
+        $validator->validate($record, new DataContainerRecordSchema());
+    }
+
+    public function testStillValidatesExplicitlyClearedFieldsDuringAPartialUpdate(): void
+    {
+        $record = new DataContainerRecordNormalizer()->denormalize(
+            ['title' => null],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => new DataContainerRecord('tl_content', ['title' => 'abc'], 17)],
+        );
+
+        $this->assertViolation('Field "title": The data (null) must match the type: string', 'title', $record);
     }
 
     public function testValidatesTitleLengthAccordingToTheGeneratedSchema(): void
@@ -70,16 +104,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     {
         $validator = $this->createValidator();
 
-        $context = $this->createMock(ExecutionContextInterface::class);
         $builder = $this->createMock(ConstraintViolationBuilderInterface::class);
-
-        $context
-            ->expects($this->once())
-            ->method('buildViolation')
-            ->with($expectedMessage)
-            ->willReturn($builder)
-        ;
-
         $builder
             ->expects($this->once())
             ->method('atPath')
@@ -90,6 +115,14 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
         $builder
             ->expects($this->once())
             ->method('addViolation')
+        ;
+
+        $context = $this->createMock(ExecutionContextInterface::class);
+        $context
+            ->expects($this->once())
+            ->method('buildViolation')
+            ->with($expectedMessage)
+            ->willReturn($builder)
         ;
 
         $validator->initialize($context);

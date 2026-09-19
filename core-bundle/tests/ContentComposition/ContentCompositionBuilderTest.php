@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\ContentComposition;
 
 use Contao\CoreBundle\Asset\ContaoContext;
@@ -154,7 +162,7 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame('<templates-dir>', $page->templateGroup);
 
         $expectedTemplateData = [
-            'locale' => 'de_DE',
+            'locale' => 'de-DE',
             'rtl' => false,
             'page' => [
                 'layout' => 1,

@@ -10,8 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Database\Result;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -663,7 +665,7 @@ class PageModel extends Model
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=CAST(? AS BINARY)") : array("$t.id=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -819,19 +821,32 @@ class PageModel extends Model
 	public static function findParentsById($intId)
 	{
 		$arrModels = array();
+		$objRegistry = Registry::getInstance();
 
-		while ($intId > 0 && ($objPage = static::findById($intId)) !== null)
+		while ($intId > 0 && ($objPage = $objRegistry->fetch('tl_page', $intId)) !== null)
 		{
-			$intId = $objPage->pid;
 			$arrModels[] = $objPage;
+			$intId = $objPage->pid;
 		}
 
-		if (empty($arrModels))
+		if ($intId > 0)
 		{
-			return null;
+			$options = (new ParentTraversalOptions())->withAllColumns();
+
+			foreach (System::getContainer()->get('contao.data_container.dca_hierarchy')->getParentRows($intId, 'tl_page', $options) as $arrPage)
+			{
+				$objPage = $objRegistry->fetch('tl_page', $arrPage['id']);
+
+				if ($objPage === null)
+				{
+					$objPage = static::createModelFromDbResult(new Result(array($arrPage), ''));
+				}
+
+				$arrModels[] = $objPage;
+			}
 		}
 
-		return static::createCollection($arrModels, 'tl_page');
+		return empty($arrModels) ? null : static::createCollection($arrModels, 'tl_page');
 	}
 
 	/**
@@ -924,7 +939,7 @@ class PageModel extends Model
 	 */
 	public function loadDetails()
 	{
-		// Loaded already
+		// Already loaded
 		if ($this->blnDetailsLoaded)
 		{
 			return $this;

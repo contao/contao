@@ -625,16 +625,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
 
 			$return .= '<script>'
-				. 'Dropzone.autoDiscover = false;'
 				. 'Backend.enableFileTreeUpload("tl_listing", ' . json_encode(array(
 					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
-					'paramName' => 'files',
 					'maxFilesize' => $intMaxSize,
 					'acceptedFiles' => $strAccepted,
-					'params' => array(
-						'FORM_SUBMIT' => 'tl_upload',
-						'action' => 'fileupload',
-					),
 				)) . ')</script>'
 			;
 		}
