@@ -636,8 +636,6 @@ export default class extends Controller {
 
             queueMicrotask(() => (this.#syncing = false));
         });
-
-        queueMicrotask(() => (this.#syncing = false));
     }
 
     #eachInput(axis, index, callback) {
