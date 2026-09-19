@@ -214,37 +214,35 @@ export default class extends Controller {
 
     // Keyboard navigation
     navigate(event) {
-        const textarea = event.target;
-        const key = event.key;
+        const caret = event.detail?.key ? event.detail : this.#getCaretPosition(event);
 
-        if (textarea.selectionStart !== textarea.selectionEnd) {
+        if (!caret) {
             return;
         }
 
-        let moved = false;
-
-        const cell = textarea.closest('.table-wizard-cell');
+        const cell = event.target.closest('.table-wizard-cell');
         const row = cell.closest('.table-wizard-row');
-
         const i = this.rowTargets.indexOf(row);
         const j = this.#getCells(row).indexOf(cell);
 
-        const cursorAtStart = 0 === textarea.selectionStart;
-        const cursorAtEnd = textarea.value.length === textarea.selectionStart;
+        const move = {
+            ArrowLeft: () => caret.atStart && this.#focusCell(i, j - 1, 'end'),
+            ArrowRight: () => caret.atEnd && this.#focusCell(i, j + 1),
+            ArrowUp: () => caret.atStart && this.#focusCell(i - 1, j, 'end'),
+            ArrowDown: () => caret.atEnd && this.#focusCell(i + 1, j),
+        };
 
-        if ('ArrowLeft' === key && cursorAtStart) {
-            moved = this.#focusCell(i, j - 1, 'end');
-        } else if ('ArrowRight' === key && cursorAtEnd) {
-            moved = this.#focusCell(i, j + 1);
-        } else if ('ArrowUp' === key && cursorAtStart) {
-            moved = this.#focusCell(i - 1, j, 'end');
-        } else if ('ArrowDown' === key && cursorAtEnd) {
-            moved = this.#focusCell(i + 1, j);
-        }
-
-        if (moved) {
+        if (move[caret.key]?.()) {
             event.preventDefault();
         }
+    }
+
+    #getCaretPosition({ target, key }) {
+        if (!(target instanceof HTMLTextAreaElement) || target.selectionStart !== target.selectionEnd) {
+            return null;
+        }
+
+        return { key, atStart: 0 === target.selectionStart, atEnd: target.value.length === target.selectionStart };
     }
 
     expandCellSizes() {
