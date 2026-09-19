@@ -603,7 +603,7 @@ export default class extends Controller {
     #resize(factor) {
         let size = '';
 
-        for (const textarea of document.querySelectorAll('.table-wizard-input')) {
+        for (const textarea of this.inputTargets) {
             const rect = textarea.getBoundingClientRect();
             textarea.style.width = `${Math.round(rect.width * factor)}px`;
             textarea.style.height = `${Math.round(rect.height * factor)}px`;
