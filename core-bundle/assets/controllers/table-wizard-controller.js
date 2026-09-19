@@ -578,18 +578,26 @@ export default class extends Controller {
     }
 
     #focusCell(i, j, caret = 'start') {
-        const textarea = this.rowTargets[i] && this.#getCells(this.rowTargets[i])[j]?.querySelector('textarea');
+        const input = this.#input(this.rowTargets[i] && this.#getCells(this.rowTargets[i])[j]);
 
-        if (!textarea) {
+        if (!input) {
             return false;
         }
 
-        const position = 'end' === caret ? textarea.value.length : 0;
-
-        textarea.focus();
-        textarea.setSelectionRange(position, position);
+        if (input instanceof HTMLTextAreaElement) {
+            const position = 'end' === caret ? input.value.length : 0;
+            input.focus();
+            input.setSelectionRange(position, position);
+        } else {
+            window.getSelection().collapse(input, 'end' === caret ? input.childNodes.length : 0);
+            input.focus();
+        }
 
         return true;
+    }
+
+    #input(cell) {
+        return cell?.querySelector(`[data-${this.identifier}-target~="input"]`);
     }
 
     #resize(factor) {
@@ -639,7 +647,7 @@ export default class extends Controller {
 
     #eachInput(axis, index, callback) {
         for (const cell of this.#inputCells(axis, index)) {
-            const input = cell?.querySelector('textarea');
+            const input = this.#input(cell);
 
             if (input) {
                 callback(input);
