@@ -617,16 +617,25 @@ export default class extends Controller {
 
         this.#syncing = true;
 
-        for (const { target } of entries) {
-            const cell = target.closest('.table-wizard-cell');
-            const row = cell.closest('.table-wizard-row');
+        // Run logic after next paint due to being used in the resize observer
+        requestAnimationFrame(() => {
+            for (const { target } of entries) {
+                const cell = target.closest('.table-wizard-cell');
+                const row = cell?.closest('.table-wizard-row');
 
-            const width = target.style.width || `${Math.round(target.getBoundingClientRect().width)}px`;
-            const height = target.style.height || `${Math.round(target.getBoundingClientRect().height)}px`;
+                if (!row) {
+                    continue;
+                }
 
-            this.#eachInput('column', this.#getCells(row).indexOf(cell), (input) => (input.style.width = width));
-            this.#eachInput('row', this.rowTargets.indexOf(row), (input) => (input.style.height = height));
-        }
+                const width = target.style.width || `${Math.round(target.getBoundingClientRect().width)}px`;
+                const height = target.style.height || `${Math.round(target.getBoundingClientRect().height)}px`;
+
+                this.#eachInput('column', this.#getCells(row).indexOf(cell), (input) => (input.style.width = width));
+                this.#eachInput('row', this.rowTargets.indexOf(row), (input) => (input.style.height = height));
+            }
+
+            queueMicrotask(() => (this.#syncing = false));
+        });
 
         queueMicrotask(() => (this.#syncing = false));
     }
