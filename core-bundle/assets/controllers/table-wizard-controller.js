@@ -427,6 +427,7 @@ export default class extends Controller {
 
             if (textarea) {
                 textarea.value = values ? (values[i] ?? '') : '';
+                textarea.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
     }
@@ -451,8 +452,8 @@ export default class extends Controller {
 
         if ('row' === axis) {
             const row = this.#clone(this.rowTargets[source]);
-            this.#setValues(this.#getCells(row), values);
             this.#place(row, this.rowTargets[index], this.bodyTarget);
+            this.#setValues(this.#getCells(row), values);
         } else {
             const handle = this.#clone(this.columnHandleTargets[source]);
             this.#place(handle, this.columnHandleTargets[index], this.columnHandleRowTarget);
@@ -460,8 +461,8 @@ export default class extends Controller {
             this.rowTargets.forEach((row, i) => {
                 const cells = this.#getCells(row);
                 const cell = this.#clone(cells[source]);
-                this.#setValues([cell], values ? [values[i]] : null);
                 this.#place(cell, cells[index], row);
+                this.#setValues([cell], values ? [values[i]] : null);
             });
         }
 
