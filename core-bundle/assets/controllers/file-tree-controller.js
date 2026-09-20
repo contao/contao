@@ -1,7 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 
-Dropzone.autoDiscover = false;
-
 export default class extends Controller {
     #dragged;
     #hoverTarget;
@@ -138,11 +136,6 @@ export default class extends Controller {
             url: this.uploadUrlValue,
             maxFilesize: this.maxFilesizeValue,
             acceptedFiles: this.acceptedFilesValue,
-            paramName: 'files',
-            params: {
-                FORM_SUBMIT: 'tl_upload',
-                action: 'fileupload',
-            },
             previewsContainer: this.dropzoneTarget.querySelector('.dropzone-previews'),
             clickable: false,
         });
