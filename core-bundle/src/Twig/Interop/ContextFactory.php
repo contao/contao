@@ -30,14 +30,8 @@ final class ContextFactory
     public function fromContaoTemplate(Template $template): array
     {
         $context = $this->fromData($template->getData());
-
-        if (!isset($context['as_editor_view'])) {
-            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
-        }
-
-        if (!isset($context['Template'])) {
-            $context['Template'] = $template;
-        }
+        $context['as_editor_view'] ??= $this->scopeMatcher->isBackendRequest();
+        $context['Template'] ??= $template;
 
         if ($template instanceof BackendTemplate) {
             $context['getLocaleString'] = $this->getCallableWrapper($template->getLocaleString(...));
@@ -105,13 +99,8 @@ final class ContextFactory
             $context[$name] = $this->getCallableWrapper($method->getClosure($object));
         }
 
-        if (!isset($context['this'])) {
-            $context['this'] = $object;
-        }
-
-        if (!isset($context['as_editor_view'])) {
-            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
-        }
+        $context['this'] ??= $object;
+        $context['as_editor_view'] ??= $this->scopeMatcher->isBackendRequest();
 
         return $context;
     }

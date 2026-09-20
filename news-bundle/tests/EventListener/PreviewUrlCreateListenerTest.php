@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Connection;
 
 class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
@@ -32,7 +32,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('news=1', $event->getQuery());
@@ -48,7 +48,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -59,7 +59,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $framework = $this->createContaoFrameworkStub();
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -76,7 +76,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -93,7 +93,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -110,7 +110,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(DcaHierarchy::class));
         $listener($event);
 
         $this->assertSame('news=2', $event->getQuery());
@@ -125,16 +125,17 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
             ->willReturn(['tl_content', 18])
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
             ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn([['pid' => 2, 'ptable' => 'tl_news']])
+            ->method('getParentTableAndId')
+            ->with(18, 'tl_content')
+            ->willReturn(['tl_news', 2])
         ;
 
         $event = new PreviewUrlCreateEvent('news', 18);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $dcaHierarchy);
         $listener($event);
 
         $this->assertSame('news=2', $event->getQuery());

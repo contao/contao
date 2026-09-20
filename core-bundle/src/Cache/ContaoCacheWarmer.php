@@ -47,7 +47,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         private readonly string $projectDir,
         private readonly Connection $connection,
         private readonly ContaoFramework $framework,
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
