@@ -100,7 +100,10 @@ export default class extends Controller {
         const config = this.element.inlineRteConfig;
 
         if (!config) {
-            console.error('No TinyMCE config was attached to the DOM element (expando "inlineRteConfig").', this.element);
+            console.error(
+                'No TinyMCE config was attached to the DOM element (expando "inlineRteConfig").',
+                this.element,
+            );
             return;
         }
 
@@ -142,7 +145,7 @@ export default class extends Controller {
     }
 
     #getCaretPosition(editor) {
-        if (!editor || !editor.selection.isCollapsed()) {
+        if (!editor?.selection.isCollapsed()) {
             return null;
         }
 
