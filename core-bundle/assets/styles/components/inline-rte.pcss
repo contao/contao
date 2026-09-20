@@ -1,0 +1,26 @@
+.inline-rte {
+    overflow: auto;
+    padding: 3px 6px;
+    cursor: text;
+    box-sizing: border-box;
+
+    &:focus,
+    &:focus-within {
+        outline: 2px solid var(--blue);
+        outline-offset: -2px;
+    }
+
+    :is(p, ul, ol) {
+        margin: 0 0 0.5em;
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+
+    /* Default link styles */
+    a {
+        color: revert;
+        text-decoration: revert;
+    }
+}
