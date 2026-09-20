@@ -33,18 +33,19 @@ export default class extends Controller {
     }
 
     toggleToggler(el, id, level, folder) {
-        const item = document.id(id);
+        const item = document.getElementById(id);
 
-        if (item && item.style.display === 'none') {
+        if (!item?.childElementCount) {
+            // Empty lists have not been loaded yet
+            this.fetchChild(el, id, level, folder);
+        } else if (item.style.display === 'none') {
             this.showChild(item);
             this.expandToggler(el);
             this.updateState(el, id, 1);
-        } else if (item) {
+        } else {
             this.hideChild(item);
             this.collapseToggler(el);
             this.updateState(el, id, 0);
-        } else {
-            this.fetchChild(el, id, level, folder);
         }
 
         this.updateOperation();
@@ -87,11 +88,15 @@ export default class extends Controller {
     }
 
     async fetchChild(el, id, level, folder) {
+        const list = document.getElementById(id);
+
+        if (!list) {
+            return;
+        }
+
         this.loadToggler(el, true);
 
-        const url = new URL(location.href);
-
-        const response = await fetch(url, {
+        const response = await fetch(new URL(location.href), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -108,40 +113,8 @@ export default class extends Controller {
         });
 
         if (response.ok) {
-            const txt = await response.text();
-
-            const li = document.createElement('li');
-            li.id = id;
-            li.classList.add('parent');
-            li.style.display = 'inline';
-            li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child');
-
-            const ul = document.createElement('ul');
-            ul.classList.add(`level_${level}`);
-            ul.innerHTML = txt;
-            li.append(ul);
-
-            if (this.modeValue === 5) {
-                el.closest('li').after(li);
-            } else {
-                let isFolder = false;
-                let parent = el.closest('li');
-                let next;
-
-                while (typeOf(parent) === 'element' && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
-                    parent = next;
-                    if (parent.classList.contains('tl_folder')) {
-                        isFolder = true;
-                        break;
-                    }
-                }
-
-                if (isFolder) {
-                    parent.before(li);
-                } else {
-                    parent.after(li);
-                }
-            }
+            list.innerHTML = await response.text();
+            this.showChild(list);
 
             window.dispatchEvent(new CustomEvent('structure'));
             this.expandToggler(el);
@@ -168,7 +141,7 @@ export default class extends Controller {
             }
         } else {
             for (const el of this.childTargets) {
-                el.remove();
+                el.innerHTML = '';
             }
 
             for (const el of this.toggleTargets) {

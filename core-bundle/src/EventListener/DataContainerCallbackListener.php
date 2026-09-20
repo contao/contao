@@ -123,9 +123,7 @@ class DataContainerCallbackListener
      */
     private function addCallbacks(array|callable|null &$dcaRef, array $callbacks): void
     {
-        if (null === $dcaRef) {
-            $dcaRef = [];
-        }
+        $dcaRef ??= [];
 
         krsort($callbacks, SORT_NUMERIC);
 

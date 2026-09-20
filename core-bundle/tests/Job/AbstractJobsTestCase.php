@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
@@ -44,7 +52,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         );
     }
 
-    protected function mockSecurity(int|null $userId = null): Security&MockObject
+    protected function mockSecurity(int|null $userId = null): MockObject&Security
     {
         $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 

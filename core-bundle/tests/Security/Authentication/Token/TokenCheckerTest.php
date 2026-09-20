@@ -562,7 +562,7 @@ class TokenCheckerTest extends TestCase
         return $map;
     }
 
-    private function mockSessionWithToken(TokenInterface $token): SessionInterface&MockObject
+    private function mockSessionWithToken(TokenInterface $token): MockObject&SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -586,7 +586,7 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    private function mockSessionWithPreview(bool $isPreview): SessionInterface&MockObject
+    private function mockSessionWithPreview(bool $isPreview): MockObject&SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
         $session

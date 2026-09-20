@@ -17,7 +17,8 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 
 class Plugin implements ExtensionPluginInterface
 {
-    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container): void
+    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container): array
     {
+        return $extensionConfigs;
     }
 }
