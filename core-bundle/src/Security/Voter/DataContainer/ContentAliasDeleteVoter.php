@@ -52,9 +52,7 @@ class ContentAliasDeleteVoter extends AbstractDataContainerVoter implements Rese
             return true;
         }
 
-        if (null === $this->cache) {
-            $this->cache = $this->connection->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias");
-        }
+        $this->cache ??= $this->connection->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias");
 
         return !isset($this->cache[(int) $action->getCurrentId()]);
     }

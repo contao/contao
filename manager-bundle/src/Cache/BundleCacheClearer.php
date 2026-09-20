@@ -28,7 +28,7 @@ class BundleCacheClearer implements CacheClearerInterface
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 
-    public function clear($cacheDir): void
+    public function clear(string $cacheDir): void
     {
         $this->filesystem->remove(Path::join($cacheDir, 'bundles.map'));
     }

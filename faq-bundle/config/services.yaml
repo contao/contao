@@ -31,6 +31,7 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+            - '@contao.data_container.dca_hierarchy'
 
     contao_faq.listener.title_tag:
         class: Contao\FaqBundle\EventListener\TitleTagListener

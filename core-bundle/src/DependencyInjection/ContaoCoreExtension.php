@@ -165,6 +165,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
         $this->handleMailerConfig($config, $container);
+        $this->handlePagination($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -721,6 +722,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->getDefinition('contao.mailer')
             ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
+    }
+
+    private function handlePagination(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.pagination.factory')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.pagination.factory')
+            ->setArgument('$defaultRange', $config['pagination']['default_range'])
         ;
     }
 
