@@ -121,7 +121,23 @@ class TableWizard extends Widget
 			'cell_attributes' => $this->arrAttributes,
 			'appearance' => $this->arrAppearance,
 			'import_url' => Backend::addToUrl('key=table'),
+			'rte' => $this->hasInlineRte(),
 		));
+	}
+
+	private function hasInlineRte(): bool
+	{
+		if (!$this->rte || isset($this->arrAttributes['readonly']) || !($GLOBALS['TL_CONFIG']['useRTE'] ?? false))
+		{
+			return false;
+		}
+
+		if (!$this->allowHtml)
+		{
+			throw new \LogicException('The inline RTE of the table wizard requires the allowHtml eval option');
+		}
+
+		return true;
 	}
 
 	/**

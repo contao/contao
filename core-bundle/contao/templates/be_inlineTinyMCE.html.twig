@@ -1,0 +1,69 @@
+{% if enableTinyMce|default and not readonly|default %}
+    <script>
+        {
+            const config = {
+                inline: true,
+                hidden_input: false,
+                language: '{{ tinyMceLanguage|e('js') }}',
+                element_format: 'html',
+                document_base_url: '{{ (app.request.schemeAndHttpHost ~ app.request.basePath ~ '/')|e('js') }}',
+                entities: '160,nbsp,60,lt,62,gt,173,shy',
+                license_key: 'gpl',
+                branding: false,
+                promotion: false,
+                menubar: false,
+                browser_spellcheck: true,
+                inline_boundaries: false,
+                skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'oxide-dark' : 'oxide'),
+
+                {% block picker %}
+                file_picker_callback: function (callback, value, meta) {
+                    Backend.openModalSelector({
+                        'id': 'tl_listing',
+                        'title': document.querySelector('.tox-dialog__title')?.textContent ?? '',
+                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
+                        'callback': function (table, val) {
+                            document.querySelector('.tox-dialog input')?.focus();
+                            callback(val.join(','));
+                        }
+                    });
+                },
+                file_picker_types: '{{ fileBrowserTypes|e('js') }}',
+                {% endblock %}
+
+                {% block plugins %}
+                plugins: 'link lists code stripnbsp',
+                {% endblock %}
+
+                {% block valid_elements %}
+                extended_valid_elements: 'q[cite|class|title]',
+                {% endblock %}
+
+                {% block toolbar %}
+                toolbar: 'bold italic | link unlink | bullist numlist | code',
+                {% endblock %}
+
+                {% block contextmenu %}
+                contextmenu: false,
+                {% endblock %}
+
+                {% block paste_data_images %}
+                paste_data_images: false,
+                {% endblock %}
+
+                {% block cache_suffix %}
+                cache_suffix: '?v={{ asset_version('js/tinymce.min.js', 'contao-components/tinymce')|e('js') }}',
+                {% endblock %}
+
+                {% block custom %}
+                {% endblock %}
+            };
+
+            const wrapper = document.querySelector('#{{ selector|e('js') }}')?.closest('[data-controller~="contao--inline-rte"]');
+
+            if (wrapper) {
+                wrapper.inlineRteConfig = config;
+            }
+        }
+    </script>
+{% endif %}

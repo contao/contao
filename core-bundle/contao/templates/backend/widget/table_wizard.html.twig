@@ -1,12 +1,27 @@
 {% trans_default_domain 'contao_default' %}
 
+{% set actions = [
+    'keydown.esc->contao--table-wizard#closeMenu',
+    'click@document->contao--table-wizard#documentClick',
+    'change@document->contao--table-wizard#syncAppearance',
+] %}
+
+{% if rte|default %}
+    {% set actions = actions|merge([
+        'input->contao--inline-rte#update',
+        'contao--inline-rte:navigate->contao--table-wizard#navigate',
+        'turbo:before-cache@document->contao--inline-rte#disconnect',
+    ]) %}
+{% endif %}
+
 {% set wrapper_attributes = attrs()
     .addClass('table-wizard')
+    .addClass('table-wizard-rte', rte|default)
     .addClass(class|default)
-    .set('data-controller', 'contao--table-wizard')
+    .set('data-controller', rte|default ? 'contao--table-wizard contao--inline-rte' : 'contao--table-wizard')
     .set('data-contao--table-wizard-name-value', id)
     .set('data-contao--table-wizard-appearance-value', appearance|json_encode)
-    .set('data-action', 'keydown.esc->contao--table-wizard#closeMenu click@document->contao--table-wizard#documentClick change@document->contao--table-wizard#syncAppearance')
+    .set('data-action', actions|join(' '))
 %}
 <div{{ wrapper_attributes }}>
     {% block toolbar %}
@@ -111,10 +126,22 @@
                                                     .addClass(['tl_textarea', 'table-wizard-input'])
                                                     .set('rows', textarea_rows)
                                                     .set('cols', textarea_cols)
-                                                    .set('data-contao--table-wizard-target', 'input')
-                                                    .set('data-action', 'keydown->contao--table-wizard#navigate')
+                                                    .set('hidden', true, rte|default)
+                                                    .set('data-contao--table-wizard-target', 'input', not rte|default)
+                                                    .set('data-action', 'keydown->contao--table-wizard#navigate', not rte|default)
                                                 %}
                                                 <textarea{{ cell_input_attributes }}>{{ cell.value }}</textarea>
+
+                                                {% if rte|default %}
+                                                    {% set cell_editor_attributes = attrs()
+                                                        .addClass(['table-wizard-input', 'inline-rte'])
+                                                        .set('tabindex', '0')
+                                                        .set('data-contao--table-wizard-target', 'input')
+                                                        .set('data-contao--inline-rte-target', 'editor')
+                                                        .set('data-action', 'focusin->contao--inline-rte#activate keydown->contao--inline-rte#navigate pointerdown->contao--inline-rte#click click->contao--inline-rte#click')
+                                                    %}
+                                                    <div{{ cell_editor_attributes }}>{{ cell.value|raw }}</div>
+                                                {% endif %}
                                             </td>
                                         {% endfor %}
                                     </tr>
