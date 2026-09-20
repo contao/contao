@@ -78,7 +78,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo', StringUtil::generateAlias('FOO'));
         $this->assertSame('foo-bar', StringUtil::generateAlias('foo bar'));
         $this->assertSame('foo-bar', StringUtil::generateAlias('%foo&bar~'));
-        $this->assertSame('foo-bar', StringUtil::generateAlias('foo&amp;bar'));
+        $this->assertSame('foo-bar', StringUtil::generateAlias('foo&bar'));
         $this->assertSame('foo-bar', StringUtil::generateAlias('foo-{{link::12}}-bar'));
         $this->assertSame('id-123', StringUtil::generateAlias('123'));
         $this->assertSame('123foo', StringUtil::generateAlias('123foo'));

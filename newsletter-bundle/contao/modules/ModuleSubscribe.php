@@ -159,7 +159,7 @@ class ModuleSubscribe extends Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
-		$this->Template->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
+		$this->Template->submit = $GLOBALS['TL_LANG']['MSC']['subscribe'];
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;

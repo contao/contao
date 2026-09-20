@@ -17,7 +17,6 @@ use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\DcaLoader;
-use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +29,7 @@ class FallbackRecordLabelListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly ValueFormatter $valueFormatter,
     ) {
     }
@@ -60,7 +59,7 @@ class FallbackRecordLabelListener
 
             $value = $this->valueFormatter->format($table, $defaultSearchField, $label, $dc);
 
-            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags($value))));
+            $event->setLabel(trim(strip_tags($value)));
         } else {
             $messageDomain = "contao_$table";
 

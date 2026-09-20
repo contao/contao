@@ -78,7 +78,7 @@ class ModuleNavigation extends Module
 		$this->Template->ariaLabel = StringUtil::specialchars($this->ariaLabel);
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
-		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
+		$this->Template->skipNavigation = $GLOBALS['TL_LANG']['MSC']['skipNavigation'];
 		$this->Template->items = isset($trail[$level]) ? $this->renderNavigation($trail[$level], 1, $host, $lang) : '';
 	}
 }

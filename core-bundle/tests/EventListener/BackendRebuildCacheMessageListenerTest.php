@@ -32,7 +32,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
     {
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
-            ->method('isBackendRequest')
+            ->method('isBackendMainRequest')
             ->willReturn($backendRequest)
         ;
 
@@ -74,7 +74,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
     {
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
-            ->method('isBackendRequest')
+            ->method('isBackendMainRequest')
             ->willReturn(true)
         ;
 
