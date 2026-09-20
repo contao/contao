@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TableAccessVoterTest extends TestCase
 {
-    private TokenInterface&Stub $token;
+    private Stub&TokenInterface $token;
 
     protected function setUp(): void
     {
@@ -95,6 +95,34 @@ class TableAccessVoterTest extends TestCase
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testCachesModuleAccessByTokenAndTable(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_denied'];
+        $GLOBALS['BE_MOD']['content']['newsletter']['tables'] = ['tl_allowed'];
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->expects($this->exactly(2))
+            ->method('decide')
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', false],
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'newsletter', true],
+            ])
+        ;
+
+        $voter = new TableAccessVoter($accessDecisionManager);
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote($this->token, new ReadAction('tl_denied', ['id' => 1]), [ContaoCorePermissions::DC_PREFIX.'tl_denied']),
+        );
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $voter->vote($this->token, new ReadAction('tl_allowed', ['id' => 2]), [ContaoCorePermissions::DC_PREFIX.'tl_allowed']),
         );
     }
 

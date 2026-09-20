@@ -457,7 +457,7 @@ class FileTree extends Widget
 		{
 			return $factory->createPreview($sourcePath, 100)->getPath();
 		}
-		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+		catch (MissingPreviewProviderException|UnableToGeneratePreviewException $exception)
 		{
 			return null;
 		}

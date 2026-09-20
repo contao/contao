@@ -41,7 +41,6 @@ class DropZone extends FileUpload
     <span class="dropzone-previews"></span>
   </div>
   <script>
-    Dropzone.autoDiscover = false;
     new Dropzone("#tl_files", {
       url: window.location.href,
       paramName: "' . $this->strName . '",

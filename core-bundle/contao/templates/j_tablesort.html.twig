@@ -2,7 +2,7 @@
 
 {# Add the tablesorter style sheet #}
 {% add 'tablesorter' to stylesheets %}
-    {% with {file: 'assets/tablesorter/css/tablesorter.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+    {% with {file: asset('css/tablesorter.min.css', 'contao-components/tablesorter')} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 
 <script src="{{ asset('js/tablesorter.min.js', 'contao-components/tablesorter') }}"></script>

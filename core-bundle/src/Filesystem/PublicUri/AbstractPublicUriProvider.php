@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Filesystem\PublicUri;
 
 use Contao\CoreBundle\Util\UrlUtil;
@@ -32,7 +40,7 @@ abstract class AbstractPublicUriProvider
         try {
             $mtime = $adapter->lastModified($adapterPath)->lastModified();
         } catch (\Throwable) {
-            $mtime = null;
+            return null;
         }
 
         // Hash because nobody needs to know the mtime

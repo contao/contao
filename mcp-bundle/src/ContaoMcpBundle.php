@@ -23,18 +23,32 @@ class ContaoMcpBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-                ->scalarNode('path')
-                    ->defaultValue('/_mcp')
-                    ->info('The HTTP route at which Contao exposes the MCP server.')
+                ->scalarNode('backend_path')
+                    ->defaultValue('/_mcp/backend')
+                    ->info('The HTTP route at which Contao exposes the backend MCP server.')
                 ->end()
             ->end()
         ;
     }
 
+    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
+    {
+        if ($container->hasExtension('security')) {
+            // Match the route so custom paths remain protected before public fallback rules
+            $container->prependExtensionConfig('security', [
+                'access_control' => [
+                    ['route' => 'contao_mcp_backend', 'roles' => ['ROLE_USER']],
+                ],
+            ]);
+        }
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
+        $configurator->import('../config/services.yaml');
+
         $configurator->parameters()
-            ->set('contao_mcp.path', $config['path'])
+            ->set('contao_mcp.backend_path', $config['backend_path'])
         ;
     }
 }

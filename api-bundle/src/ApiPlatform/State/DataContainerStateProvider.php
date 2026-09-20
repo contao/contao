@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
@@ -37,7 +36,7 @@ final class DataContainerStateProvider implements ProviderInterface
             return [];
         }
 
-        if ($operation instanceof Get || $this->hasMethod($operation, 'GET')) {
+        if ($operation instanceof HttpOperation && \in_array($operation->getMethod(), ['GET', 'PATCH', 'DELETE'], true)) {
             // TODO: load a single record from $table using $uriVariables['id'].
             // TODO: hydrate and return a DataContainerRecord.
             return new DataContainerRecord($table, [], $uriVariables['id'] ?? null);
@@ -53,11 +52,6 @@ final class DataContainerStateProvider implements ProviderInterface
             \is_array($data['data'] ?? null) ? $data['data'] : [],
             \is_int($data['id'] ?? null) || \is_string($data['id'] ?? null) ? $data['id'] : null,
         );
-    }
-
-    private function hasMethod(Operation $operation, string $method): bool
-    {
-        return $operation instanceof HttpOperation && $method === $operation->getMethod();
     }
 
     private function getTable(Operation $operation): string|null

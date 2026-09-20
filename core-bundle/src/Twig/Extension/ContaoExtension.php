@@ -41,6 +41,7 @@ use Contao\CoreBundle\Twig\Runtime\SimpleTokenRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
@@ -301,6 +302,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'autolink_url',
                 [AutolinkRuntime::class, 'linkUrls'],
                 ['pre_escape' => 'html', 'is_safe' => ['html']],
+            ),
+            new TwigFilter(
+                'language_tag',
+                static fn (string $value): string => LocaleUtil::formatAsLanguageTag($value),
             ),
         ];
     }

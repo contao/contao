@@ -1,0 +1,11 @@
+services:
+    Contao\McpBundle\Response\ApiResponseConverter: ~
+
+    Contao\McpBundle\Tool\DataContainerTools:
+        autoconfigure: true
+        arguments:
+            - '@Contao\ApiBundle\Resource\DataContainerResourceRegistry'
+            - '@http_kernel'
+            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@request_stack'
+            - '@Contao\McpBundle\Response\ApiResponseConverter'

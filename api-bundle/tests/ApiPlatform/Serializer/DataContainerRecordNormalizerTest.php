@@ -17,9 +17,77 @@ use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class DataContainerRecordNormalizerTest extends TestCase
 {
+    public function testPopulatesTheExistingRecordWithoutLosingOmittedFields(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['title' => 'Example', 'published' => false, 'tags' => ['old', 'other']], 17);
+        $normalizer = new DataContainerRecordNormalizer();
+
+        $result = $normalizer->denormalize(
+            ['published' => true, 'tags' => ['new']],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
+        );
+
+        $this->assertSame($record, $result);
+        $this->assertSame(17, $result->id);
+        $this->assertSame(['title' => 'Example', 'published' => true, 'tags' => ['new']], $result->data);
+    }
+
+    public function testPreservesExplicitNullValuesForValidation(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['title' => 'Example'], 17);
+        $normalizer = new DataContainerRecordNormalizer();
+
+        $result = $normalizer->denormalize(
+            ['title' => null],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
+        );
+
+        $this->assertSame(['title' => null], $result->data);
+    }
+
+    public function testRejectsChangingTheExistingRecordIdentifier(): void
+    {
+        $this->expectException(NotNormalizableValueException::class);
+
+        new DataContainerRecordNormalizer()->denormalize(
+            ['id' => 18],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => new DataContainerRecord('tl_content', [], 17)],
+        );
+    }
+
+    public function testAcceptsTheExistingIdentifierAsAString(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['title' => 'Example'], 17);
+
+        $result = new DataContainerRecordNormalizer()->denormalize(
+            ['id' => '17'],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
+        );
+
+        $this->assertSame($record, $result);
+        $this->assertSame(['title' => 'Example'], $result->data);
+    }
+
+    public function testRejectsPopulatingARecordFromAnotherTable(): void
+    {
+        $this->expectException(NotNormalizableValueException::class);
+
+        new DataContainerRecordNormalizer()->denormalize(
+            ['title' => 'Example'],
+            DataContainerRecord::class,
+            context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => new DataContainerRecord('tl_news', [], 17)],
+        );
+    }
+
     public function testNormalizesTheRecordData(): void
     {
         $normalizer = new DataContainerRecordNormalizer();
@@ -37,6 +105,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testDenormalizesTheRecordDataUsingTheOperationTable(): void
     {
         $normalizer = new DataContainerRecordNormalizer();
+
         $operation = new Get()->withExtraProperties([
             'contao' => [
                 'table' => 'tl_content',

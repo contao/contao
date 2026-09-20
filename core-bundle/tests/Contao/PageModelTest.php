@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -129,6 +131,76 @@ class PageModelTest extends TestCase
 
         $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
+    }
+
+    public function testFindsParentsFromTheRegistryWithoutQueryingTheHierarchy(): void
+    {
+        $parent = new PageModel(['id' => 1, 'pid' => 0]);
+        $page = new PageModel(['id' => 2, 'pid' => 1]);
+
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->never())
+            ->method('getParentRows')
+        ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
+
+        $this->assertSame([$page, $parent], PageModel::findParentsById(2)->getModels());
+    }
+
+    public function testOnlyQueriesTheUncachedPartOfTheParentHierarchy(): void
+    {
+        $page = new PageModel(['id' => 2, 'pid' => 1]);
+
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                1,
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesAllColumns()),
+            )
+            ->willReturn([['id' => 1, 'pid' => 0]])
+        ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
+
+        $parents = PageModel::findParentsById(2)->getModels();
+
+        $this->assertSame($page, $parents[0]);
+        $this->assertSame(1, $parents[1]->id);
+        $this->assertSame($parents[1], Registry::getInstance()->fetch('tl_page', 1));
+    }
+
+    public function testUsesRegisteredModelsWithinTheQueriedParentHierarchy(): void
+    {
+        $registeredParent = new PageModel(['id' => 2, 'pid' => 1]);
+
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                3,
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesAllColumns()),
+            )
+            ->willReturn([
+                ['id' => 3, 'pid' => 2],
+                ['id' => 2, 'pid' => 1],
+                ['id' => 1, 'pid' => 0],
+            ])
+        ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
+
+        $parents = PageModel::findParentsById(3)->getModels();
+
+        $this->assertSame(3, $parents[0]->id);
+        $this->assertSame($registeredParent, $parents[1]);
+        $this->assertSame(1, $parents[2]->id);
     }
 
     #[DataProvider('similarAliasProvider')]
@@ -303,23 +375,26 @@ class PageModelTest extends TestCase
         $page = new PageModel();
         $page->pid = 42;
 
-        $numberOfParents = \count($parents);
+        $parentRows = array_merge(...$parents);
 
-        $statement = $this->createStub(Statement::class);
-        $statement
-            ->method('execute')
-            ->willReturnCallback(
-                static function () use (&$parents) {
-                    return $parents ? new Result(array_shift($parents), '') : new Result([], '');
-                },
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                42,
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesAllColumns()),
             )
+            ->willReturn($parentRows)
         ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
 
         $database = $this->createMock(Database::class);
         $database
-            ->expects($this->exactly($numberOfParents))
+            ->expects($this->never())
             ->method('prepare')
-            ->willReturn($statement)
         ;
 
         $this->mockDatabase($database);
@@ -375,15 +450,30 @@ class PageModelTest extends TestCase
             \define('TL_MODE', 'BE');
         }
 
+        $currentPage = array_shift($databaseResultData);
+        $hierarchy = $this->createMock(DcaHierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getParentRows')
+            ->with(
+                (int) $currentPage['pid'],
+                'tl_page',
+                $this->callback(static fn (ParentTraversalOptions $options): bool => $options->includesAllColumns()),
+            )
+            ->willReturn($databaseResultData)
+        ;
+
+        System::getContainer()->set('contao.data_container.dca_hierarchy', $hierarchy);
+
         $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
-            ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))
+            ->willReturn(new Result([$currentPage], ''))
         ;
 
         $database = $this->createMock(Database::class);
         $database
-            ->expects($this->exactly(\count($databaseResultData)))
+            ->expects($this->once())
             ->method('prepare')
             ->willReturn($statement)
         ;

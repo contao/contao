@@ -48,7 +48,7 @@ class BackendAlerts extends Backend
 	{
 		$objTemplate = new BackendTemplate('be_alerts');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['systemMessages']);
+		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();

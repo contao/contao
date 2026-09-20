@@ -379,7 +379,7 @@ class UserRootListenerTest extends TestCase
         $listener('tl_foo');
     }
 
-    private function mockSecurity(bool $isGranted = true, BackendUser|null $user = null): Security&MockObject
+    private function mockSecurity(bool $isGranted = true, BackendUser|null $user = null): MockObject&Security
     {
         $user ??= $this->createStub(BackendUser::class);
 

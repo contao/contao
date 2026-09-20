@@ -124,11 +124,15 @@ class Input
 	 *
 	 * @return array|string|null The cleaned variable value
 	 *
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
+	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7. Except for dynamic URL parameters like auto_item.
 	 */
 	public static function get($strKey, $blnDecodeEntities=false, $blnKeepUnusedRouteParameter=false)
 	{
-		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the request object instead.', __METHOD__);
+		// Using Input::get() for dynamic URL parameters like auto_item is not yet deprecated
+		if ('auto_item' !== $strKey && !isset(self::$arrUnusedRouteParameters[$strKey]))
+		{
+			DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the request object instead.', __METHOD__);
+		}
 
 		$varValue = static::findGet($strKey);
 

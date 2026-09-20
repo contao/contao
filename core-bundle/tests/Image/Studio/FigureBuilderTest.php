@@ -1527,7 +1527,7 @@ class FigureBuilderTest extends TestCase
         return $builder->build();
     }
 
-    private function mockStudioForImage(ImageInterface|string $expectedImage, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
+    private function mockStudioForImage(ImageInterface|string $expectedImage, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): MockObject&Studio
     {
         $image = $this->createStub(ImageResult::class);
 
@@ -1542,7 +1542,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): MockObject&Studio
     {
         $lightbox = $this->createStub(LightboxResult::class);
 

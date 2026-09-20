@@ -45,11 +45,9 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 
         foreach ($frontendTemplate->positions[$key] as $id => $section) {
             if (!empty($frontendTemplate->sections[$id])) {
-                if (!isset($section['template'])) {
-                    $section['template'] = 'block_section';
-                }
-
+                $section['template'] ??= 'block_section';
                 $section['content'] = $frontendTemplate->sections[$id];
+
                 $matches[$id] = $section;
             }
         }

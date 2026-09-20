@@ -185,7 +185,7 @@ class ModuleArticle extends Module
 		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = $objPage->getFrontendUrl();
-			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		}
 
 		$arrElements = array();
@@ -230,9 +230,9 @@ class ModuleArticle extends Module
 			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
 
-			$this->Template->printTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
-			$this->Template->facebookTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
-			$this->Template->twitterTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
+			$this->Template->printTitle = $GLOBALS['TL_LANG']['MSC']['printPage'];
+			$this->Template->facebookTitle = $GLOBALS['TL_LANG']['MSC']['facebookShare'];
+			$this->Template->twitterTitle = $GLOBALS['TL_LANG']['MSC']['twitterShare'];
 		}
 
 		// HOOK: add custom logic

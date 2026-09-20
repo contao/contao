@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\McpToolCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -23,6 +26,20 @@ use PHPUnit\Framework\TestCase;
 
 final class DataContainerStateProviderTest extends TestCase
 {
+    public function testReadsTheTargetRecordForHttpWriteOperations(): void
+    {
+        $provider = new ReadProvider(new DataContainerStateProvider());
+
+        foreach ([new Patch(), new Delete()] as $operation) {
+            $operation = $operation->withRead(true)->withExtraProperties(['contao' => ['table' => 'tl_content']]);
+            $record = $provider->provide($operation, ['id' => 17]);
+
+            $this->assertInstanceOf(DataContainerRecord::class, $record);
+            $this->assertSame('tl_content', $record->table);
+            $this->assertSame(17, $record->id);
+        }
+    }
+
     public function testProvidesARecordForItemOperations(): void
     {
         $provider = new DataContainerStateProvider();
