@@ -18,9 +18,7 @@ $GLOBALS['TL_CONFIG']['dateFormat']  = 'Y-m-d';
 $GLOBALS['TL_CONFIG']['timeFormat']  = 'H:i';
 $GLOBALS['TL_CONFIG']['timeZone']    = date_default_timezone_get();
 
-// Input and security
-
-/**
+/*
  * Elements based on the safe default configuration from the HTML specification
  * with the following modifications:
  * - removed: <html><head><title><body><main><search>
@@ -51,13 +49,13 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<var><video>'
 	. '<wbr>';
 
-/**
+/*
  * Attributes based on the safe default configuration from the HTML
  * specification with the following modifications:
  * - added for all elements: data-*,id,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
- * - added for the a element: rel,target,download,referrerpolicy
- * - added for the table element: border,cellspacing,cellpadding,width,height
- * - added for the td and th element: width,height
+ * - added for the <a> element: rel,target,download,referrerpolicy
+ * - added for the <table> element: border,cellspacing,cellpadding,width,height
+ * - added for the <td> and <th> element: width,height
  * - added elements: img, map, area, video, audio, source, style, details
  *
  * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#built-in-safe-default-configuration
