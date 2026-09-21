@@ -21,9 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\AI\McpBundle\Controller\McpController;
 use Symfony\AI\McpBundle\McpBundle;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,7 +42,6 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->getDefinition('mcp.server.contao_backend.builder')->setPublic(true);
         $container->compile();
 
-        $this->assertSame('/_mcp/backend', $container->getParameter('contao_mcp.backend_path'));
         $this->assertInstanceOf(McpController::class, $container->get('mcp.server.contao_backend.controller'));
 
         $builder = $container->get('mcp.server.contao_backend.builder');
@@ -102,34 +99,6 @@ final class ContaoMcpExtensionTest extends TestCase
         $this->assertSame(['frontend_example'], $tools);
     }
 
-    public function testAllowsConfiguringTheBackendPath(): void
-    {
-        $container = $this->getContainerBuilder(['backend_path' => '/custom/backend']);
-
-        $this->assertSame('/custom/backend', $container->getParameter('contao_mcp.backend_path'));
-    }
-
-    public function testPrependsBackendAccessBeforePublicRules(): void
-    {
-        $container = $this->getContainerBuilder();
-        $container->registerExtension(new SecurityExtension());
-
-        $publicRule = ['access_control' => [['path' => '^/', 'roles' => ['PUBLIC_ACCESS']]]];
-        $container->loadFromExtension('security', $publicRule);
-
-        $extension = new ContaoMcpBundle()->getContainerExtension();
-        $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
-        $extension->prepend($container);
-
-        $this->assertSame(
-            [
-                ['access_control' => [['route' => 'contao_mcp_backend', 'roles' => ['ROLE_USER']]]],
-                $publicRule,
-            ],
-            $container->getExtensionConfig('security'),
-        );
-    }
-
     private function getContainerBuilder(array $config = []): ContainerBuilder
     {
         $container = new ContainerBuilder(
@@ -139,6 +108,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'kernel.build_dir' => sys_get_temp_dir(),
                 'kernel.environment' => 'test',
                 'kernel.debug' => false,
+                'contao.backend.route_prefix' => '/contao',
             ]),
         );
 
