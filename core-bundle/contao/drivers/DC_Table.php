@@ -3036,7 +3036,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$currentRecord = $this->getCurrentRecord();
 
 		// Handle multi-select fields in "override all" mode
-		if ($currentRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		if ($currentRecord !== null && ($arrData['eval']['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$new = StringUtil::deserialize($varValue, true);
 			$old = StringUtil::deserialize($currentRecord[$this->strField] ?? null, true);
