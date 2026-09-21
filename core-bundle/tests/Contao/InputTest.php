@@ -559,7 +559,7 @@ class InputTest extends TestCase
 
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
-            '<form><input /></form>',
+            '&#60;form action&#61;&#34;javascript:alert(document.domain)&#34;&#62;&#60;input type&#61;&#34;submit&#34; value&#61;&#34;XSS&#34; /&#62;&#60;/form&#62;',
         ];
 
         yield [
@@ -574,7 +574,7 @@ class InputTest extends TestCase
 
         yield [
             'javascript:/*--></title></style></textarea></script></xmp><svg/onload=\'+/"/+/onmouseover=1/+/[*/[]/+alert(1)//\'>',
-            'javascript:/*--&#62;&#60;/title&#62;</style></textarea>&#60;/script&#62;&#60;/xmp&#62;&#60;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;',
+            'javascript:/*--&#62;&#60;/title&#62;</style>&#60;/textarea&#62;&#60;/script&#62;&#60;/xmp&#62;&#60;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;',
         ];
 
         yield [
@@ -664,7 +664,7 @@ class InputTest extends TestCase
 
         yield [
             '<INPUT TYPE="IMAGE" SRC="javascript:alert(\'XSS\');">',
-            '<input>',
+            '&#60;INPUT TYPE&#61;&#34;IMAGE&#34; SRC&#61;&#34;javascript:alert(&#39;XSS&#39;);&#34;&#62;',
         ];
 
         yield [
