@@ -1679,8 +1679,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// PID is set (insert after or into the parent record)
 			if (is_numeric($pid))
 			{
-				// Insert the current record into the parent record
-				if ($insertMode === self::PASTE_INTO)
+				// Without a sorting column, prepending and appending both just assign the parent
+				if ($insertMode === self::PASTE_INTO || $insertMode === self::PASTE_INTO_APPEND)
 				{
 					$this->set['pid'] = $pid;
 				}
@@ -3038,7 +3038,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$currentRecord = $this->getCurrentRecord();
 
 		// Handle multi-select fields in "override all" mode
-		if ($currentRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		if ($currentRecord !== null && ($arrData['eval']['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$new = StringUtil::deserialize($varValue, true);
 			$old = StringUtil::deserialize($currentRecord[$this->strField] ?? null, true);
@@ -5118,6 +5118,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
+		$defaultSorting = $orderBy[0];
 
 		// Add PID to order fields
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && Database::getInstance()->fieldExists('pid', $this->strTable))
@@ -5148,6 +5149,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->firstOrderBy = $overwrite;
 			$this->orderBy = $orderBy;
+
+			$this->setPanelState($session['sorting'][$this->strTable] !== $defaultSorting);
 		}
 
 		$options_sorter = array();
@@ -5345,11 +5348,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$limit = $session['filter'][$filter]['limit'] ?? null;
 			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
 
-			// Only disable reset button if it is not on the first page
-			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
-			{
-				$this->setPanelState($active);
-			}
+			// Enable the reset button when the selected range differs from the default on the first page
+			$this->setPanelState($limit !== null && $limit !== ('0,' . $resultsPerPage));
 		}
 
 		return System::getContainer()
