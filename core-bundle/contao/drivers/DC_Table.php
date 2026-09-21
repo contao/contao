@@ -1679,8 +1679,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// PID is set (insert after or into the parent record)
 			if (is_numeric($pid))
 			{
-				// Insert the current record into the parent record
-				if ($insertMode === self::PASTE_INTO)
+				// Without a sorting column, prepending and appending both just assign the parent
+				if ($insertMode === self::PASTE_INTO || $insertMode === self::PASTE_INTO_APPEND)
 				{
 					$this->set['pid'] = $pid;
 				}
@@ -3036,7 +3036,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$currentRecord = $this->getCurrentRecord();
 
 		// Handle multi-select fields in "override all" mode
-		if ($currentRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		if ($currentRecord !== null && ($arrData['eval']['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$new = StringUtil::deserialize($varValue, true);
 			$old = StringUtil::deserialize($currentRecord[$this->strField] ?? null, true);

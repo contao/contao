@@ -721,7 +721,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif (($arrAttributes['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
