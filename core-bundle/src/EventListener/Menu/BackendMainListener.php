@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\System;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -51,7 +50,7 @@ class BackendMainListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $request = $this->requestStack->getCurrentRequest();
-        $modules = $this->getBackendModules($request);
+        $modules = $this->getBackendModules();
         $collapsed = $this->getCollapsedNodes();
 
         foreach ($modules as $categoryName => $categoryData) {
@@ -107,55 +106,52 @@ class BackendMainListener
     }
 
     /**
-     * We have to keep this logic from BackendUser::navigation() until the
-     * "getUserNavigation" hook is removed.
-     *
-     * @deprecated This method only exists for backwards compatibility with the "getUserNavigation" hook.
-     *             Restructure this once we remove the hook.
+     * Creates the legacy data structure for the "getUserNavigation" hook
+     * (backwards compatibility).
      */
-    private function getBackendModules(Request|null $request): array
+    private function getBackendModules(): array
     {
-        $arrModules = [];
+        $modules = [];
+        $request = $this->requestStack->getCurrentRequest();
 
-        foreach ($GLOBALS['BE_MOD'] as $strGroupName => $arrGroupModules) {
-            if (!empty($arrGroupModules)) {
-                $arrModules[$strGroupName]['class'] = 'group-'.$strGroupName;
-                $arrModules[$strGroupName]['title'] = $this->translator->trans('MSC.collapseNode', [], 'contao_default');
-                $arrModules[$strGroupName]['label'] = $this->translateModule($strGroupName);
-                $arrModules[$strGroupName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $request?->query->get('do'), 'mtg' => $strGroupName]);
-                $arrModules[$strGroupName]['ajaxUrl'] = $this->urlGenerator->generate('contao_backend');
+        foreach ($GLOBALS['BE_MOD'] as $groupName => $groupModules) {
+            if (!empty($groupModules)) {
+                $modules[$groupName]['class'] = 'group-'.$groupName;
+                $modules[$groupName]['title'] = $this->translator->trans('MSC.collapseNode', [], 'contao_default');
+                $modules[$groupName]['label'] = $this->translateModule($groupName);
+                $modules[$groupName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $request?->query->get('do'), 'mtg' => $groupName]);
+                $modules[$groupName]['ajaxUrl'] = $this->urlGenerator->generate('contao_backend');
 
-                foreach ($arrGroupModules as $strModuleName => $arrModuleConfig) {
-                    // Check access
-                    $blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && true === $arrModuleConfig['disablePermissionChecks']) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
-                    $blnHide = isset($arrModuleConfig['hideInNavigation']) && true === $arrModuleConfig['hideInNavigation'];
+                foreach ($groupModules as $moduleName => $moduleConfig) {
+                    $hasAccess = (isset($moduleConfig['disablePermissionChecks']) && true === $moduleConfig['disablePermissionChecks']) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $moduleName);
+                    $isHidden = isset($moduleConfig['hideInNavigation']) && true === $moduleConfig['hideInNavigation'];
 
-                    if ($blnAccess && !$blnHide) {
-                        $arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
-                        $arrModules[$strGroupName]['modules'][$strModuleName]['title'] = $this->translator->getCatalogue()->has("MOD.$strModuleName.1", 'contao_default') ? $this->translator->trans("MOD.$strModuleName.1", [], 'contao_default') : '';
-                        $arrModules[$strGroupName]['modules'][$strModuleName]['label'] = $this->translateModule($strModuleName);
-                        $arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation '.$strModuleName;
-                        $arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $strModuleName]);
+                    if ($hasAccess && !$isHidden) {
+                        $modules[$groupName]['modules'][$moduleName] = $moduleConfig;
+                        $modules[$groupName]['modules'][$moduleName]['title'] = $this->translator->getCatalogue()->has("MOD.$moduleName.1", 'contao_default') ? $this->translator->trans("MOD.$moduleName.1", [], 'contao_default') : '';
+                        $modules[$groupName]['modules'][$moduleName]['label'] = $this->translateModule($moduleName);
+                        $modules[$groupName]['modules'][$moduleName]['class'] = 'navigation '.$moduleName;
+                        $modules[$groupName]['modules'][$moduleName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $moduleName]);
                     }
                 }
 
                 // Unset the group if there are no allowed modules
-                if (empty($arrModules[$strGroupName]['modules'])) {
-                    unset($arrModules[$strGroupName]);
+                if (empty($modules[$groupName]['modules'])) {
+                    unset($modules[$groupName]);
                 }
             }
         }
 
         // HOOK: add custom logic
         if (isset($GLOBALS['TL_HOOKS']['getUserNavigation']) && \is_array($GLOBALS['TL_HOOKS']['getUserNavigation'])) {
-            trigger_deprecation('contao/core-bundle', '6.1', 'The "getUserNavigation" hook is deprecated and will be removed in Contao 7. Use the "%s" event instead', MenuEvent::class);
+            trigger_deprecation('contao/core-bundle', '6.0', 'The "getUserNavigation" hook is deprecated and will no longer work in Contao 7. Use the "%s" event instead', MenuEvent::class);
 
             foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback) {
-                $arrModules = System::importStatic($callback[0])->{$callback[1]}($arrModules, true);
+                $modules = System::importStatic($callback[0])->{$callback[1]}($modules, true);
             }
         }
 
-        return $arrModules;
+        return $modules;
     }
 
     private function getCollapsedNodes(): array
