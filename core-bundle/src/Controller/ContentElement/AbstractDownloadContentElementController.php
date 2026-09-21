@@ -27,6 +27,7 @@ use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeConfiguration;
 use Contao\LayoutModel;
@@ -96,10 +97,22 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
      */
     protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
     {
+        $linkAttributes = null;
+
+        // Open the file in a new window if "Show in browser" and "Full-size
+        // view/new window" are both enabled (see #6755).
+        if ($model->inline && $model->fullsize) {
+            $linkAttributes = (new HtmlAttributes())
+                ->set('target', '_blank')
+                ->set('rel', 'noreferrer noopener')
+            ;
+        }
+
         $items = array_map(
             fn (FilesystemItem $filesystemItem): array => [
                 'href' => $this->generateDownloadUrl($filesystemItem, $model),
                 'file' => $filesystemItem,
+                'link_attributes' => $linkAttributes,
                 'show_file_previews' => $model->showPreview,
                 'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
             ],
