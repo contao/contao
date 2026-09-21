@@ -6,6 +6,10 @@ export default class extends Controller {
         readOnly: Boolean,
     };
 
+    initialize() {
+        this.setMaxLines = this.setMaxLines.bind(this);
+    }
+
     connect() {
         // Create a div to apply the editor to
         this.container = document.createElement('div');
@@ -54,10 +58,10 @@ export default class extends Controller {
         this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
-    setMaxLines = () => {
+    setMaxLines() {
         this.editor.setOption(
             'maxLines',
             Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
         );
-    };
+    }
 }
