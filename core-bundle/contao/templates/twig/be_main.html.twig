@@ -77,12 +77,14 @@
     {% if not renderMainOnly %}
         <header id="header">
             <div class="inner">
-                <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
-                    <span class="app-title">Contao</span>
+                <div id="app-logo">
                     {% if badgeTitle|default %}
                         <span class="badge-title">{{ badgeTitle }}</span>
                     {% endif %}
-                </a>
+                    <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
+                        <span class="app-title">Contao</span>
+                    </a>
+                </div>
                 {{ headerMenu|raw }}
             </div>
         </header>
