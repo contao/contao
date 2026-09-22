@@ -3158,7 +3158,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	protected function getSearchFields()
 	{
 		$arrFields = array('name', 'uuid');
-		$arrMeta = array('meta.title', 'meta.alt', 'meta.link', 'meta.caption', 'meta.license');
+
+		$arrMeta = array_map(
+			static fn ($strMetaField) => 'meta.' . $strMetaField,
+			array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']['meta']['eval']['metaFields'] ?? array()),
+		);
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field => $config)
 		{
