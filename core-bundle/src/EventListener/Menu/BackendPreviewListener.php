@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -34,7 +34,6 @@ class BackendPreviewListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -55,11 +54,10 @@ class BackendPreviewListener
             ->createItem('preview')
             ->setLabel('MSC.fePreview')
             ->setUri($this->getPreviewUrl())
-            ->setLinkAttribute('class', 'icon-preview')
-            ->setLinkAttribute('title', $this->translator->trans('MSC.fePreviewTitle', [], 'contao_default'))
             ->setLinkAttribute('target', '_blank')
             ->setLinkAttribute('accesskey', 'f')
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'preview.svg')
+            ->setExtra('title', 'MSC.fePreviewTitle')
             ->setExtra('translation_domain', 'contao_default')
         ;
 

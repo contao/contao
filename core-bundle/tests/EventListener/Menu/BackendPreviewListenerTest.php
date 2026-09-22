@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -23,7 +24,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendPreviewListenerTest extends ContaoTestCase
 {
@@ -76,7 +76,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $security,
             $router,
             $requestStack,
-            $this->getTranslator(),
             $eventDispatcher,
         );
 
@@ -88,15 +87,12 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $this->assertSame(['preview', 'submenu', 'burger'], array_keys($children));
 
         $this->assertSame('MSC.fePreview', $children['preview']->getLabel());
-        $this->assertSame(['translation_domain' => 'contao_default'], $children['preview']->getExtras());
+        $this->assertSame([BackendMenuBuilder::EXTRA_ICON => 'preview.svg', 'title' => 'MSC.fePreviewTitle', 'translation_domain' => 'contao_default'], $children['preview']->getExtras());
 
         $this->assertSame(
             [
-                'class' => 'icon-preview',
-                'title' => 'MSC.fePreviewTitle',
                 'target' => '_blank',
                 'accesskey' => 'f',
-                'data-contao--tooltips-target' => 'tooltip',
             ],
             $children['preview']->getLinkAttributes(),
         );
@@ -133,7 +129,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $security,
             $router,
             new RequestStack(),
-            $this->createStub(TranslatorInterface::class),
             $this->createStub(EventDispatcher::class),
         );
 
@@ -167,7 +162,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $security,
             $router,
             new RequestStack(),
-            $this->createStub(TranslatorInterface::class),
             $this->createStub(EventDispatcher::class),
         );
 
@@ -176,16 +170,5 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $tree = $event->getTree();
 
         $this->assertCount(0, $tree->getChildren());
-    }
-
-    private function getTranslator(): TranslatorInterface
-    {
-        $translator = $this->createStub(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnCallback(static fn (string $id): string => $id)
-        ;
-
-        return $translator;
     }
 }

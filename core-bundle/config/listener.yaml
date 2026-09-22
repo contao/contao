@@ -481,14 +481,12 @@ services:
         arguments:
             - '@security.helper'
             - '@router'
-            - '@translator'
             - '@contao.framework'
 
     contao.listener.menu.backend_jobs:
         class: Contao\CoreBundle\EventListener\Menu\BackendJobsListener
         arguments:
             - '@security.helper'
-            - '@twig'
             - '@router'
             - '@contao.job.jobs'
 
@@ -516,7 +514,6 @@ services:
             - '@security.helper'
             - '@router'
             - '@request_stack'
-            - '@translator'
             - '@event_dispatcher'
 
     contao.listener.menu.backend_template_studio:
@@ -525,7 +522,6 @@ services:
             - '@security.helper'
             - '@router'
             - '@request_stack'
-            - '@translator'
             - '%contao.template_studio.enabled%'
 
     contao.listener.page_access:

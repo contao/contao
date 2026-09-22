@@ -16,12 +16,12 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\StringUtil;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Make sure this listener comes before the other ones adding to its tree.
@@ -34,7 +34,6 @@ class BackendHeaderListener
     public function __construct(
         private readonly Security $security,
         private readonly RouterInterface $router,
-        private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
     ) {
     }
@@ -56,75 +55,82 @@ class BackendHeaderListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
 
-        $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
+        $tree->addChild($this->createManual($factory));
+        $tree->addChild($this->createAlerts($factory));
+        $tree->addChild($this->createProfileMenu($factory, $user));
+        $tree->addChild($this->createNavigationToggle($factory));
+    }
 
-        $manual = $factory
+    private function createManual(FactoryInterface $factory): ItemInterface
+    {
+        return $factory
             ->createItem('manual')
-            ->setLabel($manualTitle)
+            ->setLabel('MSC.manual')
             ->setUri('https://to.contao.org/manual')
-            ->setLinkAttribute('class', 'icon-manual')
-            ->setLinkAttribute('title', $manualTitle)
             ->setLinkAttribute('target', '_blank')
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'manual.svg')
             ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
+    }
 
-        $tree->addChild($manual);
-
-        $alerts = $event->getFactory()
+    private function createAlerts(FactoryInterface $factory): ItemInterface
+    {
+        return $factory
             ->createItem('alerts')
-            ->setLabel($this->getAlertsLabel())
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
+            ->setLabel('MSC.systemMessages')
+            ->setUri($this->router->generate('contao_backend_alerts'))
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/_alerts.html.twig')
+            ->setExtra('alerts_count', $this->getAlertsCount())
+            ->setExtra('translation_domain', 'contao_default')
         ;
+    }
 
-        $tree->addChild($alerts);
-
-        $profileButtonAttributes = new HtmlAttributes()
-            ->set('id', 'profileButton')
-            ->set('type', 'button')
-            ->set('title', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
-            ->set('data-controller', 'contao--toggle-sender')
-            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
-            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
-            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
-            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#profileMenu')
-            ->set('data-contao--tooltips-target', 'tooltip')
-        ;
-
+    private function createProfileMenu(FactoryInterface $factory, BackendUser $user): ItemInterface
+    {
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel(\sprintf('<button%s>%s</button>', $profileButtonAttributes, StringUtil::specialchars($user->username)))
+            ->setLabel($user->username)
             ->setAttribute('class', 'submenu')
-            ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_profile.html.twig')
             ->setExtra('translation_domain', false)
-            ->setChildrenAttribute('id', 'profileMenu')
-            ->setChildrenAttribute('data-controller', 'contao--toggle-receiver')
-            ->setChildrenAttribute('data-contao--toggle-receiver-active-class', 'active')
-            ->setChildrenAttribute('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
-            ->setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#profileButton')
         ;
-
-        $tree->addChild($submenu);
 
         $info = $factory
             ->createItem('info')
-            ->setLabel(\sprintf('<strong>%s</strong> %s', StringUtil::specialchars($user->name), StringUtil::specialchars($user->email)))
+            ->setLabel($user->name)
             ->setAttribute('class', 'info')
-            ->setExtra('safe_label', true)
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_info.html.twig')
+            ->setExtra('detail', $user->email)
             ->setExtra('translation_domain', false)
         ;
 
         $submenu->addChild($info);
+        $this->addProfileLinks($factory, $submenu, $user);
 
+        $colorScheme = $factory
+            ->createItem('color-scheme')
+            ->setLabel('MSC.lightMode')
+            ->setLabelAttribute('class', 'color-scheme')
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_color_scheme.html.twig')
+            ->setExtra(BackendMenuBuilder::EXTRA_HAS_DIVIDER, true)
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($colorScheme);
+
+        return $submenu;
+    }
+
+    private function addProfileLinks(FactoryInterface $factory, ItemInterface $submenu, BackendUser $user): void
+    {
         $login = $factory
             ->createItem('login')
-            ->setAttribute('class', 'separator')
             ->setLabel('MSC.profile')
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'nb' => '1']))
-            ->setLinkAttribute('class', 'icon-profile')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'profile_small.svg')
+            ->setExtra(BackendMenuBuilder::EXTRA_HAS_DIVIDER, true)
             ->setExtra('translation_domain', 'contao_default')
         ;
 
@@ -134,7 +140,7 @@ class BackendHeaderListener
             ->createItem('security')
             ->setLabel('MSC.security')
             ->setUri($this->router->generate('contao_backend', ['do' => 'security']))
-            ->setLinkAttribute('class', 'icon-security')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'shield_small.svg')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
@@ -144,76 +150,28 @@ class BackendHeaderListener
             ->createItem('favorites')
             ->setLabel('MSC.favorites')
             ->setUri($this->router->generate('contao_backend', ['do' => 'favorites']))
-            ->setLinkAttribute('class', 'icon-favorites')
+            ->setExtra(BackendMenuBuilder::EXTRA_ICON, 'favorites_small.svg')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
         $submenu->addChild($favorites);
-
-        $colorScheme = $factory
-            ->createItem('color-scheme')
-            ->setLabel('<button class="icon-color-scheme" type="button" data-contao--color-scheme-target="label" data-action="contao--color-scheme#toggle:prevent">'.$this->translator->trans('MSC.lightMode', [], 'contao_default').'</button>')
-            ->setAttribute('class', 'separator')
-            ->setAttribute('data-controller', 'contao--color-scheme')
-            ->setAttribute(
-                'data-contao--color-scheme-i18n-value',
-                json_encode(
-                    [
-                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
-                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
-                    ],
-                    JSON_THROW_ON_ERROR,
-                ),
-            )
-            ->setLabelAttribute('class', 'color-scheme')
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $submenu->addChild($colorScheme);
-
-        $burgerAttributes = new HtmlAttributes()
-            ->set('id', 'burger')
-            ->set('type', 'button')
-            ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
-            ->set('data-controller', 'contao--toggle-sender')
-            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
-            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
-            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
-            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#left')
-            ->set('data-contao--tooltips-target', 'tooltip')
-        ;
-
-        $burger = $factory
-            ->createItem('burger')
-            ->setLabel(\sprintf('<button%s><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $burgerAttributes))
-            ->setAttribute('class', 'burger')
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($burger);
     }
 
-    private function getAlertsLabel(): string
+    private function createNavigationToggle(FactoryInterface $factory): ItemInterface
     {
-        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
+        return $factory
+            ->createItem('burger')
+            ->setLabel('MSC.showMainNavigation')
+            ->setAttribute('class', 'burger')
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/menu/item/_navigation_toggle.html.twig')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+    }
 
-        $label = \sprintf(
-            '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false" data-contao--tooltips-target="tooltip">%s</a>',
-            $this->router->generate('contao_backend_alerts'),
-            htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
-            StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
-            $systemMessages,
-        );
-
+    private function getAlertsCount(): int
+    {
         $adapter = $this->framework->getAdapter(Backend::class);
-        $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
 
-        if ($count > 0) {
-            $label .= '<sup>'.$count.'</sup>';
-        }
-
-        return $label;
+        return substr_count($adapter->getSystemMessages(), 'class="tl_error');
     }
 }
