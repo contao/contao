@@ -35,9 +35,14 @@ services:
             $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
             $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
 
+    Contao\ApiBundle\Widget\WidgetConverterRegistry:
+        arguments:
+            $converters: !tagged_iterator contao.api.widget_converter
+
     Contao\ApiBundle\Schema\DataContainerSchemaFactory:
         arguments:
             $framework: '@contao.framework'
+            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
 
     # Serialize DataContainerRecord payloads and handle reads/writes through
     # API Platform's serializer and state layers. The metadata factory points

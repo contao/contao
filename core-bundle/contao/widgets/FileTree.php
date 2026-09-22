@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
@@ -32,7 +31,7 @@ use Contao\Image\ResizeConfiguration;
  * @property string  $extensions
  * @property string  $fieldType
  */
-class FileTree extends Widget implements ApiWidgetInterface
+class FileTree extends Widget
 {
 	/**
 	 * Submit user input
@@ -472,52 +471,5 @@ class FileTree extends Widget implements ApiWidgetInterface
 		}
 
 		return $this->getFilePreviewPath($objFile->path) !== null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function getApiSchema(array $config, array $schema): array
-	{
-		$value = array('type' => 'string', 'format' => 'uuid');
-
-		if ($config['eval']['multiple'] ?? false)
-		{
-			$schema['type'] = 'array';
-			$schema['items'] = $value;
-		}
-		else
-		{
-			$schema = array_replace($schema, $value, array('type' => array('string', 'null')));
-		}
-
-		unset($schema['maxLength']);
-
-		return $schema;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function convertToApiFormValue(mixed $value, array $config, array $schema): mixed
-	{
-		$value = parent::convertToApiFormValue($value, $config, $schema);
-
-		return \is_array($value) ? implode(',', $value) : $value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function convertToApiValue(mixed $value, array $config, array $schema): mixed
-	{
-		$value = parent::convertToApiValue($value, $config, $schema);
-
-		if (false !== ($config['eval']['binary'] ?? true) && \is_string($value) && \strlen($value) === 16)
-		{
-			return StringUtil::binToUuid($value);
-		}
-
-		return $value === '' ? null : $value;
 	}
 }

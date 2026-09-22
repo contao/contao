@@ -13,9 +13,12 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\Schema;
 
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterInterface;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
 use Contao\PageTree;
 use Contao\Password;
@@ -108,7 +111,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         $schema = $factory->create('tl_content');
 
@@ -129,11 +132,6 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             public function __construct()
             {
             }
-
-            public static function getApiSchema(array $config, array $schema): array
-            {
-                return ['type' => 'string'];
-            }
         };
         $GLOBALS['BE_FFL']['unsupported'] = $widget::class;
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
@@ -143,9 +141,8 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'missing' => ['inputType' => 'unregistered', 'sql' => ['type' => 'string']],
             'internal' => ['sql' => ['type' => 'string']],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
-        $this->assertFalse(is_a(Widget::class, ApiWidgetInterface::class, true));
         $this->assertSame(['id', 'title'], array_keys($factory->create('tl_content')['properties']));
         $this->assertArrayNotHasKey('required', $factory->create('tl_content'));
 
@@ -162,7 +159,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'disabled' => ['inputType' => 'text', 'eval' => ['disabled' => true], 'sql' => ['type' => 'string']],
             'passwords' => ['inputType' => 'password', 'eval' => ['multiple' => true], 'sql' => ['type' => 'string']],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertTrue($properties['secret']['writeOnly']);
@@ -185,7 +182,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'multiple' => ['inputType' => 'customFiles', 'eval' => ['multiple' => true], 'sql' => ['type' => 'blob']],
             'textual' => ['inputType' => 'customFiles', 'eval' => ['binary' => false]],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'uuid'], $properties['single']);
@@ -193,16 +190,11 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'uuid'], $properties['textual']);
     }
 
-    public function testCustomWidgetsCanDescribeTheirValuesWithoutFieldOverrides(): void
+    public function testConvertersCanSupportUnmodifiedThirdPartyWidgets(): void
     {
-        $widget = new class() extends Widget implements ApiWidgetInterface {
+        $widget = new class() extends Widget {
             public function __construct()
             {
-            }
-
-            public static function getApiSchema(array $config, array $schema): array
-            {
-                return array_replace($schema, ['type' => 'string', 'readOnly' => true]);
             }
         };
         $GLOBALS['BE_FFL']['customText'] = $widget::class;
@@ -211,7 +203,18 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'second' => ['inputType' => 'customText'],
             'secret' => ['inputType' => 'customText', 'api' => ['schema' => ['writeOnly' => true]]],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $converter = $this->createMock(WidgetConverterInterface::class);
+        $converter
+            ->method('supports')
+            ->willReturnCallback(static fn (array $config): bool => 'customText' === ($config['inputType'] ?? null))
+        ;
+
+        $converter
+            ->expects($this->exactly(3))
+            ->method('getSchema')
+            ->willReturn(['type' => 'string', 'readOnly' => true])
+        ;
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame($properties['first'], $properties['second']);
@@ -227,7 +230,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'enabled' => ['inputType' => 'checkbox', 'sql' => ['type' => 'string', 'length' => 1]],
             'options' => ['inputType' => 'checkbox', 'options' => ['one', 'two'], 'eval' => ['multiple' => true]],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame('integer', $properties['page']['type']);
@@ -248,7 +251,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'ptable' => ['sql' => ['type' => 'string']],
             'sorting' => ['sql' => ['type' => 'integer']],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $properties = $factory->create('tl_content')['properties'];
 
         foreach (['pid', 'ptable', 'sorting'] as $field) {
@@ -274,7 +277,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => true]],
             'secret' => ['inputType' => 'password', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => true]],
         ];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $schemas = $factory->createOperationSchemas('tl_content');
 
         $this->assertSame(['id', 'pid', 'ptable', 'sorting', 'title'], array_keys($schemas['read']['properties']));
@@ -289,7 +292,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     public function testAnEmptyUpdateSchemaAcceptsOnlyAnEmptyObject(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['id'] = ['sql' => ['type' => 'integer']];
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
         $schema = json_decode(json_encode($factory->createOperationSchemas('tl_content')['update'], JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
         $validator = new \Opis\JsonSchema\Validator();
 

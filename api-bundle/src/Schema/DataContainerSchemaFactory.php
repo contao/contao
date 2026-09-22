@@ -14,16 +14,17 @@ namespace Contao\ApiBundle\Schema;
 
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
 use Contao\Validator as ContaoValidator;
-use Contao\Widget;
 
 final class DataContainerSchemaFactory
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly WidgetConverterRegistry $converters,
+    ) {
     }
 
     /**
@@ -104,10 +105,9 @@ final class DataContainerSchemaFactory
      */
     private function createFieldSchema(string $fieldName, array $config): array
     {
-        $widget = $GLOBALS['BE_FFL'][$config['inputType'] ?? ''] ?? null;
-        $supported = \is_string($widget) && is_a($widget, Widget::class, true) && is_a($widget, ApiWidgetInterface::class, true);
+        $converter = $this->converters->get($config);
 
-        if (!$supported && (isset($config['inputType']) || !\in_array($fieldName, DataContainerRecord::METADATA_FIELDS, true))) {
+        if (!$converter && (isset($config['inputType']) || !\in_array($fieldName, DataContainerRecord::METADATA_FIELDS, true))) {
             return [];
         }
 
@@ -118,8 +118,8 @@ final class DataContainerSchemaFactory
             $schema = ['type' => 'array', 'items' => $schema ?: ['type' => 'string']];
         }
 
-        if ($supported) {
-            $schema = $widget::getApiSchema($config, $schema);
+        if ($converter) {
+            $schema = $converter->getSchema($config, $schema);
         }
 
         $schema = array_replace($schema, $config['api']['schema'] ?? []);

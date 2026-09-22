@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
 
 /**
  * Provide methods to handle input field "page tree".
@@ -21,7 +20,7 @@ use Contao\CoreBundle\Widget\ApiWidgetInterface;
  * @property array   $rootNodes
  * @property string  $fieldType
  */
-class PageTree extends Widget implements ApiWidgetInterface
+class PageTree extends Widget
 {
 	/**
 	 * Submit user input
@@ -213,33 +212,5 @@ class PageTree extends Widget implements ApiWidgetInterface
 		}
 
 		return $extras;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function getApiSchema(array $config, array $schema): array
-	{
-		if ($config['eval']['multiple'] ?? false)
-		{
-			$schema['type'] = 'array';
-			$schema['items'] = array('type' => 'integer');
-		}
-		else
-		{
-			$schema['type'] = 'integer';
-		}
-
-		return $schema;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function convertToApiFormValue(mixed $value, array $config, array $schema): mixed
-	{
-		$value = parent::convertToApiFormValue($value, $config, $schema);
-
-		return \is_array($value) ? implode(',', $value) : $value;
 	}
 }

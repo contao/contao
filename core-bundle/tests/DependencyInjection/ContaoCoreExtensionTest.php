@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Controller\Backend\SearchController;
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
@@ -49,6 +50,35 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testRegistersApiWidgetsWhenTheApiExtensionIsAvailable(): void
+    {
+        $apiExtension = $this->createStub(Extension::class);
+        $apiExtension
+            ->method('getAlias')
+            ->willReturn('contao_api')
+        ;
+
+        $container = new ContainerBuilder(new ParameterBag([
+            'kernel.debug' => false,
+            'kernel.charset' => 'UTF-8',
+            'kernel.project_dir' => $this->getTempDir(),
+            'kernel.default_locale' => 'en',
+        ]));
+        $container->registerExtension($apiExtension);
+        new ContaoCoreExtension()->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
+        $definition = $container->getDefinition('contao.api.widget_converter');
+
+        $this->assertSame(CoreWidgetConverter::class, $definition->getClass());
+        $this->assertSame([['priority' => -100]], $definition->getTag('contao.api.widget_converter'));
+    }
+
+    public function testDoesNotRegisterApiWidgetsWithoutTheApiBundle(): void
+    {
+        $this->assertFalse($this->getContainerBuilder()->hasDefinition('contao.api.widget_converter'));
+    }
+
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();

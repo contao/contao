@@ -1,0 +1,8 @@
+services:
+    # Register the optional core integration only when the API bundle is enabled.
+    contao.api.widget_converter:
+        class: Contao\CoreBundle\Api\Widget\CoreWidgetConverter
+        arguments:
+            - '@contao.widget.date_value_formatter'
+        tags:
+            - { name: contao.api.widget_converter, priority: -100 }

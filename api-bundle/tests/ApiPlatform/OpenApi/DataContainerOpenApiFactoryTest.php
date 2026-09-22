@@ -35,7 +35,11 @@ use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 
@@ -87,7 +91,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
-        $schemaFactory = new DataContainerSchemaFactory($framework);
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
             public function __construct(private readonly ResourceMetadataCollection $collection)
@@ -174,7 +178,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->willReturn(new OpenApi(new Info('API', '1'), [], new Paths()))
         ;
         $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
-        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework), '/_api');
+        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), '/_api');
         $openApi = $factory();
 
         $this->assertNull($openApi->getPaths()->getPath('/_api/dc/tl_content/{id}')->getGet()->getResponses()['200']->getLinks());
@@ -196,7 +200,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                     return new ResourceMetadataCollection(DataContainerRecord::class, []);
                 }
             },
-            new DataContainerSchemaFactory($this->createContaoFrameworkStub()),
+            new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])),
             '/_api',
         );
 

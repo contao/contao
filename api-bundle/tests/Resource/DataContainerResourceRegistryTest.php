@@ -23,7 +23,10 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use PHPUnit\Framework\TestCase;
 
 final class DataContainerResourceRegistryTest extends TestCase
@@ -130,6 +133,6 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class)));
+        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
     }
 }

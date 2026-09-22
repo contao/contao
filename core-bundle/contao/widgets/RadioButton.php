@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
-
 /**
  * Provide methods to handle radio buttons.
  *
@@ -19,7 +17,7 @@ use Contao\CoreBundle\Widget\ApiWidgetInterface;
  * @property array   $options
  * @property array   $unknownOption
  */
-class RadioButton extends Widget implements ApiWidgetInterface
+class RadioButton extends Widget
 {
 	/**
 	 * Submit user input

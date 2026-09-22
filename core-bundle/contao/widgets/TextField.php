@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
 
 /**
  * Provide methods to handle text fields.
@@ -23,7 +22,7 @@ use Contao\CoreBundle\Widget\ApiWidgetInterface;
  * @property boolean $hideInput
  * @property integer $size
  */
-class TextField extends Widget implements ApiWidgetInterface
+class TextField extends Widget
 {
 	/**
 	 * Submit user input

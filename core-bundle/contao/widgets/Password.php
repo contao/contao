@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
-
 /**
  * Provide methods to handle password fields.
  *
@@ -19,7 +17,7 @@ use Contao\CoreBundle\Widget\ApiWidgetInterface;
  * @property boolean $mandatory
  * @property string  $placeholder
  */
-class Password extends Widget implements ApiWidgetInterface
+class Password extends Widget
 {
 	/**
 	 * Submit user input
@@ -153,15 +151,5 @@ class Password extends Widget implements ApiWidgetInterface
 			'attributes' => $this->getAttributes(),
 			'prependLabel' => $this->prependLabel ?? false
 		));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function getApiSchema(array $config, array $schema): array
-	{
-		$schema['writeOnly'] = true;
-
-		return $schema;
 	}
 }

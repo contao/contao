@@ -17,8 +17,12 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
 use Contao\PageTree;
 use Contao\Password;
@@ -141,7 +145,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
-        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework), new JsonSchemaValidator());
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new JsonSchemaValidator());
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
             ->expects($this->never())
@@ -226,7 +230,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework);
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
     }

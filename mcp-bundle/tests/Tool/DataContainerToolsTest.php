@@ -23,7 +23,10 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\McpBundle\Response\ApiResponseConverter;
 use Contao\McpBundle\Tool\DataContainerTools;
 use Mcp\Capability\Attribute\McpTool;
@@ -209,6 +212,6 @@ final class DataContainerToolsTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($this->createStub(ContaoFramework::class)));
+        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
     }
 }

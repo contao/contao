@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Widget\ApiWidgetInterface;
-
 /**
  * Provide methods to handle select menus.
  *
@@ -22,7 +20,7 @@ use Contao\CoreBundle\Widget\ApiWidgetInterface;
  * @property array   $unknownOption
  * @property boolean $chosen
  */
-class SelectMenu extends Widget implements ApiWidgetInterface
+class SelectMenu extends Widget
 {
 	/**
 	 * Submit user input
