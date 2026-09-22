@@ -43,8 +43,8 @@ use Contao\TimePeriod;
 final class CoreWidgetConverter implements WidgetConverterInterface
 {
     // Match RootPageDependentSelect before SelectMenu because its value is a map.
-    // Uploads need file requests, RowWizard needs child converters and SerpPreview
-    // has no submitted value.
+    // RowWizard has its own converter for delegating to child widgets. Uploads need
+    // file requests and SerpPreview has no submitted value.
     private const WIDGET_TYPES = [
         CheckBoxWizard::class,
         ChmodTable::class,
@@ -96,7 +96,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             RadioTable::class => $schema ?: ['type' => 'string'],
             CheckBox::class => $multiple ? $schema : $this->getBooleanSchema($schema),
             Password::class => array_replace($schema, ['writeOnly' => true]),
-            default => $schema,
+            default => array_replace(['type' => 'string'], $schema),
         };
     }
 

@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Schema;
 
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -71,6 +72,16 @@ final class DataContainerSchemaFactory
         ];
     }
 
+    /**
+     * Create a child widget schema without treating its name as a record metadata field.
+     */
+    public function createWidgetSchema(array $config): array
+    {
+        $converter = $this->converters->get($config);
+
+        return $converter ? $this->createSchema($config, $converter) : [];
+    }
+
     private function projectSchema(array $schema, string $operation): array
     {
         foreach ($schema['properties'] as $field => $property) {
@@ -111,6 +122,25 @@ final class DataContainerSchemaFactory
             return [];
         }
 
+        $schema = $this->createSchema($config, $converter);
+
+        if (\in_array($fieldName, ['id', 'tstamp'], true)) {
+            $schema['readOnly'] = true;
+        }
+
+        if (\in_array($fieldName, ['pid', 'ptable', 'sorting'], true)) {
+            $schema['description'] = trim(($schema['description'] ?? '').' Use the move operation to change the parent or position of an existing record.');
+        }
+
+        if ('id' === $fieldName) {
+            $schema['type'] = 'integer';
+        }
+
+        return $schema;
+    }
+
+    private function createSchema(array $config, WidgetConverterInterface|null $converter): array
+    {
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
 
@@ -124,16 +154,8 @@ final class DataContainerSchemaFactory
 
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
-        if (\in_array($fieldName, ['id', 'tstamp'], true) || ($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
+        if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
             $schema['readOnly'] = true;
-        }
-
-        if (\in_array($fieldName, ['pid', 'ptable', 'sorting'], true)) {
-            $schema['description'] = trim(($schema['description'] ?? '').' Use the move operation to change the parent or position of an existing record.');
-        }
-
-        if ('id' === $fieldName) {
-            $schema['type'] = 'integer';
         }
 
         return $schema;
@@ -203,7 +225,7 @@ final class DataContainerSchemaFactory
             };
         }
 
-        if (isset($config['options']) && \is_array($config['options'])) {
+        if (isset($config['inputType']) || (isset($config['options']) && \is_array($config['options']))) {
             return 'string';
         }
 
