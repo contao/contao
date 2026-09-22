@@ -1395,7 +1395,18 @@ abstract class Widget extends Controller
 		}
 
 		// Convert timestamps
-		$arrAttributes['value'] = self::formatDateValue($varValue, $arrData) ?? $arrAttributes['value'];
+		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'] ?? null, array('date', 'time', 'datim')))
+		{
+			try
+			{
+				$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
+				$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
+			}
+			catch (\OutOfBoundsException)
+			{
+				// ignore if date could not be converted
+			}
+		}
 
 		// Convert URL insert tags
 		if ($varValue && 'url' === ($arrData['eval']['rgxp'] ?? null))
@@ -1435,28 +1446,6 @@ abstract class Widget extends Controller
 		}
 
 		return $arrAttributes;
-	}
-
-	private static function formatDateValue(mixed $value, array $config): string|null
-	{
-		$rgxp = $config['eval']['rgxp'] ?? null;
-
-		if ($value === null || $value === '' || !\in_array($rgxp, array('date', 'time', 'datim')))
-		{
-			return null;
-		}
-
-		try
-		{
-			$date = new Date($value, Date::getFormatFromRgxp($rgxp));
-
-			return $date->$rgxp;
-		}
-		catch (\OutOfBoundsException)
-		{
-			// Ignore if date could not be converted
-			return null;
-		}
 	}
 
 	/**
