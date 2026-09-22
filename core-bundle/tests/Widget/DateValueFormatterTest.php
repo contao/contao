@@ -26,20 +26,20 @@ class DateValueFormatterTest extends ContaoTestCase
             ->expects($this->exactly(3))
             ->method('getFormatFromRgxp')
             ->willReturnMap([
-            ['date', 'd.m.Y'],
-            ['time', 'H:i'],
-            ['datim', 'd.m.Y H:i'],
-        ])
+                ['date', 'd.m.Y'],
+                ['time', 'H:i'],
+                ['datim', 'd.m.Y H:i'],
+            ])
         ;
         $date = $this->createMock(Date::class);
         $date
             ->expects($this->exactly(3))
             ->method('__get')
             ->willReturnMap([
-            ['date', '22.09.2026'],
-            ['time', '12:34'],
-            ['datim', '22.09.2026 12:34'],
-        ])
+                ['date', '22.09.2026'],
+                ['time', '12:34'],
+                ['datim', '22.09.2026 12:34'],
+            ])
         ;
         $framework = $this->createMock(ContaoFramework::class);
         $framework

@@ -31,6 +31,8 @@ class ContaoApiExtensionTest extends TestCase
     public function testLoadsServicesAndParameters(): void
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
         new ContaoApiBundle()->getContainerExtension()->load([['api_prefix' => '/custom-api']], $container);
 
         $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
@@ -139,6 +141,9 @@ class ContaoApiExtensionTest extends TestCase
     private function createConverterContainer(): ContainerBuilder
     {
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
         $extension = new ContaoApiBundle()->getContainerExtension();
         $container->registerExtension($extension);
         $container->setParameter('kernel.charset', 'UTF-8');
