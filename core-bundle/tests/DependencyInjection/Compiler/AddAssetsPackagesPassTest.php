@@ -148,7 +148,7 @@ class AddAssetsPackagesPassTest extends TestCase
 
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('assets.json_manifest_version_strategy', $definition->getParent());
-        $this->assertSame($bundlePath.'/Resources/public/manifest.json', $definition->getArgument(0));
+        $this->assertSame($bundlePath.'/Resources/public/manifest.json', $definition->getArgument('$manifestPath'));
     }
 
     public function testSupportsBundlesWithPublicInRoot(): void

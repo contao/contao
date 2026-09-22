@@ -65,7 +65,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
                 if (is_file($manifestPath = Path::join($path, 'manifest.json'))) {
                     $def = new ChildDefinition('assets.json_manifest_version_strategy');
-                    $def->replaceArgument(0, $manifestPath);
+                    $def->replaceArgument('$manifestPath', $manifestPath);
 
                     $container->setDefinition('assets._version_'.$packageName, $def);
                     $packageVersion = new Reference('assets._version_'.$packageName);
@@ -90,7 +90,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
                     if (is_file($manifestPath = Path::join($path, $theme->getBasename(), 'manifest.json'))) {
                         $def = new ChildDefinition('assets.json_manifest_version_strategy');
-                        $def->replaceArgument(0, $manifestPath);
+                        $def->replaceArgument('$manifestPath', $manifestPath);
 
                         $container->setDefinition('assets._version_'.$packageName, $def);
                         $packageVersion = new Reference('assets._version_'.$packageName);
@@ -142,9 +142,9 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $package = new ChildDefinition('assets.path_package');
         $package
             ->setPublic(false)
-            ->replaceArgument(0, $basePath)
-            ->replaceArgument(1, $version)
-            ->replaceArgument(2, $context)
+            ->replaceArgument('$basePath', $basePath)
+            ->replaceArgument('$versionStrategy', $version)
+            ->replaceArgument('$context', $context)
         ;
 
         return $package;
@@ -153,8 +153,8 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     private function createVersionStrategy(ContainerBuilder $container, string $name): Reference
     {
         $def = new ChildDefinition('assets.static_version_strategy');
-        $def->replaceArgument(0, InstalledVersions::getPrettyVersion($name));
-        $def->replaceArgument(1, '%%s?v=%%s');
+        $def->replaceArgument('$version', InstalledVersions::getPrettyVersion($name));
+        $def->replaceArgument('$format', '%%s?v=%%s');
 
         $container->setDefinition('assets._version_'.$name, $def);
 
