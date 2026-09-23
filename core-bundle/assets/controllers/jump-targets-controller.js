@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    #btn = null;
+    #btn;
     #prevButton = null;
     #nextButton = null;
     #linksContainer = null;
@@ -19,7 +19,9 @@ export default class extends Controller {
     initialize() {
         this.#onScroll = this.#updateScrollButtonVisibility.bind(this);
         this.#onResize = this.#updateScrollButtonVisibility.bind(this);
-        this.#initButtonElement();
+
+        this.#btn = document.createElement('button');
+        this.#btn.type = 'button';
     }
 
     navigationTargetConnected(element) {
@@ -129,11 +131,6 @@ export default class extends Controller {
         start ? (this.#prevButton = li) : (this.#nextButton = li);
 
         return li;
-    }
-
-    #initButtonElement() {
-        this.#btn = document.createElement('button');
-        this.#btn.type = 'button';
     }
 
     #getNextSnapItem() {
