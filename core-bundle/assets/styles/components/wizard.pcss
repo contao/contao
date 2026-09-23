@@ -182,13 +182,58 @@
     list-style: none;
 }
 
-.tl_listwizard .tl_text {
-    width: 78%;
-    margin: 2px 0;
-}
-
 .tl_listwizard button {
     margin-left: 1px;
+}
+
+.tl_listwizard:not(.is-nested) {
+    .tl_text {
+        width: 78%;
+        margin: 2px 0;
+    }
+}
+
+.tl_listwizard.is-nested {
+    max-width: max(80%, 600px);
+
+    ul {
+        list-style: none;
+        padding-inline-start: 20px;
+
+        &:not(:has(> li)) {
+            display: none;
+        }
+    }
+
+    li {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 4px;
+
+        > ul {
+            flex-basis: 100%;
+        }
+    }
+
+    .tl_text {
+        flex: 1;
+        min-width: 0;
+        margin: 2px 0;
+    }
+
+    .drag-handle,
+    button {
+        flex: none;
+    }
+
+    .outdent,
+    .indent {
+        &[disabled] {
+            cursor: not-allowed;
+            filter: brightness(var(--disable-brightness, 0.2)) grayscale(1) opacity(0.3);
+        }
+    }
 }
 
 /* Checkbox wizard */
