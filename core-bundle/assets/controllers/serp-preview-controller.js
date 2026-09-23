@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     #sourceElements = new Map();
+    #sourceHandlers = new Map();
 
     static values = {
         id: String,
@@ -16,6 +17,7 @@ export default class extends Controller {
         // Install event listeners on the source fields
         for (const [sourceType, ids] of Object.entries(this.fieldsValue)) {
             const elements = [];
+            const handler = this.#update.bind(this, sourceType);
 
             for (const id of ids) {
                 const el = document.getElementById(id);
@@ -25,10 +27,11 @@ export default class extends Controller {
                 }
 
                 elements.push(el);
-                el.addEventListener('input', this.#update.bind(this, sourceType));
+                el.addEventListener('input', handler);
             }
 
             this.#sourceElements.set(sourceType, elements);
+            this.#sourceHandlers.set(sourceType, handler);
 
             // Initially gather content
             this.#update(sourceType);
@@ -36,13 +39,14 @@ export default class extends Controller {
     }
 
     disconnect() {
-        for (const elements of this.#sourceElements.values()) {
+        for (const [sourceType, elements] of this.#sourceElements) {
             for (const el of elements) {
-                el.removeEventListener('input', this.#update);
+                el.removeEventListener('input', this.#sourceHandlers.get(sourceType));
             }
         }
 
         this.#sourceElements.clear();
+        this.#sourceHandlers.clear();
     }
 
     #update(sourceType) {
@@ -61,7 +65,7 @@ export default class extends Controller {
         } else if (sourceType === 'description') {
             this.descriptionTarget.textContent = this.#shorten(value, 160);
         } else if (sourceType === 'robots') {
-            this.element.classList.toggle('noindex', value.contains('noindex'));
+            this.element.classList.toggle('noindex', value.includes('noindex'));
         }
     }
 

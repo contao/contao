@@ -33,9 +33,7 @@ export default class extends Controller {
 
         // Execute the config callback
         this.element?.configCallback(this.editor);
-
         this.setMaxLines();
-        window.addEventListener('resize', this.setMaxLines.bind(this));
     }
 
     disconnect() {

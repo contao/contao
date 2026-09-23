@@ -3,6 +3,7 @@ import * as Icon from '../modules/icon';
 
 export default class TabsController extends Controller {
     #activeTab = null;
+    #listeners = new Map();
 
     static values = {
         closeLabel: String,
@@ -18,51 +19,65 @@ export default class TabsController extends Controller {
         const tabId = isRestore ? panel.dataset.tabId : (Math.random() + 1).toString(36).substring(7);
         const containerId = this.element.id;
         const panelReference = panel.id || `tab-panel_${containerId}_${tabId}`;
-        const controlReference = `tab-control_${containerId}_${tabId}`;
+        const controlReference = panel.getAttribute('aria-labelledby') || `tab-control_${containerId}_${tabId}`;
 
         // Create navigation elements
-        const selectButton = isRestore
+        const existingSelectButton = isRestore
             ? this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`)
-            : (() => {
-                  const button = document.createElement('button');
-                  button.id = controlReference;
-                  button.className = 'select';
-                  button.innerText = panel.dataset.label;
-                  button.setAttribute('type', 'button');
-                  button.setAttribute('role', 'tab');
-                  button.setAttribute('aria-controls', panelReference);
+            : null;
 
-                  return button;
-              })();
+        const selectButton =
+            existingSelectButton ??
+            (() => {
+                const button = document.createElement('button');
+                button.id = controlReference;
+                button.className = 'select';
+                button.innerText = panel.dataset.label;
+                button.setAttribute('type', 'button');
+                button.setAttribute('role', 'tab');
+                button.setAttribute('aria-controls', panelReference);
 
-        selectButton.addEventListener('click', () => {
+                return button;
+            })();
+
+        const select = () => {
             this.selectTab(panel);
-        });
+        };
 
-        selectButton.addEventListener('auxclick', (event) => {
+        const auxclick = (event) => {
             if (1 === event.button) {
                 // Remove the panel and let the disconnect handler do the rest
                 panel.remove();
             }
-        });
+        };
 
-        const closeButton = isRestore
+        selectButton.addEventListener('click', select);
+        selectButton.addEventListener('auxclick', auxclick);
+
+        const existingCloseButton = isRestore
             ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
-            : (() => {
-                  const button = document.createElement('button');
-                  button.className = 'close';
-                  button.append(Icon.getTemplate('close', { 'aria-hidden': true, width: 12, height: 12 }).content);
-                  button.setAttribute('type', 'button');
-                  button.setAttribute('aria-controls', panelReference);
-                  button.setAttribute('aria-label', this.closeLabelValue);
+            : null;
 
-                  return button;
-              })();
+        const closeButton =
+            existingCloseButton ??
+            (() => {
+                const button = document.createElement('button');
+                button.className = 'close';
+                button.append(Icon.getTemplate('close', { 'aria-hidden': true, width: 12, height: 12 }).content);
+                button.setAttribute('type', 'button');
+                button.setAttribute('aria-controls', panelReference);
+                button.setAttribute('aria-label', this.closeLabelValue);
 
-        closeButton.addEventListener('click', () => {
+                return button;
+            })();
+
+        const close = () => {
             // Remove the panel and let the disconnect handler do the rest
             panel.remove();
-        });
+        };
+
+        closeButton.addEventListener('click', close);
+        this.#listeners.set(panel, { selectButton, select, auxclick, closeButton, close });
 
         if (!isRestore) {
             // Enhance panel container
@@ -70,8 +85,13 @@ export default class TabsController extends Controller {
             panel.id = panelReference;
             panel.setAttribute('role', 'tabpanel');
             panel.setAttribute('aria-labelledby', controlReference);
+        }
 
+        if (!existingSelectButton || !existingCloseButton) {
             // Add navigation element
+            existingSelectButton?.parentElement?.remove();
+            existingCloseButton?.parentElement?.remove();
+
             const li = document.createElement('li');
             li.setAttribute('role', 'presentation');
             li.append(selectButton);
@@ -85,6 +105,8 @@ export default class TabsController extends Controller {
     }
 
     panelTargetDisconnected(panel) {
+        this.#removeListeners(panel);
+
         // Remove controls
         document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement?.remove();
 
@@ -95,6 +117,12 @@ export default class TabsController extends Controller {
             } else {
                 this.#activeTab = null;
             }
+        }
+    }
+
+    disconnect() {
+        for (const panel of this.#listeners.keys()) {
+            this.#removeListeners(panel);
         }
     }
 
@@ -136,5 +164,19 @@ export default class TabsController extends Controller {
             result[panel.id] = panel;
             return result;
         }, {});
+    }
+
+    #removeListeners(panel) {
+        const listeners = this.#listeners.get(panel);
+
+        if (!listeners) {
+            return;
+        }
+
+        listeners.selectButton.removeEventListener('click', listeners.select);
+        listeners.selectButton.removeEventListener('auxclick', listeners.auxclick);
+        listeners.closeButton.removeEventListener('click', listeners.close);
+
+        this.#listeners.delete(panel);
     }
 }

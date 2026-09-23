@@ -21,14 +21,20 @@ export default class extends Controller {
     #timer = null;
     #current = null;
     #pointer = null;
-    #targetSelector = null;
-    #contentTargetSelector = null;
+    #targetSelector;
+    #contentTargetSelector;
+    #show;
+    #setPosition;
+    #hide;
 
     static targets = ['tooltip', 'content', 'popup', 'popupContent'];
 
     initialize() {
         this.#contentTargetSelector = `[data-${this.identifier}-target~="content"]`;
         this.#targetSelector = `[data-${this.identifier}-target~="tooltip"], ${this.#contentTargetSelector}`;
+        this.#show = this.#handleShow.bind(this);
+        this.#setPosition = this.#handleSetPosition.bind(this);
+        this.#hide = this.#handleHide.bind(this);
     }
 
     connect() {
@@ -59,7 +65,7 @@ export default class extends Controller {
         }
     }
 
-    #show = (event) => {
+    #handleShow(event) {
         // Bail on touch devices
         if ('touch' === event.pointerType) return;
 
@@ -84,9 +90,9 @@ export default class extends Controller {
             this.#positionTooltip();
             this.popupTarget.style.display = 'block';
         }, 1000);
-    };
+    }
 
-    #setPosition = (event) => {
+    #handleSetPosition(event) {
         if ('touch' === event.pointerType) return;
 
         this.#pointer = { x: event.clientX, y: event.clientY };
@@ -94,9 +100,9 @@ export default class extends Controller {
         if (this.#current && this.popupTarget.style.display === 'block') {
             this.#positionTooltip();
         }
-    };
+    }
 
-    #hide = (event = null) => {
+    #handleHide(event = null) {
         if (this.#current === null) {
             return;
         }
@@ -110,7 +116,7 @@ export default class extends Controller {
         this.#migrateElementTitle(this.#current, false);
         this.#current = null;
         this.popupTarget.style.display = 'none';
-    };
+    }
 
     #positionTooltip() {
         positionAt(this.popupTarget, this.#pointer.x, this.#pointer.y);
