@@ -6,8 +6,8 @@ export default class extends Controller {
     #nextButton = null;
     #linksContainer = null;
     #links = [];
-    #onScroll = () => this.#updateScrollButtonVisibility();
-    #onResize = () => this.#updateScrollButtonVisibility();
+    #onScroll;
+    #onResize;
 
     static targets = ['navigation', 'section'];
 
@@ -17,6 +17,8 @@ export default class extends Controller {
     };
 
     initialize() {
+        this.#onScroll = this.#updateScrollButtonVisibility.bind(this);
+        this.#onResize = this.#updateScrollButtonVisibility.bind(this);
         this.#initButtonElement();
     }
 

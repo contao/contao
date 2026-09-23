@@ -21,16 +21,25 @@ export default class extends Controller {
 
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
+    #follow;
+    #blockInfo;
+    #submitStart;
 
-    #follow = (event) => {
+    initialize() {
+        this.#follow = this.#handleFollow.bind(this);
+        this.#blockInfo = this.#handleBlockInfo.bind(this);
+        this.#submitStart = this.#handleSubmitStart.bind(this);
+    }
+
+    #handleFollow(event) {
         this.#turboStreamConnection.get(this.followUrlValue, { name: event.detail.name }, true);
-    };
+    }
 
-    #blockInfo = (event) => {
+    #handleBlockInfo(event) {
         this.#turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
-    };
+    }
 
-    #submitStart = (event) => {
+    #handleSubmitStart(event) {
         // Add the currently open editor tabs to the request when selecting a theme
         if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
             this.#addOpenEditorTabsToRequest(event);
@@ -41,7 +50,7 @@ export default class extends Controller {
             this.#addEditorContentToRequest(event);
             this.#getActiveMutableEditor()?.focus();
         }
-    };
+    }
 
     connect() {
         // Subscribe to events dispatched by the editors
