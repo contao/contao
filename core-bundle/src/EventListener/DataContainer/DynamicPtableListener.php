@@ -56,7 +56,8 @@ class DynamicPtableListener
                 array_unshift($tables, $ptable);
             }
 
-            // Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
+            // Use the ptable query parameter if there is another possible dynamic parent in
+            // the back end module (see #10146)
             if (($ptable = $this->framework->getAdapter(Input::class)->get('ptable')) && \in_array($ptable, $tables, true)) {
                 array_unshift($tables, $ptable);
             }
