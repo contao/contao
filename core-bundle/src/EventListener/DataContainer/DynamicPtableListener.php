@@ -34,7 +34,6 @@ class DynamicPtableListener
         if (
             !($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
             || !isset($GLOBALS['BE_MOD'])
-            || isset($GLOBALS['TL_DCA'][$table]['config']['ptable'])
         ) {
             return;
         }
@@ -50,7 +49,19 @@ class DynamicPtableListener
                 continue;
             }
 
-            foreach ($module['tables'] as $ptable) {
+            $tables = $module['tables'];
+
+            // Use the parent table if it has been set in the DCA file
+            if (($ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            // Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
+            if (($ptable = $this->framework->getAdapter(Input::class)->get('ptable')) && \in_array($ptable, $tables, true)) {
+                array_unshift($tables, $ptable);
+            }
+
+            foreach ($tables as $ptable) {
                 $controllerAdapter->loadDataContainer($ptable);
 
                 $ctable = $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [];
