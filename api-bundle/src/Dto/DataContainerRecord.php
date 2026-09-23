@@ -18,6 +18,12 @@ use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
 #[DataContainerRecordSchema]
 final class DataContainerRecord
 {
+    /**
+     * Record metadata can be exposed without an API-capable widget. Parent and
+     * position changes are handled by the create and move operations.
+     */
+    public const array METADATA_FIELDS = ['id', 'tstamp', 'pid', 'ptable', 'sorting'];
+
     public function __construct(
         public readonly string $table,
         public array $data = [],

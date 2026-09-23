@@ -37,7 +37,7 @@ final class PluginTest extends TestCase
         $this->assertSame([ApiPlatformBundle::class, ContaoCoreBundle::class], $bundles[1]->getLoadAfter());
     }
 
-    public function testLoadsTheSkeletonConfigAndApiPlatformRoutes(): void
+    public function testLoadsApiPlatformRoutes(): void
     {
         $plugin = new Plugin();
         $routesPath = \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../config/routes.yaml';
@@ -60,28 +60,17 @@ final class PluginTest extends TestCase
         ;
 
         $this->assertSame($routeCollection, $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class)));
+    }
 
-        $paths = [];
-
+    public function testLoadsApiPlatformDefaults(): void
+    {
         $loader = $this->createMock(LoaderInterface::class);
         $loader
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('load')
-            ->willReturnCallback(
-                static function (string $path) use (&$paths): void {
-                    $paths[] = $path;
-                },
-            )
+            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/config.yaml')
         ;
 
-        $plugin->registerContainerConfiguration($loader, []);
-
-        $this->assertSame(
-            [
-                \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../skeleton/config/config.yaml',
-                \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../skeleton/config/services.yaml',
-            ],
-            $paths,
-        );
+        new Plugin()->registerContainerConfiguration($loader, []);
     }
 }
