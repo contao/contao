@@ -57,7 +57,6 @@ export default class extends Controller {
     }
 
     initialize() {
-        this.#start = null;
         this.#keypress = this.#handleKeypress.bind(this);
     }
 
