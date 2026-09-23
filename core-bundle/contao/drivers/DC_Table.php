@@ -436,7 +436,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function render(string $component, array $parameters): string
 	{
 		// API requests only need the selected IDs, so skip building and rendering the backend HTML
-		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		if ($this->isApiRequest())
 		{
 			return '';
 		}
@@ -509,7 +509,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->limit = '';
 
 		// Reading records through the API must not run backend cleanup writes
-		if (!System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		if (!$this->isApiRequest())
 		{
 			$this->reviseTable();
 		}
@@ -583,7 +583,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request?->attributes->getBoolean('_contao_api'))
+		if ($this->isApiRequest())
 		{
 			$request->attributes->set('_contao_listing_ids', array_values(array_unique($this->current)));
 		}
@@ -3162,7 +3162,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->arrSubmit = array();
 
 		// An API creation must finalize the record even when all submitted values match its defaults
-		if (!$this->noReload && (!empty($arrValues) || (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') && (int) ($this->objActiveRecord->tstamp ?? 1) === 0)))
+		if (!$this->noReload && (!empty($arrValues) || ($this->isApiRequest() && (int) ($this->objActiveRecord->tstamp ?? 1) === 0)))
 		{
 			$arrValues['tstamp'] = time();
 
@@ -3951,7 +3951,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
 		// Calculate label and add a toggle button
-		$blnIsOpen = System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') || !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
+		$blnIsOpen = $this->isApiRequest() || !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
@@ -4210,7 +4210,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// The IDs are already collected, so skip label generation and rendering for each API tree node
-		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		if ($this->isApiRequest())
 		{
 			return '';
 		}
@@ -5251,7 +5251,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function limitMenu($blnOptional=false)
 	{
 		// The API paginates the collected IDs, so skip the backend limit and its menu rendering
-		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api'))
+		if ($this->isApiRequest())
 		{
 			return '';
 		}

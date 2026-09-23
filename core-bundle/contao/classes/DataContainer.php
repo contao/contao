@@ -1571,6 +1571,11 @@ abstract class DataContainer extends Backend
 		}
 	}
 
+	protected function isApiRequest(): bool
+	{
+		return System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') ?? false;
+	}
+
 	protected function canRenderTreeRecord(): bool
 	{
 		if ($this->treeRecordLimitReached)
