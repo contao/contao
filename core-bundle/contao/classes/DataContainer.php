@@ -1605,7 +1605,8 @@ abstract class DataContainer extends Backend
 
 	protected function getTreeRecordLimit(): int
 	{
-		if (Input::get('act') == 'select')
+		// Backend bulk selection is unlimited, but API listings must retain the configured tree limit
+		if (Input::get('act') == 'select' && !$this->isApiRequest())
 		{
 			return 0;
 		}
