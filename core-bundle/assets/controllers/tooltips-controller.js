@@ -4,6 +4,8 @@ export default class TooltipsController extends Controller {
     #tooltip = null;
     #timer = null;
     #current = null;
+    #show;
+    #hide;
 
     static defaultOptionsMap = {
         'a img[alt]': { x: -9, y: 30 },
@@ -28,6 +30,11 @@ export default class TooltipsController extends Controller {
         'span[title]': { x: -9, y: 26 },
         'label.mw_enable': { x: -9, y: 30, useContent: true },
     };
+
+    initialize() {
+        this.#show = this.#handleShow.bind(this);
+        this.#hide = this.#handleHide.bind(this);
+    }
 
     /**
      * There is one controller handling multiple tooltip targets. The tooltip
@@ -55,7 +62,7 @@ export default class TooltipsController extends Controller {
         }
     }
 
-    #show = (event) => {
+    #handleShow(event) {
         // Bail on touch devices
         if ('touch' === event.pointerType) return;
 
@@ -70,9 +77,9 @@ export default class TooltipsController extends Controller {
 
         this.#current = el;
         this.#showTooltip(el, 1000);
-    };
+    }
 
-    #hide = (event = null) => {
+    #handleHide(event = null) {
         if (this.#current === null) {
             return;
         }
@@ -84,7 +91,7 @@ export default class TooltipsController extends Controller {
 
         this.#hideTooltip(this.#current);
         this.#current = null;
-    };
+    }
 
     #createTipContainer() {
         const tooltip = document.createElement('div');
