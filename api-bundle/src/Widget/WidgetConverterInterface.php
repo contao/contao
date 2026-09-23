@@ -23,17 +23,17 @@ interface WidgetConverterInterface
     public function supports(array $config): bool;
 
     /**
-     * Describe the JSON representation, refining the schema inferred from the DCA.
+     * Describes the JSON representation, refining the schema inferred from the DCA.
      */
     public function getSchema(array $config, array $schema): array;
 
     /**
-     * Convert the complete stored field value to its documented JSON representation.
+     * Converts the complete stored field value to its documented JSON representation.
      */
     public function convertToApiValue(mixed $value, array $config, array $schema): mixed;
 
     /**
-     * Prepare an API value for form submission, never for direct storage. Widget
+     * Prepares an API value for form submission, never for direct storage. Widget
      * validation and data container save callbacks still process the result.
      */
     public function convertToFormValue(mixed $value, array $config, array $schema): mixed;

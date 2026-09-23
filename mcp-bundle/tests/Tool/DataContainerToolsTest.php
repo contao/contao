@@ -134,6 +134,7 @@ final class DataContainerToolsTest extends TestCase
                 },
             )
         ;
+
         $router = $this->createMock(UrlGeneratorInterface::class);
         $router
             ->expects($this->once())
@@ -141,6 +142,7 @@ final class DataContainerToolsTest extends TestCase
             ->with('news_move', ['id' => 42])
             ->willReturn('/_api/news/42/move')
         ;
+
         $stack = new RequestStack();
         $stack->push(Request::create('https://example.org/_mcp/backend'));
 

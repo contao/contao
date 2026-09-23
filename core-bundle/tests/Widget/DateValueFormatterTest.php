@@ -31,6 +31,7 @@ class DateValueFormatterTest extends ContaoTestCase
                 ['datim', 'd.m.Y H:i'],
             ])
         ;
+
         $date = $this->createMock(Date::class);
         $date
             ->expects($this->exactly(3))
@@ -41,6 +42,7 @@ class DateValueFormatterTest extends ContaoTestCase
                 ['datim', '22.09.2026 12:34'],
             ])
         ;
+
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->exactly(3))
@@ -66,6 +68,7 @@ class DateValueFormatterTest extends ContaoTestCase
                 },
             )
         ;
+
         $formatter = new DateValueFormatter($framework);
 
         $this->assertSame('22.09.2026', $formatter->format(1234567890, 'date'));
@@ -80,6 +83,7 @@ class DateValueFormatterTest extends ContaoTestCase
             ->expects($this->never())
             ->method('initialize')
         ;
+
         $formatter = new DateValueFormatter($framework);
 
         $this->assertNull($formatter->format('', 'date'));
@@ -93,6 +97,7 @@ class DateValueFormatterTest extends ContaoTestCase
             ->method('getFormatFromRgxp')
             ->willReturn('d.m.Y')
         ;
+
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('getAdapter')

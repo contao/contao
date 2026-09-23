@@ -48,17 +48,22 @@ class RowWizardConverterTest extends TestCase
 
     public function testConvertsCellsAndPreparesRowMarkers(): void
     {
-        $converter = $this->createConverter();
         $config = ['inputType' => 'rows', 'eval' => ['actions' => ['enable']], 'fields' => [
             'id' => ['inputType' => 'text', 'eval' => ['maxlength' => 20]],
             'file' => ['inputType' => 'file'],
         ]];
+
+        $converter = $this->createConverter();
         $schema = $converter->getSchema($config, ['type' => 'string']);
+
         $this->assertTrue($converter->supports($config));
         $this->assertSame(['type' => 'string', 'maxLength' => 20], $schema['items']['properties']['id']);
+
         $uuid = '12345678-1234-1234-1234-123456789abc';
         $rows = $converter->convertToApiValue(serialize([4 => ['id' => 'test', 'file' => StringUtil::uuidToBin($uuid), 'enable' => '1']]), $config, $schema);
+
         $this->assertSame('[{"id":"test","file":"'.$uuid.'","enable":true}]', json_encode($rows, JSON_THROW_ON_ERROR));
+
         $this->assertSame(
             [
                 '_rows' => ['1'],
@@ -66,14 +71,16 @@ class RowWizardConverterTest extends TestCase
             ],
             $converter->convertToFormValue($rows, $config, $schema),
         );
+
         $this->assertSame(['_rows' => []], $converter->convertToFormValue([], $config, $schema));
         $this->assertSame([], $converter->convertToApiValue('', $config, $schema));
     }
 
     public function testDelegatesToThirdPartyConverters(): void
     {
-        $child = $this->createMock(WidgetConverterInterface::class);
         $field = ['inputType' => 'custom'];
+
+        $child = $this->createMock(WidgetConverterInterface::class);
         $child
             ->method('supports')
             ->willReturnCallback(static fn (array $config): bool => 'custom' === ($config['inputType'] ?? null))
@@ -99,11 +106,15 @@ class RowWizardConverterTest extends TestCase
             ->with(42, $field, ['type' => 'integer'])
             ->willReturn('submitted')
         ;
+
         $converter = $this->createConverter($child);
         $config = ['inputType' => 'rows', 'eval' => ['fields' => ['custom' => $field]]];
+
         $this->assertTrue($converter->supports($config));
+
         $schema = $converter->getSchema($config, []);
         $rows = $converter->convertToApiValue([['custom' => 'stored']], $config, $schema);
+
         $this->assertSame(42, $rows[0]->custom);
         $this->assertSame(['_rows' => ['1'], ['custom' => 'submitted']], $converter->convertToFormValue($rows, $config, $schema));
     }
@@ -113,10 +124,14 @@ class RowWizardConverterTest extends TestCase
         $converter = $this->createConverter();
         $nested = ['inputType' => 'rows', 'fields' => ['title' => ['inputType' => 'text']]];
         $config = ['inputType' => 'rows', 'fields' => ['children' => $nested]];
+
         $this->assertTrue($converter->supports($config));
+
         $schema = $converter->getSchema($config, []);
         $rows = $converter->convertToApiValue([['children' => [['title' => 'Nested']]]], $config, $schema);
+
         $this->assertSame(['_rows' => ['1'], ['children' => ['_rows' => ['1'], ['title' => 'Nested']]]], $converter->convertToFormValue($rows, $config, $schema));
+
         $config['fields']['unsupported'] = ['inputType' => 'unknown'];
         $this->assertFalse($converter->supports($config));
         $this->assertFalse($converter->supports(['inputType' => 'text']));
@@ -124,14 +139,17 @@ class RowWizardConverterTest extends TestCase
 
     public function testRespectsChildAccessAndSchemaOverrides(): void
     {
-        $converter = $this->createConverter();
         $config = ['inputType' => 'rows', 'fields' => [
             'secret' => ['inputType' => 'password'],
             'locked' => ['inputType' => 'text', 'eval' => ['readonly' => true], 'api' => ['schema' => ['enum' => ['test']]]],
         ]];
+
+        $converter = $this->createConverter();
         $schema = $converter->getSchema($config, []);
+
         $this->assertTrue($schema['readOnly']);
         $this->assertSame(['test'], $schema['items']['properties']['locked']['enum']);
+
         $rows = $converter->convertToApiValue([['secret' => 'hash', 'locked' => 'test']], $config, $schema);
         $this->assertSame('{"locked":"test"}', json_encode($rows[0], JSON_THROW_ON_ERROR));
     }
@@ -141,18 +159,22 @@ class RowWizardConverterTest extends TestCase
         $converter = $this->createConverter();
         $config = ['inputType' => 'rows', 'sql' => ['type' => 'json'], 'fields' => ['title' => ['inputType' => 'text']], 'eval' => ['fields' => ['ignored' => ['inputType' => 'unknown']]]];
         $this->assertTrue($converter->supports($config));
+
         $schema = $converter->getSchema($config, []);
         $this->assertSame(['title'], array_keys($schema['items']['properties']));
+
         $rows = $converter->convertToApiValue('[{"title":"JSON"}]', $config, $schema);
         $this->assertSame('JSON', $rows[0]->title);
+
         $validator = new Validator();
         $this->assertTrue($validator->validate($rows, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
     }
 
     public function testConvertsDisabledRowsWithoutDroppingThem(): void
     {
-        $converter = $this->createConverter();
         $config = ['inputType' => 'rows', 'eval' => ['actions' => ['enable']], 'fields' => ['title' => ['inputType' => 'text']]];
+
+        $converter = $this->createConverter();
         $schema = $converter->getSchema($config, []);
         $rows = $converter->convertToApiValue([['title' => 'Disabled', 'enable' => '']], $config, $schema);
 
@@ -166,6 +188,7 @@ class RowWizardConverterTest extends TestCase
         $converters = new \ArrayObject($custom ? [$custom] : []);
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
         $registry = new WidgetConverterRegistry($converters);
+
         $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry));
         $converters[] = $converter;
 

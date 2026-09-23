@@ -33,6 +33,7 @@ class ContaoApiExtensionTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
         new ContaoApiBundle()->getContainerExtension()->load([['api_prefix' => '/custom-api']], $container);
 
         $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
@@ -42,14 +43,14 @@ class ContaoApiExtensionTest extends TestCase
 
     public function testAutoconfiguresConvertersBeforeTheCoreFallback(): void
     {
-        $container = $this->createConverterContainer();
-
         $converter = $this->createMock(WidgetConverterInterface::class);
         $converter
             ->expects($this->exactly(2))
             ->method('supports')
             ->willReturnCallback(static fn (array $config): bool => 'custom' === ($config['inputType'] ?? null))
         ;
+
+        $container = $this->createConverterContainer();
         $container->register($converter::class, $converter::class)->setAutoconfigured(true)->setSynthetic(true)->setPublic(true);
         $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
         $container->compile();
@@ -78,6 +79,7 @@ class ContaoApiExtensionTest extends TestCase
         $container = $this->createConverterContainer();
         $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
         $container->compile();
+
         $widgets = $GLOBALS['BE_FFL'] ?? null;
         $GLOBALS['BE_FFL']['rows'] = RowWizard::class;
         $GLOBALS['BE_FFL']['text'] = TextField::class;
@@ -86,6 +88,7 @@ class ContaoApiExtensionTest extends TestCase
             $registry = $container->get(WidgetConverterRegistry::class);
             $config = ['inputType' => 'rows', 'fields' => ['title' => ['inputType' => 'text']]];
             $converter = $registry->get($config);
+
             $this->assertInstanceOf(RowWizardConverter::class, $converter);
             $this->assertSame('string', $converter->getSchema($config, [])['items']['properties']['title']['type']);
         } finally {
@@ -103,14 +106,17 @@ class ContaoApiExtensionTest extends TestCase
         $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
         $container->getDefinition(DataContainerSchemaFactory::class)->setPublic(true);
         $container->compile();
+
         $widgets = $GLOBALS['BE_FFL'] ?? null;
         $dca = $GLOBALS['TL_DCA'] ?? null;
         $GLOBALS['BE_FFL']['rows'] = RowWizard::class;
         $GLOBALS['BE_FFL']['text'] = TextField::class;
+
         $unsupported = ['inputType' => 'rows', 'fields' => [
             'title' => ['inputType' => 'text'],
             'unknown' => ['inputType' => 'unknown'],
         ]];
+
         $GLOBALS['TL_DCA']['tl_test']['fields'] = [
             'title' => ['inputType' => 'text'],
             'rows' => $unsupported,
@@ -143,13 +149,14 @@ class ContaoApiExtensionTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
-
-        $extension = new ContaoApiBundle()->getContainerExtension();
-        $container->registerExtension($extension);
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('kernel.project_dir', sys_get_temp_dir());
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.default_locale', 'en');
+
+        $extension = new ContaoApiBundle()->getContainerExtension();
+        $container->registerExtension($extension);
+
         new ContaoCoreExtension()->load([], $container);
         $extension->load([], $container);
 

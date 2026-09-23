@@ -146,12 +146,14 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertSame('#/components/schemas/dc_tl_content_update', $itemPathItem->getPatch()->getRequestBody()->getContent()['application/merge-patch+json']->getSchema()['$ref']);
         $this->assertSame('#/components/schemas/dc_tl_content', $itemPathItem->getPatch()->getResponses()['200']->getContent()['application/json']->getSchema()['$ref']);
         $this->assertSame(204, (int) array_key_first($itemPathItem->getDelete()->getResponses()));
+
         $move = $openApi->getPaths()->getPath('/_api/backend/dc/tl_content/{id}/move')->getPost();
         $this->assertSame(['target'], $schemas['dc_tl_content_move']['required']);
         $this->assertSame(['first', 'last', 'after'], $schemas['dc_tl_content_move']['properties']['position']['enum']);
         $this->assertArrayHasKey(200, $move->getResponses());
         $this->assertArrayNotHasKey(201, $move->getResponses());
         $this->assertSame('#/components/schemas/dc_tl_content_move', $move->getRequestBody()->getContent()['application/json']->getSchema()['$ref']);
+
         $link = $itemPathItem->getGet()->getResponses()['200']->getLinks()['move'];
         $this->assertSame($move->getOperationId(), $link->getOperationId());
         $this->assertSame(['id' => '$response.body#/id'], $link->getParameters()->getArrayCopy());
@@ -167,16 +169,19 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             operations: ['get' => new Get(uriTemplate: '/dc/tl_content/{id}')],
             extraProperties: ['contao' => ['table' => 'tl_content', 'schema_path' => 'dc/tl_content']],
         );
+
         $metadata = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadata
             ->method('create')
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, [$resource]))
         ;
+
         $decorated = $this->createStub(OpenApiFactoryInterface::class);
         $decorated
             ->method('__invoke')
             ->willReturn(new OpenApi(new Info('API', '1'), [], new Paths()))
         ;
+
         $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
         $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), '/_api');
         $openApi = $factory();

@@ -21,6 +21,7 @@ class WidgetConverterRegistryTest extends TestCase
     public function testSelectsOnlyTheFirstSupportingConverter(): void
     {
         $config = ['inputType' => 'thirdParty'];
+
         $unsupported = $this->createMock(WidgetConverterInterface::class);
         $unsupported
             ->expects($this->once())
@@ -28,6 +29,7 @@ class WidgetConverterRegistryTest extends TestCase
             ->with($config)
             ->willReturn(false)
         ;
+
         $supported = $this->createMock(WidgetConverterInterface::class);
         $supported
             ->expects($this->once())
@@ -35,6 +37,7 @@ class WidgetConverterRegistryTest extends TestCase
             ->with($config)
             ->willReturn(true)
         ;
+
         $later = $this->createMock(WidgetConverterInterface::class);
         $later
             ->expects($this->never())

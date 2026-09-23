@@ -67,6 +67,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
             }
 
             unset($data['id']);
+
             // Keep omitted fields out of validation and form submission
             $record->data = $data;
 

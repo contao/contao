@@ -64,6 +64,7 @@ class ContaoCoreExtensionTest extends TestCase
             'kernel.project_dir' => $this->getTempDir(),
             'kernel.default_locale' => 'en',
         ]));
+
         $container->registerExtension($apiExtension);
         new ContaoCoreExtension()->load([], $container);
 

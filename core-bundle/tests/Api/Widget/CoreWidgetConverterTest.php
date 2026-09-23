@@ -55,6 +55,7 @@ class CoreWidgetConverterTest extends TestCase
     protected function setUp(): void
     {
         $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
             'textarea' => TextArea::class,
@@ -89,6 +90,7 @@ class CoreWidgetConverterTest extends TestCase
             {
             }
         };
+
         $GLOBALS['BE_FFL']['custom'] = $widget::class;
         $GLOBALS['BE_FFL']['unsupported'] = Widget::class;
 
@@ -100,9 +102,10 @@ class CoreWidgetConverterTest extends TestCase
 
     public function testConvertsStoredSelectionsToTypedApiArrays(): void
     {
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
-        $schema = ['type' => 'array', 'items' => ['type' => 'integer']];
         $config = ['inputType' => 'select'];
+        $schema = ['type' => 'array', 'items' => ['type' => 'integer']];
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
 
         $this->assertSame([12, 34], $converter->convertToApiValue(serialize(['12', '34']), $config, $schema));
         $this->assertSame([12, 34], $converter->convertToApiValue('12,34', $config + ['eval' => ['csv' => ',']], $schema));
@@ -115,10 +118,11 @@ class CoreWidgetConverterTest extends TestCase
 
     public function testConvertsBinaryFileReferencesAndFormSelections(): void
     {
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $uuid = '12345678-1234-1234-1234-123456789abc';
         $binary = StringUtil::uuidToBin($uuid);
         $config = ['inputType' => 'fileTree'];
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $schema = $converter->getSchema($config, ['type' => 'string', 'maxLength' => 16]);
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'uuid'], $schema);
@@ -135,8 +139,8 @@ class CoreWidgetConverterTest extends TestCase
 
     public function testPreparesFormInputInsteadOfSerializedStorage(): void
     {
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $schema = ['type' => 'array', 'items' => ['type' => 'integer']];
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
 
         $this->assertSame(['12', '34'], $converter->convertToFormValue([12, 34], ['inputType' => 'select'], $schema));
         $this->assertSame('12,34', $converter->convertToFormValue([12, 34], ['inputType' => 'pageTree'], $schema));
@@ -150,8 +154,9 @@ class CoreWidgetConverterTest extends TestCase
     public function testConvertsStructuredWidgets(string $widget, array $stored, mixed $expected): void
     {
         $GLOBALS['BE_FFL']['structured'] = $widget;
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $config = ['inputType' => 'structured', 'sql' => ['type' => 'blob']];
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $schema = $converter->getSchema($config, ['type' => 'string', 'maxLength' => 16, 'enum' => ['irrelevant']]);
         $api = $converter->convertToApiValue(serialize($stored), $config, $schema);
 
@@ -159,6 +164,7 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame(json_encode($expected, JSON_THROW_ON_ERROR), json_encode($api, JSON_THROW_ON_ERROR));
         $this->assertArrayNotHasKey('enum', $schema);
         $this->assertArrayNotHasKey('maxLength', $schema);
+
         $validator = new Validator();
         $this->assertTrue($validator->validate($api, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
         $form = $converter->convertToFormValue($api, $config, $schema);
@@ -187,27 +193,32 @@ class CoreWidgetConverterTest extends TestCase
     public function testPreparesStructuredFormValues(): void
     {
         $GLOBALS['BE_FFL']['options'] = OptionWizard::class;
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $config = ['inputType' => 'options'];
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $schema = $converter->getSchema($config, []);
 
         $this->assertSame(
             [['value' => 'a', 'label' => 'A', 'default' => '1', 'group' => '']],
             $converter->convertToFormValue([(object) ['value' => 'a', 'label' => 'A', 'default' => true]], $config, $schema),
         );
+
         $this->assertSame([], $converter->convertToFormValue([], $config, $schema));
     }
 
     public function testSupportsAdditionalSelections(): void
     {
-        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $GLOBALS['BE_FFL']['wizard'] = CheckBoxWizard::class;
         $GLOBALS['BE_FFL']['radioTable'] = RadioTable::class;
         $GLOBALS['BE_FFL']['picker'] = Picker::class;
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
         $schema = $converter->getSchema(['inputType' => 'wizard'], ['type' => 'string', 'enum' => ['a', 'b']]);
+
         $this->assertSame(['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['a', 'b']]], $schema);
         $this->assertSame(['a', 'b'], $converter->convertToApiValue(serialize(['a', 'b']), ['inputType' => 'wizard'], $schema));
         $this->assertTrue($converter->supports(['inputType' => 'radioTable']));
+
         $schema = $converter->getSchema(['inputType' => 'picker', 'eval' => ['multiple' => true]], []);
         $this->assertSame([12, 34], $converter->convertToApiValue(serialize(['12', '34']), ['inputType' => 'picker'], $schema));
         $this->assertSame('12,34', $converter->convertToFormValue([12, 34], ['inputType' => 'picker'], $schema));

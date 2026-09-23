@@ -119,6 +119,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
     {
         $table = $resource->getExtraProperties()['contao']['table'];
         $shortName = $resource->getShortName();
+
         $operation = match (true) {
             'move' === ($metadata->getExtraProperties()['contao']['action'] ?? null) => $this->createMoveOperation($table, $shortName, $schemaRef),
             $metadata instanceof GetCollection => $this->createGetCollectionOperation($table, $shortName, $schemaRef),
@@ -154,11 +155,13 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
     {
         foreach ($operation->getResponses() as $status => $response) {
             $links = clone ($response->getLinks() ?? new \ArrayObject());
+
             $links['move'] = new Link(
                 operationId: $operationId,
                 parameters: new \ArrayObject(['id' => '$response.body#/id']),
                 description: 'Change the parent or position of this record using the move operation.',
             );
+
             $operation = $operation->withResponse($status, $response->withLinks($links));
         }
 

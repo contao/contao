@@ -103,6 +103,7 @@ final class RowWizardConverter implements WidgetConverterInterface
     public function convertToFormValue(mixed $value, array $config, array $schema): array
     {
         $rows = array_values((array) $value);
+
         // RowWizard validates as many rows as there are hidden _rows inputs
         $converted = ['_rows' => array_fill(0, \count($rows), '1')];
 

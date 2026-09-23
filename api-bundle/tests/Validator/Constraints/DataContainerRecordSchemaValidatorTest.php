@@ -41,7 +41,9 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
             'custom' => TextField::class,
@@ -144,13 +146,16 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
                 },
             )
         ;
+
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
         $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new JsonSchemaValidator());
+
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
             ->expects($this->never())
             ->method('buildViolation')
         ;
+
         $validator->initialize($context);
         $validator->validate(new DataContainerRecord('tl_content', ['title' => 'Updated'], 17), new DataContainerRecordSchema());
     }

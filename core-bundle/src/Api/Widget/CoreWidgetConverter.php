@@ -260,13 +260,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             return null;
         }
 
-        foreach (self::WIDGET_TYPES as $type) {
-            if (is_a($widget, $type, true)) {
-                return $type;
-            }
-        }
-
-        return null;
+        return array_find(self::WIDGET_TYPES, static fn ($type) => is_a($widget, $type, true));
     }
 
     private function decodeArray(mixed $value, array $config): array
