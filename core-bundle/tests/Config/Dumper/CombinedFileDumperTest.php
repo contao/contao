@@ -36,10 +36,12 @@ class CombinedFileDumperTest extends TestCase
             <?php
             /*
              * Source files (line ranges in this cache file):
-             * 6-7: source.php
+             * 8-8: source.php
              */
 
+            /* DCA file START: source.php */
             echo 'test';
+            /* DCA file END: source.php */
             PHP;
 
         $this->assertSame($expected."\n", file_get_contents($cacheDirectory.'/dca/test.php'));
@@ -52,10 +54,12 @@ class CombinedFileDumperTest extends TestCase
             echo 'foo';
             /*
              * Source files (line ranges in this cache file):
-             * 7-8: test.php
+             * 9-9: test.php
              */
 
+            /* DCA file START: test.php */
             echo 'test';
+            /* DCA file END: test.php */
             PHP;
 
         $filesystem = $this->mockFilesystem($expected."\n");
@@ -93,12 +97,17 @@ class CombinedFileDumperTest extends TestCase
             <?php
             /*
              * Source files (line ranges in this cache file):
-             * 7-8: first.php
-             * 9-9: second.php
+             * 9-9: first.php
+             * 13-13: second.php
              */
 
+            /* DCA file START: first.php */
             echo 'first';
+            /* DCA file END: first.php */
+
+            /* DCA file START: second.php */
             echo 'second';
+            /* DCA file END: second.php */
             PHP;
 
         $dumper = new CombinedFileDumper($this->mockFilesystem($expected."\n"), $loader, $this->getTempDir());

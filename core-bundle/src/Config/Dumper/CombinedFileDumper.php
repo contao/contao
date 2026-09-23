@@ -49,6 +49,9 @@ class CombinedFileDumper implements DumperInterface
         $line = 1;
         $type = $options['type'] ?? null;
 
+        $cachePath = Path::join($this->cacheDir, $cacheFile);
+        $cacheDir = Path::getDirectory($cachePath);
+
         foreach ((array) $files as $file) {
             $code = (string) $this->loader->load($file, $type);
 
@@ -56,18 +59,25 @@ class CombinedFileDumper implements DumperInterface
                 continue;
             }
 
+            if (!str_starts_with($code, "\n")) {
+                $code = "\n".$code;
+            }
+
             if (!str_ends_with($code, "\n")) {
                 $code .= "\n";
             }
 
+            $relativeFile = $this->getRelative((string) $file, $cacheDir);
             $lineCount = substr_count($code, "\n");
-            $sources[] = [(string) $file, $line, $line + $lineCount - 1];
-            $line += $lineCount;
+            $sources[] = [$relativeFile, $line + 2, $line + $lineCount];
+            $line += $lineCount + 2;
+
+            $buffer .= "\n/* DCA file START: $relativeFile */";
             $buffer .= $code;
+            $buffer .= "/* DCA file END: $relativeFile */\n";
         }
 
-        $cachePath = Path::join($this->cacheDir, $cacheFile);
-        $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, Path::getDirectory($cachePath)).$buffer);
+        $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, $cacheDir).$buffer);
     }
 
     /**
@@ -90,14 +100,19 @@ class CombinedFileDumper implements DumperInterface
         $header .= "/*\n * Source files (line ranges in this cache file):\n";
 
         foreach ($sources as [$file, $start, $end]) {
-            if (Path::isAbsolute($file)) {
-                $file = Path::makeRelative($file, $cacheDirectory);
-            }
-
-            $file = str_replace(['../', "\r", "\n", '*/'], ['', '\\r', '\\n', '* /'], $file);
+            $file = $this->getRelative($file, $cacheDirectory);
             $header .= \sprintf(" * %d-%d: %s\n", $start + $offset, $end + $offset, $file);
         }
 
         return $header." */\n";
+    }
+
+    private function getRelative(string $file, string $cacheDirectory): string
+    {
+        if (Path::isAbsolute($file)) {
+            $file = Path::makeRelative($file, $cacheDirectory);
+        }
+
+        return str_replace(['../', "\r", "\n", '*/'], ['', '\\r', '\\n', '* /'], $file);
     }
 }
