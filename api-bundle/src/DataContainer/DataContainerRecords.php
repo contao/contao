@@ -329,6 +329,8 @@ class DataContainerRecords
                 throw new NotFoundHttpException('The resource is not backed by a table data container.');
             }
 
+            // Legacy actions and callbacks can output HTML directly, bypassing render().
+            // Discard it to protect the API response, preserving any existing outer buffers.
             $level = ob_get_level();
             ob_start();
 
