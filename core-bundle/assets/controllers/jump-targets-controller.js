@@ -6,8 +6,6 @@ export default class extends Controller {
     #nextButton = null;
     #linksContainer = null;
     #links = [];
-    #onScroll;
-    #onResize;
 
     static targets = ['navigation', 'section'];
 
@@ -17,21 +15,11 @@ export default class extends Controller {
     };
 
     initialize() {
-        this.#onScroll = this.#updateScrollButtonVisibility.bind(this);
-        this.#onResize = this.#updateScrollButtonVisibility.bind(this);
-
         this.#btn = document.createElement('button');
         this.#btn.type = 'button';
     }
 
-    navigationTargetConnected(element) {
-        element.addEventListener('scroll', this.#onScroll);
-        window.addEventListener('resize', this.#onResize);
-    }
-
-    navigationTargetDisconnected(element) {
-        element.removeEventListener('scroll', this.#onScroll);
-        window.removeEventListener('resize', this.#onResize);
+    navigationTargetDisconnected() {
         this.#linksContainer?.remove();
     }
 
@@ -72,10 +60,10 @@ export default class extends Controller {
         this.#linksContainer.append(this.#nextButton ?? this.#createScrollButton(false));
         this.navigationTarget.replaceChildren(this.#linksContainer);
 
-        this.#updateScrollButtonVisibility();
+        this.updateScrollButtonVisibility();
     }
 
-    #updateScrollButtonVisibility() {
+    updateScrollButtonVisibility() {
         if (!this.hasNavigationTarget) {
             return;
         }

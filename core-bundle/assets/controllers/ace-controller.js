@@ -6,10 +6,6 @@ export default class extends Controller {
         readOnly: Boolean,
     };
 
-    initialize() {
-        this.setMaxLines = this.setMaxLines.bind(this);
-    }
-
     connect() {
         // Create a div to apply the editor to
         this.container = document.createElement('div');
@@ -37,13 +33,10 @@ export default class extends Controller {
 
         // Execute the config callback
         this.element?.configCallback(this.editor);
-
         this.setMaxLines();
-        window.addEventListener('resize', this.setMaxLines);
     }
 
     disconnect() {
-        window.removeEventListener('resize', this.setMaxLines);
         this.editor?.destroy();
         this.container?.remove();
     }

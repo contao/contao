@@ -46,7 +46,7 @@ if ($this->enableAce):
     const target = document.getElementById('<?= $this->selector ?>');
     target.configCallback = config;
     target.setAttribute('data-controller', 'contao--ace');
-    target.setAttribute('data-action', 'contao--color-scheme:change@window->contao--ace#colorChange');
+    target.setAttribute('data-action', 'resize@window->contao--ace#setMaxLines contao--color-scheme:change@window->contao--ace#colorChange');
   }
 </script>
 <?php endif; ?>
