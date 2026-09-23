@@ -23,49 +23,31 @@ export default class extends Controller {
     #pointer = null;
     #targetSelector;
     #contentTargetSelector;
-    #show;
-    #setPosition;
-    #hide;
 
     static targets = ['tooltip', 'content', 'popup', 'popupContent'];
 
     initialize() {
         this.#contentTargetSelector = `[data-${this.identifier}-target~="content"]`;
         this.#targetSelector = `[data-${this.identifier}-target~="tooltip"], ${this.#contentTargetSelector}`;
-        this.#show = this.#handleShow.bind(this);
-        this.#setPosition = this.#handleSetPosition.bind(this);
-        this.#hide = this.#handleHide.bind(this);
-    }
-
-    connect() {
-        this.element.addEventListener('pointerover', this.#show);
-        this.element.addEventListener('pointermove', this.#setPosition);
-        this.element.addEventListener('pointerout', this.#hide);
-        this.element.addEventListener('click', this.#hide, true);
     }
 
     disconnect() {
-        this.element.removeEventListener('pointerover', this.#show);
-        this.element.removeEventListener('pointermove', this.#setPosition);
-        this.element.removeEventListener('pointerout', this.#hide);
-        this.element.removeEventListener('click', this.#hide, true);
-
-        this.#hide();
+        this.hide();
     }
 
     tooltipTargetDisconnected(el) {
         if (el === this.#current) {
-            this.#hide();
+            this.hide();
         }
     }
 
     contentTargetDisconnected(el) {
         if (el === this.#current) {
-            this.#hide();
+            this.hide();
         }
     }
 
-    #handleShow(event) {
+    show(event) {
         // Bail on touch devices
         if ('touch' === event.pointerType) return;
 
@@ -75,7 +57,7 @@ export default class extends Controller {
             return;
         }
 
-        this.#hide();
+        this.hide();
 
         if (!this.#updateContent(el)) {
             return;
@@ -92,7 +74,7 @@ export default class extends Controller {
         }, 1000);
     }
 
-    #handleSetPosition(event) {
+    setPosition(event) {
         if ('touch' === event.pointerType) return;
 
         this.#pointer = { x: event.clientX, y: event.clientY };
@@ -102,7 +84,7 @@ export default class extends Controller {
         }
     }
 
-    #handleHide(event = null) {
+    hide(event = null) {
         if (this.#current === null) {
             return;
         }
