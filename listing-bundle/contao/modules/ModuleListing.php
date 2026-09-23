@@ -133,7 +133,7 @@ class ModuleListing extends Module
 		$this->Template->search_fields = $strOptions;
 
 		// Get the total number of records
-		$strQuery = "SELECT COUNT(*) AS count FROM " . $this->list_table;
+		$strQuery = "SELECT COUNT(*) AS count FROM " . $this->list_table . " t1";
 
 		if ($this->list_where)
 		{
