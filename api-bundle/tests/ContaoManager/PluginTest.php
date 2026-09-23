@@ -22,6 +22,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Yaml\Yaml;
 
 final class PluginTest extends TestCase
 {
@@ -60,6 +61,14 @@ final class PluginTest extends TestCase
         ;
 
         $this->assertSame($routeCollection, $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class)));
+    }
+
+    public function testAllApiRoutesUseTheBackendScope(): void
+    {
+        $route = Yaml::parseFile(\dirname(__DIR__, 2).'/config/routes.yaml')['api_platform'];
+
+        $this->assertSame('%contao.backend.route_prefix%/_api', $route['prefix']);
+        $this->assertSame(['_scope' => 'backend'], $route['defaults']);
     }
 
     public function testLoadsApiPlatformDefaults(): void
