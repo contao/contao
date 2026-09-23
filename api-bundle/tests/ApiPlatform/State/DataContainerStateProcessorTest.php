@@ -18,11 +18,23 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
 
 final class DataContainerStateProcessorTest extends TestCase
 {
+    public function testAcceptsMoveInputAndReturnsTheTargetRecordPlaceholder(): void
+    {
+        $operation = new Post(extraProperties: ['contao' => ['table' => 'tl_content', 'action' => 'move']]);
+        $record = new DataContainerStateProcessor()->process(new DataContainerMove(42, 'after'), $operation, ['id' => 17]);
+
+        $this->assertInstanceOf(DataContainerRecord::class, $record);
+        $this->assertSame('tl_content', $record->table);
+        $this->assertSame(17, $record->id);
+        $this->assertSame([], $record->data);
+    }
+
     public function testReturnsTheRecordForCreateAndUpdateOperations(): void
     {
         $processor = new DataContainerStateProcessor();
