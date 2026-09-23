@@ -116,8 +116,8 @@ It is no longer possible to have multiple backend themes. Use the `contao.backen
 
 ### BackendUser::navigation() removed
 
-The `BackendUser` class no longer generates the back end navigation. The `getUserNavigation` is still supported
-but has been deprecated. Use the knp-menu events instead.
+The `BackendUser` class no longer generates the back end navigation. The `getUserNavigation` hook is still
+supported but has been deprecated. Use the KnpMenu events instead.
 
 ### Merging native HTTP headers
 
