@@ -1,19 +1,20 @@
 {% trans_default_domain 'contao_default' -%}
 
-{%- set rootAttributes = attrs()
-    .set('lang', language)
+{% set rootAttributes = attrs()
+    .set('lang', app.locale|language_tag)
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
     .set('data-turbo-prefetch', 'false', isDebug)
     .mergeWith(rootAttributes|default)
 -%}
 
-{%- set bodyAttributes = attrs(attributes|default)
+{% set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
     .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'pointerover->contao--tooltips#show pointermove->contao--tooltips#setPosition pointerout->contao--tooltips#hide click->contao--tooltips#hide:capture')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -21,7 +22,7 @@
     .set('id', 'main')
     .set('aria-labelledby', 'main_headline')
     .mergeWith(mainAttributes|default)
-%}
+-%}
 
 {% set asideAttributes = attrs()
     .set('id', 'left')
@@ -30,7 +31,7 @@
     .set('data-contao--toggle-receiver-active-class', 'active')
     .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
     .mergeWith(asideAttributes|default)
-%}
+-%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
@@ -49,7 +50,7 @@
         <link rel="stylesheet" href="{{ asset('css/choices.min.css', 'contao-components/choices') }}" data-turbo-track="reload">
         <link rel="stylesheet" href="{{ asset('css/simplemodal.min.css', 'contao-components/simplemodal') }}" data-turbo-track="reload">
         <link rel="stylesheet" href="{{ asset('css/datepicker.min.css', 'contao-components/datepicker') }}" data-turbo-track="reload">
-        <link rel="stylesheet" href="{{ asset('css/dropzone.min.css', 'contao-components/dropzone') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('css/dropzone.css', 'contao-components/dropzone') }}" data-turbo-track="reload">
         <link rel="stylesheet" href="{{ asset('backend.css', 'contao_core') }}" data-turbo-track="reload">
         {{ stylesheets|default|raw }}
 
@@ -62,7 +63,7 @@
         <script src="{{ asset('js/ace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/ext-language_tools.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('js/ext-whitespace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
-        <script src="{{ asset('js/dropzone.min.js', 'contao-components/dropzone') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/dropzone-min.js', 'contao-components/dropzone') }}" data-turbo-track="reload"></script>
         <script src="{{ asset('backend.js', 'contao_core') }}" data-turbo-track="reload"></script>
         <script>{{ getDateString.invoke()|raw }}</script>
         {{ javascripts|default|raw }}

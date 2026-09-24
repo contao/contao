@@ -141,7 +141,7 @@ class BackendHelp extends Backend
 		}
 
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
+		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['helpWizardTitle'];
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->headline = $arrData['label'][0] ?? $field;

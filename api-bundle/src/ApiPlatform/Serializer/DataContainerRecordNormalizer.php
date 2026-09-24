@@ -15,6 +15,8 @@ namespace Contao\ApiBundle\ApiPlatform\Serializer;
 use ApiPlatform\Metadata\Operation;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -46,9 +48,9 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     }
 
     /**
-     * @param array{operation?: Operation, contao_table?: string} $context
+     * @param array{operation?: Operation, contao_table?: string, object_to_populate?: DataContainerRecord} $context
      */
-    public function denormalize(mixed $data, string $type, string|null $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, string|null $format = null, array $context = []): DataContainerRecord
     {
         if (!is_a($type, DataContainerRecord::class, true)) {
             throw new LogicException(\sprintf('The "%s" denormalizer only supports "%s".', self::class, DataContainerRecord::class));
@@ -57,6 +59,20 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
         $data = $this->toArray($data);
         $table = $this->getTable($context);
         $id = $data['id'] ?? null;
+        $record = $context[AbstractNormalizer::OBJECT_TO_POPULATE] ?? null;
+
+        if ($record instanceof DataContainerRecord) {
+            if ($table !== $record->table || (\array_key_exists('id', $data) && ((!\is_int($id) && !\is_string($id)) || (string) $id !== (string) $record->id))) {
+                throw new NotNormalizableValueException('Cannot change the table or identifier of an existing record.');
+            }
+
+            unset($data['id']);
+
+            // Keep omitted fields out of validation and form submission
+            $record->data = $data;
+
+            return $record;
+        }
 
         if (\array_key_exists('id', $data)) {
             unset($data['id']);
@@ -94,7 +110,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     }
 
     /**
-     * @param array{operation?: Operation, contao_table?: string} $context
+     * @param array{operation?: Operation, contao_table?: string, object_to_populate?: DataContainerRecord} $context
      */
     private function getTable(array $context): string
     {

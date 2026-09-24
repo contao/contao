@@ -112,7 +112,7 @@ export default class BackendSearchController extends Controller {
             sibling.classList.toggle('active', false);
         }
 
-        target.addClass('active');
+        target.classList.add('active');
     }
 
     #stopPendingSearch() {

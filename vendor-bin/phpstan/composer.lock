@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aeea52eee998772fc9f0295d7dffb364",
+    "content-hash": "f484a961f54e760c4d1987147ffe7668",
     "packages": [
         {
             "name": "phar-io/version",
@@ -59,11 +59,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.9",
+            "version": "2.2.13",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/13d6b4f347bad222da436580c8304fa6f83e6bd0",
-                "reference": "13d6b4f347bad222da436580c8304fa6f83e6bd0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
+                "reference": "9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
                 "shasum": ""
             },
             "require": {
@@ -119,7 +119,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-22T07:38:16+00:00"
+            "time": "2026-09-03T20:38:19+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -252,73 +252,6 @@
                 "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.20"
             },
             "time": "2026-06-16T09:17:35+00:00"
-        },
-        {
-            "name": "slam/phpstan-extensions",
-            "version": "v6.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "98424c7f2828169918d2d85e702d986a3422f16d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/98424c7f2828169918d2d85e702d986a3422f16d",
-                "reference": "98424c7f2828169918d2d85e702d986a3422f16d",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "phpstan/phpstan": "^2.1.55"
-            },
-            "require-dev": {
-                "nette/di": "^3.2.6",
-                "nette/neon": "^3.4.8",
-                "nikic/php-parser": "^4.19.2 || ^5.7.0",
-                "phpstan/phpstan-phpunit": "^2.0.16",
-                "phpunit/phpunit": "^13.1.10",
-                "slam/php-cs-fixer-extensions": "^3.15.0"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "conf/slam-rules.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "SlamPhpStan\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Filippo Tessarotto",
-                    "email": "zoeslam@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Slam extension of phpstan",
-            "support": {
-                "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.9.0"
-            },
-            "funding": [
-                {
-                    "url": "https://paypal.me/filippotessarotto",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/Slamdunk",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-05-19T03:26:23+00:00"
         }
     ],
     "packages-dev": [],
