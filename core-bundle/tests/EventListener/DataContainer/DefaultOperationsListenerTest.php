@@ -564,8 +564,8 @@ class DefaultOperationsListenerTest extends TestCase
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
-        $this->assertSame('act=paste&amp;mode=copy', $operations['copy']['href']);
-        $this->assertSame('act=paste&amp;mode=cut', $operations['cut']['href']);
+        $this->assertSame('act=paste&mode=copy', $operations['copy']['href']);
+        $this->assertSame('act=paste&mode=cut', $operations['cut']['href']);
     }
 
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void

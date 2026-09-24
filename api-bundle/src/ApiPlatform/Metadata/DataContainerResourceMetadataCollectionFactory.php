@@ -59,7 +59,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 continue;
             }
 
-            if (($config['closed'] ?? false) === true) {
+            if (true === ($config['closed'] ?? false)) {
                 continue;
             }
 
