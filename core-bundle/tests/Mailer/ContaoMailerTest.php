@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Mailer;
 
+use Contao\Config;
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\ContaoMailer;
 use Contao\CoreBundle\Mailer\TransportConfig;
@@ -137,5 +138,95 @@ class ContaoMailerTest extends TestCase
         $contaoMailer->send($email, $envelope);
 
         $this->assertSame('envelope-sender@example.com', $envelope->getSender()->getAddress());
+    }
+
+    public function testSetsTheAdminEmailOfThePageAsDefaultFrom(): void
+    {
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel->adminEmail = 'Lorem Ipsum <lorem@example.com>';
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $email = new Email()->to('foo@example.com')->text('foo');
+
+        $this->getContaoMailer(new RequestStack([$request]))->send($email);
+
+        $from = $email->getFrom();
+
+        $this->assertCount(1, $from);
+        $this->assertSame('Lorem Ipsum', $from[0]->getName());
+        $this->assertSame('lorem@example.com', $from[0]->getAddress());
+    }
+
+    public function testFallsBackToTheAdminEmailOfTheConfiguration(): void
+    {
+        $config = $this->createAdapterStub(['get']);
+        $config
+            ->method('get')
+            ->willReturn('Lorem Ipsum <lorem@example.com>')
+        ;
+
+        $email = new Email()->to('foo@example.com')->text('foo');
+
+        $this->getContaoMailer(new RequestStack(), [Config::class => $config])->send($email);
+
+        $from = $email->getFrom();
+
+        $this->assertCount(1, $from);
+        $this->assertSame('Lorem Ipsum', $from[0]->getName());
+        $this->assertSame('lorem@example.com', $from[0]->getAddress());
+    }
+
+    public function testThrowsIfNoAdminEmailHasBeenSet(): void
+    {
+        $config = $this->createAdapterStub(['get']);
+        $config
+            ->method('get')
+            ->willReturn('')
+        ;
+
+        $email = new Email()->to('foo@example.com')->text('foo');
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('No administrator e-mail address has been set.');
+
+        $this->getContaoMailer(new RequestStack(), [Config::class => $config])->send($email);
+    }
+
+    public function testDoesNotOverrideAnExistingFrom(): void
+    {
+        $config = $this->createAdapterStub(['get']);
+        $config
+            ->method('get')
+            ->willReturn('Lorem Ipsum <lorem@example.com>')
+        ;
+
+        $email = new Email()->to('foo@example.com')->text('foo')->from('Foo <foo@example.com>');
+
+        $this->getContaoMailer(new RequestStack(), [Config::class => $config])->send($email);
+
+        $this->assertSame('foo@example.com', $email->getFrom()[0]->getAddress());
+    }
+
+    public function testDoesNotSetADefaultFromIfASenderIsGiven(): void
+    {
+        $email = new Email()->to('foo@example.com')->text('foo')->sender('sender@example.com');
+
+        $this->getContaoMailer(new RequestStack())->send($email);
+
+        $this->assertSame([], $email->getFrom());
+        $this->assertSame('sender@example.com', $email->getSender()->getAddress());
+    }
+
+    private function getContaoMailer(RequestStack $requestStack, array $adapters = []): ContaoMailer
+    {
+        return new ContaoMailer(
+            new Mailer($this->createStub(TransportInterface::class)),
+            new AvailableTransports(),
+            $requestStack,
+            null,
+            $this->createContaoFrameworkStub($adapters),
+        );
     }
 }
