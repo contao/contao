@@ -21,25 +21,16 @@ export default class extends Controller {
 
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
-    #follow;
-    #blockInfo;
-    #submitStart;
 
-    initialize() {
-        this.#follow = this.#handleFollow.bind(this);
-        this.#blockInfo = this.#handleBlockInfo.bind(this);
-        this.#submitStart = this.#handleSubmitStart.bind(this);
-    }
-
-    #handleFollow(event) {
+    follow(event) {
         this.#turboStreamConnection.get(this.followUrlValue, { name: event.detail.name }, true);
     }
 
-    #handleBlockInfo(event) {
+    blockInfo(event) {
         this.#turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
     }
 
-    #handleSubmitStart(event) {
+    submitStart(event) {
         // Add the currently open editor tabs to the request when selecting a theme
         if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
             this.#addOpenEditorTabsToRequest(event);
@@ -52,18 +43,7 @@ export default class extends Controller {
         }
     }
 
-    connect() {
-        // Subscribe to events dispatched by the editors
-        this.element.addEventListener('twig-editor:lens:follow', this.#follow);
-        this.element.addEventListener('twig-editor:lens:block-info', this.#blockInfo);
-        this.element.addEventListener('turbo:submit-start', this.#submitStart);
-    }
-
     disconnect() {
-        this.element.removeEventListener('twig-editor:lens:follow', this.#follow);
-        this.element.removeEventListener('twig-editor:lens:block-info', this.#blockInfo);
-        this.element.removeEventListener('turbo:submit-start', this.#submitStart);
-
         this.#turboStreamConnection.abortPending();
     }
 
@@ -71,10 +51,11 @@ export default class extends Controller {
         // Destroy editor instances before Turbo caches the page. They will be
         // recreated when the editorTargetConnected() calls happens on the
         // restored page.
-        for (const [key, editor] of this.#editors) {
+        for (const editor of this.#editors.values()) {
             editor.destroy();
-            this.#editors.delete(key);
         }
+
+        this.#editors.clear();
     }
 
     close(event) {

@@ -236,6 +236,6 @@ export default class extends Controller {
     }
 
     hasExpandedRoot() {
-        return !!this.rootChildTargets.find((el) => el.style.display !== 'none');
+        return this.rootChildTargets.some((el) => el.style.display !== 'none');
     }
 }
