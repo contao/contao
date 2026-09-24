@@ -608,7 +608,27 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
-<ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" data-controller="contao--file-tree" data-action="pointerdown->contao--file-tree#onPointerDown dragstart->contao--file-tree#onDragStart dragenter->contao--file-tree#onDragOver:capture dragover->contao--file-tree#onDragOver:capture dragleave->contao--file-tree#onDragLeave drop->contao--file-tree#onDrop dragend->contao--file-tree#onDragEnd" data-contao--file-tree-request-token-value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-root-value="' . htmlspecialchars($strRoot, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-dragging-class="tl_listing_dragging" data-contao--file-tree-dropping-class="tl_folder_dropping" data-contao--file-tree-ghost-class="tl_left_dragging" data-contao--file-tree-uploading-class="dropzone-filetree-enabled" data-contao--file-tree-can-upload-value="' . ($blnCanUpload ? 'true' : 'false') . '" data-contao--file-tree-upload-url-value="' . htmlspecialchars($strUploadUrl, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" data-contao--file-tree-max-filesize-value="' . $intMaxSize . '" data-contao--file-tree-accepted-files-value="' . htmlspecialchars($strAccepted, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . ($blnCanUpload ? '<div class="dropzone dropzone-filetree" data-contao--file-tree-target="dropzone"><span class="dropzone-previews"></span></div>' : '') . '
+<ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '"
+  data-controller="contao--file-tree"
+  data-action="
+    pointerdown->contao--file-tree#onPointerDown
+    dragstart->contao--file-tree#onDragStart
+    dragenter->contao--file-tree#onDragOver:capture
+    dragover->contao--file-tree#onDragOver:capture
+    dragleave->contao--file-tree#onDragLeave
+    drop->contao--file-tree#onDrop
+    dragend->contao--file-tree#onDragEnd
+  "
+  data-contao--file-tree-request-token-value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '"
+  data-contao--file-tree-root-value="' . htmlspecialchars($strRoot, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '"
+  data-contao--file-tree-dragging-class="tl_listing_dragging"
+  data-contao--file-tree-dropping-class="tl_folder_dropping"
+  data-contao--file-tree-ghost-class="tl_left_dragging"
+  data-contao--file-tree-uploading-class="dropzone-filetree-enabled"
+  data-contao--file-tree-can-upload-value="' . ($blnCanUpload ? 'true' : 'false') . '"
+  data-contao--file-tree-upload-url-value="' . htmlspecialchars($strUploadUrl, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '"
+  data-contao--file-tree-max-filesize-value="' . $intMaxSize . '"
+  data-contao--file-tree-accepted-files-value="' . htmlspecialchars($strAccepted, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . ($blnCanUpload ? '<div class="dropzone dropzone-filetree" data-contao--file-tree-target="dropzone"><span class="dropzone-previews"></span></div>' : '') . '
   <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . StringUtil::ampersand($this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&id=' . $arrClipboard['id'] : ''))) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . $treeRecordLimitNotice . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
