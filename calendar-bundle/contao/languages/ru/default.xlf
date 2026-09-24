@@ -7,9 +7,11 @@
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>‹</source>
+        <target>‹</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
         <source>›</source>
+        <target>›</target>
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>

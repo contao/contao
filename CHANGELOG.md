@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.1] (2026-09-24)
+
+**Fixed issues:**
+
+- [#10119] Replace the `BackendUser::navigation()` method and deprecate the `getUserNavigation` hook ([aschempp])
+- [#10251] Remove `Backend.enableImageSizeWidgets()` ([fritzmg])
+- [#10227] Improve the default configuration of the HTML sanitizer ([ausi])
+- [#10245] Change the priorites of the `CsrfTokenCookieSubscriber` and `MakeResponsePrivateListener` ([fritzmg])
+- [#10231] Fix appending records to parent tables without sorting ([Toflar])
+- [#10211] Remove `StringUtil::specialchars()` from language strings ([leofeyer])
+- [#10212] Remove two unused language string assignments ([leofeyer])
+- [#10213] Fix the invalid HTML `lang` attribute format ([ausi])
+- [#10208] Move translations to the `be_csv_import.html.twig` template ([leofeyer])
+- [#10200] `AbstractPublicUriProvider::getVersionParameter()` never returns `null` ([leofeyer])
+- [#10209] Use `app.locale` instead of `$GLOBALS['TL_LANGUAGE']` in Twig templates ([leofeyer])
+- [#10197] Update `vstelmakh/url-highlight` to v4 ([vstelmakh])
+- [#10205] Re-add the password field to the registration module ([leofeyer])
+- [#10201] Use `random_bytes()` instead of `mt_rand()` ([leofeyer])
+- [#10196] Clean up the `TRBL` widget leftovers ([zoglo])
+- [#10192] Upgrade to Dropzone 6 ([leofeyer])
+- [#10193] Fix the Dropzone folder upload ([zoglo])
+- [#10171] Restore the tooltip title before `AjaxRequest.toggleField()` runs ([zoglo])
+
 ## [6.0.0] (2026-08-26)
 
 **Fixed issues:**
@@ -134,6 +157,7 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.1]: https://github.com/contao/contao/releases/tag/6.0.1
 [6.0.0]: https://github.com/contao/contao/releases/tag/6.0.0
 [6.0.0-RC2]: https://github.com/contao/contao/releases/tag/6.0.0-RC2
 [6.0.0-RC1]: https://github.com/contao/contao/releases/tag/6.0.0-RC1
@@ -145,6 +169,7 @@ This project adheres to [Semantic Versioning].
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [Toflar]: https://github.com/Toflar
+[vstelmakh]: https://github.com/vstelmakh
 [zoglo]: https://github.com/zoglo
 [#7014]: https://github.com/contao/contao/pull/7014
 [#7430]: https://github.com/contao/contao/pull/7430
@@ -253,9 +278,27 @@ This project adheres to [Semantic Versioning].
 [#10098]: https://github.com/contao/contao/pull/10098
 [#10099]: https://github.com/contao/contao/pull/10099
 [#10114]: https://github.com/contao/contao/pull/10114
+[#10119]: https://github.com/contao/contao/pull/10119
 [#10133]: https://github.com/contao/contao/pull/10133
 [#10141]: https://github.com/contao/contao/pull/10141
 [#10143]: https://github.com/contao/contao/pull/10143
 [#10144]: https://github.com/contao/contao/pull/10144
 [#10148]: https://github.com/contao/contao/pull/10148
 [#10152]: https://github.com/contao/contao/pull/10152
+[#10171]: https://github.com/contao/contao/pull/10171
+[#10192]: https://github.com/contao/contao/pull/10192
+[#10193]: https://github.com/contao/contao/pull/10193
+[#10196]: https://github.com/contao/contao/pull/10196
+[#10197]: https://github.com/contao/contao/pull/10197
+[#10200]: https://github.com/contao/contao/pull/10200
+[#10201]: https://github.com/contao/contao/pull/10201
+[#10205]: https://github.com/contao/contao/pull/10205
+[#10208]: https://github.com/contao/contao/pull/10208
+[#10209]: https://github.com/contao/contao/pull/10209
+[#10211]: https://github.com/contao/contao/pull/10211
+[#10212]: https://github.com/contao/contao/pull/10212
+[#10213]: https://github.com/contao/contao/pull/10213
+[#10227]: https://github.com/contao/contao/pull/10227
+[#10231]: https://github.com/contao/contao/pull/10231
+[#10245]: https://github.com/contao/contao/pull/10245
+[#10251]: https://github.com/contao/contao/pull/10251

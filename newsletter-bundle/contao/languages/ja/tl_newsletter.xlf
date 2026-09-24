@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>Invalid e-mail addresses disabled: %s (see system log).</source>
-        <target>%sつの正しくない電子メールアドレスの宛先を無効にしました。(システムログを参照してください。)</target>
+        <target>正しくない電子メールアドレスを無効にしました: %s (システムログを参照)。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>E-mail addresses skipped: %s.</source>

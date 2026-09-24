@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons, you cannot use the following characters here: #&lt;&gt;()\=</source>
-        <target>Güvenlik nedeniyle şu karakterler burada kullanılamaz: #&lt;&gt;()/= </target>
+        <target>Güvenlik nedeniyle burada şu karakterler kullanılamaz: #&lt;&gt;()/= </target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -751,7 +751,7 @@
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.1">
         <source>Allows members to manage their passkeys.</source>
-        <target>Bir üyenin geçiş anahtarlarının yönetilmesini sağlar.</target>
+        <target>Üyelerin kendi geçiş anahtarlarını yönetebilmesini sağlar.</target>
       </trans-unit>
       <trans-unit id="CTE.login.0">
         <source>Login form</source>
@@ -2355,7 +2355,7 @@
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been resent to your e-mail address.</source>
-        <target>E-posta adresinize etkinleştirme e-postası yeniden gönderildi.</target>
+        <target>Etkinleştirme e-postası adresinize yeniden gönderildi.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>

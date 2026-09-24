@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="MSC.news_previous">
         <source>‹</source>
+        <target>‹</target>
       </trans-unit>
       <trans-unit id="MSC.news_next">
         <source>›</source>
+        <target>›</target>
       </trans-unit>
       <trans-unit id="MSC.newsPicker">
         <source>News</source>

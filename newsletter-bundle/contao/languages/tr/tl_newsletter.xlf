@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>Invalid e-mail addresses disabled: %s (see system log).</source>
-        <target>%s geçersiz e-posta adresi etkisizleştirildi sistem günlüğü bölümüne bakın).</target>
+        <target>%s geçersiz e-posta adresi etkisizleştirildi sistem günlüğüne bakın).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>E-mail addresses skipped: %s.</source>

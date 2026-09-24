@@ -93,7 +93,7 @@ Click here to edit or answer the comment:
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it appears on the website!</source>
-        <target>このコメントはウェブサイトで表示する前にバックエンドで公開しなければなりません。</target>
+        <target>このコメントはウェブサイトで表示するにはバックエンドで公開しなければなりません!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>

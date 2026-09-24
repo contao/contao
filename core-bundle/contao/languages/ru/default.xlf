@@ -407,6 +407,7 @@
       </trans-unit>
       <trans-unit id="ERR.grantAdminOnly">
         <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+        <target>Вы можете предоставить доступ к &quot;%s&quot; только если у вас есть права администратора.</target>
       </trans-unit>
       <trans-unit id="ERR.sizesStartWithAuto">
         <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
@@ -2718,6 +2719,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyResendActivationAttempts">
         <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+        <target>Вы превысили количество попыток повторной отправки письма активации. Повторите попытку через 15 минут.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2913,15 +2915,19 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeLayout">
         <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+        <target>Существует как минимум один обычный пользователь с правом редактирования макетов страниц. Поскольку макеты могут содержать произвольные скрипты, эти пользователи фактически обладают полным контролем над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeLayout">
         <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, имеющая право на редактирование макетов страниц. Поскольку макеты могут содержать произвольные скрипты, пользователи этих групп фактически обладают полным контролем над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.userListingModule">
         <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+        <target>Существует как минимум один обычный пользователь с доступом к модулю списков. Поскольку модуль может содержать произвольные SQL-запросы, эти пользователи фактически обладают полным контролем над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, имеющая доступ к модулю списков. Поскольку модуль может содержать произвольные SQL-запросы, пользователи этих групп фактически обладают полным контролем над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
