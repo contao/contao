@@ -22,38 +22,40 @@ export default class extends Controller {
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
 
-    connect() {
-        // Subscribe to events dispatched by the editors
-        this.element.addEventListener('twig-editor:lens:follow', (event) => {
-            this.#turboStreamConnection.get(this.followUrlValue, { name: event.detail.name }, true);
-        });
+    follow(event) {
+        this.#turboStreamConnection.get(this.followUrlValue, { name: event.detail.name }, true);
+    }
 
-        this.element.addEventListener('twig-editor:lens:block-info', (event) => {
-            this.#turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
-        });
+    blockInfo(event) {
+        this.#turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
+    }
 
-        this.element.addEventListener('turbo:submit-start', (event) => {
-            // Add the currently open editor tabs to the request when selecting a theme
-            if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
-                this.#addOpenEditorTabsToRequest(event);
-            }
+    submitStart(event) {
+        // Add the currently open editor tabs to the request when selecting a theme
+        if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
+            this.#addOpenEditorTabsToRequest(event);
+        }
 
-            // Include the active editor's content when the save operation was triggered
-            if (event.detail.formSubmission.submitter?.dataset?.operation === 'save') {
-                this.#addEditorContentToRequest(event);
-                this.#getActiveMutableEditor()?.focus();
-            }
-        });
+        // Include the active editor's content when the save operation was triggered
+        if (event.detail.formSubmission.submitter?.dataset?.operation === 'save') {
+            this.#addEditorContentToRequest(event);
+            this.#getActiveMutableEditor()?.focus();
+        }
+    }
+
+    disconnect() {
+        this.#turboStreamConnection.abortPending();
     }
 
     beforeCache() {
         // Destroy editor instances before Turbo caches the page. They will be
         // recreated when the editorTargetConnected() calls happens on the
         // restored page.
-        for (const [key, editor] of this.#editors) {
+        for (const editor of this.#editors.values()) {
             editor.destroy();
-            delete this.#editors[key];
         }
+
+        this.#editors.clear();
     }
 
     close(event) {
@@ -65,7 +67,7 @@ export default class extends Controller {
     }
 
     editorTargetDisconnected(el) {
-        this.#editors.get(el).destroy();
+        this.#editors.get(el)?.destroy();
         this.#editors.delete(el);
     }
 
