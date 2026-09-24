@@ -14,6 +14,7 @@
     .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'pointerover->contao--tooltips#show pointermove->contao--tooltips#setPosition pointerout->contao--tooltips#hide click->contao--tooltips#hide:capture')
     .mergeWith(bodyAttributes|default)
 -%}
 
