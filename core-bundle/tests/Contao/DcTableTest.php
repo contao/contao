@@ -123,14 +123,17 @@ class DcTableTest extends TestCase
     {
         $dca = $GLOBALS['TL_DCA'] ?? null;
         $config = $GLOBALS['TL_CONFIG'] ?? null;
+
         $request = Request::create('/contao?act=select');
         $request->attributes->set('_contao_api', $api);
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack([$request]));
         System::setContainer($container);
+
         $GLOBALS['TL_CONFIG']['maxResultsPerPage'] = 2;
         $GLOBALS['TL_DCA']['tl_test']['list']['sorting']['treeRecordLimit'] = $configuredLimit;
+
         $dc = new class() extends DC_Table {
             public function __construct()
             {

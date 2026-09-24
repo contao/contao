@@ -45,6 +45,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('getAdapter')
@@ -55,8 +56,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('createInstance')
             ->willReturnCallback(static fn (string $class, array $arguments): Date => new Date(...$arguments))
         ;
+
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
         $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
             'custom' => TextField::class,
@@ -70,11 +73,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);
+
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
         if (null !== $this->widgets) {
             $GLOBALS['BE_FFL'] = $this->widgets;
         }
+
         parent::tearDown();
     }
 
@@ -88,17 +93,20 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'tags' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'eval' => ['multiple' => true]],
             'password' => ['inputType' => 'password', 'sql' => ['type' => 'string']],
         ];
+
         $controller = $this->createAdapterMock(['loadDataContainer']);
         $controller
             ->expects($this->once())
             ->method('loadDataContainer')
             ->with('tl_content')
         ;
+
         $framework = $this->createContaoFrameworkMock([Controller::class => $controller]);
         $framework
             ->expects($this->once())
             ->method('initialize')
         ;
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'title' => 'Example', 'published' => '1', 'count' => '42', 'tags' => serialize(['one', 'two']), 'password' => 'hash', 'unknown' => 'private']);
 
@@ -116,7 +124,9 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'sorting' => ['sql' => ['type' => 'integer']],
             'internal' => ['sql' => ['type' => 'string']],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'tstamp' => '123', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128', 'internal' => 'hidden']);
 
@@ -127,11 +137,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     public function testExposesFileReferencesAsUuids(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'] = ['inputType' => 'fileTree', 'sql' => ['type' => 'binary', 'length' => 16]];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
         $factory = new DataContainerSchemaFactory($framework, $this->converters);
-        $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+
+        $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'singleSRC' => hex2bin(str_replace('-', '', $uuid))]);
 
         $this->assertSame($uuid, $record->data['singleSRC']);
@@ -143,10 +155,14 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     public function testEmptyValuesMatchTheWidgetSchema(array $config, mixed $stored, mixed $expected): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['value'] = $config;
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters);
+
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'value' => $stored]);
+
         $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), null, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame($expected, $record->data['value']);
@@ -171,10 +187,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'secret' => ['inputType' => 'custom', 'api' => ['schema' => ['type' => 'string', 'writeOnly' => true]]],
             'references' => ['inputType' => 'fileTree', 'eval' => ['multiple' => true]],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+
         $record = $mapper->fromRow('tl_content', [
             'id' => 17,
             'secret' => 'hidden',
@@ -191,8 +210,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'csv' => ['inputType' => 'text', 'eval' => ['multiple' => true, 'csv' => '|']],
             'serialized' => ['inputType' => 'text', 'eval' => ['multiple' => true]],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters);
+
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'json' => '["one","two"]', 'csv' => 'one|two', 'serialized' => serialize(['one', 'two'])]);
 
@@ -208,14 +229,18 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             {
             }
         };
+
         $GLOBALS['BE_FFL']['customFiles'] = $widget::class;
+
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'files' => ['inputType' => 'customFiles', 'eval' => ['multiple' => true]],
             'textual' => ['inputType' => 'customFiles', 'eval' => ['binary' => false]],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'files' => serialize([hex2bin(str_replace('-', '', $uuid))]), 'textual' => '1234567890123456']);
 
         $this->assertSame(['files' => [$uuid], 'textual' => '1234567890123456'], $record->data);
@@ -228,8 +253,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'pages' => ['inputType' => 'pageTree', 'eval' => ['multiple' => true]],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
 
         $this->assertSame(['pages' => '1,2'], $mapper->toFormValues('tl_content', ['pages' => [1, 2]]));
@@ -284,8 +311,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 return ['rows' => $value];
             }
         };
+
         $this->converters = new WidgetConverterRegistry([$converter]);
+
         $GLOBALS['TL_DCA']['tl_content']['fields']['rows'] = ['inputType' => 'customRows'];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
 
@@ -300,8 +330,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             {
             }
         };
+
         $GLOBALS['BE_FFL']['unsupported'] = $widget::class;
         $GLOBALS['TL_DCA']['tl_content']['fields']['payload'] = ['inputType' => 'unsupported', 'api' => ['schema' => ['type' => 'string']]];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
 
@@ -320,6 +352,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'unsupported' => ['inputType' => 'unknown'],
             'outside' => ['inputType' => 'text'],
         ];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
         $row = ['alias' => '', 'password' => 'stored-hash', 'locked' => 'fixed', 'outside' => 'hidden'];
@@ -330,6 +363,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     public function testRejectsChangesToReadOnlyFields(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['locked'] = ['inputType' => 'text', 'api' => ['schema' => ['type' => 'string', 'readOnly' => true]]];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
@@ -341,6 +375,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     public function testRejectsPositionFieldsAbsentFromTheUpdateSchema(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['pid'] = ['sql' => ['type' => 'integer']];
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);

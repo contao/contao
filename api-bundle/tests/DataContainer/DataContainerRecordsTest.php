@@ -49,8 +49,10 @@ final class DataContainerRecordsTest extends ContaoTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]);
         $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
 
@@ -61,6 +63,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
         if (null !== $this->widgets) {
             $GLOBALS['BE_FFL'] = $this->widgets;
         }
+
         parent::tearDown();
     }
 
@@ -72,6 +75,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'title' => 'Example'])
         ;
+
         $record = $this->createRecords($dc)->find('tl_content', 17);
 
         $this->assertSame(17, $record->id);
@@ -99,6 +103,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
+
         $result = $this->createRecords($dc)->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
 
         $this->assertSame(['title' => 'After'], $result->data);
@@ -137,9 +142,12 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturnOnConsecutiveCalls(['id' => 47, 'title' => $default], ['id' => 47, 'title' => $input['title'] ?? $default])
         ;
+
         $records = $this->createRecords($dc);
+
         $GLOBALS['TL_DCA']['tl_content']['fields']['title']['eval']['mandatory'] = true;
         $GLOBALS['TL_DCA']['tl_content']['fields']['otherPalette'] = ['inputType' => 'text', 'eval' => ['mandatory' => true]];
+
         $result = $records->create(new DataContainerRecord('tl_content', $input));
 
         $this->assertSame(47, $result->id);
@@ -163,6 +171,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'tstamp' => $tstamp, 'title' => 'Before', 'alias' => ''])
         ;
+
         $dc
             ->expects($this->once())
             ->method('edit')
@@ -180,8 +189,11 @@ final class DataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
+
         $records = $this->createRecords($dc);
+
         $GLOBALS['TL_DCA']['tl_content']['fields']['alias'] = ['inputType' => 'text', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => $mandatory]];
+
         $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
     }
 
@@ -208,6 +220,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('delete')
             ->with(true)
         ;
+
         $this->createRecords($dc)->delete(new DataContainerRecord('tl_content', [], 17));
     }
 
@@ -227,10 +240,12 @@ final class DataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
+
         $dc
             ->method('getCurrentRecord')
             ->willReturnCallback(static fn ($id) => ['id' => $id, 'title' => 'Record '.$id])
         ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
@@ -241,6 +256,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->expects($this->never())
             ->method('iterateColumn')
         ;
+
         $page = $this->createRecords($dc, $connection)->list('tl_content', 2);
 
         $this->assertSame(2.0, $page->getCurrentPage());
@@ -261,6 +277,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('cut')
             ->with(true, 42, DC_Table::PASTE_AFTER)
         ;
+
         $result = $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'after'));
 
         $this->assertSame(17, $result->id);
@@ -304,8 +321,10 @@ final class DataContainerRecordsTest extends ContaoTestCase
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string']]];
         $GLOBALS['TL_DCA']['tl_content']['config']['dataContainer'] = DC_Table::class;
+
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $loader = $this->createAdapterStub(['switchToCurrentRequest']);
+
         $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader]);
         $framework
             ->method('createInstance')
@@ -319,7 +338,9 @@ final class DataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+
         if (!$connection) {
             $connection = $this->createStub(Connection::class);
             $connection
@@ -327,6 +348,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
                 ->willReturnCallback(static fn ($callback) => $callback())
             ;
         }
+
         $stack = $this->requestStack = new RequestStack();
         $stack->push(Request::create('/contao', 'POST'));
 
@@ -335,6 +357,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('getEditUrl')
             ->willReturn('/contao?do=article')
         ;
+
         $router = $this->createStub(UrlGeneratorInterface::class);
         $router
             ->method('generate')

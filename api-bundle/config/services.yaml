@@ -53,6 +53,7 @@ services:
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
+
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
