@@ -25,6 +25,7 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
+use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
@@ -275,7 +276,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $dc
             ->expects($this->once())
             ->method('cut')
-            ->with(true, 42, DC_Table::PASTE_AFTER)
+            ->with(true, 42, DataContainer::PASTE_AFTER)
         ;
 
         $result = $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'after'));

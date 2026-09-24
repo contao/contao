@@ -301,12 +301,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 return ['type' => 'array', 'items' => ['type' => 'integer']];
             }
 
-            public function convertToApiValue(mixed $value, array $config, array $schema): mixed
+            public function convertToApiValue(mixed $value, array $config, array $schema): array
             {
                 return array_map(intval(...), explode('|', (string) $value));
             }
 
-            public function convertToFormValue(mixed $value, array $config, array $schema): mixed
+            public function convertToFormValue(mixed $value, array $config, array $schema): array
             {
                 return ['rows' => $value];
             }
