@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Set\SetList;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\Operator\NewExpressionParenthesesFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
@@ -43,6 +44,10 @@ return ECSConfig::configure()
         __DIR__.'/vendor-bin/ecs/config',
         __DIR__.'/vendor-bin/phpstan/src',
         __DIR__.'/vendor-bin/service-linter/src',
+    ])
+    ->withRules([
+        // PHP 8.4 migration
+        NewExpressionParenthesesFixer::class,
     ])
     ->withSkip([
         MethodChainingIndentationFixer::class => [
