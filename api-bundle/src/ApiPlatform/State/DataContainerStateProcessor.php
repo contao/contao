@@ -19,6 +19,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 /**
@@ -28,22 +29,30 @@ final class DataContainerStateProcessor implements ProcessorInterface
 {
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
-            return $data;
-        }
-
         $table = $this->getTable($operation);
+
         if (null === $table) {
             return $data;
         }
 
-        if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
-            // TODO: delete the record in $table identified by $uriVariables['id'].
-            return null;
+        if ($data instanceof DataContainerMove && 'move' === ($operation->getExtraProperties()['contao']['action'] ?? null)) {
+            // TODO: move the record in $table identified by $uriVariables['id'] to the requested destination.
+            // TODO: return the moved record.
+            return new DataContainerRecord($table, [], $uriVariables['id']);
+        }
+
+        if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
+            return $data;
         }
 
         if ($data instanceof DataContainerMcpRecord) {
             $data = DataContainerRecord::fromArray($table, $data->data, $data->id ?? $uriVariables['id'] ?? null);
+        }
+
+        if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
+            // TODO: delete the record in $table identified by $data->id.
+
+            return null;
         }
 
         if ($operation instanceof Post || $this->hasMethod($operation, 'POST')) {
@@ -53,7 +62,7 @@ final class DataContainerStateProcessor implements ProcessorInterface
         }
 
         if ($operation instanceof Patch || $this->hasMethod($operation, 'PATCH')) {
-            // TODO: update the record in $table identified by $uriVariables['id'].
+            // TODO: update the record in $table identified by $data->id.
             // TODO: return the updated record.
             return $data;
         }

@@ -1632,6 +1632,11 @@ services:
             - '@security.token_storage'
             - '@contao.repository.webauthn_user_entity'
 
+    contao.widget.date_value_formatter:
+        class: Contao\CoreBundle\Widget\DateValueFormatter
+        arguments:
+            - '@contao.framework'
+
     # Autowiring aliases
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
@@ -1678,3 +1683,4 @@ services:
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
+    Contao\CoreBundle\Widget\DateValueFormatter: '@contao.widget.date_value_formatter'

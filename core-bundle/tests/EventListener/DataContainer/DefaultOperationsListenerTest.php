@@ -545,6 +545,29 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
+    public function testAddsOperationsForDynamicPtable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => [
+                'enableVersioning' => true,
+                'dynamicPtable' => true,
+            ],
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_PARENT,
+                ],
+            ],
+        ];
+
+        ($this->getListener())('tl_foo');
+
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
+        $this->assertSame('act=paste&mode=copy', $operations['copy']['href']);
+        $this->assertSame('act=paste&mode=cut', $operations['cut']['href']);
+    }
+
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
