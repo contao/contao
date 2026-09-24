@@ -136,8 +136,13 @@ export default class extends Controller {
             url: this.uploadUrlValue,
             maxFilesize: this.maxFilesizeValue,
             acceptedFiles: this.acceptedFilesValue,
+            paramName: 'files',
             previewsContainer: this.dropzoneTarget.querySelector('.dropzone-previews'),
             clickable: false,
+            params: () => ({
+                FORM_SUBMIT: 'tl_upload',
+                action: 'fileupload',
+            }),
         });
 
         this.#dropzone.on('queuecomplete', () => window.location.reload());
