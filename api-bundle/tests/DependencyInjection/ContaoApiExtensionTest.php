@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\DependencyInjection;
 
+use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
@@ -28,17 +29,29 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoApiExtensionTest extends TestCase
 {
+    public function testApiPrefixFollowsTheBackendPrefix(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+        $container->setParameter('contao.backend.route_prefix', '/admin');
+
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+
+        $this->assertSame('/admin/_api', $container->getParameterBag()->resolveValue($container->getDefinition(DataContainerOpenApiFactory::class)->getArgument('$apiPrefix')));
+    }
+
     public function testLoadsServicesAndParameters(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
 
-        new ContaoApiBundle()->getContainerExtension()->load([['api_prefix' => '/custom-api']], $container);
+        new ContaoApiBundle()->getContainerExtension()->load([['data_container_api_prefix' => '/dc']], $container);
 
         $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
         $this->assertTrue($container->hasDefinition(WidgetConverterRegistry::class));
-        $this->assertSame('/custom-api', $container->getParameter('contao_api.api_prefix'));
+        $this->assertSame('/dc', $container->getParameter('contao_api.data_container_api_prefix'));
     }
 
     public function testAutoconfiguresConvertersBeforeTheCoreFallback(): void

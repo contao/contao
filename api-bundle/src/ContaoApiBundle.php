@@ -24,10 +24,6 @@ class ContaoApiBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-                ->scalarNode('api_prefix')
-                    ->defaultValue('/_api')
-                    ->info('The general route prefix at which Contao shall expose the API.')
-                ->end()
                 ->scalarNode('data_container_api_prefix')
                     ->defaultValue('/backend/dc')
                     ->info('The DC specific subprefix at which Contao shall expose the API.')
@@ -43,7 +39,6 @@ class ContaoApiBundle extends AbstractBundle
         $container->registerForAutoconfiguration(WidgetConverterInterface::class)->addTag('contao.api.widget_converter');
 
         $configurator->parameters()
-            ->set('contao_api.api_prefix', $config['api_prefix'])
             ->set('contao_api.data_container_api_prefix', $config['data_container_api_prefix'])
         ;
     }
