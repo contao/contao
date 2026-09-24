@@ -41,8 +41,10 @@ use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
+use Contao\DataContainer;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
@@ -66,7 +68,8 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         parent::tearDown();
     }
 
-    public function testGeneratesOpenApiFromResourceMetadata(): void
+    #[DataProvider('provideSortingConfigurations')]
+    public function testGeneratesOpenApiFromResourceMetadata(int $mode, string $panelLayout, bool $fieldSortable, bool $hasSort): void
     {
         $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
         $controllerAdapter
@@ -74,13 +77,15 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->method('loadDataContainer')
             ->with('tl_content')
             ->willReturnCallback(
-                static function (): void {
+                static function () use ($mode, $panelLayout, $fieldSortable): void {
+                    $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => $mode, 'panelLayout' => $panelLayout];
                     $GLOBALS['TL_DCA']['tl_content']['fields'] = [
                         'id' => [
                             'sql' => ['type' => 'int', 'unsigned' => true, 'notnull' => true, 'default' => 0],
                         ],
                         'title' => [
                             'inputType' => 'text',
+                            'sorting' => $fieldSortable,
                             'sql' => ['type' => 'varchar', 'length' => 255, 'default' => ''],
                             'eval' => [
                                 'mandatory' => true,
@@ -134,14 +139,24 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertInstanceOf(Response::class, $getCollection->getResponses()['200']);
 
         $parameters = [];
+        $sortingParameter = null;
 
         foreach ($getCollection->getParameters() as $parameter) {
+            if ('sort' === $parameter->getName()) {
+                $sortingParameter = $parameter;
+            }
             $parameters[$parameter->getName()] = $parameter->getSchema();
         }
 
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 30, 'maximum' => 300], $parameters['itemsPerPage']);
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 1], $parameters['page']);
-
+        if ($hasSort) {
+            $this->assertSame(['type' => 'array', 'items' => ['type' => 'string'], 'maxItems' => 1], $parameters['sort']);
+            $this->assertSame('form', $sortingParameter->getStyle());
+            $this->assertFalse($sortingParameter->getExplode());
+        } else {
+            $this->assertArrayNotHasKey('sort', $parameters);
+        }
         $collectionSchema = $getCollection->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('array', $collectionSchema['type']);
         $this->assertSame('#/components/schemas/dc_tl_content', $collectionSchema['items']['$ref']);
@@ -171,6 +186,14 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $schemas['dc_tl_content_create']['properties']);
         $this->assertArrayNotHasKey('required', $schemas['dc_tl_content_update']);
         $this->assertSame('Unrelated resource', $openApi->getPaths()->getPath('/unrelated')->getGet()->getSummary());
+    }
+
+    public static function provideSortingConfigurations(): iterable
+    {
+        yield 'sortable panel' => [DataContainer::MODE_SORTABLE, 'search,filter,sort,limit', true, true];
+        yield 'no sort panel' => [DataContainer::MODE_SORTABLE, 'search,filter,limit', true, false];
+        yield 'tree view' => [DataContainer::MODE_TREE, 'sort', true, false];
+        yield 'no sortable fields' => [DataContainer::MODE_SORTABLE, 'sort', false, false];
     }
 
     public function testDoesNotLinkToAnUnsupportedMoveOperation(): void
