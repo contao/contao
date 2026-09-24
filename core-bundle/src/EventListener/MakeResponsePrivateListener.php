@@ -59,10 +59,9 @@ class MakeResponsePrivateListener
      *
      * The priority must be lower than the one of the ClearSessionDataListener
      * listener (defaults to -768) and must be lower than the one of the
-     * CsrfTokenCookieSubscriber listener (defaults to -1006) and must be higher than
-     * the one of the StreamedResponseListener listener (defaults to -1024)
+     * CsrfTokenCookieSubscriber listener (defaults to -2000)
      */
-    #[AsEventListener(priority: -1012)]
+    #[AsEventListener(priority: -2048)]
     public function makeResponsePrivate(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMainRequest($event)) {

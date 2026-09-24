@@ -29,6 +29,7 @@ use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectio
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
@@ -55,11 +56,11 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
-        $extendedDcTableClass = (new class() extends DC_Table {
+        $extendedDcTableClass = new class() extends DC_Table {
             public function __construct()
             {
             }
-        })::class;
+        }::class;
 
         $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
         $controllerAdapter
@@ -197,7 +198,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         $operations = $resource->getOperations();
         $this->assertInstanceOf(Operations::class, $operations);
-        $this->assertCount($deletable ? 5 : 4, $operations);
+        $this->assertCount($deletable ? 6 : 5, $operations);
 
         $operations = iterator_to_array($operations);
 
@@ -212,6 +213,9 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertOperation($operations['contao_api_'.$expectedTable.'_get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         $this->assertOperation($operations['contao_api_'.$expectedTable.'_post'], Post::class, $expectedShortName, $expectedRoutePrefix);
         $this->assertOperation($operations['contao_api_'.$expectedTable.'_patch'], Patch::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_move'], Post::class, $expectedShortName, $expectedRoutePrefix.'/{id}/move');
+        $this->assertSame(DataContainerMove::class, $operations['contao_api_'.$expectedTable.'_move']->getInput());
+        $this->assertFalse($operations['contao_api_'.$expectedTable.'_move']->canRead());
 
         if ($deletable) {
             $this->assertOperation($operations['contao_api_'.$expectedTable.'_delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');

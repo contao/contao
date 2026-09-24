@@ -12,6 +12,12 @@ export default class extends Controller {
         this.element.addEventListener('click', this.handle);
     }
 
+    disconnect() {
+        this.element.removeEventListener('click', this.handle);
+        clearTimeout(this.$timer);
+        this.element.removeAttribute('data-visited');
+    }
+
     handle(event) {
         // Ignore clicks on anchor elements
         if (!this.isValid(event.target)) {
