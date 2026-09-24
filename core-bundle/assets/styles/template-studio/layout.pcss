@@ -59,17 +59,15 @@
         border-bottom: 1px solid var(--border);
         padding: 6px;
 
-        label {
-            > span {
-                font-size: 0.8em;
-                margin-left: 4px;
-                color: var(--info);
-            }
+        > label {
+            font-size: 0.8em;
+            margin-left: 4px;
+            color: var(--info);
+        }
 
-            .tl_select {
-                margin-top: 5px;
-                margin-bottom: 3px;
-            }
+        > :is(.tl_select, .tl_select_wrapper) {
+            margin-top: 5px;
+            margin-bottom: 3px;
         }
     }
 
