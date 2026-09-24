@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     #sourceElements = new Map();
+    #abortController = null;
 
     static values = {
         id: String,
@@ -13,6 +14,8 @@ export default class extends Controller {
     static targets = ['url', 'title', 'description', 'robots'];
 
     connect() {
+        this.#abortController = new AbortController();
+
         // Install event listeners on the source fields
         for (const [sourceType, ids] of Object.entries(this.fieldsValue)) {
             const elements = [];
@@ -25,7 +28,10 @@ export default class extends Controller {
                 }
 
                 elements.push(el);
-                el.addEventListener('input', this.#update.bind(this, sourceType));
+
+                el.addEventListener('input', () => this.#update(sourceType), {
+                    signal: this.#abortController.signal,
+                });
             }
 
             this.#sourceElements.set(sourceType, elements);
@@ -36,12 +42,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        for (const elements of this.#sourceElements.values()) {
-            for (const el of elements) {
-                el.removeEventListener('input', this.#update);
-            }
-        }
-
+        this.#abortController?.abort();
+        this.#abortController = null;
         this.#sourceElements.clear();
     }
 
@@ -61,16 +63,12 @@ export default class extends Controller {
         } else if (sourceType === 'description') {
             this.descriptionTarget.textContent = this.#shorten(value, 160);
         } else if (sourceType === 'robots') {
-            this.element.classList.toggle('noindex', value.contains('noindex'));
+            this.element.classList.toggle('noindex', value.includes('noindex'));
         }
     }
 
     #getValue(sourceType) {
         for (const el of this.#sourceElements.get(sourceType)) {
-            if (!el) {
-                continue;
-            }
-
             const value = el.classList.contains('tl_textarea') ? this.#html2string(el.value) : el.value;
 
             if (value) {

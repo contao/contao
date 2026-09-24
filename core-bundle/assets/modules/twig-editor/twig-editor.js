@@ -39,6 +39,7 @@ export class TwigEditor {
             enableLiveAutocompletion: true,
             liveAutocompletionDelay: 300,
             enableKeyboardAccessibility: true,
+            useResizeObserver: false,
         });
 
         this.editor.renderer.attachToShadowRoot();
