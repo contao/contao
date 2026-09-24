@@ -99,10 +99,10 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     {
         $linkAttributes = null;
 
-        // Open the file in a new window if "Show in browser" and "Full-size
-        // view/new window" are both enabled (see #6755).
+        // Open the file in a new window if "Show in browser" and "Full-size view/new
+        // window" are both enabled (see #6755).
         if ($model->inline && $model->fullsize) {
-            $linkAttributes = (new HtmlAttributes())
+            $linkAttributes = new HtmlAttributes()
                 ->set('target', '_blank')
                 ->set('rel', 'noreferrer noopener')
             ;

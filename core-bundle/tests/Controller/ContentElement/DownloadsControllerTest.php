@@ -194,7 +194,7 @@ class DownloadsControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-download download-element ext-jpg">
-                <a href="https://example.com/files/image1.jpg" target="_blank" rel="noreferrer noopener" type="image/jpeg">image1 title</a>
+                <a target="_blank" rel="noreferrer noopener" href="https://example.com/files/image1.jpg" type="image/jpeg">image1 title</a>
             </div>
             HTML;
 
