@@ -3,7 +3,6 @@ import * as Icon from '../modules/icon';
 
 export default class TabsController extends Controller {
     #activeTab = null;
-    #listeners = new Map();
 
     static values = {
         closeLabel: String,
@@ -37,22 +36,13 @@ export default class TabsController extends Controller {
                 button.setAttribute('role', 'tab');
                 button.setAttribute('aria-controls', panelReference);
 
+                button.setAttribute(
+                    'data-action',
+                    `click->${this.identifier}#select auxclick->${this.identifier}#close`,
+                );
+
                 return button;
             })();
-
-        const select = () => {
-            this.selectTab(panel);
-        };
-
-        const auxclick = (event) => {
-            if (1 === event.button) {
-                // Remove the panel and let the disconnect handler do the rest
-                panel.remove();
-            }
-        };
-
-        selectButton.addEventListener('click', select);
-        selectButton.addEventListener('auxclick', auxclick);
 
         const existingCloseButton = isRestore
             ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
@@ -67,17 +57,10 @@ export default class TabsController extends Controller {
                 button.setAttribute('type', 'button');
                 button.setAttribute('aria-controls', panelReference);
                 button.setAttribute('aria-label', this.closeLabelValue);
+                button.setAttribute('data-action', `${this.identifier}#close`);
 
                 return button;
             })();
-
-        const close = () => {
-            // Remove the panel and let the disconnect handler do the rest
-            panel.remove();
-        };
-
-        closeButton.addEventListener('click', close);
-        this.#listeners.set(panel, { selectButton, select, auxclick, closeButton, close });
 
         if (!isRestore) {
             // Enhance panel container
@@ -105,8 +88,6 @@ export default class TabsController extends Controller {
     }
 
     panelTargetDisconnected(panel) {
-        this.#removeListeners(panel);
-
         // Remove controls
         document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement?.remove();
 
@@ -120,10 +101,20 @@ export default class TabsController extends Controller {
         }
     }
 
-    disconnect() {
-        for (const panel of this.#listeners.keys()) {
-            this.#removeListeners(panel);
+    select(event) {
+        const panel = document.getElementById(event.currentTarget.getAttribute('aria-controls'));
+
+        if (panel) {
+            this.selectTab(panel);
         }
+    }
+
+    close(event) {
+        if (event.type === 'auxclick' && event.button !== 1) {
+            return;
+        }
+
+        document.getElementById(event.currentTarget.getAttribute('aria-controls'))?.remove();
     }
 
     selectTab(panel) {
@@ -164,19 +155,5 @@ export default class TabsController extends Controller {
             result[panel.id] = panel;
             return result;
         }, {});
-    }
-
-    #removeListeners(panel) {
-        const listeners = this.#listeners.get(panel);
-
-        if (!listeners) {
-            return;
-        }
-
-        listeners.selectButton.removeEventListener('click', listeners.select);
-        listeners.selectButton.removeEventListener('auxclick', listeners.auxclick);
-        listeners.closeButton.removeEventListener('click', listeners.close);
-
-        this.#listeners.delete(panel);
     }
 }
