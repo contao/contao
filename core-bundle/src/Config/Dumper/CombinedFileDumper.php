@@ -72,9 +72,9 @@ class CombinedFileDumper implements DumperInterface
             $sources[] = [$relativeFile, $line + 2, $line + $lineCount];
             $line += $lineCount + 2;
 
-            $buffer .= "\n/* DCA file START: $relativeFile */";
+            $buffer .= "\n/* START of file: $relativeFile */";
             $buffer .= $code;
-            $buffer .= "/* DCA file END: $relativeFile */\n";
+            $buffer .= "/* END of file: $relativeFile */\n";
         }
 
         $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, $cacheDir).$buffer);
