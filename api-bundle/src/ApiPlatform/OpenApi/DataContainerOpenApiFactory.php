@@ -32,6 +32,7 @@ use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Schema;
 use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 
@@ -43,6 +44,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         private readonly OpenApiFactoryInterface $decorated,
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private readonly DataContainerSchemaFactory $schemaFactory,
+        private readonly Pagination $pagination,
         private readonly string $apiPrefix,
     ) {
     }
@@ -122,7 +124,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
 
         $operation = match (true) {
             'move' === ($metadata->getExtraProperties()['contao']['action'] ?? null) => $this->createMoveOperation($table, $shortName, $schemaRef),
-            $metadata instanceof GetCollection => $this->createGetCollectionOperation($table, $shortName, $schemaRef),
+            $metadata instanceof GetCollection => $this->withPaginationParameters($this->createGetCollectionOperation($table, $shortName, $schemaRef), $metadata),
             $metadata instanceof Get => $this->createGetOperation($table, $shortName, $schemaRef),
             $metadata instanceof Post => $this->createPostOperation($table, $shortName, $schemaRef),
             $metadata instanceof Patch => $this->createPatchOperation($table, $shortName, $schemaRef),
@@ -149,6 +151,23 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         }
 
         return $operation;
+    }
+
+    private function withPaginationParameters(Operation $operation, GetCollection $metadata): Operation
+    {
+        $options = $this->pagination->getOptions();
+        $schema = ['type' => 'integer', 'minimum' => 1, 'default' => $this->pagination->getLimit($metadata)];
+        $maximum = $metadata->getPaginationMaximumItemsPerPage() ?? $options['maximum_items_per_page'];
+
+        if (null !== $maximum) {
+            $schema['maximum'] = $maximum;
+        }
+
+        return $operation->withParameters([
+            ...$operation->getParameters(),
+            new Parameter(name: $options['page_parameter_name'], in: 'query', description: 'Collection page.', schema: ['type' => 'integer', 'minimum' => 1, 'default' => 1]),
+            new Parameter(name: $options['items_per_page_parameter_name'], in: 'query', description: 'Records per page, capped at the configured maximum.', schema: $schema),
+        ]);
     }
 
     private function withMoveLink(Operation $operation, string $operationId): Operation

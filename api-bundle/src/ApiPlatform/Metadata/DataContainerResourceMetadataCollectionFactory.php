@@ -25,8 +25,10 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\DataContainer\DataContainerPage;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -87,13 +89,33 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         ;
     }
 
+    private function createCollectionOperation(): GetCollection
+    {
+        $maximum = (int) $this->framework->getAdapter(Config::class)->get('maxResultsPerPage');
+
+        // Enforce a finite API page size to reduce the risk of resource exhaustion, even
+        // when the backend has no configured maximum
+        if ($maximum < 1) {
+            $maximum = DataContainerPage::DEFAULT_ITEMS_PER_PAGE;
+        }
+
+        return new GetCollection(
+            paginationEnabled: true,
+            paginationPartial: true, // Omit the total count and last page to avoid a separate count query
+            paginationClientEnabled: false, // Clients cannot disable pagination
+            paginationClientItemsPerPage: true, // Clients can choose the page size within the configured maximum
+            paginationItemsPerPage: min(DataContainerPage::DEFAULT_ITEMS_PER_PAGE, $maximum),
+            paginationMaximumItemsPerPage: $maximum,
+        );
+    }
+
     /**
      * @return Operations<HttpOperation>
      */
     private function createOperations(string $table, string $shortName, array $config): Operations
     {
         $operations = [
-            'get_collection' => new GetCollection(),
+            'get_collection' => $this->createCollectionOperation(),
             'get' => new Get(),
             'post' => new Post(),
             'patch' => new Patch(),

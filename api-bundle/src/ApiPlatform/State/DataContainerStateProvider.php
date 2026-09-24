@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\DataContainer\DataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
@@ -25,8 +27,10 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
  */
 final class DataContainerStateProvider implements ProviderInterface
 {
-    public function __construct(private readonly DataContainerRecords $records)
-    {
+    public function __construct(
+        private readonly DataContainerRecords $records,
+        private readonly Pagination $pagination,
+    ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
@@ -37,14 +41,19 @@ final class DataContainerStateProvider implements ProviderInterface
         }
 
         if ($operation instanceof CollectionOperationInterface) {
-            $page = $context['filters']['page'] ?? ($context['request'] ?? null)?->query->get('page', 1) ?? 1;
+            $context['filters'] = ($context['filters'] ?? []) + (($context['request'] ?? null)?->query->all() ?? []);
+            [$page, , $itemsPerPage] = $this->pagination->getPagination($operation, $context);
+
+            if ($itemsPerPage < 1) {
+                throw new InvalidArgumentException('The itemsPerPage must be a positive integer.');
+            }
 
             $parent = [
                 'id' => $context['filters']['parent'] ?? ($context['request'] ?? null)?->query->get('parent'),
                 'table' => $context['filters']['ptable'] ?? ($context['request'] ?? null)?->query->get('ptable'),
             ];
 
-            return $this->records->list($table, (int) $page, array_filter($parent, static fn ($value) => null !== $value));
+            return $this->records->list($table, $page, array_filter($parent, static fn ($value) => null !== $value), $itemsPerPage);
         }
 
         if ($operation instanceof HttpOperation && \in_array($operation->getMethod(), ['GET', 'PATCH', 'DELETE'], true)) {
