@@ -52,9 +52,11 @@ class DebugControllerTest extends ContaoTestCase
 
     public function testResponseContainsReferer(): void
     {
+        // The debug toggle is always requested via "/contao" (do=debug), while the
+        // referer points back to the page the button was clicked on.
         $listener = new DebugController(
             $this->mockSecurityHelper(),
-            $this->mockRequestStack('https://example.com/foo/bar.html', 'foo=bar'),
+            $this->mockRequestStack('https://example.com/contao', '/foo/bar.html?foo=bar'),
             $this->mockJwtManager(true, true),
             $this->mockTokenManager(true),
             'contao_csrf_token',
@@ -63,6 +65,56 @@ class DebugControllerTest extends ContaoTestCase
         $response = $listener->enableAction();
 
         $this->assertSame('https://example.com/foo/bar.html?foo=bar', $response->getTargetUrl());
+    }
+
+    public function testResponseContainsRefererForPathBasedBackendRoute(): void
+    {
+        // Back end modules can be addressed via a path (e.g. "/contao/page") instead of
+        // the "do" query parameter, in which case the module is not part of the
+        // referer's query string.
+        $listener = new DebugController(
+            $this->mockSecurityHelper(),
+            $this->mockRequestStack('https://example.com/contao', '/contao/page?act=edit&id=1'),
+            $this->mockJwtManager(true, true),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
+        );
+
+        $response = $listener->enableAction();
+
+        $this->assertSame('https://example.com/contao/page?act=edit&id=1', $response->getTargetUrl());
+    }
+
+    public function testFallsBackToTheBackendRootIfThereIsNoReferer(): void
+    {
+        $listener = new DebugController(
+            $this->mockSecurityHelper(),
+            $this->mockRequestStack('https://example.com/contao'),
+            $this->mockJwtManager(true, true),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
+        );
+
+        $response = $listener->enableAction();
+
+        $this->assertSame('https://example.com/contao', $response->getTargetUrl());
+    }
+
+    public function testIgnoresARefererThatIsNotASameOriginPath(): void
+    {
+        // A manipulated referer parameter must not be able to redirect to a foreign host
+        // (e.g. a protocol-relative "//evil.example.com/" URL).
+        $listener = new DebugController(
+            $this->mockSecurityHelper(),
+            $this->mockRequestStack('https://example.com/contao', '//evil.example.com/'),
+            $this->mockJwtManager(true, true),
+            $this->mockTokenManager(true),
+            'contao_csrf_token',
+        );
+
+        $response = $listener->enableAction();
+
+        $this->assertSame('https://example.com/contao', $response->getTargetUrl());
     }
 
     public function testThrowsAccessDeniedExceptionIfUserIsNotAdmin(): void
