@@ -50,7 +50,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     /**
      * @param array{operation?: Operation, contao_table?: string, object_to_populate?: DataContainerRecord} $context
      */
-    public function denormalize(mixed $data, string $type, string|null $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, string|null $format = null, array $context = []): DataContainerRecord
     {
         if (!is_a($type, DataContainerRecord::class, true)) {
             throw new LogicException(\sprintf('The "%s" denormalizer only supports "%s".', self::class, DataContainerRecord::class));
@@ -67,7 +67,9 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
             }
 
             unset($data['id']);
-            $record->data = array_replace($record->data, $data);
+
+            // Keep omitted fields out of validation and form submission
+            $record->data = $data;
 
             return $record;
         }

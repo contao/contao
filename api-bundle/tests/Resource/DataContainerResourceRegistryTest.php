@@ -23,7 +23,10 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
 use PHPUnit\Framework\TestCase;
 
 final class DataContainerResourceRegistryTest extends TestCase
@@ -54,8 +57,32 @@ final class DataContainerResourceRegistryTest extends TestCase
         $description = $this->createRegistry($framework)->describe('tl_news');
 
         $this->assertSame('tl_news', $description['resource']);
-        $this->assertSame(['list', 'read', 'create', 'update'], $description['operations']);
+        $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
         $this->assertSame('object', $description['schema']['type']);
+        $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
+        $this->assertSame('news_post', $this->createRegistry()->getOperation('tl_news', 'create')->getName());
+        $this->assertSame('news_move', $this->createRegistry()->getOperation('tl_news', 'move')->getName());
+    }
+
+    public function testDiscoveryLinksPositionFieldsToTheMoveSchema(): void
+    {
+        $previous = $GLOBALS['TL_DCA'] ?? null;
+        $GLOBALS['TL_DCA']['tl_news']['fields']['pid'] = ['sql' => ['type' => 'integer']];
+
+        try {
+            $description = $this->createRegistry()->describe('tl_news');
+            $this->assertContains('move', $description['operations']);
+            $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
+            $this->assertArrayHasKey('pid', $description['schema']['properties']);
+            $this->assertArrayHasKey('pid', $description['operationSchemas']['create']['properties']);
+            $this->assertArrayNotHasKey('pid', $description['operationSchemas']['update']['properties'] ?? []);
+        } finally {
+            unset($GLOBALS['TL_DCA']);
+
+            if (null !== $previous) {
+                $GLOBALS['TL_DCA'] = $previous;
+            }
+        }
     }
 
     public function testRejectsUnknownResources(): void
@@ -94,6 +121,7 @@ final class DataContainerResourceRegistryTest extends TestCase
                     'news_read' => new Get(name: 'news_read'),
                     'news_post' => new Post(name: 'news_post'),
                     'news_patch' => new Patch(name: 'news_patch'),
+                    'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
                 ],
                 extraProperties: ['contao' => ['table' => 0 === $i ? 'tl_news' : 'tl_resource_'.$i]],
             );
@@ -105,6 +133,6 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class)));
+        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
     }
 }

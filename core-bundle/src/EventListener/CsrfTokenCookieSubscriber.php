@@ -88,9 +88,9 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             // (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
             // The priority must be higher than the one of the make-response-private listener
-            // (defaults to -1012) and lower than the one of the session listener (defaults
-            // to -1000)
-            KernelEvents::RESPONSE => ['onKernelResponse', -1006],
+            // (defaults to -2048) and lower than the one of the session listener (defaults
+            // to -1000) and lower than the one of the profiler listener (defaults to -1024)
+            KernelEvents::RESPONSE => ['onKernelResponse', -2000],
             ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
     }

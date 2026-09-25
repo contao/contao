@@ -18,10 +18,10 @@ export default class extends Controller {
             id: 'tl_listing',
             title: this.titleValue,
             url: `${this.element.href}&value=${input.value}`,
-            callback: ((_picker, value) => {
+            callback: (_picker, value) => {
                 input.value = value.join(',');
-                input.fireEvent('change');
-            }).bind(this),
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            },
         });
     }
 }

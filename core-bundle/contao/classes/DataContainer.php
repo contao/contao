@@ -721,7 +721,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif (($arrAttributes['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
@@ -1571,6 +1571,11 @@ abstract class DataContainer extends Backend
 		}
 	}
 
+	protected function isApiRequest(): bool
+	{
+		return System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') ?? false;
+	}
+
 	protected function canRenderTreeRecord(): bool
 	{
 		if ($this->treeRecordLimitReached)
@@ -1600,7 +1605,8 @@ abstract class DataContainer extends Backend
 
 	protected function getTreeRecordLimit(): int
 	{
-		if (Input::get('act') == 'select')
+		// Backend bulk selection is unlimited, but API listings must retain the configured tree limit
+		if (Input::get('act') == 'select' && !$this->isApiRequest())
 		{
 			return 0;
 		}

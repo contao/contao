@@ -304,7 +304,7 @@ class Hierarchy
             $last = end($batch);
             $fetched += \count($batch) - (0 === $fetched ? 0 : 1);
 
-            if ($batchSize !== \count($batch) || $fetched === $options->maxDepth() || ($options->includesBoundaryRow() && !(bool) ($last['continue_traversal'] ?? false))) {
+            if ($batchSize !== \count($batch) || $fetched === $options->maxDepth() || ($options->includesBoundaryRow() && !($last['continue_traversal'] ?? false))) {
                 break;
             }
 

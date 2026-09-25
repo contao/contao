@@ -50,12 +50,15 @@ final class DataContainerResourceRegistry
     public function describe(string $name): array
     {
         $resource = $this->getResource($name);
+        $operations = $this->getOperations($resource);
+        $schemas = $this->schemaFactory->createOperationSchemas($name);
 
         return [
             'resource' => $name,
             'title' => $resource->getShortName(),
-            'operations' => array_keys($this->getOperations($resource)),
-            'schema' => $this->schemaFactory->create($name),
+            'operations' => array_keys($operations),
+            'schema' => $schemas['read'],
+            'operationSchemas' => array_intersect_key($schemas, $operations, array_flip(['create', 'update', 'move'])),
         ];
     }
 
@@ -98,6 +101,7 @@ final class DataContainerResourceRegistry
 
         foreach ($resource->getOperations() ?? [] as $operation) {
             $action = match (true) {
+                'move' === ($operation->getExtraProperties()['contao']['action'] ?? null) => 'move',
                 $operation instanceof GetCollection => 'list',
                 $operation instanceof Get => 'read',
                 $operation instanceof Post => 'create',

@@ -16,11 +16,15 @@ use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\Input;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class DcTableTest extends TestCase
 {
@@ -112,5 +116,74 @@ class DcTableTest extends TestCase
             ],
             'paletteAC',
         ];
+    }
+
+    #[DataProvider('provideTreeLimits')]
+    public function testSelectionRespectsTheApiTreeLimit(bool $api, int|null $configuredLimit, int $expected): void
+    {
+        $dca = $GLOBALS['TL_DCA'] ?? null;
+        $config = $GLOBALS['TL_CONFIG'] ?? null;
+
+        $request = Request::create('/contao?act=select');
+        $request->attributes->set('_contao_api', $api);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', new RequestStack([$request]));
+        System::setContainer($container);
+
+        $GLOBALS['TL_CONFIG']['maxResultsPerPage'] = 2;
+        $GLOBALS['TL_DCA']['tl_test']['list']['sorting']['treeRecordLimit'] = $configuredLimit;
+
+        $dc = new class() extends DC_Table {
+            public function __construct()
+            {
+                $this->strTable = 'tl_test';
+            }
+
+            public function renderNextRecord(): bool
+            {
+                if (!$this->canRenderTreeRecord()) {
+                    return false;
+                }
+
+                $this->countTreeRecord();
+
+                return true;
+            }
+        };
+
+        try {
+            $rendered = 0;
+
+            for ($i = 0; $i < 5; ++$i) {
+                $rendered += (int) $dc->renderNextRecord();
+            }
+
+            $this->assertSame($expected, $rendered);
+        } finally {
+            $this->restoreGlobals($dca, $config);
+            $this->resetStaticProperties([Input::class, System::class]);
+        }
+    }
+
+    public static function provideTreeLimits(): iterable
+    {
+        yield 'API uses the DCA limit' => [true, 3, 3];
+        yield 'API uses the configured fallback' => [true, null, 2];
+        yield 'API respects an explicitly unlimited tree' => [true, 0, 5];
+        yield 'backend selection remains unlimited' => [false, 3, 5];
+    }
+
+    private function restoreGlobals(array|null $dca, array|null $config): void
+    {
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_CONFIG']);
+
+        if (null !== $dca) {
+            $GLOBALS['TL_DCA'] = $dca;
+        }
+
+        if (null !== $config) {
+            $GLOBALS['TL_CONFIG'] = $config;
+        }
     }
 }

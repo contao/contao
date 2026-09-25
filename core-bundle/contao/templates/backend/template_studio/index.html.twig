@@ -9,7 +9,7 @@
         .set('id', 'main')
         .set('aria-labelledby', 'main_headline')
         .set('data-controller', 'contao--template-studio')
-        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange')
+        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange twig-editor:lens:follow->contao--template-studio#follow twig-editor:lens:block-info->contao--template-studio#blockInfo turbo:submit-start->contao--template-studio#submitStart')
         .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
         .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
         .set('data-twig-environment', environment_information|json_encode)

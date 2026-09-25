@@ -1,5 +1,5 @@
 contao_mcp_backend:
-    path: '%contao_mcp.backend_path%'
+    path: '%contao.backend.route_prefix%/_mcp'
     controller: mcp.server.contao_backend.controller::handle
     methods: [GET, POST, DELETE, OPTIONS]
     defaults:

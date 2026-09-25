@@ -25,6 +25,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
@@ -58,7 +59,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 continue;
             }
 
-            if (($config['closed'] ?? false) === true) {
+            if (true === ($config['closed'] ?? false)) {
                 continue;
             }
 
@@ -82,14 +83,14 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
             ->withExtraProperties($this->getExtraProperties($table))
-            ->withOperations($this->createOperations($table, $shortName, !($config['notDeletable'] ?? false)))
+            ->withOperations($this->createOperations($table, $shortName, $config))
         ;
     }
 
     /**
      * @return Operations<HttpOperation>
      */
-    private function createOperations(string $table, string $shortName, bool $deletable): Operations
+    private function createOperations(string $table, string $shortName, array $config): Operations
     {
         $operations = [
             'get_collection' => new GetCollection(),
@@ -98,26 +99,30 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             'patch' => new Patch(),
         ];
 
-        if ($deletable) {
+        if (!($config['notDeletable'] ?? false)) {
             $operations['delete'] = new Delete();
+        }
+
+        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false)) {
+            $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
         }
 
         $configured = [];
 
         foreach ($operations as $action => $operation) {
             $name = 'contao_api_'.$table.'_'.$action;
-            $item = !$operation instanceof GetCollection && !$operation instanceof Post;
+            $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
 
             $configured[$name] = $operation
                 ->withName($name)
                 ->withClass(DataContainerRecord::class)
                 ->withShortName($shortName)
-                ->withUriTemplate($this->getRoutePrefix($table).($item ? '/{id}' : ''))
+                ->withUriTemplate($this->getRoutePrefix($table).($item ? '/{id}' : '').('move' === $action ? '/move' : ''))
                 ->withProvider(DataContainerStateProvider::class)
                 ->withProcessor(DataContainerStateProcessor::class)
                 ->withDefaults(['_scope' => 'backend'])
                 ->withSecurity("is_granted('ROLE_USER')")
-                ->withExtraProperties($this->getExtraProperties($table))
+                ->withExtraProperties(['contao' => $this->getExtraProperties($table)['contao'] + ['action' => $action]])
             ;
         }
 

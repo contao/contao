@@ -116,6 +116,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
+        if ($container->hasExtension('contao_api')) {
+            $loader->load('api.yaml');
+        }
+
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
