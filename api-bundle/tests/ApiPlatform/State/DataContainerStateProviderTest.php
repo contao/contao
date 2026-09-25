@@ -145,6 +145,47 @@ final class DataContainerStateProviderTest extends TestCase
         yield [['page' => PHP_INT_MAX, 'itemsPerPage' => 100]];
     }
 
+    public function testPassesTheSortingChoiceToTheDataContainer(): void
+    {
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->with('tl_content', 1, [], 30, ['title DESC'])
+            ->willReturn(new DataContainerPage([], 1))
+        ;
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['request' => new Request(['sort' => 'title DESC'])]);
+    }
+
+    public function testRejectsMultipleSortingChoicesUntilSupported(): void
+    {
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Exactly one sorting choice is currently supported.');
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['request' => new Request(['sort' => 'title DESC,alias ASC'])]);
+    }
+
+    public function testRejectsAnArraySortingChoice(): void
+    {
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['sort' => ['title' => 'DESC']]]);
+    }
+
     public function testReturnsNullWhenNoContaoTableIsConfigured(): void
     {
         $records = $this->createMock(DataContainerRecords::class);

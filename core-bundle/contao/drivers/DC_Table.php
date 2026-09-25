@@ -473,7 +473,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Reuse the SQL limit for API pages without changing the configured tree limit
 		$apiLimit = $isApiRequest ? System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->getInt('_contao_api_listing_limit') : 0;
+		$apiSort = $isApiRequest ? (System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('sorting')[$this->strTable] ?? null) : null;
 		$this->limit = $apiLimit > 0 ? '0,' . $apiLimit : '';
+
+		if ($apiSort !== null && !\in_array('sort', StringUtil::trimsplit('[;,]', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? ''), true))
+		{
+			throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+		}
 
 		// Reading records through the API must not run backend cleanup writes
 		if (!$isApiRequest)
@@ -5077,8 +5083,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function sortMenu()
 	{
+		$isApiRequest = $this->isApiRequest();
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$session = $objSessionBag->all();
+		$apiSort = $isApiRequest ? ($session['sorting'][$this->strTable] ?? null) : null;
+
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_SORTABLE && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_PARENT)
 		{
+			if ($apiSort !== null)
+			{
+				throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+			}
+
 			return '';
 		}
 
@@ -5104,11 +5120,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return if there are no sorting fields
 		if (empty($sortingFields))
 		{
+			if ($apiSort !== null)
+			{
+				throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+			}
+
 			return '';
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$session = $objSessionBag->all();
+		if ($apiSort !== null && !\in_array($apiSort, $sortingFields, true))
+		{
+			throw new UnprocessableEntityHttpException('The requested sorting is not available in this data container.');
+		}
 
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
@@ -5145,6 +5168,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->orderBy = $orderBy;
 
 			$this->setPanelState($session['sorting'][$this->strTable] !== $defaultSorting);
+		}
+
+		// The API needs the order, not the backend menu HTML
+		if ($isApiRequest)
+		{
+			return '';
 		}
 
 		$options_sorter = array();
@@ -5660,6 +5689,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function paginationMenu()
 	{
+		// API pagination is handled after collecting IDs, without backend session state
+		if ($this->isApiRequest())
+		{
+			return '';
+		}
+
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
