@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle;
 
+use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -23,10 +24,6 @@ class ContaoApiBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-                ->scalarNode('api_prefix')
-                    ->defaultValue('/_api')
-                    ->info('The general route prefix at which Contao shall expose the API.')
-                ->end()
                 ->scalarNode('data_container_api_prefix')
                     ->defaultValue('/backend/dc')
                     ->info('The DC specific subprefix at which Contao shall expose the API.')
@@ -37,8 +34,11 @@ class ContaoApiBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
+        $configurator->import('../config/services.yaml');
+
+        $container->registerForAutoconfiguration(WidgetConverterInterface::class)->addTag('contao.api.widget_converter');
+
         $configurator->parameters()
-            ->set('contao_api.api_prefix', $config['api_prefix'])
             ->set('contao_api.data_container_api_prefix', $config['data_container_api_prefix'])
         ;
     }

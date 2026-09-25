@@ -7,7 +7,7 @@
 <div class="event layout_teaser{{ classList|default }}">
 
     {% if hasDetails.invoke() %}
-        <h2><a href="{{ href|default }}" title="{{ title }} ({% if day|default %}{{ day }}, {% endif %}{{ date }}{% if time %} {{ time }}{% endif %})"{{ target }}>{{ link|default }}</a></h2>
+        <h2><a href="{{ href|default }}" title="{{ title }} ({% if day|default %}{{ day }}, {% endif %}{{ date }}{% if time %} {{ time }}{% endif %})"{{ attrs(target) }}>{{ link|default }}</a></h2>
     {% else %}
         <h2>{{ title }}</h2>
     {% endif %}
@@ -33,7 +33,7 @@
     </div>
 
     {% if hasDetails.invoke() %}
-        <p class="more"><a href="{{ href|default }}" title="{{ readMore|default }}"{{ target }}>{{ more|default }}<span class="invisible"> {{ link|default }}</span></a></p>
+        <p class="more"><a href="{{ href|default }}" title="{{ readMore|default }}"{{ attrs(target) }}>{{ more|default }}<span class="invisible"> {{ link|default }}</span></a></p>
     {% endif %}
 
 </div>
