@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
@@ -10,7 +11,7 @@
         {% endif %}
 
         {% if hasUp|default %}
-            <li class="up"><a href="{{ upHref }}" title="{{ upPageTitle }}">{{ upLink }}</a></li>
+            <li class="up"><a href="{{ upHref }}" title="{{ upPageTitle }}">{{ 'MSC.up'|trans }}</a></li>
         {% else %}
             <li class="up empty">&nbsp;</li>
         {% endif %}

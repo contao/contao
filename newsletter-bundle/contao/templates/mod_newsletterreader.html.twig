@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
@@ -20,7 +21,7 @@
 
     {% if referer|default %}
         <!-- indexer::stop -->
-        <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
+        <p class="back"><a href="{{ referer }}">{{ 'MSC.goBack'|trans }}</a></p>
         <!-- indexer::continue -->
     {% endif %}
 

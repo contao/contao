@@ -2263,15 +2263,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
 			{
 				$objTemplate = new BackendTemplate('be_conflict');
-				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-				$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->host = Backend::getDecodedHostname();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
-				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
 				$objTemplate->explain2 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
 				$objTemplate->diff = $objVersions->compare(true);
 				$objTemplate->href = Environment::get('requestUri');
+
+				// Backwards compatibility
+				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+				$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
+				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
 				// We need to set the status code to either 4xx or 5xx in order for Turbo to render this response.

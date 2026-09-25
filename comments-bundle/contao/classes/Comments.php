@@ -107,19 +107,23 @@ class Comments extends Frontend
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
-				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
 				$objPartial->timestamp = $objComments->date;
 				$objPartial->datetime = date('Y-m-d\TH:i:sP', $objComments->date);
 				$objPartial->addReply = false;
 
+				// Backwards compatibility
+				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
+
 				// Reply
 				if ($objComments->addReply && $objComments->reply && ($objAuthor = UserModel::findById($objComments->author)))
 				{
 					$objPartial->addReply = true;
-					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
 					$objPartial->reply = $objComments->reply;
 					$objPartial->author = $objAuthor;
+
+					// Backwards compatibility
+					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
 				}
 
 				$arrComments[] = $objPartial->parse();
@@ -135,12 +139,14 @@ class Comments extends Frontend
 		}
 
 		$objTemplate->comments = $arrComments;
+		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
+
+		// Backwards compatibility
 		$objTemplate->hlcText = $GLOBALS['TL_LANG']['MSC']['comments'];
 		$objTemplate->addComment = $GLOBALS['TL_LANG']['MSC']['addComment'];
 		$objTemplate->name = $GLOBALS['TL_LANG']['MSC']['com_name'];
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
-		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
@@ -161,6 +167,8 @@ class Comments extends Frontend
 		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$objTemplate->requireLogin = true;
+
+			// Backwards compatibility
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];
 
 			return;
@@ -272,9 +280,11 @@ class Comments extends Frontend
 		}
 
 		$objTemplate->fields = $arrWidgets;
-		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
+
+		// Backwards compatibility
+		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
 
 		$session = System::getContainer()->get('request_stack')->getSession();
 

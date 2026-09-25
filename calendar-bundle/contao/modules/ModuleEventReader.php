@@ -261,12 +261,14 @@ class ModuleEventReader extends Events
 		$objTemplate->class = $objEvent->cssClass ? ' ' . trim($objEvent->cssClass) : '';
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
-		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = Template::once(static fn (): string => '');
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+
+		// Backwards compatibility
+		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 		// Clean the RTE output
 		if ($objEvent->teaser)
