@@ -1,6 +1,7 @@
 extends: default
 
 ignore: |
+    /.contao-e2e/
     /node_modules/
     /vendor/
     /vendor-bin/
