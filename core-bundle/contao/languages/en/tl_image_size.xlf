@@ -93,13 +93,13 @@
         <source>Fetch priority</source>
       </trans-unit>
       <trans-unit id="tl_image_size.fetchPriority.1">
-        <source>Hint to the browser about the priority for fetching the image.</source>
+        <source>Suggest how the browser should prioritize fetching the image. Use sparingly, as incorrect priorities can reduce page performance.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.decoding.0">
         <source>Decoding</source>
       </trans-unit>
       <trans-unit id="tl_image_size.decoding.1">
-        <source>Hint to the browser about how the image should be decoded.</source>
+        <source>Suggest how the browser should decode the image.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
