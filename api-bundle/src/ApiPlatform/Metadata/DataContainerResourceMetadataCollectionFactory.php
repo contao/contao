@@ -16,9 +16,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\McpTool;
-use ApiPlatform\Metadata\McpToolCollection;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -27,7 +25,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
@@ -61,63 +59,84 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 continue;
             }
 
-            if (($config['closed'] ?? false) === true) {
+            if (true === ($config['closed'] ?? false)) {
                 continue;
             }
 
-            $shortName = $this->getShortName($table);
-            $routePrefix = $this->getRoutePrefix($table);
-            $operations = [
-                'get_collection' => new GetCollection()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix)
-                    ->withDefaults(['_scope' => 'backend']),
-                'get' => new Get()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
-                    ->withDefaults(['_scope' => 'backend']),
-                'post' => new Post()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix)
-                    ->withDefaults(['_scope' => 'backend']),
-                'patch' => new Patch()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
-                    ->withDefaults(['_scope' => 'backend']),
-            ];
-
-            if (!($config['notDeletable'] ?? false)) {
-                $operations['delete'] = new Delete()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
-                    ->withDefaults(['_scope' => 'backend'])
-                ;
-            }
-
-            $apiResources[] = new ApiResource()
-                ->withClass(DataContainerRecord::class)
-                ->withShortName($shortName)
-                ->withProvider(DataContainerStateProvider::class)
-                ->withProcessor(DataContainerStateProcessor::class)
-                ->withRoutePrefix($routePrefix)
-                ->withDefaults(['_scope' => 'backend'])
-                ->withMcp($this->createMcpOperations($table, $shortName, $routePrefix, !($config['notDeletable'] ?? false)))
-                ->withExtraProperties([
-                    'contao' => [
-                        'table' => $table,
-                        'schema_path' => DataContainerOpenApiFactory::getSchemaPath($table),
-                    ],
-                ])
-                ->withOperations(new Operations($operations))
-            ;
+            $apiResources[] = $this->createResource($table, $config);
         }
 
         return new ResourceMetadataCollection($resourceClass, $apiResources);
+    }
+
+    private function createResource(string $table, array $config): ApiResource
+    {
+        $shortName = $this->getShortName($table);
+
+        return new ApiResource()
+            ->withClass(DataContainerRecord::class)
+            ->withShortName($shortName)
+            ->withProvider(DataContainerStateProvider::class)
+            ->withProcessor(DataContainerStateProcessor::class)
+            ->withRoutePrefix($this->getRoutePrefix($table))
+            ->withDefaults(['_scope' => 'backend'])
+            ->withSecurity("is_granted('ROLE_USER')")
+            ->withMcp([])
+            ->withExtraProperties($this->getExtraProperties($table))
+            ->withOperations($this->createOperations($table, $shortName, $config))
+        ;
+    }
+
+    /**
+     * @return Operations<HttpOperation>
+     */
+    private function createOperations(string $table, string $shortName, array $config): Operations
+    {
+        $operations = [
+            'get_collection' => new GetCollection(),
+            'get' => new Get(),
+            'post' => new Post(),
+            'patch' => new Patch(),
+        ];
+
+        if (!($config['notDeletable'] ?? false)) {
+            $operations['delete'] = new Delete();
+        }
+
+        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false)) {
+            $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
+        }
+
+        $configured = [];
+
+        foreach ($operations as $action => $operation) {
+            $name = 'contao_api_'.$table.'_'.$action;
+            $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
+
+            $configured[$name] = $operation
+                ->withName($name)
+                ->withClass(DataContainerRecord::class)
+                ->withShortName($shortName)
+                ->withUriTemplate($this->getRoutePrefix($table).($item ? '/{id}' : '').('move' === $action ? '/move' : ''))
+                ->withProvider(DataContainerStateProvider::class)
+                ->withProcessor(DataContainerStateProcessor::class)
+                ->withDefaults(['_scope' => 'backend'])
+                ->withSecurity("is_granted('ROLE_USER')")
+                ->withExtraProperties(['contao' => $this->getExtraProperties($table)['contao'] + ['action' => $action]])
+            ;
+        }
+
+        return new Operations($configured);
+    }
+
+    private function getExtraProperties(string $table): array
+    {
+        return [
+            'contao' => [
+                'table' => $table,
+                'schema_path' => DataContainerOpenApiFactory::getSchemaPath($table),
+            ],
+        ];
     }
 
     /**
@@ -156,84 +175,5 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     private function getRoutePrefix(string $table): string
     {
         return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
-    }
-
-    /**
-     * @return array<string, McpTool|McpToolCollection>
-     */
-    private function createMcpOperations(string $table, string $shortName, string $routePrefix, bool $deletable): array
-    {
-        $baseName = preg_replace('/^tl_/', '', $table) ?? $table;
-
-        $operations = [
-            $baseName.'_get_collection' => new McpToolCollection(
-                name: $baseName.'_get_collection',
-                description: 'List '.$shortName.' records',
-                method: 'GET',
-                uriTemplate: $routePrefix,
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_get' => new McpTool(
-                name: $baseName.'_get',
-                description: 'Fetch a '.$shortName.' record',
-                method: 'GET',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_post' => new McpTool(
-                name: $baseName.'_post',
-                description: 'Create a '.$shortName.' record',
-                method: 'POST',
-                uriTemplate: $routePrefix,
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_patch' => new McpTool(
-                name: $baseName.'_patch',
-                description: 'Update a '.$shortName.' record',
-                method: 'PATCH',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-        ];
-
-        if ($deletable) {
-            $operations[$baseName.'_delete'] = new McpTool(
-                name: $baseName.'_delete',
-                description: 'Delete a '.$shortName.' record',
-                method: 'DELETE',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: false,
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            )->withStructuredContent(false)->withStatus(204);
-        }
-
-        return $operations;
     }
 }

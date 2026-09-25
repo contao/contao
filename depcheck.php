@@ -69,6 +69,9 @@ return new Configuration()
     ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 
+    // The API integration is only registered when the optional API bundle is installed.
+    ->ignoreErrorsOnPackageAndPath('contao/api-bundle', __DIR__.'/core-bundle/src/Api', [ErrorType::DEV_DEPENDENCY_IN_PROD])
+
     // The manager plugin is a dev dependency because it is only required in the
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])

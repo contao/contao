@@ -16,25 +16,32 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\McpTool;
-use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Resource\Factory\MainControllerResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\Metadata\Resource\ResourceNameCollection;
+use ApiPlatform\Symfony\Routing\ApiLoader;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
 
 final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTestCase
 {
@@ -49,11 +56,11 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
-        $extendedDcTableClass = (new class() extends DC_Table {
+        $extendedDcTableClass = new class() extends DC_Table {
             public function __construct()
             {
             }
-        })::class;
+        }::class;
 
         $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
         $controllerAdapter
@@ -119,6 +126,63 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
     }
 
+    public function testGeneratesDistinctRoutesForEveryTable(): void
+    {
+        $adapter = $this->createAdapterMock(['loadDataContainer']);
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table): void {
+                    $GLOBALS['TL_DCA'][$table]['config'] = ['dataContainer' => DC_Table::class];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter]),
+            $this->createResourceFinder(['tl_article', 'tl_page']),
+            'backend/dc',
+        );
+
+        $loader = $this->createApiLoader($factory);
+        $routes = $loader->load(null);
+        $routes->addPrefix('/custom_api');
+
+        $generator = new UrlGenerator($routes, new RequestContext());
+
+        foreach (['tl_article', 'tl_page'] as $table) {
+            $this->assertSame('/custom_api/backend/dc/'.$table.'/42', $generator->generate('contao_api_'.$table.'_patch', ['id' => 42]));
+            $this->assertSame('/custom_api/backend/dc/'.$table, $generator->generate('contao_api_'.$table.'_get_collection'));
+            $this->assertSame('backend', $routes->get('contao_api_'.$table.'_patch')->getDefault('_scope'));
+            $this->assertSame('api_platform.symfony.main_controller', $routes->get('contao_api_'.$table.'_patch')->getDefault('_controller'));
+        }
+    }
+
+    private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader
+    {
+        $names = $this->createStub(ResourceNameCollectionFactoryInterface::class);
+        $names
+            ->method('create')
+            ->willReturn(new ResourceNameCollection([DataContainerRecord::class]))
+        ;
+
+        $kernel = $this->createStub(KernelInterface::class);
+        $kernel
+            ->method('locateResource')
+            ->willReturn(\dirname(new \ReflectionClass(ApiLoader::class)->getFileName(), 2).'/Bundle/Resources/config/routing')
+        ;
+
+        $container = $this->createStub(ContainerInterface::class);
+        $container
+            ->method('has')
+            ->willReturn(true)
+        ;
+
+        return new ApiLoader($kernel, $names, new MainControllerResourceMetadataCollectionFactory($factory), $container, []);
+    }
+
     private function assertResource(ApiResource $resource, string $expectedShortName, string $expectedTable, string $expectedRoutePrefix, bool $deletable): void
     {
         $this->assertSame(DataContainerRecord::class, $resource->getClass());
@@ -127,60 +191,36 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
+        $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
-        $this->assertMcpOperations($resource, $expectedShortName, $expectedTable, $deletable);
+        $this->assertSame([], $resource->getMcp());
 
         $operations = $resource->getOperations();
         $this->assertInstanceOf(Operations::class, $operations);
-        $this->assertCount($deletable ? 5 : 4, $operations);
+        $this->assertCount($deletable ? 6 : 5, $operations);
 
         $operations = iterator_to_array($operations);
-        $this->assertOperation($operations['get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
-        $this->assertOperation($operations['get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
-        $this->assertOperation($operations['post'], Post::class, $expectedShortName, $expectedRoutePrefix);
-        $this->assertOperation($operations['patch'], Patch::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
 
-        if ($deletable) {
-            $this->assertOperation($operations['delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
-        } else {
-            $this->assertArrayNotHasKey('delete', $operations);
-        }
-    }
-
-    private function assertMcpOperations(ApiResource $resource, string $expectedShortName, string $expectedTable, bool $deletable): void
-    {
-        $mcp = $resource->getMcp();
-        $this->assertIsArray($mcp);
-        $this->assertCount($deletable ? 5 : 4, $mcp);
-
-        $baseName = preg_replace('/^tl_/', '', $expectedTable) ?? $expectedTable;
-
-        $this->assertInstanceOf(McpToolCollection::class, $mcp[$baseName.'_get_collection']);
-        $this->assertSame($expectedShortName, $mcp[$baseName.'_get_collection']->getShortName());
-        $this->assertSame(DataContainerRecord::class, $mcp[$baseName.'_get_collection']->getClass());
-        $this->assertSame(DataContainerStateProvider::class, $mcp[$baseName.'_get_collection']->getProvider());
-        $this->assertSame(DataContainerStateProcessor::class, $mcp[$baseName.'_get_collection']->getProcessor());
-
-        foreach (['get', 'post', 'patch'] as $operationName) {
-            $operation = $mcp[$baseName.'_'.$operationName];
-            $this->assertInstanceOf(McpTool::class, $operation);
-            $this->assertSame($expectedShortName, $operation->getShortName());
-            $this->assertSame(DataContainerRecord::class, $operation->getClass());
+        foreach ($operations as $name => $operation) {
+            $this->assertSame($name, $operation->getName());
+            $this->assertSame($expectedTable, $operation->getExtraProperties()['contao']['table']);
             $this->assertSame(DataContainerStateProvider::class, $operation->getProvider());
             $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
         }
 
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_post'], Post::class, $expectedShortName, $expectedRoutePrefix);
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_patch'], Patch::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+        $this->assertOperation($operations['contao_api_'.$expectedTable.'_move'], Post::class, $expectedShortName, $expectedRoutePrefix.'/{id}/move');
+        $this->assertSame(DataContainerMove::class, $operations['contao_api_'.$expectedTable.'_move']->getInput());
+        $this->assertFalse($operations['contao_api_'.$expectedTable.'_move']->canRead());
+
         if ($deletable) {
-            $delete = $mcp[$baseName.'_delete'];
-            $this->assertInstanceOf(McpTool::class, $delete);
-            $this->assertSame($expectedShortName, $delete->getShortName());
-            $this->assertSame(DataContainerRecord::class, $delete->getClass());
-            $this->assertSame(DataContainerStateProvider::class, $delete->getProvider());
-            $this->assertSame(DataContainerStateProcessor::class, $delete->getProcessor());
-            $this->assertFalse($delete->getStructuredContent());
+            $this->assertOperation($operations['contao_api_'.$expectedTable.'_delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         } else {
-            $this->assertArrayNotHasKey($baseName.'_delete', $mcp);
+            $this->assertArrayNotHasKey('contao_api_'.$expectedTable.'_delete', $operations);
         }
     }
 
@@ -191,6 +231,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame($expectedShortName, $operation->getShortName());
         $this->assertSame($expectedUriTemplate, $operation->getUriTemplate());
         $this->assertSame(['_scope' => 'backend'], $operation->getDefaults());
+        $this->assertSame("is_granted('ROLE_USER')", $operation->getSecurity());
         $this->assertNull($operation->getOpenapi());
     }
 

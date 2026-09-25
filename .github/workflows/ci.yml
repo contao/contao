@@ -174,7 +174,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install the Node packages
-              run: npm install
+              run: npm ci
 
             - name: Run Biome
               run: npx biome ci core-bundle/assets
@@ -243,6 +243,8 @@ jobs:
                       $data["repositories"][1]["url"] = "../news-bundle";
                       $data["repositories"][2]["type"] = "path";
                       $data["repositories"][2]["url"] = "../test-case";
+                      $data["repositories"][3]["type"] = "path";
+                      $data["repositories"][3]["url"] = "../api-bundle";
                       file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
                   composer install --no-interaction --no-progress

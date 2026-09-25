@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -185,19 +184,40 @@ class BackendUser extends User
 	}
 
 	/**
-	 * Restore the original numeric file mounts (see #5083)
+	 * Exclude permission fields while saving
 	 */
 	public function save()
 	{
-		$filemounts = $this->filemounts;
+		$arrData = $this->arrData;
+		$permissions = $this->getPermissionFields();
+		$permissionFields = array_unique(array(...$permissions['always'], ...$permissions['depends']));
 
-		if (!empty($this->arrFilemountIds))
+		$this->arrData = array_diff_key($this->arrData, array_flip($permissionFields));
+
+		try
 		{
-			$this->arrData['filemounts'] = $this->arrFilemountIds;
+			parent::save();
+		}
+		finally
+		{
+			$this->arrData = $arrData;
+		}
+	}
+
+	/**
+	 * @return array{always: array, depends: array}
+	 */
+	private function getPermissionFields(): array
+	{
+		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud');
+
+		// HOOK: Take custom permissions
+		if (\is_array($GLOBALS['TL_PERMISSIONS'] ?? null))
+		{
+			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
 
-		parent::save();
-		$this->filemounts = $filemounts;
+		return array('always' => array('alexf'), 'depends' => $depends);
 	}
 
 	/**
@@ -226,14 +246,9 @@ class BackendUser extends User
 		Config::set('backendTheme', $this->backendTheme);
 
 		// Inherit permissions
-		$always = array('alexf');
-		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud');
-
-		// HOOK: Take custom permissions
-		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
-		{
-			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
-		}
+		$permissions = $this->getPermissionFields();
+		$always = $permissions['always'];
+		$depends = $permissions['depends'];
 
 		// Overwrite user permissions if only group permissions shall be inherited
 		if ($this->inherit == 'group')
@@ -245,7 +260,7 @@ class BackendUser extends User
 		}
 
 		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array(...$always, ...$depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_unique(array(...$always, ...$depends)) : $always;
 		$time = Date::floorToMinute();
 		$db = Database::getInstance();
 
@@ -328,87 +343,6 @@ class BackendUser extends User
 		{
 			unset($this->arrData['alexf'][$index]);
 		}
-	}
-
-	/**
-	 * Generate the navigation menu and return it as array
-	 *
-	 * @param boolean $blnShowAll
-	 *
-	 * @return array
-	 */
-	public function navigation($blnShowAll=false)
-	{
-		$arrModules = array();
-		$arrStatus = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('backend_modules');
-		$router = System::getContainer()->get('router');
-		$security = System::getContainer()->get('security.helper');
-
-		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
-		{
-			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
-			{
-				$arrModules[$strGroupName]['class'] = 'group-' . $strGroupName . ' node-expanded';
-				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
-				$arrModules[$strGroupName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null) ? ($GLOBALS['TL_LANG']['MOD'][$strGroupName][0] ?? null) : ($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null)) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName));
-				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
-
-				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
-				{
-					// Check access
-					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
-					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
-
-					if ($blnAccess && !$blnHide)
-					{
-						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1] ?? '');
-						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null) ? ($GLOBALS['TL_LANG']['MOD'][$strModuleName][0] ?? null) : ($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null)) ? $label : $strModuleName;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName));
-						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
-					}
-				}
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getUserNavigation']) && \is_array($GLOBALS['TL_HOOKS']['getUserNavigation']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback)
-			{
-				$arrModules = System::importStatic($callback[0])->{$callback[1]}($arrModules, true);
-			}
-		}
-
-		foreach ($arrModules as $strGroupName => $arrGroupModules)
-		{
-			$arrModules[$strGroupName]['isClosed'] = false;
-
-			// Do not show the modules if the group is closed
-			if (!$blnShowAll && isset($arrStatus[$strGroupName]) && $arrStatus[$strGroupName] < 1)
-			{
-				$arrModules[$strGroupName]['class'] = str_replace('node-expanded', '', $arrModules[$strGroupName]['class']) . ' node-collapsed';
-				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
-				$arrModules[$strGroupName]['isClosed'] = true;
-			}
-
-			if (isset($arrGroupModules['modules']) && \is_array($arrGroupModules['modules']))
-			{
-				foreach ($arrGroupModules['modules'] as $strModuleName => $arrModuleConfig)
-				{
-					// Mark the active module and its group
-					if (Input::get('do') == $strModuleName)
-					{
-						$arrModules[$strGroupName]['class'] .= ' trail';
-						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;
-					}
-				}
-			}
-		}
-
-		return $arrModules;
 	}
 
 	/**

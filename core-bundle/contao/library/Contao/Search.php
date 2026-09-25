@@ -204,7 +204,7 @@ class Search
 						->execute($objIndex->id);
 				}
 
-				// The same page has been indexed under a different URL already (see #8460)
+				// The same page has already been indexed under a different URL (see #8460)
 				return false;
 			}
 

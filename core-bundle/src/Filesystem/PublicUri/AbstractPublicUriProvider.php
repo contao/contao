@@ -40,7 +40,7 @@ abstract class AbstractPublicUriProvider
         try {
             $mtime = $adapter->lastModified($adapterPath)->lastModified();
         } catch (\Throwable) {
-            $mtime = null;
+            return null;
         }
 
         // Hash because nobody needs to know the mtime

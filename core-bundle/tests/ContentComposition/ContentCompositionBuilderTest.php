@@ -162,7 +162,7 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame('<templates-dir>', $page->templateGroup);
 
         $expectedTemplateData = [
-            'locale' => 'de_DE',
+            'locale' => 'de-DE',
             'rtl' => false,
             'page' => [
                 'layout' => 1,
