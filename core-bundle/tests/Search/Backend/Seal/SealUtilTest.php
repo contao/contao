@@ -83,7 +83,7 @@ class SealUtilTest extends TestCase
     public function testConvertProviderDocumentForSearchIndex(): void
     {
         $document = new Document('42', 'foobar', 'searchable');
-        $document = $document->withMetadata(['meta' => 'data']);
+        $document = $document->withMetadata(['meta' => 'data', 'allowedGroups' => [1, 2]]);
         $document = $document->withTags(['tag1', 'tag2']);
 
         $this->assertSame(
@@ -95,7 +95,8 @@ class SealUtilTest extends TestCase
                     'tag1',
                     'tag2',
                 ],
-                'document' => '{"id":"42","type":"foobar","searchableContent":"searchable","tags":["tag1","tag2"],"metadata":{"meta":"data"}}',
+                'allowedGroups' => [1, 2],
+                'document' => '{"id":"42","type":"foobar","searchableContent":"searchable","tags":["tag1","tag2"],"metadata":{"meta":"data","allowedGroups":[1,2]}}',
             ],
             SealUtil::convertProviderDocumentForSearchIndex($document),
         );
