@@ -210,6 +210,11 @@ class Picker extends Widget
 					$dc->activeRecord = $objRows;
 
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
+
+					if (\is_array($arrValues[$objRows->id]))
+					{
+						$arrValues[$objRows->id] = $arrValues[$objRows->id][0];
+					}
 				}
 			}
 		}
