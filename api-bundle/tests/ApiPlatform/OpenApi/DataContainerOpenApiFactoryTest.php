@@ -132,6 +132,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 
         $getCollection = $collectionPathItem->getGet();
         $this->assertInstanceOf(Response::class, $getCollection->getResponses()['200']);
+
         $parameters = [];
 
         foreach ($getCollection->getParameters() as $parameter) {
@@ -140,6 +141,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 30, 'maximum' => 300], $parameters['itemsPerPage']);
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 1], $parameters['page']);
+
         $collectionSchema = $getCollection->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('array', $collectionSchema['type']);
         $this->assertSame('#/components/schemas/dc_tl_content', $collectionSchema['items']['$ref']);

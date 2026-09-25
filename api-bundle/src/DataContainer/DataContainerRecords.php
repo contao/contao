@@ -170,6 +170,7 @@ class DataContainerRecords
         $request = $this->requestStack->getCurrentRequest();
         $request->attributes->set('_contao_api', true);
         $request->attributes->set('_contao_api_listing_ids', []);
+
         // Stop after the requested page without overflowing at the largest valid offset
         $request->attributes->set('_contao_api_listing_limit', $offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 

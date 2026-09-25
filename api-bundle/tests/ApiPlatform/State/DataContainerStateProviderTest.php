@@ -88,6 +88,7 @@ final class DataContainerStateProviderTest extends TestCase
     public function testUsesTheRequestedPageSizeWithinTheMaximum(array $filters, int $limit, bool $request): void
     {
         $page = new DataContainerPage([], 2, $limit);
+
         $records = $this->createMock(DataContainerRecords::class);
         $records
             ->expects($this->once())
@@ -95,12 +96,14 @@ final class DataContainerStateProviderTest extends TestCase
             ->with('tl_content', 2, ['id' => '7', 'table' => 'tl_page'], $limit)
             ->willReturn($page)
         ;
+
         $operation = new GetCollection(
             paginationClientItemsPerPage: true,
             paginationItemsPerPage: 30,
             paginationMaximumItemsPerPage: 100,
             extraProperties: ['contao' => ['table' => 'tl_content']],
         );
+
         $filters += ['page' => '2', 'parent' => '7', 'ptable' => 'tl_page'];
         $context = $request ? ['request' => new Request($filters)] : ['filters' => $filters];
 
@@ -125,6 +128,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->expects($this->never())
             ->method('list')
         ;
+
         $operation = new GetCollection(paginationClientItemsPerPage: true, paginationMaximumItemsPerPage: 100, extraProperties: ['contao' => ['table' => 'tl_content']]);
         $this->expectException(InvalidArgumentException::class);
 
