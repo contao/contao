@@ -3020,13 +3020,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$return .= '</div></li>';
 
 			// Call the next node
-			if (!empty($content) && $blnIsOpen)
+			if (!empty($content))
 			{
-				$return .= '<li class="parent" id="filetree_' . $md5 . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild' : '') . '"><ul class="level_' . $level . '">';
-				$return .= $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound);
+				$return .= '<li class="parent"><ul id="filetree_' . $md5 . '" class="level_' . $level . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild' : '') . '"' . ($blnIsOpen ? '' : ' style="display:none"') . '>';
+				$return .= $blnIsOpen ? $this->generateTree($folders[$f], $intMargin + $intSpacing, false, $protected, $arrClipboard, $arrFound) : '';
 				$return .= '</ul></li>';
 
-				if ($this->treeRecordLimitReached)
+				if ($blnIsOpen && $this->treeRecordLimitReached)
 				{
 					break;
 				}
