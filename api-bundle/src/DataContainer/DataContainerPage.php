@@ -21,9 +21,12 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
  */
 final class DataContainerPage implements \IteratorAggregate, PartialPaginatorInterface
 {
+    public const DEFAULT_ITEMS_PER_PAGE = 30;
+
     public function __construct(
         private readonly array $records,
         private readonly int $page,
+        private readonly int $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE,
     ) {
     }
 
@@ -34,7 +37,7 @@ final class DataContainerPage implements \IteratorAggregate, PartialPaginatorInt
 
     public function getItemsPerPage(): float
     {
-        return 30;
+        return $this->itemsPerPage;
     }
 
     public function count(): int

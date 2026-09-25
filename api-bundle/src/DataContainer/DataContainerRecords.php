@@ -56,19 +56,25 @@ class DataContainerRecords
         );
     }
 
-    public function list(string $table, int $page = 1, array $parent = []): DataContainerPage
+    public function list(string $table, int $page = 1, array $parent = [], int $itemsPerPage = DataContainerPage::DEFAULT_ITEMS_PER_PAGE): DataContainerPage
     {
-        if ($page < 1) {
-            throw new UnprocessableEntityHttpException('The page must be a positive integer.');
+        if ($page < 1 || $itemsPerPage < 1) {
+            throw new UnprocessableEntityHttpException('The page and itemsPerPage must be positive integers.');
         }
+
+        if ($page - 1 > intdiv(PHP_INT_MAX, $itemsPerPage)) {
+            throw new UnprocessableEntityHttpException(\sprintf('The page must not exceed %d for a page size of %d.', intdiv(PHP_INT_MAX, $itemsPerPage) + 1, $itemsPerPage));
+        }
+
+        $offset = ($page - 1) * $itemsPerPage;
 
         return $this->run(
             $table,
             ['act' => 'select'] + $this->getParentParameters($parent),
-            function (DC_Table $dc) use ($table, $page): DataContainerPage {
-                $result = array_map(fn ($row) => $this->mapper->fromRow($table, $row), $this->getListingRecords($dc, ($page - 1) * 30));
+            function (DC_Table $dc) use ($table, $page, $offset, $itemsPerPage): DataContainerPage {
+                $result = array_map(fn ($row) => $this->mapper->fromRow($table, $row), $this->getListingRecords($dc, $offset, $itemsPerPage));
 
-                return new DataContainerPage($result, $page);
+                return new DataContainerPage($result, $page, $itemsPerPage);
             },
         );
     }
@@ -159,16 +165,19 @@ class DataContainerRecords
         );
     }
 
-    private function getListingRecords(DC_Table $dc, int $offset): array
+    private function getListingRecords(DC_Table $dc, int $offset, int $itemsPerPage): array
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->attributes->set('_contao_api', true);
-        $request->attributes->set('_contao_listing_ids', []);
+        $request->attributes->set('_contao_api_listing_ids', []);
+
+        // Stop after the requested page without overflowing at the largest valid offset
+        $request->attributes->set('_contao_api_listing_limit', $offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 
         $dc->showAll();
         $records = [];
 
-        foreach ($request->attributes->get('_contao_listing_ids') as $id) {
+        foreach ($request->attributes->get('_contao_api_listing_ids') as $id) {
             try {
                 $row = $dc->getCurrentRecord($id);
             } catch (AccessDeniedException) {
@@ -182,7 +191,7 @@ class DataContainerRecords
 
             $records[] = $row;
 
-            if (30 === \count($records)) {
+            if ($itemsPerPage === \count($records)) {
                 break;
             }
         }

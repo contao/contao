@@ -13,15 +13,19 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
 use Contao\ApiBundle\DataContainer\DataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class DataContainerStateProviderTest extends TestCase
@@ -38,7 +42,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->willReturn($record)
         ;
 
-        $provider = new ReadProvider(new DataContainerStateProvider($records));
+        $provider = new ReadProvider(new DataContainerStateProvider($records, new Pagination()));
 
         foreach ([new Get(), new Patch(), new Delete()] as $operation) {
             $operation = $operation->withRead(true)->withExtraProperties(['contao' => ['table' => 'tl_content']]);
@@ -56,7 +60,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $provider = new ReadProvider(new DataContainerStateProvider($records));
+        $provider = new ReadProvider(new DataContainerStateProvider($records, new Pagination()));
         $operation = new Get(read: true, extraProperties: ['contao' => ['table' => 'tl_content']]);
 
         $this->expectException(NotFoundHttpException::class);
@@ -71,13 +75,74 @@ final class DataContainerStateProviderTest extends TestCase
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 2)
+            ->with('tl_content', 2, [], 30)
             ->willReturn($page)
         ;
 
         $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
-        $this->assertSame($page, new DataContainerStateProvider($records)->provide($operation, context: ['filters' => ['page' => 2]]));
+        $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['page' => 2]]));
+    }
+
+    #[DataProvider('providePageSizes')]
+    public function testUsesTheRequestedPageSizeWithinTheMaximum(array $filters, int $limit, bool $request): void
+    {
+        $page = new DataContainerPage([], 2, $limit);
+
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->with('tl_content', 2, ['id' => '7', 'table' => 'tl_page'], $limit)
+            ->willReturn($page)
+        ;
+
+        $operation = new GetCollection(
+            paginationClientItemsPerPage: true,
+            paginationItemsPerPage: 30,
+            paginationMaximumItemsPerPage: 100,
+            extraProperties: ['contao' => ['table' => 'tl_content']],
+        );
+
+        $filters += ['page' => '2', 'parent' => '7', 'ptable' => 'tl_page'];
+        $context = $request ? ['request' => new Request($filters)] : ['filters' => $filters];
+
+        $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: $context));
+        $this->assertSame((float) $limit, $page->getItemsPerPage());
+    }
+
+    public static function providePageSizes(): iterable
+    {
+        yield 'default' => [[], 30, false];
+        yield 'smaller' => [['itemsPerPage' => '10'], 10, false];
+        yield 'larger' => [['itemsPerPage' => '60'], 60, true];
+        yield 'maximum' => [['itemsPerPage' => '100'], 100, false];
+        yield 'capped' => [['itemsPerPage' => '999'], 100, true];
+    }
+
+    #[DataProvider('provideInvalidPagination')]
+    public function testRejectsInvalidPaginationBeforeListing(array $filters): void
+    {
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
+
+        $operation = new GetCollection(paginationClientItemsPerPage: true, paginationMaximumItemsPerPage: 100, extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => $filters]);
+    }
+
+    public static function provideInvalidPagination(): iterable
+    {
+        yield [['page' => 0]];
+        yield [['page' => -1]];
+        yield [['itemsPerPage' => 0]];
+        yield [['itemsPerPage' => -1]];
+        yield [['itemsPerPage' => 'invalid']];
+        yield [['page' => PHP_INT_MAX, 'itemsPerPage' => 100]];
     }
 
     public function testReturnsNullWhenNoContaoTableIsConfigured(): void
@@ -88,6 +153,6 @@ final class DataContainerStateProviderTest extends TestCase
             ->method('find')
         ;
 
-        $this->assertNull(new DataContainerStateProvider($records)->provide(new Get()));
+        $this->assertNull(new DataContainerStateProvider($records, new Pagination())->provide(new Get()));
     }
 }

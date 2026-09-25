@@ -30,6 +30,7 @@ use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Schema;
 use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
@@ -115,7 +116,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             }
         };
 
-        $factory = new DataContainerOpenApiFactory($decorated, $resourceMetadataCollectionFactory, $schemaFactory, '/_api');
+        $factory = new DataContainerOpenApiFactory($decorated, $resourceMetadataCollectionFactory, $schemaFactory, new Pagination(), '/_api');
         $openApi = $factory();
 
         $schemas = $openApi->getComponents()->getSchemas();
@@ -131,6 +132,16 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 
         $getCollection = $collectionPathItem->getGet();
         $this->assertInstanceOf(Response::class, $getCollection->getResponses()['200']);
+
+        $parameters = [];
+
+        foreach ($getCollection->getParameters() as $parameter) {
+            $parameters[$parameter->getName()] = $parameter->getSchema();
+        }
+
+        $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 30, 'maximum' => 300], $parameters['itemsPerPage']);
+        $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 1], $parameters['page']);
+
         $collectionSchema = $getCollection->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('array', $collectionSchema['type']);
         $this->assertSame('#/components/schemas/dc_tl_content', $collectionSchema['items']['$ref']);
@@ -183,7 +194,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
-        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), '/_api');
+        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/_api');
         $openApi = $factory();
 
         $this->assertNull($openApi->getPaths()->getPath('/_api/dc/tl_content/{id}')->getGet()->getResponses()['200']->getLinks());
@@ -206,6 +217,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                 }
             },
             new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])),
+            new Pagination(),
             '/_api',
         );
 
@@ -216,7 +228,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     {
         $operations = new Operations([
             'move' => new Post(uriTemplate: '/backend/dc/tl_content/{id}/move', extraProperties: ['contao' => ['action' => 'move']]),
-            'get_collection' => new GetCollection()
+            'get_collection' => new GetCollection(paginationItemsPerPage: 30, paginationMaximumItemsPerPage: 300, paginationClientItemsPerPage: true)
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
                 ->withUriTemplate('/_api/backend/dc/tl_content'),

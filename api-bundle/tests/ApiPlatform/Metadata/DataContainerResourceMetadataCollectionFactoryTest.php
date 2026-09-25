@@ -31,11 +31,14 @@ use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -52,7 +55,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         parent::tearDown();
     }
 
-    public function testBuildsMetadataForAllAvailableDataContainers(): void
+    #[DataProvider('provideMaximums')]
+    public function testBuildsMetadataForAllAvailableDataContainers(int $maximum, int $expectedMaximum): void
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
@@ -92,7 +96,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter, Config::class => $this->createConfigAdapter($maximum)]);
         $resourceFinder = $this->createResourceFinder(['tl_article', 'tl_content', 'tl_log', 'tl_page', 'tl_settings']);
 
         $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
@@ -102,9 +106,22 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         $resources = iterator_to_array($collection);
 
+        $operation = iterator_to_array($resources[0]->getOperations())['contao_api_tl_article_get_collection'];
+        $this->assertTrue($operation->getPaginationClientItemsPerPage());
+        $this->assertSame($expectedMaximum, $operation->getPaginationMaximumItemsPerPage());
+        $this->assertSame(min(30, $expectedMaximum), $operation->getPaginationItemsPerPage());
+
         $this->assertResource($resources[0], 'Article', 'tl_article', '/backend/dc/tl_article', true);
         $this->assertResource($resources[1], 'Content', 'tl_content', '/backend/dc/tl_content', true);
         $this->assertResource($resources[2], 'Page', 'tl_page', '/backend/dc/tl_page', false);
+    }
+
+    public static function provideMaximums(): iterable
+    {
+        yield 'configured maximum' => [300, 300];
+        yield 'below default page size' => [10, 10];
+        yield 'unlimited backend' => [0, 30];
+        yield 'invalid maximum' => [-1, 30];
     }
 
     public function testDelegatesForNonDataContainerResources(): void
@@ -141,7 +158,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         $factory = new DataContainerResourceMetadataCollectionFactory(
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
-            $this->createContaoFrameworkStub([Controller::class => $adapter]),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
             $this->createResourceFinder(['tl_article', 'tl_page']),
             'backend/dc',
         );
@@ -274,5 +291,19 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                 };
             }
         };
+    }
+
+    /**
+     * @return Adapter<Config>
+     */
+    private function createConfigAdapter(int $maximum = 300): Adapter
+    {
+        $adapter = $this->createAdapterStub(['get']);
+        $adapter
+            ->method('get')
+            ->willReturn($maximum)
+        ;
+
+        return $adapter;
     }
 }
