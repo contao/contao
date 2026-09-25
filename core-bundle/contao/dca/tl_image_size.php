@@ -188,6 +188,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('sync', 'async'),
+			'default'                 => 'async',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true, 'blankOptionLabel'=>'auto'),
 		)
 	)
