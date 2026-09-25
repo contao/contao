@@ -5,6 +5,7 @@
     .set('data-controller', 'contao--choices')
 %}
 <div{{ select_wrapper_attributes }}>
+    {% set group = null %}
     {% set select_attributes = attrs()
         .set('name', name)
         .set('id', name)
@@ -15,6 +16,11 @@
     %}
     <select{{ select_attributes }}>
         {% for option in options %}
+            {% if option.group|default != group %}
+                {% if group %}</optgroup>{% endif %}
+                {% set group = option.group|default %}
+                {% if group %}<optgroup label="{{ group }}">{% endif %}
+            {% endif %}
             {% set option_attributes = attrs()
                 .set('value', option.value)
                 .set('selected', option.selected)
@@ -22,6 +28,7 @@
             {% block option %}
                 <option{{ option_attributes }}>{{ option.label }}</option>
             {% endblock %}
+            {% if loop.last and group %}</optgroup>{% endif %}
         {% endfor %}
     </select>
 </div>
