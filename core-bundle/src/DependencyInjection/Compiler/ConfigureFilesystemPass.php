@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -24,19 +23,71 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
-class ConfigureFilesystemPass implements CompilerPassInterface
+class ConfigureFilesystemPass extends AbstractConfigureFilesystemPass
 {
     public function process(ContainerBuilder $container): void
     {
+        parent::process($container);
+
         $config = new FilesystemConfiguration($container);
 
         foreach ($this->getExtensionsThatConfigureTheFilesystem($container) as $extension) {
+            trigger_deprecation(
+                'contao/core-bundle',
+                '5.7',
+                'Implementing "%s" in the bundle extension "%s" is deprecated and will be removed in Contao 7. Register your a compiler pass that extends from %s instead.',
+                ConfigureFilesystemInterface::class,
+                $extension::class,
+                AbstractConfigureFilesystemPass::class,
+            );
+
             $extension->configureFilesystem($config);
         }
 
         $symlinkedLocalFilesProvider = $container->getDefinition('contao.filesystem.public_uri.symlinked_local_files_provider');
 
         $this->mountAdaptersForSymlinks($container, $config, $symlinkedLocalFilesProvider);
+    }
+
+    public function configureFilesystem(FilesystemConfiguration $config): void
+    {
+        // TODO: Deprecate the "contao.upload_path" config key. In the next major
+        // version, $uploadPath can then be replaced with "files" and the redundant
+        // "files" attribute removed when mounting the local adapter.
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
+        // User uploads
+        $config
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
+            ->setPublic(true)
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        $config->addVirtualFilesystem($readonlyFilesStorageName = "$filesStorageName#readonly", $uploadPath, true);
+        $config->addAssetPackage($readonlyFilesStorageName, $filesStorageName);
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
+        ;
+
+        // Job attachments
+        $config
+            ->mountLocalAdapter('var/job-attachments', 'job-attachments', 'job-attachments')
+            ->addVirtualFilesystem('job-attachments', 'job-attachments')
+        ;
+
+        // User templates
+        $config
+            ->mountLocalAdapter('templates', 'user_templates', 'user_templates')
+            ->addVirtualFilesystem('user_templates', 'user_templates')
+        ;
     }
 
     /**
