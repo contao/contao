@@ -172,6 +172,35 @@ class DownloadsControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    public function testOpensDownloadInNewWindowWhenInlineAndFullsizeAreEnabled(): void
+    {
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '',
+                'inline' => true,
+                'fullsize' => true,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-download download-element ext-jpg">
+                <a target="_blank" rel="noreferrer noopener" href="https://example.com/files/image1.jpg" type="image/jpeg">image1 title</a>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
     private function getDownloadsController(): DownloadsController
     {
         return new DownloadsController(
