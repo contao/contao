@@ -66,8 +66,8 @@ services:
             - '@security.helper'
             - '@request_stack'
 
-    contao.listener.data_container.check_template_editor_save:
-        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+    contao.listener.data_container.check_implicit_admin_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckImplicitAdminSaveListener
         arguments:
             - '@security.helper'
             - '@translator'

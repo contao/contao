@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.51] (2026-08-31)
+
+**Fixed issues:**
+
+- [#10111] Use consistent `datim` field definitions ([fritzmg])
+- [#10158] Check for the main request in more listeners ([fritzmg])
+- [#10157] Do not set the translator locale for subrequests ([Toflar])
+- [#10138] Process JSON-LD data for figures ([fritzmg])
+- [#10059] Merge the module CSS classes for root page dependent modules ([bennyborn])
+- [#10123] Backport the `BackendHelperRuntime` ([zoglo])
+- [#10122] Optimize file counting in the maintenance module ([Toflar])
+- [#10101] Use `Uuid::fromString()` for UUIDs with an unknown format ([ausi])
+
+## [5.3.50] (2026-08-25)
+
+**Security fixes:**
+
+- [GHSA-x2rp-9qf7-2fmq]: Exposure of sensitive information through a stale search index
+- [GHSA-mfxh-vp55-7gc6]: Unrestricted activation email resending
+- [GHSA-9ff2-p842-45wq]: Cross-site request forgery in custom backend actions
+- [GHSA-mrvp-7wmx-5m4h]: Path traversal in the images controller
+- [GHSA-628f-v4f6-p37r]: Cross-site scripting in the comments bundle
+- [GHSA-h57j-5f5m-789v]: Cross-site scripting in the frontend search results
+- [GHSA-r9qp-pqx5-8369]: Non-admin users can self-grant permissions that implicitly make them administrators
+- [GHSA-23w9-4pg3-xwm3]: Improper access control in the CSV import wizard
+- [GHSA-3r9g-pfhv-3228]: Improper access control in the newsletter module
+
 ## [5.3.49] (2026-08-06)
 
 **Fixed issues:**
@@ -20,7 +47,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [CVE-2026-57232]: Server-side request forgery (SSRF) via unvalidated RSS feed URLs
+- [CVE-2026-57232]: Server-side request forgery via unvalidated RSS feed URLs
 
 **Fixed issues:**
 
@@ -978,6 +1005,8 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.51]: https://github.com/contao/contao/releases/tag/5.3.51
+[5.3.50]: https://github.com/contao/contao/releases/tag/5.3.50
 [5.3.49]: https://github.com/contao/contao/releases/tag/5.3.49
 [5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
 [5.3.47]: https://github.com/contao/contao/releases/tag/5.3.47
@@ -1032,6 +1061,15 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[GHSA-x2rp-9qf7-2fmq]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
+[GHSA-mfxh-vp55-7gc6]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
+[GHSA-9ff2-p842-45wq]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
+[GHSA-mrvp-7wmx-5m4h]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
+[GHSA-628f-v4f6-p37r]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
+[GHSA-h57j-5f5m-789v]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
+[GHSA-r9qp-pqx5-8369]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
+[GHSA-23w9-4pg3-xwm3]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
+[GHSA-3r9g-pfhv-3228]: https://github.com/contao/contao/security/advisories/GHSA-3r9g-pfhv-3228
 [CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
@@ -1736,9 +1774,17 @@ This project adheres to [Semantic Versioning].
 [#10004]: https://github.com/contao/contao/pull/10004
 [#10007]: https://github.com/contao/contao/pull/10007
 [#10046]: https://github.com/contao/contao/pull/10046
+[#10059]: https://github.com/contao/contao/pull/10059
 [#10063]: https://github.com/contao/contao/pull/10063
 [#10065]: https://github.com/contao/contao/pull/10065
 [#10067]: https://github.com/contao/contao/pull/10067
 [#10076]: https://github.com/contao/contao/pull/10076
 [#10080]: https://github.com/contao/contao/pull/10080
 [#10086]: https://github.com/contao/contao/pull/10086
+[#10101]: https://github.com/contao/contao/pull/10101
+[#10111]: https://github.com/contao/contao/pull/10111
+[#10122]: https://github.com/contao/contao/pull/10122
+[#10123]: https://github.com/contao/contao/pull/10123
+[#10138]: https://github.com/contao/contao/pull/10138
+[#10157]: https://github.com/contao/contao/pull/10157
+[#10158]: https://github.com/contao/contao/pull/10158

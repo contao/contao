@@ -1,18 +1,10 @@
 name: Split
 
 on:
-    push:
-        branches:
-            - 5.3
-        tags:
-            - 5.3.*
+    push: ~
 
-permissions: read-all
-
-defaults:
-    run:
-        # Simulate an interactive terminal with color support
-        shell: script -q -e -c "export TERM=xterm; bash {0}"
+permissions:
+    contents: read
 
 jobs:
     monorepo-split:

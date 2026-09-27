@@ -675,6 +675,7 @@ class FigureBuilder
                 $settings,
             ),
             $settings->options,
+            $this->locator->get('contao.string.html_decoder'),
         );
     }
 

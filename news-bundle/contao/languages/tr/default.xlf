@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="MSC.newsOverview">
         <source>Back to the news overview</source>
-        <target>Haberler özetine geri dön</target>
+        <target>Haberler özetine dön</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>

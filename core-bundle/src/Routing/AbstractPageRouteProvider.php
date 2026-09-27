@@ -73,7 +73,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
         $models = $pages->getModels();
 
-        return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
+        return array_filter($models, $this->pageRegistry->isRoutable(...));
     }
 
     /**

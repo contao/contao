@@ -310,7 +310,7 @@
     "scripts": {
         "all": [
             "@rector",
-            "@ecs",
+            "@cs-fixer",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
@@ -318,7 +318,7 @@
             "@phpstan",
             "@depcheck"
         ],
-        "ecs": [
+        "cs-fixer": [
             "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"

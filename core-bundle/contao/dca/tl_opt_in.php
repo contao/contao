@@ -10,14 +10,17 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
+use Contao\Input;
 use Contao\Message;
 use Contao\OptInModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
 (
@@ -186,6 +189,11 @@ class tl_opt_in extends Backend
 	 */
 	public function resendToken(DataContainer $dc)
 	{
+		if (!System::getContainer()->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken(System::getContainer()->getParameter('contao.csrf_token_name'), Input::get('rt'))))
+		{
+			throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
+		}
+
 		$model = OptInModel::findById($dc->id);
 
 		System::getContainer()->get('contao.opt_in')->find($model->token)->send();

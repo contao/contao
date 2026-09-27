@@ -27,10 +27,7 @@ final class ContextFactory
     public function fromContaoTemplate(Template $template): array
     {
         $context = $this->fromData($template->getData());
-
-        if (!isset($context['Template'])) {
-            $context['Template'] = $template;
-        }
+        $context['Template'] ??= $template;
 
         return $context;
     }
@@ -91,9 +88,7 @@ final class ContextFactory
             $context[$name] = $this->getCallableWrapper($method->getClosure($object));
         }
 
-        if (!isset($context['this'])) {
-            $context['this'] = $object;
-        }
+        $context['this'] ??= $object;
 
         return $context;
     }

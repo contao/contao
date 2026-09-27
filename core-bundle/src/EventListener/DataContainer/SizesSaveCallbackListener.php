@@ -19,9 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCallback('tl_image_size', 'fields.sizes.save')]
 class SizesSaveCallbackListener
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
     }
 
     public function __invoke(mixed $value, DataContainer $dc): mixed

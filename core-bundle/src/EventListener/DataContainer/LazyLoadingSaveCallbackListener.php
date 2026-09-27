@@ -19,9 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCallback('tl_image_size', 'fields.lazyLoading.save')]
 class LazyLoadingSaveCallbackListener
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-    ) {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
     }
 
     public function __invoke(mixed $value, DC_Table $dc): mixed
