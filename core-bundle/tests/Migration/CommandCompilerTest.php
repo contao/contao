@@ -326,6 +326,7 @@ class CommandCompilerTest extends TestCase
         $fromSchema
             ->createTable('tl_message_queue')
             ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
             ->addColumn('id', 'integer')
@@ -340,6 +341,29 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
 
         $this->assertEmpty($installer->compileCommands());
+    }
+
+    public function testChangesTheEngineIfTheTargetTableHasNoExplicitEngineOptionButTheConnectionDefaultDoes(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'MyISAM')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+        $commands = $installer->compileCommands();
+
+        $this->assertContains('ALTER TABLE tl_message_queue ENGINE = InnoDB ROW_FORMAT = DYNAMIC', $commands);
     }
 
     public function testReturnsTheDropColumnCommands(): void
@@ -512,7 +536,7 @@ class CommandCompilerTest extends TestCase
         $this->assertEmpty($commands);
     }
 
-    private function getInstaller(Schema|null $fromSchema = null, Schema|null $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
+    private function getInstaller(Schema|null $fromSchema = null, Schema|null $toSchema = null, array $tables = [], string $filePerTable = 'ON', array $defaultTableOptions = ['engine' => 'InnoDB']): CommandCompiler
     {
         $schemaManagerConnection = $this->createStub(Connection::class);
         $schemaManagerConnection
@@ -584,6 +608,11 @@ class CommandCompilerTest extends TestCase
         $connection
             ->method('getConfiguration')
             ->willReturn($this->createStub(Configuration::class))
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(['defaultTableOptions' => $defaultTableOptions])
         ;
 
         $schemaProvider = $this->createStub(SchemaProvider::class);

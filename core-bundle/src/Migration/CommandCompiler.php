@@ -141,7 +141,9 @@ class CommandCompiler
                 continue;
             }
 
-            $engine = $table->hasOption('engine') ? $table->getOption('engine') : '';
+            // Fall back to the connection's default engine so tables missing an explicit
+            // engine option still get fixed instead of being left on the wrong engine.
+            $engine = $table->hasOption('engine') ? $table->getOption('engine') : ($this->connection->getParams()['defaultTableOptions']['engine'] ?? '');
             $innodb = 'innodb' === strtolower($engine);
 
             if ('' !== $engine && strtolower($tableOptions['Engine']) !== strtolower($engine)) {
