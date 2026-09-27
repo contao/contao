@@ -462,17 +462,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * List all records of a particular table
 	 *
-	 * With the internal _contao_api flag, collect IDs in _contao_listing_ids
+	 * With the internal _contao_api flag, collect IDs in _contao_api_listing_ids
 	 * without rendering or backend pagination, respecting the configured tree limit
 	 *
 	 * @return string
 	 */
 	public function showAll()
 	{
-		$this->limit = '';
+		$isApiRequest = $this->isApiRequest();
+
+		// Reuse the SQL limit for API pages without changing the configured tree limit
+		$apiLimit = $isApiRequest ? System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->getInt('_contao_api_listing_limit') : 0;
+		$this->limit = $apiLimit > 0 ? '0,' . $apiLimit : '';
 
 		// Reading records through the API must not run backend cleanup writes
-		if (!$this->isApiRequest())
+		if (!$isApiRequest)
 		{
 			$this->reviseTable();
 		}
@@ -546,9 +550,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($this->isApiRequest())
+		if ($isApiRequest)
 		{
-			$request->attributes->set('_contao_listing_ids', array_values(array_unique($this->current)));
+			$request->attributes->set('_contao_api_listing_ids', array_values(array_unique($this->current)));
 		}
 
 		return $this->render('show_all', $parameters);
