@@ -24,6 +24,7 @@ services:
             $decorated: '@.inner'
             $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
             $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
+            $pagination: '@api_platform.pagination'
             $apiPrefix: '%contao.backend.route_prefix%/_api'
 
     Contao\ApiBundle\Http\ApiRequestFactory:
@@ -53,6 +54,7 @@ services:
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
+            $pagination: '@api_platform.pagination'
 
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
         arguments:

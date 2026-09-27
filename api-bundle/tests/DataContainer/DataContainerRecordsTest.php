@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class DataContainerRecordsTest extends ContaoTestCase
@@ -225,17 +226,29 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $this->createRecords($dc)->delete(new DataContainerRecord('tl_content', [], 17));
     }
 
-    public function testUsesTheDataContainerListingWithoutQueryingTheDatabase(): void
+    public function testReportsTheMaximumPageForTheRequestedPageSize(): void
+    {
+        $records = $this->createRecords($this->createStub(DC_Table::class));
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionMessage(\sprintf('The page must not exceed %d for a page size of 30.', intdiv(PHP_INT_MAX, 30) + 1));
+
+        $records->list('tl_content', PHP_INT_MAX);
+    }
+
+    #[DataProvider('provideListingPages')]
+    public function testUsesTheDataContainerListingWithoutQueryingTheDatabase(int $size, array $expected): void
     {
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function () {
+                function () use ($size) {
+                    $this->assertSame(2 * $size, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
                     $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->get('_contao_api'));
-                    $this->assertSame([], $this->requestStack->getCurrentRequest()->attributes->get('_contao_listing_ids'));
-                    $this->requestStack->getCurrentRequest()->attributes->set('_contao_listing_ids', range(1, 33));
+                    $this->assertSame([], $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_ids'));
+                    $this->requestStack->getCurrentRequest()->attributes->set('_contao_api_listing_ids', range(1, 33));
 
                     return '';
                 },
@@ -258,10 +271,36 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('iterateColumn')
         ;
 
-        $page = $this->createRecords($dc, $connection)->list('tl_content', 2);
+        $page = $this->createRecords($dc, $connection)->list('tl_content', 2, itemsPerPage: $size);
 
         $this->assertSame(2.0, $page->getCurrentPage());
-        $this->assertSame([31, 32, 33], array_map(static fn ($record) => $record->id, iterator_to_array($page)));
+        $this->assertSame((float) $size, $page->getItemsPerPage());
+        $this->assertSame($expected, array_map(static fn ($record) => $record->id, iterator_to_array($page)));
+    }
+
+    public function testListingLimitDoesNotOverflow(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function () {
+                    $this->assertSame(PHP_INT_MAX, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
+
+                    return '';
+                },
+            )
+        ;
+
+        $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
+    }
+
+    public static function provideListingPages(): iterable
+    {
+        yield 'default size' => [30, [31, 32, 33]];
+        yield 'custom size' => [10, range(11, 20)];
+        yield 'empty page' => [40, []];
     }
 
     public function testMovesThroughTheExistingCutAction(): void
