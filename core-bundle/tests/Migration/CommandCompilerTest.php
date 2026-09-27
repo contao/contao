@@ -193,6 +193,7 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
+            ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
         ;
 
@@ -315,6 +316,28 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo_view']);
+
+        $this->assertEmpty($installer->compileCommands());
+    }
+
+    public function testDoesNotChangeTheEngineIfTheTargetTableHasNoExplicitEngineOption(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
 
         $this->assertEmpty($installer->compileCommands());
     }

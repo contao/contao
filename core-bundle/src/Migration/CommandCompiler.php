@@ -144,7 +144,7 @@ class CommandCompiler
             $engine = $table->hasOption('engine') ? $table->getOption('engine') : '';
             $innodb = 'innodb' === strtolower($engine);
 
-            if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
+            if ('' !== $engine && strtolower($tableOptions['Engine']) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
