@@ -106,8 +106,8 @@ class ImagesControllerTest extends TestCase
             ->method('create')
         ;
 
-        $resizer = $this->createStub(ResizerInterface::class);
-        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images/sub-directory');
+        $responseFactory = $this->createStub(DeferredImageResponseFactory::class);
+        $controller = new ImagesController($factory, $responseFactory, $this->getFixturesDir().'/images/sub-directory');
 
         $this->expectException(NotFoundHttpException::class);
 
