@@ -427,8 +427,8 @@ abstract class Module extends Frontend
 
 		$row['subitems'] = $subitems;
 		$row['class'] = trim($strClass);
-		$row['title'] = StringUtil::specialchars($objSubpage->title, true);
-		$row['pageTitle'] = StringUtil::specialchars($objSubpage->pageTitle, true);
+		$row['title'] = StringUtil::stripInsertTags($objSubpage->title);
+		$row['pageTitle'] = StringUtil::stripInsertTags($objSubpage->pageTitle);
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';

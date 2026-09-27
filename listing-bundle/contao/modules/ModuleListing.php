@@ -281,7 +281,7 @@ class ModuleListing extends Module
 			(
 				'link' => $strField,
 				'href' => ($strUrl . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&sort=' . $sort,
-				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField),
 				'class' => $class
 			);
 		}
