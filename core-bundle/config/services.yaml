@@ -786,7 +786,6 @@ services:
         arguments:
             - '@contao.image.factory'
             - '@contao.image.resizer'
-            - '@lock.factory'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler

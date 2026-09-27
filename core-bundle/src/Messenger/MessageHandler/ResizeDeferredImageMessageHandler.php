@@ -18,7 +18,6 @@ use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
-use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -27,7 +26,6 @@ class ResizeDeferredImageMessageHandler
     public function __construct(
         private readonly ImageFactoryInterface $imageFactory,
         private readonly DeferredResizerInterface $resizer,
-        private readonly LockFactory $lockFactory,
     ) {
     }
 
@@ -35,12 +33,6 @@ class ResizeDeferredImageMessageHandler
     {
         if (ScopeAwareMessageInterface::SCOPE_CLI !== $message->getScope()) {
             return;
-        }
-
-        $lock = $this->lockFactory->createLock('contao-deferred-image-resize');
-
-        if (!$lock->acquire(true)) {
-            throw new \RuntimeException('Unable to acquire the deferred image resize lock.');
         }
 
         try {
@@ -51,8 +43,6 @@ class ResizeDeferredImageMessageHandler
             }
         } catch (FileNotExistsException) {
             // The recipe or source image may have been purged since dispatching the message.
-        } finally {
-            $lock->release();
         }
     }
 }

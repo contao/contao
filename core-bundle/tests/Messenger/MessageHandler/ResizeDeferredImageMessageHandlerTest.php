@@ -20,8 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
-use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Lock\SharedLockInterface;
 
 class ResizeDeferredImageMessageHandlerTest extends TestCase
 {
@@ -41,7 +39,7 @@ class ResizeDeferredImageMessageHandlerTest extends TestCase
             ->with($image, false)
         ;
 
-        $handler = new ResizeDeferredImageMessageHandler($imageFactory, $resizer, $this->createLockFactory());
+        $handler = new ResizeDeferredImageMessageHandler($imageFactory, $resizer);
         $handler($this->createMessage(ScopeAwareMessageInterface::SCOPE_CLI));
     }
 
@@ -53,16 +51,9 @@ class ResizeDeferredImageMessageHandlerTest extends TestCase
             ->method('create')
         ;
 
-        $lockFactory = $this->createMock(LockFactory::class);
-        $lockFactory
-            ->expects($this->never())
-            ->method('createLock')
-        ;
-
         $handler = new ResizeDeferredImageMessageHandler(
             $imageFactory,
             $this->createStub(DeferredResizerInterface::class),
-            $lockFactory,
         );
         $handler($this->createMessage(ScopeAwareMessageInterface::SCOPE_WEB));
     }
@@ -81,32 +72,8 @@ class ResizeDeferredImageMessageHandlerTest extends TestCase
             ->method('resizeDeferredImage')
         ;
 
-        $handler = new ResizeDeferredImageMessageHandler($imageFactory, $resizer, $this->createLockFactory());
+        $handler = new ResizeDeferredImageMessageHandler($imageFactory, $resizer);
         $handler($this->createMessage(ScopeAwareMessageInterface::SCOPE_CLI));
-    }
-
-    private function createLockFactory(): LockFactory
-    {
-        $lock = $this->createMock(SharedLockInterface::class);
-        $lock
-            ->expects($this->once())
-            ->method('acquire')
-            ->with(true)
-            ->willReturn(true)
-        ;
-
-        $lock
-            ->expects($this->once())
-            ->method('release')
-        ;
-
-        $lockFactory = $this->createStub(LockFactory::class);
-        $lockFactory
-            ->method('createLock')
-            ->willReturn($lock)
-        ;
-
-        return $lockFactory;
     }
 
     private function createMessage(string $scope): ResizeDeferredImageMessage
