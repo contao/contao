@@ -2,13 +2,18 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     #editors = new WeakMap();
+    #initializations = new WeakMap();
 
     static targets = ['editor'];
 
     disconnect() {
         for (const el of this.editorTargets) {
-            this.#editors.get(el)?.remove();
+            this.#remove(el);
         }
+    }
+
+    editorTargetDisconnected(el) {
+        this.#remove(el);
     }
 
     activate({ currentTarget }) {
@@ -110,8 +115,18 @@ export default class extends Controller {
         // Initialize map
         this.#editors.set(el, null);
 
-        tinymce?.init({ ...config, target: el, setup: (editor) => this.#setup(editor) }).then((editors) => {
+        const initialization = tinymce?.init({ ...config, target: el, setup: (editor) => this.#setup(editor) });
+        this.#initializations.set(el, initialization);
+
+        initialization.then((editors) => {
             const editor = editors[0] ?? null;
+
+            if (this.#initializations.get(el) !== initialization || !this.element.contains(el)) {
+                editor?.remove();
+                return;
+            }
+
+            this.#initializations.delete(el);
 
             if (!editor) {
                 this.#editors.delete(el);
@@ -121,6 +136,13 @@ export default class extends Controller {
             this.#editors.set(el, editor);
             this.#focus(editor, offset);
         });
+    }
+
+    #remove(el) {
+        const editor = this.#editors.get(el);
+        this.#editors.delete(el);
+        this.#initializations.delete(el);
+        editor?.remove();
     }
 
     #setup(editor) {

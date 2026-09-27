@@ -342,7 +342,7 @@ export default class extends Controller {
             return;
         }
 
-        this.closeMenu();
+        this.closeMenu('remove' !== operation);
 
         switch (operation) {
             case 'insertBefore':
@@ -363,6 +363,7 @@ export default class extends Controller {
 
             case 'remove':
                 this.#remove(axis, index);
+                this.#handle(axis, Math.min(index, this.#count(axis) - 1)).focus();
                 break;
         }
     }
