@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Image;
 
-use Contao\CoreBundle\Controller\DeferredImageResponseFactory;
+use Contao\CoreBundle\Image\DeferredImageResponseFactory;
 use Contao\CoreBundle\Messenger\Message\ResizeDeferredImageMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -88,6 +88,7 @@ class DeferredImageResponseFactoryTest extends TestCase
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertTrue($response->headers->getCacheControlDirective('no-store'));
         $this->assertStringStartsWith('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"', $response->getContent());
+        $this->assertStringContainsString('style="background-color: #eee;"', $response->getContent());
         $this->assertStringContainsString('<path fill="#687787"', $response->getContent());
     }
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Image\DeferredImageResponseFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\Exception\FileNotExistsException;

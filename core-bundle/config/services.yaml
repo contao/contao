@@ -86,13 +86,6 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@contao.routing.response_context_factory'
 
-    contao.controller.deferred_image_response_factory:
-        class: Contao\CoreBundle\Controller\DeferredImageResponseFactory
-        arguments:
-            - '@messenger.bus.default'
-            - '@contao.image.resizer'
-            - '@?contao.messenger.web_worker'
-
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -495,6 +488,13 @@ services:
         arguments:
             - '%kernel.project_dir%/var/deferred-images'
             - '@?filesystem'
+
+    contao.image.deferred_response_factory:
+        class: Contao\CoreBundle\Image\DeferredImageResponseFactory
+        arguments:
+            - '@messenger.bus.default'
+            - '@contao.image.resizer'
+            - '@?contao.messenger.web_worker'
 
     contao.image.factory:
         class: Contao\CoreBundle\Image\ImageFactory

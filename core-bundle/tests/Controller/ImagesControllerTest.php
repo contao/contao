@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\CoreBundle\Controller\DeferredImageResponseFactory;
 use Contao\CoreBundle\Controller\ImagesController;
+use Contao\CoreBundle\Image\DeferredImageResponseFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImageInterface;
