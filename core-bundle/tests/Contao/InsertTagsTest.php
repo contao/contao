@@ -1131,7 +1131,12 @@ class InsertTagsTest extends TestCase
      */
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        if (!\ini_get('pcre.jit') || 'off' === strtolower((string) \ini_get('pcre.jit'))) {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+        } else {
+            $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        }
 
         InsertTags::reset();
 
