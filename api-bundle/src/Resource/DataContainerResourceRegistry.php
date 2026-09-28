@@ -51,7 +51,8 @@ final class DataContainerResourceRegistry
     {
         $resource = $this->getResource($name);
         $operations = $this->getOperations($resource);
-        $schemas = $this->schemaFactory->createOperationSchemas($name);
+        $table = $this->getTable($resource) ?? throw new \LogicException('The data container resource has no table metadata.');
+        $schemas = $this->schemaFactory->createOperationSchemas($table);
 
         return [
             'resource' => $name,
@@ -82,14 +83,22 @@ final class DataContainerResourceRegistry
         $resources = [];
 
         foreach ($this->metadataFactory->create(DataContainerRecord::class) as $resource) {
-            $table = $resource->getExtraProperties()['contao']['table'] ?? null;
+            $table = $this->getTable($resource);
 
-            if (\is_string($table) && '' !== $table) {
-                $resources[$table] = $resource;
+            if (null !== $table) {
+                $name = str_starts_with($table, 'tl_') ? substr($table, 3) : $table;
+                $resources[$name] = $resource;
             }
         }
 
         return $resources;
+    }
+
+    private function getTable(ApiResource $resource): string|null
+    {
+        $table = $resource->getExtraProperties()['contao']['table'] ?? null;
+
+        return \is_string($table) && '' !== $table ? $table : null;
     }
 
     /**

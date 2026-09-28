@@ -44,14 +44,14 @@ final class DataContainerToolsTest extends TestCase
 {
     public function testDiscoversResources(): void
     {
-        $this->assertSame(['resources' => [['resource' => 'tl_news', 'title' => 'News']]], $this->createTools()->discoverResources('NEWS'));
+        $this->assertSame(['resources' => [['resource' => 'news', 'title' => 'News']]], $this->createTools()->discoverResources('NEWS'));
     }
 
     public function testDescribesResources(): void
     {
-        $description = $this->createTools()->describeResource('tl_news');
+        $description = $this->createTools()->describeResource('news');
 
-        $this->assertSame('tl_news', $description['resource']);
+        $this->assertSame('news', $description['resource']);
         $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
     }
 
@@ -76,7 +76,7 @@ final class DataContainerToolsTest extends TestCase
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage('does not support "delete"');
 
-        $this->createTools()->deleteRecord('tl_news', 1);
+        $this->createTools()->deleteRecord('news', 1);
     }
 
     public function testDispatchesUpdatesThroughTheApi(): void
@@ -108,7 +108,7 @@ final class DataContainerToolsTest extends TestCase
         $stack->push(Request::create('https://example.org/_mcp/backend'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
-        $result = $tools->updateRecord('tl_news', 42, ['title' => 'Updated']);
+        $result = $tools->updateRecord('news', 42, ['title' => 'Updated']);
 
         $this->assertFalse($result->isError);
         $this->assertSame(200, $result->structuredContent['status']);
@@ -147,7 +147,7 @@ final class DataContainerToolsTest extends TestCase
         $stack->push(Request::create('https://example.org/_mcp/backend'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
-        $result = $tools->moveRecord('tl_news', 42, ['target' => 8, 'position' => 'after']);
+        $result = $tools->moveRecord('news', 42, ['target' => 8, 'position' => 'after']);
 
         $this->assertFalse($result->isError);
         $this->assertSame(200, $result->structuredContent['status']);
@@ -160,7 +160,7 @@ final class DataContainerToolsTest extends TestCase
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage('require an HTTP request');
 
-        $this->createTools()->readRecord('tl_news', 1);
+        $this->createTools()->readRecord('news', 1);
     }
 
     public function testToolSchemasStayFixedAndDescribeObjects(): void

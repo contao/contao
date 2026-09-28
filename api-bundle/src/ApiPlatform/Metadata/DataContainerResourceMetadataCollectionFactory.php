@@ -131,9 +131,10 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         }
 
         $configured = [];
+        $resourceName = $this->getResourceName($table);
 
         foreach ($operations as $action => $operation) {
-            $name = 'contao_api_'.$table.'_'.$action;
+            $name = 'contao_api_'.$resourceName.'_'.$action;
             $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
 
             $configured[$name] = $operation
@@ -158,7 +159,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         return [
             'contao' => [
                 'table' => $table,
-                'schema_path' => DataContainerOpenApiFactory::getSchemaPath($table),
+                'schema_path' => DataContainerOpenApiFactory::getSchemaPath($this->getResourceName($table)),
             ],
         ];
     }
@@ -181,9 +182,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
     private function getShortName(string $table): string
     {
-        $shortName = preg_replace('/^tl_/', '', $table) ?? $table;
-
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $shortName)));
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $this->getResourceName($table))));
     }
 
     /**
@@ -198,6 +197,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
     private function getRoutePrefix(string $table): string
     {
-        return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
+        return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$this->getResourceName($table);
+    }
+
+    private function getResourceName(string $table): string
+    {
+        return str_starts_with($table, 'tl_') ? substr($table, 3) : $table;
     }
 }

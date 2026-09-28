@@ -41,7 +41,7 @@ final class DataContainerResourceRegistryTest extends TestCase
 
         $registry = $this->createRegistry($framework);
 
-        $this->assertSame(['resources' => [['resource' => 'tl_news', 'title' => 'News']]], $registry->discover('NEWS'));
+        $this->assertSame(['resources' => [['resource' => 'news', 'title' => 'News']]], $registry->discover('NEWS'));
         $this->assertCount(200, $registry->discover()['resources']);
         $this->assertSame(['resources' => []], $registry->discover('unknown'));
     }
@@ -54,14 +54,14 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->method('initialize')
         ;
 
-        $description = $this->createRegistry($framework)->describe('tl_news');
+        $description = $this->createRegistry($framework)->describe('news');
 
-        $this->assertSame('tl_news', $description['resource']);
+        $this->assertSame('news', $description['resource']);
         $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
         $this->assertSame('object', $description['schema']['type']);
         $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
-        $this->assertSame('news_post', $this->createRegistry()->getOperation('tl_news', 'create')->getName());
-        $this->assertSame('news_move', $this->createRegistry()->getOperation('tl_news', 'move')->getName());
+        $this->assertSame('news_post', $this->createRegistry()->getOperation('news', 'create')->getName());
+        $this->assertSame('news_move', $this->createRegistry()->getOperation('news', 'move')->getName());
     }
 
     public function testDiscoveryLinksPositionFieldsToTheMoveSchema(): void
@@ -70,7 +70,7 @@ final class DataContainerResourceRegistryTest extends TestCase
         $GLOBALS['TL_DCA']['tl_news']['fields']['pid'] = ['sql' => ['type' => 'integer']];
 
         try {
-            $description = $this->createRegistry()->describe('tl_news');
+            $description = $this->createRegistry()->describe('news');
             $this->assertContains('move', $description['operations']);
             $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
             $this->assertArrayHasKey('pid', $description['schema']['properties']);
@@ -96,14 +96,14 @@ final class DataContainerResourceRegistryTest extends TestCase
     public function testRejectsUnsupportedOperations(): void
     {
         $this->expectException(OperationNotFoundException::class);
-        $this->expectExceptionMessage('Resource "tl_news" does not support "delete".');
+        $this->expectExceptionMessage('Resource "news" does not support "delete".');
 
-        $this->createRegistry()->getOperation('tl_news', 'delete');
+        $this->createRegistry()->getOperation('news', 'delete');
     }
 
     public function testResolvesTheResourceOperation(): void
     {
-        $operation = $this->createRegistry()->getOperation('tl_news', 'update');
+        $operation = $this->createRegistry()->getOperation('news', 'update');
 
         $this->assertInstanceOf(Patch::class, $operation);
         $this->assertSame('news_patch', $operation->getName());
