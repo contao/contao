@@ -15,11 +15,11 @@ namespace Contao\CoreBundle\Routing\Matcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
-class BackendMatcher implements RequestMatcherInterface
+class BackendApiMatcher implements RequestMatcherInterface
 {
     public function matches(Request $request): bool
     {
         return 'backend' === $request->attributes->get('_scope')
-            && !$request->attributes->getBoolean('_stateless');
+            && $request->attributes->getBoolean('_stateless');
     }
 }

@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     Contao\McpBundle\Response\ApiResponseConverter: ~
 
     Contao\McpBundle\Tool\DataContainerTools:

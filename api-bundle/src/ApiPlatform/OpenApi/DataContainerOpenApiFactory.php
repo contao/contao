@@ -35,6 +35,8 @@ use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\DataContainer;
+use Contao\StringUtil;
 
 final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
 {
@@ -187,17 +189,23 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return $operation;
     }
 
-    private function createGetCollectionOperation(string $tag, string $shortName, string $schemaRef): Operation
+    private function createGetCollectionOperation(string $table, string $shortName, string $schemaRef): Operation
     {
+        $parameters = [
+            new Parameter(name: 'parent', in: 'query', description: 'Parent record ID for a child-table listing.', schema: ['type' => 'integer', 'minimum' => 0]),
+            new Parameter(name: 'ptable', in: 'query', description: 'Parent table for a dynamic parent.', schema: ['type' => 'string']),
+        ];
+
+        if ($this->supportsSorting($table)) {
+            array_unshift($parameters, new Parameter(name: 'sort', in: 'query', description: 'Ordered backend sorting choices. Currently one choice is supported, e.g. title or title ASC/title DESC when the field allows both directions. Omit to use the configured backend default order.', schema: ['type' => 'array', 'items' => ['type' => 'string'], 'maxItems' => 1], style: 'form', explode: false));
+        }
+
         return new Operation()
             ->withOperationId($shortName.'getCollection')
             ->withSummary('Collection of '.$shortName.' records')
-            ->withParameters([
-                new Parameter(name: 'parent', in: 'query', description: 'Parent record ID for a child-table listing.', schema: ['type' => 'integer', 'minimum' => 0]),
-                new Parameter(name: 'ptable', in: 'query', description: 'Parent table for a dynamic parent.', schema: ['type' => 'string']),
-            ])
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
+            ->withParameters($parameters)
+            ->withTags([$table])
+            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$table])
             ->withResponse(200, new Response(
                 description: 'A collection of '.$shortName.' records.',
                 content: new \ArrayObject([
@@ -205,6 +213,26 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
                 ]),
             ))
         ;
+    }
+
+    private function supportsSorting(string $table): bool
+    {
+        $sorting = $GLOBALS['TL_DCA'][$table]['list']['sorting'] ?? [];
+
+        if (
+            !\in_array($sorting['mode'] ?? null, [DataContainer::MODE_SORTABLE, DataContainer::MODE_PARENT], true)
+            || !\in_array('sort', StringUtil::trimsplit('[;,]', $sorting['panelLayout'] ?? ''), true)
+        ) {
+            return false;
+        }
+
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $field) {
+            if ($field['sorting'] ?? false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createGetOperation(string $tag, string $shortName, string $schemaRef): Operation

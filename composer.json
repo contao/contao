@@ -39,7 +39,7 @@
         "ext-session": "*",
         "ext-zlib": "*",
         "composer-runtime-api": "^2.0.14",
-        "api-platform/core": "^4.3",
+        "api-platform/core": "^5.0",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^3.0.4",
         "cmsig/seal": "^0.12.2",
