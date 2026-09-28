@@ -56,13 +56,15 @@ class BackendUser extends User
 	protected $roles = array('ROLE_USER');
 
 	/**
-	 * Initialize the object
+	 * @param array<string, mixed> $data
 	 */
-	protected function __construct()
+	public static function createFromData(array $data): self
 	{
-		parent::__construct();
+		$user = new self();
+		$user->arrData = $data;
+		$user->setUserFromDb();
 
-		$this->strIp = Environment::get('ip');
+		return $user;
 	}
 
 	/**
@@ -144,43 +146,7 @@ class BackendUser extends User
 	{
 		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
 
-		if ($this->isAdmin)
-		{
-			return true;
-		}
-
-		if (!\is_array($field))
-		{
-			$field = array($field);
-		}
-
-		if (\is_array($this->$array) && array_intersect($field, $this->$array))
-		{
-			return true;
-		}
-
-		if ($array == 'filemounts')
-		{
-			// Check the subfolders (filemounts)
-			foreach ($this->filemounts as $folder)
-			{
-				if (preg_match('/^' . preg_quote($folder, '/') . '(\/|$)/i', $field[0]))
-				{
-					return true;
-				}
-			}
-		}
-		elseif ($array == 'pagemounts')
-		{
-			$childIds = System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($this->pagemounts, 'tl_page');
-
-			if (!empty($childIds) && array_intersect($field, $childIds))
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return System::getContainer()->get('security.authorization_checker')->isGrantedForUser($this, 'contao_user.' . $array, $field);
 	}
 
 	/**
@@ -235,15 +201,6 @@ class BackendUser extends User
 				$this->arrData[$k] = StringUtil::deserialize($v);
 			}
 		}
-
-		$GLOBALS['TL_USERNAME'] = $this->username;
-
-		Config::set('showHelp', $this->showHelp);
-		Config::set('useRTE', $this->useRTE);
-		Config::set('useCE', $this->useCE);
-		Config::set('doNotCollapse', $this->doNotCollapse);
-		Config::set('thumbnails', $this->thumbnails);
-		Config::set('backendTheme', $this->backendTheme);
 
 		// Inherit permissions
 		$permissions = $this->getPermissionFields();

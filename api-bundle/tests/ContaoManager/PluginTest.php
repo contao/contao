@@ -67,7 +67,7 @@ final class PluginTest extends TestCase
     {
         $route = Yaml::parseFile(\dirname(__DIR__, 2).'/config/routes.yaml')['api_platform'];
 
-        $this->assertSame('%contao.backend.route_prefix%/_api', $route['prefix']);
+        $this->assertSame('%contao.backend.route_prefix%/api', $route['prefix']);
         $this->assertSame(['_scope' => 'backend'], $route['defaults']);
     }
 

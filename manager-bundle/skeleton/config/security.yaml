@@ -11,6 +11,15 @@ security:
             id: contao.security.frontend_user_provider
 
     firewalls:
+        contao_backend_api:
+            request_matcher: contao.routing.backend_api_matcher
+            provider: contao.security.backend_user_provider
+            user_checker: contao.security.user_checker
+            stateless: true
+            login_throttling: ~
+            access_token:
+                token_handler: contao.security.access_token_handler
+
         contao_backend:
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider

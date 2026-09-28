@@ -112,6 +112,10 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             return array_map(fn ($item) => $this->convertToApiValue($item, $config, $schema['items'] ?? []), $values);
         }
 
+        if ('date-time' === ($schema['format'] ?? null)) {
+            return $value ? date(\DateTimeInterface::ATOM, (int) $value) : null;
+        }
+
         $value = match ($schema['type'] ?? null) {
             'boolean' => (bool) $value,
             'integer' => (int) $value,
@@ -143,6 +147,10 @@ final class CoreWidgetConverter implements WidgetConverterInterface
                 FileTree::class, PageTree::class, Picker::class => implode(',', $values),
                 default => $values,
             };
+        }
+
+        if ('date-time' === ($schema['format'] ?? null)) {
+            $value = new \DateTimeImmutable((string) $value)->getTimestamp();
         }
 
         return $this->dateValueFormatter->format($value, $config['eval']['rgxp'] ?? '') ?? (string) $value;
@@ -246,7 +254,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
     private function convertFileReference(mixed $value, bool $binary): mixed
     {
         return match (true) {
-            '' === $value => null,
+            '' === $value, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0" === $value => null,
             $binary && \is_string($value) && 16 === \strlen($value) => StringUtil::binToUuid($value),
             default => $value,
         };

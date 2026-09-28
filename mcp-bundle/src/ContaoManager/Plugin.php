@@ -50,7 +50,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
-        $loader->load(__DIR__.'/../../skeleton/config/mcp.yaml');
+        $loader->load(__DIR__.'/../../config/mcp.yaml');
         $loader->load(__DIR__.'/../../skeleton/config/api_platform.yaml');
     }
 }

@@ -4,12 +4,12 @@ mcp:
             name: Contao Backend
             registry:
                 tools:
-                    - Contao\McpBundle\Tool\DataContainerTools
+                    - Contao\McpBundle\Tool\
             transports:
                 http: true
                 stdio: false
             http:
-                path: '%contao.backend.route_prefix%/_mcp'
+                path: '%contao.backend.route_prefix%/mcp'
             session:
                 store: file
                 directory: '%kernel.cache_dir%/mcp/contao_backend'

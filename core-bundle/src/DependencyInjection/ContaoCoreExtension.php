@@ -116,7 +116,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        if ($container->hasExtension('contao_api')) {
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
+
+        if (isset($bundles['ContaoApiBundle'])) {
             $loader->load('api.yaml');
         }
 
@@ -414,6 +416,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ->setArgument('$indexName', $indexName),
             )
         ;
+
+        if ($container->hasDefinition('contao.search.backend.security.document_allowed_groups_resolver')) {
+            $resolverDefinition = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+            $resolverDefinition->setArgument('$maxGroups', $config['backend_search']['facets']['max_groups']);
+        }
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

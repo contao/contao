@@ -14,6 +14,7 @@ namespace Contao\McpBundle\Tests\DependencyInjection;
 
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\McpBundle\ContaoMcpBundle;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
@@ -33,7 +34,7 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testRegistersExactlyEightToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $bundle = new McpBundle();
         $bundle->getContainerExtension()->load([$config], $container);
@@ -74,7 +75,7 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testKeepsBackendToolsOutOfASecondServer(): void
     {
         $container = $this->getContainerBuilder();
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $config['servers']['frontend_example'] = [
             'name' => 'Frontend example',
@@ -99,7 +100,31 @@ final class ContaoMcpExtensionTest extends TestCase
         $this->assertSame(['frontend_example'], $tools);
     }
 
-    private function getContainerBuilder(array $config = []): ContainerBuilder
+    public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void
+    {
+        $container = $this->getContainerBuilder(true);
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
+
+        $bundle = new McpBundle();
+        $bundle->getContainerExtension()->load([$config], $container);
+        $bundle->build($container);
+
+        $container->getDefinition('mcp.server.contao_backend.builder')->setPublic(true);
+        $container->compile();
+
+        $tools = [];
+
+        foreach ($container->getDefinition('mcp.server.contao_backend.builder')->getMethodCalls() as [$method, $arguments]) {
+            if ('addTool' === $method) {
+                $tools[] = $arguments[1];
+            }
+        }
+
+        $this->assertContains('contao_backend_search', $tools);
+        $this->assertCount(9, $tools);
+    }
+
+    private function getContainerBuilder(bool $withBackendSearch = false): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -121,6 +146,10 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
         }
 
+        if ($withBackendSearch) {
+            $container->register('contao.search.backend', BackendSearch::class)->setSynthetic(true)->setPublic(true);
+        }
+
         $otherTool = new class() {
             #[McpTool(name: 'frontend_example')]
             public function __invoke(): string
@@ -136,7 +165,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->register('logger', NullLogger::class);
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
-        $extension->load([$config], $container);
+        $extension->load([], $container);
 
         return $container;
     }

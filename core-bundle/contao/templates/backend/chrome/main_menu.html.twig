@@ -11,6 +11,6 @@
     aria-label="{{ 'MSC.mainNavigation'|trans }}"
 >
     <a href="{{ app.request.requestUri }}#skipMainNav" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
-    {{ knp_menu_render('be_menu') }}
+    {{ knp_menu_render('be_menu', {template: '@Contao/backend/menu/_main.html.twig'}) }}
     <span id="skipMainNav" class="invisible"></span>
 </nav>

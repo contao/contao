@@ -127,7 +127,7 @@ class ModuleEventMenu extends ModuleCalendar
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strLink . '?year=' . $intDate;
-			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
+			$arrItems[$intYear]['title'] = $intYear . ' (' . $quantity . ')';
 			$arrItems[$intYear]['isActive'] = Input::get('year') == $intDate;
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
@@ -196,7 +196,7 @@ class ModuleEventMenu extends ModuleCalendar
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')';
 				$arrItems[$intYear][$intMonth]['isActive'] = Input::get('month') == $intDate;
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}

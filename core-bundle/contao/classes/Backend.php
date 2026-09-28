@@ -575,7 +575,7 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link if you have access to that page
-		if ($objUser->hasAccess($row['id'], 'pagemounts'))
+		if (System::getContainer()->get('security.authorization_checker')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $row['id']))
 		{
 			$label = '<a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $row['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
@@ -689,7 +689,7 @@ abstract class Backend extends Controller
 			$strPath .= '/' . $strFolder;
 
 			// Do not show pages which are not mounted
-			if (!$objUser->hasAccess($strPath, 'filemounts'))
+			if (!System::getContainer()->get('security.authorization_checker')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strPath))
 			{
 				continue;
 			}

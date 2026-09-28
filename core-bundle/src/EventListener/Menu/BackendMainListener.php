@@ -15,10 +15,11 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\System;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,67 +42,62 @@ class BackendMainListener
 
     public function __invoke(MenuEvent $event): void
     {
-        $name = $event->getTree()->getName();
+        $tree = $event->getTree();
+        $name = $tree->getName();
 
         if ('mainMenu' !== $name) {
             return;
         }
 
         $factory = $event->getFactory();
-        $tree = $event->getTree();
-        $request = $this->requestStack->getCurrentRequest();
         $modules = $this->getBackendModules();
-        $collapsed = $this->getCollapsedNodes();
 
         foreach ($modules as $categoryName => $categoryData) {
             $categoryNode = $tree->getChild($categoryName);
 
             if (!$categoryNode) {
-                $categoryNode = $factory
-                    ->createItem($categoryName)
-                    ->setLabel($categoryData['label'])
-                    ->setUri($categoryData['href'])
-                    ->setLinkAttribute('class', $categoryData['class'])
-                    ->setLinkAttribute('title', $this->translator->trans('MSC.collapseNode', [], 'contao_default'))
-                    ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
-                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
-                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-                    ->setLinkAttribute('aria-controls', $categoryName)
-                    ->setLinkAttribute('data-turbo-prefetch', 'false')
-                    ->setChildrenAttribute('id', $categoryName)
-                    ->setExtra('translation_domain', false)
-                ;
-
-                if ($collapsed[$categoryName] ?? false) {
-                    $categoryNode->setLinkAttribute('title', $this->translator->trans('MSC.expandNode', [], 'contao_default'));
-                    $categoryNode->setAttribute('class', 'collapsed');
-                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
-                } else {
-                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
-                }
-
+                $categoryNode = $this->createCategory($factory, $categoryName, $categoryData);
                 $tree->addChild($categoryNode);
             }
 
-            // Create the child nodes
-            foreach ($categoryData['modules'] as $nodeName => $nodeData) {
-                $moduleNode = $factory
-                    ->createItem($nodeName)
-                    ->setLabel($nodeData['label'])
-                    ->setUri($nodeData['href'])
-                    ->setLinkAttribute('class', $nodeData['class'])
-                    ->setLinkAttribute('title', $nodeData['title'])
-                    ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-                    ->setExtra('translation_domain', false)
-                ;
+            $this->addModules($factory, $categoryNode, $categoryData['modules']);
+        }
+    }
 
-                if ($request?->query->get('do') === $nodeName) {
-                    $categoryNode->setLinkAttribute('class', $categoryNode->getLinkAttribute('class').' trail');
-                    $moduleNode->setCurrent(true);
-                }
+    private function createCategory(FactoryInterface $factory, string $name, array $data): ItemInterface
+    {
+        $node = $factory
+            ->createItem($name)
+            ->setLabel($data['label'])
+            ->setUri($data['href'])
+            ->setExtra('translation_domain', false)
+        ;
 
-                $categoryNode->addChild($moduleNode);
+        if ($class = $this->getCustomClass($data, ['group-'.$name])) {
+            $node->setLinkAttribute('class', $class);
+        }
+
+        return $node;
+    }
+
+    private function addModules(FactoryInterface $factory, ItemInterface $category, array $modules): void
+    {
+        // Create the child nodes
+        foreach ($modules as $name => $data) {
+            $node = $factory
+                ->createItem($name)
+                ->setLabel($data['label'])
+                ->setUri($data['href'])
+                ->setCurrent((bool) $data['isActive'])
+                ->setExtra('title', $data['title'])
+                ->setExtra('translation_domain', false)
+            ;
+
+            if ($class = $this->getCustomClass($data, ['navigation', $name])) {
+                $node->setLinkAttribute('class', $class);
             }
+
+            $category->addChild($node);
         }
     }
 
@@ -132,6 +128,7 @@ class BackendMainListener
                         $modules[$groupName]['modules'][$moduleName]['label'] = $this->translateModule($moduleName);
                         $modules[$groupName]['modules'][$moduleName]['class'] = 'navigation '.$moduleName;
                         $modules[$groupName]['modules'][$moduleName]['href'] = $this->urlGenerator->generate('contao_backend', ['do' => $moduleName]);
+                        $modules[$groupName]['modules'][$moduleName]['isActive'] = false;
                     }
                 }
 
@@ -151,21 +148,35 @@ class BackendMainListener
             }
         }
 
+        // Mark the active module and its group
+        $currentModule = $request?->query->get('do');
+
+        foreach ($modules as $groupName => $groupData) {
+            foreach ($groupData['modules'] ?? [] as $moduleName => $moduleData) {
+                if ($currentModule === $moduleName) {
+                    $modules[$groupName]['class'] .= ' trail';
+                    $modules[$groupName]['modules'][$moduleName]['isActive'] = true;
+                }
+            }
+        }
+
         return $modules;
     }
 
-    private function getCollapsedNodes(): array
+    private function getCustomClass(array $attributes, array $defaultClasses): string
     {
-        $sessionBag = $this->requestStack->getSession()->getBag('contao_backend');
+        $classes = [];
 
-        if (!$sessionBag instanceof AttributeBagInterface) {
-            return [];
+        // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
+        if (isset($attributes['class'])) {
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
+
+            foreach (['trail', ...$defaultClasses] as $class) {
+                unset($classes[$class]);
+            }
         }
 
-        return array_map(
-            static fn ($v) => !$v,
-            (array) $sessionBag->get('backend_modules'),
-        );
+        return implode(' ', array_keys($classes));
     }
 
     private function translateModule(string $name): string

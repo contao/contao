@@ -399,7 +399,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function render(string $component, array $parameters): string
 	{
 		// API requests only need the selected IDs, so skip building and rendering the backend HTML
-		if ($this->isApiRequest())
+		if ($this->isApiMode())
 		{
 			return '';
 		}
@@ -462,18 +462,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	/**
 	 * List all records of a particular table
 	 *
-	 * With the internal _contao_api flag, collect IDs in _contao_api_listing_ids
-	 * without rendering or backend pagination, respecting the configured tree limit
+	 * In API mode, it returns an array of collected IDs, respecting the configured tree limit
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function showAll()
 	{
-		$isApiRequest = $this->isApiRequest();
+		$isApiRequest = $this->isApiMode();
 
 		// Reuse the SQL limit for API pages without changing the configured tree limit
-		$apiLimit = $isApiRequest ? System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->getInt('_contao_api_listing_limit') : 0;
-		$this->limit = $apiLimit > 0 ? '0,' . $apiLimit : '';
+		$apiSort = $isApiRequest ? (System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('sorting')[$this->strTable] ?? null) : null;
+
+		if ($apiSort !== null && !\in_array('sort', StringUtil::trimsplit('[;,]', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? ''), true))
+		{
+			throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+		}
 
 		// Reading records through the API must not run backend cleanup writes
 		if (!$isApiRequest)
@@ -552,7 +555,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($isApiRequest)
 		{
-			$request->attributes->set('_contao_api_listing_ids', array_values(array_unique($this->current)));
+			return array_values(array_unique($this->current));
 		}
 
 		return $this->render('show_all', $parameters);
@@ -3129,7 +3132,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->arrSubmit = array();
 
 		// An API creation must finalize the record even when all submitted values match its defaults
-		if (!$this->noReload && (!empty($arrValues) || ($this->isApiRequest() && (int) ($this->objActiveRecord->tstamp ?? 1) === 0)))
+		if (!$this->noReload && (!empty($arrValues) || ($this->isApiMode() && (int) ($this->objActiveRecord->tstamp ?? 1) === 0)))
 		{
 			$arrValues['tstamp'] = time();
 
@@ -3918,7 +3921,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
 		// Calculate label and add a toggle button
-		$blnIsOpen = $this->isApiRequest() || !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
+		$blnIsOpen = $this->isApiMode() || !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
@@ -4177,7 +4180,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// The IDs are already collected, so skip label generation and rendering for each API tree node
-		if ($this->isApiRequest())
+		if ($this->isApiMode())
 		{
 			return '';
 		}
@@ -4435,6 +4438,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->current[] = $row[$i]['id'];
 
+				// Stop rendering record if we are in API mode, $this->current is all we need
+				if ($this->isApiMode())
+				{
+					continue;
+				}
+
 				$record = array(
 					'id' => $row[$i]['id'],
 					'is_draft' => (string) ($row[$i]['tstamp'] ?? null) === '0',
@@ -4569,6 +4578,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$records[] = $record;
 			}
+		}
+
+		// Stop rendering if we are in API mode, $this->current is all we need
+		if ($this->isApiMode())
+		{
+			return '';
 		}
 
 		$parameters['records'] = $records;
@@ -4826,6 +4841,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
 
+				$this->current[] = $row['id'];
+
+				// Stop rendering record if we are in API mode, $this->current is all we need
+				if ($this->isApiMode())
+				{
+					continue;
+				}
+
 				$recordOperations = $this->generateButtons($row, $this->strTable, $this->root);
 				$this->respondWithSingleRecordOperationsIfNeeded($this->strTable, (int) $row['id'], $recordOperations);
 
@@ -4840,7 +4863,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$record['picker_input_field'] = $this->getPickerInputField($row['id']);
 				}
 
-				$this->current[] = $row['id'];
 				$label = $this->generateRecordLabel($row, $this->strTable);
 
 				// Add the group header
@@ -4886,6 +4908,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$records[] = $record;
+			}
+
+			// Stop rendering if we are in API mode, $this->current is all we need
+			if ($this->isApiMode())
+			{
+				return '';
 			}
 
 			// Add pagination
@@ -5077,8 +5105,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function sortMenu()
 	{
+		$isApiRequest = $this->isApiMode();
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$session = $objSessionBag->all();
+		$apiSort = $isApiRequest ? ($session['sorting'][$this->strTable] ?? null) : null;
+
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_SORTABLE && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_PARENT)
 		{
+			if ($apiSort !== null)
+			{
+				throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+			}
+
 			return '';
 		}
 
@@ -5104,11 +5142,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return if there are no sorting fields
 		if (empty($sortingFields))
 		{
+			if ($apiSort !== null)
+			{
+				throw new UnprocessableEntityHttpException('Sorting is not available in this data container.');
+			}
+
 			return '';
 		}
 
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$session = $objSessionBag->all();
+		if ($apiSort !== null && !\in_array($apiSort, $sortingFields, true))
+		{
+			throw new UnprocessableEntityHttpException('The requested sorting is not available in this data container.');
+		}
 
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
@@ -5145,6 +5190,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->orderBy = $orderBy;
 
 			$this->setPanelState($session['sorting'][$this->strTable] !== $defaultSorting);
+		}
+
+		// The API needs the order, not the backend menu HTML
+		if ($isApiRequest)
+		{
+			return '';
 		}
 
 		$options_sorter = array();
@@ -5218,7 +5269,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function limitMenu($blnOptional=false)
 	{
 		// The API paginates the collected IDs, so skip the backend limit and its menu rendering
-		if ($this->isApiRequest())
+		if ($this->isApiMode())
 		{
 			return '';
 		}
@@ -5660,6 +5711,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function paginationMenu()
 	{
+		// API pagination is handled after collecting IDs, without backend session state
+		if ($this->isApiMode())
+		{
+			return '';
+		}
+
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$session = $objSessionBag->all();
 

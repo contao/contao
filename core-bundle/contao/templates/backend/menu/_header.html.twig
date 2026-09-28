@@ -1,0 +1,64 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% trans_default_domain 'contao_default' %}
+
+{% set icon_only = ['manual.svg'] %}
+{% set icon_on_mobile = ['preview.svg', 'debug.svg'] %}
+
+{% block item %}
+    {% set item_attributes = attrs()
+        .addClass(item.attribute('class')|default(''))
+        .addClass('separator', item.extra('contao_backend_menu_has_divider', false))
+    %}
+
+    {% set item = item.setAttribute('class', item_attributes['class']|default(null)) %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% set translation_domain = item.extra('translation_domain', 'messages') %}
+    {% set label = translation_domain is same as(false) ? item.label : item.label|trans(item.extra('translation_params', {}), translation_domain) %}
+
+    <span{{ attrs(item.labelAttributes) }}>
+        {% if item.extra('contao_backend_menu_content_template') %}
+            {{ include(item.extra('contao_backend_menu_content_template'), {label}) }}
+        {% else %}
+            {{ block('label') }}
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block linkElement %}
+    {% if item.extra('contao_backend_menu_content_template') %}
+        {{ block('spanElement') }}
+    {% else %}
+        {% set icon = item.extra('contao_backend_menu_icon') %}
+        {% set translation_domain = item.extra('translation_domain', 'messages') %}
+        {% set title = item.extra('title', item.label) %}
+        {% set title = translation_domain is same as(false) ? title : title|trans(item.extra('translation_params', {}), translation_domain) %}
+
+        {% set link_attributes = attrs()
+            .set('title', title)
+            .set('data-contao--tooltips-target', 'tooltip')
+            .addClass('icon-' ~ icon|split('.')|first, icon)
+            .addClass('hover', item.extra('contao_backend_menu_is_highlighted', false))
+            .mergeWith(item.linkAttributes)
+        %}
+
+        {% set icon_attributes = attrs()
+            .addClass('icon')
+            .addClass('d-md-none', icon in icon_on_mobile)
+        %}
+
+        {% set label_attributes = attrs()
+            .addClass('label')
+            .addClass('invisible', icon in icon_only)
+        %}
+
+        <a href="{{ item.uri }}"{{ link_attributes }}>
+            {%- if icon %}{{ backend_icon(icon, attributes: icon_attributes) }}{% endif -%}
+            <span{{ label_attributes }}>{{ block('label') }}</span>
+        </a>
+    {% endif %}
+{% endblock %}

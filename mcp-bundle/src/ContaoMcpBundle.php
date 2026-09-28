@@ -21,5 +21,9 @@ class ContaoMcpBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import('../config/services.yaml');
+
+        if ($container->has('contao.search.backend')) {
+            $configurator->import('../config/backend_search.yaml');
+        }
     }
 }
