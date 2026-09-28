@@ -97,7 +97,12 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         default => [],
                     };
 
-                    $GLOBALS['TL_DCA'][$table]['fields'] = [];
+                    $GLOBALS['TL_DCA'][$table]['fields'] = match ($table) {
+                        'tl_article' => ['sorting' => []],
+                        'tl_content' => ['pid' => []],
+                        'tl_page' => ['pid' => [], 'sorting' => []],
+                        default => [],
+                    };
                 },
             )
         ;
@@ -150,6 +155,33 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
+    }
+
+    public function testDoesNotExposeMoveForRecordsWithoutPositionFields(): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table): void {
+                    $GLOBALS['TL_DCA'][$table] = [
+                        'config' => ['dataContainer' => DC_Table::class],
+                        'fields' => ['id' => []],
+                    ];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_user']),
+            'backend/dc',
+        );
+
+        $routes = $this->createApiLoader($factory)->load(null);
+
+        $this->assertNull($routes->get('contao_api_dc_user_move'));
     }
 
     public function testGeneratesDistinctRoutesForEveryTable(): void
