@@ -38,6 +38,7 @@ class HitTest extends TestCase
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
         $this->assertSame('type', $hit->getVisibleType());
+
         $this->assertSame(
             [
                 'id' => '42',

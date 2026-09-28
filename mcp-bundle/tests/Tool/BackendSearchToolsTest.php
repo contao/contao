@@ -30,6 +30,7 @@ final class BackendSearchToolsTest extends TestCase
     public function testSearchesTheBackendIndex(): void
     {
         $document = new Document('42', 'contao.db.tl_page', 'Home');
+
         $hit = new Hit($document, 'Home', '/contao?do=page&id=42')
             ->withVisibleType('Pages')
             ->withEditUrl('/contao?do=page&act=edit&id=42')
