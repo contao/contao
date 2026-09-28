@@ -361,7 +361,8 @@ class DataContainerRecords
                 }
 
                 return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
-        });
+            },
+        );
     }
 
     private function createRequest(string $table, array $parameters): Request
