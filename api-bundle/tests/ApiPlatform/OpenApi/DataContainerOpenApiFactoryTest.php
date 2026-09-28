@@ -122,7 +122,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             }
         };
 
-        $factory = new DataContainerOpenApiFactory($decorated, $resourceMetadataCollectionFactory, $schemaFactory, new Pagination(), '/_api');
+        $factory = new DataContainerOpenApiFactory($decorated, $resourceMetadataCollectionFactory, $schemaFactory, new Pagination(), '/contao/api');
         $openApi = $factory();
 
         $schemas = $openApi->getComponents()->getSchemas();
@@ -133,7 +133,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertInstanceOf(Schema::class, $componentSchema);
         $this->assertSame('object', $componentSchema['type']);
 
-        $collectionPathItem = $openApi->getPaths()->getPath('/_api/backend/dc/content');
+        $collectionPathItem = $openApi->getPaths()->getPath('/contao/api/dc/content');
         $this->assertInstanceOf(PathItem::class, $collectionPathItem);
 
         $getCollection = $collectionPathItem->getGet();
@@ -173,14 +173,14 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertSame('#/components/schemas/dc_content_create', $post->getRequestBody()->getContent()['application/json']->getSchema()['$ref']);
         $this->assertSame('#/components/schemas/dc_content', $post->getResponses()['201']->getContent()['application/json']->getSchema()['$ref']);
 
-        $itemPathItem = $openApi->getPaths()->getPath('/_api/backend/dc/content/{id}');
+        $itemPathItem = $openApi->getPaths()->getPath('/contao/api/dc/content/{id}');
         $this->assertInstanceOf(PathItem::class, $itemPathItem);
         $this->assertSame('#/components/schemas/dc_content', $itemPathItem->getGet()->getResponses()['200']->getContent()['application/json']->getSchema()['$ref']);
         $this->assertSame('#/components/schemas/dc_content_update', $itemPathItem->getPatch()->getRequestBody()->getContent()['application/merge-patch+json']->getSchema()['$ref']);
         $this->assertSame('#/components/schemas/dc_content', $itemPathItem->getPatch()->getResponses()['200']->getContent()['application/json']->getSchema()['$ref']);
         $this->assertSame(204, (int) array_key_first($itemPathItem->getDelete()->getResponses()));
 
-        $move = $openApi->getPaths()->getPath('/_api/backend/dc/content/{id}/move')->getPost();
+        $move = $openApi->getPaths()->getPath('/contao/api/dc/content/{id}/move')->getPost();
         $this->assertSame(['target'], $schemas['dc_content_move']['required']);
         $this->assertSame(['first', 'last', 'after'], $schemas['dc_content_move']['properties']['position']['enum']);
         $this->assertArrayHasKey(200, $move->getResponses());
@@ -194,7 +194,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertArrayNotHasKey('required', $schemas['dc_content_update']);
         $this->assertSame('Unrelated resource', $openApi->getPaths()->getPath('/unrelated')->getGet()->getSummary());
 
-        $nestedParameter = $openApi->getPaths()->getPath('/_api/backend/dc/content/{nested}/content')->getGet()->getParameters()[0];
+        $nestedParameter = $openApi->getPaths()->getPath('/contao/api/dc/content/{nested}/content')->getGet()->getParameters()[0];
         $this->assertSame('Nested parent chain alternating record IDs and resource segments, for example "4/content/5".', $nestedParameter->getDescription());
         $this->assertSame('4/content/5', $nestedParameter->getExample());
     }
@@ -228,11 +228,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
-        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/_api');
+        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/contao/api');
         $openApi = $factory();
 
-        $this->assertNull($openApi->getPaths()->getPath('/_api/dc/content/{id}')->getGet()->getResponses()['200']->getLinks());
-        $this->assertNull($openApi->getPaths()->getPath('/_api/dc/content/{id}/move'));
+        $this->assertNull($openApi->getPaths()->getPath('/contao/api/dc/content/{id}')->getGet()->getResponses()['200']->getLinks());
+        $this->assertNull($openApi->getPaths()->getPath('/contao/api/dc/content/{id}/move'));
     }
 
     public function testDoesNotDoublePrefixAlreadyPrefixedPaths(): void
@@ -252,48 +252,48 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             },
             new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])),
             new Pagination(),
-            '/_api',
+            '/contao/api',
         );
 
-        $this->assertSame('/_api/backend/dc/content', $factory->getPathForDataContainerResource('/_api/backend/dc/content'));
+        $this->assertSame('/contao/api/dc/content', $factory->getPathForDataContainerResource('/contao/api/dc/content'));
     }
 
     private function createResourceMetadataCollection(): ResourceMetadataCollection
     {
         $operations = new Operations([
-            'move' => new Post(uriTemplate: '/backend/dc/content/{id}/move', extraProperties: ['contao' => ['action' => 'move']]),
+            'move' => new Post(uriTemplate: '/dc/content/{id}/move', extraProperties: ['contao' => ['action' => 'move']]),
             'get_collection' => new GetCollection(paginationItemsPerPage: 30, paginationMaximumItemsPerPage: 300, paginationClientItemsPerPage: true)
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content'),
+                ->withUriTemplate('/dc/content'),
             'get' => new Get()
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content/{id}'),
+                ->withUriTemplate('/dc/content/{id}'),
             'post' => new Post()
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content'),
+                ->withUriTemplate('/dc/content'),
             'patch' => new Patch()
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content/{id}'),
+                ->withUriTemplate('/dc/content/{id}'),
             'delete' => new Delete()
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content/{id}'),
+                ->withUriTemplate('/dc/content/{id}'),
             'nested_get_collection' => new GetCollection(extraProperties: ['contao' => [
                 'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
             ]])
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
-                ->withUriTemplate('/_api/backend/dc/content/{nested}/content'),
+                ->withUriTemplate('/dc/content/{nested}/content'),
         ]);
 
         $resource = new ApiResource()
             ->withClass(DataContainerRecord::class)
             ->withShortName('Content')
-            ->withRoutePrefix('/_api/backend/dc/content')
+            ->withRoutePrefix('/dc/content')
             ->withProvider(DataContainerStateProvider::class)
             ->withProcessor(DataContainerStateProcessor::class)
             ->withExtraProperties([
@@ -312,7 +312,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     private function createOpenApi(): OpenApi
     {
         $paths = new Paths();
-        $paths->addPath('/_api/backend/dc/content', new PathItem(post: new Operation(summary: 'Generic generated operation')));
+        $paths->addPath('/contao/api/dc/content', new PathItem(post: new Operation(summary: 'Generic generated operation')));
         $paths->addPath('/unrelated', new PathItem(get: new Operation(summary: 'Unrelated resource')));
 
         return new OpenApi(new Info('Contao API', '1.0.0'), [], $paths);

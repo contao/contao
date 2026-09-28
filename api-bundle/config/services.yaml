@@ -17,7 +17,6 @@ services:
             $decorated: '@.inner'
             $framework: '@contao.framework'
             $resourceFinder: '@contao.resource_finder'
-            $dataContainerApiPrefix: '%contao_api.data_container_api_prefix%'
 
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.
@@ -28,7 +27,7 @@ services:
             $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
             $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
             $pagination: '@api_platform.pagination'
-            $apiPrefix: '%contao.backend.route_prefix%/_api'
+            $apiPrefix: '%contao.backend.route_prefix%/api'
 
     Contao\ApiBundle\Http\ApiRequestFactory:
         arguments:
