@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\DataContainer;
 
+use ApiPlatform\Metadata\Get;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
@@ -362,6 +364,65 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
     }
 
+    public function testUsesTheParentContextForTheDataContainer(): void
+    {
+        $modules = $GLOBALS['BE_MOD'] ?? null;
+        $GLOBALS['BE_MOD'] = ['content' => ['article' => ['tables' => ['tl_page', 'tl_content']]]];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 7])
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): string {
+                    $this->assertSame('7', $this->requestStack->getCurrentRequest()->query->get('id'));
+                    $this->assertSame('tl_page', $this->requestStack->getCurrentRequest()->query->get('ptable'));
+
+                    return '';
+                },
+            )
+        ;
+
+        try {
+            $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
+            $this->createRecords($dc)->list('tl_content', context: $context);
+        } finally {
+            if (null === $modules) {
+                unset($GLOBALS['BE_MOD']);
+            } else {
+                $GLOBALS['BE_MOD'] = $modules;
+            }
+        }
+    }
+
+    public function testRejectsAParentChainThatDoesNotMatchTheStoredRecords(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(['id' => 7], ['id' => 9, 'pid' => 8])
+        ;
+
+        $operation = new Get(extraProperties: ['contao' => ['parents' => [
+            ['table' => 'tl_page', 'parameter' => 'page_id'],
+            ['table' => 'tl_content', 'parameter' => 'content_id'],
+        ]]]);
+
+        $context = DataContainerContext::fromOperation($operation, ['page_id' => 7, 'content_id' => 9]);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->expectExceptionMessage('does not belong to the requested parent');
+
+        $this->createRecords($dc)->list('tl_content', context: $context);
+    }
+
     public static function provideListingPages(): iterable
     {
         yield 'default size' => [30, [31, 32, 33]];
@@ -428,6 +489,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'sorting' => true, 'flag' => DataContainer::SORT_BOTH]];
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
         $GLOBALS['TL_DCA']['tl_content']['config']['dataContainer'] = DC_Table::class;
+        $GLOBALS['TL_DCA']['tl_page']['config']['dataContainer'] = DC_Table::class;
 
         $system = $this->createAdapterStub(['loadLanguageFile']);
         $controller = $this->createAdapterStub(['loadDataContainer']);
@@ -439,7 +501,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->willReturnCallback(
                 function ($driver, $arguments) use ($dc) {
                     $this->assertSame(DC_Table::class, $driver);
-                    $this->assertSame(['tl_content'], $arguments);
+                    $this->assertContains($arguments, [['tl_content'], ['tl_page']]);
                     $this->assertSame('backend', $this->requestStack->getCurrentRequest()->attributes->get('_scope'));
                     $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->getBoolean('_stateless'));
 

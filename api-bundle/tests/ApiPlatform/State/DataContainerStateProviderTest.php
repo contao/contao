@@ -20,6 +20,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -75,13 +76,38 @@ final class DataContainerStateProviderTest extends TestCase
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 2, [], 30)
+            ->with('tl_content', 2, $this->isInstanceOf(DataContainerContext::class), 30)
             ->willReturn($page)
         ;
 
         $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
         $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['page' => 2]]));
+    }
+
+    public function testBuildsTheParentContextFromRouteVariables(): void
+    {
+        $records = $this->createMock(TableDataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->willReturnCallback(
+                function (string $table, int $page, DataContainerContext $context): DataContainerPage {
+                    $this->assertSame('tl_news', $table);
+                    $this->assertSame(1, $page);
+                    $this->assertSame([['table' => 'tl_news_archive', 'id' => 23]], $context->getParents());
+
+                    return new DataContainerPage([], 1);
+                },
+            )
+        ;
+
+        $operation = new GetCollection(extraProperties: ['contao' => [
+            'table' => 'tl_news',
+            'parents' => [['table' => 'tl_news_archive', 'parameter' => 'news_archive_id']],
+        ]]);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, ['news_archive_id' => 23]);
     }
 
     #[DataProvider('providePageSizes')]
@@ -93,7 +119,7 @@ final class DataContainerStateProviderTest extends TestCase
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 2, ['id' => '7', 'table' => 'tl_page'], $limit)
+            ->with('tl_content', 2, $this->isInstanceOf(DataContainerContext::class), $limit)
             ->willReturn($page)
         ;
 
@@ -104,7 +130,7 @@ final class DataContainerStateProviderTest extends TestCase
             extraProperties: ['contao' => ['table' => 'tl_content']],
         );
 
-        $filters += ['page' => '2', 'parent' => '7', 'ptable' => 'tl_page'];
+        $filters += ['page' => '2'];
         $context = $request ? ['request' => new Request($filters)] : ['filters' => $filters];
 
         $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: $context));
@@ -151,7 +177,7 @@ final class DataContainerStateProviderTest extends TestCase
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 1, [], 30, ['title DESC'])
+            ->with('tl_content', 1, $this->isInstanceOf(DataContainerContext::class), 30, ['title DESC'])
             ->willReturn(new DataContainerPage([], 1))
         ;
 

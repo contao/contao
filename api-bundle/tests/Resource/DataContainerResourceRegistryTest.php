@@ -74,7 +74,6 @@ final class DataContainerResourceRegistryTest extends TestCase
             $this->assertContains('move', $description['operations']);
             $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
             $this->assertArrayHasKey('pid', $description['schema']['properties']);
-            $this->assertArrayHasKey('pid', $description['operationSchemas']['create']['properties']);
             $this->assertArrayNotHasKey('pid', $description['operationSchemas']['update']['properties'] ?? []);
         } finally {
             unset($GLOBALS['TL_DCA']);
@@ -123,7 +122,7 @@ final class DataContainerResourceRegistryTest extends TestCase
                     'news_patch' => new Patch(name: 'news_patch'),
                     'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
                 ],
-                extraProperties: ['contao' => ['table' => 0 === $i ? 'tl_news' : 'tl_resource_'.$i]],
+                extraProperties: ['contao' => ['table' => 0 === $i ? 'tl_news' : 'tl_resource_'.$i, 'resource' => 0 === $i ? 'news' : 'resource_'.$i, 'parents' => []]],
             );
         }
 
