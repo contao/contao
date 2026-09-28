@@ -48,7 +48,7 @@ final class DataContainerRecordMapper
                 $data[$field] = match (true) {
                     null === $row[$field] => null,
                     'ptable' === $field => (string) $row[$field],
-                    'tstamp' === $field => date(\DateTimeInterface::ATOM, (int) $row[$field]),
+                    'tstamp' === $field => $row[$field] ? date(\DateTimeInterface::ATOM, (int) $row[$field]) : null,
                     default => (int) $row[$field],
                 };
             }

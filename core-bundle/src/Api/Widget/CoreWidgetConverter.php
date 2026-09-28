@@ -113,7 +113,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
         }
 
         if ('date-time' === ($schema['format'] ?? null)) {
-            return date(\DateTimeInterface::ATOM, (int) $value);
+            return $value ? date(\DateTimeInterface::ATOM, (int) $value) : null;
         }
 
         $value = match ($schema['type'] ?? null) {

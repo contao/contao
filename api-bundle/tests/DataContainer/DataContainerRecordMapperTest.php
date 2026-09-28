@@ -132,6 +132,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $this->assertSame(17, $record->id);
         $this->assertSame(['tstamp' => date(\DateTimeInterface::ATOM, 123), 'pid' => 42, 'ptable' => 'tl_article', 'sorting' => 128], $record->data);
+
+        $record = $mapper->fromRow('tl_content', ['id' => 18, 'tstamp' => '0', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128']);
+
+        $this->assertNull($record->data['tstamp']);
     }
 
     public function testExposesFileReferencesAsUuids(): void
@@ -285,10 +289,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             $dateTime = date(\DateTimeInterface::ATOM, $timestamp);
 
             foreach (['read', 'create', 'update'] as $operation) {
-                $this->assertSame(['type' => 'string', 'format' => 'date-time'], $factory->createOperationSchemas('tl_content')[$operation]['properties']['eventDate']);
+                $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time'], $factory->createOperationSchemas('tl_content')[$operation]['properties']['eventDate']);
             }
 
             $this->assertSame(['eventDate' => $dateTime], $mapper->fromRow('tl_content', ['id' => 17, 'eventDate' => (string) $timestamp])->data);
+            $this->assertSame(['eventDate' => null], $mapper->fromRow('tl_content', ['id' => 17, 'eventDate' => '0'])->data);
             $this->assertSame(['eventDate' => $expected], $mapper->toFormValues('tl_content', ['eventDate' => $dateTime]));
             $this->assertSame(['eventDate' => ''], $mapper->toFormValues('tl_content', ['eventDate' => null]));
         }

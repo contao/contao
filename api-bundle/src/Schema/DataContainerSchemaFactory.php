@@ -182,7 +182,9 @@ final class DataContainerSchemaFactory
         }
 
         if (isset($sql['default'])) {
-            $schema['default'] = 'date-time' === ($schema['format'] ?? null) ? date(\DateTimeInterface::ATOM, (int) $sql['default']) : $sql['default'];
+            $schema['default'] = 'date-time' === ($schema['format'] ?? null)
+                ? ($sql['default'] ? date(\DateTimeInterface::ATOM, (int) $sql['default']) : null)
+                : $sql['default'];
         }
 
         return $schema;
@@ -190,10 +192,10 @@ final class DataContainerSchemaFactory
 
     private function createDateTimeSchema(array $schema): array
     {
-        $schema = ['type' => 'string', 'format' => 'date-time'] + $schema;
+        $schema = ['type' => ['string', 'null'], 'format' => 'date-time'] + $schema;
 
         if (isset($schema['default'])) {
-            $schema['default'] = date(\DateTimeInterface::ATOM, (int) $schema['default']);
+            $schema['default'] = $schema['default'] ? date(\DateTimeInterface::ATOM, (int) $schema['default']) : null;
         }
 
         return $schema;
