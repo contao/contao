@@ -1,0 +1,119 @@
+services:
+    contao.oauth_bundle.authorization_server.authorization_server_factory:
+        class: Contao\OAuthBundle\AuthorizationServer\AuthorizationServerFactory
+        arguments:
+            - '@contao.oauth_bundle.authorization_server.repository.client_repository'
+            - '@contao.oauth_bundle.authorization_server.repository.access_token_repository'
+            - '@contao.oauth_bundle.authorization_server.repository.scope_repository'
+            - '@contao.oauth_bundle.authorization_server.repository.auth_code_repository'
+            - '@contao.oauth_bundle.authorization_server.repository.refresh_token_repository'
+            - '@contao.oauth_bundle.key_provider'
+
+    contao.oauth_bundle.authorization_server.repository.access_token_repository:
+        class: Contao\OAuthBundle\AuthorizationServer\Repository\AccessTokenRepository
+        arguments:
+            - '@contao.oauth_bundle.repository.oauth_token_repository'
+            - '@contao.oauth_bundle.resource_context'
+
+    contao.oauth_bundle.authorization_server.repository.auth_code_repository:
+        class: Contao\OAuthBundle\AuthorizationServer\Repository\AuthCodeRepository
+        arguments:
+            - '@contao.oauth_bundle.repository.oauth_token_repository'
+
+    contao.oauth_bundle.authorization_server.repository.client_repository:
+        class: Contao\OAuthBundle\AuthorizationServer\Repository\ClientRepository
+        arguments:
+            - '@contao.oauth_bundle.cimd.client_id_metadata_resolver'
+            - '@request_stack'
+            - '@?logger'
+
+    contao.oauth_bundle.authorization_server.repository.refresh_token_repository:
+        class: Contao\OAuthBundle\AuthorizationServer\Repository\RefreshTokenRepository
+        arguments:
+            - '@contao.oauth_bundle.repository.oauth_token_repository'
+
+    contao.oauth_bundle.authorization_server.repository.scope_repository:
+        class: Contao\OAuthBundle\AuthorizationServer\Repository\ScopeRepository
+        arguments:
+            - '@contao.oauth_bundle.resource_context'
+
+    contao.oauth_bundle.cimd.client_id_metadata_resolver:
+        class: Contao\OAuthBundle\Cimd\ClientIdMetadataResolver
+        arguments:
+            - '@http_client'
+            - '@cache.app'
+            - '%contao_oauth.cimd_trusted_domains%'
+
+    contao.oauth_bundle.controller.authorization_server_metadata_controller:
+        class: Contao\OAuthBundle\Controller\AuthorizationServerMetadataController
+        public: true
+        arguments:
+            - '@contao.oauth_bundle.resource_context'
+            - '@router'
+
+    contao.oauth_bundle.controller.authorize_controller:
+        class: Contao\OAuthBundle\Controller\AuthorizeController
+        public: true
+        arguments:
+            - '@contao.oauth_bundle.authorization_server.authorization_server_factory'
+            - '@contao.oauth_bundle.http.psr_message_converter'
+            - '@contao.oauth_bundle.resource_context'
+            - '@security.helper'
+            - '@twig'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+
+    contao.oauth_bundle.controller.protected_resource_metadata_controller:
+        class: Contao\OAuthBundle\Controller\ProtectedResourceMetadataController
+        public: true
+        arguments:
+            - '@contao.oauth_bundle.resource_context'
+
+    contao.oauth_bundle.controller.token_controller:
+        class: Contao\OAuthBundle\Controller\TokenController
+        public: true
+        arguments:
+            - '@contao.oauth_bundle.authorization_server.authorization_server_factory'
+            - '@contao.oauth_bundle.http.psr_message_converter'
+            - '@contao.oauth_bundle.resource_context'
+
+    contao.oauth_bundle.http.psr_message_converter:
+        class: Contao\OAuthBundle\Http\PsrMessageConverter
+
+    contao.oauth_bundle.key_provider:
+        class: Contao\OAuthBundle\KeyProvider
+        arguments:
+            - '%kernel.project_dir%/var/oauth'
+            - '%kernel.secret%'
+
+    contao.oauth_bundle.repository.oauth_token_repository:
+        class: Contao\OAuthBundle\Repository\OAuthTokenRepository
+        arguments:
+            - '@doctrine'
+
+    contao.oauth_bundle.resource_context:
+        class: Contao\OAuthBundle\ResourceContext
+        arguments:
+            - '@request_stack'
+            - '@router'
+            - '%contao_oauth.resource.route%'
+            - '%contao_oauth.resource.scopes%'
+            - '%contao_oauth.resource.name%'
+
+    contao.oauth_bundle.security.access_token_validator:
+        class: Contao\OAuthBundle\Security\AccessTokenValidator
+        arguments:
+            - '@contao.oauth_bundle.key_provider'
+            - '@contao.oauth_bundle.resource_context'
+            - '@contao.oauth_bundle.authorization_server.repository.access_token_repository'
+
+    contao.oauth_bundle.security.bearer_authenticator:
+        class: Contao\OAuthBundle\Security\BearerAuthenticator
+        arguments:
+            - '@contao.oauth_bundle.security.access_token_validator'
+            - '@contao.oauth_bundle.security.bearer_challenge'
+
+    contao.oauth_bundle.security.bearer_challenge:
+        class: Contao\OAuthBundle\Security\BearerChallenge
+        arguments:
+            - '@contao.oauth_bundle.resource_context'
