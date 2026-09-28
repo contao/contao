@@ -22,7 +22,7 @@ class HookHelper
                 {
                 }
 
-                public function __invoke(...$args)
+                public function __invoke(mixed ...$args): mixed
                 {
                     return ($this->handler)(...$args);
                 }
@@ -40,7 +40,7 @@ class HookHelper
                 }
 
                 // Cannot use ...spread operator because of references
-                public function __invoke(&$a, &$b, $c, &$d, &$e, $f, &$g, &$h)
+                public function __invoke(mixed &$a, mixed &$b, mixed $c, mixed &$d, mixed &$e, mixed $f, mixed &$g, mixed &$h): mixed
                 {
                     return ($this->handler)($a, $b, $c, $d, $e, $f, $g, $h);
                 }

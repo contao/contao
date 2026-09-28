@@ -1,4 +1,6 @@
 api_platform:
     resource: .
     type: api_platform
-    prefix: '%contao_api.api_prefix%'
+    prefix: '%contao.backend.route_prefix%/_api'
+    defaults:
+        _scope: backend

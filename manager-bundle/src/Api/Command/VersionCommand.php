@@ -53,10 +53,11 @@ class VersionCommand extends Command
     }
 
     /**
-     * @return array<string, array<string>>
+     * @return array<array<string, array<string>>>
      */
     private function getFeatures(): array
     {
+        /** @var array<ApiPluginInterface> $plugins */
         $plugins = $this->application->getPluginLoader()->getInstancesOf(ApiPluginInterface::class);
 
         return array_map(static fn ($plugin) => $plugin->getApiFeatures(), $plugins);

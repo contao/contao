@@ -1625,22 +1625,17 @@ services:
 
     contao.url_highlight:
         class: VStelmakh\UrlHighlight\UrlHighlight
-        arguments:
-            - ~
-            - '@contao.url_highlight.html_highlighter'
-            - !service { class: VStelmakh\UrlHighlight\Encoder\HtmlSpecialcharsEncoder }
-
-    contao.url_highlight.html_highlighter:
-        class: VStelmakh\UrlHighlight\Highlighter\HtmlHighlighter
-        arguments:
-            - https
-            - { target: _blank, rel: noreferrer noopener }
 
     contao.webauthn.user_entity_guesser:
         class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
         arguments:
             - '@security.token_storage'
             - '@contao.repository.webauthn_user_entity'
+
+    contao.widget.date_value_formatter:
+        class: Contao\CoreBundle\Widget\DateValueFormatter
+        arguments:
+            - '@contao.framework'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
@@ -1688,3 +1683,4 @@ services:
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
+    Contao\CoreBundle\Widget\DateValueFormatter: '@contao.widget.date_value_formatter'

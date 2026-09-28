@@ -97,9 +97,9 @@ class ModuleSearch extends Module
 		$this->Template->keyword = StringUtil::specialchars($strKeywords);
 		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
-		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
-		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
-		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
+		$this->Template->search = $GLOBALS['TL_LANG']['MSC']['searchLabel'];
+		$this->Template->matchAll = $GLOBALS['TL_LANG']['MSC']['matchAll'];
+		$this->Template->matchAny = $GLOBALS['TL_LANG']['MSC']['matchAny'];
 		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page

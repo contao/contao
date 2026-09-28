@@ -222,6 +222,6 @@ class ModuleChangePassword extends Module
 		}
 
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['changePassword'];
 	}
 }

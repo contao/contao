@@ -123,9 +123,7 @@ class CsvImportController extends AbstractController
         $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
-        if (null !== $submitLabel) {
-            $template->submitLabel = $submitLabel;
-        }
+        $template->submitLabel = $submitLabel ?? $this->translator->trans('MSC.apply', [], 'contao_default');
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
             try {
@@ -156,14 +154,15 @@ class CsvImportController extends AbstractController
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
-        $template->submitLabel = $this->translator->trans('MSC.apply', [], 'contao_default');
+        $template->messages = Message::generate();
+
+        // Backwards compatibility
         $template->backBT = $this->translator->trans('MSC.backBT', [], 'contao_default');
         $template->backBTTitle = $this->translator->trans('MSC.backBTTitle', [], 'contao_default');
         $template->separatorLabel = $this->translator->trans('MSC.separator.0', [], 'contao_default');
         $template->separatorHelp = $this->translator->trans('MSC.separator.1', [], 'contao_default');
         $template->sourceLabel = $this->translator->trans('MSC.source.0', [], 'contao_default');
         $template->sourceLabelHelp = $this->translator->trans('MSC.source.1', [], 'contao_default');
-        $template->messages = Message::generate();
 
         return $template;
     }
@@ -209,16 +208,19 @@ class CsvImportController extends AbstractController
             self::SEPARATOR_COMMA => [
                 'delimiter' => ',',
                 'value' => self::SEPARATOR_COMMA,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.comma', [], 'contao_default'),
             ],
             self::SEPARATOR_SEMICOLON => [
                 'delimiter' => ';',
                 'value' => self::SEPARATOR_SEMICOLON,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.semicolon', [], 'contao_default'),
             ],
             self::SEPARATOR_TABULATOR => [
                 'delimiter' => "\t",
                 'value' => self::SEPARATOR_TABULATOR,
+                // Backwards compatibility
                 'label' => $this->translator->trans('MSC.tabulator', [], 'contao_default'),
             ],
         ];

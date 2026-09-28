@@ -1,13 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    #btn = null;
+    #btn;
     #prevButton = null;
     #nextButton = null;
     #linksContainer = null;
     #links = [];
-    #onScroll = () => this.#updateScrollButtonVisibility();
-    #onResize = () => this.#updateScrollButtonVisibility();
 
     static targets = ['navigation', 'section'];
 
@@ -17,18 +15,12 @@ export default class extends Controller {
     };
 
     initialize() {
-        this.#initButtonElement();
+        this.#btn = document.createElement('button');
+        this.#btn.type = 'button';
     }
 
-    navigationTargetConnected(element) {
-        element.addEventListener('scroll', this.#onScroll);
-        window.addEventListener('resize', this.#onResize);
-    }
-
-    navigationTargetDisconnected(element) {
-        element.removeEventListener('scroll', this.#onScroll);
-        window.removeEventListener('resize', this.#onResize);
-        this.#linksContainer?.destroy();
+    navigationTargetDisconnected() {
+        this.#linksContainer?.remove();
     }
 
     sectionTargetConnected() {
@@ -68,10 +60,10 @@ export default class extends Controller {
         this.#linksContainer.append(this.#nextButton ?? this.#createScrollButton(false));
         this.navigationTarget.replaceChildren(this.#linksContainer);
 
-        this.#updateScrollButtonVisibility();
+        this.updateScrollButtonVisibility();
     }
 
-    #updateScrollButtonVisibility() {
+    updateScrollButtonVisibility() {
         if (!this.hasNavigationTarget) {
             return;
         }
@@ -128,11 +120,6 @@ export default class extends Controller {
         start ? (this.#prevButton = li) : (this.#nextButton = li);
 
         return li;
-    }
-
-    #initButtonElement() {
-        this.#btn = document.createElement('button');
-        this.#btn.type = 'button';
     }
 
     #getNextSnapItem() {

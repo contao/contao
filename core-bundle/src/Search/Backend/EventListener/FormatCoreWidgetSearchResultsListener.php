@@ -38,7 +38,7 @@ class FormatCoreWidgetSearchResultsListener
     {
         $chunks = StringUtil::deserialize($event->getSearchableContent());
 
-        // Not in the format we expect, maybe changed by an earlier listener already?
+        // Not in the format we expect, maybe already changed by an earlier listener?
         if (!isset($chunks['unit']) && !isset($chunks['value'])) {
             return $event->getSearchableContent();
         }

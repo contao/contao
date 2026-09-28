@@ -16,7 +16,7 @@ use Contao\ModuleNavigation;
 
 class InvalidListener
 {
-    public function __construct(private readonly ModuleNavigation|ValidListener $invalid)
+    public function __construct(public readonly ModuleNavigation|ValidListener $invalid)
     {
     }
 

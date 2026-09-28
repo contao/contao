@@ -31,12 +31,12 @@ abstract class AbstractOperationTestCase extends ContaoTestCase
 {
     public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): iterable
     {
-        yield 'user template exists already' => [
+        yield 'user template already exists' => [
             static::getOperationContext('content_element/existing_user_template'),
             true,
         ];
 
-        yield 'user template in a theme exists already' => [
+        yield 'user template in a theme already exists' => [
             static::getOperationContext('content_element/existing_user_template', 'my_theme'),
             true,
         ];

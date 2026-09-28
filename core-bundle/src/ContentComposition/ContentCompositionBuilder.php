@@ -287,9 +287,10 @@ class ContentCompositionBuilder
         $locale = LocaleUtil::formatAsLocale($page->language ?? '');
         $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);
 
-        $template->set('locale', $locale);
-        $template->set('rtl', $isRtl);
+        // Backwards compatibility
+        $template->set('locale', LocaleUtil::formatAsLanguageTag($locale));
 
+        $template->set('rtl', $isRtl);
         $template->set('page', $page->row());
 
         if ($layout) {

@@ -193,7 +193,7 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function disableTwoFactor(BackendUser $user, $return)
 	{
-		// Return if 2FA is disabled already
+		// Return if 2FA is already disabled
 		if (!$user->useTwoFactor)
 		{
 			return;

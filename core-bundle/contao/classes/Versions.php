@@ -616,9 +616,9 @@ class Versions extends Controller
 		$objTemplate->versions = $arrVersions;
 		$objTemplate->to = $intTo;
 		$objTemplate->from = $intFrom;
-		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->showLabel = $GLOBALS['TL_LANG']['MSC']['showDifferences'];
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['showDifferences'];
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 

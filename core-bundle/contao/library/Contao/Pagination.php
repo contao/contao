@@ -293,7 +293,7 @@ class Pagination
 		$objTemplate->class = 'pagination-' . $this->strParameter;
 
 		// Backwards compatibility
-		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
+		$objTemplate->pagination = $GLOBALS['TL_LANG']['MSC']['pagination'];
 
 		// Adding rel="prev" and rel="next" links is not possible
 		// anymore with unique variable names (see #3515 and #4141)

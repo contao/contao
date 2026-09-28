@@ -142,7 +142,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		if ($fileCount > 1 && !$this->multipleFiles)
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['multipleFilesNotAllowed']);
-			unset($_FILES[$this->strName]);
 
 			return;
 		}
@@ -185,8 +184,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $files['error'][$i], $files['name'][$i]));
 				}
 
-				unset($_FILES[$this->strName]);
-
 				return;
 			}
 
@@ -194,7 +191,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			if ($files['size'][$i] > $maxlength_kb)
 			{
 				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
-				unset($_FILES[$this->strName]);
 
 				return;
 			}
@@ -206,7 +202,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			if (!\in_array($objFile->extension, $uploadTypes))
 			{
 				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
-				unset($_FILES[$this->strName]);
 
 				return;
 			}
@@ -219,7 +214,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 				{
 					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $files['name'][$i], $intImageWidth));
-					unset($_FILES[$this->strName]);
 
 					return;
 				}
@@ -230,7 +224,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 				{
 					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $files['name'][$i], $intImageHeight));
-					unset($_FILES[$this->strName]);
 
 					return;
 				}
@@ -240,7 +233,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			if (\in_array($objFile->extension, array('svg', 'svgz')) && !FileUpload::sanitizeSvg($files['tmp_name'][$i]))
 			{
 				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], 'Invalid SVG', $files['name'][$i]));
-				unset($_FILES[$this->strName]);
 
 				return;
 			}
@@ -357,8 +349,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		{
 			$this->varValue = ($this->multipleFiles) ? $uploadedFiles : $uploadedFiles[0];
 		}
-
-		unset($_FILES[$this->strName]);
 	}
 
 	/**

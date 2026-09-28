@@ -85,6 +85,14 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
+     * Returns the path to the Fixtures directory.
+     */
+    protected function getFixturesDir(): string
+    {
+        throw new \LogicException(\sprintf('Class "%s" must implement the getFixturesDir() method', static::class));
+    }
+
+    /**
      * Returns a Symfony container with the Contao core extension configuration.
      */
     protected function getContainerWithContaoConfiguration(string $projectDir = ''): ContainerBuilder
@@ -173,7 +181,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks an adapter with the given methods.
      *
-     * @return Adapter&MockObject
+     * @return Adapter<mixed>&MockObject
      *
      * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createAdapterMock() or createAdapterStub() instead.
@@ -187,6 +195,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates an adapter mock object with the given methods.
+     *
+     * @return Adapter<mixed>&MockObject
      */
     protected function createAdapterMock(array $methods): Adapter&MockObject
     {
@@ -195,6 +205,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates an adapter stub object with the given methods.
+     *
+     * @return Adapter<mixed>&Stub
      */
     protected function createAdapterStub(array $methods): Adapter&Stub
     {
@@ -204,7 +216,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a configured adapter with the given methods and return values.
      *
-     * @return Adapter&MockObject
+     * @return Adapter<mixed>&MockObject
      *
      * @deprecated Deprecated since Contao 5.7, to be removed in Contao 7;
      *             use createConfiguredAdapterMock() or createConfiguredAdapterStub() instead.
@@ -218,6 +230,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates a configured adapter mock object with the given methods and return values.
+     *
+     * @return Adapter<mixed>&MockObject
      */
     protected function createConfiguredAdapterMock(array $configuration): Adapter&MockObject
     {
@@ -235,6 +249,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates a configured adapter stub object with the given methods and return values.
+     *
+     * @return Adapter<mixed>&Stub
      */
     protected function createConfiguredAdapterStub(array $configuration): Adapter&Stub
     {
@@ -274,7 +290,9 @@ abstract class ContaoTestCase extends TestCase
             $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
         }
 
-        return $this->addMethods($mock, $classMethods, $properties);
+        $this->addMethods($mock, $classMethods, $properties);
+
+        return $mock;
     }
 
     /**
@@ -288,7 +306,10 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createClassWithPropertiesMock(string $class, array $properties = []): MockObject
     {
-        return $this->addMethods($this->createMock($class), get_class_methods($class), $properties);
+        $mock = $this->createMock($class);
+        $this->addMethods($mock, get_class_methods($class), $properties);
+
+        return $mock;
     }
 
     /**
@@ -302,7 +323,10 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createClassWithPropertiesStub(string $class, array $properties = []): Stub
     {
-        return $this->addMethods($this->createStub($class), get_class_methods($class), $properties);
+        $stub = $this->createStub($class);
+        $this->addMethods($stub, get_class_methods($class), $properties);
+
+        return $stub;
     }
 
     /**
@@ -386,13 +410,13 @@ abstract class ContaoTestCase extends TestCase
 
             if (
                 null === $properties
-                && \is_callable([$class, 'reset'])
-                && method_exists($class, 'reset')
-                && $reflectionClass->getMethod('reset')->isStatic()
-                && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
-                && [] === $reflectionClass->getMethod('reset')->getParameters()
+                && $reflectionClass->hasMethod('reset')
+                && ($resetMethod = $reflectionClass->getMethod('reset'))->isPublic()
+                && $resetMethod->isStatic()
+                && $resetMethod->getDeclaringClass()->getName() === $class
+                && [] === $resetMethod->getParameters()
             ) {
-                $class::reset();
+                $resetMethod->invoke(null);
 
                 continue;
             }
@@ -446,6 +470,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates an adapter with the given methods and returns the class name.
+     *
+     * @return class-string<Adapter<mixed>>
      */
     private function createAdapterClass(array $methods): string
     {
@@ -465,7 +491,7 @@ abstract class ContaoTestCase extends TestCase
         return $fqcn;
     }
 
-    private function addAdaptersAndInstances(MockObject|Stub $object, $adapters, $instances): void
+    private function addAdaptersAndInstances(MockObject|Stub $object, array $adapters, array $instances): void
     {
         $this->addConfigAdapter($adapters);
 
@@ -499,7 +525,7 @@ abstract class ContaoTestCase extends TestCase
         }
     }
 
-    private function addMethods(MockObject|Stub $object, array $methods, array $properties): MockObject|Stub
+    private function addMethods(MockObject|Stub $object, array $methods, array $properties): void
     {
         $object
             ->method('__get')
@@ -553,8 +579,6 @@ abstract class ContaoTestCase extends TestCase
                 )
             ;
         }
-
-        return $object;
     }
 
     /**
@@ -562,26 +586,38 @@ abstract class ContaoTestCase extends TestCase
      */
     private function loadDefaultConfiguration(): void
     {
-        match (true) {
+        $files = [
             // The core-bundle is in the vendor folder of the monorepo
-            file_exists(__DIR__.'/../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../core-bundle/contao/config/default.php',
+            __DIR__.'/../../../../core-bundle/contao/config/default.php',
 
             // The test-case is in the vendor-bin folder
-            file_exists(__DIR__.'/../../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../../core-bundle/contao/config/default.php',
+            __DIR__.'/../../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is in the vendor folder of the managed edition
-            file_exists(__DIR__.'/../../../../../core-bundle/contao/config/default.php') => include __DIR__.'/../../../../../core-bundle/contao/config/default.php',
+            __DIR__.'/../../../../../core-bundle/contao/config/default.php',
 
             // The core-bundle is the root package and the test-case folder is in vendor/contao
-            file_exists(__DIR__.'/../../../../contao/config/default.php') => include __DIR__.'/../../../../contao/config/default.php',
+            __DIR__.'/../../../../contao/config/default.php',
 
             // Another bundle is the root package and the core-bundle folder is in vendor/contao
-            file_exists(__DIR__.'/../../core-bundle/contao/config/default.php') => include __DIR__.'/../../core-bundle/contao/config/default.php',
+            __DIR__.'/../../core-bundle/contao/config/default.php',
 
             // The test-case is the root package and the core-bundle folder is in vendor/contao
-            file_exists(__DIR__.'/../vendor/contao/core-bundle/contao/config/default.php') => include __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php',
+            __DIR__.'/../vendor/contao/core-bundle/contao/config/default.php',
+        ];
 
-            default => throw new \RuntimeException('Cannot find the Contao configuration file'),
-        };
+        $filesystem = new Filesystem();
+
+        foreach ($files as $file) {
+            if (!$filesystem->exists($file)) {
+                continue;
+            }
+
+            include $file;
+
+            return;
+        }
+
+        throw new \RuntimeException('Cannot find the Contao configuration file');
     }
 }

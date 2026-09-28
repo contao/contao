@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\HttpKernel;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -115,7 +116,8 @@ class JwtManager
         $token = $this->config->parser()->parse($data);
 
         if (
-            $token->isExpired(new \DateTimeImmutable())
+            !$token instanceof UnencryptedToken
+            || $token->isExpired(new \DateTimeImmutable())
             || !$this->config->validator()->validate($token, ...$this->config->validationConstraints())
         ) {
             return null;
