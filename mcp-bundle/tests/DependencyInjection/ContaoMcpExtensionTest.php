@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tests\DependencyInjection;
 
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\McpBundle\ContaoMcpBundle;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
@@ -28,10 +30,11 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Yaml\Yaml;
+use Twig\Environment;
 
 final class ContaoMcpExtensionTest extends TestCase
 {
-    public function testRegistersExactlyEightToolsThroughTheBundleConfiguration(): void
+    public function testRegistersTemplateToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
         $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
@@ -67,6 +70,14 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_dc_update_record',
                 'contao_dc_delete_record',
                 'contao_dc_move_record',
+                'contao_template_list_themes',
+                'contao_template_discover',
+                'contao_template_read',
+                'contao_template_validate',
+                'contao_template_create_override',
+                'contao_template_save',
+                'contao_template_delete_override',
+                'contao_template_execute_operation',
             ],
             $tools,
         );
@@ -121,7 +132,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(9, $tools);
+        $this->assertCount(17, $tools);
     }
 
     private function getContainerBuilder(bool $withBackendSearch = false): ContainerBuilder
@@ -142,6 +153,9 @@ final class ContaoMcpExtensionTest extends TestCase
             ApiRequestFactory::class => ApiRequestFactory::class,
             'request_stack' => RequestStack::class,
             DataContainerResourceRegistry::class => DataContainerResourceRegistry::class,
+            'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
+            'twig' => Environment::class,
+            'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
         }
