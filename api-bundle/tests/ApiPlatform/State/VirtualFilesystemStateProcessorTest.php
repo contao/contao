@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
@@ -106,9 +105,8 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = $this->createProcessor($storage);
         $result = $processor->process(
             null,
-            new Patch(),
-            ['path' => 'images/example.jpg'],
-            ['request' => Request::create('/', 'PATCH', content: '{"localized":{"en":{"title":"New title"}}}')],
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: '{"path":"images/example.jpg","data":{"localized":{"en":{"title":"New title"}}}}')],
         );
 
         $this->assertSame('New title', $result->metadata['localized']['en']['title']);
@@ -134,9 +132,8 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = $this->createProcessor($storage);
         $result = $processor->process(
             null,
-            new Patch(),
-            ['path' => 'images/example.jpg'],
-            ['request' => Request::create('/', 'PATCH', content: '{"importantPart":{"x":0.1,"y":0.2,"width":0.3,"height":0.4},"textTrack":{"sourceLanguage":"de","type":"captions"}}')],
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: '{"path":"images/example.jpg","data":{"importantPart":{"x":0.1,"y":0.2,"width":0.3,"height":0.4},"textTrack":{"sourceLanguage":"de","type":"captions"}}}')],
         );
 
         $this->assertSame(
@@ -161,9 +158,26 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $this->expectException(BadRequestHttpException::class);
         $processor->process(
             null,
-            new Patch(),
-            ['path' => 'images/example.jpg'],
-            ['request' => Request::create('/', 'PATCH', content: '{"uuid":"changed"}')],
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: '{"path":"images/example.jpg","data":{"uuid":"changed"}}')],
+        );
+    }
+
+    public function testRejectsMetadataWithoutAPath(): void
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->never())
+            ->method('setExtraMetadata')
+        ;
+
+        $processor = $this->createProcessor($storage);
+
+        $this->expectException(BadRequestHttpException::class);
+        $processor->process(
+            null,
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: '{"data":{}}')],
         );
     }
 
@@ -186,10 +200,14 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
         $processor->process(
             null,
-            new Patch(),
-            ['path' => 'missing.jpg'],
-            ['request' => Request::create('/', 'PATCH', content: '{"localized":{"en":{"title":"New title"}}}')],
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: '{"path":"missing.jpg","data":{"localized":{"en":{"title":"New title"}}}}')],
         );
+    }
+
+    private function createMetadataOperation(): Post
+    {
+        return new Post(extraProperties: ['contao' => ['operation' => 'metadata']]);
     }
 
     private function createSecurityStub(): Security

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
@@ -53,42 +52,28 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             return $this->move($data);
         }
 
+        $request = $context['request'] ?? $this->requestStack->getCurrentRequest();
+
+        if ('metadata' === ($operation->getExtraProperties()['contao']['operation'] ?? null)) {
+            return $this->updateMetadata($request);
+        }
+
         $path = $uriVariables['path'] ?? null;
 
         if (!\is_string($path) || '' === $path) {
             throw new BadRequestHttpException('A file path is required.');
         }
 
-        $request = $context['request'] ?? $this->requestStack->getCurrentRequest();
-
-        if ($operation instanceof Patch) {
-            return $this->updateMetadata($path, $request);
-        }
-
         return $this->upload($path, $request);
     }
 
-    private function updateMetadata(string $path, mixed $request): VirtualFilesystemItem
+    private function updateMetadata(mixed $request): VirtualFilesystemItem
     {
-        if (!$request instanceof Request) {
-            throw new BadRequestHttpException('A metadata body is required.');
-        }
+        [$path, $data] = $this->parseMetadataRequest($request);
 
         try {
-            $content = $request->getContent();
-
-            if (!json_decode($content, false, 512, JSON_THROW_ON_ERROR) instanceof \stdClass) {
-                throw new NotNormalizableValueException('The metadata body must be a JSON object.');
-            }
-
-            $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
-
-            if (!\is_array($data)) {
-                throw new NotNormalizableValueException('The metadata body must be a JSON object.');
-            }
-
             $update = $this->objectNormalizer->fromArray(ExtraMetadata::class, $data);
-        } catch (\InvalidArgumentException|\JsonException|NotNormalizableValueException|\TypeError|\ValueError $exception) {
+        } catch (\InvalidArgumentException|NotNormalizableValueException|\TypeError|\ValueError $exception) {
             throw new BadRequestHttpException($exception->getMessage(), $exception);
         }
 
@@ -115,6 +100,36 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         $this->filesStorage->setExtraMetadata($path, $metadata);
 
         return $this->getItem($path);
+    }
+
+    /**
+     * @return array{string, array<string, mixed>}
+     */
+    private function parseMetadataRequest(mixed $request): array
+    {
+        if (!$request instanceof Request) {
+            throw new BadRequestHttpException('A metadata body is required.');
+        }
+
+        try {
+            $object = json_decode($request->getContent(), false, 512, JSON_THROW_ON_ERROR);
+            $payload = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new BadRequestHttpException($exception->getMessage(), $exception);
+        }
+
+        if (!$object instanceof \stdClass || !\is_array($payload) || array_diff_key($payload, ['path' => true, 'data' => true])) {
+            throw new BadRequestHttpException('The metadata body must contain only a non-empty path and a data object.');
+        }
+
+        $path = $payload['path'] ?? null;
+        $data = $payload['data'] ?? null;
+
+        if (!\is_string($path) || '' === $path || !(($object->data ?? null) instanceof \stdClass) || !\is_array($data)) {
+            throw new BadRequestHttpException('The metadata body must contain only a non-empty path and a data object.');
+        }
+
+        return [$path, $data];
     }
 
     private function move(VirtualFilesystemMove $move): VirtualFilesystemItem

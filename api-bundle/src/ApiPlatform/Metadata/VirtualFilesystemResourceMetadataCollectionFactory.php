@@ -15,7 +15,6 @@ namespace Contao\ApiBundle\ApiPlatform\Metadata;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
@@ -53,7 +52,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 'contao_api_files_move' => $this->createMoveOperation(),
                 'contao_api_files_get' => $this->createGetOperation(),
                 'contao_api_files_upload' => $this->createUploadOperation(),
-                'contao_api_files_update_metadata' => $this->createMetadataUpdateOperation(),
+                'contao_api_files_metadata' => $this->createMetadataOperation(),
             ],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
@@ -99,6 +98,17 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             requirements: ['path' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
+            openapi: new OpenApiOperation(
+                summary: 'Upload a file',
+                description: 'Uploads raw file contents with PUT. An existing file at the path is replaced.',
+                requestBody: new RequestBody(
+                    description: 'The raw contents of the file.',
+                    content: new \ArrayObject([
+                        'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary'])),
+                    ]),
+                    required: true,
+                ),
+            ),
             read: false,
             deserialize: false,
             processor: VirtualFilesystemStateProcessor::class,
@@ -120,25 +130,43 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
         );
     }
 
-    private function createMetadataUpdateOperation(): Patch
+    private function createMetadataOperation(): Post
     {
-        return new Patch(
-            uriTemplate: '/files/{path}',
+        return new Post(
+            uriTemplate: '/files_operations/metadata',
             inputFormats: ['json' => ['application/json']],
             shortName: 'File',
             class: VirtualFilesystemItem::class,
-            requirements: ['path' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER') and is_granted('contao_user.fop.f2')",
             input: false,
-            openapi: new OpenApiOperation(requestBody: new RequestBody(
-                content: new \ArrayObject(['application/json' => new MediaType(new \ArrayObject($this->objectNormalizer->getJsonSchema(ExtraMetadata::class)))]),
-                required: true,
-            )),
+            openapi: new OpenApiOperation(
+                summary: 'Update file metadata',
+                description: 'Updates metadata for the file identified in the request body without changing its contents.',
+                requestBody: new RequestBody(
+                    description: 'The file path and metadata values to update.',
+                    content: new \ArrayObject(['application/json' => new MediaType(new \ArrayObject($this->getMetadataRequestSchema()))]),
+                    required: true,
+                ),
+            ),
             read: false,
             deserialize: false,
             status: 200,
             processor: VirtualFilesystemStateProcessor::class,
+            extraProperties: ['contao' => ['operation' => 'metadata']],
         );
+    }
+
+    private function getMetadataRequestSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'path' => ['type' => 'string', 'minLength' => 1],
+                'data' => $this->objectNormalizer->getJsonSchema(ExtraMetadata::class),
+            ],
+            'required' => ['path', 'data'],
+            'additionalProperties' => false,
+        ];
     }
 }
