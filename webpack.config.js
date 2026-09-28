@@ -28,8 +28,8 @@ Encore
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
     .addStyleEntry('login', './core-bundle/assets/styles/login.pcss')
-    .addStyleEntry('tinymce', './core-bundle/assets/styles/vendors/tinymce/theme/light.pcss')
-    .addStyleEntry('tinymce-dark', './core-bundle/assets/styles/vendors/tinymce/theme/dark.pcss')
+    .addStyleEntry('hugerte', './core-bundle/assets/styles/vendors/hugerte/theme/light.pcss')
+    .addStyleEntry('hugerte-dark', './core-bundle/assets/styles/vendors/hugerte/theme/dark.pcss')
     .configureDevServerOptions(options => {
         options.server = {
             type: 'https',
