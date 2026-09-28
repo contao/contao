@@ -20,7 +20,7 @@
                         editor.editorManager.get(editor.id).focus();
                     }
                     editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
-                }
+                },
 
                 {% block picker %}
                 file_picker_callback: function (callback, value, meta) {
