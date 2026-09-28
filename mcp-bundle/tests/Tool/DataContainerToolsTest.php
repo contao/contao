@@ -79,6 +79,14 @@ final class DataContainerToolsTest extends TestCase
         $this->createTools()->deleteRecord('news', 1);
     }
 
+    public function testRejectsUnknownParentParametersBeforeDispatch(): void
+    {
+        $this->expectException(ToolCallException::class);
+        $this->expectExceptionMessage('Unknown parent parameter "pid".');
+
+        $this->createTools()->listRecords('news', parents: ['pid' => 1]);
+    }
+
     public function testDispatchesUpdatesThroughTheApi(): void
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -181,6 +189,8 @@ final class DataContainerToolsTest extends TestCase
         $this->assertSame('object', $tools['contao_dc_update_record']['properties']['data']['type']);
         $this->assertSame(['resource', 'id', 'data'], $tools['contao_dc_update_record']['required']);
         $this->assertSame(1, $tools['contao_dc_list_records']['properties']['page']['minimum']);
+        $this->assertSame('object', $tools['contao_dc_list_records']['properties']['parents']['type']);
+        $this->assertSame(['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]], $tools['contao_dc_list_records']['properties']['parents']['additionalProperties']);
     }
 
     private function createTools(): DataContainerTools
@@ -205,7 +215,7 @@ final class DataContainerToolsTest extends TestCase
                 'news_patch' => new Patch(name: 'news_patch'),
                 'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
             ],
-            extraProperties: ['contao' => ['table' => 'tl_news']],
+            extraProperties: ['contao' => ['table' => 'tl_news', 'resource' => 'news', 'parents' => []]],
         )];
 
         $metadata = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);

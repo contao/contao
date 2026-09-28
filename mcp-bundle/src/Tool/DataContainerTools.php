@@ -53,55 +53,72 @@ final class DataContainerTools
         }
     }
 
-    #[McpTool(name: 'contao_dc_list_records', description: 'List records of a discovered resource. Follow the pagination links in the result. Requires the list operation. For child tables, supply parent with id and optionally table.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
-    public function listRecords(string $resource, #[Schema(minimum: 1)] int $page = 1, #[Schema(type: 'object', additionalProperties: true)] array $parent = []): CallToolResult
+    #[McpTool(name: 'contao_dc_list_records', description: 'List records of a discovered resource. Follow the pagination links in the result. Supply every parent parameter returned by the resource description.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    public function listRecords(string $resource, #[Schema(minimum: 1)] int $page = 1, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
         if ($page < 1) {
             throw new ToolCallException('The page must be at least 1.');
         }
 
-        return $this->execute($this->getOperation($resource, 'list'), array_filter(['page' => $page, 'parent' => $parent['id'] ?? null, 'ptable' => $parent['table'] ?? null], static fn ($value) => null !== $value));
+        return $this->execute($this->getOperation($resource, 'list', $parents), ['page' => $page] + $parents);
     }
 
     #[McpTool(name: 'contao_dc_read_record', description: 'Read one record using an identifier returned by the API. Requires the read operation.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
-    public function readRecord(string $resource, int|string $id): CallToolResult
+    public function readRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
-        return $this->execute($this->getOperation($resource, 'read'), ['id' => $id]);
+        return $this->execute($this->getOperation($resource, 'read', $parents), ['id' => $id] + $parents);
     }
 
     #[McpTool(name: 'contao_dc_create_record', description: 'Create a record. First describe the resource and supply fields from operationSchemas.create, including required fields. Requires the create operation.', annotations: new ToolAnnotations(destructiveHint: false, openWorldHint: false))]
-    public function createRecord(string $resource, #[Schema(type: 'object', additionalProperties: true)] array $data): CallToolResult
+    public function createRecord(string $resource, #[Schema(type: 'object', additionalProperties: true)] array $data, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
-        return $this->execute($this->getOperation($resource, 'create'), [], $data);
+        return $this->execute($this->getOperation($resource, 'create', $parents), $parents, $data);
     }
 
     #[McpTool(name: 'contao_dc_update_record', description: 'Update a record using JSON Merge Patch. First describe the resource and supply only fields from operationSchemas.update. Use the move operation to change parent or position. Requires the update operation.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function updateRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: true)] array $data): CallToolResult
+    public function updateRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: true)] array $data, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
-        return $this->execute($this->getOperation($resource, 'update'), ['id' => $id], $data);
+        return $this->execute($this->getOperation($resource, 'update', $parents), ['id' => $id] + $parents, $data);
     }
 
     #[McpTool(name: 'contao_dc_delete_record', description: 'Delete a record using an identifier returned by the API. Requires the delete operation. Check the resource description before calling.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function deleteRecord(string $resource, int|string $id): CallToolResult
+    public function deleteRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
-        return $this->execute($this->getOperation($resource, 'delete'), ['id' => $id]);
+        return $this->execute($this->getOperation($resource, 'delete', $parents), ['id' => $id] + $parents);
     }
 
     #[McpTool(name: 'contao_dc_move_record', description: 'Move or reorder a record using the move operation schema returned by contao_dc_describe_resource. Requires the move operation. Supply a target parent or sibling and position, never a raw sorting value.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function moveRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: true)] array $data): CallToolResult
+    public function moveRecord(string $resource, int|string $id, #[Schema(type: 'object', additionalProperties: true)] array $data, #[Schema(type: 'object', additionalProperties: ['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]])] array $parents = []): CallToolResult
     {
-        return $this->execute($this->getOperation($resource, 'move'), ['id' => $id], $data);
+        return $this->execute($this->getOperation($resource, 'move', $parents), ['id' => $id] + $parents, $data);
     }
 
-    private function getOperation(string $resource, string $action): HttpOperation
+    private function getOperation(string $resource, string $action, array $parents = []): HttpOperation
     {
         try {
-            return $this->resources->getOperation($resource, $action);
+            $operation = $this->resources->getOperation($resource, $action, isset($parents['nested']));
         } catch (\OutOfBoundsException $exception) {
             throw new ToolCallException($exception->getMessage().' Use contao_dc_discover_resources first.', previous: $exception);
         } catch (OperationNotFoundException $exception) {
             throw new ToolCallException($exception->getMessage().' Use contao_dc_describe_resource to discover its operations.', previous: $exception);
         }
+
+        $contao = $operation->getExtraProperties()['contao'] ?? [];
+        $expected = array_column($contao['parents'] ?? [], 'parameter');
+
+        if (\is_string($contao['recursive_parent']['parameter'] ?? null)) {
+            $expected[] = $contao['recursive_parent']['parameter'];
+        }
+
+        if ([] !== ($invalid = array_diff(array_keys($parents), $expected))) {
+            throw new ToolCallException('Unknown parent parameter "'.reset($invalid).'".');
+        }
+
+        if ([] !== ($missing = array_diff($expected, array_keys($parents)))) {
+            throw new ToolCallException('Missing parent parameter "'.reset($missing).'".');
+        }
+
+        return $operation;
     }
 
     private function execute(HttpOperation $operation, array $parameters = [], array|null $data = null): CallToolResult

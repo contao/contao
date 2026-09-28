@@ -87,18 +87,10 @@ final class DataContainerSchemaFactory
         foreach ($schema['properties'] as $field => $property) {
             $excluded = 'read' === $operation
                 ? ($property['writeOnly'] ?? false)
-                : ($property['readOnly'] ?? false) || \in_array($field, 'update' === $operation ? ['pid', 'ptable', 'sorting'] : ['sorting'], true);
+                : ($property['readOnly'] ?? false) || \in_array($field, ['pid', 'ptable', 'sorting'], true);
 
             if ($excluded) {
                 unset($schema['properties'][$field]);
-            }
-        }
-
-        if ('create' === $operation) {
-            foreach (['pid' => 'Destination parent ID for the new record.', 'ptable' => 'Destination parent table for the new record.'] as $field => $description) {
-                if (isset($schema['properties'][$field])) {
-                    $schema['properties'][$field]['description'] = $description;
-                }
             }
         }
 

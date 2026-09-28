@@ -52,20 +52,23 @@ final class DataContainerResourceRegistry
         $resource = $this->getResource($name);
         $operations = $this->getOperations($resource);
         $table = $this->getTable($resource) ?? throw new \LogicException('The data container resource has no table metadata.');
+        $contao = $resource->getExtraProperties()['contao'] ?? [];
         $schemas = $this->schemaFactory->createOperationSchemas($table);
 
         return [
             'resource' => $name,
             'title' => $resource->getShortName(),
+            'parentParameters' => array_column($contao['parents'] ?? [], 'parameter'),
+            'recursiveParentParameter' => $this->hasRecursiveOperations($resource) ? 'nested' : null,
             'operations' => array_keys($operations),
             'schema' => $schemas['read'],
             'operationSchemas' => array_intersect_key($schemas, $operations, array_flip(['create', 'update', 'move'])),
         ];
     }
 
-    public function getOperation(string $name, string $action): HttpOperation
+    public function getOperation(string $name, string $action, bool $recursive = false): HttpOperation
     {
-        return $this->getOperations($this->getResource($name))[$action]
+        return $this->getOperations($this->getResource($name), $recursive)[$action]
             ?? throw new OperationNotFoundException(\sprintf('Resource "%s" does not support "%s".', $name, $action));
     }
 
@@ -83,10 +86,9 @@ final class DataContainerResourceRegistry
         $resources = [];
 
         foreach ($this->metadataFactory->create(DataContainerRecord::class) as $resource) {
-            $table = $this->getTable($resource);
+            $name = $resource->getExtraProperties()['contao']['resource'] ?? null;
 
-            if (null !== $table) {
-                $name = str_starts_with($table, 'tl_') ? substr($table, 3) : $table;
+            if (\is_string($name) && '' !== $name) {
                 $resources[$name] = $resource;
             }
         }
@@ -104,11 +106,15 @@ final class DataContainerResourceRegistry
     /**
      * @return array<string, HttpOperation>
      */
-    private function getOperations(ApiResource $resource): array
+    private function getOperations(ApiResource $resource, bool $recursive = false): array
     {
         $operations = [];
 
         foreach ($resource->getOperations() ?? [] as $operation) {
+            if ($recursive !== isset($operation->getExtraProperties()['contao']['recursive_parent'])) {
+                continue;
+            }
+
             $action = match (true) {
                 'move' === ($operation->getExtraProperties()['contao']['action'] ?? null) => 'move',
                 $operation instanceof GetCollection => 'list',
@@ -125,5 +131,16 @@ final class DataContainerResourceRegistry
         }
 
         return $operations;
+    }
+
+    private function hasRecursiveOperations(ApiResource $resource): bool
+    {
+        foreach ($resource->getOperations() ?? [] as $operation) {
+            if (isset($operation->getExtraProperties()['contao']['recursive_parent'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
