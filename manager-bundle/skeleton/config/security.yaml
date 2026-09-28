@@ -16,6 +16,7 @@ security:
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
             stateless: true
+            login_throttling: ~
             access_token:
                 token_handler: contao.security.access_token_handler
 
