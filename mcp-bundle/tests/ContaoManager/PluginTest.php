@@ -15,8 +15,10 @@ namespace Contao\McpBundle\Tests\ContaoManager;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\McpBundle\ContaoManager\Plugin;
 use Contao\McpBundle\ContaoMcpBundle;
+use Contao\OAuthBundle\ContaoOAuthBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -35,7 +37,7 @@ final class PluginTest extends TestCase
 
         $this->assertCount(2, $bundles);
         $this->assertSame(ContaoMcpBundle::class, $bundles[0]->getName());
-        $this->assertSame([ContaoApiBundle::class, ContaoCoreBundle::class], $bundles[0]->getLoadAfter());
+        $this->assertSame([ContaoApiBundle::class, ContaoCoreBundle::class, ContaoOAuthBundle::class], $bundles[0]->getLoadAfter());
         $this->assertSame(McpBundle::class, $bundles[1]->getName());
         $this->assertSame([ContaoMcpBundle::class], $bundles[1]->getLoadAfter());
     }
@@ -103,8 +105,51 @@ final class PluginTest extends TestCase
         $this->assertSame($route['path'], $config['servers']['contao_backend']['http']['path']);
         $this->assertSame(['_scope' => 'backend', '_stateless' => true], $route['defaults']);
         $this->assertSame('%contao.backend.route_prefix%/mcp', $route['path']);
+
         $this->assertSame('mcp.server.contao_backend.controller::handle', $route['controller']);
         $this->assertSame(['GET', 'POST', 'DELETE', 'OPTIONS'], $route['methods']);
         $this->assertArrayNotHasKey('resource', $route);
+    }
+
+    public function testAddsTheMcpFirewallBeforeTheBackendApiFirewall(): void
+    {
+        $extensionConfigs = [
+            [
+                'firewalls' => [
+                    'dev' => ['security' => false],
+                    'contao_backend_api' => ['stateless' => true],
+                    'contao_backend' => [],
+                ],
+            ],
+        ];
+
+        $plugin = new Plugin();
+        $config = $plugin->getExtensionConfig('security', $extensionConfigs, $this->createStub(ContainerBuilder::class));
+
+        $this->assertSame(['dev', 'contao_mcp', 'contao_backend_api', 'contao_backend'], array_keys($config[0]['firewalls']));
+
+        $this->assertSame(
+            [
+                'request_matcher' => 'contao.mcp_bundle.routing.mcp_request_matcher',
+                'stateless' => true,
+                'provider' => 'contao.security.backend_user_provider',
+                'user_checker' => 'contao.security.user_checker',
+                'custom_authenticators' => ['contao.oauth_bundle.security.bearer_authenticator'],
+                'entry_point' => 'contao.oauth_bundle.security.bearer_authenticator',
+            ],
+            $config[0]['firewalls']['contao_mcp'],
+        );
+    }
+
+    public function testDoesNotOverrideAnExistingMcpFirewall(): void
+    {
+        $extensionConfigs = [
+            ['firewalls' => ['contao_mcp' => ['custom' => true], 'contao_backend' => []]],
+        ];
+
+        $plugin = new Plugin();
+
+        $this->assertSame($extensionConfigs, $plugin->getExtensionConfig('security', $extensionConfigs, $this->createStub(ContainerBuilder::class)));
+        $this->assertSame([['foo' => 'bar']], $plugin->getExtensionConfig('framework', [['foo' => 'bar']], $this->createStub(ContainerBuilder::class)));
     }
 }

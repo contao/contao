@@ -43,3 +43,6 @@ services:
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.inspector'
+
+    contao.mcp_bundle.routing.mcp_request_matcher:
+        class: Contao\McpBundle\Routing\McpRequestMatcher

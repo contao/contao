@@ -30,6 +30,7 @@ use Symfony\AI\McpBundle\Controller\McpController;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -163,6 +164,35 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $this->assertContains('contao_backend_search', $tools);
         $this->assertCount(17, $tools);
+    }
+
+    public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoMcpBundle()->getContainerExtension();
+
+        $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
+
+        $extension->prepend($container);
+
+        $this->assertSame(
+            [
+                [
+                    'resource' => [
+                        'route' => 'contao_mcp_backend',
+                        'name' => 'Contao MCP',
+                        'scopes' => ['mcp'],
+                    ],
+                    'cimd_trusted_domains' => [
+                        'chatgpt.com',
+                        'claude.ai',
+                        'vscode.dev',
+                    ],
+                ],
+            ],
+            $container->getExtensionConfig('contao_oauth'),
+        );
     }
 
     private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
