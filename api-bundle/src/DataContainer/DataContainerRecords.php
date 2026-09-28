@@ -23,6 +23,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -343,6 +344,8 @@ class DataContainerRecords
     private function run(string $table, array $parameters, callable $callback): mixed
     {
         $this->framework->initialize();
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+
         $request = $this->createRequest($table, $parameters);
         $bag = $request->getSession()->getBag('contao_backend');
 
@@ -360,18 +363,7 @@ class DataContainerRecords
                     throw new NotFoundHttpException('The resource is not backed by a table data container.');
                 }
 
-                // Legacy actions and callbacks can output HTML directly, bypassing render().
-                // Discard it to protect the API response, preserving any existing outer buffers.
-                $level = ob_get_level();
-                ob_start();
-
-                try {
-                    return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
-                } finally {
-                    while (ob_get_level() > $level) {
-                        ob_end_clean();
-                    }
-                }
+                return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
             },
         );
     }
@@ -393,7 +385,7 @@ class DataContainerRecords
         // Build a backend request instead of inheriting API routing or client
         // control parameters
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
-        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_contao_api' => true, '_locale' => $parent->getLocale()]);
+        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_contao_api' => true, '_locale' => $parent->getLocale()]);
 
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());

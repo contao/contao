@@ -39,7 +39,7 @@ final class PluginTest extends TestCase
         $this->assertSame([ContaoMcpBundle::class], $bundles[1]->getLoadAfter());
     }
 
-    public function testLoadsTheSkeletonConfigAndMcpRoutes(): void
+    public function testLoadsTheBundleConfigAndMcpRoutes(): void
     {
         $plugin = new Plugin();
         $routeCollection = new RouteCollection();
@@ -79,7 +79,7 @@ final class PluginTest extends TestCase
 
         $this->assertSame(
             [
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/mcp.yaml',
+                \dirname(__DIR__, 2).'/src/ContaoManager/../../config/mcp.yaml',
                 \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/api_platform.yaml',
             ],
             $paths,
@@ -97,7 +97,7 @@ final class PluginTest extends TestCase
     {
         $route = Yaml::parseFile(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')['contao_mcp_backend'];
 
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $this->assertSame($route['path'], $config['servers']['contao_backend']['http']['path']);
         $this->assertSame(['_scope' => 'backend'], $route['defaults']);
