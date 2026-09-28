@@ -198,7 +198,7 @@
                     {% for access_token in personal_access_tokens %}
                         <tr class="hover-row">
                             {% if access_token.id.equals(created_pat_id|default) %}
-                                <td class="name tl_confirm">
+                                <td class="name tl_confirm" colspan="2">
                                     <button
                                         type="button"
                                         data-controller="contao--clipboard"
@@ -211,14 +211,14 @@
                                 </td>
                             {% else %}
                                 <td class="name">{{ access_token.name }}</td>
+                                <td class="expires">
+                                    {% if access_token.expiresAt|default %}
+                                        {{ access_token.expiresAt.format('j. F Y, H:i') }}
+                                    {% else %}
+                                        –
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                            <td class="expires">
-                                {% if access_token.expiresAt|default %}
-                                    {{ access_token.expiresAt.format('j. F Y, H:i') }}
-                                {% else %}
-                                    –
-                                {% endif %}
-                            </td>
                             <td class="actions">
                                 <form method="post">
                                     <input type="hidden" name="FORM_SUBMIT" value="tl_pat_actions">

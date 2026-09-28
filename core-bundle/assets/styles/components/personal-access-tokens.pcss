@@ -19,6 +19,10 @@
                     word-break: break-word;
                 }
             }
+
+            &.tl_confirm {
+                background-position: 11px center;
+            }
         }
 
         td.tl_confirm {
@@ -50,6 +54,10 @@
                     vertical-align: -3px;
                 }
             }
+        }
+
+        td.tl_confirm + td {
+            background-color: var(--confirm-bg);
         }
     }
 }
