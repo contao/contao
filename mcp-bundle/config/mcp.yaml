@@ -4,7 +4,7 @@ mcp:
             name: Contao Backend
             registry:
                 tools:
-                    - Contao\McpBundle\Tool\DataContainerTools
+                    - Contao\McpBundle\Tool\
             transports:
                 http: true
                 stdio: false
