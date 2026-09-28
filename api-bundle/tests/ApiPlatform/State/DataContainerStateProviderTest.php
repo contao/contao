@@ -13,121 +13,146 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\McpTool;
-use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\DataContainer\DataContainerPage;
+use Contao\ApiBundle\DataContainer\DataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class DataContainerStateProviderTest extends TestCase
 {
-    public function testReadsTheTargetRecordForHttpWriteOperations(): void
+    public function testReadsExistingRecordsForItemOperations(): void
     {
-        $provider = new ReadProvider(new DataContainerStateProvider());
+        $record = new DataContainerRecord('tl_content', ['headline' => 'Existing'], 17);
 
-        foreach ([new Patch(), new Delete()] as $operation) {
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->exactly(3))
+            ->method('find')
+            ->with('tl_content', 17)
+            ->willReturn($record)
+        ;
+
+        $provider = new ReadProvider(new DataContainerStateProvider($records, new Pagination()));
+
+        foreach ([new Get(), new Patch(), new Delete()] as $operation) {
             $operation = $operation->withRead(true)->withExtraProperties(['contao' => ['table' => 'tl_content']]);
-            $record = $provider->provide($operation, ['id' => 17]);
-
-            $this->assertInstanceOf(DataContainerRecord::class, $record);
-            $this->assertSame('tl_content', $record->table);
-            $this->assertSame(17, $record->id);
+            $this->assertSame($record, $provider->provide($operation, ['id' => 17]));
         }
     }
 
-    public function testProvidesARecordForItemOperations(): void
+    public function testReturnsNotFoundForMissingRecords(): void
     {
-        $provider = new DataContainerStateProvider();
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('find')
+            ->with('tl_content', 17)
+            ->willReturn(null)
+        ;
 
-        $operation = new Get()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $provider = new ReadProvider(new DataContainerStateProvider($records, new Pagination()));
+        $operation = new Get(read: true, extraProperties: ['contao' => ['table' => 'tl_content']]);
 
-        $record = $provider->provide($operation, ['id' => 17]);
-
-        $this->assertInstanceOf(DataContainerRecord::class, $record);
-        $this->assertSame('tl_content', $record->table);
-        $this->assertSame(17, $record->id);
-        $this->assertSame([], $record->data);
+        $this->expectException(NotFoundHttpException::class);
+        $provider->provide($operation, ['id' => 17]);
     }
 
-    public function testProvidesARecordForMcpToolItemOperations(): void
+    public function testReturnsTheRequestedCollectionPage(): void
     {
-        $provider = new DataContainerStateProvider();
+        $page = new DataContainerPage([new DataContainerRecord('tl_content', [], 17)], 2);
 
-        $operation = new McpTool()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->with('tl_content', 2, [], 30)
+            ->willReturn($page)
+        ;
 
-        $record = $provider->provide($operation, ['id' => 17]);
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
-        $this->assertInstanceOf(DataContainerRecord::class, $record);
-        $this->assertSame('tl_content', $record->table);
-        $this->assertSame(17, $record->id);
-        $this->assertSame([], $record->data);
+        $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['page' => 2]]));
     }
 
-    public function testProvidesAnEmptyCollectionForCollectionOperations(): void
+    #[DataProvider('providePageSizes')]
+    public function testUsesTheRequestedPageSizeWithinTheMaximum(array $filters, int $limit, bool $request): void
     {
-        $provider = new DataContainerStateProvider();
+        $page = new DataContainerPage([], 2, $limit);
 
-        $operation = new GetCollection()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->with('tl_content', 2, ['id' => '7', 'table' => 'tl_page'], $limit)
+            ->willReturn($page)
+        ;
 
-        $this->assertSame([], $provider->provide($operation));
+        $operation = new GetCollection(
+            paginationClientItemsPerPage: true,
+            paginationItemsPerPage: 30,
+            paginationMaximumItemsPerPage: 100,
+            extraProperties: ['contao' => ['table' => 'tl_content']],
+        );
+
+        $filters += ['page' => '2', 'parent' => '7', 'ptable' => 'tl_page'];
+        $context = $request ? ['request' => new Request($filters)] : ['filters' => $filters];
+
+        $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: $context));
+        $this->assertSame((float) $limit, $page->getItemsPerPage());
     }
 
-    public function testProvidesMcpInputForWriteOperations(): void
+    public static function providePageSizes(): iterable
     {
-        $provider = new DataContainerStateProvider();
-
-        $operation = new McpTool(method: 'POST')->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
-
-        $record = $provider->provide($operation, context: [
-            'mcp_data' => [
-                'data' => ['headline' => 'Example'],
-                'id' => 17,
-            ],
-        ]);
-
-        $this->assertInstanceOf(DataContainerMcpRecord::class, $record);
-        $this->assertSame(['headline' => 'Example'], $record->data);
-        $this->assertSame(17, $record->id);
+        yield 'default' => [[], 30, false];
+        yield 'smaller' => [['itemsPerPage' => '10'], 10, false];
+        yield 'larger' => [['itemsPerPage' => '60'], 60, true];
+        yield 'maximum' => [['itemsPerPage' => '100'], 100, false];
+        yield 'capped' => [['itemsPerPage' => '999'], 100, true];
     }
 
-    public function testProvidesAnEmptyCollectionForMcpToolCollectionOperations(): void
+    #[DataProvider('provideInvalidPagination')]
+    public function testRejectsInvalidPaginationBeforeListing(array $filters): void
     {
-        $provider = new DataContainerStateProvider();
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
 
-        $operation = new McpToolCollection()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $operation = new GetCollection(paginationClientItemsPerPage: true, paginationMaximumItemsPerPage: 100, extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->assertSame([], $provider->provide($operation));
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => $filters]);
+    }
+
+    public static function provideInvalidPagination(): iterable
+    {
+        yield [['page' => 0]];
+        yield [['page' => -1]];
+        yield [['itemsPerPage' => 0]];
+        yield [['itemsPerPage' => -1]];
+        yield [['itemsPerPage' => 'invalid']];
+        yield [['page' => PHP_INT_MAX, 'itemsPerPage' => 100]];
     }
 
     public function testReturnsNullWhenNoContaoTableIsConfigured(): void
     {
-        $provider = new DataContainerStateProvider();
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('find')
+        ;
 
-        $this->assertNull($provider->provide(new Get()));
+        $this->assertNull(new DataContainerStateProvider($records, new Pagination())->provide(new Get()));
     }
 }

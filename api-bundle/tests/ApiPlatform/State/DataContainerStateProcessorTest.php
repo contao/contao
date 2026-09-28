@@ -13,87 +13,99 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\DataContainer\DataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
 
 final class DataContainerStateProcessorTest extends TestCase
 {
-    public function testAcceptsMoveInputAndReturnsTheTargetRecordPlaceholder(): void
+    public function testMovesAnExistingRecordInsteadOfCreatingOne(): void
     {
+        $input = new DataContainerMove(42, 'after');
+        $persisted = new DataContainerRecord('tl_content', [], 17);
+
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $records
+            ->expects($this->once())
+            ->method('move')
+            ->with('tl_content', 17, $input)
+            ->willReturn($persisted)
+        ;
+
         $operation = new Post(extraProperties: ['contao' => ['table' => 'tl_content', 'action' => 'move']]);
-        $record = new DataContainerStateProcessor()->process(new DataContainerMove(42, 'after'), $operation, ['id' => 17]);
 
-        $this->assertInstanceOf(DataContainerRecord::class, $record);
-        $this->assertSame('tl_content', $record->table);
-        $this->assertSame(17, $record->id);
-        $this->assertSame([], $record->data);
+        $this->assertSame($persisted, new DataContainerStateProcessor($records)->process($input, $operation, ['id' => 17]));
     }
 
-    public function testReturnsTheRecordForCreateAndUpdateOperations(): void
+    public function testCreatesARecordAndReturnsThePersistedState(): void
     {
-        $processor = new DataContainerStateProcessor();
-        $record = new DataContainerRecord('tl_content', ['headline' => 'Example']);
+        $input = new DataContainerRecord('tl_content', ['headline' => 'Example']);
+        $persisted = new DataContainerRecord('tl_content', ['headline' => 'Example', 'alias' => 'example'], 17);
 
-        $operation = new McpTool(method: 'POST')->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('create')
+            ->with($input)
+            ->willReturn($persisted)
+        ;
 
-        $this->assertSame($record, $processor->process($record, $operation));
+        $operation = new Post(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
-        $operation = new Patch()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
-
-        $this->assertSame($record, $processor->process($record, $operation, ['id' => 17]));
+        $this->assertSame($persisted, new DataContainerStateProcessor($records)->process($input, $operation));
     }
 
-    public function testConvertsMcpWriteInputToADataContainerRecord(): void
+    public function testUpdatesARecordAndReturnsThePersistedState(): void
     {
-        $processor = new DataContainerStateProcessor();
-        $input = new DataContainerMcpRecord(['headline' => 'Example'], 17);
+        $input = new DataContainerRecord('tl_content', ['headline' => 'Example'], 17);
+        $persisted = new DataContainerRecord('tl_content', ['headline' => 'Saved'], 17);
 
-        $operation = new Post()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('update')
+            ->with($input)
+            ->willReturn($persisted)
+        ;
 
-        $record = $processor->process($input, $operation);
+        $operation = new Patch(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
-        $this->assertInstanceOf(DataContainerRecord::class, $record);
-        $this->assertSame('tl_content', $record->table);
-        $this->assertSame(['headline' => 'Example'], $record->data);
-        $this->assertSame(17, $record->id);
+        $this->assertSame($persisted, new DataContainerStateProcessor($records)->process($input, $operation, ['id' => 17]));
     }
 
-    public function testReturnsNullForDeleteOperations(): void
+    public function testDeletesTheRecord(): void
     {
-        $processor = new DataContainerStateProcessor();
-        $record = new DataContainerRecord('tl_content', ['headline' => 'Example']);
+        $record = new DataContainerRecord('tl_content', [], 17);
 
-        $operation = new Delete()->withExtraProperties([
-            'contao' => [
-                'table' => 'tl_content',
-            ],
-        ]);
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('delete')
+            ->with($record)
+        ;
 
-        $this->assertNull($processor->process($record, $operation, ['id' => 17]));
+        $operation = new Delete(extraProperties: ['contao' => ['table' => 'tl_content']]);
+
+        $this->assertNull(new DataContainerStateProcessor($records)->process($record, $operation, ['id' => 17]));
     }
 
-    public function testReturnsTheInputWhenItIsNotADataContainerRecord(): void
+    public function testReturnsUnsupportedInputUnchanged(): void
     {
-        $processor = new DataContainerStateProcessor();
+        $records = $this->createMock(DataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('create')
+        ;
 
-        $this->assertSame('foo', $processor->process('foo', new Post()));
+        $this->assertSame('foo', new DataContainerStateProcessor($records)->process('foo', new Post()));
     }
 }

@@ -118,7 +118,6 @@ final class DataContainerRecordNormalizerTest extends TestCase
             context: ['operation' => $operation],
         );
 
-        $this->assertInstanceOf(DataContainerRecord::class, $record);
         $this->assertSame('tl_content', $record->table);
         $this->assertSame(17, $record->id);
         $this->assertSame(['headline' => 'Example'], $record->data);
