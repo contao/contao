@@ -180,8 +180,8 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
 
         $this->assertArrayHasKey('template-studio', $children);
         $this->assertSame('MOD.template_studio.0', $children['template-studio']->getLabel());
-
         $this->assertSame([], $children['template-studio']->getLinkAttributes());
+
         $this->assertSame(
             ['translation_domain' => 'contao_modules', 'title' => 'MOD.template_studio.1'],
             $children['template-studio']->getExtras(),

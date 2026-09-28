@@ -71,7 +71,7 @@ class BackendMenuListener
         $params = [
             'do' => 'debug',
             'key' => $this->debug ? 'disable' : 'enable',
-            'referer' => base64_encode((string) $request->server->get('QUERY_STRING', '')),
+            'referer' => base64_encode($request->server->getString('QUERY_STRING', '')),
             'rt' => $this->tokenManager->getDefaultTokenValue(),
         ];
 

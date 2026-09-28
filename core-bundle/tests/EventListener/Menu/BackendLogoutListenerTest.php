@@ -205,6 +205,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $this->assertSame($label, $children['logout']->getLabel());
         $this->assertSame($url, $children['logout']->getUri());
+
         $this->assertSame(
             [
                 BackendMenuBuilder::EXTRA_ICON => 'exit.svg',

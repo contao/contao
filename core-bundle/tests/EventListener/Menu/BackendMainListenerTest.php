@@ -327,6 +327,7 @@ class BackendMainListenerTest extends TestCase
     {
         $factory = new MenuFactory();
         $menu = $factory->createItem('mainMenu')->setChildrenAttribute('class', 'menu_level_0');
+
         $group = $factory
             ->createItem('custom')
             ->setLabel('Custom')
@@ -373,6 +374,7 @@ class BackendMainListenerTest extends TestCase
     {
         $factory = new MenuFactory();
         $menu = $factory->createItem('mainMenu');
+
         $item = $factory
             ->createItem('standalone')
             ->setLabel('Standalone')
@@ -392,6 +394,7 @@ class BackendMainListenerTest extends TestCase
     {
         $factory = new MenuFactory();
         $menu = $factory->createItem('mainMenu');
+
         $item = $factory
             ->createItem('standalone')
             ->setLabel('Standalone')

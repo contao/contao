@@ -43,15 +43,13 @@ class BackendMainListener
     public function __invoke(MenuEvent $event): void
     {
         $tree = $event->getTree();
-
-        $name = $event->getTree()->getName();
+        $name = $tree->getName();
 
         if ('mainMenu' !== $name) {
             return;
         }
 
         $factory = $event->getFactory();
-        $tree = $event->getTree();
         $modules = $this->getBackendModules();
 
         foreach ($modules as $categoryName => $categoryData) {
