@@ -240,6 +240,7 @@ class DcTableTest extends TestCase
     private function createSortingDataContainer(string|null $sort): DC_Table
     {
         $request = new Request(attributes: ['_contao_api' => true]);
+
         $bag = new ArrayAttributeBag('_contao_be_attributes');
         $bag->setName('contao_backend');
 
@@ -252,12 +253,14 @@ class DcTableTest extends TestCase
         }
 
         $request->setSession($session);
+
         $stack = new RequestStack();
         $stack->push($request);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $stack);
         System::setContainer($container);
+
         $GLOBALS['TL_DCA']['tl_test'] = [
             'list' => ['sorting' => ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort', 'fields' => ['title', 'alias', 'id']]],
             'fields' => ['title' => ['sorting' => true, 'flag' => DataContainer::SORT_BOTH]],

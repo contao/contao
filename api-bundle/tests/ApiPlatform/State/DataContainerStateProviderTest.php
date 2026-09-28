@@ -154,6 +154,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->with('tl_content', 1, [], 30, ['title DESC'])
             ->willReturn(new DataContainerPage([], 1))
         ;
+
         $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
 
         new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['request' => new Request(['sort' => 'title DESC'])]);
@@ -166,6 +167,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->expects($this->never())
             ->method('list')
         ;
+
         $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Exactly one sorting choice is currently supported.');
@@ -180,6 +182,7 @@ final class DataContainerStateProviderTest extends TestCase
             ->expects($this->never())
             ->method('list')
         ;
+
         $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
         $this->expectException(InvalidArgumentException::class);
 

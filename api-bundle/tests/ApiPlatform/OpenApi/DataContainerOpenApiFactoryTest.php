@@ -145,11 +145,13 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             if ('sort' === $parameter->getName()) {
                 $sortingParameter = $parameter;
             }
+
             $parameters[$parameter->getName()] = $parameter->getSchema();
         }
 
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 30, 'maximum' => 300], $parameters['itemsPerPage']);
         $this->assertSame(['type' => 'integer', 'minimum' => 1, 'default' => 1], $parameters['page']);
+
         if ($hasSort) {
             $this->assertSame(['type' => 'array', 'items' => ['type' => 'string'], 'maxItems' => 1], $parameters['sort']);
             $this->assertSame('form', $sortingParameter->getStyle());
@@ -157,6 +159,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         } else {
             $this->assertArrayNotHasKey('sort', $parameters);
         }
+
         $collectionSchema = $getCollection->getResponses()['200']->getContent()['application/json']->getSchema();
         $this->assertSame('array', $collectionSchema['type']);
         $this->assertSame('#/components/schemas/dc_tl_content', $collectionSchema['items']['$ref']);
