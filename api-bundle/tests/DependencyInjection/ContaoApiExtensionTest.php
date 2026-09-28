@@ -38,20 +38,19 @@ class ContaoApiExtensionTest extends TestCase
 
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
-        $this->assertSame('/admin/_api', $container->getParameterBag()->resolveValue($container->getDefinition(DataContainerOpenApiFactory::class)->getArgument('$apiPrefix')));
+        $this->assertSame('/admin/api', $container->getParameterBag()->resolveValue($container->getDefinition(DataContainerOpenApiFactory::class)->getArgument('$apiPrefix')));
     }
 
-    public function testLoadsServicesAndParameters(): void
+    public function testLoadsServices(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
 
-        new ContaoApiBundle()->getContainerExtension()->load([['data_container_api_prefix' => '/dc']], $container);
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
         $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
         $this->assertTrue($container->hasDefinition(WidgetConverterRegistry::class));
-        $this->assertSame('/dc', $container->getParameter('contao_api.data_container_api_prefix'));
     }
 
     public function testAutoconfiguresConvertersBeforeTheCoreFallback(): void

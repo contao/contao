@@ -96,7 +96,7 @@ final class DataContainerToolsTest extends TestCase
             ->willReturnCallback(
                 function (Request $request, int $type): Response {
                     $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
-                    $this->assertSame('/_api/news/42', $request->getPathInfo());
+                    $this->assertSame('/contao/api/dc/news/42', $request->getPathInfo());
                     $this->assertSame('PATCH', $request->getMethod());
                     $this->assertSame('application/merge-patch+json', $request->headers->get('Content-Type'));
                     $this->assertSame(['title' => 'Updated'], json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR));
@@ -110,10 +110,10 @@ final class DataContainerToolsTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('news_patch', ['id' => 42])
-            ->willReturn('/_api/news/42')
+            ->willReturn('/contao/api/dc/news/42')
         ;
         $stack = new RequestStack();
-        $stack->push(Request::create('https://example.org/_mcp/backend'));
+        $stack->push(Request::create('https://example.org/contao/mcp'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
         $result = $tools->updateRecord('news', 42, ['title' => 'Updated']);
@@ -133,7 +133,7 @@ final class DataContainerToolsTest extends TestCase
             ->willReturnCallback(
                 function (Request $request, int $type): Response {
                     $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
-                    $this->assertSame('/_api/news/42/move', $request->getPathInfo());
+                    $this->assertSame('/contao/api/dc/news/42/move', $request->getPathInfo());
                     $this->assertSame('POST', $request->getMethod());
                     $this->assertSame('application/ld+json', $request->headers->get('Content-Type'));
                     $this->assertSame(['target' => 8, 'position' => 'after'], json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR));
@@ -148,11 +148,11 @@ final class DataContainerToolsTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('news_move', ['id' => 42])
-            ->willReturn('/_api/news/42/move')
+            ->willReturn('/contao/api/dc/news/42/move')
         ;
 
         $stack = new RequestStack();
-        $stack->push(Request::create('https://example.org/_mcp/backend'));
+        $stack->push(Request::create('https://example.org/contao/mcp'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
         $result = $tools->moveRecord('news', 42, ['target' => 8, 'position' => 'after']);
