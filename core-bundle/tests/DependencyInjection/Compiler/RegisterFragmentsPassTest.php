@@ -370,7 +370,7 @@ class RegisterFragmentsPassTest extends TestCase
     }
 
     #[DataProvider('provideTemplateNames')]
-    public function testSetsTemplatesInTemplatesOptionsListener(string|false|null $template, array $expectedCustomTemplates): void
+    public function testSetsTemplatesInTemplatesOptionsListener(false|string|null $template, array $expectedCustomTemplates): void
     {
         $contentController = new Definition('App\Controller\TextController');
         $contentController->addTag('contao.content_element', null === $template ? [] : ['template' => $template]);
