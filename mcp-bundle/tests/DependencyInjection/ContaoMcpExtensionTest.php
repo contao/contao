@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\McpBundle\ContaoMcpBundle;
 use Mcp\Capability\Attribute\McpTool;
@@ -74,6 +75,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_template_discover',
                 'contao_template_read',
                 'contao_template_validate',
+                'contao_template_analyze_impact',
                 'contao_template_create_override',
                 'contao_template_save',
                 'contao_template_delete_override',
@@ -132,7 +134,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(17, $tools);
+        $this->assertCount(18, $tools);
     }
 
     private function getContainerBuilder(bool $withBackendSearch = false): ContainerBuilder
@@ -156,6 +158,7 @@ final class ContaoMcpExtensionTest extends TestCase
             'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
+            'contao.twig.inspector' => Inspector::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
         }

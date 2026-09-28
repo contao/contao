@@ -14,9 +14,11 @@ namespace Contao\McpBundle\Tests\Tool;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
+use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\McpBundle\Response\ApiResponseConverter;
 use Contao\McpBundle\Tool\UserTemplateTools;
+use Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer;
 use Contao\McpBundle\UserTemplate\UserTemplateValidator;
 use Mcp\Exception\ToolCallException;
 use PHPUnit\Framework\TestCase;
@@ -51,6 +53,7 @@ final class UserTemplateToolsTest extends TestCase
             new RequestStack(),
             new ApiResponseConverter(),
             new UserTemplateValidator(new Environment(new ArrayLoader()), $loader),
+            new UserTemplateImpactAnalyzer($loader, $this->createStub(Inspector::class)),
         )->validate('content_element/text', '{{ value }}', 'demo');
 
         $this->assertSame(['identifier' => 'content_element/text', 'valid' => true, 'errors' => []], $result);
@@ -69,6 +72,7 @@ final class UserTemplateToolsTest extends TestCase
             new RequestStack([Request::create('/')]),
             new ApiResponseConverter(),
             new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
+            new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
         );
         $tools->executeOperation('save', 'content_element/text');
     }

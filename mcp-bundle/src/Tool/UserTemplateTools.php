@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\McpBundle\Response\ApiResponseConverter;
+use Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer;
 use Contao\McpBundle\UserTemplate\UserTemplateValidator;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
@@ -36,6 +37,7 @@ final class UserTemplateTools
         private readonly RequestStack $requestStack,
         private readonly ApiResponseConverter $responseConverter,
         private readonly UserTemplateValidator $validator,
+        private readonly UserTemplateImpactAnalyzer $impactAnalyzer,
     ) {
     }
 
@@ -61,6 +63,12 @@ final class UserTemplateTools
     public function validate(string $name, string $code, string|null $theme = null): array
     {
         return $this->validator->validate($name, $code, $theme);
+    }
+
+    #[McpTool(name: 'contao_template_analyze_impact', description: 'Analyze the theme-aware inheritance chain and direct literal Twig consumers of a template. The result is heuristic and includes explicit limitations.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    public function analyzeImpact(string $name, string|null $theme = null): array
+    {
+        return $this->impactAnalyzer->analyze($name, $theme);
     }
 
     #[McpTool(name: 'contao_template_create_override', description: 'Create an editable user override for a discovered template. Read the template first and only call this when the create operation is available.', annotations: new ToolAnnotations(destructiveHint: false, openWorldHint: false))]
