@@ -21,7 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class AccessTokenManager
 {
-    private const string TOKEN_PREFIX = 'pat';
+    private const string TOKEN_PREFIX = 'ct_pat_';
 
     public function __construct(
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
@@ -44,7 +44,7 @@ class AccessTokenManager
         $this->entityManager->persist($personalAccessToken);
         $this->entityManager->flush();
 
-        $personalAccessToken->setPlainToken(implode('_', [self::TOKEN_PREFIX, $personalAccessToken->getId()->toBase32(), $plainSecret]));
+        $personalAccessToken->setPlainToken(\sprintf('%s%s_%s', self::TOKEN_PREFIX, $personalAccessToken->getId()->toBase32(), $plainSecret));
 
         return $personalAccessToken;
     }
@@ -54,15 +54,19 @@ class AccessTokenManager
      */
     public function parseToken(string $token): array|null
     {
+        if (!str_starts_with($token, self::TOKEN_PREFIX)) {
+            return null;
+        }
+
         $parts = explode('_', $token);
 
-        if (3 !== \count($parts) || self::TOKEN_PREFIX !== $parts[0]) {
+        if (4 !== \count($parts)) {
             return null;
         }
 
         return [
-            'id' => $parts[1],
-            'secret' => $parts[2],
+            'id' => $parts[2],
+            'secret' => $parts[3],
         ];
     }
 

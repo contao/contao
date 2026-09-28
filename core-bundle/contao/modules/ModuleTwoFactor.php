@@ -224,10 +224,8 @@ class ModuleTwoFactor extends BackendModule
 			$this->Template->pat_expires_widget = $expiresWidget;
 		}
 
-		if ($token = $session->get('_created_pat_token'))
+		if (($token = $session->get('_created_pat_token')) && ($parsedToken = $accessTokenManager->parseToken($token)))
 		{
-			$parsedToken = $accessTokenManager->parseToken($token);
-
 			$this->Template->created_pat_id = Uuid::fromString($parsedToken['id']);
 			$this->Template->created_pat_token = $token;
 		}
