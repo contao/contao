@@ -9,6 +9,11 @@ services:
         arguments:
             $decorated: '@.inner'
 
+    Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceNameCollectionFactory:
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+
     # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
         decoration_priority: 750
@@ -17,6 +22,14 @@ services:
             $decorated: '@.inner'
             $framework: '@contao.framework'
             $resourceFinder: '@contao.resource_finder'
+
+    # Provide user templates as resources.
+    Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory:
+        decoration_priority: 751
+        decorates: api_platform.metadata.resource.metadata_collection_factory
+        arguments:
+            $decorated: '@.inner'
+            $templateStudioOperations: !tagged_iterator contao.operation.template_studio_element
 
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.
@@ -86,3 +99,19 @@ services:
             $urlGenerator: '@router'
 
     Opis\JsonSchema\Validator: ~
+
+    Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider:
+        tags: [api_platform.state_provider]
+        arguments:
+            $client: '@Contao\ApiBundle\UserTemplate\TemplateStudioClient'
+
+    Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor:
+        tags: [api_platform.state_processor]
+        arguments:
+            $client: '@Contao\ApiBundle\UserTemplate\TemplateStudioClient'
+
+    Contao\ApiBundle\UserTemplate\TemplateStudioClient:
+        arguments:
+            $kernel: '@http_kernel'
+            $router: '@router'
+            $requestStack: '@request_stack'

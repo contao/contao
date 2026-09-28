@@ -20,8 +20,20 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class CreateLegacyVariantOperation extends AbstractOperation
+class CreateLegacyVariantOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Create a legacy template variant outside a theme context. Provide identifier_fragment as a non-empty string
+            without the template prefix or file extension (for example, {"identifier_fragment": "compact"}). The
+            fragment is joined to the legacy prefix with "_"; slashes are replaced with hyphens. Choose an unused name.
+            Omit the fragment to obtain the prefix, suggested_identifier_fragment and
+            allowed_identifier_fragment_pattern without creating a file. Creation uses generated default content; use
+            save to edit it. The response contains the new identifier.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         if ($context->isThemeContext()) {
