@@ -184,7 +184,6 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
             $this->createResourceFinder(['tl_user']),
-            'backend/dc',
         );
 
         $routes = $this->createApiLoader($factory)->load(null);

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -157,7 +156,7 @@ class BackendUser extends User
 	{
 		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
 
-		return System::getContainer()->get('security.authorization_checker')->isGrantedForUser($this, 'contao_user.'.$array, $field);
+		return System::getContainer()->get('security.authorization_checker')->isGrantedForUser($this, 'contao_user.' . $array, $field);
 	}
 
 	/**
