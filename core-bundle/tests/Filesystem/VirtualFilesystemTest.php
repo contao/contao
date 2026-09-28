@@ -966,7 +966,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
 
-    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager&MockObject
+    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MockObject&MountManager
     {
         $mountManager = $this->createMock(MountManager::class);
 

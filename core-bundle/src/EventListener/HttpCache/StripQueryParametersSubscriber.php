@@ -29,6 +29,9 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         // Facebook click identifier
         'fbclid',
 
+        // LinkedIn click identifier
+        'li_fat_id',
+
         // TikTok click identifier
         'ttclid',
 

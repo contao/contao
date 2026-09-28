@@ -52,6 +52,6 @@ class ForeignKeyParser
             $expression = new ForeignKeyExpression($tableExpression, $columnExpression);
         }
 
-        return $expression->withKey($key ?? null);
+        return $expression->withKey($key);
     }
 }

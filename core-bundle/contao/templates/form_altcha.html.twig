@@ -25,16 +25,13 @@
         <p class="error">{{ 'ERR.altchaInsecureConnection'|trans }}</p>
     {% else %}
         {% add 'altcha' to stylesheets %}
-            {% with {file: asset('css/altcha.min.css', 'contao-components/altcha')} %}{{ block('stylesheet_component') }}{% endwith %}
+            {% with {file: asset('css/altcha.css', 'contao-components/altcha')} %}{{ block('stylesheet_component') }}{% endwith %}
         {% endadd %}
 
         {% add 'altcha' to body %}
-            <script src="{{ asset('js/altcha.min.js', 'contao-components/altcha') }}" type="module"></script>
+            <script src="{{ asset('js/altcha.i18n.min.js', 'contao-components/altcha') }}" type="module"></script>
         {% endadd %}
 
-        <altcha-widget{{ attrs()
-            .set('workerurl', asset('js/worker.js', 'contao-components/altcha'))
-            .mergeWith(this.altchaAttributes)
-        }}></altcha-widget>
+        <altcha-widget{{ this.altchaAttributes }}></altcha-widget>
     {% endif %}
 {% endblock %}

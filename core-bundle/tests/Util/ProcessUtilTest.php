@@ -77,7 +77,7 @@ class ProcessUtilTest extends TestCase
         return str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 
-    private function mockProcess(bool $isSuccessful, bool $autostart): Process&MockObject
+    private function mockProcess(bool $isSuccessful, bool $autostart): MockObject&Process
     {
         $process = $this->createMock(Process::class);
         $process

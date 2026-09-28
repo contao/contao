@@ -131,9 +131,7 @@ class ImageSizes implements ResetInterface
                 $imageSize['theme'] = 'Theme '.$imageSize['theme'];
             }
 
-            if (!isset($options[$imageSize['theme']])) {
-                $options[$imageSize['theme']] = [];
-            }
+            $options[$imageSize['theme']] ??= [];
 
             $options[$imageSize['theme']][$imageSize['id']] = \sprintf(
                 '%s (%sx%s)',

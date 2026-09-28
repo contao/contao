@@ -1633,39 +1633,6 @@ window.Backend =
 	},
 
 	/**
-	 * Update the fields of the imageSize widget upon change
-	 */
-	enableImageSizeWidgets: function() {
-		$$('.tl_image_size').each(function(el) {
-			var select = el.getElement('select'),
-				widthInput = el.getChildren('input')[0],
-				heightInput = el.getChildren('input')[1],
-				update = function() {
-					if (select.get('value') === '' || select.get('value').indexOf('_') === 0 || select.get('value').toInt().toString() === select.get('value')) {
-						widthInput.readOnly = true;
-						heightInput.readOnly = true;
-						var dimensions = $(select.getSelected()[0]).get('text');
-						dimensions = dimensions.split('(').length > 1
-							? dimensions.split('(').getLast().split(')')[0].split('x')
-							: ['', ''];
-						widthInput.set('value', '').set('placeholder', dimensions[0] * 1 || '');
-						heightInput.set('value', '').set('placeholder', dimensions[1] * 1 || '');
-					} else {
-						widthInput.set('placeholder', '');
-						heightInput.set('placeholder', '');
-						widthInput.readOnly = false;
-						heightInput.readOnly = false;
-					}
-				}
-			;
-
-			update();
-			select.addEvent('change', update);
-			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
 	 * Allow to mark the important part of an image
 	 *
 	 * @param {object} el The DOM element
@@ -1811,8 +1778,16 @@ window.Backend =
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;
 
+		options.paramName = 'files';
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
+
+		options.params = function() {
+			return {
+				FORM_SUBMIT: 'tl_upload',
+				action: 'fileupload'
+			};
+		};
 
 		var dz = new Dropzone(wrap, options);
 
@@ -1837,8 +1812,7 @@ window.Backend =
 				}
 
 				if (folder) {
-					var link = folder.getElement('img[src$="/icons/new.svg"]');
-					link = link && link.getParent('a');
+					var link = folder.getElement('a.upload');
 				}
 			}
 

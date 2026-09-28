@@ -33,7 +33,7 @@ class ContaoSetupCommand extends Command
 
     private readonly string $consolePath;
 
-    private readonly string|false $phpPath;
+    private readonly false|string $phpPath;
 
     /**
      * @var \Closure(array<string>): Process

@@ -12,24 +12,31 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\ApiPlatform\OpenApi;
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\OpenApi\Factory\OpenApiFactory;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model\Link;
 use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\Paths;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Schema;
 use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\DataContainer;
+use Contao\StringUtil;
 
 final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
 {
@@ -39,6 +46,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         private readonly OpenApiFactoryInterface $decorated,
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private readonly DataContainerSchemaFactory $schemaFactory,
+        private readonly Pagination $pagination,
         private readonly string $apiPrefix,
     ) {
     }
@@ -46,72 +54,11 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
-        $paths = new Paths();
-
-        $schemas = $openApi->getComponents()->getSchemas() ?? new \ArrayObject();
+        $paths = clone $openApi->getPaths();
+        $schemas = clone ($openApi->getComponents()->getSchemas() ?? new \ArrayObject());
 
         foreach ($this->resourceMetadataCollectionFactory->create(DataContainerRecord::class) as $resource) {
-            $contao = $resource->getExtraProperties()['contao'] ?? null;
-            $shortName = $resource->getShortName();
-
-            if (!\is_array($contao) || !\is_string($shortName) || '' === $shortName) {
-                continue;
-            }
-
-            $table = $contao['table'] ?? null;
-            $schemaPath = $contao['schema_path'] ?? null;
-
-            if (!\is_string($table) || '' === $table || !\is_string($schemaPath) || '' === $schemaPath) {
-                continue;
-            }
-
-            $schema = $this->schemaFactory->create($table);
-            $schemaName = str_replace('/', '_', $schemaPath);
-            $schemaRef = '#/components/schemas/'.$schemaName;
-
-            if (!isset($schemas[$schemaName])) {
-                $schemas[$schemaName] = $this->createComponentSchema($schema);
-            }
-
-            foreach ($resource->getOperations() as $operation) {
-                if ($operation instanceof GetCollection) {
-                    $path = $this->getPathForDataContainerResource($operation->getUriTemplate());
-                    $pathItem = $paths->getPath($path) ?? new PathItem();
-                    $paths->addPath($path, $pathItem->withGet($this->createGetCollectionOperation($table, $shortName, $schemaRef)));
-                    continue;
-                }
-
-                if ($operation instanceof Get) {
-                    $path = $this->getPathForDataContainerResource($operation->getUriTemplate());
-                    $pathItem = $paths->getPath($path) ?? new PathItem();
-                    $paths->addPath($path, $pathItem->withGet($this->createGetOperation($table, $shortName, $schemaRef)));
-                    continue;
-                }
-
-                if ($operation instanceof Post) {
-                    $path = $this->getPathForDataContainerResource($operation->getUriTemplate());
-                    $pathItem = $paths->getPath($path) ?? new PathItem();
-                    $paths->addPath($path, $pathItem->withPost($this->createPostOperation($table, $shortName, $schemaRef)));
-                    continue;
-                }
-
-                if ($operation instanceof Patch) {
-                    $path = $this->getPathForDataContainerResource($operation->getUriTemplate());
-                    $pathItem = $paths->getPath($path) ?? new PathItem();
-                    $paths->addPath($path, $pathItem->withPatch($this->createPatchOperation($table, $shortName, $schemaRef)));
-                    continue;
-                }
-
-                if ($operation instanceof Delete) {
-                    $path = $this->getPathForDataContainerResource($operation->getUriTemplate());
-                    $pathItem = $paths->getPath($path) ?? new PathItem();
-                    $paths->addPath($path, $pathItem->withDelete($this->createDeleteOperation($table, $shortName)));
-                }
-            }
-        }
-
-        foreach ($openApi->getPaths()->getPaths() as $path => $pathItem) {
-            $paths->addPath($path, $pathItem);
+            $this->addResource($resource, $paths, $schemas);
         }
 
         return $openApi
@@ -137,13 +84,128 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return $apiPrefix.$path;
     }
 
-    private function createGetCollectionOperation(string $tag, string $shortName, string $schemaRef): Operation
+    /**
+     * @param \ArrayObject<string, Schema> $schemas
+     */
+    private function addResource(ApiResource $resource, Paths $paths, \ArrayObject $schemas): void
     {
+        $contao = $resource->getExtraProperties()['contao'] ?? [];
+        $table = $contao['table'] ?? null;
+        $schemaPath = $contao['schema_path'] ?? null;
+        $shortName = $resource->getShortName();
+
+        if (!\is_string($table) || '' === $table || !\is_string($schemaPath) || '' === $schemaPath || !\is_string($shortName) || '' === $shortName) {
+            return;
+        }
+
+        $schemaName = str_replace('/', '_', $schemaPath);
+        $schemaRef = '#/components/schemas/'.$schemaName;
+
+        foreach ($this->schemaFactory->createOperationSchemas($table) as $action => $schema) {
+            $schemas[$schemaName.('read' === $action ? '' : '_'.$action)] = $this->createComponentSchema($schema);
+        }
+
+        foreach ($resource->getOperations() ?? [] as $metadata) {
+            $operation = $this->createOperation($metadata, $resource, $schemaRef);
+
+            if (!$operation) {
+                continue;
+            }
+
+            $path = $this->getPathForDataContainerResource($metadata->getUriTemplate());
+            $pathItem = $paths->getPath($path) ?? new PathItem();
+            $method = 'with'.ucfirst(strtolower($metadata->getMethod()));
+            $paths->addPath($path, $pathItem->$method($operation));
+        }
+    }
+
+    private function createOperation(HttpOperation $metadata, ApiResource $resource, string $schemaRef): Operation|null
+    {
+        $table = $resource->getExtraProperties()['contao']['table'];
+        $shortName = $resource->getShortName();
+
+        $operation = match (true) {
+            'move' === ($metadata->getExtraProperties()['contao']['action'] ?? null) => $this->createMoveOperation($table, $shortName, $schemaRef),
+            $metadata instanceof GetCollection => $this->withPaginationParameters($this->createGetCollectionOperation($table, $shortName, $schemaRef), $metadata),
+            $metadata instanceof Get => $this->createGetOperation($table, $shortName, $schemaRef),
+            $metadata instanceof Post => $this->createPostOperation($table, $shortName, $schemaRef),
+            $metadata instanceof Patch => $this->createPatchOperation($table, $shortName, $schemaRef),
+            $metadata instanceof Delete => $this->createDeleteOperation($table, $shortName),
+            default => null,
+        };
+
+        if (!$operation) {
+            return null;
+        }
+
+        $operation = $operation->withOperationId($metadata->getName() ?? $operation->getOperationId());
+
+        if (str_contains((string) $metadata->getUriTemplate(), '{id}')) {
+            $operation = $operation->withParameters([new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer'])]);
+        }
+
+        if (!$metadata instanceof GetCollection && !$metadata instanceof Delete) {
+            foreach ($resource->getOperations() ?? [] as $candidate) {
+                if ('move' === ($candidate->getExtraProperties()['contao']['action'] ?? null)) {
+                    return $this->withMoveLink($operation, $candidate->getName() ?? $shortName.'move');
+                }
+            }
+        }
+
+        return $operation;
+    }
+
+    private function withPaginationParameters(Operation $operation, GetCollection $metadata): Operation
+    {
+        $options = $this->pagination->getOptions();
+        $schema = ['type' => 'integer', 'minimum' => 1, 'default' => $this->pagination->getLimit($metadata)];
+        $maximum = $metadata->getPaginationMaximumItemsPerPage() ?? $options['maximum_items_per_page'];
+
+        if (null !== $maximum) {
+            $schema['maximum'] = $maximum;
+        }
+
+        return $operation->withParameters([
+            ...$operation->getParameters(),
+            new Parameter(name: $options['page_parameter_name'], in: 'query', description: 'Collection page.', schema: ['type' => 'integer', 'minimum' => 1, 'default' => 1]),
+            new Parameter(name: $options['items_per_page_parameter_name'], in: 'query', description: 'Records per page, capped at the configured maximum.', schema: $schema),
+        ]);
+    }
+
+    private function withMoveLink(Operation $operation, string $operationId): Operation
+    {
+        foreach ($operation->getResponses() as $status => $response) {
+            $links = clone ($response->getLinks() ?? new \ArrayObject());
+
+            $links['move'] = new Link(
+                operationId: $operationId,
+                parameters: new \ArrayObject(['id' => '$response.body#/id']),
+                description: 'Change the parent or position of this record using the move operation.',
+            );
+
+            $operation = $operation->withResponse($status, $response->withLinks($links));
+        }
+
+        return $operation;
+    }
+
+    private function createGetCollectionOperation(string $table, string $shortName, string $schemaRef): Operation
+    {
+        $parameters = [
+            new Parameter(name: 'parent', in: 'query', description: 'Parent record ID for a child-table listing.', schema: ['type' => 'integer', 'minimum' => 0]),
+            new Parameter(name: 'ptable', in: 'query', description: 'Parent table for a dynamic parent.', schema: ['type' => 'string']),
+        ];
+
+        if ($this->supportsSorting($table)) {
+            array_unshift($parameters, new Parameter(name: 'sort', in: 'query', description: 'Ordered backend sorting choices. Currently one choice is supported, e.g. title or title ASC/title DESC when the field allows both directions. Omit to use the configured backend default order.', schema: ['type' => 'array', 'items' => ['type' => 'string'], 'maxItems' => 1], style: 'form', explode: false));
+        }
+
         return new Operation()
             ->withOperationId($shortName.'getCollection')
             ->withSummary('Collection of '.$shortName.' records')
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
+            ->withParameters($parameters)
+            ->withTags([$table])
+            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$table])
             ->withResponse(200, new Response(
                 description: 'A collection of '.$shortName.' records.',
                 content: new \ArrayObject([
@@ -151,6 +213,26 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
                 ]),
             ))
         ;
+    }
+
+    private function supportsSorting(string $table): bool
+    {
+        $sorting = $GLOBALS['TL_DCA'][$table]['list']['sorting'] ?? [];
+
+        if (
+            !\in_array($sorting['mode'] ?? null, [DataContainer::MODE_SORTABLE, DataContainer::MODE_PARENT], true)
+            || !\in_array('sort', StringUtil::trimsplit('[;,]', $sorting['panelLayout'] ?? ''), true)
+        ) {
+            return false;
+        }
+
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $field) {
+            if ($field['sorting'] ?? false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createGetOperation(string $tag, string $shortName, string $schemaRef): Operation
@@ -185,7 +267,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             ->withRequestBody(new RequestBody(
                 description: 'The '.$shortName.' payload.',
                 content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
+                    'application/json' => new MediaType($this->createObjectSchema($schemaRef.'_create')),
                 ]),
                 required: true,
             ))
@@ -208,8 +290,25 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             ->withRequestBody(new RequestBody(
                 description: 'The '.$shortName.' payload.',
                 content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
+                    'application/merge-patch+json' => new MediaType($this->createObjectSchema($schemaRef.'_update')),
                 ]),
+                required: true,
+            ))
+        ;
+    }
+
+    private function createMoveOperation(string $tag, string $shortName, string $schemaRef): Operation
+    {
+        return $this->createPostOperation($tag, $shortName, $schemaRef)
+            ->withOperationId($shortName.'move')
+            ->withSummary('Move or reorder a '.$shortName.' record')
+            ->withParameters([new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer'])])
+            ->withResponses(['200' => new Response(
+                description: 'The moved record.',
+                content: new \ArrayObject(['application/json' => new MediaType($this->createObjectSchema($schemaRef))]),
+            )])
+            ->withRequestBody(new RequestBody(
+                content: new \ArrayObject(['application/json' => new MediaType($this->createObjectSchema($schemaRef.'_move'))]),
                 required: true,
             ))
         ;

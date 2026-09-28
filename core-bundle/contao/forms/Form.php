@@ -553,11 +553,11 @@ class Form extends Hybrid
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->attachFileFromString('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"', 'form.csv', 'text/comma-separated-values');
 			}
 			elseif ($this->format == 'csv_excel')
 			{
-				$email->attachFileFromString(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
+				$email->attachFileFromString(mb_convert_encoding("\u{FEFF}sep=;\n" . '"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"', 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -587,7 +587,7 @@ class Form extends Hybrid
 			}
 
 			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
-			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
+			$email->text = trim($message) . $uploaded . "\n\n";
 
 			// Set the transport
 			if (!empty($this->mailerTransport))

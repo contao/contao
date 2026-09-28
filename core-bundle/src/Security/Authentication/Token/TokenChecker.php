@@ -253,22 +253,20 @@ class TokenChecker
 
         $id = (int) $token['previewLinkId'];
 
-        if (!isset($this->previewLinks[$id])) {
-            $this->previewLinks[$id] = $this->connection->fetchAssociative(
-                <<<'SQL'
-                    SELECT
-                        url,
-                        showUnpublished,
-                        restrictToUrl
-                    FROM tl_preview_link
-                    WHERE
-                        id = :id
-                        AND published = 1
-                        AND expiresAt > UNIX_TIMESTAMP()
-                    SQL,
-                ['id' => $id],
-            );
-        }
+        $this->previewLinks[$id] ??= $this->connection->fetchAssociative(
+            <<<'SQL'
+                SELECT
+                    url,
+                    showUnpublished,
+                    restrictToUrl
+                FROM tl_preview_link
+                WHERE
+                    id = :id
+                    AND published = 1
+                    AND expiresAt > UNIX_TIMESTAMP()
+                SQL,
+            ['id' => $id],
+        );
 
         $previewLink = $this->previewLinks[$id];
 

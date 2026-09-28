@@ -89,7 +89,7 @@ class CustomRgxpListenerTest extends TestCase
         $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'foobar', $widget));
     }
 
-    public function testDecodesEntities(): void
+    public function testUsesRawValues(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
@@ -98,7 +98,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^&lt;>$/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^<>$/i']);
         $widget
             ->expects($this->never())
             ->method('addError')
@@ -107,6 +107,6 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, '<&gt;', $widget));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, '<>', $widget));
     }
 }

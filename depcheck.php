@@ -62,12 +62,15 @@ return new Configuration()
     ->ignoreErrorsOnPackage('contao-components/swiper', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tablesort', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tablesorter', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('contao-components/tinymce4', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('contao-components/tinymce', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tristen-tablesort', [ErrorType::UNUSED_DEPENDENCY])
 
     // These packages are required for the search integration.
     ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
+    // The API integration is only registered when the optional API bundle is installed.
+    ->ignoreErrorsOnPackageAndPath('contao/api-bundle', __DIR__.'/core-bundle/src/Api', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
     // The manager plugin is a dev dependency because it is only required in the
     // managed edition.

@@ -105,10 +105,19 @@ Missing values in models now return their default value instead of `null`.
 
 Frontend form widgets no longer implement the `Widget::generate()` method. Use `Widget::parse()` instead.
 
+### TrblWidget
+
+The TRBL widget has been removed. Use the `text` widget with `'size' => 4'` or the row wizard instead.
+
 ### Backend themes
 
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
 `contao.backend.custom_js` configuration options to customize the backend instead.
+
+### BackendUser::navigation() removed
+
+The `BackendUser` class no longer generates the back end navigation. The `getUserNavigation` hook is still
+supported but has been deprecated. Use the KnpMenu events instead.
 
 ### Merging native HTTP headers
 

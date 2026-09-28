@@ -83,7 +83,7 @@ class PlayerController extends AbstractContentElementController
         $poster = null;
 
         if ($uuid = $model->posterSRC) {
-            $poster = $this->filesStorage->generatePublicUri(Uuid::fromBinary($uuid));
+            $poster = $this->filesStorage->generatePublicUri(Uuid::fromString($uuid));
         }
 
         $size = StringUtil::deserialize($model->playerSize, true);

@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
+use Contao\ApiBundle\DataContainer\DataContainerPage;
+use Contao\ApiBundle\DataContainer\DataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
@@ -25,6 +28,12 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
  */
 final class DataContainerStateProvider implements ProviderInterface
 {
+    public function __construct(
+        private readonly DataContainerRecords $records,
+        private readonly Pagination $pagination,
+    ) {
+    }
+
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object|null
     {
         $table = $this->getTable($operation);
@@ -33,14 +42,13 @@ final class DataContainerStateProvider implements ProviderInterface
         }
 
         if ($operation instanceof CollectionOperationInterface) {
-            // TODO: load the records from $table and hydrate DataContainerRecord objects.
-            return [];
+            return $this->provideCollection($table, $operation, $context);
         }
 
-        if ($operation instanceof Get || $this->hasMethod($operation, 'GET')) {
-            // TODO: load a single record from $table using $uriVariables['id'].
-            // TODO: hydrate and return a DataContainerRecord.
-            return new DataContainerRecord($table, [], $uriVariables['id'] ?? null);
+        if ($operation instanceof HttpOperation && \in_array($operation->getMethod(), ['GET', 'PATCH', 'DELETE'], true)) {
+            $id = $uriVariables['id'] ?? null;
+
+            return null === $id ? null : $this->records->find($table, $id);
         }
 
         $data = $context['mcp_data'] ?? null;
@@ -55,9 +63,45 @@ final class DataContainerStateProvider implements ProviderInterface
         );
     }
 
-    private function hasMethod(Operation $operation, string $method): bool
+    private function provideCollection(string $table, Operation $operation, array $context): DataContainerPage
     {
-        return $operation instanceof HttpOperation && $method === $operation->getMethod();
+        $context['filters'] = ($context['filters'] ?? []) + (($context['request'] ?? null)?->query->all() ?? []);
+        [$page, , $itemsPerPage] = $this->pagination->getPagination($operation, $context);
+
+        if ($itemsPerPage < 1) {
+            throw new InvalidArgumentException('The itemsPerPage must be a positive integer.');
+        }
+
+        $parent = [
+            'id' => $context['filters']['parent'] ?? ($context['request'] ?? null)?->query->get('parent'),
+            'table' => $context['filters']['ptable'] ?? ($context['request'] ?? null)?->query->get('ptable'),
+        ];
+
+        return $this->records->list($table, $page, array_filter($parent, static fn ($value) => null !== $value), $itemsPerPage, $this->getSort($context['filters']));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getSort(array $filters): array
+    {
+        $sort = $filters['sort'] ?? null;
+
+        if (null === $sort) {
+            return [];
+        }
+
+        if (!\is_string($sort)) {
+            throw new InvalidArgumentException('The sort must be a comma-separated string.');
+        }
+
+        $choices = array_map(trim(...), explode(',', $sort));
+
+        if (1 !== \count($choices) || '' === $choices[0]) {
+            throw new InvalidArgumentException('Exactly one sorting choice is currently supported.');
+        }
+
+        return $choices;
     }
 
     private function getTable(Operation $operation): string|null

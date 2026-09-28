@@ -116,6 +116,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
+        if ($container->hasExtension('contao_api')) {
+            $loader->load('api.yaml');
+        }
+
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
@@ -165,6 +169,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
         $this->handleMailerConfig($config, $container);
+        $this->handlePagination($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -728,6 +733,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->getDefinition('contao.mailer')
             ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
+    }
+
+    private function handlePagination(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.pagination.factory')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.pagination.factory')
+            ->setArgument('$defaultRange', $config['pagination']['default_range'])
         ;
     }
 
