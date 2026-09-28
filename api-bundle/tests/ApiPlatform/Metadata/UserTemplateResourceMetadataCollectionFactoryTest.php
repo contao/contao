@@ -43,6 +43,22 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $this->assertSame($collection, new UserTemplateResourceMetadataCollectionFactory($decorated, [])->create('App\\Resource'));
     }
 
+    public function testDelegatesTheUserTemplateResourceIfTheTemplateStudioIsDisabled(): void
+    {
+        $collection = new ResourceMetadataCollection(UserTemplate::class);
+        $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
+        $decorated
+            ->expects($this->once())
+            ->method('create')
+            ->with(UserTemplate::class)
+            ->willReturn($collection)
+        ;
+
+        $factory = new UserTemplateResourceMetadataCollectionFactory($decorated, [], false);
+
+        $this->assertSame($collection, $factory->create(UserTemplate::class));
+    }
+
     public function testExposesRegisteredOperationsOnceAndDelegatesDispatch(): void
     {
         $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);

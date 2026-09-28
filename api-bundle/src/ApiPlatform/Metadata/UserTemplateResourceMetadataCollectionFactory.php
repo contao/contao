@@ -30,12 +30,13 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly iterable $templateStudioOperations,
+        private readonly bool $templateStudioEnabled = true,
     ) {
     }
 
     public function create(string $resourceClass): ResourceMetadataCollection
     {
-        if (UserTemplate::class !== $resourceClass) {
+        if (UserTemplate::class !== $resourceClass || !$this->templateStudioEnabled) {
             return $this->decorated->create($resourceClass);
         }
 

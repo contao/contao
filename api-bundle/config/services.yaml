@@ -13,6 +13,7 @@ services:
         decorates: api_platform.metadata.resource.name_collection_factory
         arguments:
             $decorated: '@.inner'
+            $templateStudioEnabled: '%contao.template_studio.enabled%'
 
     # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
@@ -29,6 +30,7 @@ services:
         arguments:
             $decorated: '@.inner'
             $templateStudioOperations: !tagged_iterator contao.operation.template_studio_element
+            $templateStudioEnabled: '%contao.template_studio.enabled%'
 
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.

@@ -40,4 +40,19 @@ final class UserTemplateResourceNameCollectionFactoryTest extends TestCase
             $resourceNames,
         );
     }
+
+    public function testDoesNotAppendTheUserTemplateResourceNameIfTheTemplateStudioIsDisabled(): void
+    {
+        $resourceNames = new ResourceNameCollection(['App\\Entity\\Foo']);
+        $decorated = $this->createMock(ResourceNameCollectionFactoryInterface::class);
+        $decorated
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($resourceNames)
+        ;
+
+        $factory = new UserTemplateResourceNameCollectionFactory($decorated, false);
+
+        $this->assertSame($resourceNames, $factory->create());
+    }
 }

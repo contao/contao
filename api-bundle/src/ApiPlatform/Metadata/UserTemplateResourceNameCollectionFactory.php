@@ -18,12 +18,18 @@ use Contao\ApiBundle\Resource\UserTemplate;
 
 final class UserTemplateResourceNameCollectionFactory implements ResourceNameCollectionFactoryInterface
 {
-    public function __construct(private readonly ResourceNameCollectionFactoryInterface $decorated)
-    {
+    public function __construct(
+        private readonly ResourceNameCollectionFactoryInterface $decorated,
+        private readonly bool $templateStudioEnabled = true,
+    ) {
     }
 
     public function create(): ResourceNameCollection
     {
+        if (!$this->templateStudioEnabled) {
+            return $this->decorated->create();
+        }
+
         return new ResourceNameCollection([
             ...iterator_to_array($this->decorated->create()),
             UserTemplate::class,
