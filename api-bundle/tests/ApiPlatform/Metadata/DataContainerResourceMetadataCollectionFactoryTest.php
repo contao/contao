@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -106,14 +107,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         $resources = iterator_to_array($collection);
 
-        $operation = iterator_to_array($resources[0]->getOperations())['contao_api_tl_article_get_collection'];
+        $operation = iterator_to_array($resources[0]->getOperations())['contao_api_article_get_collection'];
         $this->assertTrue($operation->getPaginationClientItemsPerPage());
         $this->assertSame($expectedMaximum, $operation->getPaginationMaximumItemsPerPage());
         $this->assertSame(min(30, $expectedMaximum), $operation->getPaginationItemsPerPage());
 
-        $this->assertResource($resources[0], 'Article', 'tl_article', '/backend/dc/tl_article', true);
-        $this->assertResource($resources[1], 'Content', 'tl_content', '/backend/dc/tl_content', true);
-        $this->assertResource($resources[2], 'Page', 'tl_page', '/backend/dc/tl_page', false);
+        $this->assertResource($resources[0], 'Article', 'tl_article', '/backend/dc/article', true);
+        $this->assertResource($resources[1], 'Content', 'tl_content', '/backend/dc/content', true);
+        $this->assertResource($resources[2], 'Page', 'tl_page', '/backend/dc/page', false);
     }
 
     public static function provideMaximums(): iterable
@@ -170,10 +171,12 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $generator = new UrlGenerator($routes, new RequestContext());
 
         foreach (['tl_article', 'tl_page'] as $table) {
-            $this->assertSame('/custom_api/backend/dc/'.$table.'/42', $generator->generate('contao_api_'.$table.'_patch', ['id' => 42]));
-            $this->assertSame('/custom_api/backend/dc/'.$table, $generator->generate('contao_api_'.$table.'_get_collection'));
-            $this->assertSame('backend', $routes->get('contao_api_'.$table.'_patch')->getDefault('_scope'));
-            $this->assertSame('api_platform.symfony.main_controller', $routes->get('contao_api_'.$table.'_patch')->getDefault('_controller'));
+            $resource = substr($table, 3);
+
+            $this->assertSame('/custom_api/backend/dc/'.$resource.'/42', $generator->generate('contao_api_'.$resource.'_patch', ['id' => 42]));
+            $this->assertSame('/custom_api/backend/dc/'.$resource, $generator->generate('contao_api_'.$resource.'_get_collection'));
+            $this->assertSame('backend', $routes->get('contao_api_'.$resource.'_patch')->getDefault('_scope'));
+            $this->assertSame('api_platform.symfony.main_controller', $routes->get('contao_api_'.$resource.'_patch')->getDefault('_controller'));
         }
     }
 
@@ -208,9 +211,12 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
+        $this->assertTrue($resource->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
-        $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
+        $expectedResource = str_starts_with($expectedTable, 'tl_') ? substr($expectedTable, 3) : $expectedTable;
+
+        $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedResource), $resource->getExtraProperties()['contao']['schema_path']);
         $this->assertSame([], $resource->getMcp());
 
         $operations = $resource->getOperations();
@@ -226,28 +232,29 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
         }
 
-        $this->assertOperation($operations['contao_api_'.$expectedTable.'_get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
-        $this->assertOperation($operations['contao_api_'.$expectedTable.'_get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
-        $this->assertOperation($operations['contao_api_'.$expectedTable.'_post'], Post::class, $expectedShortName, $expectedRoutePrefix);
-        $this->assertOperation($operations['contao_api_'.$expectedTable.'_patch'], Patch::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
-        $this->assertOperation($operations['contao_api_'.$expectedTable.'_move'], Post::class, $expectedShortName, $expectedRoutePrefix.'/{id}/move');
-        $this->assertSame(DataContainerMove::class, $operations['contao_api_'.$expectedTable.'_move']->getInput());
-        $this->assertFalse($operations['contao_api_'.$expectedTable.'_move']->canRead());
+        $this->assertOperation($operations['contao_api_'.$expectedResource.'_get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);
+        $this->assertOperation($operations['contao_api_'.$expectedResource.'_get'], Get::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+        $this->assertOperation($operations['contao_api_'.$expectedResource.'_post'], Post::class, $expectedShortName, $expectedRoutePrefix);
+        $this->assertOperation($operations['contao_api_'.$expectedResource.'_patch'], Patch::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+        $this->assertOperation($operations['contao_api_'.$expectedResource.'_move'], Post::class, $expectedShortName, $expectedRoutePrefix.'/{id}/move');
+        $this->assertSame(DataContainerMove::class, $operations['contao_api_'.$expectedResource.'_move']->getInput());
+        $this->assertFalse($operations['contao_api_'.$expectedResource.'_move']->canRead());
 
         if ($deletable) {
-            $this->assertOperation($operations['contao_api_'.$expectedTable.'_delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
+            $this->assertOperation($operations['contao_api_'.$expectedResource.'_delete'], Delete::class, $expectedShortName, $expectedRoutePrefix.'/{id}');
         } else {
-            $this->assertArrayNotHasKey('contao_api_'.$expectedTable.'_delete', $operations);
+            $this->assertArrayNotHasKey('contao_api_'.$expectedResource.'_delete', $operations);
         }
     }
 
-    private function assertOperation(object $operation, string $expectedClass, string $expectedShortName, string $expectedUriTemplate): void
+    private function assertOperation(HttpOperation $operation, string $expectedClass, string $expectedShortName, string $expectedUriTemplate): void
     {
         $this->assertInstanceOf($expectedClass, $operation);
         $this->assertSame(DataContainerRecord::class, $operation->getClass());
         $this->assertSame($expectedShortName, $operation->getShortName());
         $this->assertSame($expectedUriTemplate, $operation->getUriTemplate());
         $this->assertSame(['_scope' => 'backend'], $operation->getDefaults());
+        $this->assertTrue($operation->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $operation->getSecurity());
         $this->assertNull($operation->getOpenapi());
     }

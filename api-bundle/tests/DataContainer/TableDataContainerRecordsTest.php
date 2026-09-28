@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\DataContainer;
 
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -28,6 +28,7 @@ use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Doctrine\DBAL\Connection;
@@ -36,11 +37,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class DataContainerRecordsTest extends ContaoTestCase
+final class TableDataContainerRecordsTest extends ContaoTestCase
 {
     private RequestStack $requestStack;
 
@@ -208,7 +212,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
         yield 'unchanged optional field stays omitted' => [123, false, false];
     }
 
-    public function testDeletesWithoutFollowingABackendRedirect(): void
+    public function testDeletesWithAnIsolatedBackendSession(): void
     {
         $dc = $this->createMock(DC_Table::class);
         $dc
@@ -221,9 +225,24 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->expects($this->once())
             ->method('delete')
             ->with(true)
+            ->willReturnCallback(
+                function (): void {
+                    $request = $this->requestStack->getCurrentRequest();
+                    $this->assertNotSame($this->requestStack->getMainRequest()->getSession(), $request->getSession());
+                    $this->assertNull($request->getSession()->get('marker'));
+                    $this->assertInstanceOf(AttributeBagInterface::class, $request->getSession()->getBag('contao_backend'));
+                },
+            )
         ;
 
-        $this->createRecords($dc)->delete(new DataContainerRecord('tl_content', [], 17));
+        $records = $this->createRecords($dc);
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('marker', 'saved backend state');
+        $this->requestStack->getCurrentRequest()->setSession($session);
+
+        $records->delete(new DataContainerRecord('tl_content', [], 17));
+
+        $this->assertSame('saved backend state', $session->get('marker'));
     }
 
     public function testReportsTheMaximumPageForTheRequestedPageSize(): void
@@ -242,15 +261,22 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
+            ->method('__set')
+            ->with('limit', '0,'.(2 * $size))
+        ;
+
+        $dc
+            ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function () use ($size) {
-                    $this->assertSame(2 * $size, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
-                    $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->get('_contao_api'));
-                    $this->assertSame([], $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_ids'));
-                    $this->requestStack->getCurrentRequest()->attributes->set('_contao_api_listing_ids', range(1, 33));
+                function () {
+                    $this->assertTrue($this->requestStack->getCurrentRequest()->hasSession());
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['sorting' => ['tl_content' => 'title DESC']], $bag->all());
+                    $this->assertNull($this->requestStack->getCurrentRequest()->query->get('sort'));
 
-                    return '';
+                    return range(1, 33);
                 },
             )
         ;
@@ -271,11 +297,57 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->method('iterateColumn')
         ;
 
-        $page = $this->createRecords($dc, $connection)->list('tl_content', 2, itemsPerPage: $size);
+        $page = $this->createRecords($dc, $connection)->list('tl_content', 2, itemsPerPage: $size, sort: ['title DESC']);
 
         $this->assertSame(2.0, $page->getCurrentPage());
         $this->assertSame((float) $size, $page->getItemsPerPage());
         $this->assertSame($expected, array_map(static fn ($record) => $record->id, iterator_to_array($page)));
+    }
+
+    public function testPassesTheSortingChoiceToTheDataContainer(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): string {
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['tl_content' => 'title'], $bag->get('sorting'));
+
+                    return '';
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $records->list('tl_content', sort: ['title']);
+    }
+
+    public function testListingDoesNotInheritTheBackendSession(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): string {
+                    $this->assertNull($this->requestStack->getCurrentRequest()->getSession()->get('marker'));
+
+                    return '';
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('marker', 'saved backend state');
+        $this->requestStack->getCurrentRequest()->setSession($session);
+
+        $records->list('tl_content');
+
+        $this->assertSame('saved backend state', $session->get('marker'));
     }
 
     public function testListingLimitDoesNotOverflow(): void
@@ -283,14 +355,8 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('showAll')
-            ->willReturnCallback(
-                function () {
-                    $this->assertSame(PHP_INT_MAX, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
-
-                    return '';
-                },
-            )
+            ->method('__set')
+            ->with('limit', '0,'.PHP_INT_MAX)
         ;
 
         $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
@@ -357,15 +423,17 @@ final class DataContainerRecordsTest extends ContaoTestCase
         return $dc;
     }
 
-    private function createRecords(DC_Table $dc, Connection|null $connection = null): DataContainerRecords
+    private function createRecords(DC_Table $dc, Connection|null $connection = null): TableDataContainerRecords
     {
-        $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string']]];
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'sorting' => true, 'flag' => DataContainer::SORT_BOTH]];
+        $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
         $GLOBALS['TL_DCA']['tl_content']['config']['dataContainer'] = DC_Table::class;
 
+        $system = $this->createAdapterStub(['loadLanguageFile']);
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $loader = $this->createAdapterStub(['switchToCurrentRequest']);
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader, System::class => $system]);
         $framework
             ->method('createInstance')
             ->willReturnCallback(
@@ -373,6 +441,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
                     $this->assertSame(DC_Table::class, $driver);
                     $this->assertSame(['tl_content'], $arguments);
                     $this->assertSame('backend', $this->requestStack->getCurrentRequest()->attributes->get('_scope'));
+                    $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->getBoolean('_stateless'));
 
                     return $dc;
                 },
@@ -404,6 +473,6 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->willReturnCallback(static fn ($route, $parameters) => '/contao?'.http_build_query($parameters))
         ;
 
-        return new DataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
+        return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
     }
 }

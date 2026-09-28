@@ -335,6 +335,11 @@ abstract class DataContainer extends Backend
 	protected bool $treeRecordLimitReached = false;
 
 	/**
+	 * Toggle API mode
+	 */
+	private bool $apiMode = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -1571,9 +1576,14 @@ abstract class DataContainer extends Backend
 		}
 	}
 
-	protected function isApiRequest(): bool
+	public function setApiMode(bool $apiMode = true): void
 	{
-		return System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api') ?? false;
+		$this->apiMode = $apiMode;
+	}
+
+	public function isApiMode(): bool
+	{
+		return $this->apiMode;
 	}
 
 	protected function canRenderTreeRecord(): bool
@@ -1606,7 +1616,7 @@ abstract class DataContainer extends Backend
 	protected function getTreeRecordLimit(): int
 	{
 		// Backend bulk selection is unlimited, but API listings must retain the configured tree limit
-		if (Input::get('act') == 'select' && !$this->isApiRequest())
+		if (Input::get('act') == 'select' && !$this->isApiMode())
 		{
 			return 0;
 		}

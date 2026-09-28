@@ -20,17 +20,21 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class DataContainerRecords
+class TableDataContainerRecords
 {
     public function __construct(
         private readonly DataContainerRecordMapper $mapper,
@@ -56,7 +60,7 @@ class DataContainerRecords
         );
     }
 
-    public function list(string $table, int $page = 1, array $parent = [], int $itemsPerPage = DataContainerPage::DEFAULT_ITEMS_PER_PAGE): DataContainerPage
+    public function list(string $table, int $page = 1, array $parent = [], int $itemsPerPage = DataContainerPage::DEFAULT_ITEMS_PER_PAGE, array $sort = []): DataContainerPage
     {
         if ($page < 1 || $itemsPerPage < 1) {
             throw new UnprocessableEntityHttpException('The page and itemsPerPage must be positive integers.');
@@ -66,12 +70,23 @@ class DataContainerRecords
             throw new UnprocessableEntityHttpException(\sprintf('The page must not exceed %d for a page size of %d.', intdiv(PHP_INT_MAX, $itemsPerPage) + 1, $itemsPerPage));
         }
 
+        if (\count($sort) > 1 || (isset($sort[0]) && !\is_string($sort[0]))) {
+            throw new UnprocessableEntityHttpException('Exactly one sorting choice is currently supported.');
+        }
+
         $offset = ($page - 1) * $itemsPerPage;
 
         return $this->run(
             $table,
             ['act' => 'select'] + $this->getParentParameters($parent),
-            function (DC_Table $dc) use ($table, $page, $offset, $itemsPerPage): DataContainerPage {
+            function (DC_Table $dc, Request $request, ArrayAttributeBag $bag) use ($table, $page, $offset, $itemsPerPage, $sort): DataContainerPage {
+                if (isset($sort[0])) {
+                    $sorting = $bag->get('sorting');
+                    $sorting = \is_array($sorting) ? $sorting : [];
+                    $sorting[$table] = $sort[0];
+                    $bag->set('sorting', $sorting);
+                }
+
                 $result = array_map(fn ($row) => $this->mapper->fromRow($table, $row), $this->getListingRecords($dc, $offset, $itemsPerPage));
 
                 return new DataContainerPage($result, $page, $itemsPerPage);
@@ -167,17 +182,13 @@ class DataContainerRecords
 
     private function getListingRecords(DC_Table $dc, int $offset, int $itemsPerPage): array
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $request->attributes->set('_contao_api', true);
-        $request->attributes->set('_contao_api_listing_ids', []);
-
         // Stop after the requested page without overflowing at the largest valid offset
-        $request->attributes->set('_contao_api_listing_limit', $offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
+        $dc->limit = '0,'.($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 
-        $dc->showAll();
+        $ids = $dc->showAll();
         $records = [];
 
-        foreach ($request->attributes->get('_contao_api_listing_ids') as $id) {
+        foreach ($ids as $id) {
             try {
                 $row = $dc->getCurrentRecord($id);
             } catch (AccessDeniedException) {
@@ -329,28 +340,32 @@ class DataContainerRecords
     private function run(string $table, array $parameters, callable $callback): mixed
     {
         $this->framework->initialize();
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
 
-        return $this->requestSwitcher->runWithRequest($this->createRequest($table, $parameters), function () use ($table, $callback) {
-            $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
-            $driver = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
+        $request = $this->createRequest($table, $parameters);
+        $bag = $request->getSession()->getBag('contao_backend');
 
-            if (!\is_string($driver) || !is_a($driver, DC_Table::class, true)) {
-                throw new NotFoundHttpException('The resource is not backed by a table data container.');
-            }
+        if (!$bag instanceof ArrayAttributeBag) {
+            throw new \LogicException('The backend session bag is not available.');
+        }
 
-            // Legacy actions and callbacks can output HTML directly, bypassing render().
-            // Discard it to protect the API response, preserving any existing outer buffers.
-            $level = ob_get_level();
-            ob_start();
+        return $this->requestSwitcher->runWithRequest(
+            $request,
+            function () use ($table, $callback, $request, $bag) {
+                $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+                $driver = DataContainer::getDriverForTable($table);
 
-            try {
-                return $callback($this->framework->createInstance($driver, [$table]));
-            } finally {
-                while (ob_get_level() > $level) {
-                    ob_end_clean();
+                if (!\is_string($driver) || !is_a($driver, DC_Table::class, true)) {
+                    throw new NotFoundHttpException('The resource is not backed by a table data container.');
                 }
-            }
-        });
+
+                /** @var DC_Table $dc */
+                $dc = $this->framework->createInstance($driver, [$table]);
+                $dc->setApiMode();
+
+                return $callback($dc, $request, $bag);
+            },
+        );
     }
 
     private function createRequest(string $table, array $parameters): Request
@@ -370,11 +385,15 @@ class DataContainerRecords
         // Build a backend request instead of inheriting API routing or client
         // control parameters
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
-        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_contao_api' => true, '_locale' => $parent->getLocale()]);
+        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_locale' => $parent->getLocale()]);
 
-        if ($parent->hasSession()) {
-            $request->setSession($parent->getSession());
-        }
+        // Keep backend UI state isolated from the API request
+        $session = new Session(new MockArraySessionStorage());
+        $bag = new ArrayAttributeBag('_contao_be_attributes');
+        $bag->setName('contao_backend');
+
+        $session->registerBag($bag);
+        $request->setSession($session);
 
         return $request;
     }

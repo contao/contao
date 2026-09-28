@@ -16,7 +16,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +28,7 @@ final class DataContainerStateProcessorTest extends TestCase
         $input = new DataContainerMove(42, 'after');
         $persisted = new DataContainerRecord('tl_content', [], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('create')
@@ -51,7 +51,7 @@ final class DataContainerStateProcessorTest extends TestCase
         $input = new DataContainerRecord('tl_content', ['headline' => 'Example']);
         $persisted = new DataContainerRecord('tl_content', ['headline' => 'Example', 'alias' => 'example'], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('create')
@@ -69,7 +69,7 @@ final class DataContainerStateProcessorTest extends TestCase
         $input = new DataContainerRecord('tl_content', ['headline' => 'Example'], 17);
         $persisted = new DataContainerRecord('tl_content', ['headline' => 'Saved'], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('update')
@@ -86,7 +86,7 @@ final class DataContainerStateProcessorTest extends TestCase
     {
         $record = new DataContainerRecord('tl_content', [], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('delete')
@@ -100,7 +100,7 @@ final class DataContainerStateProcessorTest extends TestCase
 
     public function testReturnsUnsupportedInputUnchanged(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('create')

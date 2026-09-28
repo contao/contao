@@ -166,6 +166,7 @@ class ContaoApiExtensionTest extends TestCase
         $container->setParameter('kernel.project_dir', sys_get_temp_dir());
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.default_locale', 'en');
+        $container->setParameter('kernel.bundles', ['ContaoApiBundle' => ContaoApiBundle::class]);
 
         $extension = new ContaoApiBundle()->getContainerExtension();
         $container->registerExtension($extension);
