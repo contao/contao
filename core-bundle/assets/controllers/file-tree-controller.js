@@ -39,7 +39,7 @@ export default class extends Controller {
         }
 
         // Only allow row and empty space to start a drag and leave other content selectable
-        item.draggable = event.target === item || event.target.classList.contains('tl_left');
+        item.draggable = event.target === item || event.target.closest('.tl_left, .drag-handle');
     }
 
     onDragStart(event) {
@@ -87,6 +87,8 @@ export default class extends Controller {
         const pid = target && this.#getPid(target);
 
         if (!pid) {
+            // Keep the drag operation in the browser so that onDrop() can reset it.
+            event.preventDefault();
             event.dataTransfer.dropEffect = 'none';
             this.#setDroppingClass(null);
             return;
@@ -105,14 +107,20 @@ export default class extends Controller {
     }
 
     onDrop(event) {
-        const id = this.#dragged?.dataset.id;
-        const pid = this.#hoverTarget && this.#getPid(this.#hoverTarget);
-
-        if (!id || !pid) {
+        if (!this.#dragged) {
             return;
         }
 
         event.preventDefault();
+
+        const id = this.#dragged?.dataset.id;
+        const pid = this.#hoverTarget && this.#getPid(this.#hoverTarget);
+
+        if (!id || !pid) {
+            this.#reset();
+            return;
+        }
+
         this.#reset();
 
         const url = new URL(window.location.href);
