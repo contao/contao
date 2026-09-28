@@ -452,6 +452,11 @@ class tl_user extends Backend
 	 */
 	public function addTemplateWarning()
 	{
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->getBoolean('_stateless'))
+		{
+			return;
+		}
+
 		if (Input::get('act') && Input::get('act') != 'select')
 		{
 			return;

@@ -87,18 +87,10 @@ final class DataContainerSchemaFactory
         foreach ($schema['properties'] as $field => $property) {
             $excluded = 'read' === $operation
                 ? ($property['writeOnly'] ?? false)
-                : ($property['readOnly'] ?? false) || \in_array($field, 'update' === $operation ? ['pid', 'ptable', 'sorting'] : ['sorting'], true);
+                : ($property['readOnly'] ?? false) || \in_array($field, ['pid', 'ptable', 'sorting'], true);
 
             if ($excluded) {
                 unset($schema['properties'][$field]);
-            }
-        }
-
-        if ('create' === $operation) {
-            foreach (['pid' => 'Destination parent ID for the new record.', 'ptable' => 'Destination parent table for the new record.'] as $field => $description) {
-                if (isset($schema['properties'][$field])) {
-                    $schema['properties'][$field]['description'] = $description;
-                }
             }
         }
 
@@ -136,6 +128,10 @@ final class DataContainerSchemaFactory
             $schema['type'] = 'integer';
         }
 
+        if ('tstamp' === $fieldName) {
+            $schema = $this->createDateTimeSchema($schema);
+        }
+
         return $schema;
     }
 
@@ -165,8 +161,11 @@ final class DataContainerSchemaFactory
     {
         $schema = [];
         $eval = $config['eval'] ?? [];
+        $rgxp = isset($eval['rgxp']) ? (string) $eval['rgxp'] : null;
 
-        if (null !== ($type = $this->guessType($config, $sql))) {
+        if (\in_array($rgxp, ['date', 'time', 'datim'], true)) {
+            $schema = $this->createDateTimeSchema($schema);
+        } elseif (null !== ($type = $this->guessType($config, $sql))) {
             $schema['type'] = $type;
         }
 
@@ -178,12 +177,25 @@ final class DataContainerSchemaFactory
             $schema['enum'] = $choices;
         }
 
-        if (isset($eval['rgxp'])) {
-            $schema += $this->getFormatForRgxp((string) $eval['rgxp']);
+        if (null !== $rgxp) {
+            $schema += $this->getFormatForRgxp($rgxp);
         }
 
         if (isset($sql['default'])) {
-            $schema['default'] = $sql['default'];
+            $schema['default'] = 'date-time' === ($schema['format'] ?? null)
+                ? ($sql['default'] ? date(\DateTimeInterface::ATOM, (int) $sql['default']) : null)
+                : $sql['default'];
+        }
+
+        return $schema;
+    }
+
+    private function createDateTimeSchema(array $schema): array
+    {
+        $schema = ['type' => ['string', 'null'], 'format' => 'date-time'] + $schema;
+
+        if (isset($schema['default'])) {
+            $schema['default'] = $schema['default'] ? date(\DateTimeInterface::ATOM, (int) $schema['default']) : null;
         }
 
         return $schema;

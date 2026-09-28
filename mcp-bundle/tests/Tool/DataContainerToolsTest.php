@@ -44,14 +44,14 @@ final class DataContainerToolsTest extends TestCase
 {
     public function testDiscoversResources(): void
     {
-        $this->assertSame(['resources' => [['resource' => 'tl_news', 'title' => 'News']]], $this->createTools()->discoverResources('NEWS'));
+        $this->assertSame(['resources' => [['resource' => 'news', 'title' => 'News']]], $this->createTools()->discoverResources('NEWS'));
     }
 
     public function testDescribesResources(): void
     {
-        $description = $this->createTools()->describeResource('tl_news');
+        $description = $this->createTools()->describeResource('news');
 
-        $this->assertSame('tl_news', $description['resource']);
+        $this->assertSame('news', $description['resource']);
         $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
     }
 
@@ -76,7 +76,15 @@ final class DataContainerToolsTest extends TestCase
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage('does not support "delete"');
 
-        $this->createTools()->deleteRecord('tl_news', 1);
+        $this->createTools()->deleteRecord('news', 1);
+    }
+
+    public function testRejectsUnknownParentParametersBeforeDispatch(): void
+    {
+        $this->expectException(ToolCallException::class);
+        $this->expectExceptionMessage('Unknown parent parameter "pid".');
+
+        $this->createTools()->listRecords('news', parents: ['pid' => 1]);
     }
 
     public function testDispatchesUpdatesThroughTheApi(): void
@@ -88,7 +96,7 @@ final class DataContainerToolsTest extends TestCase
             ->willReturnCallback(
                 function (Request $request, int $type): Response {
                     $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
-                    $this->assertSame('/_api/news/42', $request->getPathInfo());
+                    $this->assertSame('/contao/api/dc/news/42', $request->getPathInfo());
                     $this->assertSame('PATCH', $request->getMethod());
                     $this->assertSame('application/merge-patch+json', $request->headers->get('Content-Type'));
                     $this->assertSame(['title' => 'Updated'], json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR));
@@ -102,13 +110,13 @@ final class DataContainerToolsTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('news_patch', ['id' => 42])
-            ->willReturn('/_api/news/42')
+            ->willReturn('/contao/api/dc/news/42')
         ;
         $stack = new RequestStack();
-        $stack->push(Request::create('https://example.org/_mcp/backend'));
+        $stack->push(Request::create('https://example.org/contao/mcp'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
-        $result = $tools->updateRecord('tl_news', 42, ['title' => 'Updated']);
+        $result = $tools->updateRecord('news', 42, ['title' => 'Updated']);
 
         $this->assertFalse($result->isError);
         $this->assertSame(200, $result->structuredContent['status']);
@@ -125,7 +133,7 @@ final class DataContainerToolsTest extends TestCase
             ->willReturnCallback(
                 function (Request $request, int $type): Response {
                     $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
-                    $this->assertSame('/_api/news/42/move', $request->getPathInfo());
+                    $this->assertSame('/contao/api/dc/news/42/move', $request->getPathInfo());
                     $this->assertSame('POST', $request->getMethod());
                     $this->assertSame('application/ld+json', $request->headers->get('Content-Type'));
                     $this->assertSame(['target' => 8, 'position' => 'after'], json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR));
@@ -140,14 +148,14 @@ final class DataContainerToolsTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('news_move', ['id' => 42])
-            ->willReturn('/_api/news/42/move')
+            ->willReturn('/contao/api/dc/news/42/move')
         ;
 
         $stack = new RequestStack();
-        $stack->push(Request::create('https://example.org/_mcp/backend'));
+        $stack->push(Request::create('https://example.org/contao/mcp'));
 
         $tools = new DataContainerTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter());
-        $result = $tools->moveRecord('tl_news', 42, ['target' => 8, 'position' => 'after']);
+        $result = $tools->moveRecord('news', 42, ['target' => 8, 'position' => 'after']);
 
         $this->assertFalse($result->isError);
         $this->assertSame(200, $result->structuredContent['status']);
@@ -160,7 +168,7 @@ final class DataContainerToolsTest extends TestCase
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage('require an HTTP request');
 
-        $this->createTools()->readRecord('tl_news', 1);
+        $this->createTools()->readRecord('news', 1);
     }
 
     public function testToolSchemasStayFixedAndDescribeObjects(): void
@@ -181,6 +189,8 @@ final class DataContainerToolsTest extends TestCase
         $this->assertSame('object', $tools['contao_dc_update_record']['properties']['data']['type']);
         $this->assertSame(['resource', 'id', 'data'], $tools['contao_dc_update_record']['required']);
         $this->assertSame(1, $tools['contao_dc_list_records']['properties']['page']['minimum']);
+        $this->assertSame('object', $tools['contao_dc_list_records']['properties']['parents']['type']);
+        $this->assertSame(['anyOf' => [['type' => 'integer', 'minimum' => 1], ['type' => 'string']]], $tools['contao_dc_list_records']['properties']['parents']['additionalProperties']);
     }
 
     private function createTools(): DataContainerTools
@@ -205,7 +215,7 @@ final class DataContainerToolsTest extends TestCase
                 'news_patch' => new Patch(name: 'news_patch'),
                 'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
             ],
-            extraProperties: ['contao' => ['table' => 'tl_news']],
+            extraProperties: ['contao' => ['table' => 'tl_news', 'resource' => 'news', 'parents' => []]],
         )];
 
         $metadata = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);

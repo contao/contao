@@ -136,7 +136,7 @@ class ModuleListing extends Module
 		$this->Template->search_fields = $strOptions;
 
 		// Get the total number of records
-		$strQuery = "SELECT COUNT(*) AS count FROM " . $this->list_table;
+		$strQuery = "SELECT COUNT(*) AS count FROM " . $this->list_table . " t1";
 
 		if ($this->list_where)
 		{
@@ -281,7 +281,7 @@ class ModuleListing extends Module
 			(
 				'link' => $strField,
 				'href' => ($strUrl . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&sort=' . $sort,
-				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField),
 				'class' => $class
 			);
 		}

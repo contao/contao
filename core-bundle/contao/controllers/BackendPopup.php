@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
@@ -91,7 +92,7 @@ class BackendPopup extends Backend
 		}
 
 		// Check whether the file is mounted (thanks to Marko Cupic)
-		if (!BackendUser::getInstance()->hasAccess($this->strFile, 'filemounts'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $this->strFile))
 		{
 			exit('Permission denied');
 		}
@@ -196,9 +197,9 @@ class BackendPopup extends Backend
 		$objTemplate->ctime = Date::parse(Config::get('datimFormat'), $objFile->ctime);
 		$objTemplate->mtime = Date::parse(Config::get('datimFormat'), $objFile->mtime);
 		$objTemplate->atime = Date::parse(Config::get('datimFormat'), $objFile->atime);
-		$objTemplate->path = StringUtil::specialchars($this->strFile);
+		$objTemplate->path = $this->strFile;
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = StringUtil::specialchars($this->strFile);
+		$objTemplate->title = $this->strFile;
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = $container->getParameter('kernel.charset');
 		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests;
 
+use Contao\CoreBundle\Routing\Matcher\BackendApiMatcher;
 use Contao\CoreBundle\Routing\Matcher\BackendMatcher;
 use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -34,7 +35,7 @@ abstract class TestCase extends ContaoTestCase
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {
-        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher(), $this->createStub(RequestStack::class));
+        return new ScopeMatcher(new BackendMatcher(), new BackendApiMatcher(), new FrontendMatcher(), $this->createStub(RequestStack::class));
     }
 
     /**
