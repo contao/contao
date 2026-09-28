@@ -17,7 +17,7 @@
                 },
                 init_instance_callback: function (editor) {
                     if (document.activeElement && document.activeElement.id && document.activeElement.id === editor.id) {
-                        editor.focus();
+                        editor.editorManager.get(editor.id).focus();
                     }
                     editor.on('focus', () =>
                         window.dispatchEvent(new Event('store-scroll-offset'))
@@ -28,7 +28,7 @@
                 file_picker_callback: function (callback, value, meta) {
                     Backend.openModalSelector({
                         'id': 'tl_listing',
-                        'title': document.get('.tox-dialog__title').get('text'),
+                        'title': document.getElement('.tox-dialog__title').get('text'),
                         'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
                         'callback': function (table, val) {
                             document.getElement('.tox-dialog input')?.focus();

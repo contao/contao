@@ -563,7 +563,7 @@ class PageRegular extends Frontend
 		{
 			foreach ($arrFramework as $strFile)
 			{
-				if ($strFile != 'hugerte.css')
+				if ($strFile != 'tinymce.css')
 				{
 					$GLOBALS['TL_FRAMEWORK_CSS'][] = 'assets/contao/css/' . basename($strFile, '.css') . '.min.css';
 				}
