@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 final readonly class SchemaAwareObjectNormalizer
 {
     /**
-     * @param iterable<ObjectNormalizationHandlerInterface> $handlers
+     * @param iterable<SchemaAwareNormalizationHandlerInterface> $handlers
      */
     public function __construct(
         private Validator $validator,
@@ -74,7 +74,7 @@ final readonly class SchemaAwareObjectNormalizer
         return $this->getHandler($class)->getJsonSchema($class);
     }
 
-    private function getHandler(object|string $value): ObjectNormalizationHandlerInterface
+    private function getHandler(object|string $value): SchemaAwareNormalizationHandlerInterface
     {
         // Handlers are tagged services so another domain can add support without
         // extending this service or adding a central class-to-handler map.

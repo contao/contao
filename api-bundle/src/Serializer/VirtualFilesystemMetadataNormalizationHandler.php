@@ -28,7 +28,7 @@ use Symfony\Component\Uid\Uuid;
  * objects. This handler recursively converts those objects while preserving
  * custom scalar and array entries supplied by filesystem adapters.
  */
-final readonly class VirtualFilesystemMetadataNormalizationHandler implements ObjectNormalizationHandlerInterface
+final readonly class VirtualFilesystemMetadataNormalizationHandler implements SchemaAwareNormalizationHandlerInterface
 {
     /**
      * These are the only object types that may occur in the documented VFS metadata

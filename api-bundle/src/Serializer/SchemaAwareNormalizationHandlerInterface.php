@@ -16,7 +16,7 @@ namespace Contao\ApiBundle\Serializer;
  * Defines a schema-backed, bidirectional representation for a group of related
  * domain objects. Implementations are discovered by SchemaAwareObjectNormalizer.
  */
-interface ObjectNormalizationHandlerInterface
+interface SchemaAwareNormalizationHandlerInterface
 {
     /**
      * Whether this handler can normalize the object or denormalize the class.

@@ -3,9 +3,9 @@ services:
         autoconfigure: true
 
     _instanceof:
-        Contao\ApiBundle\Serializer\ObjectNormalizationHandlerInterface:
+        Contao\ApiBundle\Serializer\SchemaAwareNormalizationHandlerInterface:
             tags:
-                - contao.api.object_normalization_handler
+                - contao.api.schema_aware_normalization_handler
 
     # Merge Contao resources into API Platform's discovered resource names so the
     # entrypoint, docs and metadata pipeline can see DataContainerRecord.
@@ -96,7 +96,7 @@ services:
     Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer:
         arguments:
             $validator: '@Opis\JsonSchema\Validator'
-            $handlers: !tagged_iterator contao.api.object_normalization_handler
+            $handlers: !tagged_iterator contao.api.schema_aware_normalization_handler
 
     Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler: ~
 
