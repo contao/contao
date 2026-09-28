@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\E2eTests\Backend;
 
-use Contao\E2eTestBundle\Browser\BackendBrowser;
-use Contao\E2eTestBundle\Browser\BrowserOptions;
-use Contao\E2eTestBundle\ManagedEdition\ManagedEditionConfig;
+use Contao\E2eTesting\Browser\BackendBrowser;
+use Contao\E2eTesting\Browser\BrowserOptions;
+use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\File\FileMapping;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;

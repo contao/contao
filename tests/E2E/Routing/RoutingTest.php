@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\E2eTests\Routing;
 
-use Contao\E2eTestBundle\Http\Origin;
-use Contao\E2eTestBundle\ManagedEdition\ManagedEditionConfig;
+use Contao\E2eTesting\Http\Origin;
+use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureResult;
 use Contao\InstallationRecipe\Fixture\FixtureSet;

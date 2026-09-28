@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\E2eTests;
 
-use Contao\E2eTestBundle\Composer\MonorepoProject;
-use Contao\E2eTestBundle\ManagedEdition\ManagedEditionTestTrait;
+use Contao\E2eTesting\Composer\MonorepoProject;
+use Contao\E2eTesting\ManagedEdition\ManagedEditionTestTrait;
 use Contao\InstallationRecipe\Composer\ComposerConfig;
 use PHPUnit\Framework\TestCase;
 
