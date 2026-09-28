@@ -138,7 +138,7 @@ class DcTableTest extends TestCase
         $GLOBALS['TL_DCA']['tl_test']['list']['sorting']['treeRecordLimit'] = $configuredLimit;
 
         $dc = new class($api) extends DC_Table {
-            public function __construct($api)
+            public function __construct(bool $api)
             {
                 $this->strTable = 'tl_test';
                 $this->setApiMode($api);
@@ -186,7 +186,7 @@ class DcTableTest extends TestCase
 
         $dc->showAll();
 
-        $this->assertSame($expected, $dc->getOrderBy());
+        $this->assertSame($expected, new \ReflectionProperty($dc, 'orderBy')->getValue($dc));
     }
 
     public static function provideSortingChoices(): iterable
@@ -230,7 +230,7 @@ class DcTableTest extends TestCase
 
         $dc->showAll();
 
-        $this->assertSame(['title DESC', 'alias', 'id'], $dc->getOrderBy());
+        $this->assertSame(['title DESC', 'alias', 'id'], new \ReflectionProperty($dc, 'orderBy')->getValue($dc));
     }
 
     public function testApiPaginationDoesNotReadTheBackendSession(): void
@@ -295,11 +295,6 @@ class DcTableTest extends TestCase
             protected function parentView(): string
             {
                 return '';
-            }
-
-            public function getOrderBy()
-            {
-                return $this->orderBy;
             }
         };
     }
