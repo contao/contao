@@ -627,7 +627,7 @@ class Date
 		if ($intTime === null)
 		{
 			// Respect the preview time (see #10108)
-			$intTime = System::getContainer()->get('contao.preview.clock')->now()->getTimestamp();
+			$intTime = System::getContainer()?->get('contao.preview.clock')->now()->getTimestamp();
 		}
 
 		return $intTime - ($intTime % 60);
