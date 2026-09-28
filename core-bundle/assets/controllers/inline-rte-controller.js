@@ -106,7 +106,7 @@ export default class extends Controller {
 
         if (!config) {
             console.error(
-                'No TinyMCE config was attached to the DOM element (expando "inlineRteConfig").',
+                'No HugeRTE config was attached to the DOM element (expando "inlineRteConfig").',
                 this.element,
             );
             return;
@@ -115,7 +115,7 @@ export default class extends Controller {
         // Initialize map
         this.#editors.set(el, null);
 
-        const initialization = tinymce?.init({ ...config, target: el, setup: (editor) => this.#setup(editor) });
+        const initialization = hugerte?.init({ ...config, target: el, setup: (editor) => this.#setup(editor) });
         this.#initializations.set(el, initialization);
 
         initialization.then((editors) => {
@@ -148,9 +148,9 @@ export default class extends Controller {
     #setup(editor) {
         editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
 
-        // Hide instead of removing as reinit during focus event crashes TinyMCE
+        // Hide instead of removing as reinit during focus event crashes HugeRTE
         editor.on('blur', () => {
-            // Keep when TinyMCE dialog is open, the Contao picker blurs the editor
+            // Keep when HugeRTE dialog is open, the Contao picker blurs the editor
             if (document.querySelector('.tox-dialog')) {
                 return;
             }
@@ -181,7 +181,7 @@ export default class extends Controller {
     }
 
     #commit(editor) {
-        // Only edited cells are written back to make sure TinyMCE does not rewrite unedited cells
+        // Only edited cells are written back to make sure HugeRTE does not rewrite unedited cells
         if (!editor.isDirty()) {
             return;
         }
@@ -192,7 +192,7 @@ export default class extends Controller {
         editor.setDirty(false);
     }
 
-    // Reset TinyMCE specific content (e.g. cloned or duplicated elements)
+    // Reset HugeRTE specific content (e.g. cloned or duplicated elements)
     #reset(el, content) {
         for (const name of ['id', 'contenteditable', 'spellcheck']) {
             el.removeAttribute(name);

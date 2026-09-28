@@ -1,16 +1,14 @@
-{% if enableTinyMce|default and not readonly|default %}
+{% if enableHugeRte|default and not readonly|default %}
     <script>
         {
             const config = {
                 inline: true,
                 hidden_input: false,
-                language: '{{ tinyMceLanguage|e('js') }}',
+                language: '{{ hugeRteLanguage|e('js') }}',
                 element_format: 'html',
                 document_base_url: '{{ (app.request.schemeAndHttpHost ~ app.request.basePath ~ '/')|e('js') }}',
                 entities: '160,nbsp,60,lt,62,gt,173,shy',
-                license_key: 'gpl',
                 branding: false,
-                promotion: false,
                 menubar: false,
                 browser_spellcheck: true,
                 inline_boundaries: false,
@@ -21,7 +19,7 @@
                     Backend.openModalSelector({
                         'id': 'tl_listing',
                         'title': document.querySelector('.tox-dialog__title')?.textContent ?? '',
-                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
+                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype === 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
                         'callback': function (table, val) {
                             document.querySelector('.tox-dialog input')?.focus();
                             callback(val.join(','));
@@ -52,7 +50,7 @@
                 {% endblock %}
 
                 {% block cache_suffix %}
-                cache_suffix: '?v={{ asset_version('js/tinymce.min.js', 'contao-components/tinymce')|e('js') }}',
+                cache_suffix: '?v={{ asset_version('js/hugerte.min.js', 'contao-components/hugerte')|e('js') }}',
                 {% endblock %}
 
                 {% block custom %}
