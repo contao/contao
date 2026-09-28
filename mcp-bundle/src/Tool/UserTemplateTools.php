@@ -65,10 +65,10 @@ final class UserTemplateTools
         return $this->validator->validate($name, $code, $theme);
     }
 
-    #[McpTool(name: 'contao_template_analyze_impact', description: 'Analyze the theme-aware inheritance chain and direct literal Twig consumers of a template. The result is heuristic and includes explicit limitations.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
-    public function analyzeImpact(string $name, string|null $theme = null): array
+    #[McpTool(name: 'contao_template_analyze_impact', description: 'Analyze direct and transitive consumers of a template through theme-aware resolution and Twig AST references. Optionally include the hierarchy of a specific block. Consult contao://template-guidance when choosing an edit target.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    public function analyzeImpact(string $name, string|null $theme = null, string|null $block = null): array
     {
-        return $this->impactAnalyzer->analyze($name, $theme);
+        return $this->impactAnalyzer->analyze($name, $theme, $block);
     }
 
     #[McpTool(name: 'contao_template_create_override', description: 'Create an editable user override for a discovered template. Read the template first and only call this when the create operation is available.', annotations: new ToolAnnotations(destructiveHint: false, openWorldHint: false))]
@@ -77,7 +77,7 @@ final class UserTemplateTools
         return $this->execute('contao_api_user_template_operation_create', array_filter(['theme' => $theme], static fn ($value): bool => null !== $value), ['name' => $name, 'parameters' => []]);
     }
 
-    #[McpTool(name: 'contao_template_save', description: 'Replace the complete code of an existing user template. Read and validate the proposed code first.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
+    #[McpTool(name: 'contao_template_save', description: 'Replace the complete code of an existing user template. Read contao://template-guidance, analyze impact and validate the proposed code first.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
     public function save(string $name, string $code, string|null $theme = null): CallToolResult
     {
         return $this->execute('contao_api_user_template_operation_save', array_filter(['name' => $name, 'theme' => $theme], static fn ($value): bool => null !== $value), ['code' => $code]);

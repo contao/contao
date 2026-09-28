@@ -83,6 +83,16 @@ final class ContaoMcpExtensionTest extends TestCase
             ],
             $tools,
         );
+
+        $resources = [];
+
+        foreach ($container->getDefinition('mcp.server.contao_backend.builder')->getMethodCalls() as [$method, $arguments]) {
+            if ('addResource' === $method) {
+                $resources[] = $arguments[1];
+            }
+        }
+
+        $this->assertSame(['contao://template-guidance', 'contao://twig/html-attributes'], $resources);
     }
 
     public function testKeepsBackendToolsOutOfASecondServer(): void

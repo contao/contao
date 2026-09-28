@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\UserTemplate;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -25,7 +26,7 @@ final class UserTemplateImpactAnalyzer
     ) {
     }
 
-    public function analyze(string $identifier, string|null $themeSlug): array
+    public function analyze(string $identifier, string|null $themeSlug, string|null $block = null): array
     {
         $chains = $this->loader->getInheritanceChains($themeSlug);
         $targetChain = $chains[$identifier] ?? null;
@@ -36,16 +37,18 @@ final class UserTemplateImpactAnalyzer
 
         $targetNames = array_values($targetChain);
         $referenceNames = $this->getReferenceNames($identifier, $targetNames);
-        $consumers = [];
+        $logicalNames = [];
+        $reverseReferences = [];
         $unreadable = [];
+        $dynamicReferenceCount = 0;
 
         foreach ($chains as $consumerIdentifier => $chain) {
-            $logicalName = reset($chain);
-
-            if (false === $logicalName || \in_array($logicalName, $targetNames, true)) {
-                continue;
+            foreach (array_values($chain) as $position => $logicalName) {
+                $logicalNames[$logicalName] = [$consumerIdentifier, $position];
             }
+        }
 
+        foreach ($logicalNames as $logicalName => [$consumerIdentifier, $position]) {
             try {
                 $information = $this->inspector->inspectTemplate($logicalName);
             } catch (InspectionException) {
@@ -54,46 +57,137 @@ final class UserTemplateImpactAnalyzer
                 continue;
             }
 
-            $relations = [];
-
             foreach ($information->getReferences() as $reference) {
-                if (null !== $reference['name'] && \in_array($reference['name'], $referenceNames, true)) {
-                    $relations[] = [
-                        'type' => $reference['type'],
-                        'line' => $reference['line'],
+                if (null === $reference['name']) {
+                    ++$dynamicReferenceCount;
+
+                    continue;
+                }
+
+                $resolvedName = $this->resolveReference($reference['name'], $consumerIdentifier, $position, $chains, $logicalNames);
+
+                if (null !== $resolvedName) {
+                    $reverseReferences[$resolvedName][] = [
+                        'template' => $logicalName,
+                        'reference' => [
+                            'type' => $reference['type'],
+                            'name' => $reference['name'],
+                            'line' => 0 < $reference['line'] ? $reference['line'] : null,
+                        ],
                     ];
                 }
             }
+        }
 
-            if (!$relations) {
+        $targetName = $targetNames[0];
+        $paths = [$targetName => []];
+        $queue = [$targetName];
+
+        while ($current = array_shift($queue)) {
+            foreach ($reverseReferences[$current] ?? [] as $edge) {
+                $consumerName = $edge['template'];
+
+                if (isset($paths[$consumerName])) {
+                    continue;
+                }
+
+                $paths[$consumerName] = [[
+                    ...$edge,
+                    'resolvesTo' => $current,
+                ], ...$paths[$current]];
+                $queue[] = $consumerName;
+            }
+        }
+
+        $directConsumers = [];
+        $transitiveConsumers = [];
+
+        foreach ($chains as $consumerIdentifier => $chain) {
+            $activeName = reset($chain);
+
+            if (false === $activeName || $activeName === $targetName || !isset($paths[$activeName])) {
                 continue;
             }
 
-            $consumers[$consumerIdentifier] = [
+            $consumer = [
                 'identifier' => $consumerIdentifier,
-                'template' => $logicalName,
-                'references' => $relations,
+                'template' => $activeName,
+                'depth' => \count($paths[$activeName]),
+                'path' => $paths[$activeName],
             ];
+
+            if (1 === $consumer['depth']) {
+                $directConsumers[] = $consumer;
+            } else {
+                $transitiveConsumers[] = $consumer;
+            }
         }
 
-        ksort($consumers);
+        $sortConsumers = static fn (array $a, array $b): int => $a['identifier'] <=> $b['identifier'];
+        usort($directConsumers, $sortConsumers);
+        usort($transitiveConsumers, $sortConsumers);
+
+        $blockImpact = null;
+
+        if (null !== $block && '' !== $block) {
+            $blockImpact = [
+                'name' => $block,
+                'hierarchy' => array_map(
+                    static fn ($information): array => [
+                        'template' => $information->getTemplateName(),
+                        'block' => $information->getBlockName(),
+                        'type' => $information->getType()->value,
+                        'prototype' => $information->isPrototype(),
+                    ],
+                    $this->inspector->getBlockHierarchy($targetName, $block),
+                ),
+            ];
+        }
 
         return [
             'identifier' => $identifier,
             'theme' => $themeSlug,
             'inheritanceChain' => $targetNames,
             'referenceNames' => $referenceNames,
-            'directConsumers' => array_values($consumers),
+            'directConsumers' => $directConsumers,
+            'transitiveConsumers' => $transitiveConsumers,
+            'blockImpact' => $blockImpact,
             'summary' => [
-                'directConsumerCount' => \count($consumers),
+                'directConsumerCount' => \count($directConsumers),
+                'transitiveConsumerCount' => \count($transitiveConsumers),
+                'affectedConsumerCount' => \count($directConsumers) + \count($transitiveConsumers),
+                'unresolvedDynamicReferenceCount' => $dynamicReferenceCount,
             ],
             'limitations' => [
                 'Only statically resolvable Twig references are matched to consumers.',
                 'Dynamic template names and references created in PHP cannot be assigned to a target.',
-                'The result lists direct consumers and does not calculate transitive impact.',
             ],
             'unreadableTemplates' => array_values(array_unique($unreadable)),
         ];
+    }
+
+    private function resolveReference(string $referenceName, string $consumerIdentifier, int $position, array $chains, array $logicalNames): string|null
+    {
+        if (isset($logicalNames[$referenceName])) {
+            return $referenceName;
+        }
+
+        if (!str_starts_with($referenceName, '@Contao/')) {
+            return null;
+        }
+
+        $referencedIdentifier = ContaoTwigUtil::getIdentifier($referenceName);
+        $referencedChain = array_values($chains[$referencedIdentifier] ?? []);
+
+        if (!$referencedChain) {
+            return null;
+        }
+
+        if ($referencedIdentifier === $consumerIdentifier) {
+            return $referencedChain[$position + 1] ?? null;
+        }
+
+        return $referencedChain[0];
     }
 
     /**

@@ -4,6 +4,8 @@ services:
 
     Contao\McpBundle\Response\ApiResponseConverter: ~
 
+    Contao\McpBundle\Resource\TemplateGuidance: ~
+
     Contao\McpBundle\Tool\DataContainerTools:
         autoconfigure: true
         arguments:
