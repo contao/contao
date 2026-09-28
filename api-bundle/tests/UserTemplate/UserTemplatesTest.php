@@ -20,11 +20,32 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UserTemplatesTest extends TestCase
 {
+    private string $defaultLocale;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->defaultLocale = \ini_get('intl.default_locale');
+    }
+
+    protected function tearDown(): void
+    {
+        \Locale::setDefault($this->defaultLocale);
+
+        if ('' === $this->defaultLocale) {
+            ini_restore('intl.default_locale');
+        }
+
+        parent::tearDown();
+    }
+
     #[DataProvider('studioEndpoints')]
     public function testReadsThroughTheStudioEndpoints(string $route, array $variables, string|null $theme): void
     {
@@ -49,7 +70,9 @@ class UserTemplatesTest extends TestCase
                     $this->assertSame('text/vnd.turbo-stream.html', $request->headers->get('Accept'));
                     $this->assertSame('de', $request->attributes->get('_locale'));
                     $this->assertNotSame($parent, $request);
-                    $this->assertSame($theme, $request->getSession()->getBag('contao_backend')->get('template_studio_theme_slug'));
+                    $bag = $request->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame($theme, $bag->get('template_studio_theme_slug'));
                     $this->assertSame([], $request->request->all());
                     $this->assertTrue($request->attributes->getBoolean('_contao_api'));
 

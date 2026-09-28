@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -41,7 +42,9 @@ class TemplateStudioOperationsTest extends TestCase
                     $this->assertSame('save', $request->query->get('operation'));
                     $this->assertSame(['code' => ''], $request->request->all());
                     $this->assertSame('text/vnd.turbo-stream.html', $request->headers->get('Accept'));
-                    $this->assertSame('demo', $request->getSession()->getBag('contao_backend')->get('template_studio_theme_slug'));
+                    $bag = $request->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame('demo', $bag->get('template_studio_theme_slug'));
                     $this->assertTrue($request->attributes->getBoolean('_contao_api'));
 
                     return new JsonResponse(['identifier' => 'content_element/test']);

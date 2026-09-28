@@ -23,9 +23,8 @@ services:
             $framework: '@contao.framework'
             $resourceFinder: '@contao.resource_finder'
 
-    # Provide user templates as resources.
     Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory:
-        decoration_priority: 751
+        decoration_priority: 750
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
             $decorated: '@.inner'
