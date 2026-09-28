@@ -414,10 +414,12 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
     private function getTags(OpenApi $openApi, array $resources): array
     {
         $resourceNames = array_filter(array_map(static fn (ApiResource $resource): string|null => $resource->getShortName(), $resources));
+
         $categories = array_values(array_unique(array_filter(
             array_map(static fn (ApiResource $resource): mixed => $resource->getExtraProperties()['contao']['category'] ?? $resource->getShortName(), $resources),
             static fn (mixed $category): bool => \is_string($category) && '' !== $category,
         )));
+
         $tags = [];
 
         foreach ($openApi->getTags() as $tag) {

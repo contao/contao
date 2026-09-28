@@ -208,6 +208,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->createResourceFinder(['tl_article', 'tl_content']),
             'backend/dc',
         );
+
         $routes = $this->createApiLoader($factory)->load(null);
         $generator = new UrlGenerator($routes, new RequestContext());
         $parameters = ['article_id' => 3, 'nested' => '4/content/5'];

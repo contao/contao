@@ -368,6 +368,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     {
         $modules = $GLOBALS['BE_MOD'] ?? null;
         $GLOBALS['BE_MOD'] = ['content' => ['article' => ['tables' => ['tl_page', 'tl_content']]]];
+
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
@@ -413,6 +414,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ['table' => 'tl_page', 'parameter' => 'page_id'],
             ['table' => 'tl_content', 'parameter' => 'content_id'],
         ]]]);
+
         $context = DataContainerContext::fromOperation($operation, ['page_id' => 7, 'content_id' => 9]);
 
         $this->expectException(NotFoundHttpException::class);
