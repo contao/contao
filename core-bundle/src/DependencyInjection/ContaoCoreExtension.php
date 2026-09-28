@@ -116,7 +116,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        if ($container->hasExtension('contao_api')) {
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
+
+        if (isset($bundles['ContaoApiBundle'])) {
             $loader->load('api.yaml');
         }
 

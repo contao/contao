@@ -50,22 +50,16 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
-    public function testRegistersApiWidgetsWhenTheApiExtensionIsAvailable(): void
+    public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
     {
-        $apiExtension = $this->createStub(Extension::class);
-        $apiExtension
-            ->method('getAlias')
-            ->willReturn('contao_api')
-        ;
-
         $container = new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,
             'kernel.charset' => 'UTF-8',
             'kernel.project_dir' => $this->getTempDir(),
             'kernel.default_locale' => 'en',
+            'kernel.bundles' => ['ContaoApiBundle' => true],
         ]));
 
-        $container->registerExtension($apiExtension);
         new ContaoCoreExtension()->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
