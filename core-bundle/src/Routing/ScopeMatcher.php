@@ -63,6 +63,28 @@ class ScopeMatcher
         return $this->backendMatcher->matches($request) || $this->backendApiMatcher->matches($request);
     }
 
+    public function isBackendUiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->backendMatcher->matches($request);
+    }
+
+    public function isBackendApiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->backendApiMatcher->matches($request);
+    }
+
     public function isFrontendRequest(Request|null $request = null): bool
     {
         $request ??= $this->requestStack->getCurrentRequest();
