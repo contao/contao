@@ -660,7 +660,7 @@ window.Backend =
 	},
 
 	/**
-	 * Open a TinyMCE file browser in a modal window
+	 * Open a HugeRTE file browser in a modal window
 	 *
 	 * @param {string} field_name The field name
 	 * @param {string} url        The URL
