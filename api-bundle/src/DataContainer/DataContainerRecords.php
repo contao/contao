@@ -344,7 +344,7 @@ class DataContainerRecords
     private function run(string $table, array $parameters, callable $callback): mixed
     {
         $this->framework->initialize();
-        System::loadLanguageFile('default');
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
 
         $request = $this->createRequest($table, $parameters);
         $bag = $request->getSession()->getBag('contao_backend');

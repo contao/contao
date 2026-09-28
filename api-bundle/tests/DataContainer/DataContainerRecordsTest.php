@@ -28,6 +28,7 @@ use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Doctrine\DBAL\Connection;
@@ -432,10 +433,11 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
         $GLOBALS['TL_DCA']['tl_content']['config']['dataContainer'] = DC_Table::class;
 
+        $system = $this->createAdapterStub(['loadLanguageFile']);
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $loader = $this->createAdapterStub(['switchToCurrentRequest']);
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader, System::class => $system]);
         $framework
             ->method('createInstance')
             ->willReturnCallback(
