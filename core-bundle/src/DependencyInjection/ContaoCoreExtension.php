@@ -417,9 +417,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasDefinition('contao.search.backend.security.document_allowed_groups_resolver')) {
             $resolverDefinition = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
-            $resolverDefinition
-                ->setArgument('$maxGroups', $config['backend_search']['permission_aware_facets']['max_groups'])
-            ;
+            $resolverDefinition->setArgument('$maxGroups', $config['backend_search']['facets']['max_groups']);
         }
     }
 

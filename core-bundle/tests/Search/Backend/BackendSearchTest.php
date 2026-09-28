@@ -201,7 +201,6 @@ class BackendSearchTest extends TestCase
             ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
         ;
 
-        $security = $this->createMock(Security::class);
         $user = $this->createMock(BackendUser::class);
         $user
             ->method('__get')
@@ -209,10 +208,12 @@ class BackendSearchTest extends TestCase
             ->willReturn([1])
         ;
 
+        $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
         ;
+
         $security
             ->expects($this->exactly(4))
             ->method('isGranted')

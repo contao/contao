@@ -38,6 +38,7 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
             new Reference('request_stack'),
             new Reference('security.firewall.map'),
         ]);
+
         $container->setDefinition('contao.security.authentication.contao_strategy_context', $strategyContext);
 
         $strategy = new Definition(ContaoStrategy::class, [
@@ -45,6 +46,7 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
             new Definition(PriorityStrategy::class),
             new Reference('contao.security.authentication.contao_strategy_context'),
         ]);
+
         $container->setDefinition('contao.security.authentication.contao_strategy', $strategy);
 
         $accessDecisionManager->replaceArgument(1, new Reference('contao.security.authentication.contao_strategy'));

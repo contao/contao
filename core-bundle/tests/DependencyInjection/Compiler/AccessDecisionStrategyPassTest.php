@@ -54,10 +54,7 @@ class AccessDecisionStrategyPassTest extends TestCase
         $pass->process($container);
 
         $accessDecisionManager = $container->getDefinition('security.access.decision_manager');
-        $this->assertSame(
-            'contao.security.authentication.contao_strategy',
-            (string) $accessDecisionManager->getArgument(1),
-        );
+        $this->assertSame('contao.security.authentication.contao_strategy', (string) $accessDecisionManager->getArgument(1));
 
         $context = $container->getDefinition('contao.security.authentication.contao_strategy_context');
         $this->assertSame(ContaoStrategyContext::class, $context->getClass());

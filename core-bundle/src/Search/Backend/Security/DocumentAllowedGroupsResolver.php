@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Search\Backend\Security;
 
 use Contao\CoreBundle\Search\Backend\Document;
@@ -53,11 +61,12 @@ class DocumentAllowedGroupsResolver
 
         $time = Date::floorToMinute();
         $groups = [];
+
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('id')
             ->from('tl_user_group')
-            ->where("disable=0 AND (start='' OR start<=:time) AND (stop='' OR stop>:time)")
+            ->where("disable = 0 AND (start = '' OR start <= :time) AND (stop = '' OR stop > :time)")
             ->orderBy('name', 'ASC')
             ->setParameter('time', $time)
         ;

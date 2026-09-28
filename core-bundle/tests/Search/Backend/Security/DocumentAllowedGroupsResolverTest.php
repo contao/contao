@@ -26,6 +26,7 @@ class DocumentAllowedGroupsResolverTest extends TestCase
     {
         $connection = $this->createConnection();
         $provider = $this->createStub(ProviderInterface::class);
+
         $documentAccessEvaluator = $this->createMock(DocumentAccessEvaluator::class);
         $documentAccessEvaluator
             ->expects($this->exactly(4))
@@ -48,6 +49,7 @@ class DocumentAllowedGroupsResolverTest extends TestCase
     public function testDoesNotLimitGroupsIfConfiguredWithZero(): void
     {
         $provider = $this->createStub(ProviderInterface::class);
+
         $documentAccessEvaluator = $this->createStub(DocumentAccessEvaluator::class);
         $documentAccessEvaluator
             ->method('isGrantedForGroup')

@@ -89,6 +89,7 @@ class ContaoStrategyTest extends TestCase
     public function testCanForceTheContaoStrategyWithoutARequest(): void
     {
         $strategyContext = new ContaoStrategyContext(new RequestStack(), $this->createStub(FirewallMap::class));
+
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(false),
             $this->mockAccessDecisionStrategy(true),
