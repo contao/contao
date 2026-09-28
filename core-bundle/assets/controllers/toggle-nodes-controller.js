@@ -33,7 +33,7 @@ export default class extends Controller {
     }
 
     toggleToggler(el, id, level, folder) {
-        const item = document.id(id);
+        const item = document.getElementById(id);
 
         if (item && item.style.display === 'none') {
             this.showChild(item);
@@ -128,7 +128,7 @@ export default class extends Controller {
                 let parent = el.closest('li');
                 let next;
 
-                while (typeOf(parent) === 'element' && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
+                while (parent instanceof HTMLElement && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
                     parent = next;
                     if (parent.classList.contains('tl_folder')) {
                         isFolder = true;
@@ -147,7 +147,7 @@ export default class extends Controller {
             this.expandToggler(el);
 
             // HOOK (see #6752)
-            window.fireEvent('ajax_change');
+            document.dispatchEvent(new CustomEvent('ajax_change', { bubbles: true }));
         }
 
         this.loadToggler(el, false);
@@ -236,6 +236,6 @@ export default class extends Controller {
     }
 
     hasExpandedRoot() {
-        return !!this.rootChildTargets.find((el) => el.style.display !== 'none');
+        return this.rootChildTargets.some((el) => el.style.display !== 'none');
     }
 }

@@ -1636,6 +1636,8 @@ window.Backend =
 	 * Update the fields of the imageSize widget upon change
 	 */
 	enableImageSizeWidgets: function() {
+		console.warn('Backend.enableImageSizeWidgets() is deprecated. Please use the Stimulus controller instead.');
+
 		$$('.tl_image_size').each(function(el) {
 			var select = el.getElement('select'),
 				widthInput = el.getChildren('input')[0],
