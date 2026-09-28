@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
 use Contao\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
@@ -37,6 +38,23 @@ use Twig\Loader\LoaderInterface;
 
 class PreviewSwitchControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+
+        System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testExitsOnNonAjaxRequest(): void
     {
         $controller = new PreviewSwitchController(
