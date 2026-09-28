@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -30,17 +31,21 @@ class ImageSizesTest extends TestCase
 
     private EventDispatcherInterface&MockObject $eventDispatcher;
 
+    private Security&MockObject $security;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->security = $this->createMock(Security::class);
 
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
             $this->createStub(TranslatorInterface::class),
+            $this->security,
         );
     }
 
@@ -77,7 +82,13 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $user = $this->createClassWithPropertiesStub(BackendUser::class);
-        $user->isAdmin = true;
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGrantedForUser')
+            ->with($user, 'ROLE_ADMIN')
+            ->willReturn(true)
+        ;
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
@@ -92,10 +103,16 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $user = $this->createClassWithPropertiesStub(BackendUser::class);
-        $user->isAdmin = false;
 
         // Allow only one image size
         $user->imageSizes = [42];
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('isGrantedForUser')
+            ->with($user, 'ROLE_ADMIN')
+            ->willReturn(false)
+        ;
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
@@ -104,7 +121,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('42', $options['My theme']);
 
         $user = $this->createClassWithPropertiesStub(BackendUser::class);
-        $user->isAdmin = false;
 
         // Allow only some default options
         $user->imageSizes = ['proportional', 'box'];
@@ -115,7 +131,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('My theme', $options);
 
         $user = $this->createClassWithPropertiesStub(BackendUser::class);
-        $user->isAdmin = false;
 
         // Allow nothing
         $user->imageSizes = [];

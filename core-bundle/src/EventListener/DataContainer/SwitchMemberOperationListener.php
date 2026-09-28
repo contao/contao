@@ -30,8 +30,7 @@ class SwitchMemberOperationListener
 
     public function __invoke(DataContainerOperation $operation): void
     {
-        $user = $this->security->getUser();
-        $blnCanSwitchUser = $user instanceof BackendUser && ($user->isAdmin || (!empty($user->amg) && \is_array($user->amg)));
+        $blnCanSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
 
         if (!$blnCanSwitchUser) {
             $operation->hide();
@@ -44,7 +43,7 @@ class SwitchMemberOperationListener
         if (
             !$row['login']
             || !$row['username']
-            || (!$user->isAdmin && \count(array_intersect(StringUtil::deserialize($row['groups'], true), $user->amg)) < 1)
+            || $this->security->isGranted('contao_user.amg', StringUtil::deserialize($row['groups'], true))
         ) {
             $operation->disable();
 

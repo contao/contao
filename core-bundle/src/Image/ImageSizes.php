@@ -16,7 +16,9 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\StringUtil;
+use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -34,6 +36,7 @@ class ImageSizes implements ResetInterface
         private readonly Connection $connection,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TranslatorInterface $translator,
+        private readonly Security $security,
     ) {
     }
 
@@ -70,7 +73,7 @@ class ImageSizes implements ResetInterface
     {
         $this->loadOptions();
 
-        if ($user->isAdmin) {
+        if ($this->security->isGrantedForUser($user, 'ROLE_ADMIN')) {
             $event = new ImageSizesEvent($this->options, $user);
         } else {
             $options = array_map(
