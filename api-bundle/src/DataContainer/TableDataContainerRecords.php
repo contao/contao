@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class DataContainerRecords
+class TableDataContainerRecords
 {
     public function __construct(
         private readonly DataContainerRecordMapper $mapper,
@@ -182,17 +182,13 @@ class DataContainerRecords
 
     private function getListingRecords(DC_Table $dc, int $offset, int $itemsPerPage): array
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $request->attributes->set('_contao_api', true);
-        $request->attributes->set('_contao_api_listing_ids', []);
-
         // Stop after the requested page without overflowing at the largest valid offset
-        $request->attributes->set('_contao_api_listing_limit', $offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
+        $dc->limit = '0,'.($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 
-        $dc->showAll();
+        $ids = $dc->showAll();
         $records = [];
 
-        foreach ($request->attributes->get('_contao_api_listing_ids') as $id) {
+        foreach ($ids as $id) {
             try {
                 $row = $dc->getCurrentRecord($id);
             } catch (AccessDeniedException) {
@@ -357,13 +353,17 @@ class DataContainerRecords
             $request,
             function () use ($table, $callback, $request, $bag) {
                 $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
-                $driver = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
+                $driver = DataContainer::getDriverForTable($table);
 
                 if (!\is_string($driver) || !is_a($driver, DC_Table::class, true)) {
                     throw new NotFoundHttpException('The resource is not backed by a table data container.');
                 }
 
-                return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
+                /** @var DC_Table $dc */
+                $dc = $this->framework->createInstance($driver, [$table]);
+                $dc->setApiMode();
+
+                return $callback($dc, $request, $bag);
             },
         );
     }
@@ -385,7 +385,7 @@ class DataContainerRecords
         // Build a backend request instead of inheriting API routing or client
         // control parameters
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
-        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_contao_api' => true, '_locale' => $parent->getLocale()]);
+        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_locale' => $parent->getLocale()]);
 
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());

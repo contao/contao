@@ -19,7 +19,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
@@ -29,7 +29,7 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
 final class DataContainerStateProvider implements ProviderInterface
 {
     public function __construct(
-        private readonly DataContainerRecords $records,
+        private readonly TableDataContainerRecords $records,
         private readonly Pagination $pagination,
     ) {
     }

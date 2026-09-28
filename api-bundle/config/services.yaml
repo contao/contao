@@ -57,22 +57,12 @@ services:
 
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
         arguments:
-            $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
+            $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
             $pagination: '@api_platform.pagination'
 
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
         arguments:
-            $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
-
-    Contao\ApiBundle\DataContainer\DataContainerRecords:
-        arguments:
-            $mapper: '@Contao\ApiBundle\DataContainer\DataContainerRecordMapper'
-            $connection: '@database_connection'
-            $framework: '@contao.framework'
-            $requestStack: '@request_stack'
-            $requestSwitcher: '@contao.data_container.dca_request_switcher'
-            $urlAnalyzer: '@contao.data_container.dca_url_analyzer'
-            $urlGenerator: '@router'
+            $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
 
     Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
         arguments:
@@ -85,5 +75,15 @@ services:
             $validator: '@Opis\JsonSchema\Validator'
         tags:
             - { name: validator.constraint_validator }
+
+    Contao\ApiBundle\DataContainer\TableDataContainerRecords:
+        arguments:
+            $mapper: '@Contao\ApiBundle\DataContainer\DataContainerRecordMapper'
+            $connection: '@database_connection'
+            $framework: '@contao.framework'
+            $requestStack: '@request_stack'
+            $requestSwitcher: '@contao.data_container.dca_request_switcher'
+            $urlAnalyzer: '@contao.data_container.dca_url_analyzer'
+            $urlGenerator: '@router'
 
     Opis\JsonSchema\Validator: ~

@@ -21,7 +21,7 @@ use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ final class DataContainerStateProviderTest extends TestCase
     {
         $record = new DataContainerRecord('tl_content', ['headline' => 'Existing'], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->exactly(3))
             ->method('find')
@@ -52,7 +52,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testReturnsNotFoundForMissingRecords(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('find')
@@ -71,7 +71,7 @@ final class DataContainerStateProviderTest extends TestCase
     {
         $page = new DataContainerPage([new DataContainerRecord('tl_content', [], 17)], 2);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('list')
@@ -89,7 +89,7 @@ final class DataContainerStateProviderTest extends TestCase
     {
         $page = new DataContainerPage([], 2, $limit);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('list')
@@ -123,7 +123,7 @@ final class DataContainerStateProviderTest extends TestCase
     #[DataProvider('provideInvalidPagination')]
     public function testRejectsInvalidPaginationBeforeListing(array $filters): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('list')
@@ -147,7 +147,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testPassesTheSortingChoiceToTheDataContainer(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('list')
@@ -162,7 +162,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testRejectsMultipleSortingChoicesUntilSupported(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('list')
@@ -177,7 +177,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testRejectsAnArraySortingChoice(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('list')
@@ -191,7 +191,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testReturnsNullWhenNoContaoTableIsConfigured(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('find')
