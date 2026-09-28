@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Database;
 use Contao\Environment;
 use Contao\System;
@@ -41,6 +42,7 @@ class BackendUserTest extends ContaoTestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $this->createStub(Connection::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
 
         System::setContainer($container);
 
