@@ -19,10 +19,8 @@
                     if (document.activeElement && document.activeElement.id && document.activeElement.id === editor.id) {
                         editor.editorManager.get(editor.id).focus();
                     }
-                    editor.on('focus', () =>
-                        window.dispatchEvent(new Event('store-scroll-offset'))
-                    );
-                },
+                    editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
+                }
 
                 {% block picker %}
                 file_picker_callback: function (callback, value, meta) {
@@ -44,7 +42,7 @@
                 {% endblock %}
 
                 {% block plugins %}
-                plugins: 'autosave charmap code fullscreen help image importcss link lists searchreplace table visualblocks visualchars',
+                plugins: 'autosave charmap code fullscreen help image importcss link lists searchreplace stripnbsp table visualblocks visualchars',
                 {% endblock %}
 
                 {% block valid_elements %}
