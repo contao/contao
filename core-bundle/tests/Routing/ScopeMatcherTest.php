@@ -92,7 +92,7 @@ class ScopeMatcherTest extends TestCase
             false,
             false,
             true,
-            true
+            true,
         ];
 
         yield [
