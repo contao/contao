@@ -204,7 +204,7 @@ class Search
 						->execute($objIndex->id);
 				}
 
-				// The same page has been indexed under a different URL already (see #8460)
+				// The same page has already been indexed under a different URL (see #8460)
 				return false;
 			}
 
@@ -471,9 +471,6 @@ class Search
 	 */
 	public static function query(string $strKeywords, bool $blnOrSearch=false, array $arrPid=array(), bool $blnFuzzy=false, int $intMinlength=0): SearchResult
 	{
-		// Clean the keywords
-		$strKeywords = StringUtil::decodeEntities($strKeywords);
-
 		// Check keyword string
 		if (!\strlen($strKeywords))
 		{

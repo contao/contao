@@ -158,7 +158,7 @@ class UserListCommandTest extends TestCase
         return $command;
     }
 
-    private function mockQueryBuilder(array $result): QueryBuilder&MockObject
+    private function mockQueryBuilder(array $result): MockObject&QueryBuilder
     {
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder

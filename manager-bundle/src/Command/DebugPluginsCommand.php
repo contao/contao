@@ -194,6 +194,7 @@ class DebugPluginsCommand extends Command
                     $config->loadInProduction() && $config->loadInDevelopment() => 'All',
                     $config->loadInProduction() => 'Production',
                     $config->loadInDevelopment() => 'Development',
+                    default => 'None',
                 },
             ];
 

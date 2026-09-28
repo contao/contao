@@ -18,51 +18,49 @@ export default class TabsController extends Controller {
         const tabId = isRestore ? panel.dataset.tabId : (Math.random() + 1).toString(36).substring(7);
         const containerId = this.element.id;
         const panelReference = panel.id || `tab-panel_${containerId}_${tabId}`;
-        const controlReference = `tab-control_${containerId}_${tabId}`;
+        const controlReference = panel.getAttribute('aria-labelledby') || `tab-control_${containerId}_${tabId}`;
 
         // Create navigation elements
-        const selectButton = isRestore
+        const existingSelectButton = isRestore
             ? this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`)
-            : (() => {
-                  const button = document.createElement('button');
-                  button.id = controlReference;
-                  button.className = 'select';
-                  button.innerText = panel.dataset.label;
-                  button.setAttribute('type', 'button');
-                  button.setAttribute('role', 'tab');
-                  button.setAttribute('aria-controls', panelReference);
+            : null;
 
-                  return button;
-              })();
+        const selectButton =
+            existingSelectButton ??
+            (() => {
+                const button = document.createElement('button');
+                button.id = controlReference;
+                button.className = 'select';
+                button.innerText = panel.dataset.label;
+                button.setAttribute('type', 'button');
+                button.setAttribute('role', 'tab');
+                button.setAttribute('aria-controls', panelReference);
 
-        selectButton.addEventListener('click', () => {
-            this.selectTab(panel);
-        });
+                button.setAttribute(
+                    'data-action',
+                    `click->${this.identifier}#select auxclick->${this.identifier}#close`,
+                );
 
-        selectButton.addEventListener('auxclick', (event) => {
-            if (1 === event.button) {
-                // Remove the panel and let the disconnect handler do the rest
-                panel.remove();
-            }
-        });
+                return button;
+            })();
 
-        const closeButton = isRestore
+        const existingCloseButton = isRestore
             ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
-            : (() => {
-                  const button = document.createElement('button');
-                  button.className = 'close';
-                  button.append(Icon.getTemplate('close', { 'aria-hidden': true, width: 12, height: 12 }).content);
-                  button.setAttribute('type', 'button');
-                  button.setAttribute('aria-controls', panelReference);
-                  button.setAttribute('aria-label', this.closeLabelValue);
+            : null;
 
-                  return button;
-              })();
+        const closeButton =
+            existingCloseButton ??
+            (() => {
+                const button = document.createElement('button');
+                button.className = 'close';
+                button.append(Icon.getTemplate('close', { 'aria-hidden': true, width: 12, height: 12 }).content);
+                button.setAttribute('type', 'button');
+                button.setAttribute('aria-controls', panelReference);
+                button.setAttribute('aria-label', this.closeLabelValue);
+                button.setAttribute('data-action', `${this.identifier}#close`);
 
-        closeButton.addEventListener('click', () => {
-            // Remove the panel and let the disconnect handler do the rest
-            panel.remove();
-        });
+                return button;
+            })();
 
         if (!isRestore) {
             // Enhance panel container
@@ -70,8 +68,13 @@ export default class TabsController extends Controller {
             panel.id = panelReference;
             panel.setAttribute('role', 'tabpanel');
             panel.setAttribute('aria-labelledby', controlReference);
+        }
 
+        if (!existingSelectButton || !existingCloseButton) {
             // Add navigation element
+            existingSelectButton?.parentElement?.remove();
+            existingCloseButton?.parentElement?.remove();
+
             const li = document.createElement('li');
             li.setAttribute('role', 'presentation');
             li.append(selectButton);
@@ -96,6 +99,22 @@ export default class TabsController extends Controller {
                 this.#activeTab = null;
             }
         }
+    }
+
+    select(event) {
+        const panel = document.getElementById(event.currentTarget.getAttribute('aria-controls'));
+
+        if (panel) {
+            this.selectTab(panel);
+        }
+    }
+
+    close(event) {
+        if (event.type === 'auxclick' && event.button !== 1) {
+            return;
+        }
+
+        document.getElementById(event.currentTarget.getAttribute('aria-controls'))?.remove();
     }
 
     selectTab(panel) {

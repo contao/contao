@@ -58,7 +58,7 @@ class LinkInsertTagTest extends TestCase
     }
 
     #[DataProvider('getConvertedInsertTags')]
-    public function testReplacedInsertTag(string $insertTag, string|false $expected, OutputType $outputType): void
+    public function testReplacedInsertTag(string $insertTag, false|string $expected, OutputType $outputType): void
     {
         $page1 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page1->alias = 'foobar';

@@ -404,7 +404,7 @@ class Comments extends Frontend
 	{
 		$objNotify = CommentsNotifyModel::findBySourceParentAndEmail($objComment->source, $objComment->parent, $objComment->email);
 
-		// The subscription exists already
+		// The subscription already exists
 		if ($objNotify !== null)
 		{
 			return;
@@ -502,7 +502,7 @@ class Comments extends Frontend
 	 */
 	public static function notifyCommentsSubscribers(CommentsModel $objComment)
 	{
-		// Notified already
+		// Already notified
 		if ($objComment->notified)
 		{
 			return;

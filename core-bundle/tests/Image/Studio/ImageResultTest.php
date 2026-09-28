@@ -432,7 +432,7 @@ class ImageResultTest extends TestCase
         $imageResult->createIfDeferred();
     }
 
-    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface&MockObject
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): MockObject&PictureFactoryInterface
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory

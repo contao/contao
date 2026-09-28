@@ -365,7 +365,7 @@ class FigureBuilder
 
         try {
             $stream = $storage->readStream($location);
-        } catch (VirtualFilesystemException|UnableToResolveUuidException $e) {
+        } catch (UnableToResolveUuidException|VirtualFilesystemException $e) {
             $this->lastException = new InvalidResourceException(\sprintf('Could not read resource from storage: %s', $e->getMessage()), previous: $e);
 
             return $this;
@@ -689,6 +689,7 @@ class FigureBuilder
                 $settings,
             ),
             $settings->options,
+            $this->locator->get('contao.string.html_decoder'),
         );
     }
 

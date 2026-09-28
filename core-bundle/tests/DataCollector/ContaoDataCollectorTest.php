@@ -79,17 +79,21 @@ class ContaoDataCollectorTest extends TestCase
     public function testCollectsDataInFrontEnd(): void
     {
         $layout = $this->createClassWithPropertiesStub(LayoutModel::class);
-        $layout->name = 'Default';
+        $layout->name = 'Default & custom';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
         $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
-        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => []]);
+        $article = $this->createClassWithPropertiesStub(ArticleModel::class);
+        $article->id = 3;
+        $article->title = 'Article & content';
+
+        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => [$article]]);
         $framework = $this->createContaoFrameworkStub([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
 
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->id = 2;
-        $page->title = 'Page';
+        $page->title = 'Page & title';
         $page->layoutId = 2;
 
         $pageFinder = $this->createStub(PageFinder::class);
@@ -116,11 +120,16 @@ class ContaoDataCollectorTest extends TestCase
                 'framework' => true,
                 'frontend' => true,
                 'preview' => false,
-                'page' => 'Page (ID 2)',
+                'page' => 'Page & title (ID 2)',
                 'page_url' => '',
-                'layout' => 'Default (ID 2)',
+                'layout' => 'Default & custom (ID 2)',
                 'layout_url' => '',
-                'articles' => [],
+                'articles' => [
+                    [
+                        'url' => '',
+                        'label' => 'Article & content (ID 3)',
+                    ],
+                ],
                 'template' => 'fe_page',
             ],
             $collector->getSummary(),

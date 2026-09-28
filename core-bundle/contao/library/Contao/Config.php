@@ -71,11 +71,11 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
+		'maxPaginationLinks' => 'contao.pagination.default_range',
 	);
 
 	private static $arrDeprecated = array
 	(
-		'maxPaginationLinks',
 	);
 
 	private static $arrToBeRemoved = array
@@ -173,7 +173,7 @@ class Config
 	 */
 	protected function markModified()
 	{
-		// Return if marked as modified already
+		// Return if already marked as modified
 		if ($this->blnIsModified === true)
 		{
 			return;
@@ -258,7 +258,7 @@ class Config
 			$strFile .= "\n" . $this->strBottom . "\n";
 		}
 
-		$strTemp = Path::join($this->strRootDir, 'system/tmp', md5(uniqid(mt_rand(), true)));
+		$strTemp = Path::join($this->strRootDir, 'system/tmp', bin2hex(random_bytes(16)));
 
 		// Write to a temp file first
 		$objFile = fopen($strTemp, 'w');

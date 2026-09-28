@@ -59,10 +59,7 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
         }
 
         $cacheKey = $subject['source'].'.'.$subject['parent'];
-
-        if (!isset($this->cache[$cacheKey])) {
-            $this->cache[$cacheKey] = $this->hasAccess($token, $subject['source'], (int) $subject['parent']);
-        }
+        $this->cache[$cacheKey] ??= $this->hasAccess($token, $subject['source'], (int) $subject['parent']);
 
         return $this->cache[$cacheKey] ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
     }

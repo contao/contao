@@ -54,10 +54,10 @@ export default class extends Controller {
         const select = this.selectTarget;
         const value = select.value;
 
-        if (value === '' || value.indexOf('_') === 0 || value.toInt().toString() === value) {
+        if (value === '' || value.startsWith('_') || String(Number.parseInt(value, 10)) === value) {
             let dimensions = select.options[select.selectedIndex].text;
             dimensions = dimensions.split('(');
-            dimensions = dimensions.length > 1 ? dimensions.getLast().split(')')[0].split('x') : ['', ''];
+            dimensions = dimensions.length > 1 ? dimensions.at(-1).split(')')[0].split('x') : ['', ''];
 
             this.widthTarget.readOnly = true;
             this.heightTarget.readOnly = true;

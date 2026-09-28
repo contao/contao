@@ -81,7 +81,7 @@ class ModuleQuicknav extends Module
 
 		$this->Template->formId = 'tl_quicknav_' . $this->id;
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
-		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['go'];
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
@@ -113,7 +113,6 @@ class ModuleQuicknav extends Module
 		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
-		$db = Database::getInstance();
 		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		foreach ($objSubpages as $objSubpage)
@@ -159,7 +158,7 @@ class ModuleQuicknav extends Module
 					);
 
 					// Subpages
-					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page')))))
+					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && \in_array($objSubpage->id, $objPage->trail)))
 					{
 						$subpages = $this->getQuicknavPages($objSubpage->id, $level);
 

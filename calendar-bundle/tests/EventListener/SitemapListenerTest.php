@@ -15,9 +15,9 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\SitemapListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\Database;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -115,17 +115,13 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters, bool $hasAuthenticatedMember = false): SitemapListener
     {
-        $database = $this->createStub(Database::class);
-        $database
-            ->method('getChildRecords')
+        $framework = $this->createContaoFrameworkStub($adapters);
+
+        $hierarchy = $this->createStub(DcaHierarchy::class);
+        $hierarchy
+            ->method('getChildIds')
             ->willReturn($allPages)
         ;
-
-        $instances = [
-            Database::class => $database,
-        ];
-
-        $framework = $this->createContaoFrameworkStub($adapters, $instances);
 
         if ([] === $allPages) {
             $security = $this->createStub(Security::class);
@@ -144,7 +140,7 @@ class SitemapListenerTest extends ContaoTestCase
             ->willReturn('https://contao.org')
         ;
 
-        return new SitemapListener($framework, $security, $urlGenerator);
+        return new SitemapListener($framework, $security, $urlGenerator, $hierarchy);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

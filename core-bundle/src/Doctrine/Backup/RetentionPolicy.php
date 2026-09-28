@@ -76,7 +76,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
             $intervalsNew[$interval] = new \DateInterval('P'.$interval);
         }
 
-        uasort($intervalsNew, static fn (\DateInterval $a, \DateInterval $b) => self::compareDateIntervals($a, $b));
+        uasort($intervalsNew, self::compareDateIntervals(...));
 
         return $intervalsNew;
     }

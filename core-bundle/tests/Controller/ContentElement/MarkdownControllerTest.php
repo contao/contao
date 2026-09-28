@@ -166,9 +166,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): ContainerBuilder
     {
-        if (!isset($frameworkAdapters[Input::class])) {
-            $frameworkAdapters[Input::class] = new Adapter(Input::class);
-        }
+        $frameworkAdapters[Input::class] ??= new Adapter(Input::class);
 
         $template = new FragmentTemplate(
             'foo',

@@ -12,12 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Fixtures;
 
+/**
+ * @implements \IteratorAggregate<int, string>
+ */
 class IteratorAggregateStub implements \IteratorAggregate
 {
     public function __construct(private readonly array $data)
     {
     }
 
+    /**
+     * @return \ArrayIterator<int, string>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->data);

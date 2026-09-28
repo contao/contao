@@ -98,8 +98,8 @@ class FallbackRecordLabelListenerTest extends TestCase
         $formatter
             ->expects($this->once())
             ->method('format')
-            ->with('tl_foo', 'fieldA', 'A <span>(B &amp; B)</span>')
-            ->willReturn('A (B & B)')
+            ->with('tl_foo', 'fieldA', 'A <span>(B & B)</span>')
+            ->willReturn('A <span>(B & B)</span>')
         ;
 
         $dataContainer = $this->createAdapterMock(['getDriverForTable']);
@@ -116,7 +116,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         ;
 
         $listener = new FallbackRecordLabelListener($framework, $translator, $formatter);
-        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
+        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B & B)</span>']));
 
         $this->assertSame('A (B & B)', $event->getLabel());
     }

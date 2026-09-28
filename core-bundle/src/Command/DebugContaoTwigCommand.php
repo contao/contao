@@ -90,10 +90,7 @@ class DebugContaoTwigCommand extends Command
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                if (!isset($node[$part])) {
-                    $node[$part] = [];
-                }
-
+                $node[$part] ??= [];
                 $node = &$node[$part];
             }
 

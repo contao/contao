@@ -153,7 +153,7 @@ class ModuleRegistration extends Module
 		$objMember = null;
 
 		// Check for a follow-up registration (see #7992)
-		if ($this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId && $this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
@@ -344,7 +344,7 @@ class ModuleRegistration extends Module
 
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
+		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['register'];
 	}
 
 	/**
@@ -547,6 +547,18 @@ class ModuleRegistration extends Module
 
 		$this->strTemplate = 'mod_message';
 		$this->Template = new FrontendTemplate($this->strTemplate);
+
+		$factory = System::getContainer()->get('contao.rate_limit.member_password_factory');
+		$limiter = $factory->create($objMember->id);
+
+		if (!$limiter->consume()->isAccepted())
+		{
+			// Deny activation
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyResendActivationAttempts'];
+
+			return;
+		}
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = null;

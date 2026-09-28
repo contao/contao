@@ -161,7 +161,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     private function disableTwoFactor(FrontendUser $user, PageModel $pageModel): Response|null
     {
-        // Return if 2FA is disabled already
+        // Return if 2FA is already disabled
         if (!$user->useTwoFactor) {
             return null;
         }

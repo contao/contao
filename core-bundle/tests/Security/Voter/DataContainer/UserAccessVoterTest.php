@@ -225,7 +225,7 @@ class UserAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $decision);
     }
 
-    private function mockToken(UserInterface|array|null $user = null): TokenInterface&Stub
+    private function mockToken(UserInterface|array|null $user = null): Stub&TokenInterface
     {
         $token = $this->createStub(TokenInterface::class);
 

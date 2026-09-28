@@ -14,11 +14,21 @@ namespace Contao\ManagerBundle\Twig;
 
 use Symfony\Component\Filesystem\Path;
 
+/**
+ * @template TKey of array-key
+ *
+ * @implements \IteratorAggregate<TKey, string>
+ */
 class FileExtensionFilterIterator implements \IteratorAggregate
 {
+    /**
+     * @var \Traversable<TKey, string>
+     */
     private readonly \Traversable $iterator;
 
     /**
+     * @param \IteratorAggregate<TKey, string> $templateIterator
+     *
      * @internal
      */
     public function __construct(\IteratorAggregate $templateIterator)
@@ -26,6 +36,9 @@ class FileExtensionFilterIterator implements \IteratorAggregate
         $this->iterator = $templateIterator->getIterator();
     }
 
+    /**
+     * @return \CallbackFilterIterator<TKey, string, \IteratorIterator<TKey, string, \Traversable<TKey, string>>>
+     */
     public function getIterator(): \CallbackFilterIterator
     {
         return new \CallbackFilterIterator(

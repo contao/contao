@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\StringUtil;
@@ -38,7 +46,7 @@ final class RecordLabel implements \Stringable
         return $this->htmlLabel ?? StringUtil::specialchars($this->label);
     }
 
-    public static function fromCallback(self|array|string $callbackReturnValue, bool $asColumns = false): self
+    public static function fromCallback(array|self|string $callbackReturnValue, bool $asColumns = false): self
     {
         if ($callbackReturnValue instanceof self) {
             return $callbackReturnValue;

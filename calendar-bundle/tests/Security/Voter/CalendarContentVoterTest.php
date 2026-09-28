@@ -14,6 +14,7 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarBundle\Security\Voter\CalendarContentVoter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -30,7 +31,7 @@ class CalendarContentVoterTest extends ContaoTestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new CalendarContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class));
+        $voter = new CalendarContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -59,27 +60,11 @@ class CalendarContentVoterTest extends ContaoTestCase
             ->willReturnMap($accessDecisionMap)
         ;
 
-        $fetchAllAssociativeMap = [];
-        $fetchAssociativeMap = [];
+        $parentMap = [];
 
-        foreach ($parentRecords as $id => &$records) {
-            if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
-                $parent = array_pop($records);
-
-                $fetchAssociativeMap[] = [
-                    'SELECT id, pid, ptable FROM tl_content WHERE id = ?',
-                    [(int) end($records)['pid']],
-                    [],
-                    $parent,
-                ];
-            }
-
-            $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = :id'.str_repeat(' UNION SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = @pid AND ptable = :ptable', 9),
-                ['id' => $id, 'ptable' => 'tl_content'],
-                [],
-                $records,
-            ];
+        foreach ($parentRecords as $id => $records) {
+            $parent = end($records);
+            $parentMap[] = [$id, 'tl_content', [$parent['ptable'], (int) $parent['pid']]];
         }
 
         $fetchOneMap = [];
@@ -95,24 +80,19 @@ class CalendarContentVoterTest extends ContaoTestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(\count($parentRecords)))
-            ->method('fetchAllAssociative')
-            ->willReturnMap($fetchAllAssociativeMap)
-        ;
-
-        $connection
-            ->expects($this->exactly(\count($fetchAssociativeMap)))
-            ->method('fetchAssociative')
-            ->willReturnMap($fetchAssociativeMap)
-        ;
-
-        $connection
             ->expects($this->exactly(\count($events)))
             ->method('fetchOne')
             ->willReturnMap($fetchOneMap)
         ;
 
-        $voter = new CalendarContentVoter($accessDecisionManager, $connection);
+        $dcaHierarchy = $this->createMock(DcaHierarchy::class);
+        $dcaHierarchy
+            ->expects($this->exactly(\count($parentRecords)))
+            ->method('getParentTableAndId')
+            ->willReturnMap($parentMap)
+        ;
+
+        $voter = new CalendarContentVoter($accessDecisionManager, $connection, $dcaHierarchy);
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);
@@ -211,7 +191,7 @@ class CalendarContentVoterTest extends ContaoTestCase
 
         $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
 
-        $voter = new CalendarContentVoter($accessDecisionManager, $this->createStub(Connection::class));
+        $voter = new CalendarContentVoter($accessDecisionManager, $this->createStub(Connection::class), $this->createStub(DcaHierarchy::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);

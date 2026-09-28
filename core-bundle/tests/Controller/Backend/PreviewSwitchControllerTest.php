@@ -384,7 +384,7 @@ class PreviewSwitchControllerTest extends TestCase
         return $router;
     }
 
-    private function mockTokenChecker(string|null $frontendUsername = null, \DateTimeImmutable|null $previewTime = null): TokenChecker&Stub
+    private function mockTokenChecker(string|null $frontendUsername = null, \DateTimeImmutable|null $previewTime = null): Stub&TokenChecker
     {
         $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
@@ -464,7 +464,7 @@ class PreviewSwitchControllerTest extends TestCase
         return $tokenManager;
     }
 
-    private function mockTranslator(): TranslatorInterface&Stub
+    private function mockTranslator(): Stub&TranslatorInterface
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing\ResponseContext;
 use Contao\CoreBundle\Controller\CspReporterController;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
@@ -78,14 +79,14 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-        $name = $this->insertTagParser->replaceInline($pageModel->title ?: '');
-        $title = $this->insertTagParser->replaceInline($pageModel->pageTitle ?: $pageModel->title ?: '');
+        $name = $this->insertTagParser->replaceInline($pageModel->title ?: '', OutputType::text);
+        $title = $this->insertTagParser->replaceInline($pageModel->pageTitle ?: $pageModel->title ?: '', OutputType::text);
 
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
         $htmlHeadBag
             ->setName($name ?: '')
             ->setTitle($title ?: '')
-            ->setMetaDescription($this->insertTagParser->replaceInline($pageModel->description ?: ''))
+            ->setMetaDescription($this->insertTagParser->replaceInline($pageModel->description ?: '', OutputType::text))
         ;
 
         if ($pageModel->robots) {
@@ -93,7 +94,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink);
+            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink, OutputType::url);
 
             // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {

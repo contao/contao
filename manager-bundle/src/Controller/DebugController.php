@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Controller;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 class DebugController
 {
@@ -27,6 +30,8 @@ class DebugController
         private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly JwtManager $jwtManager,
+        private readonly ContaoCsrfTokenManager $csrfTokenManager,
+        private readonly string $csrfTokenName,
     ) {
     }
 
@@ -48,6 +53,10 @@ class DebugController
 
         if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($this->csrfTokenName, $request->query->get('rt')))) {
+            throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
         }
 
         $referer = '';
