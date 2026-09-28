@@ -91,6 +91,7 @@
         "league/flysystem": "^3.7",
         "league/flysystem-bundle": "^3.7",
         "league/flysystem-local": "^3.0",
+        "league/oauth2-server": "^9.4",
         "loupe/loupe": "^0.13.2 || ^1.0",
         "matthiasmullie/minify": "^1.3",
         "mcp/sdk": "^0.8.1",
@@ -159,6 +160,7 @@
         "symfony/polyfill-php85": "^1.34",
         "symfony/process": "^7.4 || ^8.0",
         "symfony/property-access": "^7.4 || ^8.0",
+        "symfony/psr-http-message-bridge": "^7.4 || ^8.0",
         "symfony/rate-limiter": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0",
         "symfony/security-bundle": "^7.4 || ^8.0",
@@ -219,6 +221,7 @@
         "contao/mcp-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
+        "contao/oauth-bundle": "self.version",
         "contao/test-case": "self.version"
     },
     "conflict": {
@@ -247,6 +250,7 @@
             "Contao\\McpBundle\\": "mcp-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
+            "Contao\\OAuthBundle\\": "oauth-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
@@ -338,7 +342,8 @@
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
-            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
+            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
+            "contao/oauth-bundle": "Contao\\OAuthBundle\\ContaoManager\\Plugin"
         }
     },
     "scripts": {
