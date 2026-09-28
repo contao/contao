@@ -724,7 +724,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'backend_search' => [
                         'dsn' => 'whatever://search-adapter-you-like',
                         'index_name' => 'my_backend_search_index',
-                        'permission_aware_facets' => [
+                        'facets' => [
                             'max_groups' => 42,
                         ],
                     ],

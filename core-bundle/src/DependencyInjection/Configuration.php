@@ -701,7 +701,7 @@ class Configuration implements ConfigurationInterface
                     ->info('The name of the search index')
                     ->defaultValue('contao_backend')
                 ->end()
-                ->arrayNode('permission_aware_facets')
+                ->arrayNode('facets')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->integerNode('max_groups')
