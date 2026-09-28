@@ -54,18 +54,21 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         $this->framework->initialize();
 
         $configs = [];
+        $dcas = [];
 
         foreach ($this->getTables() as $table) {
-            $config = $this->loadDcaConfig($table);
+            $dca = $this->loadDca($table);
+            $config = $dca['config'] ?? [];
 
             if (!is_a((string) ($config['dataContainer'] ?? ''), DC_Table::class, true)) {
                 continue;
             }
 
             $configs[$table] = $config;
+            $dcas[$table] = $dca;
         }
 
-        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $configs[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
+        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $dcas[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
 
         return new ResourceMetadataCollection($resourceClass, $apiResources);
     }
@@ -73,10 +76,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     /**
      * @param non-empty-list<string> $path
      */
-    private function createResource(array $path, array $config): ApiResource
+    private function createResource(array $path, array $dca): ApiResource
     {
         $table = $path[array_key_last($path)];
         $shortName = $this->getShortName($table);
+        $config = $dca['config'];
 
         return new ApiResource()
             ->withClass(DataContainerRecord::class)
@@ -89,7 +93,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
             ->withExtraProperties($this->getExtraProperties($path))
-            ->withOperations($this->createOperations($path, $config))
+            ->withOperations($this->createOperations($path, $config, $dca['fields'] ?? []))
         ;
     }
 
@@ -118,7 +122,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
      *
      * @return Operations<HttpOperation>
      */
-    private function createOperations(array $path, array $config): Operations
+    private function createOperations(array $path, array $config, array $fields): Operations
     {
         $operations = [
             'get_collection' => $this->createCollectionOperation(),
@@ -131,7 +135,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             $operations['delete'] = new Delete();
         }
 
-        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false)) {
+        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false) && (isset($fields['pid']) || isset($fields['sorting']))) {
             $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
         }
 
@@ -228,11 +232,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     /**
      * @return array<string, mixed>
      */
-    private function loadDcaConfig(string $table): array
+    private function loadDca(string $table): array
     {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
 
-        return $GLOBALS['TL_DCA'][$table]['config'] ?? [];
+        return $GLOBALS['TL_DCA'][$table] ?? [];
     }
 
     /**
