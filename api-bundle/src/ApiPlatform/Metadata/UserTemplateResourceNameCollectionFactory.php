@@ -14,7 +14,7 @@ namespace Contao\ApiBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceNameCollection;
-use Contao\ApiBundle\Resource\UserTemplate;
+use Contao\ApiBundle\Dto\UserTemplate;
 
 final class UserTemplateResourceNameCollectionFactory implements ResourceNameCollectionFactoryInterface
 {

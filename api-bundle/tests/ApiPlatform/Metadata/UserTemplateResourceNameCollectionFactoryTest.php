@@ -15,7 +15,7 @@ namespace Contao\ApiBundle\Tests\ApiPlatform\Metadata;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceNameCollection;
 use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceNameCollectionFactory;
-use Contao\ApiBundle\Resource\UserTemplate;
+use Contao\ApiBundle\Dto\UserTemplate;
 use PHPUnit\Framework\TestCase;
 
 final class UserTemplateResourceNameCollectionFactoryTest extends TestCase

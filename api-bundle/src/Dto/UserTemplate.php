@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ApiBundle\Resource;
+namespace Contao\ApiBundle\Dto;
 
 /**
  * Resource marker for the Template Studio API endpoints.

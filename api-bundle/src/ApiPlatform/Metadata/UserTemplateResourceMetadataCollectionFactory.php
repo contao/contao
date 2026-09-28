@@ -24,9 +24,9 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider;
+use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
 use Contao\ApiBundle\Dto\UserTemplateUpdate;
-use Contao\ApiBundle\Resource\UserTemplate;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationDescriptionInterface;
 
 final class UserTemplateResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
