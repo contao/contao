@@ -46,20 +46,22 @@ class UserTemplatesTest extends TestCase
         parent::tearDown();
     }
 
-    #[DataProvider('studioEndpoints')]
-    public function testReadsThroughTheStudioEndpoints(string $route, array $variables, string|null $theme): void
+    #[DataProvider('templateStudioEndpoints')]
+    public function testReadsThroughTheTemplateStudioEndpoints(string $route, array $variables, string|null $theme): void
     {
         $parent = Request::create('/contao/_api/user_templates', parameters: null === $theme ? [] : ['theme' => $theme]);
         $parent->setLocale('de');
-        $studioVariables = isset($variables['name']) ? ['identifier' => $variables['name']] : [];
+
+        $templateStudioVariables = isset($variables['name']) ? ['identifier' => $variables['name']] : [];
 
         $router = $this->createMock(UrlGeneratorInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with($route, $studioVariables)
-            ->willReturn('/studio')
+            ->with($route, $templateStudioVariables)
+            ->willReturn('/template-studio')
         ;
+
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -87,7 +89,7 @@ class UserTemplatesTest extends TestCase
         $this->assertSame(['tree' => []], json_decode($response->getContent(), true));
     }
 
-    public static function studioEndpoints(): iterable
+    public static function templateStudioEndpoints(): iterable
     {
         yield ['_contao_template_studio_tree.stream', [], null];
         yield ['_contao_template_studio_tree.stream', [], 'demo'];

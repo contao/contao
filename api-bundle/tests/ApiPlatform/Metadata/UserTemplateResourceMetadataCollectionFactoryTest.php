@@ -23,7 +23,7 @@ use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider;
 use Contao\ApiBundle\Resource\UserTemplate;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
-use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation as StudioDeleteOperation;
+use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -84,8 +84,9 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             ->method('getName')
             ->willReturn('create')
         ;
-        $delete = new StudioDeleteOperation();
+        $delete = new DeleteOperation();
         $delete->setName('delete');
+
         $resources = new UserTemplateResourceMetadataCollectionFactory($decorated, [$save, $save, $create, $delete, $custom])->create(UserTemplate::class);
         $operations = iterator_to_array($resources[0]->getOperations());
 

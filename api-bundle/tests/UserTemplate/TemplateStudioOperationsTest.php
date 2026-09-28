@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TemplateStudioOperationsTest extends TestCase
 {
-    public function testProcessorDispatchesToTheStudioRoute(): void
+    public function testProcessorDispatchesToTheTemplateStudioRoute(): void
     {
         $parent = Request::create('/contao/_api/user_templates/content_element%2Ftest', parameters: ['theme' => 'demo']);
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -93,7 +93,7 @@ class TemplateStudioOperationsTest extends TestCase
         $this->assertSame(['identifier' => 'content_element/renamed'], json_decode($response->getContent(), true));
     }
 
-    public function testDeleteSkipsTheStudioConfirmationStep(): void
+    public function testDeleteSkipsTheTemplateStudioConfirmationStep(): void
     {
         $client = $this->createMock(TemplateStudioClient::class);
         $client
@@ -114,7 +114,7 @@ class TemplateStudioOperationsTest extends TestCase
         $this->assertSame(['identifier' => 'content_element/test'], json_decode($response->getContent(), true));
     }
 
-    public function testRejectsNonJsonStudioResponses(): void
+    public function testRejectsNonJsonTemplateStudioResponses(): void
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
@@ -125,7 +125,7 @@ class TemplateStudioOperationsTest extends TestCase
         $router = $this->createStub(UrlGeneratorInterface::class);
         $router
             ->method('generate')
-            ->willReturn('/studio')
+            ->willReturn('/template-studio')
         ;
         $client = new TemplateStudioClient($kernel, $router, new RequestStack([Request::create('/')]));
 
