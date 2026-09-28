@@ -15,6 +15,11 @@ services:
             $decorated: '@.inner'
             $templateStudioEnabled: '%contao.template_studio.enabled%'
 
+    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceNameCollectionFactory:
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+
     # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
         decoration_priority: 750
@@ -31,6 +36,12 @@ services:
             $decorated: '@.inner'
             $templateStudioOperations: !tagged_iterator contao.operation.template_studio_element
             $templateStudioEnabled: '%contao.template_studio.enabled%'
+
+    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceMetadataCollectionFactory:
+        decoration_priority: 750
+        decorates: api_platform.metadata.resource.metadata_collection_factory
+        arguments:
+            $decorated: '@.inner'
 
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.
@@ -76,6 +87,17 @@ services:
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
+
+    Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider:
+        arguments:
+            $filesStorage: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+
+    Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor:
+        arguments:
+            $filesStorage: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+            $requestStack: '@request_stack'
 
     Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
         arguments:
