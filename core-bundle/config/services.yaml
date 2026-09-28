@@ -922,11 +922,11 @@ services:
         arguments:
             - '%contao.resources_paths%'
 
-    contao.routing.backend_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
-
     contao.routing.backend_api_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendApiMatcher
+
+    contao.routing.backend_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
     contao.routing.content.article_resolver:
         class: Contao\CoreBundle\Routing\Content\ArticleResolver
