@@ -34,7 +34,7 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testRegistersExactlyEightToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $bundle = new McpBundle();
         $bundle->getContainerExtension()->load([$config], $container);
@@ -75,7 +75,7 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testKeepsBackendToolsOutOfASecondServer(): void
     {
         $container = $this->getContainerBuilder();
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $config['servers']['frontend_example'] = [
             'name' => 'Frontend example',
@@ -103,7 +103,7 @@ final class ContaoMcpExtensionTest extends TestCase
     public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void
     {
         $container = $this->getContainerBuilder(true);
-        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/skeleton/config/mcp.yaml')['mcp'];
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $bundle = new McpBundle();
         $bundle->getContainerExtension()->load([$config], $container);
