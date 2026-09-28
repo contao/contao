@@ -1762,6 +1762,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!preg_match('/^[a-z][a-z0-9_]*$/i', $table))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid $table parameter "%s".', $table));
+		}
+
 		if (!\count($ids))
 		{
 			return;
