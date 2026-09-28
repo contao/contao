@@ -14,10 +14,8 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\LanguageFallbackWarningListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Message;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,23 +24,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LanguageFallbackWarningListenerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
-
-        System::setContainer($container);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([System::class]);
-
-        parent::tearDown();
-    }
-
     #[DataProvider('provideRootRecords')]
     public function testGeneratesMessages(array $records, string $messages): void
     {
