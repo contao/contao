@@ -246,7 +246,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
     private function convertFileReference(mixed $value, bool $binary): mixed
     {
         return match (true) {
-            '' === $value => null,
+            '' === $value, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0" === $value => null,
             $binary && \is_string($value) && 16 === \strlen($value) => StringUtil::binToUuid($value),
             default => $value,
         };

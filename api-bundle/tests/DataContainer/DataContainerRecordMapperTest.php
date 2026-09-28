@@ -149,6 +149,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame($uuid, $record->data['singleSRC']);
         $this->assertSame('uuid', $factory->create('tl_content')['properties']['singleSRC']['format']);
         $this->assertArrayNotHasKey('maxLength', $factory->create('tl_content')['properties']['singleSRC']);
+
+        foreach (["\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", '', null] as $uuid) {
+            $record = $mapper->fromRow('tl_content', ['id' => 17, 'singleSRC' => $uuid]);
+            $this->assertNull($record->data['singleSRC']);
+        }
     }
 
     #[DataProvider('provideEmptyValues')]
