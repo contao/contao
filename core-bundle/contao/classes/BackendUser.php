@@ -248,15 +248,6 @@ class BackendUser extends User
 			}
 		}
 
-		$GLOBALS['TL_USERNAME'] = $this->username;
-
-		Config::set('showHelp', $this->showHelp);
-		Config::set('useRTE', $this->useRTE);
-		Config::set('useCE', $this->useCE);
-		Config::set('doNotCollapse', $this->doNotCollapse);
-		Config::set('thumbnails', $this->thumbnails);
-		Config::set('backendTheme', $this->backendTheme);
-
 		// Inherit permissions
 		$permissions = $this->getPermissionFields();
 		$always = $permissions['always'];

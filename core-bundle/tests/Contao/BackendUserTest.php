@@ -24,7 +24,7 @@ class BackendUserTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_USERNAME']);
+        unset($GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([
             BackendUser::class,
