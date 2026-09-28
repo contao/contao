@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\DataContainer;
 
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -44,7 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class DataContainerRecordsTest extends ContaoTestCase
+final class TableDataContainerRecordsTest extends ContaoTestCase
 {
     private RequestStack $requestStack;
 
@@ -261,20 +261,22 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
+            ->method('__set')
+            ->with('limit', '0,'.(2 * $size))
+        ;
+
+        $dc
+            ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function () use ($size) {
-                    $this->assertSame(2 * $size, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
-                    $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->get('_contao_api'));
+                function () {
                     $this->assertTrue($this->requestStack->getCurrentRequest()->hasSession());
                     $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
                     $this->assertSame(['sorting' => ['tl_content' => 'title DESC']], $bag->all());
                     $this->assertNull($this->requestStack->getCurrentRequest()->query->get('sort'));
-                    $this->assertSame([], $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_ids'));
-                    $this->requestStack->getCurrentRequest()->attributes->set('_contao_api_listing_ids', range(1, 33));
 
-                    return '';
+                    return range(1, 33);
                 },
             )
         ;
@@ -353,14 +355,8 @@ final class DataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('showAll')
-            ->willReturnCallback(
-                function () {
-                    $this->assertSame(PHP_INT_MAX, $this->requestStack->getCurrentRequest()->attributes->get('_contao_api_listing_limit'));
-
-                    return '';
-                },
-            )
+            ->method('__set')
+            ->with('limit', '0,'.PHP_INT_MAX)
         ;
 
         $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
@@ -427,7 +423,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
         return $dc;
     }
 
-    private function createRecords(DC_Table $dc, Connection|null $connection = null): DataContainerRecords
+    private function createRecords(DC_Table $dc, Connection|null $connection = null): TableDataContainerRecords
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'sorting' => true, 'flag' => DataContainer::SORT_BOTH]];
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
@@ -477,6 +473,6 @@ final class DataContainerRecordsTest extends ContaoTestCase
             ->willReturnCallback(static fn ($route, $parameters) => '/contao?'.http_build_query($parameters))
         ;
 
-        return new DataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
+        return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
     }
 }

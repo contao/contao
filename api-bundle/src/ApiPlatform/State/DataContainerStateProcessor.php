@@ -18,7 +18,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -28,7 +28,7 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
  */
 final class DataContainerStateProcessor implements ProcessorInterface
 {
-    public function __construct(private readonly DataContainerRecords $records)
+    public function __construct(private readonly TableDataContainerRecords $records)
     {
     }
 
