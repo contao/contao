@@ -360,20 +360,8 @@ class DataContainerRecords
                     throw new NotFoundHttpException('The resource is not backed by a table data container.');
                 }
 
-                // Legacy actions and callbacks can output HTML directly, bypassing render().
-                // Discard it to protect the API response, preserving any existing outer buffers.
-                $level = ob_get_level();
-                ob_start();
-
-                try {
-                    return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
-                } finally {
-                    while (ob_get_level() > $level) {
-                        ob_end_clean();
-                    }
-                }
-            },
-        );
+                return $callback($this->framework->createInstance($driver, [$table]), $request, $bag);
+        });
     }
 
     private function createRequest(string $table, array $parameters): Request
