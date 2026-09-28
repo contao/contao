@@ -233,7 +233,6 @@ class BackendUser extends User
 		Config::set('useCE', $this->useCE);
 		Config::set('doNotCollapse', $this->doNotCollapse);
 		Config::set('thumbnails', $this->thumbnails);
-		Config::set('backendTheme', $this->backendTheme);
 
 		// Inherit permissions
 		$permissions = $this->getPermissionFields();
