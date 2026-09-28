@@ -36,6 +36,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\DataContainer;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Contao\TestCase\ContaoTestCase;
@@ -77,6 +78,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                     $GLOBALS['TL_DCA'][$table]['config'] = match ($table) {
                         'tl_article' => [
                             'dataContainer' => DC_Table::class,
+                            'ptable' => 'tl_page',
+                            'ctable' => ['tl_content'],
                         ],
                         'tl_content' => [
                             'dataContainer' => DC_Table::class,
@@ -89,6 +92,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         ],
                         'tl_page' => [
                             'dataContainer' => $extendedDcTableClass,
+                            'ctable' => ['tl_article'],
                             'notDeletable' => true,
                         ],
                         'tl_settings' => [
@@ -103,6 +107,10 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         'tl_page' => ['pid' => [], 'sorting' => []],
                         default => [],
                     };
+
+                    if ('tl_article' === $table) {
+                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] = DataContainer::MODE_TREE_EXTENDED;
+                    }
                 },
             )
         ;
