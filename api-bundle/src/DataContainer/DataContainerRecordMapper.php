@@ -45,7 +45,12 @@ final class DataContainerRecordMapper
             if ($converter) {
                 $data[$field] = $converter->convertToApiValue($row[$field], $config, $schema);
             } elseif (!isset($config['inputType']) && \in_array($field, DataContainerRecord::METADATA_FIELDS, true)) {
-                $data[$field] = null === $row[$field] ? null : ('ptable' === $field ? (string) $row[$field] : (int) $row[$field]);
+                $data[$field] = match (true) {
+                    null === $row[$field] => null,
+                    'ptable' === $field => (string) $row[$field],
+                    'tstamp' === $field => $row[$field] ? date(\DateTimeInterface::ATOM, (int) $row[$field]) : null,
+                    default => (int) $row[$field],
+                };
             }
         }
 
