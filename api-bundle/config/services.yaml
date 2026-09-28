@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     # Merge Contao resources into API Platform's discovered resource names so the
     # entrypoint, docs and metadata pipeline can see DataContainerRecord.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory:
@@ -51,6 +54,7 @@ services:
     Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer:
         tags:
             - { name: serializer.normalizer }
+
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\DataContainerRecords'
