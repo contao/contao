@@ -245,7 +245,7 @@ class LintServiceIdsCommand
                     && !str_ends_with($serviceId, 'Controller')
                     && !str_ends_with($serviceId, 'Repository')
                 ) {
-                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers and repositoires.', $serviceId, $fileName);
+                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers and repositories.', $serviceId, $fileName);
                 }
 
                 if (!isset($config['class'])) {
