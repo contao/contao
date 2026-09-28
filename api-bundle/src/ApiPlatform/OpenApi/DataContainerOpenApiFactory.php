@@ -31,6 +31,7 @@ use ApiPlatform\OpenApi\Model\Paths;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Schema;
+use ApiPlatform\OpenApi\Model\Tag;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -57,13 +58,16 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         $paths = clone $openApi->getPaths();
         $schemas = clone ($openApi->getComponents()->getSchemas() ?? new \ArrayObject());
 
-        foreach ($this->resourceMetadataCollectionFactory->create(DataContainerRecord::class) as $resource) {
+        $resources = iterator_to_array($this->resourceMetadataCollectionFactory->create(DataContainerRecord::class));
+
+        foreach ($resources as $resource) {
             $this->addResource($resource, $paths, $schemas);
         }
 
         return $openApi
             ->withComponents($openApi->getComponents()->withSchemas($schemas))
             ->withPaths($paths)
+            ->withTags($this->getTags($openApi, $resources))
         ;
     }
 
@@ -123,14 +127,19 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
     {
         $table = $resource->getExtraProperties()['contao']['table'];
         $shortName = $resource->getShortName();
+        $category = $resource->getExtraProperties()['contao']['category'] ?? $shortName;
+
+        if (!\is_string($category) || '' === $category) {
+            $category = $shortName;
+        }
 
         $operation = match (true) {
-            'move' === ($metadata->getExtraProperties()['contao']['action'] ?? null) => $this->createMoveOperation($table, $shortName, $schemaRef),
+            'move' === ($metadata->getExtraProperties()['contao']['action'] ?? null) => $this->createMoveOperation($shortName, $schemaRef),
             $metadata instanceof GetCollection => $this->withPaginationParameters($this->createGetCollectionOperation($table, $shortName, $schemaRef), $metadata),
-            $metadata instanceof Get => $this->createGetOperation($table, $shortName, $schemaRef),
-            $metadata instanceof Post => $this->createPostOperation($table, $shortName, $schemaRef),
-            $metadata instanceof Patch => $this->createPatchOperation($table, $shortName, $schemaRef),
-            $metadata instanceof Delete => $this->createDeleteOperation($table, $shortName),
+            $metadata instanceof Get => $this->createGetOperation($shortName, $schemaRef),
+            $metadata instanceof Post => $this->createPostOperation($shortName, $schemaRef),
+            $metadata instanceof Patch => $this->createPatchOperation($shortName, $schemaRef),
+            $metadata instanceof Delete => $this->createDeleteOperation($shortName),
             default => null,
         };
 
@@ -138,16 +147,21 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             return null;
         }
 
-        $operation = $operation->withOperationId($metadata->getName() ?? $operation->getOperationId());
+        $operation = $operation
+            ->withOperationId($metadata->getName() ?? $operation->getOperationId())
+            ->withTags([$category])
+            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$category])
+        ;
 
-        if (str_contains((string) $metadata->getUriTemplate(), '{id}')) {
-            $operation = $operation->withParameters([new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer'])]);
-        }
+        $operation = $operation->withParameters([...$this->getPathParameters($metadata), ...($operation->getParameters() ?? [])]);
 
         if (!$metadata instanceof GetCollection && !$metadata instanceof Delete) {
             foreach ($resource->getOperations() ?? [] as $candidate) {
-                if ('move' === ($candidate->getExtraProperties()['contao']['action'] ?? null)) {
-                    return $this->withMoveLink($operation, $candidate->getName() ?? $shortName.'move');
+                $candidateContao = $candidate->getExtraProperties()['contao'] ?? [];
+                $recursive = isset($metadata->getExtraProperties()['contao']['recursive_parent']);
+
+                if ('move' === ($candidateContao['action'] ?? null) && $recursive === isset($candidateContao['recursive_parent'])) {
+                    return $this->withMoveLink($operation, $candidate->getName() ?? $shortName.'move', $metadata);
                 }
             }
         }
@@ -172,14 +186,27 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         ]);
     }
 
-    private function withMoveLink(Operation $operation, string $operationId): Operation
+    private function withMoveLink(Operation $operation, string $operationId, HttpOperation $metadata): Operation
     {
+        $linkParameters = ['id' => '$response.body#/id'];
+
+        foreach ($metadata->getExtraProperties()['contao']['parents'] ?? [] as $parent) {
+            if (\is_string($parent['parameter'] ?? null)) {
+                $linkParameters[$parent['parameter']] = '$request.path.'.$parent['parameter'];
+            }
+        }
+
+        if (\is_string($metadata->getExtraProperties()['contao']['recursive_parent']['parameter'] ?? null)) {
+            $parameter = $metadata->getExtraProperties()['contao']['recursive_parent']['parameter'];
+            $linkParameters[$parameter] = '$request.path.'.$parameter;
+        }
+
         foreach ($operation->getResponses() as $status => $response) {
             $links = clone ($response->getLinks() ?? new \ArrayObject());
 
             $links['move'] = new Link(
                 operationId: $operationId,
-                parameters: new \ArrayObject(['id' => '$response.body#/id']),
+                parameters: new \ArrayObject($linkParameters),
                 description: 'Change the parent or position of this record using the move operation.',
             );
 
@@ -191,10 +218,7 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
 
     private function createGetCollectionOperation(string $table, string $shortName, string $schemaRef): Operation
     {
-        $parameters = [
-            new Parameter(name: 'parent', in: 'query', description: 'Parent record ID for a child-table listing.', schema: ['type' => 'integer', 'minimum' => 0]),
-            new Parameter(name: 'ptable', in: 'query', description: 'Parent table for a dynamic parent.', schema: ['type' => 'string']),
-        ];
+        $parameters = [];
 
         if ($this->supportsSorting($table)) {
             array_unshift($parameters, new Parameter(name: 'sort', in: 'query', description: 'Ordered backend sorting choices. Currently one choice is supported, e.g. title or title ASC/title DESC when the field allows both directions. Omit to use the configured backend default order.', schema: ['type' => 'array', 'items' => ['type' => 'string'], 'maxItems' => 1], style: 'form', explode: false));
@@ -204,8 +228,6 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             ->withOperationId($shortName.'getCollection')
             ->withSummary('Collection of '.$shortName.' records')
             ->withParameters($parameters)
-            ->withTags([$table])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$table])
             ->withResponse(200, new Response(
                 description: 'A collection of '.$shortName.' records.',
                 content: new \ArrayObject([
@@ -235,13 +257,46 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return false;
     }
 
-    private function createGetOperation(string $tag, string $shortName, string $schemaRef): Operation
+    /**
+     * @return list<Parameter>
+     */
+    private function getPathParameters(HttpOperation $metadata): array
+    {
+        $parameters = [];
+
+        foreach ($metadata->getExtraProperties()['contao']['parents'] ?? [] as $parent) {
+            $name = $parent['parameter'] ?? null;
+
+            if (\is_string($name)) {
+                $parameters[] = new Parameter(name: $name, in: 'path', required: true, schema: ['type' => 'integer', 'minimum' => 1]);
+            }
+        }
+
+        $recursive = $metadata->getExtraProperties()['contao']['recursive_parent'] ?? null;
+
+        if (\is_array($recursive) && \is_string($recursive['parameter'] ?? null) && \is_string($recursive['segment'] ?? null)) {
+            $parameters[] = new Parameter(
+                name: $recursive['parameter'],
+                in: 'path',
+                description: 'Nested parent chain alternating record IDs and resource segments, for example "4/'.$recursive['segment'].'/5".',
+                required: true,
+                schema: ['type' => 'string', 'pattern' => '^\\d+(?:/'.$recursive['segment'].'/\\d+)*$'],
+                example: '4/'.$recursive['segment'].'/5',
+            );
+        }
+
+        if (str_contains((string) $metadata->getUriTemplate(), '{id}')) {
+            $parameters[] = new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer', 'minimum' => 1]);
+        }
+
+        return $parameters;
+    }
+
+    private function createGetOperation(string $shortName, string $schemaRef): Operation
     {
         return new Operation()
             ->withOperationId($shortName.'get')
             ->withSummary('Fetch a '.$shortName.' record')
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
             ->withResponse(200, new Response(
                 description: 'A '.$shortName.' record.',
                 content: new \ArrayObject([
@@ -251,13 +306,11 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         ;
     }
 
-    private function createPostOperation(string $tag, string $shortName, string $schemaRef): Operation
+    private function createPostOperation(string $shortName, string $schemaRef): Operation
     {
         return new Operation()
             ->withOperationId($shortName.'post')
             ->withSummary('Create a '.$shortName.' record')
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
             ->withResponse(201, new Response(
                 description: 'The created '.$shortName.' record.',
                 content: new \ArrayObject([
@@ -274,13 +327,11 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         ;
     }
 
-    private function createPatchOperation(string $tag, string $shortName, string $schemaRef): Operation
+    private function createPatchOperation(string $shortName, string $schemaRef): Operation
     {
         return new Operation()
             ->withOperationId($shortName.'patch')
             ->withSummary('Update a '.$shortName.' record')
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
             ->withResponse(200, new Response(
                 description: 'The updated '.$shortName.' record.',
                 content: new \ArrayObject([
@@ -297,9 +348,9 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         ;
     }
 
-    private function createMoveOperation(string $tag, string $shortName, string $schemaRef): Operation
+    private function createMoveOperation(string $shortName, string $schemaRef): Operation
     {
-        return $this->createPostOperation($tag, $shortName, $schemaRef)
+        return $this->createPostOperation($shortName, $schemaRef)
             ->withOperationId($shortName.'move')
             ->withSummary('Move or reorder a '.$shortName.' record')
             ->withParameters([new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer'])])
@@ -314,13 +365,11 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         ;
     }
 
-    private function createDeleteOperation(string $tag, string $shortName): Operation
+    private function createDeleteOperation(string $shortName): Operation
     {
         return new Operation()
             ->withOperationId($shortName.'delete')
             ->withSummary('Delete a '.$shortName.' record')
-            ->withTags([$tag])
-            ->withExtensionProperty(OpenApiFactory::API_PLATFORM_TAG, [$tag])
             ->withResponse(204, new Response(description: 'No content.'))
         ;
     }
@@ -352,5 +401,37 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         $schema['$ref'] = $ref;
 
         return $schema;
+    }
+
+    /**
+     * Groups nested data container resources under their root resource category while
+     * preserving unrelated OpenAPI tags.
+     *
+     * @param list<ApiResource> $resources
+     *
+     * @return list<Tag>
+     */
+    private function getTags(OpenApi $openApi, array $resources): array
+    {
+        $resourceNames = array_filter(array_map(static fn (ApiResource $resource): string|null => $resource->getShortName(), $resources));
+
+        $categories = array_values(array_unique(array_filter(
+            array_map(static fn (ApiResource $resource): mixed => $resource->getExtraProperties()['contao']['category'] ?? $resource->getShortName(), $resources),
+            static fn (mixed $category): bool => \is_string($category) && '' !== $category,
+        )));
+
+        $tags = [];
+
+        foreach ($openApi->getTags() as $tag) {
+            if (!\in_array($tag->getName(), $resourceNames, true) || \in_array($tag->getName(), $categories, true)) {
+                $tags[$tag->getName()] = $tag;
+            }
+        }
+
+        foreach ($categories as $category) {
+            $tags[$category] ??= new Tag(name: $category, description: "Resource '$category' operations.");
+        }
+
+        return array_values($tags);
     }
 }

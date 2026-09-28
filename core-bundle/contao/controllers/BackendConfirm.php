@@ -157,7 +157,7 @@ class BackendConfirm extends Backend
 
 		// Template variables
 		$objTemplate->confirm = true;
-		$objTemplate->link = StringUtil::specialchars($url);
+		$objTemplate->link = $url;
 		$objTemplate->info = $arrInfo;
 		$objTemplate->labels = $GLOBALS['TL_LANG']['CONFIRM'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];

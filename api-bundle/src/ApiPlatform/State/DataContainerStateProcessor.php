@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerMove;
@@ -40,8 +41,10 @@ final class DataContainerStateProcessor implements ProcessorInterface
             return $data;
         }
 
+        $context = DataContainerContext::fromOperation($operation, $uriVariables);
+
         if ($data instanceof DataContainerMove && 'move' === ($operation->getExtraProperties()['contao']['action'] ?? null)) {
-            return $this->records->move($table, $uriVariables['id'], $data);
+            return $this->records->move($table, $uriVariables['id'], $data, $context);
         }
 
         if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
@@ -53,17 +56,17 @@ final class DataContainerStateProcessor implements ProcessorInterface
         }
 
         if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
-            $this->records->delete($data);
+            $this->records->delete($data, $context);
 
             return null;
         }
 
         if ($operation instanceof Post || $this->hasMethod($operation, 'POST')) {
-            return $this->records->create($data);
+            return $this->records->create($data, $context);
         }
 
         if ($operation instanceof Patch || $this->hasMethod($operation, 'PATCH')) {
-            return $this->records->update($data);
+            return $this->records->update($data, $context);
         }
 
         return $data;

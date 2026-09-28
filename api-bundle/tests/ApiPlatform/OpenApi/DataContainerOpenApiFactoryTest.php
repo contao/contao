@@ -29,6 +29,7 @@ use ApiPlatform\OpenApi\Model\Paths;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Response;
 use ApiPlatform\OpenApi\Model\Schema;
+use ApiPlatform\OpenApi\Model\Tag;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
@@ -137,6 +138,9 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 
         $getCollection = $collectionPathItem->getGet();
         $this->assertInstanceOf(Response::class, $getCollection->getResponses()['200']);
+        $this->assertSame(['Article'], $getCollection->getTags());
+        $this->assertSame(['Article'], $getCollection->getExtensionProperties()['x-apiplatform-tag']);
+        $this->assertSame(['Article'], array_map(static fn (Tag $tag): string => $tag->getName(), $openApi->getTags()));
 
         $parameters = [];
         $sortingParameter = null;
@@ -189,6 +193,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $schemas['dc_content_create']['properties']);
         $this->assertArrayNotHasKey('required', $schemas['dc_content_update']);
         $this->assertSame('Unrelated resource', $openApi->getPaths()->getPath('/unrelated')->getGet()->getSummary());
+
+        $nestedParameter = $openApi->getPaths()->getPath('/_api/backend/dc/content/{nested}/content')->getGet()->getParameters()[0];
+        $this->assertSame('Nested parent chain alternating record IDs and resource segments, for example "4/content/5".', $nestedParameter->getDescription());
+        $this->assertSame('4/content/5', $nestedParameter->getExample());
     }
 
     public static function provideSortingConfigurations(): iterable
@@ -274,6 +282,12 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
                 ->withUriTemplate('/_api/backend/dc/content/{id}'),
+            'nested_get_collection' => new GetCollection(extraProperties: ['contao' => [
+                'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
+            ]])
+                ->withClass(DataContainerRecord::class)
+                ->withShortName('Content')
+                ->withUriTemplate('/_api/backend/dc/content/{nested}/content'),
         ]);
 
         $resource = new ApiResource()
@@ -285,6 +299,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->withExtraProperties([
                 'contao' => [
                     'table' => 'tl_content',
+                    'category' => 'Article',
                     'schema_path' => DataContainerOpenApiFactory::getSchemaPath('content'),
                 ],
             ])

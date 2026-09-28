@@ -146,7 +146,7 @@ class ModuleLogin extends Module
 			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['logout'];
 			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
-			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
+			$this->Template->targetPath = $strRedirect;
 
 			if ($user->lastLogin > 0)
 			{
@@ -209,7 +209,7 @@ class ModuleLogin extends Module
 
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
-		$this->Template->targetPath = StringUtil::specialchars(base64_encode($strRedirect));
+		$this->Template->targetPath = base64_encode($strRedirect);
 
 		if ($isTwoFactorInProgress && $request)
 		{

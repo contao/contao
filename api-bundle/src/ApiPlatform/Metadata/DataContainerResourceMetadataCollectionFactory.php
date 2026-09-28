@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\HttpOperation;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -52,7 +53,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
         $this->framework->initialize();
 
-        $apiResources = [];
+        $configs = [];
 
         foreach ($this->getTables() as $table) {
             $config = $this->loadDcaConfig($table);
@@ -61,18 +62,20 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 continue;
             }
 
-            if (true === ($config['closed'] ?? false)) {
-                continue;
-            }
-
-            $apiResources[] = $this->createResource($table, $config);
+            $configs[$table] = $config;
         }
+
+        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $configs[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
 
         return new ResourceMetadataCollection($resourceClass, $apiResources);
     }
 
-    private function createResource(string $table, array $config): ApiResource
+    /**
+     * @param non-empty-list<string> $path
+     */
+    private function createResource(array $path, array $config): ApiResource
     {
+        $table = $path[array_key_last($path)];
         $shortName = $this->getShortName($table);
 
         return new ApiResource()
@@ -80,13 +83,13 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withShortName($shortName)
             ->withProvider(DataContainerStateProvider::class)
             ->withProcessor(DataContainerStateProcessor::class)
-            ->withRoutePrefix($this->getRoutePrefix($table))
+            ->withRoutePrefix($this->getRoutePrefix($path))
             ->withDefaults(['_scope' => 'backend'])
             ->withStateless(true)
             ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
-            ->withExtraProperties($this->getExtraProperties($table))
-            ->withOperations($this->createOperations($table, $shortName, $config))
+            ->withExtraProperties($this->getExtraProperties($path))
+            ->withOperations($this->createOperations($path, $config))
         ;
     }
 
@@ -111,9 +114,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     }
 
     /**
+     * @param non-empty-list<string> $path
+     *
      * @return Operations<HttpOperation>
      */
-    private function createOperations(string $table, string $shortName, array $config): Operations
+    private function createOperations(array $path, array $config): Operations
     {
         $operations = [
             'get_collection' => $this->createCollectionOperation(),
@@ -130,35 +135,70 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
         }
 
-        $configured = [];
-        $resourceName = $this->getResourceName($table);
-
-        foreach ($operations as $action => $operation) {
-            $name = 'contao_api_'.$resourceName.'_'.$action;
-            $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
-
-            $configured[$name] = $operation
-                ->withName($name)
-                ->withClass(DataContainerRecord::class)
-                ->withShortName($shortName)
-                ->withUriTemplate($this->getRoutePrefix($table).($item ? '/{id}' : '').('move' === $action ? '/move' : ''))
-                ->withProvider(DataContainerStateProvider::class)
-                ->withProcessor(DataContainerStateProcessor::class)
-                ->withDefaults(['_scope' => 'backend'])
-                ->withStateless(true)
-                ->withSecurity("is_granted('ROLE_USER')")
-                ->withExtraProperties(['contao' => $this->getExtraProperties($table)['contao'] + ['action' => $action]])
-            ;
-        }
-
-        return new Operations($configured);
+        return new Operations($this->configureOperations($operations, $path, $config));
     }
 
-    private function getExtraProperties(string $table): array
+    /**
+     * @param array<string, HttpOperation> $operations
+     * @param non-empty-list<string>       $path
+     * @param array<string, mixed>         $config
+     *
+     * @return array<string, HttpOperation>
+     */
+    private function configureOperations(array $operations, array $path, array $config): array
     {
+        $configured = [];
+
+        foreach ([false, true] as $recursive) {
+            $table = $path[array_key_last($path)];
+
+            if ($recursive && !\in_array($table, (array) ($config['ctable'] ?? []), true)) {
+                continue;
+            }
+
+            foreach ($operations as $action => $operation) {
+                $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
+                $suffix = ($recursive ? '/{nested}/'.$this->getResourceName($table) : '').($item ? '/{id}' : '').('move' === $action ? '/move' : '');
+                $name = 'contao_api_dc_'.implode('_', array_map($this->getResourceName(...), $path)).($recursive ? '_nested' : '').'_'.$action;
+                $extra = $this->getExtraProperties($path)['contao'] + ['action' => $action];
+
+                if ($recursive) {
+                    $extra['recursive_parent'] = ['table' => $table, 'parameter' => 'nested', 'segment' => $this->getResourceName($table)];
+                }
+
+                $configured[$name] = $operation
+                    ->withName($name)
+                    ->withClass(DataContainerRecord::class)
+                    ->withShortName($this->getShortName($table))
+                    ->withUriTemplate($this->getRoutePrefix($path).$suffix)
+                    ->withUriVariables($this->getUriVariables($path, $item, $recursive))
+                    ->withRequirements($recursive ? ['nested' => '.+'] : [])
+                    ->withProvider(DataContainerStateProvider::class)
+                    ->withProcessor(DataContainerStateProcessor::class)
+                    ->withDefaults(['_scope' => 'backend'])
+                    ->withStateless(true)
+                    ->withSecurity("is_granted('ROLE_USER')")
+                    ->withExtraProperties(['contao' => $extra])
+                ;
+            }
+        }
+
+        return $configured;
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     */
+    private function getExtraProperties(array $path): array
+    {
+        $table = $path[array_key_last($path)];
+
         return [
             'contao' => [
                 'table' => $table,
+                'resource' => implode('/', array_map($this->getResourceName(...), $path)),
+                'category' => $this->getShortName($path[0]),
+                'parents' => array_map(fn (string $parent): array => ['table' => $parent, 'parameter' => $this->getParameterName($parent)], \array_slice($path, 0, -1)),
                 'schema_path' => DataContainerOpenApiFactory::getSchemaPath($this->getResourceName($table)),
             ],
         ];
@@ -195,13 +235,116 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         return $GLOBALS['TL_DCA'][$table]['config'] ?? [];
     }
 
-    private function getRoutePrefix(string $table): string
+    /**
+     * @param non-empty-list<string> $path
+     */
+    private function getRoutePrefix(array $path): string
     {
-        return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$this->getResourceName($table);
+        $route = '/'.trim($this->dataContainerApiPrefix, '/');
+
+        foreach ($path as $index => $table) {
+            $route .= '/'.$this->getResourceName($table);
+
+            if ($index < \count($path) - 1) {
+                $route .= '/{'.$this->getParameterName($table).'}';
+            }
+        }
+
+        return $route;
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $configs
+     *
+     * @return list<non-empty-list<string>>
+     */
+    private function getResourcePaths(array $configs): array
+    {
+        $children = [];
+        $hasParent = [];
+
+        foreach ($configs as $table => $config) {
+            $parent = $config['ptable'] ?? null;
+
+            if (\is_string($parent) && $parent !== $table && isset($configs[$parent])) {
+                $children[$parent][] = $table;
+                $hasParent[$table] = true;
+            }
+
+            foreach ((array) ($config['ctable'] ?? []) as $child) {
+                if ($child === $table || !isset($configs[$child])) {
+                    continue;
+                }
+
+                if (!\in_array($child, $children[$table] ?? [], true)) {
+                    $children[$table][] = $child;
+                }
+
+                $hasParent[$child] = true;
+            }
+        }
+
+        $paths = [];
+
+        foreach (array_keys($configs) as $table) {
+            if (!isset($hasParent[$table]) && !($configs[$table]['closed'] ?? false)) {
+                $this->appendResourcePaths([$table], $configs, $children, $paths);
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * @param non-empty-list<string>              $path
+     * @param array<string, array<string, mixed>> $configs
+     * @param array<string, list<string>>         $children
+     * @param list<non-empty-list<string>>        $paths
+     */
+    private function appendResourcePaths(array $path, array $configs, array $children, array &$paths): void
+    {
+        $table = $path[array_key_last($path)];
+        $paths[] = $path;
+
+        foreach ($children[$table] ?? [] as $child) {
+            if (!\in_array($child, $path, true) && !($configs[$child]['closed'] ?? false)) {
+                $this->appendResourcePaths([...$path, $child], $configs, $children, $paths);
+            }
+        }
     }
 
     private function getResourceName(string $table): string
     {
         return str_starts_with($table, 'tl_') ? substr($table, 3) : $table;
+    }
+
+    private function getParameterName(string $table): string
+    {
+        return $this->getResourceName($table).'_id';
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     *
+     * @return array<string, Link>
+     */
+    private function getUriVariables(array $path, bool $item, bool $recursive = false): array
+    {
+        $variables = [];
+
+        foreach (\array_slice($path, 0, -1) as $parent) {
+            $parameter = $this->getParameterName($parent);
+            $variables[$parameter] = new Link(parameterName: $parameter, fromClass: DataContainerRecord::class, identifiers: ['id']);
+        }
+
+        if ($recursive) {
+            $variables['nested'] = new Link(parameterName: 'nested', fromClass: DataContainerRecord::class, identifiers: ['id']);
+        }
+
+        if ($item) {
+            $variables['id'] = new Link(parameterName: 'id', fromClass: DataContainerRecord::class, identifiers: ['id']);
+        }
+
+        return $variables;
     }
 }

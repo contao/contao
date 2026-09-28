@@ -1378,7 +1378,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<([a-z][a-z0-9]*)\b[^>]*>\s*<\/\1>/i', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 		$showColumns = ($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED));
@@ -1463,6 +1463,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!preg_match('/^[a-z][a-z0-9_]*$/i', $table))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid $table parameter "%s".', $table));
+		}
+
 		if (!\count($ids))
 		{
 			return;
