@@ -76,7 +76,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             Config::set('useCE', $user->useCE);
             Config::set('doNotCollapse', $user->doNotCollapse);
             Config::set('thumbnails', $user->thumbnails);
-            Config::set('backendTheme', $user->backendTheme);
         }
 
         if ($token instanceof TwoFactorTokenInterface) {

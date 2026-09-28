@@ -717,8 +717,8 @@ abstract class DataContainer extends Backend
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
 			$objTemplate->aceType = Backend::getAceType($type);
-			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
-			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
+			$objTemplate->enableHugeRte = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->hugeRteLanguage = Backend::getHugeRteLanguage();
 
 			$updateMode = $objTemplate->parse();
 

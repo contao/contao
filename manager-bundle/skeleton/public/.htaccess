@@ -12,10 +12,6 @@
         RewriteCond %{QUERY_STRING} ^version=
         RewriteRule ^files/ - [ENV=VERSIONED_FILES:true]
         Header set Cache-Control "public, max-age=31536000" env=VERSIONED_FILES
-
-        # Allow CORS on the Contao TinyMCE skin.
-        RewriteRule ^assets/tinymce/js/skins/contao/fonts/ - [ENV=CONTAO_TINYMCE_SKIN:true]
-        Header set Access-Control-Allow-Origin "*" env=CONTAO_TINYMCE_SKIN
     </IfModule>
 
     # Determine the RewriteBase automatically and set it as environment variable.

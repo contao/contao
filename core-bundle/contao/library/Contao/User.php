@@ -38,7 +38,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string            $name
  * @property string            $email
  * @property string            $language
- * @property string            $backendTheme
  * @property integer           $backendWidth
  * @property string            $uploader
  * @property boolean           $showHelp
