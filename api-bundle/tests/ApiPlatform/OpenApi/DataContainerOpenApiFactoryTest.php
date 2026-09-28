@@ -62,6 +62,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
+        $this->resetStaticProperties([
+            System::class,
+        ]);
+
         parent::tearDown();
     }
 

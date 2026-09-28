@@ -23,12 +23,22 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Password;
 use Contao\RowWizard;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ContaoApiExtensionTest extends TestCase
+class ContaoApiExtensionTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([
+            System::class,
+        ]);
+
+        parent::tearDown();
+    }
+
     public function testApiPrefixFollowsTheBackendPrefix(): void
     {
         $container = new ContainerBuilder();
@@ -185,6 +195,8 @@ class ContaoApiExtensionTest extends TestCase
 
         $container->register('contao.framework', ContaoFramework::class)->setSynthetic(true)->setPublic(true);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
+
+        System::setContainer($container);
 
         return $container;
     }
