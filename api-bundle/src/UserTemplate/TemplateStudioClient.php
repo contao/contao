@@ -81,7 +81,6 @@ class TemplateStudioClient
         $uri = $this->router->generate($route, $routeParameters);
 
         $request = Request::create($parent->getSchemeAndHttpHost().$uri, $method, $parameters);
-
         $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_contao_api' => true, '_locale' => $parent->getLocale()]);
         $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 

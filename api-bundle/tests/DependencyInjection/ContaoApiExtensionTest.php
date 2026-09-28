@@ -62,8 +62,8 @@ class ContaoApiExtensionTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
-        new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
         new ResolveClassPass()->process($container);
         new ResolveNamedArgumentsPass()->process($container);
 

@@ -34,6 +34,7 @@ class TemplateStudioOperationsTest extends TestCase
     public function testProcessorDispatchesToTheTemplateStudioRoute(): void
     {
         $parent = Request::create('/contao/_api/user_templates/content_element%2Ftest', parameters: ['theme' => 'demo']);
+
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -54,6 +55,7 @@ class TemplateStudioOperationsTest extends TestCase
                 },
             )
         ;
+
         $router = $this->createMock(UrlGeneratorInterface::class);
         $router
             ->expects($this->once())
@@ -61,8 +63,10 @@ class TemplateStudioOperationsTest extends TestCase
             ->with('_contao_template_studio_operation.stream', ['operation' => 'save', 'identifier' => 'content_element/test'])
             ->willReturn('/contao/template-studio/resource/content_element/test?operation=save')
         ;
+
         $processor = new UserTemplateStateProcessor(new TemplateStudioClient($kernel, $router, new RequestStack([$parent])));
         $operation = new Patch(extraProperties: ['template_studio_operation' => 'save']);
+
         $response = $processor->process(
             new UserTemplateUpdate(''),
             $operation,
@@ -82,8 +86,10 @@ class TemplateStudioOperationsTest extends TestCase
             ->with('rename', 'content_element/test', 'demo', ['name' => 'renamed'])
             ->willReturn(new JsonResponse(['identifier' => 'content_element/renamed']))
         ;
+
         $processor = new UserTemplateStateProcessor($client);
         $request = Request::create('/contao/_api/user_template_operations/rename', parameters: ['theme' => 'demo']);
+
         $response = $processor->process(
             new UserTemplateOperation('content_element/test', ['name' => 'renamed']),
             new Post(extraProperties: ['template_studio_operation' => 'rename']),
@@ -102,8 +108,10 @@ class TemplateStudioOperationsTest extends TestCase
             ->with('delete', 'content_element/test', 'demo', ['confirm_delete' => true])
             ->willReturn(new JsonResponse(['identifier' => 'content_element/test']))
         ;
+
         $processor = new UserTemplateStateProcessor($client);
         $request = Request::create('/contao/_api/user_templates/content_element%2Ftest', parameters: ['theme' => 'demo']);
+
         $response = $processor->process(
             null,
             new Delete(extraProperties: ['template_studio_operation' => 'delete']),
@@ -122,11 +130,13 @@ class TemplateStudioOperationsTest extends TestCase
             ->method('handle')
             ->willReturn(new Response('failure'))
         ;
+
         $router = $this->createStub(UrlGeneratorInterface::class);
         $router
             ->method('generate')
             ->willReturn('/template-studio')
         ;
+
         $client = new TemplateStudioClient($kernel, $router, new RequestStack([Request::create('/')]));
 
         $this->expectException(UnprocessableEntityHttpException::class);

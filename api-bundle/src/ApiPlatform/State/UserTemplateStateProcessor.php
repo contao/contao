@@ -51,11 +51,6 @@ final class UserTemplateStateProcessor implements ProcessorInterface
             throw new \LogicException('The user template operation input is missing.');
         }
 
-        return $this->client->call(
-            $operationName,
-            $data->name,
-            $theme,
-            $data->parameters,
-        );
+        return $this->client->call($operationName, $data->name, $theme, $data->parameters);
     }
 }

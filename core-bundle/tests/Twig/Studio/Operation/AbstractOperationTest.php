@@ -26,6 +26,7 @@ class AbstractOperationTest extends TestCase
     public function testReturnsTheRenderContextForApiRequests(): void
     {
         $request = new Request(attributes: ['_contao_api' => true]);
+
         $container = new Container();
         $container->set('request_stack', new RequestStack([$request]));
 
@@ -45,6 +46,7 @@ class AbstractOperationTest extends TestCase
                 return $this->render('unused.html.twig', ['identifier' => 'content_element/text']);
             }
         };
+
         $operation->setContainer($container);
 
         $response = $operation->renderForTest();

@@ -83,6 +83,7 @@ class UserTemplatesTest extends TestCase
                 },
             )
         ;
+
         $provider = new UserTemplateStateProvider(new TemplateStudioClient($kernel, $router, new RequestStack([$parent])));
         $response = $provider->provide(new Get(), $variables, ['request' => $parent]);
 
@@ -104,6 +105,7 @@ class UserTemplatesTest extends TestCase
             ->expects($this->never())
             ->method('handle')
         ;
+
         $client = new TemplateStudioClient($kernel, $this->createStub(UrlGeneratorInterface::class), new RequestStack());
 
         $this->expectException(\LogicException::class);

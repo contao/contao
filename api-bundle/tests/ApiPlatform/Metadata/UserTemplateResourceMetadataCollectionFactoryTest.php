@@ -35,11 +35,12 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
     public function testDelegatesOtherResources(): void
     {
         $collection = new ResourceMetadataCollection('App\\Resource');
+
         $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $decorated
             ->expects($this->once())
             ->method('create')
-            ->with('App\\Resource')
+            ->with('App\Resource')
             ->willReturn($collection)
         ;
 
@@ -49,6 +50,7 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
     public function testDelegatesTheUserTemplateResourceIfTheTemplateStudioIsDisabled(): void
     {
         $collection = new ResourceMetadataCollection(UserTemplate::class);
+
         $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $decorated
             ->expects($this->once())
@@ -69,21 +71,25 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             ->expects($this->never())
             ->method('create')
         ;
+
         $save = $this->createStub(AbstractOperation::class);
         $save
             ->method('getName')
             ->willReturn('save')
         ;
+
         $custom = $this->createStub(AbstractOperation::class);
         $custom
             ->method('getName')
             ->willReturn('custom')
         ;
+
         $create = $this->createStub(AbstractOperation::class);
         $create
             ->method('getName')
             ->willReturn('create')
         ;
+
         $delete = new DeleteOperation();
         $delete->setName('delete');
 
@@ -135,14 +141,17 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             ->method('getName')
             ->willReturn('save')
         ;
+
         $factory = new UserTemplateResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class), [$save]);
         $operation = iterator_to_array($factory->create(UserTemplate::class)[0]->getOperations())['contao_api_user_template_operation_save'];
+
         $routes = new RouteCollection();
         $routes->add($operation->getName(), new Route(
             '/contao/_api'.$operation->getUriTemplate(),
             requirements: $operation->getRequirements(),
             methods: ['PATCH'],
         ));
+
         $matcher = new UrlMatcher($routes, new RequestContext(method: 'PATCH'));
         $parameters = $matcher->match('/contao/_api/user_templates/content_element%2Ftext%2Fsave');
 
@@ -157,11 +166,13 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             ->method('getName')
             ->willReturn('create')
         ;
+
         $custom = $this->createStub(AbstractOperation::class);
         $custom
             ->method('getName')
             ->willReturn('custom')
         ;
+
         $factory = new UserTemplateResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class), [$create, $custom]);
         $routes = new RouteCollection();
 
