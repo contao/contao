@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -39,8 +41,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     use TargetPathTrait;
 
-    private User|null $user = null;
-
     /**
      * @internal
      */
@@ -65,10 +65,19 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $user = $token->getUser();
 
         if (!$user instanceof User) {
-            return new RedirectResponse($this->determineTargetUrl($request));
+            return new RedirectResponse($this->determineTargetUrl($request, null));
         }
 
-        $this->user = $user;
+        $GLOBALS['TL_USERNAME'] = $user->username;
+
+        if ($user instanceof BackendUser) {
+            Config::set('showHelp', $user->showHelp);
+            Config::set('useRTE', $user->useRTE);
+            Config::set('useCE', $user->useCE);
+            Config::set('doNotCollapse', $user->doNotCollapse);
+            Config::set('thumbnails', $user->thumbnails);
+            Config::set('backendTheme', $user->backendTheme);
+        }
 
         if ($token instanceof TwoFactorTokenInterface) {
             if ($this->uriSigner->checkRequest($request) && $request->query->getBoolean(TwoFactorAuthenticator::FLAG_2FA_COMPLETE)) {
@@ -77,7 +86,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
                 $this->tokenStorage->setToken($authenticatedToken);
             } else {
-                $this->user->save();
+                $user->save();
 
                 $response = new RedirectResponse($request->getUri());
 
@@ -90,9 +99,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             }
         }
 
-        $this->user->lastLogin = $this->user->currentLogin;
-        $this->user->currentLogin = time();
-        $this->user->save();
+        $user->lastLogin = $user->currentLogin;
+        $user->currentLogin = time();
+        $user->save();
 
         if ($request->request->has('trusted')) {
             $firewallConfig = $this->firewallMap->getFirewallConfig($request);
@@ -102,11 +111,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             }
         }
 
-        $response = new RedirectResponse($this->determineTargetUrl($request));
+        $response = new RedirectResponse($this->determineTargetUrl($request, $user));
 
         $this->logger?->info(
-            \sprintf('User "%s" has logged in', $this->user->username),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)],
+            \sprintf('User "%s" has logged in', $user->username),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)],
         );
 
         if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
@@ -116,14 +125,14 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         return $response;
     }
 
-    protected function determineTargetUrl(Request $request): string
+    private function determineTargetUrl(Request $request, User|null $user): string
     {
-        if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
+        if (!$user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
             return $this->decodeTargetPath($request);
         }
 
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-        $groups = StringUtil::deserialize($this->user->groups, true);
+        $groups = StringUtil::deserialize($user->groups, true);
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
 
         if ($groupPage instanceof PageModel) {
