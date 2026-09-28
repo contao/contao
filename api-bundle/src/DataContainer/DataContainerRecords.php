@@ -23,6 +23,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -343,6 +344,8 @@ class DataContainerRecords
     private function run(string $table, array $parameters, callable $callback): mixed
     {
         $this->framework->initialize();
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+
         $request = $this->createRequest($table, $parameters);
         $bag = $request->getSession()->getBag('contao_backend');
 
