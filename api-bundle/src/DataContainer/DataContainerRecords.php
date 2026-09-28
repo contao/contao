@@ -385,7 +385,7 @@ class DataContainerRecords
         // Build a backend request instead of inheriting API routing or client
         // control parameters
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
-        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_contao_api' => true, '_locale' => $parent->getLocale()]);
+        $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_contao_api' => true, '_locale' => $parent->getLocale()]);
 
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());

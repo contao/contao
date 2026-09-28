@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -208,6 +209,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
+        $this->assertTrue($resource->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
@@ -241,13 +243,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         }
     }
 
-    private function assertOperation(object $operation, string $expectedClass, string $expectedShortName, string $expectedUriTemplate): void
+    private function assertOperation(HttpOperation $operation, string $expectedClass, string $expectedShortName, string $expectedUriTemplate): void
     {
         $this->assertInstanceOf($expectedClass, $operation);
         $this->assertSame(DataContainerRecord::class, $operation->getClass());
         $this->assertSame($expectedShortName, $operation->getShortName());
         $this->assertSame($expectedUriTemplate, $operation->getUriTemplate());
         $this->assertSame(['_scope' => 'backend'], $operation->getDefaults());
+        $this->assertTrue($operation->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $operation->getSecurity());
         $this->assertNull($operation->getOpenapi());
     }
