@@ -39,7 +39,7 @@ export default class extends Controller {
         }
 
         // Only allow the drag-handle to start a drag and leave other content selectable
-        item.draggable = event.target.classList.contains('.drag-handle');
+        item.draggable = event.target.closest('.drag-handle');
     }
 
     onDragStart(event) {
