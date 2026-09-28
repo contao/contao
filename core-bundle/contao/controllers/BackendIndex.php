@@ -80,6 +80,8 @@ class BackendIndex extends Backend
 		}
 
 		$objTemplate = new BackendTemplate('be_login');
+
+		// Backwards compatibility
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 		$objTemplate->loginButton = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
@@ -92,6 +94,8 @@ class BackendIndex extends Backend
 			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
 
 			$objTemplate = new BackendTemplate('be_login_two_factor');
+
+			// Backwards compatibility
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
@@ -99,19 +103,21 @@ class BackendIndex extends Backend
 		}
 
 		$objTemplate->messages = Message::generate();
-		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
-		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
 		$objTemplate->curUsername = Input::post('username') ?: '';
+		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
+		$objTemplate->webauthnSuccessUrl = StringUtil::specialchars($targetPath);
+		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
+
+		// Backwards compatibility
+		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
-		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
-		$objTemplate->webauthnSuccessUrl = StringUtil::specialchars($targetPath);
-		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
 
 		return $objTemplate->getResponse();
 	}

@@ -152,10 +152,12 @@ class ModuleUnsubscribe extends Module
 		$this->Template->showChannels = !$this->nl_hideChannels;
 		$this->Template->email = Input::get('email');
 		$this->Template->submit = $GLOBALS['TL_LANG']['MSC']['unsubscribe'];
-		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
-		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
+
+		// Backwards compatibility
+		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
+		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 	}
 
 	/**

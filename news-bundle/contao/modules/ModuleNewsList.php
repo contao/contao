@@ -106,6 +106,8 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		$this->Template->articles = array();
+
+		// Backwards compatibility
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['emptyList'];
 
 		// Get the total number of items

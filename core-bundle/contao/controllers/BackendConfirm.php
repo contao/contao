@@ -160,14 +160,16 @@ class BackendConfirm extends Backend
 		$objTemplate->link = StringUtil::specialchars($url);
 		$objTemplate->info = $arrInfo;
 		$objTemplate->labels = $GLOBALS['TL_LANG']['CONFIRM'];
+		$objTemplate->host = Backend::getDecodedHostname();
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+
+		// Backwards compatibility
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 		$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		$objTemplate->continue = $GLOBALS['TL_LANG']['MSC']['continue'];
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
-		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		return $objTemplate->getResponse();
 	}

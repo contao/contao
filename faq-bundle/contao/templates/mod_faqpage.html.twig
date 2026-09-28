@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
@@ -38,7 +39,7 @@
                 </section>
             {% endfor %}
 
-            <p class="toplink"><a href="{{ request }}#top">{{ topLink }}</a></p>
+            <p class="toplink"><a href="{{ request }}#top">{{ 'MSC.backToTop'|trans }}</a></p>
         </article>
     {% endfor %}
 

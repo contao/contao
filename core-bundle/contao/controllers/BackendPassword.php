@@ -130,10 +130,12 @@ class BackendPassword extends Backend
 		}
 
 		$objTemplate->messages = Message::generate();
-		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+
+		// Backwards compatibility
+		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+		$objTemplate->title = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = $GLOBALS['TL_LANG']['MSC']['continue'];

@@ -219,8 +219,10 @@ class ModuleLogin extends Module
 			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
 
 			$this->Template->twoFactorEnabled = true;
-			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['continue'];
+
+			// Backwards compatibility
+			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 
@@ -232,12 +234,9 @@ class ModuleLogin extends Module
 			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}
 
-		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
-		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = $GLOBALS['TL_LANG']['MSC']['login'];
 		$this->Template->value = Input::encodeInsertTags($lastUsername);
 		$this->Template->autologin = $this->autologin;
-		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->remembered = false;
 
 		if ($isRemembered)
@@ -248,5 +247,10 @@ class ModuleLogin extends Module
 			$this->Template->value = Input::encodeInsertTags($user->getUserIdentifier());
 			$this->Template->remembered = true;
 		}
+
+		// Backwards compatibility
+		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
+		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
+		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}
 }

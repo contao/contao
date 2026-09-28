@@ -142,11 +142,13 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 		}
 
 		$objTemplate->jobs = $arrJobs;
+		$objTemplate->help = (Config::get('showHelp') && $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1]) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
+
+		// Backwards compatibility
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['clearCache'];
 		$objTemplate->job = $GLOBALS['TL_LANG']['tl_maintenance']['job'];
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];
 		$objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['clearCache'];
-		$objTemplate->help = (Config::get('showHelp') && $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1]) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
 
 		return $objTemplate->parse();
 	}

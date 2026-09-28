@@ -233,6 +233,8 @@ class ModuleNewsArchive extends ModuleNews
 		}
 
 		$this->Template->headline = trim($this->headline);
+
+		// Backwards compatibility
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
 	}

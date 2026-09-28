@@ -41,18 +41,18 @@
                     {% if badgeTitle|default %}
                         <span class="badge-title">{{ badgeTitle }}</span>
                     {% endif %}
-                    <h1>{{ headline }}</h1>
+                    <h1>{{ 'MSC.twoFactorAuthentication'|trans }}</h1>
                     <div class="widget widget-text">
-                        <label for="verify">{{ authCode }}</label>
-                        <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="one-time-code" placeholder="{{ authCode }}" required>
+                        <label for="verify">{{ 'MSC.twoFactorVerification'|trans }}</label>
+                        <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="one-time-code" placeholder="{{ 'MSC.twoFactorVerification'|trans }}" required>
                     </div>
                     <div class="widget widget-checkbox">
                         <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
                         <label for="trusted">{{ 'MSC.twoFactorTrustDevice'|trans }}</label>
                     </div>
                     <div class="submit_container">
-                        <a href="{{ path('contao_backend_logout') }}" class="tl_submit">{{ cancel }}</a>
-                        <button type="submit" name="login" id="login" class="tl_submit">{{ loginButton }}</button>
+                        <a href="{{ path('contao_backend_logout') }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+                        <button type="submit" name="login" id="login" class="tl_submit">{{ 'MSC.continue'|trans }}</button>
                     </div>
                 </div>
             </form>

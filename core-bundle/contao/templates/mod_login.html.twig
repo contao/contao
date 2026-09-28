@@ -24,9 +24,9 @@
             {% if logout|default %}
                 <p class="login_info">{{ loggedInAs }}<br>{{ lastLogin|default }}</p>
             {% elseif twoFactorEnabled|default %}
-                <h3>{{ twoFactorAuthentication }}</h3>
+                <h3>{{ 'MSC.twoFactorAuthentication'|trans }}</h3>
                 <div class="widget widget-text">
-                    <label for="verify">{{ authCode }}</label>
+                    <label for="verify">{{ 'MSC.twoFactorVerification'|trans }}</label>
                     <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
                 </div>
                 <div class="widget widget-checkbox">
@@ -39,18 +39,18 @@
                     <p class="login_info">{{ loggedInAs }}<br>{{ reauthenticate }}</p>
                 {% else %}
                     <div class="widget widget-text">
-                        <label for="username">{{ username }}</label>
+                        <label for="username">{{ 'MSC.username'|trans }}</label>
                         <input type="text" name="username" id="username" class="text" value="{{ value }}" autocapitalize="off" autocomplete="username" required>
                     </div>
                 {% endif %}
                 <div class="widget widget-password">
-                    <label for="password">{{ password }}</label>
+                    <label for="password">{{ 'MSC.password'|trans }}</label>
                     <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
                 </div>
                 {% if autologin and not remembered|default %}
                     <div class="widget widget-checkbox">
                         <fieldset class="checkbox_container">
-                            <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ autoLabel }}</label></span>
+                            <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ 'MSC.autologin'|trans }}</label></span>
                         </fieldset>
                     </div>
                 {% endif %}
@@ -58,7 +58,7 @@
             <div class="widget widget-submit">
                 <button type="submit" class="submit">{{ slabel }}</button>
                 {% if twoFactorEnabled|default %}
-                    <a href="{{ path('contao_frontend_logout') }}">{{ cancel }} ›</a>
+                    <a href="{{ path('contao_frontend_logout') }}">{{ 'MSC.cancelBT'|trans }} ›</a>
                 {% endif %}
             </div>
             {% if pwResetUrl|default %}

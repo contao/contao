@@ -1,3 +1,4 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_searchable.html.twig' %}
 
 {% set wrapperAttributes = attrs()
@@ -10,6 +11,6 @@
 {% block content %}
 
     {{ text|default|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_html }}
-    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline|insert_tag_html }}</span></a></p>
+    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ 'MSC.more'|trans }}<span class="invisible"> {{ headline|insert_tag_html }}</span></a></p>
 
 {% endblock %}

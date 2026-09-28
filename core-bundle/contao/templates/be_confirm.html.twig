@@ -1,9 +1,11 @@
+{% trans_default_domain 'contao_default' -%}
+
 <!DOCTYPE html>
 <html lang="{{ app.locale|language_tag }}">
 <head>
 
     <meta charset="{{ charset }}">
-    <title>{{ title }} | {{ host }}</title>
+    <title>{{ 'MSC.invalidToken'|trans }} | {{ host }}</title>
     <meta name="generator" content="Contao Open Source CMS">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
     <meta name="referrer" content="origin">
@@ -26,7 +28,7 @@
             <div class="tl_formbody_edit">
                 <input type="hidden" name="FORM_SUBMIT" value="invalid_token_url">
                 <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                <h1>{{ h1 }}</h1>
+                <h1>{{ 'MSC.invalidToken'|trans }}</h1>
                 <p class="link">{{ link }}</p>
                 <table>
                     {% for key, info in info %}
@@ -36,10 +38,10 @@
                         </tr>
                     {% endfor %}
                 </table>
-                <p>{{ explain }}</p>
+                <p>{{ 'MSC.invalidTokenUrl'|trans }}</p>
                 <div class="submit_container cf">
-                    <button type="submit" name="cancel" class="tl_submit" accesskey="s">{{ cancel }}</button>
-                    <a href="{{ href }}">{{ continue }}</a>
+                    <button type="submit" name="cancel" class="tl_submit" accesskey="s">{{ 'MSC.cancelBT'|trans }}</button>
+                    <a href="{{ href }}">{{ 'MSC.continue'|trans }}</a>
                 </div>
             </div>
         </form>

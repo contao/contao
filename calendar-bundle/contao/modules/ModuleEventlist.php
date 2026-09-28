@@ -356,6 +356,8 @@ class ModuleEventlist extends Events
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
+
+			// Backwards compatibility
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 			// Short view

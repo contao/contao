@@ -56,7 +56,7 @@
                     .mergeWith(skiplink_attributes|default)
                 %}
 
-                <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
+                <a{{ skiplink_attributes }}>{{ 'MSC.skipNavigation'|trans }}</a>
             {% endblock %}
 
             {{ items|raw }}

@@ -331,15 +331,17 @@ class ModuleListing extends Module
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
 		$this->Template->details = (bool) $this->list_info;
-		$this->Template->search_label = $GLOBALS['TL_LANG']['MSC']['search'];
-		$this->Template->per_page_label = $GLOBALS['TL_LANG']['MSC']['list_perPage'];
-		$this->Template->fields_label = $GLOBALS['TL_LANG']['MSC']['all_fields'][0];
-		$this->Template->keywords_label = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->search = $strSearch;
 		$this->Template->for = $strFor;
 		$this->Template->order_by = $order_by;
 		$this->Template->sort = $sort;
 		$this->Template->no_results = \sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
+
+		// Backwards compatibility
+		$this->Template->search_label = $GLOBALS['TL_LANG']['MSC']['search'];
+		$this->Template->per_page_label = $GLOBALS['TL_LANG']['MSC']['list_perPage'];
+		$this->Template->fields_label = $GLOBALS['TL_LANG']['MSC']['all_fields'][0];
+		$this->Template->keywords_label = $GLOBALS['TL_LANG']['MSC']['keywords'];
 	}
 
 	/**

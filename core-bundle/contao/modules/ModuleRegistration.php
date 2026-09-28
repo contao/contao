@@ -329,6 +329,7 @@ class ModuleRegistration extends Module
 			$this->createNewUser($arrUser);
 		}
 
+		// Backwards compatibility
 		$this->Template->loginDetails = $GLOBALS['TL_LANG']['tl_member']['loginDetails'];
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];

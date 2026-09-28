@@ -176,6 +176,8 @@ class ModuleCalendar extends Events
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
 			$objTemplate->prevTitle = $lblPrevious;
 			$objTemplate->prevLink = $GLOBALS['TL_LANG']['MSC']['cal_previous'] . ' ' . $lblPrevious;
+
+			// Backwards compatibility
 			$objTemplate->prevLabel = $GLOBALS['TL_LANG']['MSC']['cal_previous'];
 		}
 
@@ -194,6 +196,8 @@ class ModuleCalendar extends Events
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = $lblNext;
 			$objTemplate->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['cal_next'];
+
+			// Backwards compatibility
 			$objTemplate->nextLabel = $GLOBALS['TL_LANG']['MSC']['cal_next'];
 		}
 

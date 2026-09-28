@@ -57,21 +57,21 @@
                     {% if badgeTitle|default %}
                         <span class="badge-title">{{ badgeTitle }}</span>
                     {% endif %}
-                    <h1>{{ headline }}</h1>
+                    <h1>{{ 'MSC.loginBT'|trans }}</h1>
                     <div class="widget widget-text">
-                        <label for="username">{{ username }}</label>
-                        <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ username }}" required>
+                        <label for="username">{{ 'tl_user.username.0'|trans({}, 'contao_tl_user') }}</label>
+                        <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ 'tl_user.username.0'|trans({}, 'contao_tl_user') }}" required>
                     </div>
                     <div class="widget widget-password" data-controller="contao--password-visibility">
-                        <label for="password">{{ password }}</label>
-                        <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="{{ password }}" data-contao--password-visibility-target="input" required>
+                        <label for="password">{{ 'MSC.password.0'|trans }}</label>
+                        <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="{{ 'MSC.password.0'|trans }}" data-contao--password-visibility-target="input" required>
                         <button type="button" class="password-button" data-action="contao--password-visibility#toggle">
                             <span data-contao--password-visibility-target="icon">{{ backend_icon('password-show.svg', 'MSC.showPassword'|trans) }}</span>
                             <span class="hidden" data-contao--password-visibility-target="icon">{{ backend_icon('password-hide.svg', 'MSC.hidePassword'|trans) }}</span>
                         </button>
                     </div>
                     <div class="submit_container">
-                        <button type="submit" name="login" id="login" class="tl_submit">{{ loginButton }}</button>
+                        <button type="submit" name="login" id="login" class="tl_submit">{{ 'MSC.loginBT'|trans }}</button>
                     </div>
                 </div>
             </form>
@@ -79,12 +79,12 @@
         </main>
         {{ messages|raw }}
         <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
-        <p class="fe-link"><a href="/">{{ feLink }}</a></p>
+        <p class="fe-link"><a href="/">{{ 'MSC.feLink'|trans }}</a></p>
     </div>
 {% endblock %}
 
 <div class="tl_info" id="javascript">
-    {{ jsDisabled }}
+    {{ 'MSC.jsDisabled'|trans }}
 </div>
 
 <script>
