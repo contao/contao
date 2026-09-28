@@ -38,8 +38,8 @@ export default class extends Controller {
             return;
         }
 
-        // Only allow row and empty space to start a drag and leave other content selectable
-        item.draggable = event.target === item || event.target.closest('.tl_left, .drag-handle');
+        // Only allow the drag-handle to start a drag and leave other content selectable
+        item.draggable = event.target.classList.contains('.drag-handle');
     }
 
     onDragStart(event) {
