@@ -33,6 +33,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DC_Table;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
@@ -271,13 +272,16 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         foreach ($configs as $table => $config) {
             $parent = $config['ptable'] ?? null;
 
-            if (\is_string($parent) && $parent !== $table && isset($configs[$parent])) {
-                $children[$parent][] = $table;
+            if (\is_string($parent) && $parent !== $table && isset($configs[$parent]) && !$this->isExtendedTreeMode($table)) {
+                if (!\in_array($table, $children[$parent] ?? [], true)) {
+                    $children[$parent][] = $table;
+                }
+
                 $hasParent[$table] = true;
             }
 
             foreach ((array) ($config['ctable'] ?? []) as $child) {
-                if ($child === $table || !isset($configs[$child])) {
+                if ($child === $table || !isset($configs[$child]) || $this->isExtendedTreeMode($child)) {
                     continue;
                 }
 
@@ -298,6 +302,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         }
 
         return $paths;
+    }
+
+    private function isExtendedTreeMode(string $table): bool
+    {
+        return DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
     }
 
     /**
