@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class TemplateOptionsListener
 {
     /**
-     * @var array<string, array<string, string>>
+     * @var array<string, array<string, string|false>>
      */
     private array $defaultIdentifiersByType = [];
 
@@ -60,6 +60,12 @@ class TemplateOptionsListener
         }
 
         $identifier = $this->defaultIdentifiersByType[$dc->table][$type] ?? null;
+
+        // Do not render a template (see #10103)
+        if (false === $identifier) {
+            return [];
+        }
+
         $legacyPrefix = $this->getLegacyTemplatePrefix($dc);
         $legacyProxyClass = $this->getLegacyProxyClass($dc);
 

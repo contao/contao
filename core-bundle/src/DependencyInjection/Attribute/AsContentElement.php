@@ -23,7 +23,7 @@ class AsContentElement
     /**
      * @param array{allowedTypes?: list<string>}|bool $nestedFragments
      */
-    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array|bool $nestedFragments = false, int $priority = 0, mixed ...$attributes)
+    public function __construct(string|null $type = null, string $category = 'miscellaneous', string|false|null $template = null, string|null $method = null, string|null $renderer = null, array|bool $nestedFragments = false, int $priority = 0, mixed ...$attributes)
     {
         $attributes['type'] = $type;
         $attributes['category'] = $category;
