@@ -12,16 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
+use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class VirtualFilesystemStateProcessorTest extends TestCase
 {
@@ -44,7 +54,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->willReturn($item)
         ;
 
-        $processor = new VirtualFilesystemStateProcessor($storage, $this->createSecurityStub(), new RequestStack());
+        $processor = $this->createProcessor($storage);
         $result = $processor->process(null, new Put(), ['path' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
@@ -66,10 +76,120 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->willReturn($item)
         ;
 
-        $processor = new VirtualFilesystemStateProcessor($storage, $this->createSecurityStub(), new RequestStack());
+        $processor = $this->createProcessor($storage);
         $result = $processor->process(new VirtualFilesystemMove('documents/example.txt', 'archive/example.txt'), new Post());
 
         $this->assertSame('archive/example.txt', $result->path);
+    }
+
+    public function testUpdatesLocalizedMetadataWithoutLosingOtherMetadata(): void
+    {
+        $extra = new ExtraMetadata(['custom' => 'kept']);
+        $extra->setLocalized(new MetadataBag([
+            'en' => new Metadata(['title' => 'Old title', 'alt' => 'Old alt']),
+            'de' => new Metadata(['title' => 'Deutscher Titel']),
+        ]));
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('setExtraMetadata')
+            ->with('images/example.jpg', $extra)
+        ;
+
+        $storage
+            ->method('get')
+            ->with('images/example.jpg')
+            ->willReturn(new FilesystemItem(true, 'images/example.jpg', 123, 7, 'image/jpeg', $extra))
+        ;
+
+        $processor = $this->createProcessor($storage);
+        $result = $processor->process(
+            null,
+            new Patch(),
+            ['path' => 'images/example.jpg'],
+            ['request' => Request::create('/', 'PATCH', content: '{"localized":{"en":{"title":"New title"}}}')],
+        );
+
+        $this->assertSame('New title', $result->metadata['localized']['en']['title']);
+        $this->assertSame('kept', $result->metadata['custom']);
+    }
+
+    public function testUpdatesImportantPartAndTextTrackMetadata(): void
+    {
+        $extra = new ExtraMetadata();
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('setExtraMetadata')
+            ->with('images/example.jpg', $extra)
+        ;
+
+        $storage
+            ->method('get')
+            ->with('images/example.jpg')
+            ->willReturn(new FilesystemItem(true, 'images/example.jpg', 123, 7, 'image/jpeg', $extra))
+        ;
+
+        $processor = $this->createProcessor($storage);
+        $result = $processor->process(
+            null,
+            new Patch(),
+            ['path' => 'images/example.jpg'],
+            ['request' => Request::create('/', 'PATCH', content: '{"importantPart":{"x":0.1,"y":0.2,"width":0.3,"height":0.4},"textTrack":{"sourceLanguage":"de","type":"captions"}}')],
+        );
+
+        $this->assertSame(
+            [
+                'importantPart' => ['x' => 0.1, 'y' => 0.2, 'width' => 0.3, 'height' => 0.4],
+                'textTrack' => ['sourceLanguage' => 'de', 'type' => 'captions'],
+            ],
+            $result->metadata,
+        );
+    }
+
+    public function testRejectsInvalidLocalizedMetadata(): void
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->never())
+            ->method('setExtraMetadata')
+        ;
+
+        $processor = $this->createProcessor($storage);
+
+        $this->expectException(BadRequestHttpException::class);
+        $processor->process(
+            null,
+            new Patch(),
+            ['path' => 'images/example.jpg'],
+            ['request' => Request::create('/', 'PATCH', content: '{"uuid":"changed"}')],
+        );
+    }
+
+    public function testRejectsMetadataUpdatesForMissingFiles(): void
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->method('get')
+            ->with('missing.jpg')
+            ->willReturn(null)
+        ;
+
+        $storage
+            ->expects($this->never())
+            ->method('setExtraMetadata')
+        ;
+
+        $processor = $this->createProcessor($storage);
+
+        $this->expectException(NotFoundHttpException::class);
+        $processor->process(
+            null,
+            new Patch(),
+            ['path' => 'missing.jpg'],
+            ['request' => Request::create('/', 'PATCH', content: '{"localized":{"en":{"title":"New title"}}}')],
+        );
     }
 
     private function createSecurityStub(): Security
@@ -81,5 +201,17 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         return $security;
+    }
+
+    private function createProcessor(VirtualFilesystem $storage): VirtualFilesystemStateProcessor
+    {
+        $normalizer = $this->createObjectNormalizer();
+
+        return new VirtualFilesystemStateProcessor($storage, $this->createSecurityStub(), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer));
+    }
+
+    private function createObjectNormalizer(): SchemaAwareObjectNormalizer
+    {
+        return new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
     }
 }

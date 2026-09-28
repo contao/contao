@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -30,8 +31,11 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
 {
     private readonly VirtualFilesystemInterface $filesStorage;
 
-    public function __construct(VirtualFilesystem $filesStorage, Security $security)
-    {
+    public function __construct(
+        VirtualFilesystem $filesStorage,
+        Security $security,
+        private readonly VirtualFilesystemItemFactory $itemFactory,
+    ) {
         $this->filesStorage = new PermissionCheckingVirtualFilesystem($filesStorage, $security);
     }
 
@@ -47,7 +51,7 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
             throw new NotFoundHttpException('The requested file or directory does not exist.');
         }
 
-        return VirtualFilesystemItem::fromFilesystemItem($item);
+        return $this->itemFactory->create($item);
     }
 
     /**
@@ -60,7 +64,7 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
         $deep = filter_var($filters['deep'] ?? false, FILTER_VALIDATE_BOOL);
         $items = $this->filesStorage->listContents($path, $deep);
 
-        return array_map(VirtualFilesystemItem::fromFilesystemItem(...), $items->toArray());
+        return array_map($this->itemFactory->create(...), $items->toArray());
     }
 
     private function getFilters(array $context): array

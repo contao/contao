@@ -13,9 +13,13 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -23,6 +27,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 
 /**
  * @implements ProcessorInterface<mixed, VirtualFilesystemItem>
@@ -35,6 +41,8 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         VirtualFilesystem $filesStorage,
         Security $security,
         private readonly RequestStack $requestStack,
+        private readonly SchemaAwareObjectNormalizer $objectNormalizer,
+        private readonly VirtualFilesystemItemFactory $itemFactory,
     ) {
         $this->filesStorage = new PermissionCheckingVirtualFilesystem($filesStorage, $security);
     }
@@ -51,7 +59,62 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new BadRequestHttpException('A file path is required.');
         }
 
-        return $this->upload($path, $context['request'] ?? $this->requestStack->getCurrentRequest());
+        $request = $context['request'] ?? $this->requestStack->getCurrentRequest();
+
+        if ($operation instanceof Patch) {
+            return $this->updateMetadata($path, $request);
+        }
+
+        return $this->upload($path, $request);
+    }
+
+    private function updateMetadata(string $path, mixed $request): VirtualFilesystemItem
+    {
+        if (!$request instanceof Request) {
+            throw new BadRequestHttpException('A metadata body is required.');
+        }
+
+        try {
+            $content = $request->getContent();
+
+            if (!json_decode($content, false, 512, JSON_THROW_ON_ERROR) instanceof \stdClass) {
+                throw new NotNormalizableValueException('The metadata body must be a JSON object.');
+            }
+
+            $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+
+            if (!\is_array($data)) {
+                throw new NotNormalizableValueException('The metadata body must be a JSON object.');
+            }
+
+            $update = $this->objectNormalizer->fromArray(ExtraMetadata::class, $data);
+        } catch (\InvalidArgumentException|\JsonException|NotNormalizableValueException|\TypeError|\ValueError $exception) {
+            throw new BadRequestHttpException($exception->getMessage(), $exception);
+        }
+
+        if (!$update instanceof ExtraMetadata) {
+            throw new \LogicException(\sprintf('Expected an instance of "%s".', ExtraMetadata::class));
+        }
+
+        if (isset($data['uuid'])) {
+            throw new BadRequestHttpException('The UUID cannot be changed.');
+        }
+
+        $item = $this->filesStorage->get($path);
+
+        if (!$item || !$item->isFile()) {
+            throw new NotFoundHttpException('The requested file does not exist.');
+        }
+
+        $metadata = $item->getExtraMetadata();
+
+        foreach ($update->all() as $key => $value) {
+            $metadata->set($key, $value);
+        }
+
+        $this->filesStorage->setExtraMetadata($path, $metadata);
+
+        return $this->getItem($path);
     }
 
     private function move(VirtualFilesystemMove $move): VirtualFilesystemItem
@@ -84,6 +147,6 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new \LogicException(\sprintf('The filesystem item "%s" was not found after writing it.', $path));
         }
 
-        return VirtualFilesystemItem::fromFilesystemItem($item);
+        return $this->itemFactory->create($item);
     }
 }

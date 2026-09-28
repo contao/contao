@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Contao\ApiBundle\Serializer\ObjectNormalizationHandlerInterface:
+            tags:
+                - contao.api.object_normalization_handler
+
     # Merge Contao resources into API Platform's discovered resource names so the
     # entrypoint, docs and metadata pipeline can see DataContainerRecord.
     Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory:
@@ -42,6 +47,13 @@ services:
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
             $decorated: '@.inner'
+            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
+
+    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory:
+        decorates: api_platform.metadata.property.metadata_factory
+        arguments:
+            $decorated: '@.inner'
+            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
 
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.
@@ -79,6 +91,19 @@ services:
         tags:
             - { name: serializer.normalizer }
 
+    # This is an explicit schema-aware API boundary, not a global Symfony
+    # serializer normalizer. Domain-specific handlers are collected by tag.
+    Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer:
+        arguments:
+            $validator: '@Opis\JsonSchema\Validator'
+            $handlers: !tagged_iterator contao.api.object_normalization_handler
+
+    Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler: ~
+
+    Contao\ApiBundle\Dto\VirtualFilesystemItemFactory:
+        arguments:
+            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
+
     Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
         arguments:
             $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
@@ -92,12 +117,15 @@ services:
         arguments:
             $filesStorage: '@contao.filesystem.virtual.files'
             $security: '@security.helper'
+            $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
 
     Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor:
         arguments:
             $filesStorage: '@contao.filesystem.virtual.files'
             $security: '@security.helper'
             $requestStack: '@request_stack'
+            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
+            $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
 
     Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
         arguments:

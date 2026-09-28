@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Tests\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Resource\Factory\MainControllerResourceMetadataCollectionFactory;
@@ -27,6 +28,9 @@ use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
+use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -38,7 +42,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 {
     public function testBuildsTheVirtualFilesystemResource(): void
     {
-        $factory = new VirtualFilesystemResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
+        $factory = $this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
         $resources = iterator_to_array($factory->create(VirtualFilesystemItem::class));
         $this->assertCount(1, $resources);
 
@@ -50,6 +54,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $collection = $operations['contao_api_files_get_collection'];
         $get = $operations['contao_api_files_get'];
         $upload = $operations['contao_api_files_upload'];
+        $metadata = $operations['contao_api_files_update_metadata'];
         $move = $operations['contao_api_files_move'];
 
         $this->assertInstanceOf(GetCollection::class, $collection);
@@ -65,6 +70,15 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertFalse($upload->canRead());
         $this->assertFalse($upload->canDeserialize());
         $this->assertSame(VirtualFilesystemStateProcessor::class, $upload->getProcessor());
+
+        $this->assertInstanceOf(Patch::class, $metadata);
+        $this->assertSame('/files/{path}', $metadata->getUriTemplate());
+        $this->assertFalse($metadata->getInput());
+        $this->assertFalse($metadata->canRead());
+        $this->assertFalse($metadata->canDeserialize());
+        $this->assertSame(200, $metadata->getStatus());
+        $this->assertSame("is_granted('ROLE_USER') and is_granted('contao_user.fop.f2')", $metadata->getSecurity());
+        $this->assertSame(VirtualFilesystemStateProcessor::class, $metadata->getProcessor());
 
         $this->assertInstanceOf(Post::class, $move);
         $this->assertSame(VirtualFilesystemMove::class, $move->getInput());
@@ -82,30 +96,36 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->willReturn($collection)
         ;
 
-        $factory = new VirtualFilesystemResourceMetadataCollectionFactory($decorated);
+        $factory = $this->createFactory($decorated);
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
     }
 
     public function testGeneratesRoutesForNestedPaths(): void
     {
-        $factory = new VirtualFilesystemResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
+        $factory = $this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
         $routes = $this->createApiLoader($factory)->load(null);
         $generator = new UrlGenerator($routes, new RequestContext());
 
         $this->assertSame('/files', $generator->generate('contao_api_files_get_collection'));
         $this->assertSame('/files/images/example.jpg', $generator->generate('contao_api_files_get', ['path' => 'images/example.jpg']));
-        $this->assertSame('/files/move', $generator->generate('contao_api_files_move'));
+        $this->assertSame('/files_operations/move', $generator->generate('contao_api_files_move'));
+        $this->assertSame('/files/images/example.jpg', $generator->generate('contao_api_files_update_metadata', ['path' => 'images/example.jpg']));
         $this->assertSame('backend', $routes->get('contao_api_files_get')->getDefault('_scope'));
 
         $context = new RequestContext();
         $context->setMethod('POST');
-        $this->assertSame('contao_api_files_move', new UrlMatcher($routes, $context)->match('/files/move')['_route']);
+        $this->assertSame('contao_api_files_move', new UrlMatcher($routes, $context)->match('/files_operations/move')['_route']);
 
         $context->setMethod('GET');
         $match = new UrlMatcher($routes, $context)->match('/files/move');
         $this->assertSame('contao_api_files_get', $match['_route']);
         $this->assertSame('move', $match['path']);
+
+        $context->setMethod('PATCH');
+        $match = new UrlMatcher($routes, $context)->match('/files/images/example.jpg');
+        $this->assertSame('contao_api_files_update_metadata', $match['_route']);
+        $this->assertSame('images/example.jpg', $match['path']);
     }
 
     private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader
@@ -129,5 +149,12 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         ;
 
         return new ApiLoader($kernel, $names, new MainControllerResourceMetadataCollectionFactory($factory), $container, []);
+    }
+
+    private function createFactory(ResourceMetadataCollectionFactoryInterface $decorated): VirtualFilesystemResourceMetadataCollectionFactory
+    {
+        $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
+
+        return new VirtualFilesystemResourceMetadataCollectionFactory($decorated, $normalizer);
     }
 }

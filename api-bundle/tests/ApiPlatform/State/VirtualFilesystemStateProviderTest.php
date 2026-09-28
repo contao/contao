@@ -15,6 +15,9 @@ namespace Contao\ApiBundle\Tests\ApiPlatform\State;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
+use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\TextTrack;
@@ -24,6 +27,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\Image\ImportantPart;
+use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,7 +48,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             'image/jpeg',
             new ExtraMetadata([
                 'uuid' => $uuid,
-                'localized' => new MetadataBag(['en' => new Metadata(['title' => 'Example'])]),
+                'localized' => new MetadataBag(['en' => new Metadata(['title' => 'Example', 'uuid' => $uuid->toRfc4122()])]),
                 'importantPart' => $importantPart,
                 'textTrack' => $textTrack,
                 'custom' => ['enabled' => true],
@@ -59,7 +63,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub())->provide(new Get(), ['path' => 'images/example.jpg']);
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => 'images/example.jpg']);
 
         $this->assertSame('images/example.jpg', $result->path);
         $this->assertSame(456, $result->fileSize);
@@ -67,9 +71,9 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $this->assertSame($uuid->toRfc4122(), $result->uuid);
         $this->assertSame(
             [
-                'localized' => ['en' => ['title' => 'Example']],
-                'importantPart' => $importantPart,
-                'textTrack' => $textTrack,
+                'localized' => ['en' => ['title' => 'Example', 'uuid' => $uuid->toRfc4122()]],
+                'importantPart' => ['x' => 0.1, 'y' => 0.2, 'width' => 0.3, 'height' => 0.4],
+                'textTrack' => ['sourceLanguage' => 'en', 'type' => 'subtitles'],
                 'custom' => ['enabled' => true],
             ],
             $result->metadata,
@@ -91,7 +95,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($items)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub())->provide(
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(
             new GetCollection(),
             context: ['filters' => ['path' => 'documents', 'deep' => true]],
         );
@@ -108,7 +112,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $storage = $this->createStub(VirtualFilesystem::class);
 
         $this->expectException(NotFoundHttpException::class);
-        new VirtualFilesystemStateProvider($storage, $this->createSecurityStub())->provide(new Get(), ['path' => 'missing.txt']);
+        new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => 'missing.txt']);
     }
 
     private function createSecurityStub(): Security
@@ -120,5 +124,12 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         ;
 
         return $security;
+    }
+
+    private function createItemFactory(): VirtualFilesystemItemFactory
+    {
+        $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
+
+        return new VirtualFilesystemItemFactory($normalizer);
     }
 }

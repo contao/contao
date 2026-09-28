@@ -15,19 +15,27 @@ namespace Contao\ApiBundle\ApiPlatform\Metadata;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\OpenApi\Model\MediaType;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
+use ApiPlatform\OpenApi\Model\RequestBody;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 
 final class VirtualFilesystemResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
 {
-    public function __construct(private readonly ResourceMetadataCollectionFactoryInterface $decorated)
-    {
+    public function __construct(
+        private readonly ResourceMetadataCollectionFactoryInterface $decorated,
+        private readonly SchemaAwareObjectNormalizer $objectNormalizer,
+    ) {
     }
 
     public function create(string $resourceClass): ResourceMetadataCollection
@@ -45,6 +53,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 'contao_api_files_move' => $this->createMoveOperation(),
                 'contao_api_files_get' => $this->createGetOperation(),
                 'contao_api_files_upload' => $this->createUploadOperation(),
+                'contao_api_files_update_metadata' => $this->createMetadataUpdateOperation(),
             ],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
@@ -99,13 +108,35 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
     private function createMoveOperation(): Post
     {
         return new Post(
-            uriTemplate: '/files/move',
+            uriTemplate: '/files_operations/move',
             shortName: 'File',
             class: VirtualFilesystemItem::class,
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
             input: VirtualFilesystemMove::class,
             read: false,
+            status: 200,
+            processor: VirtualFilesystemStateProcessor::class,
+        );
+    }
+
+    private function createMetadataUpdateOperation(): Patch
+    {
+        return new Patch(
+            uriTemplate: '/files/{path}',
+            inputFormats: ['json' => ['application/json']],
+            shortName: 'File',
+            class: VirtualFilesystemItem::class,
+            requirements: ['path' => '.+'],
+            defaults: ['_scope' => 'backend'],
+            security: "is_granted('ROLE_USER') and is_granted('contao_user.fop.f2')",
+            input: false,
+            openapi: new OpenApiOperation(requestBody: new RequestBody(
+                content: new \ArrayObject(['application/json' => new MediaType(new \ArrayObject($this->objectNormalizer->getJsonSchema(ExtraMetadata::class)))]),
+                required: true,
+            )),
+            read: false,
+            deserialize: false,
             status: 200,
             processor: VirtualFilesystemStateProcessor::class,
         );
