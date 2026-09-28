@@ -37,11 +37,12 @@ use Contao\DC_Table;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
 {
+    private const ROUTE_PREFIX = '/dc';
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly ContaoFramework $framework,
         private readonly ResourceFinderInterface $resourceFinder,
-        private readonly string $dataContainerApiPrefix,
     ) {
     }
 
@@ -244,7 +245,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
      */
     private function getRoutePrefix(array $path): string
     {
-        $route = '/'.trim($this->dataContainerApiPrefix, '/');
+        $route = self::ROUTE_PREFIX;
 
         foreach ($path as $index => $table) {
             $route .= '/'.$this->getResourceName($table);
