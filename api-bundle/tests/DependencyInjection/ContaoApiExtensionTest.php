@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\DependencyInjection;
 
+use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -25,6 +26,9 @@ use Contao\Password;
 use Contao\RowWizard;
 use Contao\TextField;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
+use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoApiExtensionTest extends TestCase
@@ -51,6 +55,21 @@ class ContaoApiExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
         $this->assertTrue($container->hasDefinition(WidgetConverterRegistry::class));
+    }
+
+    public function testResolvesTemplateMetadataFactoryArguments(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+        new ResolveClassPass()->process($container);
+        new ResolveNamedArgumentsPass()->process($container);
+
+        $operations = $container->getDefinition(UserTemplateResourceMetadataCollectionFactory::class)->getArgument(1);
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $operations);
+        $this->assertSame('contao.operation.template_studio_element', $operations->getTag());
     }
 
     public function testAutoconfiguresConvertersBeforeTheCoreFallback(): void

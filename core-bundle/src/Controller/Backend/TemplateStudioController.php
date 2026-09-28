@@ -28,6 +28,7 @@ use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -70,6 +71,25 @@ class TemplateStudioController extends AbstractBackendController
         ksort($operationsByName);
 
         $this->operations = $operationsByName;
+    }
+
+    protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null, \Throwable|null $apiError = null): Response
+    {
+        // We expose the Template Studio in our api-bundle. If a sub request is made in
+        // that context, we return the raw context instead of a rendered response.
+        if ($this->container->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api')) {
+            if ($apiError) {
+                $parameters['errorClass'] = $apiError::class;
+                $parameters['errorMessage'] = $apiError->getMessage();
+            }
+
+            return new JsonResponse(
+                $parameters,
+                $apiError ? JsonResponse::HTTP_BAD_REQUEST : JsonResponse::HTTP_OK,
+            );
+        }
+
+        return parent::render($view, $parameters, $response, $includeChromeContext);
     }
 
     #[Route(
@@ -158,6 +178,7 @@ class TemplateStudioController extends AbstractBackendController
             return $this->render(
                 '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
                 ['identifier' => $identifier],
+                apiError: new \InvalidArgumentException('Given identifier does not exist.'),
             );
         }
 
