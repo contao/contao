@@ -237,4 +237,9 @@ final class ContaoCorePermissions
      * Access is granted if the given WebauthnCredential belongs to the current user.
      */
     public const WEBAUTHN_CREDENTIAL_OWNERSHIP = 'contao_webauthn_credential_ownership';
+
+    /**
+     * Access is granted if the given PersonalAccessToken belongs to the current user.
+     */
+    public const PERSONAL_ACCESS_TOKEN_OWNERSHIP = 'contao_personal_access_token_ownership';
 }

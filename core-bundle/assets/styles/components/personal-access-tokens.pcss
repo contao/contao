@@ -1,0 +1,54 @@
+.personal-access-tokens {
+    border-top: 1px solid var(--border);
+
+    .list_pats {
+        margin: 0 15px 15px;
+    }
+
+    .pat-list {
+        td.name {
+            button {
+                box-sizing: border-box;
+                border: 0;
+                text-align: left;
+                margin: 0;
+                background-color: transparent;
+
+                code {
+                    word-break: break-word;
+                }
+            }
+        }
+
+        td.tl_confirm {
+            padding-left: 32px;
+        }
+
+        td.expires {
+            width: 30%;
+
+            @media (width <= 767.98px) {
+                width: auto;
+            }
+        }
+
+        td.actions {
+            text-align: right;
+            width: 50px;
+
+            @media (width <= 767.98px) {
+                width: auto;
+            }
+
+            button {
+                border: 0;
+                padding: 0;
+                background-color: transparent;
+
+                img {
+                    vertical-align: -3px;
+                }
+            }
+        }
+    }
+}

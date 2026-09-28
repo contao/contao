@@ -163,7 +163,7 @@ $GLOBALS['BE_MOD'] = array
 		),
 		'user' => array
 		(
-			'tables'                  => array('tl_user')
+			'tables'                  => array('tl_user'),
 		),
 		'group' => array
 		(

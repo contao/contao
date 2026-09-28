@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Security\Authentication;
+
+use Contao\BackendUser;
+use Contao\CoreBundle\Entity\PersonalAccessToken;
+use Contao\StringUtil;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+
+class AccessTokenManager
+{
+    private const TOKEN_PREFIX = 'pat';
+
+    public function __construct(
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
+    /**
+     * Creates a personal access token, persists it to the database and returns the
+     * token with the plain token set on the entity.
+     */
+    public function createToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): PersonalAccessToken
+    {
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
+
+        $plainSecret = StringUtil::encodeBase32(random_bytes(16));
+
+        $personalAccessToken = new PersonalAccessToken((int) $user->id, $name, $passwordHasher->hash($plainSecret), $expiresAt);
+
+        $this->entityManager->persist($personalAccessToken);
+        $this->entityManager->flush();
+
+        $personalAccessToken->setPlainToken(implode('_', [self::TOKEN_PREFIX, $personalAccessToken->getId()->toBase32(), $plainSecret]));
+
+        return $personalAccessToken;
+    }
+
+    /**
+     * Parses a plain authorization token and extracts the token ID and token secret.
+     */
+    public function parseToken(string $token): array|null
+    {
+        $parts = explode('_', $token);
+
+        if (3 !== \count($parts) || self::TOKEN_PREFIX !== $parts[0]) {
+            return null;
+        }
+
+        return [
+            'id' => $parts[1],
+            'secret' => $parts[2],
+        ];
+    }
+
+    /**
+     * Returns a valid personal access token from the given plain token.
+     */
+    public function getValidPersonalAccessToken(string $token): PersonalAccessToken|null
+    {
+        if (!$parsedToken = $this->parseToken($token)) {
+            return null;
+        }
+
+        $personalAccessTokenRepository = $this->entityManager->getRepository(PersonalAccessToken::class);
+
+        if (!$personalAccessToken = $personalAccessTokenRepository->findOneValidById($parsedToken['id'])) {
+            return null;
+        }
+
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class);
+
+        if (!$passwordHasher->verify($personalAccessToken->getSecret(), $parsedToken['secret'])) {
+            return null;
+        }
+
+        return $personalAccessToken;
+    }
+}
