@@ -18,7 +18,9 @@ use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DC_Table;
 use Contao\Validator as ContaoValidator;
+use Contao\Widget;
 
 final class DataContainerSchemaFactory
 {
@@ -43,6 +45,23 @@ final class DataContainerSchemaFactory
         $properties = [];
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
+            /** @var class-string<Widget> $widgetClass */
+            $widgetClass = $GLOBALS['BE_FFL'][$config['inputType'] ?? ''] ?? null;
+
+            if ($widgetClass && class_exists($widgetClass)) {
+                $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
+                $dc->strTable = $table;
+                $dc->field = $fieldName;
+                $dc->activeRecord = new class() {
+                    public function __get(string $name): null
+                    {
+                        return null;
+                    }
+                };
+
+                $config['eval'] = $widgetClass::getAttributesFromDca($config, $fieldName, null, $fieldName, $table, $dc);
+            }
+
             $schema = $this->createFieldSchema((string) $fieldName, \is_array($config) ? $config : []);
 
             if ([] === $schema) {
@@ -216,6 +235,10 @@ final class DataContainerSchemaFactory
 
         if (isset($eval['minlength']) && is_numeric($eval['minlength'])) {
             $schema['minLength'] = (int) $eval['minlength'];
+        }
+
+        if ($eval['allowHtml'] ?? null) {
+            $schema['contentMediaType'] = 'text/html';
         }
 
         return $schema;

@@ -43,28 +43,24 @@ use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
-
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
 
         parent::tearDown();
     }

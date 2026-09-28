@@ -50,16 +50,16 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 {
     private RequestStack $requestStack;
 
-    private array|null $widgets = null;
-
     private WidgetConverterRegistry $converters;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
+
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]);
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
 
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
@@ -67,10 +67,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
-
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
 
         parent::tearDown();
     }

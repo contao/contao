@@ -38,13 +38,14 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 final class DataContainerRecordMapperTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     private WidgetConverterRegistry $converters;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
 
         $framework = $this->createStub(ContaoFramework::class);
         $framework
@@ -58,7 +59,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
@@ -75,10 +75,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->resetStaticProperties([System::class]);
 
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
-
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
 
         parent::tearDown();
     }
