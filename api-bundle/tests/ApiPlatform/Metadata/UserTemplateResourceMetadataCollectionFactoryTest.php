@@ -119,7 +119,12 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $this->assertStringContainsString('deletion is immediate', $operations['contao_api_user_template_operation_delete']->getDescription());
 
         foreach ($operations as $operation) {
-            $this->assertArrayHasKey('theme', iterator_to_array($operation->getParameters()));
+            $this->assertSame('UserTemplate', $operation->getShortName());
+
+            $parameters = iterator_to_array($operation->getParameters());
+
+            $this->assertArrayHasKey('theme', $parameters);
+            $this->assertSame('theme', $parameters['theme']->getKey());
         }
     }
 

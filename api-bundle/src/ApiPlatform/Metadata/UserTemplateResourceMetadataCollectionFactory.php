@@ -83,6 +83,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
         foreach ($operations as $name => $operation) {
             $operation = $operation->withParameters([
                 'theme' => new QueryParameter(
+                    key: 'theme',
                     schema: ['type' => 'string'],
                     description: 'Optional theme slug. Omit for global user templates; use the same context for subsequent operations.',
                 ),
@@ -90,6 +91,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
 
             $operations[$name] = $operation
                 ->withClass(UserTemplate::class)
+                ->withShortName('UserTemplate')
                 ->withProvider(UserTemplateStateProvider::class)
                 ->withProcessor(UserTemplateStateProcessor::class)
                 ->withDefaults(['_scope' => 'backend'])
@@ -101,6 +103,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
         return new ResourceMetadataCollection(UserTemplate::class, [
             new ApiResource()
                 ->withClass(UserTemplate::class)
+                ->withShortName('UserTemplate')
                 ->withDescription('Discover and read templates, then execute the available Template Studio operations to create, save, rename or delete user templates. Requires an administrator.')
                 ->withDefaults(['_scope' => 'backend'])
                 ->withStateless(true)
