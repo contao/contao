@@ -18,6 +18,7 @@ use Contao\CoreBundle\File\TextTrack;
 use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\Image\ImportantPart;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Defines the API representation of VFS metadata without adding serialization
@@ -74,8 +75,8 @@ final readonly class VirtualFilesystemMetadataNormalizationHandler implements Ob
     {
         return match ($class) {
             ExtraMetadata::class => $this->denormalizeExtraMetadata($data),
-            Metadata::class => new Metadata($data),
-            MetadataBag::class => new MetadataBag(array_map(static fn (array $item): Metadata => new Metadata($item), $data)),
+            Metadata::class => $this->denormalizeMetadata($data),
+            MetadataBag::class => new MetadataBag(array_map($this->denormalizeMetadata(...), $data)),
             TextTrack::class => new TextTrack($data['sourceLanguage'], null === $data['type'] ? null : TextTrackType::from($data['type'])),
             ImportantPart::class => new ImportantPart(...$data),
             default => throw new \InvalidArgumentException(\sprintf('The class "%s" is not supported.', $class)),
@@ -102,6 +103,14 @@ final readonly class VirtualFilesystemMetadataNormalizationHandler implements Ob
         $data = [];
 
         foreach ($metadata->all() as $key => $value) {
+            // The file UUID is stored as an object internally but represented as a read-only
+            // RFC 4122 string alongside the remaining metadata.
+            if ('uuid' === $key && $value instanceof Uuid) {
+                $data[$key] = $value->toRfc4122();
+
+                continue;
+            }
+
             // ExtraMetadata can be extended by filesystem adapters. Preserve portable values
             // but do not guess how an unknown object is shaped.
             if ($this->isNormalizable($value)) {
@@ -114,6 +123,10 @@ final readonly class VirtualFilesystemMetadataNormalizationHandler implements Ob
 
     private function denormalizeExtraMetadata(array $data): ExtraMetadata
     {
+        if (\array_key_exists('uuid', $data)) {
+            throw new \InvalidArgumentException('The UUID cannot be changed.');
+        }
+
         // Only well-known entries need reconstruction. Custom entries remain the scalar
         // or array values accepted by the open ExtraMetadata container.
         foreach (['localized' => MetadataBag::class, 'textTrack' => TextTrack::class, 'importantPart' => ImportantPart::class] as $key => $class) {
@@ -123,6 +136,17 @@ final readonly class VirtualFilesystemMetadataNormalizationHandler implements Ob
         }
 
         return new ExtraMetadata($data);
+    }
+
+    private function denormalizeMetadata(array $data): Metadata
+    {
+        // DBAFS injects the file UUID into every localized metadata object. It
+        // identifies the owning file and is never client-controlled metadata.
+        if (\array_key_exists(Metadata::VALUE_UUID, $data)) {
+            throw new \InvalidArgumentException('The localized metadata UUID cannot be changed.');
+        }
+
+        return new Metadata($data);
     }
 
     private function isNormalizable(mixed $value): bool
@@ -150,6 +174,7 @@ final readonly class VirtualFilesystemMetadataNormalizationHandler implements Ob
         return [
             'type' => 'object',
             'properties' => [
+                'uuid' => ['type' => 'string', 'format' => 'uuid', 'readOnly' => true],
                 'localized' => $this->getJsonSchema(MetadataBag::class),
                 'textTrack' => $this->getJsonSchema(TextTrack::class),
                 'importantPart' => $this->getJsonSchema(ImportantPart::class),

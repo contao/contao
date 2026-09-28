@@ -68,9 +68,9 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $this->assertSame('images/example.jpg', $result->path);
         $this->assertSame(456, $result->fileSize);
         $this->assertSame('image/jpeg', $result->mimeType);
-        $this->assertSame($uuid->toRfc4122(), $result->uuid);
         $this->assertSame(
             [
+                'uuid' => $uuid->toRfc4122(),
                 'localized' => ['en' => ['title' => 'Example', 'uuid' => $uuid->toRfc4122()]],
                 'importantPart' => ['x' => 0.1, 'y' => 0.2, 'width' => 0.3, 'height' => 0.4],
                 'textTrack' => ['sourceLanguage' => 'en', 'type' => 'subtitles'],
@@ -102,7 +102,6 @@ final class VirtualFilesystemStateProviderTest extends TestCase
 
         $this->assertCount(2, $result);
         $this->assertSame('documents/Guide.pdf', $result[0]->path);
-        $this->assertNull($result[0]->uuid);
         $this->assertSame([], $result[0]->metadata);
         $this->assertSame('documents/notes.txt', $result[1]->path);
     }

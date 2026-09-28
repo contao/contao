@@ -33,7 +33,6 @@ final readonly class VirtualFilesystemItemFactory
             $item->getLastModified(),
             $item->isFile() ? $item->getFileSize() : null,
             $item->isFile() ? ($item->getMimeType('') ?: null) : null,
-            $item->getUuid()?->toRfc4122(),
             $this->objectNormalizer->toArray($item->getExtraMetadata()),
         );
     }

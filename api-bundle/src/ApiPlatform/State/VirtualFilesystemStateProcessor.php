@@ -81,10 +81,6 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new \LogicException(\sprintf('Expected an instance of "%s".', ExtraMetadata::class));
         }
 
-        if (isset($data['uuid'])) {
-            throw new BadRequestHttpException('The UUID cannot be changed.');
-        }
-
         $item = $this->filesStorage->get($path);
 
         if (!$item || !$item->isFile()) {

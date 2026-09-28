@@ -24,7 +24,6 @@ final readonly class VirtualFilesystemItem
         public int|null $lastModified,
         public int|null $fileSize,
         public string|null $mimeType,
-        public string|null $uuid,
         public array $metadata,
     ) {
     }
