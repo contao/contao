@@ -56,16 +56,6 @@ class BackendUser extends User
 	protected $roles = array('ROLE_USER');
 
 	/**
-	 * Initialize the object
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-
-		$this->strIp = Environment::get('ip');
-	}
-
-	/**
 	 * Instantiate a new user object
 	 *
 	 * @return static|User The object instance

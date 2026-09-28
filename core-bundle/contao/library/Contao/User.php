@@ -112,13 +112,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $intId;
 
 	/**
-	 * IP address
-	 * @var string
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
-	 */
-	protected $strIp;
-
-	/**
 	 * Table
 	 * @var string
 	 */
