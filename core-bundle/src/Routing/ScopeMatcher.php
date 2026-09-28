@@ -24,6 +24,7 @@ class ScopeMatcher
      */
     public function __construct(
         private readonly RequestMatcherInterface $backendMatcher,
+        private readonly RequestMatcherInterface $backendApiMatcher,
         private readonly RequestMatcherInterface $frontendMatcher,
         private readonly RequestStack $requestStack,
     ) {
@@ -59,7 +60,7 @@ class ScopeMatcher
             return false;
         }
 
-        return $this->backendMatcher->matches($request);
+        return $this->backendMatcher->matches($request) || $this->backendApiMatcher->matches($request);
     }
 
     public function isFrontendRequest(Request|null $request = null): bool

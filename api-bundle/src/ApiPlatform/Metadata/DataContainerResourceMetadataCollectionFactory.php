@@ -81,7 +81,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withProvider(DataContainerStateProvider::class)
             ->withProcessor(DataContainerStateProcessor::class)
             ->withRoutePrefix($this->getRoutePrefix($table))
-            ->withDefaults(['_scope' => 'backend'])
+            ->withDefaults(['_scope' => 'backend_api'])
             ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
             ->withExtraProperties($this->getExtraProperties($table))
@@ -142,7 +142,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                 ->withUriTemplate($this->getRoutePrefix($table).($item ? '/{id}' : '').('move' === $action ? '/move' : ''))
                 ->withProvider(DataContainerStateProvider::class)
                 ->withProcessor(DataContainerStateProcessor::class)
-                ->withDefaults(['_scope' => 'backend'])
+                ->withDefaults(['_scope' => 'backend_api'])
                 ->withSecurity("is_granted('ROLE_USER')")
                 ->withExtraProperties(['contao' => $this->getExtraProperties($table)['contao'] + ['action' => $action]])
             ;

@@ -172,7 +172,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         foreach (['tl_article', 'tl_page'] as $table) {
             $this->assertSame('/custom_api/backend/dc/'.$table.'/42', $generator->generate('contao_api_'.$table.'_patch', ['id' => 42]));
             $this->assertSame('/custom_api/backend/dc/'.$table, $generator->generate('contao_api_'.$table.'_get_collection'));
-            $this->assertSame('backend', $routes->get('contao_api_'.$table.'_patch')->getDefault('_scope'));
+            $this->assertSame('backend_api', $routes->get('contao_api_'.$table.'_patch')->getDefault('_scope'));
             $this->assertSame('api_platform.symfony.main_controller', $routes->get('contao_api_'.$table.'_patch')->getDefault('_controller'));
         }
     }
@@ -207,7 +207,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(DataContainerStateProvider::class, $resource->getProvider());
         $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
-        $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
+        $this->assertSame(['_scope' => 'backend_api'], $resource->getDefaults());
         $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedTable), $resource->getExtraProperties()['contao']['schema_path']);
@@ -247,7 +247,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame(DataContainerRecord::class, $operation->getClass());
         $this->assertSame($expectedShortName, $operation->getShortName());
         $this->assertSame($expectedUriTemplate, $operation->getUriTemplate());
-        $this->assertSame(['_scope' => 'backend'], $operation->getDefaults());
+        $this->assertSame(['_scope' => 'backend_api'], $operation->getDefaults());
         $this->assertSame("is_granted('ROLE_USER')", $operation->getSecurity());
         $this->assertNull($operation->getOpenapi());
     }

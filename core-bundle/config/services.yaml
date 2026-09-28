@@ -925,6 +925,9 @@ services:
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
 
+    contao.routing.backend_api_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\BackendApiMatcher
+
     contao.routing.content.article_resolver:
         class: Contao\CoreBundle\Routing\Content\ArticleResolver
         arguments:
@@ -1107,6 +1110,7 @@ services:
         public: true
         arguments:
             - '@contao.routing.backend_matcher'
+            - '@contao.routing.backend_api_matcher'
             - '@contao.routing.frontend_matcher'
             - '@request_stack'
 
@@ -1128,6 +1132,9 @@ services:
             - '@contao.routing.page_finder'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+
+    contao.security.access_token_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessTokenHandler
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
