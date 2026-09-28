@@ -52,6 +52,8 @@ framework:
             contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_high
+            'Contao\CoreBundle\Webhook\Message\ConsumeWebhookMessage': contao_prio_high
+            'Contao\CoreBundle\Webhook\Message\DeliverWebhookMessage': contao_prio_high
 
 # Contao configuration
 contao:

@@ -176,6 +176,21 @@
       <trans-unit id="MOD.theme_export">
         <source>Theme export</source>
       </trans-unit>
+      <trans-unit id="MOD.webhooks">
+        <source>Webhooks</source>
+      </trans-unit>
+      <trans-unit id="MOD.webhook_ingoing.0">
+        <source>Ingoing</source>
+      </trans-unit>
+      <trans-unit id="MOD.webhook_ingoing.1">
+        <source>Manage ingoing webhooks</source>
+      </trans-unit>
+      <trans-unit id="MOD.webhook_outgoing.0">
+        <source>Outgoing</source>
+      </trans-unit>
+      <trans-unit id="MOD.webhook_outgoing.1">
+        <source>Manage outgoing webhooks</source>
+      </trans-unit>
       <trans-unit id="FMD.navigationMenu">
         <source>Navigation</source>
       </trans-unit>

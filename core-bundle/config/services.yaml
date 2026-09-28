@@ -483,6 +483,12 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao.http_client.webhook:
+        class: Symfony\Component\HttpClient\NoPrivateNetworkHttpClient
+        arguments:
+            - '@http_client'
+            - null
+
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
@@ -1638,6 +1644,62 @@ services:
             - '@security.token_storage'
             - '@contao.repository.webauthn_user_entity'
 
+    contao.webhook.consume_handler:
+        class: Contao\CoreBundle\Webhook\MessageHandler\ConsumeWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.receiver_registry'
+
+    contao.webhook.deliver_handler:
+        class: Contao\CoreBundle\Webhook\MessageHandler\DeliverWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.secret_encryption'
+            - '@contao.http_client.webhook'
+            - '@?monolog.logger.contao.webhook'
+            - '%contao.webhook.connect_timeout%'
+            - '%contao.webhook.total_timeout%'
+            - '%contao.webhook.max_redirects%'
+
+    contao.webhook.dispatcher:
+        class: Contao\CoreBundle\Webhook\WebhookDispatcher
+        arguments:
+            - '@contao.webhook.event_registry'
+            - '@contao.webhook.repository'
+            - '@messenger.bus.default'
+
+    contao.webhook.event_registry:
+        class: Contao\CoreBundle\Webhook\WebhookEventRegistry
+
+    contao.webhook.rate_limiter_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            - { id: contao.webhook.incoming, policy: fixed_window, limit: '%contao.webhook.rate_limit%', interval: 1 minute }
+            - '@contao.webhook.rate_limiter_storage'
+            - '@?lock_factory'
+
+    contao.webhook.rate_limiter_storage:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments:
+            - '@cache.rate_limiter'
+
+    contao.webhook.receiver_registry:
+        class: Contao\CoreBundle\Webhook\WebhookReceiverRegistry
+        arguments:
+            - []
+            - !service_locator { }
+
+    contao.webhook.repository:
+        class: Contao\CoreBundle\Webhook\WebhookRepository
+        arguments:
+            - '@database_connection'
+            - '@doctrine.orm.default_entity_manager'
+
+    contao.webhook.secret_encryption:
+        class: Contao\CoreBundle\Webhook\SecretEncryption
+        arguments:
+            - '%kernel.secret%'
+
     contao.widget.date_value_formatter:
         class: Contao\CoreBundle\Widget\DateValueFormatter
         arguments:
@@ -1689,4 +1751,5 @@ services:
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
+    Contao\CoreBundle\Webhook\WebhookDispatcher: '@contao.webhook.dispatcher'
     Contao\CoreBundle\Widget\DateValueFormatter: '@contao.widget.date_value_formatter'

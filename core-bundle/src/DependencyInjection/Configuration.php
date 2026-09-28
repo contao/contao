@@ -125,6 +125,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
                 ->append($this->addPaginationNode())
+                ->append($this->addWebhookNode())
                 ->scalarNode('auto_refresh_template_hierarchy')
                     ->info('Automatically refreshes the template hierarchy on every request.')
                     ->defaultNull()
@@ -1053,6 +1054,25 @@ class Configuration implements ConfigurationInterface
                     ->min(0)
                     ->defaultValue(7)
                 ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addWebhookNode(): ArrayNodeDefinition
+    {
+        return new TreeBuilder('webhooks')
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->integerNode('request_body_limit')->min(1)->defaultValue(1048576)->end()
+                ->integerNode('rate_limit')->min(1)->defaultValue(60)->end()
+                ->integerNode('connect_timeout')->min(1)->defaultValue(10)->end()
+                ->integerNode('total_timeout')->min(1)->defaultValue(15)->end()
+                ->integerNode('max_redirects')->min(0)->defaultValue(0)->end()
+                ->booleanNode('allow_private_networks')->defaultFalse()->end()
             ->end()
         ;
     }

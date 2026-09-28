@@ -34,6 +34,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\WebhookRegistryPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
@@ -64,6 +65,7 @@ class ContaoCoreBundle extends Bundle
         new Request()->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
     }
 
+    #[\Override]
     public function getContainerExtension(): ContaoCoreExtension
     {
         return new ContaoCoreExtension();
@@ -92,6 +94,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
+        $container->addCompilerPass(new WebhookRegistryPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterPagesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 
@@ -147,6 +150,7 @@ class ContaoCoreBundle extends Bundle
         return $version;
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);

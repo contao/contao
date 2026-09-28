@@ -8,6 +8,7 @@ contao:
 # Monolog configuration
 monolog:
     channels:
+        - contao.webhook
         - deprecation
     handlers:
         contao:

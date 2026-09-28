@@ -36,6 +36,8 @@ use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookEventProvider;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -154,6 +156,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
         $container->setParameter('contao.registration.expiration', $config['registration']['expiration']);
+        $container->setParameter('contao.webhook.request_body_limit', $config['webhooks']['request_body_limit']);
+        $container->setParameter('contao.webhook.rate_limit', $config['webhooks']['rate_limit']);
+        $container->setParameter('contao.webhook.connect_timeout', $config['webhooks']['connect_timeout']);
+        $container->setParameter('contao.webhook.total_timeout', $config['webhooks']['total_timeout']);
+        $container->setParameter('contao.webhook.max_redirects', $config['webhooks']['max_redirects']);
+
+        if ($config['webhooks']['allow_private_networks']) {
+            $container->removeDefinition('contao.http_client.webhook');
+            $container->setAlias('contao.http_client.webhook', 'http_client');
+        }
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
@@ -187,6 +199,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->registerForAutoconfiguration(ContentUrlResolverInterface::class)
             ->addTag('contao.content_url_resolver')
         ;
+
+        $container->registerAttributeForAutoconfiguration(
+            AsWebhookReceiver::class,
+            static function (ChildDefinition $definition, AsWebhookReceiver $attribute, \Reflector $reflector): void {
+                if (!$reflector instanceof \ReflectionClass && !$reflector instanceof \ReflectionMethod) {
+                    throw new LogicException('The AsWebhookReceiver attribute can only be used on classes or methods.');
+                }
+
+                $definition->addTag('contao.webhook_receiver', ['name' => $attribute->name, 'parser' => $attribute->parser]);
+            },
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsWebhookEventProvider::class,
+            static function (ChildDefinition $definition): void {
+                $definition->addTag('contao.webhook_event_provider');
+            },
+        );
 
         $container->registerAttributeForAutoconfiguration(
             AsContentElement::class,
