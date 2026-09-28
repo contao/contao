@@ -218,16 +218,14 @@ class MetaWizard extends Widget
 			++$count;
 		}
 
-		$user = BackendUser::getInstance();
-
 		// Sort the items by language name with the user language on top (see #3818)
-		uksort($items, static function ($a, $b) use ($user, $languages) {
-			if ($user->language === $a)
+		uksort($items, static function ($a, $b) use ($languages) {
+			if ($GLOBALS['TL_LANGUAGE'] === $a)
 			{
 				return -1;
 			}
 
-			if ($user->language === $b)
+			if ($GLOBALS['TL_LANGUAGE'] === $b)
 			{
 				return 1;
 			}

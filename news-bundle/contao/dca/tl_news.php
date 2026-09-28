@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
+			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'filter'                  => true,
@@ -503,7 +503,7 @@ class tl_news extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if (BackendUser::getInstance()->isAdmin)
+		if (System::getContainer()->get('security.helper')->isGranted('ROLE_ADMIN'))
 		{
 			return array('default', 'internal', 'article', 'external');
 		}

@@ -1294,11 +1294,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 		}
 
-		/** @var class-string<FileUpload> $class */
-		$class = BackendUser::getInstance()->uploader;
+		$user = System::getContainer()->get('security.helper')->getUser();
 
 		// See #4086
-		if (!class_exists($class))
+		/** @var class-string<FileUpload> $class */
+		if (!$user instanceof BackendUser || !class_exists($class = $user->uploader))
 		{
 			$class = DropZone::class;
 		}
@@ -2851,7 +2851,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$files = array_values($files);
 		}
 
-		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
 		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
@@ -2988,7 +2987,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
-					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
+					if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $currentFolder))
 					{
 						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
@@ -3290,9 +3289,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not allow file operations on root folders
 		if (\in_array(Input::get('act'), array('edit', 'paste', 'delete')))
 		{
-			$user = BackendUser::getInstance();
-
-			if (!$user->isAdmin && \in_array($strFile, $user->filemounts))
+			if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strFile))
 			{
 				throw new AccessDeniedException('Attempt to edit, copy, move or delete the root folder "' . $strFile . '".');
 			}

@@ -169,9 +169,9 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
+			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
-			'backendSearch' 		  => false,
+			'backendSearch'           => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -667,13 +667,14 @@ class tl_calendar_events extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if (BackendUser::getInstance()->isAdmin)
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return array('default', 'internal', 'article', 'external');
 		}
 
 		$arrOptions = array('default');
-		$security = System::getContainer()->get('security.helper');
 
 		// Add the "internal" option
 		if (

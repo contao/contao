@@ -106,10 +106,10 @@ class ImageSize extends Widget
 			$varInput[1] = parent::validator($varInput[1]);
 		}
 
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 		$imageSizes = System::getContainer()->get('contao.image.sizes');
 
-		$this->arrAvailableOptions = $user->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($user);
+		$this->arrAvailableOptions = $security->isGranted('ROLE_ADMIN') ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($user);
 
 		if (!$this->isValidOption($varInput[2]))
 		{

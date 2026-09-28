@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
@@ -97,12 +96,8 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->newsletters))
-		{
-			return array();
-		}
+		$security = System::getContainer()->get('security.helper');
+		$isAdmin = $security->isGranted('ROLE_ADMIN');
 
 		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
 
@@ -120,7 +115,7 @@ class tl_module_newsletter extends Backend
 
 		while ($objChannels->next())
 		{
-			if ($security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
+			if ($isAdmin || $security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
 			{
 				$arrChannels[$objChannels->id] = $objChannels->title;
 			}
