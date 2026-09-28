@@ -14,30 +14,30 @@ export default class extends Controller {
     }
 
     disconnect() {
-        // Fall back to element ID to remove the TinyMCE instance, as the async
-        // editorId may still be null before TinyMCE is initialized (see #10051)
+        // Fall back to element ID to remove the HugeRTE instance, as the async
+        // editorId may still be null before HugeRTE is initialized (see #10051)
         const id = this.#editorId ?? this.element.id;
-        tinymce?.get(id)?.remove();
+        hugerte?.get(id)?.remove();
     }
 
     beforeCache() {
-        // Destroy TinyMCE before Turbo caches the page. It will be recreated
+        // Destroy HugeRTE before Turbo caches the page. It will be recreated
         // when the connect() call happens on the restored page.
         this.disconnect();
 
         // Remove the controller attribute. They will be re-added in the init
-        // script of the be_tinyMCE.html5 template.
+        // script of the be_tinyMCE.html.twig template.
         this.element.removeAttribute('data-controller');
     }
 
     leave(event) {
-        const editor = tinymce?.get(this.#editorId);
+        const editor = hugerte?.get(this.#editorId);
 
         if (!editor || !Object.hasOwn(editor.plugins, 'autosave') || editor.isNotDirty) {
             return;
         }
 
-        // Trigger a beforeunload event like when navigating away to capture the TinyMCE autosave message
+        // Trigger a beforeunload event like when navigating away to capture the HugeRTE autosave message
         const delegate = document.createEvent('BeforeUnloadEvent');
         delegate.initEvent('beforeunload', false, true);
 
@@ -47,10 +47,10 @@ export default class extends Controller {
     }
 
     #doConnect() {
-        if (!this.element.tinymceConfig) {
+        if (!this.element.hugerteConfig) {
             if (window.console) {
                 console.error(
-                    'No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".',
+                    'No HugeRTE config was attached to the DOM element, expected an expando property called "hugerteConfig".',
                     this.element,
                 );
             }
@@ -58,10 +58,10 @@ export default class extends Controller {
             return;
         }
 
-        const config = this.element.tinymceConfig;
+        const config = this.element.hugerteConfig;
         config.target = this.element;
 
-        tinymce?.init(config).then((editors) => {
+        hugerte?.init(config).then((editors) => {
             const editor = editors[0] ?? null;
             this.#editorId = editor?.id;
 
