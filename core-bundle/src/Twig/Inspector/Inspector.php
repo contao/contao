@@ -78,6 +78,7 @@ class Inspector
             $data['uses'],
             $error,
             $data['deprecations'],
+            $data['references'],
         );
     }
 
@@ -205,6 +206,7 @@ class Inspector
             'calls' => [],
             'parent' => null,
             'uses' => [],
+            'references' => [],
         ];
 
         if (null === ($path = $this->getPathByTemplateName($templateName))) {
