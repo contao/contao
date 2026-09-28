@@ -394,12 +394,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$for = preg_quote($for, null);
 				}
 
-				$strField = $session['search'][$this->strTable]['field'] ?? 'name';
-
-				if ('uuid' === $strField || !\in_array($strField, $this->getSearchFields(), true))
-				{
-					$strField = 'name';
-				}
+				// Fallback to the name field on stale sessions as fields are configurable
+				$strField = ($session['search'][$this->strTable]['field'] ?? null) ?: 'name';
 
 				// Regex search serialized meta field
 				if (str_contains($strField, 'meta.'))
