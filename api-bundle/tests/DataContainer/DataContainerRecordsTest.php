@@ -443,7 +443,7 @@ final class DataContainerRecordsTest extends ContaoTestCase
                     $this->assertSame(DC_Table::class, $driver);
                     $this->assertSame(['tl_content'], $arguments);
                     $this->assertSame('backend', $this->requestStack->getCurrentRequest()->attributes->get('_scope'));
-                    $this->assertSame(true, $this->requestStack->getCurrentRequest()->attributes->get('_stateless'));
+                    $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->get('_stateless'));
 
                     return $dc;
                 },

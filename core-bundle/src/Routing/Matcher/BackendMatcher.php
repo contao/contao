@@ -19,6 +19,7 @@ class BackendMatcher implements RequestMatcherInterface
 {
     public function matches(Request $request): bool
     {
-        return 'backend' === $request->attributes->get('_scope');
+        return 'backend' === $request->attributes->get('_scope')
+            && !$request->attributes->get('_stateless');
     }
 }
