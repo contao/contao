@@ -160,3 +160,8 @@ Use the `contao--toggle-receiver` and `contao--toggle-sender` Stimulus controlle
 `Theme.setupProfileToggle`, and `Theme.setupSplitButtonToggle`.
 
 All remaining `Theme.*` methods have been removed.
+
+### TinyMCE
+
+TinyMCE has been replaced by [HugeRTE](https://hugerte.org/), either update your custom `be_tinyMCE.*` templates
+accordingly or require the TinyMCE contao component yourself.
