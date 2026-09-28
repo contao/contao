@@ -33,7 +33,7 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return list<WebauthnCredential>
+     * @return list<PersonalAccessToken>
      */
     public function getAllForUser(int $userId): array
     {
@@ -60,12 +60,6 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-    }
-
-    public function persist(PersonalAccessToken $personalAccessToken): void
-    {
-        $this->getEntityManager()->persist($personalAccessToken);
-        $this->getEntityManager()->flush();
     }
 
     public function remove(PersonalAccessToken $personalAccessToken): void

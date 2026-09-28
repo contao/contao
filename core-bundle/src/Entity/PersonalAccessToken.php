@@ -15,13 +15,10 @@ namespace Contao\CoreBundle\Entity;
 use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
@@ -32,8 +29,6 @@ class PersonalAccessToken
 {
     #[Id]
     #[Column(type: UuidType::NAME, unique: true)]
-    #[GeneratedValue(strategy: 'CUSTOM')]
-    #[CustomIdGenerator(UuidGenerator::class)]
     private readonly Uuid $id;
 
     #[Column(type: Types::INTEGER, options: ['unsigned' => true])]
@@ -56,23 +51,22 @@ class PersonalAccessToken
 
     public function __construct(int $userId, string $name, string $secret, \DateTimeInterface|null $expiresAt = null)
     {
+        $this->id = Uuid::v7();
         $this->userId = $userId;
         $this->createdAt = new \DateTimeImmutable();
         $this->name = $name;
         $this->secret = $secret;
+
+        if ($expiresAt && !$expiresAt instanceof \DateTimeImmutable) {
+            $expiresAt = \DateTimeImmutable::createFromInterface($expiresAt);
+        }
+
         $this->expiresAt = $expiresAt;
     }
 
     public function getId(): Uuid
     {
         return $this->id;
-    }
-
-    public function setId(Uuid $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getCreated(): \DateTimeInterface

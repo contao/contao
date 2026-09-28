@@ -14,13 +14,14 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Entity\PersonalAccessToken;
+use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\StringUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class AccessTokenManager
 {
-    private const TOKEN_PREFIX = 'pat';
+    private const string TOKEN_PREFIX = 'pat';
 
     public function __construct(
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
@@ -74,6 +75,7 @@ class AccessTokenManager
             return null;
         }
 
+        /** @var PersonalAccessTokenRepository $personalAccessTokenRepository */
         $personalAccessTokenRepository = $this->entityManager->getRepository(PersonalAccessToken::class);
 
         if (!$personalAccessToken = $personalAccessTokenRepository->findOneValidById($parsedToken['id'])) {
