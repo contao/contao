@@ -370,10 +370,10 @@ class RegisterFragmentsPassTest extends TestCase
     }
 
     #[DataProvider('provideTemplateNames')]
-    public function testSetsTemplatesInTemplatesOptionsListener(string|null $template, array $expectedCustomTemplates): void
+    public function testSetsTemplatesInTemplatesOptionsListener(string|false|null $template, array $expectedCustomTemplates): void
     {
         $contentController = new Definition('App\Controller\TextController');
-        $contentController->addTag('contao.content_element', array_filter(['template' => $template]));
+        $contentController->addTag('contao.content_element', null === $template ? [] : ['template' => $template]);
 
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
@@ -404,6 +404,11 @@ class RegisterFragmentsPassTest extends TestCase
         yield 'legacy template, alternative name' => [
             'ce_foo',
             ['text' => 'ce_foo'],
+        ];
+
+        yield 'no template' => [
+            false,
+            ['text' => false],
         ];
 
         yield 'template inferred from type' => [
