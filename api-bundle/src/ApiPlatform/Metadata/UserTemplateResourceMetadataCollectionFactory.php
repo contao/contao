@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operations;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
@@ -22,6 +25,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
+use Contao\ApiBundle\Dto\UserTemplateUpdate;
 use Contao\ApiBundle\Resource\UserTemplate;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationDescriptionInterface;
 
@@ -42,11 +46,11 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
 
         $operations = [
             new Get(
-                '/user_template',
+                '/user_templates',
                 description: <<<'MARKDOWN'
                     Discover available templates. The response contains a "tree" with the template hierarchy.
                     Use a template identifier from this tree to read its source and available operations via
-                    GET /user_template/{identifier}. Identifiers do not include the file extension.
+                    GET /user_templates/{name}. Names do not include the file extension.
                     Pass the optional "theme" query parameter to select a theme slug; omit it for global user
                     templates. Use the same theme context when reading or modifying a template. No request body
                     is required.
@@ -54,8 +58,8 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                 name: 'contao_api_user_template_discover',
             ),
             new Get(
-                '/user_template/{identifier}',
-                requirements: ['identifier' => '.+'],
+                '/user_templates/{name}',
+                requirements: ['name' => '.+'],
                 description: <<<'MARKDOWN'
                     Read a template and its inheritance chain. Supply its identifier without the file extension,
                     for example content_element/code. Pass the optional "theme" query parameter to select a theme
@@ -64,50 +68,25 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                     The response contains "identifier", "templates", "operations" and "can_edit". The templates
                     array lists source code and template information from the highest-priority override to the
                     original template. The operations array lists the operation names available for this identifier
-                    in the selected theme context. Invoke one with POST /user_template/{identifier}/{operation},
-                    following that operation's parameter and confirmation instructions. Read the current code
-                    before saving: save replaces the complete contents. If can_edit is false, create a user override
-                    first when the "create" operation is available.
+                    in the selected theme context. Invoke one using the endpoint documented for that operation. Read
+                    the current code before saving: save replaces the complete contents. If can_edit is false, create
+                    a user override first when the "create" operation is available.
                     MARKDOWN,
                 name: 'contao_api_user_template_read',
             ),
         ];
 
         foreach ($this->templateStudioOperations as $operation) {
-            $name = $operation->getName();
-            $description = $operation instanceof OperationDescriptionInterface ? $operation->getDescription() : 'Execute the "'.$name.'" template operation.';
-            $description .= <<<'MARKDOWN'
-                Send a JSON object with the operation parameters nested under "parameters", for example {"parameters":
-                {"code": "..."}} for save. For operations without parameters, send {}. Set Content-Type:
-                application/ld+json when using JSON-LD; Accept alone does not specify the request body format.
-
-                The URL identifier is the template identifier without its file extension, for example
-                content_element/code/compact. An optional top-level "theme" string selects the theme slug; omit it or
-                use null for the global user templates. Variant creation and renaming require the global context.
-                Responses may describe an intermediary step rather than a completed change; inspect the returned fields
-                before assuming the operation has completed.
-                MARKDOWN;
-
-            $operations[] = new Post(
-                uriTemplate: '/user_template/{identifier}/'.rawurlencode($name),
-                requirements: ['identifier' => '.+'],
-                description: $description,
-                input: UserTemplateOperation::class,
-                read: false,
-                name: 'contao_api_user_template_operation_'.$name,
-                extraProperties: ['template_studio_operation' => $name],
-            );
+            $operations[] = $this->createOperation($operation);
         }
 
         foreach ($operations as $name => $operation) {
-            if ($operation instanceof Get) {
-                $operation = $operation->withParameters([
-                    'theme' => new QueryParameter(
-                        schema: ['type' => 'string'],
-                        description: 'Optional theme slug. Omit for global user templates; use the same context for subsequent operations.',
-                    ),
-                ]);
-            }
+            $operation = $operation->withParameters([
+                'theme' => new QueryParameter(
+                    schema: ['type' => 'string'],
+                    description: 'Optional theme slug. Omit for global user templates; use the same context for subsequent operations.',
+                ),
+            ]);
 
             $operations[$name] = $operation
                 ->withClass(UserTemplate::class)
@@ -128,5 +107,61 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                 ->withSecurity("is_granted('ROLE_ADMIN')")
                 ->withOperations(new Operations($operations)),
         ]);
+    }
+
+    private function createOperation(object $operation): HttpOperation
+    {
+        $name = $operation->getName();
+        $description = $operation instanceof OperationDescriptionInterface ? $operation->getDescription() : 'Execute the "'.$name.'" template operation.';
+
+        if ('delete' === $name) {
+            $description .= <<<'MARKDOWN'
+                When using the API, deletion is immediate: no confirmation parameter or request body is required. Pass
+                the optional "theme" query parameter to delete a template in a theme.
+                MARKDOWN;
+
+            return new Delete(
+                uriTemplate: '/user_templates/{name}',
+                requirements: ['name' => '.+'],
+                description: $description,
+                input: false,
+                read: false,
+                name: 'contao_api_user_template_operation_delete',
+                extraProperties: ['template_studio_operation' => $name],
+            );
+        }
+
+        if ('save' === $name) {
+            $description .= <<<'MARKDOWN'
+                Send the complete template code as {"code": "..."}. Pass the optional "theme" query parameter for a
+                theme template.
+                MARKDOWN;
+
+            return new Patch(
+                uriTemplate: '/user_templates/{name}',
+                requirements: ['name' => '.+'],
+                description: $description,
+                input: UserTemplateUpdate::class,
+                read: false,
+                name: 'contao_api_user_template_operation_save',
+                extraProperties: ['template_studio_operation' => $name],
+            );
+        }
+
+        $description .= <<<'MARKDOWN'
+            Send the template name in "name" and any arguments in "parameters". Pass the optional "theme" query
+            parameter for a theme template. Template names do not include the file extension.
+            MARKDOWN;
+
+        $arguments = [
+            'uriTemplate' => '/user_template_operations/'.rawurlencode($name),
+            'description' => $description,
+            'input' => UserTemplateOperation::class,
+            'read' => false,
+            'name' => 'contao_api_user_template_operation_'.$name,
+            'extraProperties' => ['template_studio_operation' => $name],
+        ];
+
+        return new Post(...$arguments);
     }
 }

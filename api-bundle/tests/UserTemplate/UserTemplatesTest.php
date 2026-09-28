@@ -49,14 +49,15 @@ class UserTemplatesTest extends TestCase
     #[DataProvider('studioEndpoints')]
     public function testReadsThroughTheStudioEndpoints(string $route, array $variables, string|null $theme): void
     {
-        $parent = Request::create('/contao/_api/user_template', parameters: null === $theme ? [] : ['theme' => $theme]);
+        $parent = Request::create('/contao/_api/user_templates', parameters: null === $theme ? [] : ['theme' => $theme]);
         $parent->setLocale('de');
+        $studioVariables = isset($variables['name']) ? ['identifier' => $variables['name']] : [];
 
         $router = $this->createMock(UrlGeneratorInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with($route, $variables)
+            ->with($route, $studioVariables)
             ->willReturn('/studio')
         ;
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -90,8 +91,8 @@ class UserTemplatesTest extends TestCase
     {
         yield ['_contao_template_studio_tree.stream', [], null];
         yield ['_contao_template_studio_tree.stream', [], 'demo'];
-        yield ['_contao_template_studio_editor_tab.stream', ['identifier' => 'content_element/text'], null];
-        yield ['_contao_template_studio_editor_tab.stream', ['identifier' => 'content_element/text'], 'demo'];
+        yield ['_contao_template_studio_editor_tab.stream', ['name' => 'content_element/text'], null];
+        yield ['_contao_template_studio_editor_tab.stream', ['name' => 'content_element/text'], 'demo'];
     }
 
     public function testRequiresARequestContext(): void

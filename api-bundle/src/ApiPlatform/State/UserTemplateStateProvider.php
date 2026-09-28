@@ -31,8 +31,8 @@ final class UserTemplateStateProvider implements ProviderInterface
         $request = $context['request'];
         $themeSlug = $request->query->get('theme');
 
-        return isset($uriVariables['identifier'])
-            ? $this->client->read($uriVariables['identifier'], $themeSlug)
+        return isset($uriVariables['name'])
+            ? $this->client->read($uriVariables['name'], $themeSlug)
             : $this->client->discover($themeSlug);
     }
 }

@@ -17,10 +17,10 @@ use ApiPlatform\Metadata\ApiProperty;
 final class UserTemplateOperation
 {
     public function __construct(
+        #[ApiProperty(description: 'Template name without the file extension, for example content_element/code.')]
+        public string $name,
         #[ApiProperty(description: 'Operation-specific parameters. See the operation description for required fields and confirmation steps.', openapiContext: ['type' => 'object', 'additionalProperties' => true])]
         public array $parameters = [],
-        #[ApiProperty(description: 'Optional theme slug. Omit or use null for global user templates. Variant creation and renaming do not support a theme context.')]
-        public string|null $theme = null,
     ) {
     }
 }

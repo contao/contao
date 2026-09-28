@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\UserTemplate;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
+use Contao\ApiBundle\Dto\UserTemplateUpdate;
 use Contao\ApiBundle\UserTemplate\TemplateStudioClient;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +33,7 @@ class TemplateStudioOperationsTest extends TestCase
 {
     public function testProcessorDispatchesToTheStudioRoute(): void
     {
-        $parent = Request::create('/contao/_api/user_template/content_element%2Ftest/save');
+        $parent = Request::create('/contao/_api/user_templates/content_element%2Ftest', parameters: ['theme' => 'demo']);
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -59,11 +62,53 @@ class TemplateStudioOperationsTest extends TestCase
             ->willReturn('/contao/template-studio/resource/content_element/test?operation=save')
         ;
         $processor = new UserTemplateStateProcessor(new TemplateStudioClient($kernel, $router, new RequestStack([$parent])));
-        $operation = new Post(extraProperties: ['template_studio_operation' => 'save']);
+        $operation = new Patch(extraProperties: ['template_studio_operation' => 'save']);
         $response = $processor->process(
-            new UserTemplateOperation(['code' => ''], 'demo'),
+            new UserTemplateUpdate(''),
             $operation,
-            ['identifier' => 'content_element/test'],
+            ['name' => 'content_element/test'],
+            ['request' => $parent],
+        );
+
+        $this->assertSame(['identifier' => 'content_element/test'], json_decode($response->getContent(), true));
+    }
+
+    public function testProcessorUsesTheBodyNameForOtherOperations(): void
+    {
+        $client = $this->createMock(TemplateStudioClient::class);
+        $client
+            ->expects($this->once())
+            ->method('call')
+            ->with('rename', 'content_element/test', 'demo', ['name' => 'renamed'])
+            ->willReturn(new JsonResponse(['identifier' => 'content_element/renamed']))
+        ;
+        $processor = new UserTemplateStateProcessor($client);
+        $request = Request::create('/contao/_api/user_template_operations/rename', parameters: ['theme' => 'demo']);
+        $response = $processor->process(
+            new UserTemplateOperation('content_element/test', ['name' => 'renamed']),
+            new Post(extraProperties: ['template_studio_operation' => 'rename']),
+            context: ['request' => $request],
+        );
+
+        $this->assertSame(['identifier' => 'content_element/renamed'], json_decode($response->getContent(), true));
+    }
+
+    public function testDeleteSkipsTheStudioConfirmationStep(): void
+    {
+        $client = $this->createMock(TemplateStudioClient::class);
+        $client
+            ->expects($this->once())
+            ->method('call')
+            ->with('delete', 'content_element/test', 'demo', ['confirm_delete' => true])
+            ->willReturn(new JsonResponse(['identifier' => 'content_element/test']))
+        ;
+        $processor = new UserTemplateStateProcessor($client);
+        $request = Request::create('/contao/_api/user_templates/content_element%2Ftest', parameters: ['theme' => 'demo']);
+        $response = $processor->process(
+            null,
+            new Delete(extraProperties: ['template_studio_operation' => 'delete']),
+            ['name' => 'content_element/test'],
+            ['request' => $request],
         );
 
         $this->assertSame(['identifier' => 'content_element/test'], json_decode($response->getContent(), true));
