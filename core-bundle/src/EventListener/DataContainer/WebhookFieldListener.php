@@ -108,7 +108,8 @@ final class WebhookFieldListener
     }
 
     #[AsCallback(table: 'tl_webhook_ingoing', target: 'fields.secret.load')]
-    public function loadIncomingSecret(mixed $value): string
+    #[AsCallback(table: 'tl_webhook_outgoing', target: 'fields.secret.load')]
+    public function loadSecret(mixed $value): string
     {
         return '' !== $value ? self::SECRET_PLACEHOLDER : '';
     }

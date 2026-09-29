@@ -61,6 +61,7 @@ $GLOBALS['TL_DCA']['tl_webhook_outgoing'] = array(
 			'sql' => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'secret' => array(
+			'inputType' => 'text',
 			'eval' => array('tl_class' => 'w50', 'hideInput' => true),
 			'sql' => array('type' => 'text', 'default' => ''),
 		),
