@@ -32,6 +32,8 @@ class TemplateSnapshotsTest extends TestCase
     protected function tearDown(): void
     {
         new Filesystem()->remove($this->directory);
+
+        parent::tearDown();
     }
 
     public function testRestoresWholeTreeAndKeepsSafetySnapshot(): void
