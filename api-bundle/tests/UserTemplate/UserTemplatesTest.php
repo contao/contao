@@ -111,4 +111,47 @@ class UserTemplatesTest extends TestCase
         $this->expectException(\LogicException::class);
         $client->discover(null);
     }
+
+    public function testDiscoversThemes(): void
+    {
+        $client = $this->createMock(TemplateStudioClient::class);
+        $client
+            ->expects($this->once())
+            ->method('themes')
+            ->willReturn(new JsonResponse(['themes' => ['demo' => 'Demo']]))
+        ;
+
+        $request = Request::create('/contao/api/user_template_themes');
+
+        $response = new UserTemplateStateProvider($client)->provide(
+            new Get(extraProperties: ['template_studio_action' => 'themes']),
+            context: ['request' => $request],
+        );
+
+        $this->assertSame(['themes' => ['demo' => 'Demo']], json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR));
+    }
+
+    public function testFiltersTemplateDiscoveryByIdentifier(): void
+    {
+        $client = $this->createMock(TemplateStudioClient::class);
+        $client
+            ->expects($this->once())
+            ->method('discover')
+            ->with('demo')
+            ->willReturn(new JsonResponse(['tree' => [
+                'content_element' => [
+                    'text' => [['identifier' => 'content_element/text']],
+                    'image' => [['identifier' => 'content_element/image']],
+                ],
+            ]]))
+        ;
+
+        $request = Request::create('/contao/api/user_templates', parameters: ['theme' => 'demo', 'query' => 'TEXT']);
+        $response = new UserTemplateStateProvider($client)->provide(new Get(), context: ['request' => $request]);
+
+        $this->assertSame(
+            ['content_element' => ['text' => [['identifier' => 'content_element/text']]]],
+            json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR)['tree'],
+        );
+    }
 }

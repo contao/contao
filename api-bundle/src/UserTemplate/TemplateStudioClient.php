@@ -41,6 +41,11 @@ class TemplateStudioClient
         );
     }
 
+    public function themes(): JsonResponse
+    {
+        return $this->request('GET', '_contao_template_studio_themes.stream');
+    }
+
     public function read(string $identifier, string|null $themeSlug): JsonResponse
     {
         return $this->request(
@@ -101,7 +106,7 @@ class TemplateStudioClient
         $response = $this->kernel->handle($request, HttpKernelInterface::SUB_REQUEST);
 
         if (!$response instanceof JsonResponse) {
-            throw new UnprocessableEntityHttpException($response->getContent());
+            throw new UnprocessableEntityHttpException(\sprintf('Template Studio returned a non-JSON response (HTTP %d).', $response->getStatusCode()));
         }
 
         if (JsonResponse::HTTP_OK !== $response->getStatusCode()) {
