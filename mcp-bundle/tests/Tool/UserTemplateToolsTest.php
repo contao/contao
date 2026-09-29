@@ -22,8 +22,8 @@ use Contao\McpBundle\Tool\UserTemplateTools;
 use Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer;
 use Contao\McpBundle\UserTemplate\UserTemplateValidator;
 use Mcp\Exception\ToolCallException;
-use Symfony\Bundle\SecurityBundle\Security;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +34,42 @@ use Twig\Loader\ArrayLoader;
 
 final class UserTemplateToolsTest extends TestCase
 {
+    public function testRequiresAdministratorForEveryTool(): void
+    {
+        $security = $this->createStub(Security::class);
+        $security->method('isGranted')->willReturn(false);
+
+        $tools = new UserTemplateTools(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(HttpKernelInterface::class),
+            new ApiRequestFactory($this->createStub(UrlGeneratorInterface::class)),
+            new RequestStack(),
+            new ApiResponseConverter(),
+            new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
+            new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
+            $security,
+        );
+
+        foreach ([
+            'listThemes' => [],
+            'discover' => [],
+            'read' => ['content_element/text'],
+            'validate' => ['content_element/text', '{{ value }}'],
+            'analyzeImpact' => ['content_element/text'],
+            'createOverride' => ['content_element/text'],
+            'save' => ['content_element/text', '{{ value }}'],
+            'deleteOverride' => ['content_element/text'],
+            'executeOperation' => ['create_variant', 'content_element/text'],
+        ] as $method => $arguments) {
+            try {
+                $tools->$method(...$arguments);
+                $this->fail($method.' should require an administrator.');
+            } catch (ToolCallException $exception) {
+                $this->assertSame('Template Studio tools require administrator privileges.', $exception->getMessage());
+            }
+        }
+    }
+
     public function testListsThemesThroughTheRegisteredApiOperation(): void
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
