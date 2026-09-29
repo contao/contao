@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     contao.oauth_bundle.authorization_server.authorization_server_factory:
         class: Contao\OAuthBundle\AuthorizationServer\AuthorizationServerFactory
         arguments:
