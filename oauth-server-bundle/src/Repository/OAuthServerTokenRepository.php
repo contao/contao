@@ -12,23 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\OAuthServerBundle\Repository;
 
-use Contao\OAuthServerBundle\Entity\OAuthToken;
+use Contao\OAuthServerBundle\Entity\OAuthServerToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @template-extends ServiceEntityRepository<OAuthToken>
+ * @template-extends ServiceEntityRepository<OAuthServerToken>
  *
  * @internal
  */
-class OAuthTokenRepository extends ServiceEntityRepository
+class OAuthServerTokenRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, OAuthToken::class);
+        parent::__construct($registry, OAuthServerToken::class);
     }
 
-    public function add(OAuthToken $token): void
+    public function add(OAuthServerToken $token): void
     {
         $this->getEntityManager()->persist($token);
         $this->getEntityManager()->flush();

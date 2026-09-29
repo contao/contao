@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\OAuthServerBundle\Cron;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
-use Contao\OAuthServerBundle\Repository\OAuthTokenRepository;
+use Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository;
 
 #[AsCronJob('daily')]
-class PurgeExpiredOAuthTokensCron
+class PurgeExpiredOAuthServerTokensCron
 {
-    public function __construct(private readonly OAuthTokenRepository $tokenRepository)
+    public function __construct(private readonly OAuthServerTokenRepository $tokenRepository)
     {
     }
 

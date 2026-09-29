@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\OAuthServerBundle\Entity;
 
-use Contao\OAuthServerBundle\Repository\OAuthTokenRepository;
+use Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -24,11 +24,11 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 /**
  * @internal
  */
-#[Table(name: 'tl_oauth_token')]
+#[Table(name: 'oauth_server_token')]
 #[UniqueConstraint(name: 'identifier', columns: ['identifier'])]
 #[Index(name: 'expires', columns: ['expires'])]
-#[Entity(repositoryClass: OAuthTokenRepository::class)]
-class OAuthToken
+#[Entity(repositoryClass: OAuthServerTokenRepository::class)]
+class OAuthServerToken
 {
     final public const string TYPE_ACCESS = 'access';
     final public const string TYPE_REFRESH = 'refresh';

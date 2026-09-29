@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\OAuthServerBundle\AuthorizationServer\Repository;
 
 use Contao\OAuthServerBundle\AuthorizationServer\Entity\AccessToken;
-use Contao\OAuthServerBundle\Entity\OAuthToken;
-use Contao\OAuthServerBundle\Repository\OAuthTokenRepository;
+use Contao\OAuthServerBundle\Entity\OAuthServerToken;
+use Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository;
 use Contao\OAuthServerBundle\ResourceContext;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -26,8 +26,8 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(
-        private readonly OAuthTokenRepository $tokenRepository,
-        private readonly ResourceContext $context,
+        private readonly OAuthServerTokenRepository $tokenRepository,
+        private readonly ResourceContext            $context,
     ) {
     }
 
@@ -49,8 +49,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity): void
     {
-        $this->tokenRepository->add(new OAuthToken(
-            OAuthToken::TYPE_ACCESS,
+        $this->tokenRepository->add(new OAuthServerToken(
+            OAuthServerToken::TYPE_ACCESS,
             $accessTokenEntity->getIdentifier(),
             $accessTokenEntity->getExpiryDateTime(),
             $accessTokenEntity->getClient()->getIdentifier(),
@@ -60,11 +60,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     public function revokeAccessToken(string $tokenId): void
     {
-        $this->tokenRepository->revoke(OAuthToken::TYPE_ACCESS, $tokenId);
+        $this->tokenRepository->revoke(OAuthServerToken::TYPE_ACCESS, $tokenId);
     }
 
     public function isAccessTokenRevoked(string $tokenId): bool
     {
-        return $this->tokenRepository->isRevoked(OAuthToken::TYPE_ACCESS, $tokenId);
+        return $this->tokenRepository->isRevoked(OAuthServerToken::TYPE_ACCESS, $tokenId);
     }
 }

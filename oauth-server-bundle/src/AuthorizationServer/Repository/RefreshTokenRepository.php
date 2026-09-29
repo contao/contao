@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\OAuthServerBundle\AuthorizationServer\Repository;
 
 use Contao\OAuthServerBundle\AuthorizationServer\Entity\RefreshToken;
-use Contao\OAuthServerBundle\Entity\OAuthToken;
-use Contao\OAuthServerBundle\Repository\OAuthTokenRepository;
+use Contao\OAuthServerBundle\Entity\OAuthServerToken;
+use Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
@@ -23,7 +23,7 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
  */
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    public function __construct(private readonly OAuthTokenRepository $tokenRepository)
+    public function __construct(private readonly OAuthServerTokenRepository $tokenRepository)
     {
     }
 
@@ -36,8 +36,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     {
         $accessToken = $refreshTokenEntity->getAccessToken();
 
-        $this->tokenRepository->add(new OAuthToken(
-            OAuthToken::TYPE_REFRESH,
+        $this->tokenRepository->add(new OAuthServerToken(
+            OAuthServerToken::TYPE_REFRESH,
             $refreshTokenEntity->getIdentifier(),
             $refreshTokenEntity->getExpiryDateTime(),
             $accessToken->getClient()->getIdentifier(),
@@ -47,11 +47,11 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
     public function revokeRefreshToken(string $tokenId): void
     {
-        $this->tokenRepository->revoke(OAuthToken::TYPE_REFRESH, $tokenId);
+        $this->tokenRepository->revoke(OAuthServerToken::TYPE_REFRESH, $tokenId);
     }
 
     public function isRefreshTokenRevoked(string $tokenId): bool
     {
-        return $this->tokenRepository->isRevoked(OAuthToken::TYPE_REFRESH, $tokenId);
+        return $this->tokenRepository->isRevoked(OAuthServerToken::TYPE_REFRESH, $tokenId);
     }
 }

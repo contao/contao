@@ -5,13 +5,13 @@ services:
     contao_oauth_server.authorization_server.access_token_repository:
         class: Contao\OAuthServerBundle\AuthorizationServer\Repository\AccessTokenRepository
         arguments:
-            - '@contao_oauth_server.repository.oauth_token'
+            - '@contao_oauth_server.repository.oauth_server_token'
             - '@contao_oauth_server.resource_context'
 
     contao_oauth_server.authorization_server.auth_code_repository:
         class: Contao\OAuthServerBundle\AuthorizationServer\Repository\AuthCodeRepository
         arguments:
-            - '@contao_oauth_server.repository.oauth_token'
+            - '@contao_oauth_server.repository.oauth_server_token'
 
     contao_oauth_server.authorization_server.client_repository:
         class: Contao\OAuthServerBundle\AuthorizationServer\Repository\ClientRepository
@@ -33,7 +33,7 @@ services:
     contao_oauth_server.authorization_server.refresh_token_repository:
         class: Contao\OAuthServerBundle\AuthorizationServer\Repository\RefreshTokenRepository
         arguments:
-            - '@contao_oauth_server.repository.oauth_token'
+            - '@contao_oauth_server.repository.oauth_server_token'
 
     contao_oauth_server.authorization_server.scope_repository:
         class: Contao\OAuthServerBundle\AuthorizationServer\Repository\ScopeRepository
@@ -80,10 +80,10 @@ services:
             - '@contao_oauth_server.http.psr_message_converter'
             - '@contao_oauth_server.resource_context'
 
-    contao_oauth_server.cron.purge_expired_oauth_tokens:
-        class: Contao\OAuthServerBundle\Cron\PurgeExpiredOAuthTokensCron
+    contao_oauth_server.cron.purge_expired_oauth_server_tokens:
+        class: Contao\OAuthServerBundle\Cron\PurgeExpiredOAuthServerTokensCron
         arguments:
-            - '@contao_oauth_server.repository.oauth_token'
+            - '@contao_oauth_server.repository.oauth_server_token'
 
     contao_oauth_server.http.psr_message_converter:
         class: Contao\OAuthServerBundle\Http\PsrMessageConverter
@@ -93,8 +93,8 @@ services:
         arguments:
             - '%kernel.secret%'
 
-    contao_oauth_server.repository.oauth_token:
-        class: Contao\OAuthServerBundle\Repository\OAuthTokenRepository
+    contao_oauth_server.repository.oauth_server_token:
+        class: Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository
         arguments:
             - '@doctrine'
 

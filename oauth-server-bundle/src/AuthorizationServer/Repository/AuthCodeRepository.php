@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\OAuthServerBundle\AuthorizationServer\Repository;
 
 use Contao\OAuthServerBundle\AuthorizationServer\Entity\AuthCode;
-use Contao\OAuthServerBundle\Entity\OAuthToken;
-use Contao\OAuthServerBundle\Repository\OAuthTokenRepository;
+use Contao\OAuthServerBundle\Entity\OAuthServerToken;
+use Contao\OAuthServerBundle\Repository\OAuthServerTokenRepository;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
@@ -23,7 +23,7 @@ use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
  */
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    public function __construct(private readonly OAuthTokenRepository $tokenRepository)
+    public function __construct(private readonly OAuthServerTokenRepository $tokenRepository)
     {
     }
 
@@ -34,8 +34,8 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity): void
     {
-        $this->tokenRepository->add(new OAuthToken(
-            OAuthToken::TYPE_CODE,
+        $this->tokenRepository->add(new OAuthServerToken(
+            OAuthServerToken::TYPE_CODE,
             $authCodeEntity->getIdentifier(),
             $authCodeEntity->getExpiryDateTime(),
             $authCodeEntity->getClient()->getIdentifier(),
@@ -45,11 +45,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
     public function revokeAuthCode(string $codeId): void
     {
-        $this->tokenRepository->revoke(OAuthToken::TYPE_CODE, $codeId);
+        $this->tokenRepository->revoke(OAuthServerToken::TYPE_CODE, $codeId);
     }
 
     public function isAuthCodeRevoked(string $codeId): bool
     {
-        return $this->tokenRepository->isRevoked(OAuthToken::TYPE_CODE, $codeId);
+        return $this->tokenRepository->isRevoked(OAuthServerToken::TYPE_CODE, $codeId);
     }
 }
