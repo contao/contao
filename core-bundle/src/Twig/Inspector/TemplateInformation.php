@@ -36,6 +36,7 @@ final class TemplateInformation
         private readonly array $uses = [],
         private readonly Error|null $error = null,
         private readonly array $deprecations = [],
+        private readonly array $references = [],
     ) {
     }
 
@@ -113,5 +114,13 @@ final class TemplateInformation
     public function getDeprecations(): array
     {
         return $this->deprecations;
+    }
+
+    /**
+     * @return list<array{type: string, name: string|null, line: int, dynamic: bool}>
+     */
+    public function getReferences(): array
+    {
+        return $this->references;
     }
 }

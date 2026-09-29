@@ -35,10 +35,11 @@ class ScopeMatcherTest extends TestCase
     }
 
     #[DataProvider('mainRequestProvider')]
-    public function testRecognizesTheContaoScopes(string|null $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend): void
+    public function testRecognizesTheContaoScopes(string|null $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend, bool $stateless = false): void
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);
+        $request->attributes->set('_stateless', $stateless);
 
         $event = new KernelEvent($this->createStub(KernelInterface::class), $request, $requestType);
 
@@ -46,6 +47,8 @@ class ScopeMatcherTest extends TestCase
         $this->assertSame($isMain && $isBackend, $this->matcher->isBackendMainRequest($event));
         $this->assertSame($isMain && $isFrontend, $this->matcher->isFrontendMainRequest($event));
         $this->assertSame($isBackend, $this->matcher->isBackendRequest($request));
+        $this->assertSame($isBackend && $stateless, $this->matcher->isBackendApiRequest($request));
+        $this->assertSame($isBackend && !$stateless, $this->matcher->isBackendUiRequest($request));
         $this->assertSame($isFrontend, $this->matcher->isFrontendRequest($request));
     }
 
@@ -84,6 +87,15 @@ class ScopeMatcherTest extends TestCase
         ];
 
         yield [
+            ContaoCoreBundle::SCOPE_BACKEND,
+            HttpKernelInterface::SUB_REQUEST,
+            false,
+            false,
+            true,
+            true,
+        ];
+
+        yield [
             ContaoCoreBundle::SCOPE_FRONTEND,
             HttpKernelInterface::SUB_REQUEST,
             false,
@@ -105,11 +117,14 @@ class ScopeMatcherTest extends TestCase
         $scopeMatcher = new ScopeMatcher(
             $this->createStub(RequestMatcherInterface::class),
             $this->createStub(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             new RequestStack(),
         );
 
         $this->assertFalse($scopeMatcher->isFrontendRequest());
         $this->assertFalse($scopeMatcher->isBackendRequest());
+        $this->assertFalse($scopeMatcher->isBackendApiRequest());
+        $this->assertFalse($scopeMatcher->isBackendUiRequest());
         $this->assertFalse($scopeMatcher->isContaoRequest());
     }
 }

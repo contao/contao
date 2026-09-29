@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-final class SaveOperation extends AbstractOperation
+final class SaveOperation extends AbstractOperation implements OperationDescriptionInterface
 {
     public function __construct(private readonly Inspector $inspector)
     {
@@ -75,5 +75,16 @@ final class SaveOperation extends AbstractOperation
         }
 
         return hash('xxh3', json_encode($state, JSON_THROW_ON_ERROR));
+    }
+
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Replace the complete contents of an existing user template in the selected theme context. Provide code as a
+            string (for example, {"code": "{% extends '@Contao/content_element/code.html.twig' %}"}). An empty string
+            empties the file; omitting code is an error. Read the template first if you want to preserve any existing
+            content. If no user template exists yet, use create first. The response contains identifier and full_reload,
+            indicating whether the template hierarchy information should be refreshed.
+            MARKDOWN;
     }
 }

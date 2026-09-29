@@ -129,7 +129,6 @@ class DcTableTest extends TestCase
         $config = $GLOBALS['TL_CONFIG'] ?? null;
 
         $request = Request::create('/contao?act=select');
-        $request->attributes->set('_contao_api', $api);
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack([$request]));
@@ -138,10 +137,11 @@ class DcTableTest extends TestCase
         $GLOBALS['TL_CONFIG']['maxResultsPerPage'] = 2;
         $GLOBALS['TL_DCA']['tl_test']['list']['sorting']['treeRecordLimit'] = $configuredLimit;
 
-        $dc = new class() extends DC_Table {
-            public function __construct()
+        $dc = new class($api) extends DC_Table {
+            public function __construct(bool $api)
             {
                 $this->strTable = 'tl_test';
+                $this->setApiMode($api);
             }
 
             public function renderNextRecord(): bool
@@ -184,7 +184,9 @@ class DcTableTest extends TestCase
         $dc = $this->createSortingDataContainer($sort);
         $GLOBALS['TL_DCA']['tl_test']['fields']['title']['flag'] = $flag;
 
-        $this->assertSame($expected, json_decode($dc->showAll(), true, flags: JSON_THROW_ON_ERROR));
+        $dc->showAll();
+
+        $this->assertSame($expected, new \ReflectionProperty($dc, 'orderBy')->getValue($dc));
     }
 
     public static function provideSortingChoices(): iterable
@@ -226,7 +228,9 @@ class DcTableTest extends TestCase
         $dc = $this->createSortingDataContainer('title DESC');
         $GLOBALS['TL_DCA']['tl_test']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
 
-        $this->assertSame(['title DESC', 'alias', 'id'], json_decode($dc->showAll(), true, flags: JSON_THROW_ON_ERROR));
+        $dc->showAll();
+
+        $this->assertSame(['title DESC', 'alias', 'id'], new \ReflectionProperty($dc, 'orderBy')->getValue($dc));
     }
 
     public function testApiPaginationDoesNotReadTheBackendSession(): void
@@ -239,7 +243,7 @@ class DcTableTest extends TestCase
 
     private function createSortingDataContainer(string|null $sort): DC_Table
     {
-        $request = new Request(attributes: ['_contao_api' => true]);
+        $request = new Request();
 
         $bag = new ArrayAttributeBag('_contao_be_attributes');
         $bag->setName('contao_backend');
@@ -271,6 +275,7 @@ class DcTableTest extends TestCase
             {
                 $this->strTable = 'tl_test';
                 $this->orderBy = ['callback DESC'];
+                $this->setApiMode();
             }
 
             protected function reviseTable(): void
@@ -284,17 +289,12 @@ class DcTableTest extends TestCase
 
             protected function listView(): string
             {
-                return json_encode($this->orderBy, JSON_THROW_ON_ERROR);
+                return '';
             }
 
             protected function parentView(): string
             {
-                return $this->listView();
-            }
-
-            protected function render(string $component, array $parameters): string
-            {
-                return $parameters['view'];
+                return '';
             }
         };
     }

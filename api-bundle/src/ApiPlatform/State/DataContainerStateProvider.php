@@ -18,8 +18,9 @@ use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
@@ -29,7 +30,7 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
 final class DataContainerStateProvider implements ProviderInterface
 {
     public function __construct(
-        private readonly DataContainerRecords $records,
+        private readonly TableDataContainerRecords $records,
         private readonly Pagination $pagination,
     ) {
     }
@@ -41,14 +42,16 @@ final class DataContainerStateProvider implements ProviderInterface
             return null;
         }
 
+        $dataContainerContext = DataContainerContext::fromOperation($operation, $uriVariables);
+
         if ($operation instanceof CollectionOperationInterface) {
-            return $this->provideCollection($table, $operation, $context);
+            return $this->provideCollection($table, $operation, $context, $dataContainerContext);
         }
 
         if ($operation instanceof HttpOperation && \in_array($operation->getMethod(), ['GET', 'PATCH', 'DELETE'], true)) {
             $id = $uriVariables['id'] ?? null;
 
-            return null === $id ? null : $this->records->find($table, $id);
+            return null === $id ? null : $this->records->find($table, $id, $dataContainerContext);
         }
 
         $data = $context['mcp_data'] ?? null;
@@ -63,7 +66,7 @@ final class DataContainerStateProvider implements ProviderInterface
         );
     }
 
-    private function provideCollection(string $table, Operation $operation, array $context): DataContainerPage
+    private function provideCollection(string $table, Operation $operation, array $context, DataContainerContext $dataContainerContext): DataContainerPage
     {
         $context['filters'] = ($context['filters'] ?? []) + (($context['request'] ?? null)?->query->all() ?? []);
         [$page, , $itemsPerPage] = $this->pagination->getPagination($operation, $context);
@@ -72,12 +75,7 @@ final class DataContainerStateProvider implements ProviderInterface
             throw new InvalidArgumentException('The itemsPerPage must be a positive integer.');
         }
 
-        $parent = [
-            'id' => $context['filters']['parent'] ?? ($context['request'] ?? null)?->query->get('parent'),
-            'table' => $context['filters']['ptable'] ?? ($context['request'] ?? null)?->query->get('ptable'),
-        ];
-
-        return $this->records->list($table, $page, array_filter($parent, static fn ($value) => null !== $value), $itemsPerPage, $this->getSort($context['filters']));
+        return $this->records->list($table, $page, $dataContainerContext, $itemsPerPage, $this->getSort($context['filters']));
     }
 
     /**

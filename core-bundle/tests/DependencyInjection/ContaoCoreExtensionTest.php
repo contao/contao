@@ -50,22 +50,16 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
-    public function testRegistersApiWidgetsWhenTheApiExtensionIsAvailable(): void
+    public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
     {
-        $apiExtension = $this->createStub(Extension::class);
-        $apiExtension
-            ->method('getAlias')
-            ->willReturn('contao_api')
-        ;
-
         $container = new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,
             'kernel.charset' => 'UTF-8',
             'kernel.project_dir' => $this->getTempDir(),
             'kernel.default_locale' => 'en',
+            'kernel.bundles' => ['ContaoApiBundle' => true],
         ]));
 
-        $container->registerExtension($apiExtension);
         new ContaoCoreExtension()->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
@@ -807,6 +801,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -816,6 +812,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

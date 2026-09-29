@@ -34,6 +34,10 @@
     padding: 1px 0;
     background: none;
     border: none;
+
+    img {
+        -webkit-user-drag: none;
+    }
 }
 
 .tl_listing .tl_left {
@@ -71,8 +75,7 @@
     white-space: nowrap;
 }
 
-.tl_listing .tl_left.tl_left_dragging .preview-image,
-.tl_listing .tl_left.tl_left_dragging a img {
+.tl_listing .tl_left.tl_left_dragging :is(.preview-image, .preview-important, a img) {
     display: none;
 }
 

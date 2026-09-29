@@ -1443,7 +1443,7 @@ abstract class Controller extends System
 				// Use the file name as title if none is given
 				if (empty($arrMeta['title']))
 				{
-					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
+					$arrMeta['title'] = $objFile->basename;
 				}
 
 				$arrEnclosures[] = array
@@ -1451,7 +1451,7 @@ abstract class Controller extends System
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,

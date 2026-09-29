@@ -38,6 +38,7 @@ parameters:
         - Contao\Database\Result
         - Contao\Model
         - Contao\Template
+        - Contao\DataContainer
 
     excludePaths:
         - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*

@@ -101,8 +101,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasUp = true;
 				$this->Template->upHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->upTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->upPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->upTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->upPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 				$this->Template->upLink = $GLOBALS['TL_LANG']['MSC']['up'];
 			}
 		}
@@ -139,8 +139,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasPrev = true;
 				$this->Template->prevHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->prevTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->prevPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->prevTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->prevPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 				$this->Template->prevLink = $this->arrPages[$intKey]->title;
 			}
 		}
@@ -165,8 +165,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasNext = true;
 				$this->Template->nextHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->nextTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->nextPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->nextTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->nextPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 				$this->Template->nextLink = $this->arrPages[$intKey]->title;
 			}
 		}
