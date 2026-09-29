@@ -24,35 +24,27 @@
 </head>
 <body{{ attrs(attributes|default).addClass('be_oauth_consent') }}>
 
-{% block container %}
-    <div id="container">
-        <main id="main">
-            <h1>Connect <i>{{ client_name }}</i> with Contao?</h1>
-
-            <p>
-                The application will act as <strong>{{ user.username }}</strong> and can do <strong>everything</strong> this user account is allowed to do in the back end.
-            </p>
-
-            <p>
-                The client <strong>{{ client_host }}</strong> will redirect you to <strong>{{ redirect_host }}</strong> after you allowed the connection.
-            </p>
-
-            <form class="tl_login_form" method="post">
-                <div class="formbody">
-                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
-                    <input type="hidden" name="request_key" value="{{ request_key }}">
-
-                    <div class="submit_container">
-                        <button type="submit" class="tl_submit" name="decision" value="allow">Allow</button>
+    {% block container %}
+        <div id="container">
+            <main id="main">
+                <h1>Connect <i>{{ client_name }}</i> with Contao?</h1>
+                <p>The application will act as <strong>{{ user.username }}</strong> and can do <strong>everything</strong> this user account is allowed to do in the back end.</p>
+                <p>The client <strong>{{ client_host }}</strong> will redirect you to <strong>{{ redirect_host }}</strong> after you allowed the connection.</p>
+                <form class="tl_login_form" method="post">
+                    <div class="formbody">
+                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                        <input type="hidden" name="request_key" value="{{ request_key }}">
+                        <div class="submit_container">
+                            <button type="submit" class="tl_submit" name="decision" value="allow">Allow</button>
+                        </div>
+                        <div class="submit_container">
+                            <button type="submit" class="tl_submit" name="decision" value="deny">Deny</button>
+                        </div>
                     </div>
-                    <div class="submit_container">
-                        <button type="submit" class="tl_submit" name="decision" value="deny">Deny</button>
-                    </div>
-                </div>
-            </form>
-        </main>
-    </div>
-{% endblock %}
+                </form>
+            </main>
+        </div>
+    {% endblock %}
 
 </body>
 </html>

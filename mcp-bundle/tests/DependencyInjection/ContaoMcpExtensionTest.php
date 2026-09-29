@@ -171,9 +171,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
-
         $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
-
         $extension->prepend($container);
 
         $this->assertSame(
