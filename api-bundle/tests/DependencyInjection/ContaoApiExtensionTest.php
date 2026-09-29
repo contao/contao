@@ -36,6 +36,7 @@ use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class ContaoApiExtensionTest extends ContaoTestCase
 {
@@ -219,6 +220,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
         $container->register(DataContainerRelationResolver::class, DataContainerRelationResolver::class)->setSynthetic(true);
         $container->set(DataContainerRelationResolver::class, $this->createRelationResolver());
+        $container->register('translation.locale_switcher', LocaleSwitcher::class)->setSynthetic(true);
+        $container->set('translation.locale_switcher', $this->createLocaleSwitcher());
 
         System::setContainer($container);
 
@@ -236,5 +239,16 @@ class ContaoApiExtensionTest extends ContaoTestCase
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createStub(RouterInterface::class),
         );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

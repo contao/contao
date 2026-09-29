@@ -38,6 +38,7 @@ use Doctrine\DBAL\Connection;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
@@ -156,7 +157,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver()), new JsonSchemaValidator());
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
@@ -247,7 +248,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver());
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher());
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
     }
@@ -271,5 +272,16 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             $this->createRelationResolver(),
             $this->createStub(AnonymousContextBuilderInterface::class),
         );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

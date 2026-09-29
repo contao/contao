@@ -84,6 +84,7 @@ services:
             $framework: '@contao.framework'
             $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
             $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
+            $localeSwitcher: '@translation.locale_switcher'
 
     Contao\ApiBundle\DataContainer\DataContainerRelationResolver:
         arguments:

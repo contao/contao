@@ -24,6 +24,7 @@ use Contao\DC_Table;
 use Contao\System;
 use Contao\Validator as ContaoValidator;
 use Contao\Widget;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactory
 {
@@ -31,6 +32,7 @@ final class DataContainerSchemaFactory
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
         private readonly DataContainerRelationResolver $relationResolver,
+        private readonly LocaleSwitcher $localeSwitcher,
     ) {
     }
 
@@ -44,8 +46,28 @@ final class DataContainerSchemaFactory
     public function create(string $table): array
     {
         $this->framework->initialize();
+
+        try {
+            return $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
+        } finally {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile('default');
+            $system->loadLanguageFile($table);
+        }
+    }
+
+    /**
+     * @return array{
+     *     type: 'object',
+     *     properties: array<string, array<string, mixed>>,
+     *     additionalProperties: bool
+     * }
+     */
+    private function createTableSchema(string $table): array
+    {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
         $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+        $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
         $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
@@ -183,6 +205,8 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
+        $schema += $this->createLabelSchema($config['label'] ?? null);
+
         if ($this->relationResolver->supports($field)) {
             $schema = $this->createRelationSchema($schema);
         }
@@ -191,6 +215,25 @@ final class DataContainerSchemaFactory
 
         if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
             $schema['readOnly'] = true;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * @return array{title?: string, description?: string}
+     */
+    private function createLabelSchema(mixed $label): array
+    {
+        $label = \is_array($label) ? array_values(\array_slice($label, 0, 2)) : [$label];
+        $schema = [];
+
+        foreach (['title', 'description'] as $index => $key) {
+            $part = $label[$index] ?? null;
+
+            if (\is_string($part) && '' !== ($part = trim(strip_tags($part)))) {
+                $schema[$key] = $part;
+            }
         }
 
         return $schema;
