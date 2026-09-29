@@ -31,7 +31,7 @@ class ImageSizesTest extends TestCase
 
     private EventDispatcherInterface&MockObject $eventDispatcher;
 
-    private Security&MockObject $security;
+    private MockObject&Security $security;
 
     protected function setUp(): void
     {
