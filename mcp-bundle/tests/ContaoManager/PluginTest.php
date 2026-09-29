@@ -152,4 +152,30 @@ final class PluginTest extends TestCase
         $this->assertSame($extensionConfigs, $plugin->getExtensionConfig('security', $extensionConfigs, $this->createStub(ContainerBuilder::class)));
         $this->assertSame([['foo' => 'bar']], $plugin->getExtensionConfig('framework', [['foo' => 'bar']], $this->createStub(ContainerBuilder::class)));
     }
+
+    public function testDoesNotAddTheMcpFirewallIfALaterConfigDefinesIt(): void
+    {
+        $extensionConfigs = [
+            ['firewalls' => ['contao_backend_api' => [], 'contao_backend' => []]],
+            ['firewalls' => ['contao_mcp' => ['custom' => true]]],
+        ];
+
+        $plugin = new Plugin();
+
+        $this->assertSame($extensionConfigs, $plugin->getExtensionConfig('security', $extensionConfigs, $this->createStub(ContainerBuilder::class)));
+    }
+
+    public function testAddsTheMcpFirewallOnlyOnce(): void
+    {
+        $extensionConfigs = [
+            ['firewalls' => ['contao_backend_api' => [], 'contao_backend' => []]],
+            ['firewalls' => ['contao_backend_api' => [], 'contao_backend' => []]],
+        ];
+
+        $plugin = new Plugin();
+        $config = $plugin->getExtensionConfig('security', $extensionConfigs, $this->createStub(ContainerBuilder::class));
+
+        $this->assertSame(['contao_mcp', 'contao_backend_api', 'contao_backend'], array_keys($config[0]['firewalls']));
+        $this->assertSame(['contao_backend_api', 'contao_backend'], array_keys($config[1]['firewalls']));
+    }
 }

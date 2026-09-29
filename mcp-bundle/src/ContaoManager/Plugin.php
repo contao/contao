@@ -64,11 +64,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
             return $extensionConfigs;
         }
 
-        foreach ($extensionConfigs as &$config) {
+        // Do not add the firewall if the application already defines it
+        foreach ($extensionConfigs as $config) {
             if (isset($config['firewalls']['contao_mcp'])) {
                 return $extensionConfigs;
             }
+        }
 
+        foreach ($extensionConfigs as &$config) {
             $before = match (true) {
                 isset($config['firewalls']['contao_backend_api']) => 'contao_backend_api',
                 isset($config['firewalls']['contao_backend']) => 'contao_backend',
@@ -98,6 +101,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
 
             $config['firewalls'] = $firewalls;
 
+            // Add the firewall only once, otherwise the configs would be merged and list
+            // options like "custom_authenticators" would contain duplicates
             break;
         }
 
