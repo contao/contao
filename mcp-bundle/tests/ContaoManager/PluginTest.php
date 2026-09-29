@@ -21,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Yaml\Yaml;
@@ -39,7 +40,7 @@ final class PluginTest extends TestCase
         $this->assertSame([ContaoMcpBundle::class], $bundles[1]->getLoadAfter());
     }
 
-    public function testLoadsTheSkeletonConfigAndMcpRoutes(): void
+    public function testLoadsTheBundleConfigAndMcpRoutes(): void
     {
         $plugin = new Plugin();
         $routeCollection = new RouteCollection();
@@ -48,7 +49,7 @@ final class PluginTest extends TestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->with(Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/routes.yaml'))
             ->willReturn($routeCollection)
         ;
 
@@ -56,7 +57,7 @@ final class PluginTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('resolve')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->with(Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/routes.yaml'))
             ->willReturn($loader)
         ;
 
@@ -79,8 +80,8 @@ final class PluginTest extends TestCase
 
         $this->assertSame(
             [
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/mcp.yaml',
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/api_platform.yaml',
+                Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/mcp.yaml'),
+                Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../skeleton/config/api_platform.yaml'),
             ],
             $paths,
         );
@@ -97,8 +98,11 @@ final class PluginTest extends TestCase
     {
         $route = Yaml::parseFile(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')['contao_mcp_backend'];
 
-        $this->assertSame(['_scope' => 'backend'], $route['defaults']);
-        $this->assertSame('%contao_mcp.backend_path%', $route['path']);
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
+
+        $this->assertSame($route['path'], $config['servers']['contao_backend']['http']['path']);
+        $this->assertSame(['_scope' => 'backend', '_stateless' => true], $route['defaults']);
+        $this->assertSame('%contao.backend.route_prefix%/mcp', $route['path']);
         $this->assertSame('mcp.server.contao_backend.controller::handle', $route['controller']);
         $this->assertSame(['GET', 'POST', 'DELETE', 'OPTIONS'], $route['methods']);
         $this->assertArrayNotHasKey('resource', $route);

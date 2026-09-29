@@ -8,12 +8,7 @@ export default class extends Controller {
     static targets = ['source', 'input'];
 
     initialize() {
-        this.#start = null;
-        this.#keypress = (event) => {
-            this.#shiftKey = event.shiftKey;
-            this.element.style['user-select'] = event.shiftKey ? 'none' : '';
-            this.element.style['-webkit-user-select'] = event.shiftKey ? 'none' : '';
-        };
+        this.#keypress = this.#handleKeypress.bind(this);
     }
 
     connect() {
@@ -24,6 +19,12 @@ export default class extends Controller {
     disconnect() {
         document.removeEventListener('keydown', this.#keypress);
         document.removeEventListener('keyup', this.#keypress);
+    }
+
+    #handleKeypress(event) {
+        this.#shiftKey = event.shiftKey;
+        this.element.style['user-select'] = event.shiftKey ? 'none' : '';
+        this.element.style['-webkit-user-select'] = event.shiftKey ? 'none' : '';
     }
 
     toggleInput(event) {

@@ -31,14 +31,14 @@
         "/bundles/contaocore/login.a3f6a7ab.css"
       ]
     },
-    "tinymce": {
+    "hugerte": {
       "css": [
-        "/bundles/contaocore/tinymce.84b1625a.css"
+        "/bundles/contaocore/hugerte.84b1625a.css"
       ]
     },
-    "tinymce-dark": {
+    "hugerte-dark": {
       "css": [
-        "/bundles/contaocore/tinymce-dark.fbda69ff.css"
+        "/bundles/contaocore/hugerte-dark.fbda69ff.css"
       ]
     }
   }

@@ -49,16 +49,6 @@ class FrontendUser extends User
 	protected $roles = array('ROLE_MEMBER');
 
 	/**
-	 * Initialize the object
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-
-		$this->strIp = Environment::get('ip');
-	}
-
-	/**
 	 * Instantiate a new user object
 	 *
 	 * @return static|User The object instance
@@ -176,8 +166,6 @@ class FrontendUser extends User
 				$this->arrData[$k] = StringUtil::deserialize($v);
 			}
 		}
-
-		$GLOBALS['TL_USERNAME'] = $this->username;
 
 		// Make sure that groups is an array
 		if (!\is_array($this->groups))

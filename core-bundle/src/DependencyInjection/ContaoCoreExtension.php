@@ -116,6 +116,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
+
+        if (isset($bundles['ContaoApiBundle'])) {
+            $loader->load('api.yaml');
+        }
+
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
@@ -410,6 +416,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ->setArgument('$indexName', $indexName),
             )
         ;
+
+        if ($container->hasDefinition('contao.search.backend.security.document_allowed_groups_resolver')) {
+            $resolverDefinition = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+            $resolverDefinition->setArgument('$maxGroups', $config['backend_search']['facets']['max_groups']);
+        }
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

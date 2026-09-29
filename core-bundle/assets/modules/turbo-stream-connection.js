@@ -29,8 +29,10 @@ export class TurboStreamConnection {
 
         try {
             response = await fetch(this.constructor.buildURL(url, query_params), params);
-        } catch (e) {
-            if (e !== this._abortSignal) {
+
+            return await this.#renderResponse(response, url, params.signal);
+        } catch {
+            if (!params.signal.aborted) {
                 if (window.console) {
                     console.error(`There was an error fetching the Turbo stream response from "${url}"`);
                 }
@@ -38,6 +40,12 @@ export class TurboStreamConnection {
                 return new TurboStreamResult('error', response);
             }
 
+            return new TurboStreamResult('aborted');
+        }
+    }
+
+    async #renderResponse(response, url, signal) {
+        if (signal.aborted) {
             return new TurboStreamResult('aborted');
         }
 
@@ -66,6 +74,12 @@ export class TurboStreamConnection {
         }
 
         const html = await response.text();
+
+        // A request can be aborted after receiving the headers or while reading the body.
+        if (signal.aborted) {
+            return new TurboStreamResult('aborted');
+        }
+
         Turbo.renderStreamMessage(html);
 
         return new TurboStreamResult('ok', response);
