@@ -298,7 +298,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createStub(FrontendUser::class))
         ;
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
