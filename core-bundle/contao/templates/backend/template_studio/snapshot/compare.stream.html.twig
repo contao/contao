@@ -6,22 +6,13 @@
 
     {% block content %}
         {% if diff %}
-            <div class="template-studio--snapshot-diff">
-                {% for line in diff|split('\n') %}
-                    {% if line starts with 'diff --git ' %}
-                        {% set kind = 'file' %}
-                    {% elseif line starts with '@@ ' %}
-                        {% set kind = 'hunk' %}
-                    {% elseif line starts with '+' and not line starts with '+++' %}
-                        {% set kind = 'added' %}
-                    {% elseif line starts with '-' and not line starts with '---' %}
-                        {% set kind = 'deleted' %}
-                    {% else %}
-                        {% set kind = 'context' %}
-                    {% endif %}
-                    <div class="line line--{{ kind }}">{{ line }}</div>
-                {% endfor %}
-            </div>
+            {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
+            {% set highlighted = diff|highlight('diff') %}
+            {% set code_attributes = attrs()
+                .addClass('hljs')
+                .addClass(highlighted.language)
+            %}
+            <pre class="template-studio--snapshot-diff"><code{{ code_attributes }}>{{ highlighted.value|raw }}</code></pre>
         {% else %}
             <p class="description">{{ 'template_studio.snapshots.no_changes'|trans }}</p>
         {% endif %}

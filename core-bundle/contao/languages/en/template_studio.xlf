@@ -161,9 +161,6 @@
       <trans-unit id="template_studio.snapshots.current">
         <source>Current snapshot: %s %s</source>
       </trans-unit>
-      <trans-unit id="template_studio.snapshots.none">
-        <source>No snapshot yet</source>
-      </trans-unit>
       <trans-unit id="template_studio.snapshots.compare">
         <source>Compare changes</source>
       </trans-unit>
