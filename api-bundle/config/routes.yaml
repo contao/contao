@@ -10,7 +10,7 @@ api_doc:
     path: '%contao.backend.route_prefix%/api/docs.{_format}'
     controller: api_platform.action.documentation
     methods: ['GET', 'HEAD']
+    stateless: false
     defaults:
         _format: null
         _api_respond: true
-        _stateless: false
