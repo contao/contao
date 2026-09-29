@@ -44,7 +44,7 @@ final class UserTemplateTools
     #[McpTool(name: 'contao_template_list_themes', description: 'List valid Contao theme slugs for template operations.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
     public function listThemes(): CallToolResult
     {
-        return $this->execute('contao_api_user_template_themes');
+        return $this->execute('contao_api_user_template_theme_discover');
     }
 
     #[McpTool(name: 'contao_template_discover', description: 'Discover template identifiers. Optionally filter identifiers by a case-insensitive query and select a theme context.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
