@@ -265,7 +265,7 @@
                 <div class="tl_submit_container">
                     <button class="tl_submit" type="submit">{{ 'MSC.generatePersonalAccessToken'|trans }}</button>
                 </div>
-            </div>
+            </form>
         {% else %}
             <div class="submit_container">
                 <a href="{{ path('contao_backend', {'do': 'security', 'act': 'create_pat'}) }}" class="tl_submit">{{ 'MSC.generatePersonalAccessToken'|trans }}</a>
