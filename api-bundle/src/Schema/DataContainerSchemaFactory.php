@@ -18,7 +18,10 @@ use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DC_Table;
+use Contao\System;
 use Contao\Validator as ContaoValidator;
+use Contao\Widget;
 
 final class DataContainerSchemaFactory
 {
@@ -39,11 +42,16 @@ final class DataContainerSchemaFactory
     {
         $this->framework->initialize();
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
 
         $properties = [];
+        $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
+        $dc->strTable = $table;
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
-            $schema = $this->createFieldSchema((string) $fieldName, \is_array($config) ? $config : []);
+            $fieldName = (string) $fieldName;
+            $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
+            $schema = $this->createFieldSchema($fieldName, $config);
 
             if ([] === $schema) {
                 continue;
@@ -80,6 +88,31 @@ final class DataContainerSchemaFactory
         $converter = $this->converters->get($config);
 
         return $converter ? $this->createSchema($config, $converter) : [];
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     */
+    private function applyWidgetAttributes(array $config, string $fieldName, string $table, DC_Table $dc): array
+    {
+        /** @var class-string<Widget>|null $widgetClass */
+        $widgetClass = $GLOBALS['BE_FFL'][$config['inputType'] ?? ''] ?? null;
+
+        if (!\is_string($widgetClass) || !is_a($widgetClass, Widget::class, true)) {
+            return $config;
+        }
+
+        $dc->field = $fieldName;
+
+        try {
+            $config['eval'] = $widgetClass::getAttributesFromDca($config, $fieldName, null, $fieldName, $table, $dc);
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(\sprintf('Could not resolve the widget attributes for field "%s.%s". Make sure the DCA callbacks work statically without a record.', $table, $fieldName), previous: $exception);
+        }
+
+        return $config;
     }
 
     private function projectSchema(array $schema, string $operation): array
@@ -216,6 +249,10 @@ final class DataContainerSchemaFactory
 
         if (isset($eval['minlength']) && is_numeric($eval['minlength'])) {
             $schema['minLength'] = (int) $eval['minlength'];
+        }
+
+        if ($eval['allowHtml'] ?? null) {
+            $schema['contentMediaType'] = 'text/html';
         }
 
         return $schema;
