@@ -76,6 +76,7 @@ final class UserTemplateToolsTest extends TestCase
             ->expects($this->never())
             ->method('handle')
         ;
+
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
             ->expects($this->once())
@@ -103,6 +104,7 @@ final class UserTemplateToolsTest extends TestCase
         $this->expectExceptionMessage('Only advertised create_* and rename_* operations');
 
         $metadata = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
+
         $tools = new UserTemplateTools(
             $metadata,
             $this->createStub(HttpKernelInterface::class),
@@ -112,6 +114,7 @@ final class UserTemplateToolsTest extends TestCase
             new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
             new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
         );
+
         $tools->executeOperation('save', 'content_element/text');
     }
 }

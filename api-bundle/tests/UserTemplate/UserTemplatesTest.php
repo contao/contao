@@ -122,6 +122,7 @@ class UserTemplatesTest extends TestCase
         ;
 
         $request = Request::create('/contao/api/user_template_themes');
+
         $response = new UserTemplateStateProvider($client)->provide(
             new Get(extraProperties: ['template_studio_action' => 'themes']),
             context: ['request' => $request],

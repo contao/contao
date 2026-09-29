@@ -91,10 +91,7 @@ final class UserTemplateImpactAnalyzer
                     continue;
                 }
 
-                $paths[$consumerName] = [[
-                    ...$edge,
-                    'resolvesTo' => $current,
-                ], ...$paths[$current]];
+                $paths[$consumerName] = [[...$edge, 'resolvesTo' => $current], ...$paths[$current]];
                 $queue[] = $consumerName;
             }
         }
