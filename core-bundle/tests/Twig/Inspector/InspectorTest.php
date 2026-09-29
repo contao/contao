@@ -514,9 +514,60 @@ class InspectorTest extends TestCase
         $inspector = $this->getInspector(['foo.html.twig' => '…'], new Storage(new NullAdapter()));
 
         $this->expectException(InspectionException::class);
-        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". No recorded information was found.');
 
         $inspector->inspectTemplate('foo.html.twig');
+    }
+
+    public function testRecompilesTheSourceIfNoInformationWasRecorded(): void
+    {
+        $templates = [
+            'foo.html.twig' => '…',
+        ];
+
+        $filesystemLoader = $this->getContaoFilesystemLoader($templates);
+        $environment = new Environment($filesystemLoader);
+
+        $data = null;
+        $record = false;
+
+        $storage = $this->createMock(Storage::class);
+        $storage
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnCallback(
+                static function () use (&$data, &$record): array|null {
+                    $record = true;
+
+                    return $data;
+                },
+            )
+        ;
+
+        $storage
+            ->expects($this->exactly(2))
+            ->method('set')
+            ->willReturnCallback(
+                static function (string $path, array $value) use (&$data, &$record): void {
+                    if ($record) {
+                        $data = $value;
+                    }
+                },
+            )
+        ;
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $filesystemLoader,
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($storage, $environment),
+            ),
+        );
+
+        $information = new Inspector($environment, $storage, $filesystemLoader)->inspectTemplate('foo.html.twig');
+
+        $this->assertSame('…', $information->getCode());
     }
 
     public function testResolvesManagedNamespace(): void
