@@ -301,17 +301,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/failure')
         ;
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createStub(FrontendUser::class))
         ;
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);

@@ -203,6 +203,7 @@ class BackendSearchTest extends TestCase
 
         $user = $this->createMock(BackendUser::class);
         $user
+            ->expects($this->exactly(4))
             ->method('__get')
             ->with('groups')
             ->willReturn([1])
