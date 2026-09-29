@@ -33,6 +33,7 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Widget\DateValueFormatter;
+use Contao\Database;
 use Contao\Date;
 use Contao\FileTree;
 use Contao\PageTree;
@@ -77,7 +78,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
         $this->relationResolver = $this->createRelationResolver($this->converters);
-        $this->localeSwitcher = new LocaleSwitcher('en', []);
+        $this->localeSwitcher = $this->createLocaleSwitcher();
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
@@ -91,7 +92,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([Database::class, System::class]);
 
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
@@ -645,5 +646,16 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 return \is_string($table) ? new DataContainerRelationDefinition($table) : null;
             }
         };
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }
