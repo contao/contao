@@ -64,6 +64,7 @@ final class UserTemplateImpactAnalyzerTest extends TestCase
             )
         ;
         $inspector
+            ->expects($this->once())
             ->method('getBlockHierarchy')
             ->with('@Contao_User/component/_figure.html.twig', 'figure_component')
             ->willReturn([
