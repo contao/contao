@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Routing\Matcher\RequestMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -50,6 +51,8 @@ class ScopeMatcherTest extends TestCase
         $this->assertSame($isBackend && $stateless, $this->matcher->isBackendApiRequest($request));
         $this->assertSame($isBackend && !$stateless, $this->matcher->isBackendUiRequest($request));
         $this->assertSame($isFrontend, $this->matcher->isFrontendRequest($request));
+        $this->assertSame($isFrontend && $stateless, $this->matcher->isFrontendApiRequest($request));
+        $this->assertSame($isFrontend && !$stateless, $this->matcher->isFrontendUiRequest($request));
     }
 
     public static function mainRequestProvider(): iterable
@@ -115,6 +118,7 @@ class ScopeMatcherTest extends TestCase
     public function testReturnsFalseIfThereIsNoRequest(): void
     {
         $scopeMatcher = new ScopeMatcher(
+            $this->createStub(RequestMatcherInterface::class),
             $this->createStub(RequestMatcherInterface::class),
             $this->createStub(RequestMatcherInterface::class),
             $this->createStub(RequestMatcherInterface::class),
