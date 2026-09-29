@@ -663,6 +663,14 @@ services:
         arguments:
             - '%contao.console_path%'
 
+    contao.rate_limit.form_captcha_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.form_captcha, policy: fixed_window, limit: 1, interval: 30 minutes }
+            - '@contao.rate_limit.member_password_storage'
+            - '@?lock_factory'
+
     contao.rate_limit.member_password_factory:
         class: Symfony\Component\RateLimiter\RateLimiterFactory
         public: true
