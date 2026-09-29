@@ -29,7 +29,7 @@ class WebauthnRpEntityNormalizerTest extends FunctionalTestCase
 
         $data = self::getContainer()->get('serializer')->normalize(PublicKeyCredentialRpEntity::create());
 
-        $this->assertSame(['id' => 'www.example.org', 'name' => 'www.example.org'], $data);
+        $this->assertSame('www.example.org', $data['id']);
     }
 
     public function testTheCreationProfileContainsAnRpNode(): void

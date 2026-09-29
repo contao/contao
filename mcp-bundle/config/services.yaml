@@ -4,6 +4,8 @@ services:
 
     Contao\McpBundle\Response\ApiResponseConverter: ~
 
+    Contao\McpBundle\Resource\TemplateGuidance: ~
+
     Contao\McpBundle\Tool\DataContainerTools:
         autoconfigure: true
         arguments:
@@ -12,3 +14,24 @@ services:
             - '@Contao\ApiBundle\Http\ApiRequestFactory'
             - '@request_stack'
             - '@Contao\McpBundle\Response\ApiResponseConverter'
+
+    Contao\McpBundle\Tool\UserTemplateTools:
+        autoconfigure: true
+        arguments:
+            - '@api_platform.metadata.resource.metadata_collection_factory'
+            - '@http_kernel'
+            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@request_stack'
+            - '@Contao\McpBundle\Response\ApiResponseConverter'
+            - '@Contao\McpBundle\UserTemplate\UserTemplateValidator'
+            - '@Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer'
+
+    Contao\McpBundle\UserTemplate\UserTemplateValidator:
+        arguments:
+            - '@twig'
+            - '@contao.twig.filesystem_loader'
+
+    Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer:
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.inspector'

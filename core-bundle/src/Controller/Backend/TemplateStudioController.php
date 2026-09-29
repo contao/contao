@@ -135,6 +135,20 @@ class TemplateStudioController extends AbstractBackendController
         ]);
     }
 
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio-themes',
+        name: '_contao_template_studio_themes.stream',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function themes(): Response
+    {
+        return new JsonResponse([
+            'themes' => $this->getAvailableThemes(),
+        ]);
+    }
+
     /**
      * (De-)select a theme and stream the changes to all open tabs.
      */
