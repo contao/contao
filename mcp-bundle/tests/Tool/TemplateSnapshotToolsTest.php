@@ -83,6 +83,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'first');
+
         $first = $tools->snapshot()['hash'];
 
         $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'second');
