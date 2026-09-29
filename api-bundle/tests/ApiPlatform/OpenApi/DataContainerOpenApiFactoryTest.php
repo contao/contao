@@ -43,6 +43,7 @@ use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
+use Contao\ImageSize;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
@@ -58,6 +59,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         System::setContainer($container);
 
         $GLOBALS['BE_FFL']['text'] = TextField::class;
+        $GLOBALS['BE_FFL']['imageSize'] = ImageSize::class;
     }
 
     protected function tearDown(): void
@@ -91,6 +93,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                             'eval' => [
                                 'mandatory' => true,
                             ],
+                        ],
+                        'size' => [
+                            'inputType' => 'imageSize',
+                            'sql' => ['type' => 'varchar', 'length' => 255, 'default' => ''],
                         ],
                     ];
                 },
@@ -136,6 +142,8 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $componentSchema = $schemas['dc_content'];
         $this->assertInstanceOf(Schema::class, $componentSchema);
         $this->assertSame('object', $componentSchema['type']);
+        $this->assertSame(['Optional width', 'Optional height', 'Resize mode or image size reference'], array_column($componentSchema['properties']['size']['prefixItems'], 'title'));
+        $this->assertStringContainsString('integer ID of a database image size record', $componentSchema['properties']['size']['prefixItems'][2]['description']);
 
         $collectionPathItem = $openApi->getPaths()->getPath('/contao/api/dc/content');
         $this->assertInstanceOf(PathItem::class, $collectionPathItem);
