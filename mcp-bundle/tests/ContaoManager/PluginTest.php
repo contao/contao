@@ -21,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Yaml\Yaml;
@@ -48,7 +49,7 @@ final class PluginTest extends TestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->with(Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/routes.yaml'))
             ->willReturn($routeCollection)
         ;
 
@@ -56,7 +57,7 @@ final class PluginTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('resolve')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/routes.yaml')
+            ->with(Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/routes.yaml'))
             ->willReturn($loader)
         ;
 
@@ -79,8 +80,8 @@ final class PluginTest extends TestCase
 
         $this->assertSame(
             [
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../config/mcp.yaml',
-                \dirname(__DIR__, 2).'/src/ContaoManager/../../skeleton/config/api_platform.yaml',
+                Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/mcp.yaml'),
+                Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../skeleton/config/api_platform.yaml'),
             ],
             $paths,
         );

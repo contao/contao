@@ -263,8 +263,8 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('__set')
-            ->with('limit', '0,'.(2 * $size))
+            ->method('setLimit')
+            ->with(2 * $size)
         ;
 
         $dc
@@ -357,8 +357,8 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('__set')
-            ->with('limit', '0,'.PHP_INT_MAX)
+            ->method('setLimit')
+            ->with(PHP_INT_MAX)
         ;
 
         $dc

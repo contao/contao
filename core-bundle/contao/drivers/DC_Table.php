@@ -459,6 +459,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return parent::__get($strKey);
 	}
 
+	public function setLimit(int $limit, int $offset=0): void
+	{
+		$this->limit = $offset . ',' . $limit;
+	}
+
 	/**
 	 * List all records of a particular table
 	 *

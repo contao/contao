@@ -20,6 +20,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Yaml\Yaml;
@@ -41,7 +42,7 @@ final class PluginTest extends TestCase
     public function testLoadsApiPlatformRoutes(): void
     {
         $plugin = new Plugin();
-        $routesPath = \dirname(__DIR__, 2).\DIRECTORY_SEPARATOR.'src'.\DIRECTORY_SEPARATOR.'ContaoManager/../../config/routes.yaml';
+        $routesPath = Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/routes.yaml');
         $routeCollection = new RouteCollection();
 
         $loader = $this->createMock(LoaderInterface::class);
@@ -77,7 +78,7 @@ final class PluginTest extends TestCase
         $loader
             ->expects($this->once())
             ->method('load')
-            ->with(\dirname(__DIR__, 2).'/src/ContaoManager/../../config/config.yaml')
+            ->with(Path::join(\dirname(__DIR__, 2), 'src/ContaoManager/../../config/config.yaml'))
         ;
 
         new Plugin()->registerContainerConfiguration($loader, []);
