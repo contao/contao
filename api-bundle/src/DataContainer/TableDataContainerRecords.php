@@ -20,6 +20,7 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -44,6 +45,7 @@ class TableDataContainerRecords
         private readonly DcaUrlAnalyzer $urlAnalyzer,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly DcaRequestSwitcher $requestSwitcher,
+        private readonly ContaoStrategyContext $strategyContext,
     ) {
     }
 
@@ -395,22 +397,25 @@ class TableDataContainerRecords
             throw new \LogicException('The backend session bag is not available.');
         }
 
-        return $this->requestSwitcher->runWithRequest(
-            $request,
-            function () use ($table, $callback, $request, $bag) {
-                $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
-                $driver = DataContainer::getDriverForTable($table);
+        return $this->strategyContext->runInContext(
+            ContaoStrategyContext::CONTEXT_BACKEND,
+            fn () => $this->requestSwitcher->runWithRequest(
+                $request,
+                function () use ($table, $callback, $request, $bag) {
+                    $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+                    $driver = DataContainer::getDriverForTable($table);
 
-                if (!\is_string($driver) || !is_a($driver, DC_Table::class, true)) {
-                    throw new NotFoundHttpException('The resource is not backed by a table data container.');
-                }
+                    if (!\is_string($driver) || !is_a($driver, DC_Table::class, true)) {
+                        throw new NotFoundHttpException('The resource is not backed by a table data container.');
+                    }
 
-                /** @var DC_Table $dc */
-                $dc = $this->framework->createInstance($driver, [$table]);
-                $dc->setApiMode();
+                    /** @var DC_Table $dc */
+                    $dc = $this->framework->createInstance($driver, [$table]);
+                    $dc->setApiMode();
 
-                return $callback($dc, $request, $bag);
-            },
+                    return $callback($dc, $request, $bag);
+                },
+            ),
         );
     }
 
