@@ -2354,9 +2354,6 @@
       <trans-unit id="MSC.personalAccessTokensDescription">
         <source>Personal access tokens allow you to authenticate as your backend user for stateless APIs.</source>
       </trans-unit>
-      <trans-unit id="MSC.createPersonalAccessToken">
-        <source>Create token</source>
-      </trans-unit>
       <trans-unit id="MSC.generatePersonalAccessToken">
         <source>Generate token</source>
       </trans-unit>
