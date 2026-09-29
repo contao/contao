@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Config;
 use Contao\FormCaptcha;
 use Contao\Input;
 use Contao\System;
@@ -55,7 +56,9 @@ class FormCaptchaTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, System::class]);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([Input::class, System::class, Config::class]);
 
         parent::tearDown();
     }
