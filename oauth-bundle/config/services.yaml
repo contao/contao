@@ -80,6 +80,11 @@ services:
             - '@contao.oauth_bundle.http.psr_message_converter'
             - '@contao.oauth_bundle.resource_context'
 
+    contao.oauth_bundle.cron.purge_expired_oauth_tokens_cron:
+        class: Contao\OAuthBundle\Cron\PurgeExpiredOAuthTokensCron
+        arguments:
+            - '@contao.oauth_bundle.repository.oauth_token_repository'
+
     contao.oauth_bundle.http.psr_message_converter:
         class: Contao\OAuthBundle\Http\PsrMessageConverter
 
