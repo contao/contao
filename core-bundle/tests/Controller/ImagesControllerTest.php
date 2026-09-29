@@ -88,6 +88,7 @@ class ImagesControllerTest extends TestCase
 
         $responseFactory = $this->createMock(DeferredImageResponseFactory::class);
         $responseFactory
+            ->expects($this->once())
             ->method('create')
             ->with($image)
             ->willReturn($response)
