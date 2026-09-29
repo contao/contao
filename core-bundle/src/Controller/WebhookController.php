@@ -84,14 +84,14 @@ final class WebhookController
             $parser = $this->receivers->getParser($endpoint['receiver']);
             $secret = '' === $endpoint['secret'] ? '' : $this->encryption->decrypt($endpoint['secret']);
             $remoteEvents = $parser->parse($request, $secret);
-        } catch (RejectWebhookException|HttpExceptionInterface $e) {
+        } catch (HttpExceptionInterface|RejectWebhookException $e) {
             $this->logger?->error('Incoming webhook request rejected. ('.$e->getMessage().')', ['endpoint' => $endpoint['id']]);
 
             return $parser->createRejectedResponse('Webhook rejected.');
         } catch (\Throwable $e) {
             $this->logger?->error('Incoming webhook request could not be parsed. ('.$e->getMessage().')', ['endpoint' => $endpoint['id']]);
 
-            return new Response('', null === $parser ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_BAD_REQUEST);
+            return new Response('', !$parser ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_BAD_REQUEST);
         }
 
         if (null === $remoteEvents) {

@@ -1644,23 +1644,6 @@ services:
             - '@security.token_storage'
             - '@contao.repository.webauthn_user_entity'
 
-    contao.webhook.consume_handler:
-        class: Contao\CoreBundle\Webhook\MessageHandler\ConsumeWebhookHandler
-        arguments:
-            - '@contao.webhook.repository'
-            - '@contao.webhook.receiver_registry'
-
-    contao.webhook.deliver_handler:
-        class: Contao\CoreBundle\Webhook\MessageHandler\DeliverWebhookHandler
-        arguments:
-            - '@contao.webhook.repository'
-            - '@contao.webhook.secret_encryption'
-            - '@contao.http_client.webhook'
-            - '@?monolog.logger.contao.webhook'
-            - '%contao.webhook.connect_timeout%'
-            - '%contao.webhook.total_timeout%'
-            - '%contao.webhook.max_redirects%'
-
     contao.webhook.dispatcher:
         class: Contao\CoreBundle\Webhook\WebhookDispatcher
         arguments:
@@ -1670,6 +1653,23 @@ services:
 
     contao.webhook.event_registry:
         class: Contao\CoreBundle\Webhook\WebhookEventRegistry
+
+    contao.webhook.message_handler.consume_handler:
+        class: Contao\CoreBundle\Webhook\MessageHandler\ConsumeWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.receiver_registry'
+
+    contao.webhook.message_handler.deliver_handler:
+        class: Contao\CoreBundle\Webhook\MessageHandler\DeliverWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.secret_encryption'
+            - '@contao.http_client.webhook'
+            - '@?monolog.logger.contao.webhook'
+            - '%contao.webhook.connect_timeout%'
+            - '%contao.webhook.total_timeout%'
+            - '%contao.webhook.max_redirects%'
 
     contao.webhook.rate_limiter_factory:
         class: Symfony\Component\RateLimiter\RateLimiterFactory
