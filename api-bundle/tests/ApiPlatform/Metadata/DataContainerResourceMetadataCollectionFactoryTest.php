@@ -36,6 +36,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\DataContainer;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Contao\TestCase\ContaoTestCase;
@@ -77,6 +78,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                     $GLOBALS['TL_DCA'][$table]['config'] = match ($table) {
                         'tl_article' => [
                             'dataContainer' => DC_Table::class,
+                            'ptable' => 'tl_page',
+                            'ctable' => ['tl_content'],
                         ],
                         'tl_content' => [
                             'dataContainer' => DC_Table::class,
@@ -89,6 +92,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         ],
                         'tl_page' => [
                             'dataContainer' => $extendedDcTableClass,
+                            'ctable' => ['tl_article'],
                             'notDeletable' => true,
                         ],
                         'tl_settings' => [
@@ -97,7 +101,16 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
                         default => [],
                     };
 
-                    $GLOBALS['TL_DCA'][$table]['fields'] = [];
+                    $GLOBALS['TL_DCA'][$table]['fields'] = match ($table) {
+                        'tl_article' => ['sorting' => []],
+                        'tl_content' => ['pid' => []],
+                        'tl_page' => ['pid' => [], 'sorting' => []],
+                        default => [],
+                    };
+
+                    if ('tl_article' === $table) {
+                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] = DataContainer::MODE_TREE_EXTENDED;
+                    }
                 },
             )
         ;
@@ -105,7 +118,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter, Config::class => $this->createConfigAdapter($maximum)]);
         $resourceFinder = $this->createResourceFinder(['tl_article', 'tl_content', 'tl_log', 'tl_page', 'tl_settings']);
 
-        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
+        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder);
         $collection = $factory->create(DataContainerRecord::class);
 
         $this->assertCount(3, $collection);
@@ -117,9 +130,9 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame($expectedMaximum, $operation->getPaginationMaximumItemsPerPage());
         $this->assertSame(min(30, $expectedMaximum), $operation->getPaginationItemsPerPage());
 
-        $this->assertResource($resources[0], 'Article', 'tl_article', '/backend/dc/article', 'article', true);
-        $this->assertResource($resources[1], 'Content', 'tl_content', '/backend/dc/article/{article_id}/content', 'article_content', true);
-        $this->assertResource($resources[2], 'Page', 'tl_page', '/backend/dc/page', 'page', false);
+        $this->assertResource($resources[0], 'Article', 'tl_article', '/dc/article', 'article', true);
+        $this->assertResource($resources[1], 'Content', 'tl_content', '/dc/article/{article_id}/content', 'article_content', true);
+        $this->assertResource($resources[2], 'Page', 'tl_page', '/dc/page', 'page', false);
         $this->assertSame([['table' => 'tl_article', 'parameter' => 'article_id']], $resources[1]->getExtraProperties()['contao']['parents']);
         $this->assertSame('article/content', $resources[1]->getExtraProperties()['contao']['resource']);
         $this->assertSame('Article', $resources[1]->getExtraProperties()['contao']['category']);
@@ -147,9 +160,35 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             ->willReturn($collection)
         ;
 
-        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder, 'backend/dc');
+        $factory = new DataContainerResourceMetadataCollectionFactory($decorated, $framework, $resourceFinder);
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
+    }
+
+    public function testDoesNotExposeMoveForRecordsWithoutPositionFields(): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table): void {
+                    $GLOBALS['TL_DCA'][$table] = [
+                        'config' => ['dataContainer' => DC_Table::class],
+                        'fields' => ['id' => []],
+                    ];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_user']),
+        );
+
+        $routes = $this->createApiLoader($factory)->load(null);
+
+        $this->assertNull($routes->get('contao_api_dc_user_move'));
     }
 
     public function testGeneratesDistinctRoutesForEveryTable(): void
@@ -169,7 +208,6 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
             $this->createResourceFinder(['tl_article', 'tl_articles', 'tl_calendar_events', 'tl_page']),
-            'backend/dc',
         );
 
         $loader = $this->createApiLoader($factory);
@@ -180,8 +218,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         foreach (['tl_article', 'tl_articles', 'tl_calendar_events', 'tl_page'] as $table) {
             $resource = substr($table, 3);
-            $this->assertSame('/custom_api/backend/dc/'.$resource.'/42', $generator->generate('contao_api_dc_'.$resource.'_patch', ['id' => 42]));
-            $this->assertSame('/custom_api/backend/dc/'.$resource, $generator->generate('contao_api_dc_'.$resource.'_get_collection'));
+            $this->assertSame('/custom_api/dc/'.$resource.'/42', $generator->generate('contao_api_dc_'.$resource.'_patch', ['id' => 42]));
+            $this->assertSame('/custom_api/dc/'.$resource, $generator->generate('contao_api_dc_'.$resource.'_get_collection'));
             $this->assertSame('backend', $routes->get('contao_api_dc_'.$resource.'_patch')->getDefault('_scope'));
             $this->assertSame('api_platform.symfony.main_controller', $routes->get('contao_api_dc_'.$resource.'_patch')->getDefault('_controller'));
         }
@@ -206,18 +244,17 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
             $this->createResourceFinder(['tl_article', 'tl_content']),
-            'backend/dc',
         );
 
         $routes = $this->createApiLoader($factory)->load(null);
         $generator = new UrlGenerator($routes, new RequestContext());
         $parameters = ['article_id' => 3, 'nested' => '4/content/5'];
 
-        $this->assertSame('/backend/dc/article/3/content/4/content/5/content', $generator->generate('contao_api_dc_article_content_nested_get_collection', $parameters));
-        $this->assertSame('/backend/dc/article/3/content/4/content/5/content/6', $generator->generate('contao_api_dc_article_content_nested_get', $parameters + ['id' => 6]));
+        $this->assertSame('/dc/article/3/content/4/content/5/content', $generator->generate('contao_api_dc_article_content_nested_get_collection', $parameters));
+        $this->assertSame('/dc/article/3/content/4/content/5/content/6', $generator->generate('contao_api_dc_article_content_nested_get', $parameters + ['id' => 6]));
         $this->assertSame('.+', $routes->get('contao_api_dc_article_content_nested_get')->getRequirement('nested'));
 
-        $match = new UrlMatcher($routes, new RequestContext())->match('/backend/dc/article/3/content/4/content/5/content');
+        $match = new UrlMatcher($routes, new RequestContext())->match('/dc/article/3/content/4/content/5/content');
         $this->assertSame('contao_api_dc_article_content_nested_get_collection', $match['_route']);
         $this->assertSame('4/content/5', $match['nested']);
     }

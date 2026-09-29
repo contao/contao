@@ -131,7 +131,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'tstamp' => '123', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128', 'internal' => 'hidden']);
 
         $this->assertSame(17, $record->id);
-        $this->assertSame(['tstamp' => 123, 'pid' => 42, 'ptable' => 'tl_article', 'sorting' => 128], $record->data);
+        $this->assertSame(['tstamp' => date(\DateTimeInterface::ATOM, 123), 'pid' => 42, 'ptable' => 'tl_article', 'sorting' => 128], $record->data);
+
+        $record = $mapper->fromRow('tl_content', ['id' => 18, 'tstamp' => '0', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128']);
+
+        $this->assertNull($record->data['tstamp']);
     }
 
     public function testExposesFileReferencesAsUuids(): void
@@ -267,7 +271,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame(['pages' => '1,2'], $mapper->toFormValues('tl_content', ['pages' => [1, 2]]));
     }
 
-    public function testFormatsTimestampsUsingDcaWithoutExposingFormMetadata(): void
+    public function testExposesDateFieldsAsDateTimesAndConvertsThemForTheWidget(): void
     {
         $container = new ContainerBuilder();
         $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
@@ -282,13 +286,15 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         foreach (['date' => ['d.m.Y', '17.09.2026'], 'time' => ['H:i', '14:35'], 'datim' => ['d.m.Y H:i', '17.09.2026 14:35']] as $rgxp => [$format, $expected]) {
             $GLOBALS['TL_CONFIG'][$rgxp.'Format'] = $format;
             $GLOBALS['TL_DCA']['tl_content']['fields']['eventDate'] = ['inputType' => 'text', 'sql' => ['type' => 'integer'], 'eval' => ['rgxp' => $rgxp]];
+            $dateTime = date(\DateTimeInterface::ATOM, $timestamp);
 
             foreach (['read', 'create', 'update'] as $operation) {
-                $this->assertSame(['type' => 'integer'], $factory->createOperationSchemas('tl_content')[$operation]['properties']['eventDate']);
+                $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time'], $factory->createOperationSchemas('tl_content')[$operation]['properties']['eventDate']);
             }
 
-            $this->assertSame(['eventDate' => $timestamp], $mapper->fromRow('tl_content', ['id' => 17, 'eventDate' => (string) $timestamp])->data);
-            $this->assertSame(['eventDate' => $expected], $mapper->toFormValues('tl_content', ['eventDate' => $timestamp]));
+            $this->assertSame(['eventDate' => $dateTime], $mapper->fromRow('tl_content', ['id' => 17, 'eventDate' => (string) $timestamp])->data);
+            $this->assertSame(['eventDate' => null], $mapper->fromRow('tl_content', ['id' => 17, 'eventDate' => '0'])->data);
+            $this->assertSame(['eventDate' => $expected], $mapper->toFormValues('tl_content', ['eventDate' => $dateTime]));
             $this->assertSame(['eventDate' => ''], $mapper->toFormValues('tl_content', ['eventDate' => null]));
         }
     }

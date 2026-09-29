@@ -15,11 +15,11 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Routing\RouterInterface;
-use Twig\Environment;
 
 /**
  * @internal
@@ -29,7 +29,6 @@ class BackendJobsListener
 {
     public function __construct(
         private readonly Security $security,
-        private readonly Environment $twig,
         private readonly RouterInterface $router,
         private readonly Jobs $jobs,
     ) {
@@ -49,16 +48,13 @@ class BackendJobsListener
             return;
         }
 
-        $markup = $this->twig->render('@Contao/backend/jobs/menu_item.html.twig', [
-            'jobs_link' => $this->router->generate('contao_backend', ['do' => 'jobs']),
-            'has_pending_jobs' => [] !== $this->jobs->findMyNewOrPending(),
-        ]);
-
         $tree = $event->getFactory()
             ->createItem('jobs')
-            ->setLabel($markup)
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
+            ->setLabel('MSC.jobs')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'jobs']))
+            ->setExtra(BackendMenuBuilder::EXTRA_CONTENT_TEMPLATE, '@Contao/backend/jobs/menu_item.html.twig')
+            ->setExtra('has_pending_jobs', [] !== $this->jobs->findMyNewOrPending())
+            ->setExtra('translation_domain', 'contao_default')
         ;
 
         $event->getTree()->addChild($tree);

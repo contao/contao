@@ -33,15 +33,17 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DC_Table;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
 {
+    private const ROUTE_PREFIX = '/dc';
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly ContaoFramework $framework,
         private readonly ResourceFinderInterface $resourceFinder,
-        private readonly string $dataContainerApiPrefix,
     ) {
     }
 
@@ -54,18 +56,21 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         $this->framework->initialize();
 
         $configs = [];
+        $dcas = [];
 
         foreach ($this->getTables() as $table) {
-            $config = $this->loadDcaConfig($table);
+            $dca = $this->loadDca($table);
+            $config = $dca['config'] ?? [];
 
             if (!is_a((string) ($config['dataContainer'] ?? ''), DC_Table::class, true)) {
                 continue;
             }
 
             $configs[$table] = $config;
+            $dcas[$table] = $dca;
         }
 
-        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $configs[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
+        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $dcas[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
 
         return new ResourceMetadataCollection($resourceClass, $apiResources);
     }
@@ -73,10 +78,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     /**
      * @param non-empty-list<string> $path
      */
-    private function createResource(array $path, array $config): ApiResource
+    private function createResource(array $path, array $dca): ApiResource
     {
         $table = $path[array_key_last($path)];
         $shortName = $this->getShortName($table);
+        $config = $dca['config'];
 
         return new ApiResource()
             ->withClass(DataContainerRecord::class)
@@ -89,7 +95,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             ->withSecurity("is_granted('ROLE_USER')")
             ->withMcp([])
             ->withExtraProperties($this->getExtraProperties($path))
-            ->withOperations($this->createOperations($path, $config))
+            ->withOperations($this->createOperations($path, $config, $dca['fields'] ?? []))
         ;
     }
 
@@ -118,7 +124,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
      *
      * @return Operations<HttpOperation>
      */
-    private function createOperations(array $path, array $config): Operations
+    private function createOperations(array $path, array $config, array $fields): Operations
     {
         $operations = [
             'get_collection' => $this->createCollectionOperation(),
@@ -131,7 +137,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             $operations['delete'] = new Delete();
         }
 
-        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false)) {
+        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false) && (isset($fields['pid']) || isset($fields['sorting']))) {
             $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
         }
 
@@ -228,11 +234,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
     /**
      * @return array<string, mixed>
      */
-    private function loadDcaConfig(string $table): array
+    private function loadDca(string $table): array
     {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
 
-        return $GLOBALS['TL_DCA'][$table]['config'] ?? [];
+        return $GLOBALS['TL_DCA'][$table] ?? [];
     }
 
     /**
@@ -240,7 +246,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
      */
     private function getRoutePrefix(array $path): string
     {
-        $route = '/'.trim($this->dataContainerApiPrefix, '/');
+        $route = self::ROUTE_PREFIX;
 
         foreach ($path as $index => $table) {
             $route .= '/'.$this->getResourceName($table);
@@ -266,13 +272,16 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         foreach ($configs as $table => $config) {
             $parent = $config['ptable'] ?? null;
 
-            if (\is_string($parent) && $parent !== $table && isset($configs[$parent])) {
-                $children[$parent][] = $table;
+            if (\is_string($parent) && $parent !== $table && isset($configs[$parent]) && !$this->isExtendedTreeMode($table)) {
+                if (!\in_array($table, $children[$parent] ?? [], true)) {
+                    $children[$parent][] = $table;
+                }
+
                 $hasParent[$table] = true;
             }
 
             foreach ((array) ($config['ctable'] ?? []) as $child) {
-                if ($child === $table || !isset($configs[$child])) {
+                if ($child === $table || !isset($configs[$child]) || $this->isExtendedTreeMode($child)) {
                     continue;
                 }
 
@@ -293,6 +302,11 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         }
 
         return $paths;
+    }
+
+    private function isExtendedTreeMode(string $table): bool
+    {
+        return DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
     }
 
     /**

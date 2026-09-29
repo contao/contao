@@ -282,6 +282,32 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertTrue($factory->create('tl_content')['properties']['pid']['readOnly']);
     }
 
+    public function testCreatesDateTimeSchemasForDateFieldsAndTheTimestampMetadata(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'tstamp' => ['sql' => ['type' => 'integer', 'default' => 0]],
+            'eventDate' => ['inputType' => 'text', 'eval' => ['rgxp' => 'date'], 'sql' => ['type' => 'integer', 'default' => 0]],
+            'eventTime' => ['inputType' => 'text', 'eval' => ['rgxp' => 'time'], 'sql' => ['type' => 'string', 'default' => '456']],
+            'eventDateTime' => ['inputType' => 'text', 'eval' => ['rgxp' => 'datim'], 'sql' => ['type' => 'integer']],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time', 'default' => null, 'readOnly' => true], $properties['tstamp']);
+        $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time', 'default' => null], $properties['eventDate']);
+        $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time', 'default' => date(\DateTimeInterface::ATOM, 456)], $properties['eventTime']);
+        $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time'], $properties['eventDateTime']);
+
+        $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+        $validator = new \Opis\JsonSchema\Validator();
+
+        $this->assertTrue($validator->validate((object) ['eventDate' => date(\DateTimeInterface::ATOM, 123)], $schema)->isValid());
+        $this->assertTrue($validator->validate((object) ['eventDate' => null], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['eventDate' => 123], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['eventDate' => 'not a date'], $schema)->isValid());
+    }
+
     public function testCreatesDifferentRequestAndResponseSchemas(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [

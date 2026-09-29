@@ -213,7 +213,7 @@ class TableDataContainerRecords
     private function getListingRecords(DC_Table $dc, int $offset, int $itemsPerPage): array
     {
         // Stop after the requested page without overflowing at the largest valid offset
-        $dc->limit = '0,'.($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
+        $dc->setLimit($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 
         $ids = $dc->showAll();
         $records = [];

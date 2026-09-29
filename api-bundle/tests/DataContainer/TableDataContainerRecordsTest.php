@@ -263,15 +263,15 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('__set')
-            ->with('limit', '0,'.(2 * $size))
+            ->method('setLimit')
+            ->with(2 * $size)
         ;
 
         $dc
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function () {
+                function (): array {
                     $this->assertTrue($this->requestStack->getCurrentRequest()->hasSession());
                     $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
@@ -313,12 +313,12 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function (): string {
+                function (): array {
                     $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
                     $this->assertSame(['tl_content' => 'title'], $bag->get('sorting'));
 
-                    return '';
+                    return [];
                 },
             )
         ;
@@ -334,10 +334,10 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function (): string {
+                function (): array {
                     $this->assertNull($this->requestStack->getCurrentRequest()->getSession()->get('marker'));
 
-                    return '';
+                    return [];
                 },
             )
         ;
@@ -357,8 +357,14 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc = $this->createMock(DC_Table::class);
         $dc
             ->expects($this->once())
-            ->method('__set')
-            ->with('limit', '0,'.PHP_INT_MAX)
+            ->method('setLimit')
+            ->with(PHP_INT_MAX)
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturn([])
         ;
 
         $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
@@ -380,11 +386,11 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
-                function (): string {
+                function (): array {
                     $this->assertSame('7', $this->requestStack->getCurrentRequest()->query->get('id'));
                     $this->assertSame('tl_page', $this->requestStack->getCurrentRequest()->query->get('ptable'));
 
-                    return '';
+                    return [];
                 },
             )
         ;
