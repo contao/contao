@@ -125,7 +125,7 @@ class FormCaptcha extends Widget
 	public function validate()
 	{
 		$sum = (int) Input::post($this->strCaptchaKey);
-		$hash = Input::post($this->strCaptchaKey . '_hash' . ($sum ** 2 + 1)) ?: Input::post($this->strCaptchaKey . '_hash');
+		$hash = Input::post($this->strCaptchaKey . '_hash' . ($sum ** 2 + 1));
 		$parts = \is_string($hash) ? explode(':', $hash, 2) : array();
 
 		if (
