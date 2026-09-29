@@ -20,4 +20,13 @@ class Facet
         public int $count,
     ) {
     }
+
+    public function toArray(): array
+    {
+        return [
+            'key' => $this->key,
+            'label' => $this->label,
+            'count' => $this->count,
+        ];
+    }
 }

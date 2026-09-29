@@ -61,7 +61,13 @@ class CombinerTest extends TestCase
         $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
         $this->filesystem->dumpFile($this->getTempDir().'/public/file3.css', 'public/file3');
 
-        $mtime = filemtime($this->getTempDir().'/file1.css');
+        $mtime1 = 1000000001;
+        $mtime2 = 1000000002;
+        $mtime3 = 1000000003;
+
+        $this->filesystem->touch($this->getTempDir().'/file1.css', $mtime1);
+        $this->filesystem->touch($this->getTempDir().'/public/file2.css', $mtime2);
+        $this->filesystem->touch($this->getTempDir().'/file3.css', $mtime3);
 
         $combiner = new Combiner();
         $combiner->add('file1.css');
@@ -69,18 +75,18 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             [
-                'file1.css|'.$mtime,
-                'file2.css|screen|'.$mtime,
-                'file3.css|screen|'.$mtime,
+                'file1.css|'.$mtime1,
+                'file2.css|screen|'.$mtime2,
+                'file3.css|screen|'.$mtime3,
             ],
             $combiner->getFileUrls(),
         );
 
         $this->assertSame(
             [
-                'https://cdn.example.com/file1.css|'.$mtime,
-                'https://cdn.example.com/file2.css|screen|'.$mtime,
-                'https://cdn.example.com/file3.css|screen|'.$mtime,
+                'https://cdn.example.com/file1.css|'.$mtime1,
+                'https://cdn.example.com/file2.css|screen|'.$mtime2,
+                'https://cdn.example.com/file3.css|screen|'.$mtime3,
             ],
             $combiner->getFileUrls('https://cdn.example.com/'),
         );

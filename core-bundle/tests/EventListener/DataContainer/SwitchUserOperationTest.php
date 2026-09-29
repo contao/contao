@@ -186,6 +186,7 @@ class SwitchUserOperationTest extends TestCase
         ;
 
         $operation
+            ->expects($this->once())
             ->method('offsetGet')
             ->with('attributes')
             ->willReturn($htmlAttributes)

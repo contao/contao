@@ -1,15 +1,13 @@
-{% if enableTinyMce|default %}
+{% if enableHugeRte|default %}
     <script>
         {
             const config = {
                 min_height: 336,
-                language: '{{ tinyMceLanguage|e('js') }}',
+                language: '{{ hugeRteLanguage|e('js') }}',
                 element_format: 'html',
                 document_base_url: '{{ (app.request.schemeAndHttpHost ~ app.request.basePath ~ '/')|e('js') }}',
                 entities: '160,nbsp,60,lt,62,gt,173,shy',
-                license_key: 'gpl',
                 branding: false,
-                promotion: false,
                 skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'oxide-dark' : 'oxide'),
                 setup: function (editor) {
                     editor.getElement().removeAttribute('required');
@@ -18,7 +16,7 @@
                     });
                 },
                 init_instance_callback: function (editor) {
-                    if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
+                    if (document.activeElement && document.activeElement.id && document.activeElement.id === editor.id) {
                         editor.editorManager.get(editor.id).focus();
                     }
                     editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
@@ -29,7 +27,7 @@
                     Backend.openModalSelector({
                         'id': 'tl_listing',
                         'title': document.getElement('.tox-dialog__title').get('text'),
-                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
+                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype === 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
                         'callback': function (table, val) {
                             document.getElement('.tox-dialog input')?.focus();
                             callback(val.join(','));
@@ -40,7 +38,7 @@
                 {% endblock %}
 
                 {% block content_css %}
-                content_css: document.documentElement.dataset.colorScheme === 'dark' ? '{{ asset('tinymce-dark.css', 'contao_core')|e('js') }}' : '{{ asset('tinymce.css', 'contao_core')|e('js') }}',
+                content_css: document.documentElement.dataset.colorScheme === 'dark' ? '{{ asset('hugerte-dark.css', 'contao_core')|e('js') }}' : '{{ asset('hugerte.css', 'contao_core')|e('js') }}',
                 {% endblock %}
 
                 {% block plugins %}
@@ -68,7 +66,7 @@
                 {% endblock %}
 
                 {% block cache_suffix %}
-                cache_suffix: '?v={{ asset_version('js/tinymce.min.js', 'contao-components/tinymce')|e('js') }}',
+                cache_suffix: '?v={{ asset_version('js/hugerte.min.js', 'contao-components/hugerte')|e('js') }}',
                 {% endblock %}
 
                 {% block custom %}
@@ -84,9 +82,9 @@
 
             // Add Stimulus data and controller reference
             const target = document.querySelector('#{{ selector|e('js') }}');
-            target.tinymceConfig = config;
-            target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
-            target.setAttribute('data-controller', `${target.getAttribute('data-controller') || ''} contao--tinymce`.trim());
+            target.hugerteConfig = config;
+            target.setAttribute('data-action', 'turbo:before-visit@window->contao--hugerte#leave');
+            target.setAttribute('data-controller', `${target.getAttribute('data-controller') || ''} contao--hugerte`.trim());
         }
     </script>
 {% endif %}

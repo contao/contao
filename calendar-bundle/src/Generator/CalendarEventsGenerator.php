@@ -224,7 +224,7 @@ class CalendarEventsGenerator
         $event['calendar'] = $calendarModel->findById($eventModel->pid);
         $event['link'] = $eventModel->title;
         $event['target'] = '';
-        $event['title'] = StringUtil::specialchars($eventModel->title, true);
+        $event['title'] = StringUtil::stripInsertTags($eventModel->title);
         $event['href'] = $url;
         $event['class'] = $eventModel->cssClass ? ' '.$eventModel->cssClass : '';
         $event['recurring'] = $recurring;

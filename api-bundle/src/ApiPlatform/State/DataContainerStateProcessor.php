@@ -18,7 +18,10 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 /**
@@ -26,36 +29,44 @@ use Contao\ApiBundle\Dto\DataContainerRecord;
  */
 final class DataContainerStateProcessor implements ProcessorInterface
 {
+    public function __construct(private readonly TableDataContainerRecords $records)
+    {
+    }
+
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
-            return $data;
-        }
-
         $table = $this->getTable($operation);
+
         if (null === $table) {
             return $data;
         }
 
-        if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
-            // TODO: delete the record in $table identified by $uriVariables['id'].
-            return null;
+        $context = DataContainerContext::fromOperation($operation, $uriVariables);
+
+        if ($data instanceof DataContainerMove && 'move' === ($operation->getExtraProperties()['contao']['action'] ?? null)) {
+            return $this->records->move($table, $uriVariables['id'], $data, $context);
+        }
+
+        if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
+            return $data;
         }
 
         if ($data instanceof DataContainerMcpRecord) {
             $data = DataContainerRecord::fromArray($table, $data->data, $data->id ?? $uriVariables['id'] ?? null);
         }
 
+        if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
+            $this->records->delete($data, $context);
+
+            return null;
+        }
+
         if ($operation instanceof Post || $this->hasMethod($operation, 'POST')) {
-            // TODO: insert a new record into $table from $data->data.
-            // TODO: return the persisted record with its generated id.
-            return $data;
+            return $this->records->create($data, $context);
         }
 
         if ($operation instanceof Patch || $this->hasMethod($operation, 'PATCH')) {
-            // TODO: update the record in $table identified by $uriVariables['id'].
-            // TODO: return the updated record.
-            return $data;
+            return $this->records->update($data, $context);
         }
 
         return $data;

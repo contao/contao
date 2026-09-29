@@ -151,7 +151,7 @@ class ModuleQuicknav extends Module
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
-						'title' => StringUtil::specialchars(StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
+						'title' => StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title),
 						'href' => $href,
 						'link' => StringUtil::stripInsertTags($objSubpage->title),
 						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))

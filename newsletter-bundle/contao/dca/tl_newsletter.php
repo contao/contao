@@ -261,7 +261,7 @@ class tl_newsletter extends Backend
 	}
 
 	/**
-	 * Convert absolute URLs from TinyMCE to relative URLs
+	 * Convert absolute URLs from HugeRTE to relative URLs
 	 *
 	 * @param string $strContent
 	 *
@@ -273,7 +273,7 @@ class tl_newsletter extends Backend
 	}
 
 	/**
-	 * Convert relative URLs from TinyMCE to absolute URLs
+	 * Convert relative URLs from HugeRTE to absolute URLs
 	 *
 	 * @param string $strContent
 	 *

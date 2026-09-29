@@ -21,10 +21,12 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -182,6 +184,7 @@ class TemplateStudioControllerTest extends TestCase
             $this->createStub(Autocomplete::class),
             $this->createStub(EnvironmentInformation::class),
             $connection,
+            new TemplateSnapshots($this->getTempDir(), $this->getTempDir().'/cache', $this->createStub(CacheInvalidator::class), $loader),
             [$fooOperation],
         );
 

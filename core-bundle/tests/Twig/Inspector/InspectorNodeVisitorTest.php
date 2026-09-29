@@ -25,6 +25,7 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Nodes;
 use Twig\NodeTraverser;
@@ -54,7 +55,7 @@ class InspectorNodeVisitorTest extends TestCase
             new BodyNode(),
             $parentExpression,
             new EmptyNode(),
-            new EmptyNode(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new EmptyNode(),
             new EmptyNode(),
             null,
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
@@ -76,7 +77,7 @@ class InspectorNodeVisitorTest extends TestCase
             new BodyNode(),
             null,
             new EmptyNode(),
-            new EmptyNode(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new EmptyNode(),
             new Nodes([
                 new Nodes(['template' => $useExpression, 'targets' => new Nodes()]),
             ]),
@@ -146,7 +147,7 @@ class InspectorNodeVisitorTest extends TestCase
                     new BlockNode('baz', new EmptyNode(), 0),
                 ]),
             ]),
-            new EmptyNode(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new EmptyNode(),
             new EmptyNode(),
             null,
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),

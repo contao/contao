@@ -31,12 +31,32 @@ class LocaleUtil
 
     public static function canonicalize(string $locale): string
     {
-        return \Locale::canonicalize($locale);
+        // Do not use the system locale as fallback
+        if ('' === $locale) {
+            return '';
+        }
+
+        $locale = \Locale::canonicalize($locale);
+
+        // Fix parsing for older ICU versions
+        return preg_replace('/^und\b|^_$|^__$/', '', $locale);
     }
 
     public static function getPrimaryLanguage(string $locale): string
     {
-        return \Locale::getPrimaryLanguage($locale);
+        // Do not use the system locale as fallback
+        if ('' === $locale) {
+            return '';
+        }
+
+        $locale = \Locale::getPrimaryLanguage($locale);
+
+        // Fix parsing for older ICU versions
+        if ('und' === $locale) {
+            $locale = '';
+        }
+
+        return $locale;
     }
 
     /**
@@ -64,6 +84,11 @@ class LocaleUtil
 
         $result = [];
         $data = \Locale::parseLocale($locale);
+
+        // Fix parsing for older ICU versions
+        if ('und' === ($data[\Locale::LANG_TAG] ?? null)) {
+            unset($data[\Locale::LANG_TAG]);
+        }
 
         if (isset($data[\Locale::LANG_TAG])) {
             $result[] = $data[\Locale::LANG_TAG];

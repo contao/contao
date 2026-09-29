@@ -906,6 +906,7 @@ class DbafsTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->exactly(2))
             ->method('quoteSingleIdentifier')
             ->with('tl_files')
             ->willReturn('tl_files')

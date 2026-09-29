@@ -114,6 +114,11 @@ The TRBL widget has been removed. Use the `text` widget with `'size' => 4'` or t
 It is no longer possible to have multiple backend themes. Use the `contao.backend.custom_css` and
 `contao.backend.custom_js` configuration options to customize the backend instead.
 
+### BackendUser::navigation() removed
+
+The `BackendUser` class no longer generates the back end navigation. The `getUserNavigation` hook is still
+supported but has been deprecated. Use the KnpMenu events instead.
+
 ### Merging native HTTP headers
 
 Headers sent via `header()` are no longer merged into the final Symfony response. Work with the Symfony `Response`
@@ -155,3 +160,8 @@ Use the `contao--toggle-receiver` and `contao--toggle-sender` Stimulus controlle
 `Theme.setupProfileToggle`, and `Theme.setupSplitButtonToggle`.
 
 All remaining `Theme.*` methods have been removed.
+
+### TinyMCE
+
+TinyMCE has been replaced by [HugeRTE](https://hugerte.org/), either update your custom `be_tinyMCE.*` templates
+accordingly or require the TinyMCE contao component yourself.

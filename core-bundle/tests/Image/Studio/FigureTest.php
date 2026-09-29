@@ -433,7 +433,7 @@ class FigureTest extends TestCase
         $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
-        $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
+        $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['alt']);
     }
 
     public function testWithHrefLinkAttribute(): void

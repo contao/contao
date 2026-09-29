@@ -249,6 +249,7 @@ class RegisterHookListenersPassTest extends TestCase
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container
+            ->expects($this->once())
             ->method('hasDefinition')
             ->with('contao.framework')
             ->willReturn(false)
