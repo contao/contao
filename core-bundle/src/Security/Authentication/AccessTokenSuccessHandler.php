@@ -28,17 +28,19 @@ class AccessTokenSuccessHandler implements AuthenticationSuccessHandlerInterface
     ) {
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): void
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): null
     {
         $personalAccessToken = $token->getAttribute('access_token');
 
         if (!$personalAccessToken instanceof PersonalAccessToken) {
-            return;
+            return null;
         }
 
         $personalAccessToken->setLastUsed(new \DateTimeImmutable());
 
         $this->entityManager->persist($personalAccessToken);
         $this->entityManager->flush();
+
+        return null;
     }
 }
