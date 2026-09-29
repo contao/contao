@@ -62,8 +62,8 @@ final class DataContainerSchemaFactory
      */
     private function createTableSchema(string $table): array
     {
-        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
         $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
