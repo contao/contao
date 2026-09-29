@@ -63,7 +63,7 @@ final class TemplateSnapshotTools
     private function assertAdmin(): void
     {
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            throw new ToolCallException('Template snapshots require administrator privileges.');
+            throw new ToolCallException('Template Studio tools require administrator privileges.');
         }
     }
 

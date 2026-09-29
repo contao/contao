@@ -41,7 +41,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
                 $tools->$method();
                 $this->fail($method.' should require an administrator.');
             } catch (ToolCallException $exception) {
-                $this->assertSame('Template snapshots require administrator privileges.', $exception->getMessage());
+                $this->assertSame('Template Studio tools require administrator privileges.', $exception->getMessage());
             }
         }
     }
