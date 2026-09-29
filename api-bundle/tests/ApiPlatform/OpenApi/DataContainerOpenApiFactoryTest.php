@@ -43,18 +43,20 @@ use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
+
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
 
@@ -62,9 +64,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -97,7 +97,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
@@ -227,7 +231,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->willReturn(new OpenApi(new Info('API', '1'), [], new Paths()))
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/contao/api');
         $openApi = $factory();
 

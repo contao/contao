@@ -38,13 +38,14 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 final class DataContainerRecordMapperTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     private WidgetConverterRegistry $converters;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
 
         $framework = $this->createStub(ContaoFramework::class);
         $framework
@@ -58,7 +59,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
@@ -75,10 +75,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->resetStaticProperties([System::class]);
 
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
-
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
 
         parent::tearDown();
     }
@@ -101,7 +97,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->with('tl_content')
         ;
 
-        $framework = $this->createContaoFrameworkMock([Controller::class => $controller]);
+        $framework = $this->createContaoFrameworkMock([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -127,7 +127,17 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+            ),
+            $this->converters,
+        );
+
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'tstamp' => '123', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128', 'internal' => 'hidden']);
 
         $this->assertSame(17, $record->id);
@@ -143,7 +153,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'] = ['inputType' => 'fileTree', 'sql' => ['type' => 'binary', 'length' => 16]];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $factory = new DataContainerSchemaFactory($framework, $this->converters);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
@@ -167,7 +182,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
 
-        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters);
+        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]), $this->converters);
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'value' => $stored]);
@@ -198,9 +216,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
-        $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
+        $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
 
         $record = $mapper->fromRow('tl_content', [
@@ -221,7 +243,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters);
+        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]), $this->converters);
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'json' => '["one","two"]', 'csv' => 'one|two', 'serialized' => serialize(['one', 'two'])]);
@@ -249,7 +274,17 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $controller = $this->createAdapterStub(['loadDataContainer']);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+            ),
+            $this->converters,
+        );
+
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'files' => serialize([hex2bin(str_replace('-', '', $uuid))]), 'textual' => '1234567890123456']);
 
         $this->assertSame(['files' => [$uuid], 'textual' => '1234567890123456'], $record->data);
@@ -264,7 +299,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
 
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
 
@@ -278,7 +316,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         System::setContainer($container);
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $factory = new DataContainerSchemaFactory($framework, $this->converters);
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $timestamp = mktime(14, 35, 0, 9, 17, 2026);
@@ -328,7 +371,17 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields']['rows'] = ['inputType' => 'customRows'];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
+
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+            ),
+            $this->converters,
+        );
 
         $this->assertSame(['rows' => [1, 2]], $mapper->fromRow('tl_content', ['id' => 17, 'rows' => '1|2'])->data);
         $this->assertSame(['rows' => ['rows' => [3, 4]]], $mapper->toFormValues('tl_content', ['rows' => [3, 4]]));
@@ -346,7 +399,17 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields']['payload'] = ['inputType' => 'unsupported', 'api' => ['schema' => ['type' => 'string']]];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
+
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+            ),
+            $this->converters,
+        );
 
         $this->assertSame([], $mapper->fromRow('tl_content', ['id' => 17, 'payload' => 'private'])->data);
         $this->expectException(UnprocessableEntityHttpException::class);
@@ -365,7 +428,18 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($this->createContaoFrameworkStub([Controller::class => $controller]), $this->converters), $this->converters);
+
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+            ),
+            $this->converters,
+        );
+
         $row = ['alias' => '', 'password' => 'stored-hash', 'locked' => 'fixed', 'outside' => 'hidden'];
 
         $this->assertSame(['alias' => '', 'password' => ''], $mapper->toFormDefaults('tl_content', $row, ['alias', 'password', 'locked', 'unsupported']));
@@ -376,7 +450,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields']['locked'] = ['inputType' => 'text', 'api' => ['schema' => ['type' => 'string', 'readOnly' => true]]];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
 
         $this->expectException(UnprocessableEntityHttpException::class);
@@ -388,7 +467,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields']['pid'] = ['sql' => ['type' => 'integer']];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
 
         $this->expectException(UnprocessableEntityHttpException::class);
