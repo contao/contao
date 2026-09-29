@@ -210,10 +210,19 @@
                                     </button>
                                 </td>
                             {% else %}
-                                <td class="name">{{ access_token.name }}</td>
+                                <td class="name">
+                                    {{ access_token.name }}
+                                    {% if access_token.lastUsed|default %}
+                                        <span class="last-used">{{ 'MSC.lastUsed'|trans }}: {{ access_token.lastUsed.format('j. F Y, H:i') }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="expires">
                                     {% if access_token.expiresAt|default %}
-                                        {{ access_token.expiresAt.format('j. F Y, H:i') }}
+                                        {% if access_token.expiresAt < date() %}
+                                            <span class="expired">{{ access_token.expiresAt.format('j. F Y, H:i') }}</span>
+                                        {% else %}
+                                            {{ access_token.expiresAt.format('j. F Y, H:i') }}
+                                        {% endif %}
                                     {% else %}
                                         –
                                     {% endif %}

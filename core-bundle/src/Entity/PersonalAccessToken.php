@@ -40,6 +40,9 @@ class PersonalAccessToken
     #[Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     protected \DateTimeImmutable|null $expiresAt;
 
+    #[Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    protected \DateTimeImmutable|null $lastUsed = null;
+
     #[Column(type: Types::STRING)]
     protected string $name;
 
@@ -97,6 +100,22 @@ class PersonalAccessToken
         }
 
         $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
+
+    public function getLastUsed(): \DateTimeInterface|null
+    {
+        return $this->lastUsed;
+    }
+
+    public function setLastUsed(\DateTimeInterface|null $lastUsed): self
+    {
+        if ($lastUsed && !$lastUsed instanceof \DateTimeImmutable) {
+            $lastUsed = \DateTimeImmutable::createFromInterface($lastUsed);
+        }
+
+        $this->lastUsed = $lastUsed;
 
         return $this;
     }

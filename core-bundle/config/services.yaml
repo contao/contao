@@ -1172,6 +1172,7 @@ services:
         arguments:
             - '@contao.security.access_token_manager'
             - '@contao.security.backend_user_provider'
+            - '@doctrine.orm.entity_manager'
 
     contao.security.access_token_manager:
         class: Contao\CoreBundle\Security\Authentication\AccessTokenManager

@@ -2393,6 +2393,9 @@
       <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.unlimited">
         <source>No expiration</source>
       </trans-unit>
+      <trans-unit id="MSC.lastUsed">
+        <source>Last used</source>
+      </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
       </trans-unit>

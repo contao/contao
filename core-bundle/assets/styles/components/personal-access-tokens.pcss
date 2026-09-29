@@ -7,6 +7,8 @@
 
     .pat-list {
         td.name {
+            height: 36px;
+
             button {
                 box-sizing: border-box;
                 border: 0;
@@ -23,6 +25,12 @@
             &.tl_confirm {
                 background-position: 11px center;
             }
+
+            .last-used {
+                color: var(--gray);
+                font-size: 0.8em;
+                display: block;
+            }
         }
 
         td.tl_confirm {
@@ -34,6 +42,10 @@
 
             @media (width <= 767.98px) {
                 width: auto;
+            }
+
+            .expired {
+                color: var(--red);
             }
         }
 
