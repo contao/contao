@@ -208,9 +208,9 @@ class ModuleTwoFactor extends BackendModule
 						$expiresAt = (new \DateTimeImmutable())->modify(\sprintf('+%d days', $expiresWidget->value));
 					}
 
-					$personalAccessToken = $accessTokenManager->createToken($user, $nameWidget->value, $expiresAt);
+					$plainToken = $accessTokenManager->createToken($user, $nameWidget->value, $expiresAt);
 
-					$session->set('_created_pat_token', $personalAccessToken->getPlainToken());
+					$session->set('_created_pat_token', $plainToken);
 
 					$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 				}

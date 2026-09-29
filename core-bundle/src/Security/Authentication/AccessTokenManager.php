@@ -31,9 +31,9 @@ class AccessTokenManager
 
     /**
      * Creates a personal access token, persists it to the database and returns the
-     * token with the plain token set on the entity.
+     * plain token..
      */
-    public function createToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): PersonalAccessToken
+    public function createToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): string
     {
         $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
         $plainSecret = StringUtil::encodeBase32(random_bytes(16));
@@ -42,9 +42,7 @@ class AccessTokenManager
         $this->entityManager->persist($personalAccessToken);
         $this->entityManager->flush();
 
-        $personalAccessToken->setPlainToken(\sprintf('%s%s_%s', self::TOKEN_PREFIX, $personalAccessToken->getId()->toBase32(), $plainSecret));
-
-        return $personalAccessToken;
+        return \sprintf('%s%s_%s', self::TOKEN_PREFIX, $personalAccessToken->getId()->toBase32(), $plainSecret);
     }
 
     /**

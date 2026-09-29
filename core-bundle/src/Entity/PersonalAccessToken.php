@@ -49,9 +49,6 @@ class PersonalAccessToken
     #[Column(type: Types::STRING)]
     protected string $secret;
 
-    // The plain token that is shown to the user once
-    protected string|null $plainToken = null;
-
     public function __construct(int $userId, string $name, string $secret, \DateTimeInterface|null $expiresAt = null)
     {
         $this->id = Uuid::v7();
@@ -152,18 +149,6 @@ class PersonalAccessToken
     public function setSecret(string $secret): self
     {
         $this->secret = $secret;
-
-        return $this;
-    }
-
-    public function getPlainToken(): string|null
-    {
-        return $this->plainToken;
-    }
-
-    public function setPlainToken(string $plainToken): self
-    {
-        $this->plainToken = $plainToken;
 
         return $this;
     }

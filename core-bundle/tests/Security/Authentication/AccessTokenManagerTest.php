@@ -53,12 +53,19 @@ class AccessTokenManagerTest extends TestCase
 
         $entityManager
             ->expects($this->once())
-            ->method('flush')
+            ->method('persist')
+            ->willReturnCallback(function (PersonalAccessToken $personalAccessToken) {
+                $this->assertSame('hashed-secret', $personalAccessToken->getSecret());
+                $this->assertNull($personalAccessToken->getExpiresAt());
+                $this->assertNull($personalAccessToken->getLastUsed());
+
+                return true;
+            })
         ;
 
         $entityManager
             ->expects($this->once())
-            ->method('persist')
+            ->method('flush')
         ;
 
         $accessTokenManager = new AccessTokenManager(
@@ -66,12 +73,9 @@ class AccessTokenManagerTest extends TestCase
             $entityManager,
         );
 
-        $personalAccessToken = $accessTokenManager->createToken($user, 'foobar');
+        $plainToken = $accessTokenManager->createToken($user, 'foobar');
 
-        $this->assertStringStartsWith(AccessTokenManager::TOKEN_PREFIX, $personalAccessToken->getPlainToken());
-        $this->assertSame('hashed-secret', $personalAccessToken->getSecret());
-        $this->assertNull($personalAccessToken->getExpiresAt());
-        $this->assertNull($personalAccessToken->getLastUsed());
+        $this->assertStringStartsWith(AccessTokenManager::TOKEN_PREFIX, $plainToken);
     }
 
     public function testParserSkipsTokensWithWrongFormats(): void
