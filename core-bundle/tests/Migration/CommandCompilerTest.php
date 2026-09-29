@@ -280,6 +280,7 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
+            ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
         ;
 
@@ -404,6 +405,76 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo_view']);
 
         $this->assertEmpty($installer->compileCommands());
+    }
+
+    public function testDoesNotChangeTheEngineIfTheTargetTableHasNoExplicitEngineOption(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+
+        $this->assertEmpty($installer->compileCommands());
+    }
+
+    public function testChangesTheEngineIfTheTargetTableHasNoExplicitEngineOptionButTheConnectionDefaultDoes(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'MyISAM')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+        $commands = $installer->compileCommands();
+
+        $this->assertContains('ALTER TABLE tl_message_queue ENGINE = InnoDB ROW_FORMAT = DYNAMIC', $commands);
+    }
+
+    public function testChangesTheCollationIfTheTargetTableHasNoExplicitCollationOptionButTheConnectionDefaultDoes(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_bin')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+        $commands = $installer->compileCommands();
+
+        $this->assertContains('ALTER TABLE tl_message_queue CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $commands);
     }
 
     public function testReturnsTheDropColumnCommands(): void
@@ -648,6 +719,18 @@ class CommandCompilerTest extends TestCase
         $connection
             ->method('getConfiguration')
             ->willReturn($this->createStub(Configuration::class))
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn([
+                'defaultTableOptions' => [
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                    'engine' => 'InnoDB',
+                    'row_format' => 'DYNAMIC',
+                ],
+            ])
         ;
 
         $schemaProvider = $this->createStub(SchemaProvider::class);

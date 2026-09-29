@@ -660,7 +660,7 @@ window.Backend =
 	},
 
 	/**
-	 * Open a TinyMCE file browser in a modal window
+	 * Open a HugeRTE file browser in a modal window
 	 *
 	 * @param {string} field_name The field name
 	 * @param {string} url        The URL
@@ -940,6 +940,8 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeDragAndDrop: function(ul, options) {
+		console.warn('Backend.enableFileTreeDragAndDrop() is deprecated. Please use the Stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -1633,39 +1635,6 @@ window.Backend =
 	},
 
 	/**
-	 * Update the fields of the imageSize widget upon change
-	 */
-	enableImageSizeWidgets: function() {
-		$$('.tl_image_size').each(function(el) {
-			var select = el.getElement('select'),
-				widthInput = el.getChildren('input')[0],
-				heightInput = el.getChildren('input')[1],
-				update = function() {
-					if (select.get('value') === '' || select.get('value').indexOf('_') === 0 || select.get('value').toInt().toString() === select.get('value')) {
-						widthInput.readOnly = true;
-						heightInput.readOnly = true;
-						var dimensions = $(select.getSelected()[0]).get('text');
-						dimensions = dimensions.split('(').length > 1
-							? dimensions.split('(').getLast().split(')')[0].split('x')
-							: ['', ''];
-						widthInput.set('value', '').set('placeholder', dimensions[0] * 1 || '');
-						heightInput.set('value', '').set('placeholder', dimensions[1] * 1 || '');
-					} else {
-						widthInput.set('placeholder', '');
-						heightInput.set('placeholder', '');
-						widthInput.readOnly = false;
-						heightInput.readOnly = false;
-					}
-				}
-			;
-
-			update();
-			select.addEvent('change', update);
-			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
 	 * Allow to mark the important part of an image
 	 *
 	 * @param {object} el The DOM element
@@ -1802,6 +1771,8 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeUpload: function(wrap, options) {
+		console.warn('Backend.enableFileTreeUpload() is deprecated. Please use the Stimulus controllers instead.');
+
 		wrap = $(wrap);
 
 		var fallbackUrl = options.url,
