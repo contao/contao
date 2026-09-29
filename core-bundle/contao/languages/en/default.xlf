@@ -2361,7 +2361,10 @@
         <source>Name</source>
       </trans-unit>
       <trans-unit id="MSC.personalAccessTokenNameDescription">
-        <source>What's this token for?</source>
+        <source>What‘s this token for?</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenCopy">
+        <source>Copy the token to your clipboard</source>
       </trans-unit>
       <trans-unit id="MSC.personalAccessTokenExpiresAt">
         <source>Expires at</source>
