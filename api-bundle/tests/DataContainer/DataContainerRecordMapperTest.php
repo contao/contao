@@ -137,6 +137,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     public function testReadsRecordMetadataWithoutAWidget(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_page';
+
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'id' => ['sql' => ['type' => 'integer']],
             'tstamp' => ['sql' => ['type' => 'integer']],
@@ -353,10 +354,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher);
         $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
         $schema = json_decode(json_encode($factory->create('tl_news'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
@@ -373,6 +376,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ],
             $factory->create('tl_news')['properties']['jumpTo'],
         );
+
         $this->assertTrue(new JsonSchemaValidator()->validate((object) ['jumpTo' => (object) ['iri' => '/contao/api/dc/page/42']], $schema)->isValid());
         $this->assertFalse(new JsonSchemaValidator()->validate((object) ['jumpTo' => 42], $schema)->isValid());
         $this->assertEquals(new DataContainerRelationReference(42, '/contao/api/dc/page/42'), $mapper->fromRow('tl_news', ['id' => 1, 'jumpTo' => 42])->data['jumpTo']);
@@ -389,10 +393,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $converters = new WidgetConverterRegistry([$this->createRelationAwareConverter()]);
         $resolver = $this->createRelationResolver($converters);
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $factory = new DataContainerSchemaFactory($framework, $converters, $resolver, $this->localeSwitcher);
         $mapper = new DataContainerRecordMapper($factory, $converters, $resolver);
 
@@ -597,11 +603,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             operations: [new Get(name: 'page_get', extraProperties: ['contao' => ['resource' => 'page', 'parents' => []]])],
             extraProperties: ['contao' => ['table' => 'tl_page']],
         );
+
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, [$resource]))
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')

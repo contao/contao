@@ -355,6 +355,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')

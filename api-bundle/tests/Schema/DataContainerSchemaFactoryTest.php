@@ -250,6 +250,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             $this->relationResolver,
             $localeSwitcher,
         );
+
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame('English title', $properties['title']['title']);
@@ -452,6 +453,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')

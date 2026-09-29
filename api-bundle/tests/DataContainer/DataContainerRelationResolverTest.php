@@ -107,6 +107,7 @@ final class DataContainerRelationResolverTest extends TestCase
     public function testUsesRelationMetadataProvidedByAWidgetConverter(): void
     {
         $config = ['inputType' => 'custom', 'eval' => ['targetTable' => 'tl_page']];
+
         $converter = $this->createStub(RelationAwareWidgetConverterInterface::class);
         $converter
             ->method('supports')
@@ -117,13 +118,14 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('getRelation')
             ->willReturnCallback(static fn (array $config): DataContainerRelationDefinition => new DataContainerRelationDefinition($config['eval']['targetTable']))
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('/contao/api/dc/page/12')
         ;
-        $resolver = $this->createResolver($router, new WidgetConverterRegistry([$converter]));
 
+        $resolver = $this->createResolver($router, new WidgetConverterRegistry([$converter]));
         $field = new DataContainerFieldContext($config);
 
         $this->assertTrue($resolver->supports($field));
@@ -134,11 +136,13 @@ final class DataContainerRelationResolverTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
         $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['mode'] = DataContainer::MODE_TREE;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('/contao/api/dc/page/12')
         ;
+
         $resolver = $this->createResolver($router);
 
         foreach (['tl_article', 'tl_page'] as $table) {
@@ -156,6 +160,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('generate')
             ->willReturn('/contao/api/dc/page/12')
         ;
+
         $resolver = $this->createResolver($router);
 
         $this->assertSame('/contao/api/dc/page/12', $resolver->resolveRecordToIri(new DataContainerRecord('tl_page', id: 12)));
@@ -164,11 +169,13 @@ final class DataContainerRelationResolverTest extends TestCase
     public function testInfersDynamicPidRelationsFromTheRow(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('/contao/api/dc/page/12/article/7')
         ;
+
         $field = new DataContainerFieldContext([], 'tl_content', 'pid');
         $resolver = $this->createResolver($router);
 

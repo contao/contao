@@ -101,6 +101,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testNormalizesTheRecordData(): void
     {
         $normalizer = $this->createNormalizer();
+
         $record = new DataContainerRecord(
             'tl_content',
             [
@@ -129,6 +130,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testAddsTheResourceIriForJsonLd(): void
     {
         $normalizer = $this->createNormalizer();
+
         $record = new DataContainerRecord(
             'tl_content',
             [
@@ -219,6 +221,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     private function createNormalizer(): DataContainerRecordNormalizer
     {
         $connection = $this->createStub(Connection::class);
+
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')
@@ -229,6 +232,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
                 ),
             ]))
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
