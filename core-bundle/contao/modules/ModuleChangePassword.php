@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+
 /**
  * Front end module "change password".
  */
@@ -44,6 +46,11 @@ class ModuleChangePassword extends Module
 		}
 
 		$security = $container->get('security.helper');
+
+		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('User is not fully authenticated');
+		}
 
 		// Return if there is no logged-in user
 		if (!$security->getUser() instanceof FrontendUser)

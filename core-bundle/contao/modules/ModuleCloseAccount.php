@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+
 /**
  * Front end module "close account".
  */
@@ -43,8 +45,15 @@ class ModuleCloseAccount extends Module
 			return $objTemplate->parse();
 		}
 
+		$security = $container->get('security.helper');
+
+		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('User is not fully authenticated');
+		}
+
 		// Return if there is no logged-in user
-		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
+		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
 		}
