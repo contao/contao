@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\SwitchMemberOperationListener;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class SwitchMemberOperationListenerTest extends TestCase
 {
