@@ -139,13 +139,13 @@ class CrawlCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->execute(['--queue' => 'doctrine']);
 
-        $expectCli = \sprintf('[Job ID: %s]', $jobId);
+        $expectCliRegex = \sprintf('/\\[Job ID:\s+%s\\]/', $jobId);
 
-        $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
+        $this->assertMatchesRegularExpression($expectCliRegex, $tester->getDisplay(true));
 
         $tester->execute(['--queue' => 'doctrine', 'job' => $jobId]);
 
-        $this->assertStringContainsString($expectCli, $tester->getDisplay(true));
+        $this->assertMatchesRegularExpression($expectCliRegex, $tester->getDisplay(true));
     }
 
     public function testEmitsWarningIfLocalhostIsInCollection(): void
