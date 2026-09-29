@@ -37,7 +37,10 @@ final class UserTemplateToolsTest extends TestCase
     public function testRequiresAdministratorForEveryTool(): void
     {
         $security = $this->createStub(Security::class);
-        $security->method('isGranted')->willReturn(false);
+        $security
+            ->method('isGranted')
+            ->willReturn(false)
+        ;
 
         $tools = new UserTemplateTools(
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
@@ -161,7 +164,10 @@ final class UserTemplateToolsTest extends TestCase
     private function createAdminSecurity(): Security
     {
         $security = $this->createStub(Security::class);
-        $security->method('isGranted')->willReturn(true);
+        $security
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
 
         return $security;
     }

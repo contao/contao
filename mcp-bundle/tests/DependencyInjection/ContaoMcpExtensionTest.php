@@ -16,9 +16,9 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
-use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
 use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Mcp\Capability\Attribute\McpTool;

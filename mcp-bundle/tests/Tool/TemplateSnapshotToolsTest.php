@@ -123,7 +123,6 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
     private function createAdminSecurity(): Security
     {
         $security = $this->createMock(Security::class);
-
         $security
             ->expects($this->atLeastOnce())
             ->method('isGranted')
