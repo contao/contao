@@ -21,7 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class AccessTokenManager
 {
-    private const string TOKEN_PREFIX = 'ct_pat_';
+    public const string TOKEN_PREFIX = 'ct_pat_';
 
     public function __construct(
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
