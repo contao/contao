@@ -145,7 +145,7 @@ class AuthorizeController
     }
 
     /**
-     * RFC 9207 requires the "iss" parameter in all authorization responses
+     * RFC 9207 requires the "iss" parameter in all authorization responses.
      */
     private function addIssuer(Response $response): Response
     {
