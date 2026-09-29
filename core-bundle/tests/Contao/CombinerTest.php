@@ -61,7 +61,13 @@ class CombinerTest extends TestCase
         $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
         $this->filesystem->dumpFile($this->getTempDir().'/public/file3.css', 'public/file3');
 
-        $mtime = filemtime($this->getTempDir().'/file1.css');
+        $mtime1 = 1000000001;
+        $mtime2 = 1000000002;
+        $mtime3 = 1000000003;
+
+        $this->filesystem->touch($this->getTempDir().'/file1.css', $mtime1);
+        $this->filesystem->touch($this->getTempDir().'/public/file2.css', $mtime2);
+        $this->filesystem->touch($this->getTempDir().'/file3.css', $mtime3);
 
         $combiner = new Combiner();
         $combiner->add('file1.css');
@@ -69,18 +75,18 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             [
-                'file1.css|'.$mtime,
-                'file2.css|screen|'.$mtime,
-                'file3.css|screen|'.$mtime,
+                'file1.css|'.$mtime1,
+                'file2.css|screen|'.$mtime2,
+                'file3.css|screen|'.$mtime3,
             ],
             $combiner->getFileUrls(),
         );
 
         $this->assertSame(
             [
-                'https://cdn.example.com/file1.css|'.$mtime,
-                'https://cdn.example.com/file2.css|screen|'.$mtime,
-                'https://cdn.example.com/file3.css|screen|'.$mtime,
+                'https://cdn.example.com/file1.css|'.$mtime1,
+                'https://cdn.example.com/file2.css|screen|'.$mtime2,
+                'https://cdn.example.com/file3.css|screen|'.$mtime3,
             ],
             $combiner->getFileUrls('https://cdn.example.com/'),
         );
@@ -100,10 +106,12 @@ class CombinerTest extends TestCase
 
         System::getContainer()->setParameter('kernel.debug', true);
 
-        $hash = substr(md5((string) $mtime), 0, 8);
+        $hash1 = substr(md5((string) $mtime1), 0, 8);
+        $hash2 = substr(md5((string) $mtime2), 0, 8);
+        $hash3 = substr(md5((string) $mtime3), 0, 8);
 
         $this->assertSame(
-            'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
+            'file1.css?v='.$hash1.'"><link rel="stylesheet" href="file2.css?v='.$hash2.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash3.'" media="screen',
             $combiner->getCombinedFile(),
         );
     }
