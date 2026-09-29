@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Config;
 use Contao\FormCaptcha;
 use Contao\Input;
 use Contao\System;
