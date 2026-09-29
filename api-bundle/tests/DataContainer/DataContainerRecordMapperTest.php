@@ -35,10 +35,13 @@ use Opis\JsonSchema\Validator as JsonSchemaValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerRecordMapperTest extends ContaoTestCase
 {
     private WidgetConverterRegistry $converters;
+
+    private LocaleSwitcher $localeSwitcher;
 
     protected function setUp(): void
     {
@@ -59,6 +62,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
+        $this->localeSwitcher = $this->createLocaleSwitcher();
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
@@ -107,7 +111,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'title' => 'Example', 'published' => '1', 'count' => '42', 'tags' => serialize(['one', 'two']), 'password' => 'hash', 'unknown' => 'private']);
 
         $this->assertSame(17, $record->id);
@@ -134,6 +138,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                     System::class => $this->createAdapterStub(['loadLanguageFile']),
                 ]),
                 $this->converters,
+                $this->localeSwitcher,
             ),
             $this->converters,
         );
@@ -159,7 +164,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $this->converters);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher);
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
@@ -185,7 +190,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters);
+        ]), $this->converters, $this->localeSwitcher);
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'value' => $stored]);
@@ -223,7 +228,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ]);
 
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
 
         $record = $mapper->fromRow('tl_content', [
             'id' => 17,
@@ -246,7 +251,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters);
+        ]), $this->converters, $this->localeSwitcher);
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'json' => '["one","two"]', 'csv' => 'one|two', 'serialized' => serialize(['one', 'two'])]);
@@ -281,6 +286,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                     System::class => $this->createAdapterStub(['loadLanguageFile']),
                 ]),
                 $this->converters,
+                $this->localeSwitcher,
             ),
             $this->converters,
         );
@@ -304,7 +310,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
 
         $this->assertSame(['pages' => '1,2'], $mapper->toFormValues('tl_content', ['pages' => [1, 2]]));
     }
@@ -322,7 +328,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $this->converters);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher);
         $mapper = new DataContainerRecordMapper($factory, $this->converters);
         $timestamp = mktime(14, 35, 0, 9, 17, 2026);
 
@@ -379,6 +385,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                     System::class => $this->createAdapterStub(['loadLanguageFile']),
                 ]),
                 $this->converters,
+                $this->localeSwitcher,
             ),
             $this->converters,
         );
@@ -407,6 +414,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                     System::class => $this->createAdapterStub(['loadLanguageFile']),
                 ]),
                 $this->converters,
+                $this->localeSwitcher,
             ),
             $this->converters,
         );
@@ -436,6 +444,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                     System::class => $this->createAdapterStub(['loadLanguageFile']),
                 ]),
                 $this->converters,
+                $this->localeSwitcher,
             ),
             $this->converters,
         );
@@ -456,7 +465,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $mapper->toFormValues('tl_content', ['locked' => 'Changed']);
@@ -473,10 +482,21 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $this->expectExceptionMessage('Field "pid" is not writable through the update operation.');
         $mapper->toFormValues('tl_content', ['pid' => 42]);
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }
