@@ -52,6 +52,13 @@ final class TemplateGuidance
             - Some generic components accept either a grouped object or the current context, e.g. `list|default(_context)`; the grouped object takes precedence.
             - Preserve fine-grained blocks around wrappers, attributes and inner content. They are intentional customization points.
 
+            ## Code style
+
+            - Match the style and naming of the template being extended and nearby templates.
+            - Indent nested Twig and HTML with four spaces, and separate logical sections with blank lines.
+            - Use descriptive `snake_case` names for new blocks and template variables, including element-specific attribute variables.
+            - Preserve existing block structure and Twig whitespace controls (`{%-` and `-%}`) when editing rendered output.
+
             ## Variables and attributes
 
             - Use `|default`, `|default(null)` or `is defined` for optional extension variables.
