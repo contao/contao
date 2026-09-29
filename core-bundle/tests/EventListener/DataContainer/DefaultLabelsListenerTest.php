@@ -43,6 +43,7 @@ class DefaultLabelsListenerTest extends TestCase
     public function testDoesNotReplaceAConfiguredOperationLabelPartReferencingAMissingTranslation(): void
     {
         $GLOBALS['TL_LANG']['DCA']['edit'] = ['Fallback label'];
+
         $GLOBALS['TL_DCA']['tl_test']['list']['operations']['edit']['label'] = [
             &$GLOBALS['TL_LANG']['tl_test']['edit'][0],
             'Description',
