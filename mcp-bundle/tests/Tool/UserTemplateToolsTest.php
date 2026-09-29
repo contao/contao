@@ -22,6 +22,7 @@ use Contao\McpBundle\Tool\UserTemplateTools;
 use Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer;
 use Contao\McpBundle\UserTemplate\UserTemplateValidator;
 use Mcp\Exception\ToolCallException;
+use Symfony\Bundle\SecurityBundle\Security;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -61,6 +62,7 @@ final class UserTemplateToolsTest extends TestCase
             new ApiResponseConverter(),
             new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
             new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
+            $this->createAdminSecurity(),
         );
 
         $result = $tools->listThemes();
@@ -93,6 +95,7 @@ final class UserTemplateToolsTest extends TestCase
             new ApiResponseConverter(),
             new UserTemplateValidator(new Environment(new ArrayLoader()), $loader),
             new UserTemplateImpactAnalyzer($loader, $this->createStub(Inspector::class)),
+            $this->createAdminSecurity(),
         )->validate('content_element/text', '{{ value }}', 'demo');
 
         $this->assertSame(['identifier' => 'content_element/text', 'valid' => true, 'errors' => []], $result);
@@ -113,8 +116,17 @@ final class UserTemplateToolsTest extends TestCase
             new ApiResponseConverter(),
             new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
             new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
+            $this->createAdminSecurity(),
         );
 
         $tools->executeOperation('save', 'content_element/text');
+    }
+
+    private function createAdminSecurity(): Security
+    {
+        $security = $this->createStub(Security::class);
+        $security->method('isGranted')->willReturn(true);
+
+        return $security;
     }
 }
