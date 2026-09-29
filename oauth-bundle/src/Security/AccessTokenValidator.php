@@ -16,8 +16,8 @@ use Contao\OAuthBundle\AuthorizationServer\Repository\AccessTokenRepository;
 use Contao\OAuthBundle\KeyProvider;
 use Contao\OAuthBundle\ResourceContext;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
@@ -39,11 +39,7 @@ class AccessTokenValidator
 
     public function validate(string $jwt): array
     {
-        $config = Configuration::forAsymmetricSigner(
-            new Sha256(),
-            InMemory::plainText('unused'),
-            InMemory::plainText($this->keys->getPublicKeyContents()),
-        );
+        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($this->keys->getSigningKey()->getKeyContents()));
 
         try {
             $token = $config->parser()->parse($jwt);

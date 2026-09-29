@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\OAuthBundle\AuthorizationServer\Entity;
 
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
@@ -49,11 +49,7 @@ final class AccessToken implements AccessTokenEntityInterface
 
     public function toString(): string
     {
-        $config = Configuration::forAsymmetricSigner(
-            new Sha256(),
-            InMemory::plainText($this->privateKey->getKeyContents(), $this->privateKey->getPassPhrase() ?? ''),
-            InMemory::plainText('unused'),
-        );
+        $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($this->privateKey->getKeyContents()));
 
         $now = new \DateTimeImmutable();
 

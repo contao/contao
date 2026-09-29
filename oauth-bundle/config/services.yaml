@@ -2,7 +2,6 @@ services:
     _defaults:
         autoconfigure: true
 
-
     contao_oauth.authorization_server.access_token_repository:
         class: Contao\OAuthBundle\AuthorizationServer\Repository\AccessTokenRepository
         arguments:
@@ -92,7 +91,6 @@ services:
     contao_oauth.key_provider:
         class: Contao\OAuthBundle\KeyProvider
         arguments:
-            - '%kernel.project_dir%/var/oauth'
             - '%kernel.secret%'
 
     contao_oauth.repository.oauth_token:

@@ -45,7 +45,7 @@ class AuthorizationServerFactory
             $this->clients,
             $this->accessTokens,
             $this->scopes,
-            $this->keys->getPrivateKey(),
+            $this->keys->getSigningKey(),
             $this->keys->getEncryptionKey(),
         );
 
