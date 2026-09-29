@@ -143,6 +143,7 @@
         "symfony/security-core": "^7.4 || ^8.0",
         "symfony/security-csrf": "^7.4 || ^8.0",
         "symfony/security-http": "^7.4 || ^8.0",
+        "symfony/serializer": "^7.4 || ^8.0",
         "symfony/service-contracts": "^3.0",
         "symfony/string": "^7.4 || ^8.0",
         "symfony/translation": "^7.4 || ^8.0",

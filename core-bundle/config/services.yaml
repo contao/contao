@@ -1378,6 +1378,14 @@ services:
     contao.security.webauthn_credential_voter:
         class: Contao\CoreBundle\Security\Voter\WebauthnCredentialVoter
 
+    contao.serializer.webauthn_rp_entity_normalizer:
+        class: Contao\CoreBundle\Serializer\WebauthnRpEntityNormalizer
+        arguments:
+            - '@request_stack'
+            - '@Webauthn\Denormalizer\PublicKeyCredentialRpEntityDenormalizer'
+        tags:
+            - { name: serializer.normalizer, priority: 1025 }
+
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
