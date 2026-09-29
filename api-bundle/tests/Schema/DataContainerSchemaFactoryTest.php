@@ -190,6 +190,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     public function testCreatesEnglishTitlesAndDescriptionsFromLabelsUnlessExplicitlyConfigured(): void
     {
         $GLOBALS['TL_LANG']['MSC']['apiTestImgSize'] = ['Deutsche Bildgröße', 'Deutsche Hilfe.'];
+
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'title' => ['inputType' => 'text', 'label' => ['Deutscher Titel', 'Deutsche Hilfe.']],
             'size' => ['inputType' => 'text', 'label' => &$GLOBALS['TL_LANG']['MSC']['apiTestImgSize']],
@@ -203,8 +204,9 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
         $localeSwitcher = $this->createLocaleSwitcher('de');
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $system = $this->createAdapterMock(['loadLanguageFile']);
         $loadedLanguageFiles = [];
+
+        $system = $this->createAdapterMock(['loadLanguageFile']);
         $system
             ->expects($this->exactly(4))
             ->method('loadLanguageFile')
@@ -229,6 +231,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             Controller::class => $controller,
             System::class => $system,
         ]);
+
         $factory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $localeSwitcher);
         $properties = $factory->create('tl_content')['properties'];
 
@@ -426,6 +429,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
                 },
             )
         ;
+
         $localeSwitcher
             ->method('runWithLocale')
             ->willReturnCallback(
