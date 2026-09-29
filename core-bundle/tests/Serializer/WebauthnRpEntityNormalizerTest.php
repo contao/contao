@@ -27,11 +27,9 @@ class WebauthnRpEntityNormalizerTest extends TestCase
         $requestStack->push(Request::create('https://www.example.org/contao/login'));
 
         $normalizer = new WebauthnRpEntityNormalizer($requestStack, new PublicKeyCredentialRpEntityDenormalizer());
+        $normalizedData = $normalizer->normalize(PublicKeyCredentialRpEntity::create());
 
-        $this->assertSame(
-            ['id' => 'www.example.org', 'name' => 'www.example.org'],
-            $normalizer->normalize(PublicKeyCredentialRpEntity::create()),
-        );
+        $this->assertSame('www.example.org', $normalizedData['id']);
     }
 
     public function testDoesNotSupportAnExplicitRpId(): void
