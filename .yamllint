@@ -10,6 +10,7 @@ rules:
     braces:
         min-spaces-inside: 1
         max-spaces-inside: 1
+        min-spaces-inside-empty: 0
 
     brackets:
         min-spaces-inside: 0
