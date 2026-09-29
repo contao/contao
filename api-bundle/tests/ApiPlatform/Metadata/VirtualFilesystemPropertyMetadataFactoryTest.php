@@ -31,9 +31,10 @@ final class VirtualFilesystemPropertyMetadataFactoryTest extends TestCase
             ->method('create')
             ->willReturn(new ApiProperty())
         ;
-        $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
-        $factory = new VirtualFilesystemPropertyMetadataFactory($decorated, $normalizer);
 
+        $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
+
+        $factory = new VirtualFilesystemPropertyMetadataFactory($decorated, $normalizer);
         $metadata = $factory->create(VirtualFilesystemItem::class, 'metadata');
 
         $this->assertSame($normalizer->getJsonSchema(ExtraMetadata::class), $metadata->getJsonSchemaContext());

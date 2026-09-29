@@ -40,6 +40,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
         $importantPart = new ImportantPart(0.1, 0.2, 0.3, 0.4);
         $textTrack = new TextTrack('en', TextTrackType::subtitles);
+
         $item = new FilesystemItem(
             true,
             'images/example.jpg',

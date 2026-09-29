@@ -70,6 +70,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertInstanceOf(Put::class, $upload);
         $this->assertFalse($upload->canRead());
         $this->assertFalse($upload->canDeserialize());
+
         $uploadOpenApi = $upload->getOpenapi();
         $this->assertInstanceOf(OpenApiOperation::class, $uploadOpenApi);
         $this->assertSame('Upload a file', $uploadOpenApi->getSummary());
@@ -82,11 +83,13 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertFalse($metadata->getInput());
         $this->assertFalse($metadata->canRead());
         $this->assertFalse($metadata->canDeserialize());
+
         $metadataOpenApi = $metadata->getOpenapi();
         $this->assertInstanceOf(OpenApiOperation::class, $metadataOpenApi);
         $this->assertSame('Update file metadata', $metadataOpenApi->getSummary());
         $this->assertInstanceOf(RequestBody::class, $metadataOpenApi->getRequestBody());
         $this->assertSame('The file path and metadata values to update.', $metadataOpenApi->getRequestBody()->getDescription());
+
         $metadataSchema = $metadataOpenApi->getRequestBody()->getContent()['application/json']->getSchema();
         $this->assertSame(['path', 'data'], $metadataSchema['required']);
         $this->assertSame('object', $metadataSchema['properties']['data']['type']);
@@ -102,12 +105,12 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
     public function testDelegatesOtherResources(): void
     {
         $collection = new ResourceMetadataCollection('App\\Entity\\Foo');
+
         $decorated = $this->createMock(ResourceMetadataCollectionFactoryInterface::class);
         $decorated
             ->expects($this->once())
             ->method('create')
             ->with('App\\Entity\\Foo')
-            ->willReturn($collection)
         ;
 
         $factory = $this->createFactory($decorated);

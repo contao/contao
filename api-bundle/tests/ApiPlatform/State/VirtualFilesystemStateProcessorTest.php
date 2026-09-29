@@ -37,6 +37,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     public function testUploadsTheRequestBody(): void
     {
         $item = new FilesystemItem(true, 'documents/example.txt', 123, 7, 'text/plain');
+
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
             ->expects($this->once())
@@ -63,6 +64,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     public function testMovesTheItem(): void
     {
         $item = new FilesystemItem(true, 'archive/example.txt', 123, 7, 'text/plain');
+
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
             ->expects($this->once())
@@ -86,6 +88,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     public function testUpdatesLocalizedMetadataWithoutLosingOtherMetadata(): void
     {
         $extra = new ExtraMetadata(['custom' => 'kept']);
+
         $extra->setLocalized(new MetadataBag([
             'en' => new Metadata(['title' => 'Old title', 'alt' => 'Old alt']),
             'de' => new Metadata(['title' => 'Deutscher Titel']),
@@ -106,6 +109,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
+
         $result = $processor->process(
             null,
             $this->createMetadataOperation(),
@@ -119,6 +123,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     public function testUpdatesImportantPartAndTextTrackMetadata(): void
     {
         $extra = new ExtraMetadata();
+
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
             ->expects($this->once())
@@ -134,6 +139,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
+
         $result = $processor->process(
             null,
             $this->createMetadataOperation(),
@@ -160,6 +166,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = $this->createProcessor($storage);
 
         $this->expectException(BadRequestHttpException::class);
+
         $processor->process(
             null,
             $this->createMetadataOperation(),
@@ -178,6 +185,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = $this->createProcessor($storage);
 
         $this->expectException(BadRequestHttpException::class);
+
         $processor->process(
             null,
             $this->createMetadataOperation(),
@@ -203,6 +211,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = $this->createProcessor($storage);
 
         $this->expectException(NotFoundHttpException::class);
+
         $processor->process(
             null,
             $this->createMetadataOperation(),
