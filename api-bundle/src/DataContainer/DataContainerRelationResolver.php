@@ -119,7 +119,7 @@ final class DataContainerRelationResolver
             return $value['iri'] ?? $value['@id'] ?? null;
         }
 
-        // Also accept the compact IRI representation for backwards compatibility
+        // Also accept JSON-LD's compact IRI representation
         return $value;
     }
 
