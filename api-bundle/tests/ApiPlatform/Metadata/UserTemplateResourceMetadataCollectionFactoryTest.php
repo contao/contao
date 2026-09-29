@@ -96,7 +96,8 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $resources = new UserTemplateResourceMetadataCollectionFactory($decorated, [$save, $save, $create, $delete, $custom])->create(UserTemplate::class);
         $operations = iterator_to_array($resources[0]->getOperations());
 
-        $this->assertCount(6, $operations);
+        $this->assertCount(7, $operations);
+        $this->assertSame('/user_template_themes', $operations['contao_api_user_template_theme_discover']->getUriTemplate());
         $this->assertInstanceOf(Get::class, $operations['contao_api_user_template_read']);
         $this->assertSame('/user_templates', $operations['contao_api_user_template_discover']->getUriTemplate());
         $this->assertSame('/user_templates/{name}', $operations['contao_api_user_template_read']->getUriTemplate());
@@ -132,6 +133,8 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             $this->assertArrayHasKey('theme', $parameters);
             $this->assertSame('theme', $parameters['theme']->getKey());
         }
+
+        $this->assertArrayHasKey('query', iterator_to_array($operations['contao_api_user_template_discover']->getParameters()));
     }
 
     public function testMatchesEncodedIdentifierSlashesBeforeTheOperation(): void

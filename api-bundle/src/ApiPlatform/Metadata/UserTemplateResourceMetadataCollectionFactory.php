@@ -56,6 +56,19 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                     is required.
                     MARKDOWN,
                 name: 'contao_api_user_template_discover',
+                parameters: [
+                    'query' => new QueryParameter(
+                        key: 'query',
+                        schema: ['type' => 'string'],
+                        description: 'Optional case-insensitive substring used to filter template identifiers.',
+                    ),
+                ],
+            ),
+            new Get(
+                '/user_template_themes',
+                description: 'Discover valid theme slugs for use with the theme query parameter.',
+                name: 'contao_api_user_template_theme_discover',
+                extraProperties: ['template_studio_action' => 'themes'],
             ),
             new Get(
                 '/user_templates/{name}',
@@ -82,6 +95,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
 
         foreach ($operations as $name => $operation) {
             $operation = $operation->withParameters([
+                ...iterator_to_array($operation->getParameters() ?? []),
                 'theme' => new QueryParameter(
                     key: 'theme',
                     schema: ['type' => 'string'],

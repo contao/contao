@@ -30,6 +30,7 @@ use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
 use Contao\PageTree;
 use Contao\Password;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Contao\Validator;
@@ -42,13 +43,12 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
@@ -64,9 +64,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -153,7 +151,11 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver()), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
@@ -235,7 +237,11 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkMock([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkMock([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')

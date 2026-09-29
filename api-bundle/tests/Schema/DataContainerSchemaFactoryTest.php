@@ -28,7 +28,9 @@ use Contao\FileTree;
 use Contao\PageTree;
 use Contao\Password;
 use Contao\SelectMenu;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Contao\TextArea;
 use Contao\TextField;
 use Contao\Validator;
 use Contao\Widget;
@@ -37,19 +39,19 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class DataContainerSchemaFactoryTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     private DataContainerRelationResolver $relationResolver;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
         $this->relationResolver = $this->createRelationResolver();
 
         $GLOBALS['BE_FFL'] = [
             'text' => TextField::class,
+            'textarea' => TextArea::class,
             'select' => SelectMenu::class,
             'custom' => TextField::class,
             'checkbox' => CheckBox::class,
@@ -63,9 +65,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -121,6 +121,15 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
                     'type' => 'string',
                 ],
             ],
+            'text' => [
+                'inputType' => 'textarea',
+                'eval' => [
+                    'rte' => 'tinyMCE',
+                ],
+                'sql' => [
+                    'type' => 'string',
+                ],
+            ],
         ];
 
         $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver);
@@ -138,6 +147,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['type' => 'string', 'maxLength' => 1, 'enum' => ['a', 'b']], $schema['properties']['type']);
         $this->assertSame(['type' => 'string', 'format' => 'email'], $schema['properties']['email']);
         $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT], $schema['properties']['digits']);
+        $this->assertSame(['type' => 'string', 'contentMediaType' => 'text/html'], $schema['properties']['text']);
     }
 
     public function testRequiresExplicitWidgetSupportEvenWithSchemaOverrides(): void

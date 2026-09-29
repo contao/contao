@@ -27,17 +27,25 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Password;
 use Contao\RowWizard;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\RouterInterface;
 
-class ContaoApiExtensionTest extends TestCase
+class ContaoApiExtensionTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testApiPrefixFollowsTheBackendPrefix(): void
     {
         $container = new ContainerBuilder();
@@ -211,6 +219,8 @@ class ContaoApiExtensionTest extends TestCase
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
         $container->register(DataContainerRelationResolver::class, DataContainerRelationResolver::class)->setSynthetic(true);
         $container->set(DataContainerRelationResolver::class, $this->createRelationResolver());
+
+        System::setContainer($container);
 
         return $container;
     }

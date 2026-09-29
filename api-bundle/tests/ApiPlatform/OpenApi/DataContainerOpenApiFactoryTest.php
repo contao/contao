@@ -45,6 +45,8 @@ use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
+use Contao\ImageSize;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Doctrine\DBAL\Connection;
@@ -53,22 +55,22 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
-    private array|null $widgets = null;
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->widgets = $GLOBALS['BE_FFL'] ?? null;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
+
         $GLOBALS['BE_FFL']['text'] = TextField::class;
+        $GLOBALS['BE_FFL']['imageSize'] = ImageSize::class;
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        if (null !== $this->widgets) {
-            $GLOBALS['BE_FFL'] = $this->widgets;
-        }
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -96,12 +98,20 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                                 'mandatory' => true,
                             ],
                         ],
+                        'size' => [
+                            'inputType' => 'imageSize',
+                            'sql' => ['type' => 'varchar', 'length' => 255, 'default' => ''],
+                        ],
                     ];
                 },
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver());
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
@@ -149,6 +159,8 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ],
             $componentSchema['properties']['id'],
         );
+        $this->assertSame(['Optional width', 'Optional height', 'Resize mode or image size reference'], array_column($componentSchema['properties']['size']['prefixItems'], 'title'));
+        $this->assertStringContainsString('integer ID of a database image size record', $componentSchema['properties']['size']['prefixItems'][2]['description']);
 
         $collectionPathItem = $openApi->getPaths()->getPath('/contao/api/dc/content');
         $this->assertInstanceOf(PathItem::class, $collectionPathItem);
@@ -244,7 +256,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->willReturn(new OpenApi(new Info('API', '1'), [], new Paths()))
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver()), new Pagination(), '/contao/api');
         $openApi = $factory();
 
