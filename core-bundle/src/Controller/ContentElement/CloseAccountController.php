@@ -53,6 +53,8 @@ class CloseAccountController extends AbstractContentElementController
             return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', message: 'User is not fully authenticated');
+
         $this->framework->initialize();
 
         $memberModelAdapter = $this->framework->getAdapter(MemberModel::class);

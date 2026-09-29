@@ -38,6 +38,8 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -70,6 +72,31 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    public function testThrowsAccessDeniedExceptionIfMemberIsNotFullyAuthenticated(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate(
+            $this->createStub(FrontendUser::class),
+            isFullyAuthenticated: false,
+        );
+
+        $controller = new ChangePasswordController(
+            $this->getDefaultFramework(),
+            $this->createStub(PasswordHasherFactoryInterface::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(RouterInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
+        $request = new Request();
+
+        $this->expectException(AccessDeniedException::class);
+
+        $controller($request, $model, 'main');
     }
 
     public function testReturnsIfNoFrontendMember(): void
@@ -313,6 +340,17 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         return $tokenStorage;
     }
 
+    private function mockAuthorizationChecker(bool $isGranted = true): Stub|TokenStorageInterface
+    {
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->method('isGranted')
+            ->willReturn($isGranted)
+        ;
+
+        return $authorizationChecker;
+    }
+
     /**
      * @template T
      *
@@ -334,7 +372,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         return $formFactory;
     }
 
-    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null, bool|null $formIsValid = null): ContainerBuilder
+    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null, bool|null $formIsValid = null, bool $isFullyAuthenticated = true): ContainerBuilder
     {
         $form = $this->createMock(FormInterface::class);
         $form
@@ -370,6 +408,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
         $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
+        $container->set('security.authorization_checker', $this->mockAuthorizationChecker($isFullyAuthenticated));
         $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $container->set('form.factory', $this->mockFormFactory(null !== $formIsValid ? $form : null));
