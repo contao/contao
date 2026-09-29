@@ -560,13 +560,12 @@ class InspectorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($storage, $environment),
             ),
         );
 
-        $information = (new Inspector($environment, $storage, $filesystemLoader))->inspectTemplate('foo.html.twig');
+        $information = new Inspector($environment, $storage, $filesystemLoader)->inspectTemplate('foo.html.twig');
 
         $this->assertSame('…', $information->getCode());
     }
