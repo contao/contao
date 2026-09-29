@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Routing\Matcher\RequestMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;

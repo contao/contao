@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests;
 
-use Contao\CoreBundle\Routing\Matcher\BackendApiMatcher;
-use Contao\CoreBundle\Routing\Matcher\BackendMatcher;
-use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\Matcher\RequestMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
@@ -41,7 +38,7 @@ abstract class TestCase extends ContaoTestCase
             new RequestMatcher('backend', true),
             new RequestMatcher('frontend', false),
             new RequestMatcher('frontend', true),
-            $this->createStub(RequestStack::class)
+            $this->createStub(RequestStack::class),
         );
     }
 

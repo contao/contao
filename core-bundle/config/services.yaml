@@ -1126,6 +1126,7 @@ services:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.backend_api_matcher'
             - '@contao.routing.frontend_matcher'
+            - '@contao.routing.frontend_api_matcher'
             - '@request_stack'
 
     contao.routing.url_matcher:
