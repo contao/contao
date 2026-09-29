@@ -22,7 +22,7 @@ final class TemplateGuidance
         uri: 'contao://template-guidance',
         name: 'contao_template_guidance',
         title: 'Contao template editing guidance',
-        description: 'Version-specific rules for choosing, overriding, validating and saving Contao Twig templates.',
+        description: 'Version-specific rules for choosing, overriding, validating, saving and recovering Contao Twig templates with snapshots.',
         mimeType: 'text/markdown',
     )]
     public function templateGuidance(): string
@@ -32,9 +32,13 @@ final class TemplateGuidance
 
             Installed Contao version: __CONTAO_VERSION__
 
+            All `contao_template_*` tools expose Template Studio functionality and require the current backend user to have administrator privileges (`ROLE_ADMIN`).
+
             ## Choosing an edit target
 
             - Discover and read templates instead of guessing identifiers or source.
+            - Template identifiers come from `contao_template_discover` and do not include a file extension.
+            - Use `contao_template_list_themes` when the task targets a theme. Pass the returned slug unchanged to every subsequent tool; omit `theme` consistently for global user templates.
             - Analyze impact before choosing the template to override.
             - Prefer the narrowest template matching the requested scope.
             - A `component/*` change can affect unrelated template families; a concrete template is narrower.
@@ -78,9 +82,20 @@ final class TemplateGuidance
 
             ## Workflow
 
-            - Validate the complete proposed source before saving it.
-            - Re-read and re-analyze the result after creating or changing an override.
+            - Read the template before changing it. The returned `operations` are the operations currently available for that identifier and theme context; do not assume another operation is supported.
+            - Create a snapshot before the first mutation in a task and keep its hash until the work is accepted.
+            - If `can_edit` is false and `create` is available, create the override before saving. Creation writes generated default content, which must then be replaced with the intended complete source.
+            - Validation compiles the complete proposed source in context but does not render it with runtime data. Treat a successful result as a syntax and compilation check, not proof of correct output.
+            - For an advertised `create_*` or `rename_*` operation, first call `contao_template_execute_operation` with empty `parameters`. This returns suggested values and the allowed identifier pattern without creating or renaming a file. Then call it again with a valid `identifier_fragment`.
+            - Re-read and re-analyze the result after creating, renaming or changing an override. Use the new identifier returned by a rename operation.
             - Dynamic template references and references created in PHP may require human review.
+
+            ## Snapshot recovery
+
+            - A snapshot covers the entire project `templates/` directory, not just the template being edited. Its history is stored in the application cache, separate from the project Git repository, and can be cleared with that cache; it is not a durable backup.
+            - Use `contao_template_diff` with the saved hash to inspect changes against that recovery point. Omitting the hash compares with the latest snapshot.
+            - Use `contao_template_snapshots` to find snapshot hashes. An explicit hash can be used with both `contao_template_diff` and `contao_template_rollback`.
+            - `contao_template_rollback` replaces the entire `templates/` directory. Only call it when the user explicitly requests a restore and identifies the intended snapshot, preferably by hash. If hash is omitted, the latest snapshot is restored.
             MARKDOWN);
     }
 

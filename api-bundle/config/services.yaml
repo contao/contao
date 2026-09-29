@@ -83,12 +83,24 @@ services:
         arguments:
             $framework: '@contao.framework'
             $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
+            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
             $localeSwitcher: '@translation.locale_switcher'
+
+    Contao\ApiBundle\DataContainer\DataContainerRelationResolver:
+        arguments:
+            $connection: '@database_connection'
+            $foreignKeyParser: '@contao.data_container.foreign_key_parser'
+            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
+            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $router: '@router'
 
     # Serialize DataContainerRecord payloads and handle reads/writes through
     # API Platform's serializer and state layers. The metadata factory points
     # every Contao DCA-backed resource at these shared services.
     Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer:
+        arguments:
+            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
+            $contextBuilder: '@api_platform.jsonld.context_builder'
         tags:
             - { name: serializer.normalizer }
 
@@ -132,6 +144,7 @@ services:
         arguments:
             $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
             $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
+            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
 
     Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator:
         arguments:

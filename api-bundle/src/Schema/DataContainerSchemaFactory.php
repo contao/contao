@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Schema;
 
+use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
@@ -29,6 +31,7 @@ final class DataContainerSchemaFactory
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
+        private readonly DataContainerRelationResolver $relationResolver,
         private readonly LocaleSwitcher $localeSwitcher,
     ) {
     }
@@ -73,7 +76,7 @@ final class DataContainerSchemaFactory
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
             $fieldName = (string) $fieldName;
             $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
-            $schema = $this->createFieldSchema($fieldName, $config, $this->createLabelSchema($config['label'] ?? null));
+            $schema = $this->createFieldSchema(new DataContainerFieldContext($config, $table, $fieldName));
 
             if ([] === $schema) {
                 continue;
@@ -109,7 +112,7 @@ final class DataContainerSchemaFactory
     {
         $converter = $this->converters->get($config);
 
-        return $converter ? $this->createSchema($config, $converter) : [];
+        return $converter ? $this->createSchema(new DataContainerFieldContext($config), $converter) : [];
     }
 
     /**
@@ -157,41 +160,40 @@ final class DataContainerSchemaFactory
     }
 
     /**
-     * @param array<string, mixed> $config
-     *
      * @return array<string, mixed>
      */
-    private function createFieldSchema(string $fieldName, array $config, array $labelSchema): array
+    private function createFieldSchema(DataContainerFieldContext $field): array
     {
-        $converter = $this->converters->get($config);
+        $converter = $this->converters->get($field->config);
 
-        if (!$converter && (isset($config['inputType']) || !\in_array($fieldName, DataContainerRecord::METADATA_FIELDS, true))) {
+        if (!$converter && (isset($field->config['inputType']) || !\in_array($field->name, DataContainerRecord::METADATA_FIELDS, true))) {
             return [];
         }
 
-        $schema = $this->createSchema($config, $converter, $labelSchema);
+        $schema = $this->createSchema($field, $converter);
 
-        if (\in_array($fieldName, ['id', 'tstamp'], true)) {
+        if (\in_array($field->name, ['id', 'tstamp'], true)) {
             $schema['readOnly'] = true;
         }
 
-        if (\in_array($fieldName, ['pid', 'ptable', 'sorting'], true)) {
+        if (\in_array($field->name, ['pid', 'ptable', 'sorting'], true)) {
             $schema['description'] = trim(($schema['description'] ?? '').' Use the move operation to change the parent or position of an existing record.');
         }
 
-        if ('id' === $fieldName) {
-            $schema['type'] = 'integer';
+        if ('id' === $field->name) {
+            $schema = $this->createRelationSchema($schema);
         }
 
-        if ('tstamp' === $fieldName) {
+        if ('tstamp' === $field->name) {
             $schema = $this->createDateTimeSchema($schema);
         }
 
         return $schema;
     }
 
-    private function createSchema(array $config, WidgetConverterInterface|null $converter, array $labelSchema = []): array
+    private function createSchema(DataContainerFieldContext $field, WidgetConverterInterface|null $converter): array
     {
+        $config = $field->config;
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
 
@@ -203,7 +205,11 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
-        $schema += $labelSchema;
+        $schema += $this->createLabelSchema($config['label'] ?? null);
+
+        if ($this->relationResolver->supports($field)) {
+            $schema = $this->createRelationSchema($schema);
+        }
 
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
@@ -231,6 +237,29 @@ final class DataContainerSchemaFactory
         }
 
         return $schema;
+    }
+
+    private function createRelationSchema(array $schema): array
+    {
+        $referenceSchema = [
+            'type' => ['object', 'null'],
+            'required' => ['iri'],
+            'properties' => [
+                'id' => ['type' => ['integer', 'string'], 'readOnly' => true],
+                'iri' => ['type' => 'string', 'format' => 'iri-reference'],
+            ],
+            'additionalProperties' => false,
+        ];
+
+        if ('array' === ($schema['type'] ?? null)) {
+            $schema['items'] = $referenceSchema;
+
+            return $schema;
+        }
+
+        unset($schema['enum'], $schema['default'], $schema['maxLength'], $schema['minLength'], $schema['pattern']);
+
+        return $referenceSchema + $schema;
     }
 
     private function createValueSchema(array $config, array $sql): array
