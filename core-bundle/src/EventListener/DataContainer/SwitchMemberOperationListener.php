@@ -42,7 +42,7 @@ class SwitchMemberOperationListener
         if (
             !$row['login']
             || !$row['username']
-            || $this->security->isGranted('contao_user.amg', StringUtil::deserialize($row['groups'], true))
+            || !$this->security->isGranted('contao_user.amg', StringUtil::deserialize($row['groups'], true))
         ) {
             $operation->disable();
 

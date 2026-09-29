@@ -21,73 +21,16 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class SwitchMemberOperationTest extends TestCase
+class SwitchMemberOperationListenerTest extends TestCase
 {
-    public function testOperationIsHiddenIfUserIsNotABackendUser(): void
+    public function testOperationIsHiddenIfUserDoesNotHaveSwitchMemberRole(): void
     {
-        $user = $this->createStub(UserInterface::class);
-
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $operation = $this->createMock(DataContainerOperation::class);
-        $operation
-            ->expects($this->once())
-            ->method('hide')
-        ;
-
-        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
-        $listener($operation);
-    }
-
-    public function testOperationIsHiddenIfAllowedMemberGroupsIsNull(): void
-    {
-        $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('__get')
-            ->willReturnMap([
-                ['isAdmin', false],
-                ['amg', null],
-            ])
-        ;
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $operation = $this->createMock(DataContainerOperation::class);
-        $operation
-            ->expects($this->once())
-            ->method('hide')
-        ;
-
-        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
-        $listener($operation);
-    }
-
-    public function testOperationIsHiddenIfAllowedMemberGroupsIsEmpty(): void
-    {
-        $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('__get')
-            ->willReturnMap([
-                ['isAdmin', false],
-                ['amg', []],
-            ])
-        ;
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
+            ->method('isGranted')
+            ->with('ROLE_ALLOWED_TO_SWITCH_MEMBER')
+            ->willReturn(false)
         ;
 
         $operation = $this->createMock(DataContainerOperation::class);
@@ -102,19 +45,12 @@ class SwitchMemberOperationTest extends TestCase
 
     public function testOperationIsDisabledIfMemberCannotLogin(): void
     {
-        $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('__get')
-            ->willReturnMap([
-                ['isAdmin', true],
-            ])
-        ;
-
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
+            ->method('isGranted')
+            ->with('ROLE_ALLOWED_TO_SWITCH_MEMBER')
+            ->willReturn(true)
         ;
 
         $operation = $this->createMock(DataContainerOperation::class);
@@ -134,19 +70,12 @@ class SwitchMemberOperationTest extends TestCase
 
     public function testOperationIsDisabledIfMemberHasNoUsername(): void
     {
-        $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('__get')
-            ->willReturnMap([
-                ['isAdmin', true],
-            ])
-        ;
-
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
+            ->method('isGranted')
+            ->with('ROLE_ALLOWED_TO_SWITCH_MEMBER')
+            ->willReturn(true)
         ;
 
         $operation = $this->createMock(DataContainerOperation::class);
@@ -164,21 +93,43 @@ class SwitchMemberOperationTest extends TestCase
         $listener($operation);
     }
 
-    public function testReplacesOperationUrl(): void
+    public function testOperationIsDisabledIfUserDoesNotHaveAllowedMemberGroups(): void
     {
-        $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('__get')
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->exactly(2))
+            ->method('isGranted')
             ->willReturnMap([
-                ['isAdmin', true],
+                ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
+                ['contao_user.amg', ['42'], false],
             ])
         ;
 
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->method('getRecord')
+            ->willReturn(['login' => 1, 'username' => 'foobar', 'groups' => serialize(['42'])])
+        ;
+
+        $operation
+            ->expects($this->once())
+            ->method('disable')
+        ;
+
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
+        $listener($operation);
+    }
+
+    public function testReplacesOperationUrl(): void
+    {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
+            ->expects($this->exactly(2))
+            ->method('isGranted')
+            ->willReturnMap([
+                ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
+                ['contao_user.amg', ['42'], true],
+            ])
         ;
 
         $htmlAttributes = $this->createMock(HtmlAttributes::class);
@@ -191,7 +142,7 @@ class SwitchMemberOperationTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->method('getRecord')
-            ->willReturn(['login' => 1, 'username' => 'foobar'])
+            ->willReturn(['login' => 1, 'username' => 'foobar', 'groups' => serialize(['42'])])
         ;
 
         $operation
