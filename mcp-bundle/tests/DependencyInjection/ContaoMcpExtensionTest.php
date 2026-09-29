@@ -18,6 +18,7 @@ use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
@@ -82,6 +83,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_api_discover',
                 'contao_api_describe',
                 'contao_api_execute',
+                'contao_frontend_inspect',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -173,7 +175,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(17, $tools);
+        $this->assertCount(18, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
@@ -228,6 +230,7 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'contao.security.frontend_preview_authenticator' => FrontendPreviewAuthenticator::class,
             'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);

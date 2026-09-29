@@ -43,6 +43,16 @@ services:
             - '@contao_mcp.response.api_converter'
             - '@contao_mcp.api.binary_payload_handler'
 
+    contao_mcp.tool.frontend_tools:
+        class: Contao\McpBundle\Tool\FrontendTools
+        autoconfigure: true
+        arguments:
+            - '@http_kernel'
+            - '@request_stack'
+            - '@event_dispatcher'
+            - '@contao.security.frontend_preview_authenticator'
+            - '@security.helper'
+
     contao_mcp.tool.user_template_tools:
         class: Contao\McpBundle\Tool\UserTemplateTools
         autoconfigure: true
