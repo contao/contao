@@ -55,7 +55,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL'], $GLOBALS['TL_LANG']);
 
         $this->resetStaticProperties([System::class]);
 
@@ -189,8 +189,10 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testCreatesEnglishDescriptionsFromLabelsUnlessExplicitlyConfigured(): void
     {
+        $GLOBALS['TL_LANG']['MSC']['apiTestImgSize'] = ['Deutsche Bildgröße', 'Deutsche Hilfe.'];
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'title' => ['inputType' => 'text', 'label' => ['Deutscher Titel', 'Deutsche Hilfe.']],
+            'size' => ['inputType' => 'text', 'label' => &$GLOBALS['TL_LANG']['MSC']['apiTestImgSize']],
             'labelOnly' => ['inputType' => 'text', 'label' => 'English label'],
             'explicit' => [
                 'inputType' => 'text',
@@ -200,34 +202,44 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         ];
 
         $localeSwitcher = $this->createLocaleSwitcher('de');
-        $controller = $this->createAdapterMock(['loadDataContainer', 'loadLanguageFile']);
-        $controller
-            ->expects($this->exactly(2))
+        $controller = $this->createAdapterStub(['loadDataContainer']);
+        $system = $this->createAdapterMock(['loadLanguageFile']);
+        $loadedLanguageFiles = [];
+        $system
+            ->expects($this->exactly(4))
             ->method('loadLanguageFile')
             ->willReturnCallback(
-                static function () use ($localeSwitcher): void {
-                    if ('en' === $localeSwitcher->getLocale()) {
+                static function (string $name) use ($localeSwitcher, &$loadedLanguageFiles): void {
+                    $loadedLanguageFiles[] = [$localeSwitcher->getLocale(), $name];
+
+                    if ('default' === $name) {
+                        $GLOBALS['TL_LANG']['MSC']['apiTestImgSize'] = 'en' === $localeSwitcher->getLocale()
+                            ? ['Image size', 'Here you can set the image dimensions.']
+                            : ['Deutsche Bildgröße', 'Deutsche Hilfe.'];
+                    } elseif ('en' === $localeSwitcher->getLocale()) {
                         $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label'] = ['English title', 'English <em>help</em>.'];
-
-                        return;
+                    } else {
+                        $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label'] = ['Deutscher Titel', 'Deutsche Hilfe.'];
                     }
-
-                    $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label'] = ['Deutscher Titel', 'Deutsche Hilfe.'];
                 },
             )
         ;
 
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $controller,
+            System::class => $system,
         ]);
         $factory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $localeSwitcher);
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame('English title: English help.', $properties['title']['description']);
+        $this->assertSame('Image size: Here you can set the image dimensions.', $properties['size']['description']);
         $this->assertSame('English label', $properties['labelOnly']['description']);
         $this->assertSame('Explicit description.', $properties['explicit']['description']);
+        $this->assertSame([['en', 'default'], ['en', 'tl_content'], ['de', 'default'], ['de', 'tl_content']], $loadedLanguageFiles);
         $this->assertSame('de', $localeSwitcher->getLocale());
         $this->assertSame(['Deutscher Titel', 'Deutsche Hilfe.'], $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label']);
+        $this->assertSame(['Deutsche Bildgröße', 'Deutsche Hilfe.'], $GLOBALS['TL_DCA']['tl_content']['fields']['size']['label']);
     }
 
     public function testInheritsWidgetSchemaForEveryFieldUsingThatWidget(): void
