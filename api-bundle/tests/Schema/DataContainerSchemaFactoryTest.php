@@ -187,7 +187,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertArrayNotHasKey('writeOnly', $properties['passwords']['items']);
     }
 
-    public function testCreatesEnglishDescriptionsFromLabelsUnlessExplicitlyConfigured(): void
+    public function testCreatesEnglishTitlesAndDescriptionsFromLabelsUnlessExplicitlyConfigured(): void
     {
         $GLOBALS['TL_LANG']['MSC']['apiTestImgSize'] = ['Deutsche Bildgröße', 'Deutsche Hilfe.'];
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
@@ -197,7 +197,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'explicit' => [
                 'inputType' => 'text',
                 'label' => ['Deutsche Bezeichnung', 'Deutsche Hilfe.'],
-                'api' => ['schema' => ['description' => 'Explicit description.']],
+                'api' => ['schema' => ['title' => 'Explicit title', 'description' => 'Explicit description.']],
             ],
         ];
 
@@ -232,9 +232,13 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $factory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $localeSwitcher);
         $properties = $factory->create('tl_content')['properties'];
 
-        $this->assertSame('English title: English help.', $properties['title']['description']);
-        $this->assertSame('Image size: Here you can set the image dimensions.', $properties['size']['description']);
-        $this->assertSame('English label', $properties['labelOnly']['description']);
+        $this->assertSame('English title', $properties['title']['title']);
+        $this->assertSame('English help.', $properties['title']['description']);
+        $this->assertSame('Image size', $properties['size']['title']);
+        $this->assertSame('Here you can set the image dimensions.', $properties['size']['description']);
+        $this->assertSame('English label', $properties['labelOnly']['title']);
+        $this->assertArrayNotHasKey('description', $properties['labelOnly']);
+        $this->assertSame('Explicit title', $properties['explicit']['title']);
         $this->assertSame('Explicit description.', $properties['explicit']['description']);
         $this->assertSame([['en', 'default'], ['en', 'tl_content'], ['de', 'default'], ['de', 'tl_content']], $loadedLanguageFiles);
         $this->assertSame('de', $localeSwitcher->getLocale());

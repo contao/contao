@@ -73,10 +73,7 @@ final class DataContainerSchemaFactory
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
             $fieldName = (string) $fieldName;
             $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
-            $description = \array_key_exists('description', $config['api']['schema'] ?? [])
-                ? null
-                : $this->createDescription($config['label'] ?? null);
-            $schema = $this->createFieldSchema($fieldName, $config, $description);
+            $schema = $this->createFieldSchema($fieldName, $config, $this->createLabelSchema($config['label'] ?? null));
 
             if ([] === $schema) {
                 continue;
@@ -164,7 +161,7 @@ final class DataContainerSchemaFactory
      *
      * @return array<string, mixed>
      */
-    private function createFieldSchema(string $fieldName, array $config, string|null $description): array
+    private function createFieldSchema(string $fieldName, array $config, array $labelSchema): array
     {
         $converter = $this->converters->get($config);
 
@@ -172,7 +169,7 @@ final class DataContainerSchemaFactory
             return [];
         }
 
-        $schema = $this->createSchema($config, $converter, $description);
+        $schema = $this->createSchema($config, $converter, $labelSchema);
 
         if (\in_array($fieldName, ['id', 'tstamp'], true)) {
             $schema['readOnly'] = true;
@@ -193,7 +190,7 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
-    private function createSchema(array $config, WidgetConverterInterface|null $converter, string|null $description = null): array
+    private function createSchema(array $config, WidgetConverterInterface|null $converter, array $labelSchema = []): array
     {
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
@@ -206,9 +203,7 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
-        if (null !== $description) {
-            $schema += ['description' => $description];
-        }
+        $schema += $labelSchema;
 
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
@@ -219,18 +214,23 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
-    private function createDescription(mixed $label): string|null
+    /**
+     * @return array{title?: string, description?: string}
+     */
+    private function createLabelSchema(mixed $label): array
     {
-        $label = \is_array($label) ? \array_slice($label, 0, 2) : [$label];
-        $parts = [];
+        $label = \is_array($label) ? array_values(\array_slice($label, 0, 2)) : [$label];
+        $schema = [];
 
-        foreach ($label as $part) {
+        foreach (['title', 'description'] as $index => $key) {
+            $part = $label[$index] ?? null;
+
             if (\is_string($part) && '' !== ($part = trim(strip_tags($part)))) {
-                $parts[] = $part;
+                $schema[$key] = $part;
             }
         }
 
-        return $parts ? implode(': ', $parts) : null;
+        return $schema;
     }
 
     private function createValueSchema(array $config, array $sql): array
