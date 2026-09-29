@@ -683,7 +683,7 @@ class Versions extends Controller
 		if (!$isAdmin)
 		{
 			$user = $security->getUser();
-			$params = $user instanceof BackendUser ? $user->id : 0;
+			$params[] = $user instanceof BackendUser ? $user->id : 0;
 		}
 
 		$objDatabase = Database::getInstance();
