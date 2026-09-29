@@ -15,6 +15,7 @@ namespace Contao\McpBundle\Tool;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshotException;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Capability\Attribute\Schema;
 use Mcp\Exception\ToolCallException;
 use Mcp\Schema\ToolAnnotations;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -27,7 +28,7 @@ final class TemplateSnapshotTools
     ) {
     }
 
-    #[McpTool(name: 'contao_template_snapshot', description: 'Manually snapshot the entire templates directory in short-lived cache history.', annotations: new ToolAnnotations(destructiveHint: false, openWorldHint: false))]
+    #[McpTool(name: 'contao_template_snapshot', description: 'Create a manual recovery point for the entire project templates/ directory before editing. Returns its hash. History is stored in the application cache and is not a durable backup.', annotations: new ToolAnnotations(destructiveHint: false, openWorldHint: false))]
     public function snapshot(): array
     {
         $this->assertAdmin();
@@ -35,7 +36,7 @@ final class TemplateSnapshotTools
         return $this->execute(fn (): array => ['hash' => $this->snapshots->snapshot()]);
     }
 
-    #[McpTool(name: 'contao_template_snapshots', description: 'List template snapshots, including safety snapshots created before a restore.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    #[McpTool(name: 'contao_template_snapshots', description: 'List up to 50 recent manual and safety snapshots for the entire templates/ directory, newest first. Use a returned full hash with contao_template_diff or contao_template_rollback.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
     public function listSnapshots(): array
     {
         $this->assertAdmin();
@@ -43,16 +44,16 @@ final class TemplateSnapshotTools
         return $this->execute(fn (): array => ['snapshots' => $this->snapshots->listSnapshots()]);
     }
 
-    #[McpTool(name: 'contao_template_diff', description: 'Compare the current templates directory with a snapshot. Omit hash for the latest manual snapshot.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
-    public function diff(string|null $hash = null): array
+    #[McpTool(name: 'contao_template_diff', description: 'Show all changes in the current templates/ directory since a snapshot. Pass its full hash, or omit hash to use the latest manual snapshot.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    public function diff(#[Schema(description: 'Full hash returned by contao_template_snapshot or contao_template_snapshots. Omit to use the latest manual snapshot.', pattern: '^[a-fA-F0-9]{40,64}$')] string|null $hash = null): array
     {
         $this->assertAdmin();
 
         return $this->execute(fn (): array => ['diff' => $this->snapshots->diff($hash)]);
     }
 
-    #[McpTool(name: 'contao_template_rollback', description: 'Restore the entire templates directory to a snapshot. Omit hash for the latest manual snapshot. Creates a safety snapshot of the current directory first.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function rollback(string|null $hash = null): array
+    #[McpTool(name: 'contao_template_rollback', description: 'Destructively replace the entire templates/ directory with a snapshot. Pass the confirmed target hash, or omit hash for the latest manual snapshot. Creates a safety snapshot first and returns its hash. Call only when the user explicitly requests restoring that snapshot.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
+    public function rollback(#[Schema(description: 'Full hash of the snapshot the user requested to restore. Omit only when the user explicitly selected the latest manual snapshot.', pattern: '^[a-fA-F0-9]{40,64}$')] string|null $hash = null): array
     {
         $this->assertAdmin();
 
