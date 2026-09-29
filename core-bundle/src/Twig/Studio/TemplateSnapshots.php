@@ -149,8 +149,10 @@ final class TemplateSnapshots
             return;
         }
 
-        new Filesystem()->mkdir($this->workTree);
-        new Filesystem()->mkdir(\dirname($this->gitDir));
+        $filesystem = new Filesystem();
+        $filesystem->mkdir($this->workTree);
+        $filesystem->mkdir(\dirname($this->gitDir));
+
         $this->run(['git', 'init', '--bare', $this->gitDir]);
     }
 
@@ -233,8 +235,10 @@ final class TemplateSnapshots
             throw new TemplateSnapshotException('Git is not available.');
         }
 
-        new Filesystem()->mkdir($this->workTree);
-        new Filesystem()->mkdir(\dirname($this->gitDir));
+        $filesystem = new Filesystem();
+        $filesystem->mkdir($this->workTree);
+        $filesystem->mkdir(\dirname($this->gitDir));
+
         $lock = fopen($this->gitDir.'.lock', 'c');
 
         if (false === $lock) {

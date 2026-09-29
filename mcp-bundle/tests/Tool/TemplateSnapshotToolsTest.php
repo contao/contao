@@ -61,7 +61,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
         $this->assertMatchesRegularExpression('/^[a-f0-9]{40}$/', $hash);
         $this->assertSame($hash, $tools->listSnapshots()['snapshots'][0]['hash']);
 
-        file_put_contents(self::getTempDir().'/templates/page.twig', 'changed');
+        new Filesystem()->dumpFile(self::getTempDir().'/templates/page.twig', 'changed');
         $this->assertStringContainsString('+changed', $tools->diff()['diff']);
         $this->assertSame($tools->diff()['diff'], $tools->diff($hash)['diff']);
 
@@ -80,9 +80,12 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
         }
 
         $tools = new TemplateSnapshotTools($snapshots, $this->createAdminSecurity());
-        new Filesystem()->dumpFile(self::getTempDir().'/templates/page.twig', 'first');
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'first');
         $first = $tools->snapshot()['hash'];
-        file_put_contents(self::getTempDir().'/templates/page.twig', 'second');
+
+        $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'second');
         $tools->snapshot();
 
         $this->assertStringContainsString('+second', $tools->diff($first)['diff']);

@@ -38,19 +38,22 @@ class TemplateSnapshotsTest extends TestCase
 
     public function testRestoresWholeTree(): void
     {
-        file_put_contents($this->directory.'/templates/first.twig', 'first');
+        new Filesystem()->dumpFile($this->directory.'/templates/first.twig', 'first');
+
         $cacheInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheInvalidator
             ->expects($this->exactly(2))
             ->method('invalidateCache')
             ->with('')
         ;
+
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
             ->expects($this->once())
             ->method('warmUp')
             ->with(true)
         ;
+
         $snapshots = new TemplateSnapshots($this->directory, $this->directory.'/var/cache/test', $cacheInvalidator, $loader);
 
         if (!$snapshots->isAvailable()) {
@@ -62,8 +65,10 @@ class TemplateSnapshotsTest extends TestCase
         $this->assertNotNull($current);
         $this->assertSame($initial, $current['hash']);
         $this->assertNotEmpty($current['date']);
-        file_put_contents($this->directory.'/templates/first.twig', 'changed');
-        file_put_contents($this->directory.'/templates/second.twig', 'added');
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($this->directory.'/templates/first.twig', 'changed');
+        $filesystem->dumpFile($this->directory.'/templates/second.twig', 'added');
 
         $this->assertStringContainsString('+changed', $snapshots->diff());
         $this->assertStringContainsString('second.twig', $snapshots->diff());
@@ -86,10 +91,13 @@ class TemplateSnapshotsTest extends TestCase
             $this->markTestSkipped('Git is unavailable.');
         }
 
-        file_put_contents($this->directory.'/templates/page.twig', 'original');
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($this->directory.'/templates/page.twig', 'original');
+
         $snapshots = $this->createSnapshots();
         $snapshots->snapshot();
-        file_put_contents($this->directory.'/templates/page.twig', 'edited');
+
+        $filesystem->dumpFile($this->directory.'/templates/page.twig', 'edited');
         $snapshots->rollback();
 
         $this->assertSame('original', file_get_contents($this->directory.'/templates/page.twig'));
