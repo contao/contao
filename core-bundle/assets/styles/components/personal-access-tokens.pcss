@@ -6,8 +6,6 @@
         width: calc(100% - 30px);
 
         td.name {
-            height: 36px;
-
             button {
                 box-sizing: border-box;
                 border: 0;
@@ -15,6 +13,7 @@
                 margin: 0;
                 background-color: transparent;
                 display: flex;
+                align-items: center;
 
                 code {
                     word-break: break-word;
@@ -39,7 +38,7 @@
         td.expires {
             width: 30%;
 
-            @media (width <= 767.98px) {
+            @media (width < 768px) {
                 width: auto;
             }
 
@@ -52,7 +51,7 @@
             text-align: right;
             width: 50px;
 
-            @media (width <= 767.98px) {
+            @media (width < 768px) {
                 width: auto;
             }
 

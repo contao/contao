@@ -19,7 +19,6 @@ use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use Contao\CoreBundle\Security\Authentication\AccessTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -57,7 +56,6 @@ class ModuleTwoFactor extends BackendModule
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}
 
-		/** @var Request $request */
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security'));
 
@@ -151,6 +149,7 @@ class ModuleTwoFactor extends BackendModule
 		// Personal access tokens
 		/** @var PersonalAccessTokenRepository $patRepo */
 		$patRepo = $container->get(PersonalAccessTokenRepository::class);
+
 		/** @var AccessTokenManager $accessTokenManager */
 		$accessTokenManager = $container->get('contao.security.access_token_manager');
 		$session = $request->getSession();

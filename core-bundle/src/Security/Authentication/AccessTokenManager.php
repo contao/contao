@@ -36,9 +36,7 @@ class AccessTokenManager
     public function createToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): PersonalAccessToken
     {
         $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
-
         $plainSecret = StringUtil::encodeBase32(random_bytes(16));
-
         $personalAccessToken = new PersonalAccessToken((int) $user->id, $name, $passwordHasher->hash($plainSecret), $expiresAt);
 
         $this->entityManager->persist($personalAccessToken);
