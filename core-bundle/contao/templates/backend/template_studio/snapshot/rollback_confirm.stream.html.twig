@@ -1,0 +1,18 @@
+{% embed '@Contao/backend/template_studio/show_modal.stream.html.twig' %}
+    {% trans_default_domain 'contao_template_studio' %}
+    {% set form_attributes = attrs()
+        .set('data-turbo', 'true')
+        .set('data-turbo-stream')
+    %}
+
+    {% block title %}{{ 'template_studio.snapshots.rollback'|trans }}{% endblock %}
+
+    {% block content %}
+        <p class="description description--warning">{{ 'template_studio.snapshots.confirm'|trans }}</p>
+    {% endblock %}
+
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm" name="confirm_rollback" value="1">{{ 'template_studio.snapshots.rollback'|trans }}</button>
+    {% endblock %}
+{% endembed %}

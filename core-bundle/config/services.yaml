@@ -914,7 +914,6 @@ services:
         public: true
         arguments:
             - '@doctrine'
-            - '@security.token_storage'
 
     contao.repository.webauthn_user_entity:
         class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository
@@ -934,6 +933,9 @@ services:
         public: true
         arguments:
             - '%contao.resources_paths%'
+
+    contao.routing.backend_api_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\BackendApiMatcher
 
     contao.routing.backend_matcher:
         class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
@@ -1120,6 +1122,7 @@ services:
         public: true
         arguments:
             - '@contao.routing.backend_matcher'
+            - '@contao.routing.backend_api_matcher'
             - '@contao.routing.frontend_matcher'
             - '@request_stack'
 
@@ -1141,6 +1144,9 @@ services:
             - '@contao.routing.page_finder'
             - '@contao.routing.page_registry'
             - '@http_kernel'
+
+    contao.security.access_token_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessTokenHandler
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
@@ -1384,6 +1390,14 @@ services:
 
     contao.security.webauthn_credential_voter:
         class: Contao\CoreBundle\Security\Voter\WebauthnCredentialVoter
+
+    contao.serializer.webauthn_rp_entity_normalizer:
+        class: Contao\CoreBundle\Serializer\WebauthnRpEntityNormalizer
+        arguments:
+            - '@request_stack'
+            - '@Webauthn\Denormalizer\PublicKeyCredentialRpEntityDenormalizer'
+        tags:
+            - { name: serializer.normalizer, priority: 1025 }
 
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory

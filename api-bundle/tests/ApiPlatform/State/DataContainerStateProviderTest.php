@@ -20,8 +20,9 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\Provider\ReadProvider;
 use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
-use Contao\ApiBundle\DataContainer\DataContainerRecords;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +35,7 @@ final class DataContainerStateProviderTest extends TestCase
     {
         $record = new DataContainerRecord('tl_content', ['headline' => 'Existing'], 17);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->exactly(3))
             ->method('find')
@@ -52,7 +53,7 @@ final class DataContainerStateProviderTest extends TestCase
 
     public function testReturnsNotFoundForMissingRecords(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('find')
@@ -71,11 +72,11 @@ final class DataContainerStateProviderTest extends TestCase
     {
         $page = new DataContainerPage([new DataContainerRecord('tl_content', [], 17)], 2);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 2, [], 30)
+            ->with('tl_content', 2, $this->isInstanceOf(DataContainerContext::class), 30)
             ->willReturn($page)
         ;
 
@@ -84,16 +85,41 @@ final class DataContainerStateProviderTest extends TestCase
         $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['page' => 2]]));
     }
 
+    public function testBuildsTheParentContextFromRouteVariables(): void
+    {
+        $records = $this->createMock(TableDataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->willReturnCallback(
+                function (string $table, int $page, DataContainerContext $context): DataContainerPage {
+                    $this->assertSame('tl_news', $table);
+                    $this->assertSame(1, $page);
+                    $this->assertSame([['table' => 'tl_news_archive', 'id' => 23]], $context->getParents());
+
+                    return new DataContainerPage([], 1);
+                },
+            )
+        ;
+
+        $operation = new GetCollection(extraProperties: ['contao' => [
+            'table' => 'tl_news',
+            'parents' => [['table' => 'tl_news_archive', 'parameter' => 'news_archive_id']],
+        ]]);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, ['news_archive_id' => 23]);
+    }
+
     #[DataProvider('providePageSizes')]
     public function testUsesTheRequestedPageSizeWithinTheMaximum(array $filters, int $limit, bool $request): void
     {
         $page = new DataContainerPage([], 2, $limit);
 
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->once())
             ->method('list')
-            ->with('tl_content', 2, ['id' => '7', 'table' => 'tl_page'], $limit)
+            ->with('tl_content', 2, $this->isInstanceOf(DataContainerContext::class), $limit)
             ->willReturn($page)
         ;
 
@@ -104,7 +130,7 @@ final class DataContainerStateProviderTest extends TestCase
             extraProperties: ['contao' => ['table' => 'tl_content']],
         );
 
-        $filters += ['page' => '2', 'parent' => '7', 'ptable' => 'tl_page'];
+        $filters += ['page' => '2'];
         $context = $request ? ['request' => new Request($filters)] : ['filters' => $filters];
 
         $this->assertSame($page, new DataContainerStateProvider($records, new Pagination())->provide($operation, context: $context));
@@ -123,7 +149,7 @@ final class DataContainerStateProviderTest extends TestCase
     #[DataProvider('provideInvalidPagination')]
     public function testRejectsInvalidPaginationBeforeListing(array $filters): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('list')
@@ -145,9 +171,53 @@ final class DataContainerStateProviderTest extends TestCase
         yield [['page' => PHP_INT_MAX, 'itemsPerPage' => 100]];
     }
 
+    public function testPassesTheSortingChoiceToTheDataContainer(): void
+    {
+        $records = $this->createMock(TableDataContainerRecords::class);
+        $records
+            ->expects($this->once())
+            ->method('list')
+            ->with('tl_content', 1, $this->isInstanceOf(DataContainerContext::class), 30, ['title DESC'])
+            ->willReturn(new DataContainerPage([], 1))
+        ;
+
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['request' => new Request(['sort' => 'title DESC'])]);
+    }
+
+    public function testRejectsMultipleSortingChoicesUntilSupported(): void
+    {
+        $records = $this->createMock(TableDataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
+
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Exactly one sorting choice is currently supported.');
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['request' => new Request(['sort' => 'title DESC,alias ASC'])]);
+    }
+
+    public function testRejectsAnArraySortingChoice(): void
+    {
+        $records = $this->createMock(TableDataContainerRecords::class);
+        $records
+            ->expects($this->never())
+            ->method('list')
+        ;
+
+        $operation = new GetCollection(extraProperties: ['contao' => ['table' => 'tl_content']]);
+        $this->expectException(InvalidArgumentException::class);
+
+        new DataContainerStateProvider($records, new Pagination())->provide($operation, context: ['filters' => ['sort' => ['title' => 'DESC']]]);
+    }
+
     public function testReturnsNullWhenNoContaoTableIsConfigured(): void
     {
-        $records = $this->createMock(DataContainerRecords::class);
+        $records = $this->createMock(TableDataContainerRecords::class);
         $records
             ->expects($this->never())
             ->method('find')

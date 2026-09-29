@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageInterface;
-use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -214,17 +213,16 @@ class Jobs
         $existingJob = $this->getByUuid($job->getUuid());
 
         if (!$existingJob) {
-            // Need to encode HTML entities here for Contao's DC_Table
             $this->connection->insert(
                 'tl_job',
                 [
-                    'uuid' => $job->getUuid(), // No encoding needed, UUID
-                    'type' => StringUtil::specialchars($job->getType()),
-                    'status' => $job->getStatus()->value, // No encoding needed, enum
-                    'owner' => $job->getOwner()->getId(), // No encoding needed, integer
-                    'tstamp' => $this->clock->now()->getTimestamp(), // No encoding needed, integer
-                    'createdAt' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
-                    'public' => $job->isPublic(), // No encoding needed, boolean
+                    'uuid' => $job->getUuid(),
+                    'type' => $job->getType(),
+                    'status' => $job->getStatus()->value,
+                    'owner' => $job->getOwner()->getId(),
+                    'tstamp' => $this->clock->now()->getTimestamp(),
+                    'createdAt' => (int) $job->getCreatedAt()->format('U'),
+                    'public' => $job->isPublic(),
                 ],
                 [
                     Types::STRING,
@@ -240,9 +238,9 @@ class Jobs
 
         // Update job data
         $row = [];
-        $row['tstamp'] = $this->clock->now()->getTimestamp(); // No encoding needed, integer
-        $row['pid'] = 0; // No encoding needed, integer
-        $row['status'] = $job->getStatus()->value; // No encoding needed, enum
+        $row['tstamp'] = $this->clock->now()->getTimestamp();
+        $row['pid'] = 0;
+        $row['status'] = $job->getStatus()->value;
 
         $row['jobData'] = json_encode(
             [
@@ -251,8 +249,6 @@ class Jobs
                 'errors' => $job->getErrors(),
                 'warnings' => $job->getWarnings(),
             ],
-            // No encoding needed because this data is not output anywhere at the moment,
-            // make sure to adjust when adding this to the output!
             JSON_THROW_ON_ERROR,
         );
 
@@ -452,7 +448,7 @@ class Jobs
             $row['uuid'],
             \DateTimeImmutable::createFromFormat('U', (string) $row['createdAt']),
             Status::from($row['status']),
-            StringUtil::decodeEntities($row['type']), // Decode because it's encoded for DC_Table
+            $row['type'],
             new Owner((int) $row['owner']),
         );
 

@@ -78,6 +78,7 @@ class Inspector
             $data['uses'],
             $error,
             $data['deprecations'],
+            $data['references'],
         );
     }
 
@@ -205,14 +206,28 @@ class Inspector
             'calls' => [],
             'parent' => null,
             'uses' => [],
+            'references' => [],
         ];
 
         if (null === ($path = $this->getPathByTemplateName($templateName))) {
             return $baseData;
         }
 
-        $data = $this->storage->get($path) ??
-            throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+        $data = $this->storage->get($path);
+
+        // The compiled template class can still be loaded in a long-running process
+        // after the inspector storage has been cleared. In this case, loading the
+        // template does not run the node visitor again, so compile the source explicitly
+        // to rebuild the missing inspector data.
+        if (null === $data) {
+            try {
+                $this->twig->compileSource($this->twig->getLoader()->getSourceContext($templateName));
+            } catch (LoaderError|SyntaxError) {
+            }
+
+            $data = $this->storage->get($path) ??
+                throw new InspectionException($templateName, reason: 'No recorded information was found.');
+        }
 
         return [...$baseData, ...$data];
     }

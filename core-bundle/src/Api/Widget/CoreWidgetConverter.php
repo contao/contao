@@ -112,6 +112,10 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             return array_map(fn ($item) => $this->convertToApiValue($item, $config, $schema['items'] ?? []), $values);
         }
 
+        if ('date-time' === ($schema['format'] ?? null)) {
+            return $value ? date(\DateTimeInterface::ATOM, (int) $value) : null;
+        }
+
         $value = match ($schema['type'] ?? null) {
             'boolean' => (bool) $value,
             'integer' => (int) $value,
@@ -145,6 +149,10 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             };
         }
 
+        if ('date-time' === ($schema['format'] ?? null)) {
+            $value = new \DateTimeImmutable((string) $value)->getTimestamp();
+        }
+
         return $this->dateValueFormatter->format($value, $config['eval']['rgxp'] ?? '') ?? (string) $value;
     }
 
@@ -163,9 +171,42 @@ final class CoreWidgetConverter implements WidgetConverterInterface
             SectionWizard::class => ['type' => 'array', 'items' => $this->getObjectSchema(['title' => 'string', 'id' => 'string', 'template' => 'string', 'position' => 'string'])],
             MetaWizard::class => ['type' => 'object', 'additionalProperties' => ['type' => 'object', 'additionalProperties' => $string]],
             RootPageDependentSelect::class => ['type' => 'object', 'additionalProperties' => $string],
-            ImageSize::class => ['type' => 'array', 'prefixItems' => [$string, $string, $string], 'items' => false, 'minItems' => 3, 'maxItems' => 3],
+            ImageSize::class => $this->getImageSizeSchema(),
             default => null,
         };
+    }
+
+    private function getImageSizeSchema(): array
+    {
+        return [
+            'type' => 'array',
+            'description' => 'A three-item tuple. Set an optional width and height with a resize mode, or leave both dimensions empty and provide an image size reference.',
+            'prefixItems' => [
+                [
+                    'type' => 'string',
+                    'title' => 'Optional width',
+                    'description' => 'Optional target width in pixels as a decimal string. Use an empty string when an image size reference supplies the dimensions.',
+                    'pattern' => '^\d*$',
+                    'examples' => ['800'],
+                ],
+                [
+                    'type' => 'string',
+                    'title' => 'Optional height',
+                    'description' => 'Optional target height in pixels as a decimal string. Use an empty string when an image size reference supplies the dimensions.',
+                    'pattern' => '^\d*$',
+                    'examples' => ['600'],
+                ],
+                [
+                    'type' => 'string',
+                    'title' => 'Resize mode or image size reference',
+                    'description' => 'A resize mode such as "proportional", "box" or "crop", the integer ID of a database image size record encoded as a decimal string, a string identifier for a configuration-based image size, or an empty string.',
+                    'examples' => ['crop', '42', 'content_teaser'],
+                ],
+            ],
+            'items' => false,
+            'minItems' => 3,
+            'maxItems' => 3,
+        ];
     }
 
     private function getObjectSchema(array $types): array
@@ -246,7 +287,7 @@ final class CoreWidgetConverter implements WidgetConverterInterface
     private function convertFileReference(mixed $value, bool $binary): mixed
     {
         return match (true) {
-            '' === $value => null,
+            '' === $value, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0" === $value => null,
             $binary && \is_string($value) && 16 === \strlen($value) => StringUtil::binToUuid($value),
             default => $value,
         };

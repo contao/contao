@@ -71,7 +71,7 @@ class Versions extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			throw new \InvalidArgumentException(\sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
+			throw new \InvalidArgumentException(\sprintf('"%s" is not a valid table', $strTable));
 		}
 
 		$this->strTable = $strTable;

@@ -21,5 +21,13 @@ class ContaoMcpBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import('../config/services.yaml');
+
+        if ($container->has('contao.twig.studio.template_snapshots')) {
+            $configurator->import('../config/template_snapshots.yaml');
+        }
+
+        if ($container->has('contao.search.backend')) {
+            $configurator->import('../config/backend_search.yaml');
+        }
     }
 }

@@ -128,8 +128,8 @@ class ModuleCustomnav extends Module
 					$row['isActive'] = true;
 					$row['isTrail'] = false;
 					$row['class'] = trim('active ' . $strClass);
-					$row['title'] = StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
+					$row['title'] = StringUtil::stripInsertTags($objModel->title);
+					$row['pageTitle'] = StringUtil::stripInsertTags($objModel->pageTitle);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
@@ -165,8 +165,8 @@ class ModuleCustomnav extends Module
 					$row['isActive'] = false;
 					$row['isTrail'] = $trail;
 					$row['class'] = $strClass;
-					$row['title'] = StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
+					$row['title'] = StringUtil::stripInsertTags($objModel->title);
+					$row['pageTitle'] = StringUtil::stripInsertTags($objModel->pageTitle);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';

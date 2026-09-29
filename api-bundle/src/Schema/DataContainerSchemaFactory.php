@@ -12,19 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Schema;
 
+use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DC_Table;
+use Contao\System;
 use Contao\Validator as ContaoValidator;
+use Contao\Widget;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactory
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
+        private readonly DataContainerRelationResolver $relationResolver,
+        private readonly LocaleSwitcher $localeSwitcher,
     ) {
     }
 
@@ -38,12 +46,37 @@ final class DataContainerSchemaFactory
     public function create(string $table): array
     {
         $this->framework->initialize();
+
+        try {
+            return $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
+        } finally {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile('default');
+            $system->loadLanguageFile($table);
+        }
+    }
+
+    /**
+     * @return array{
+     *     type: 'object',
+     *     properties: array<string, array<string, mixed>>,
+     *     additionalProperties: bool
+     * }
+     */
+    private function createTableSchema(string $table): array
+    {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+        $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
+        $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
+        $dc->strTable = $table;
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
-            $schema = $this->createFieldSchema((string) $fieldName, \is_array($config) ? $config : []);
+            $fieldName = (string) $fieldName;
+            $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
+            $schema = $this->createFieldSchema(new DataContainerFieldContext($config, $table, $fieldName));
 
             if ([] === $schema) {
                 continue;
@@ -79,7 +112,32 @@ final class DataContainerSchemaFactory
     {
         $converter = $this->converters->get($config);
 
-        return $converter ? $this->createSchema($config, $converter) : [];
+        return $converter ? $this->createSchema(new DataContainerFieldContext($config), $converter) : [];
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     */
+    private function applyWidgetAttributes(array $config, string $fieldName, string $table, DC_Table $dc): array
+    {
+        /** @var class-string<Widget>|null $widgetClass */
+        $widgetClass = $GLOBALS['BE_FFL'][$config['inputType'] ?? ''] ?? null;
+
+        if (!\is_string($widgetClass) || !is_a($widgetClass, Widget::class, true)) {
+            return $config;
+        }
+
+        $dc->field = $fieldName;
+
+        try {
+            $config['eval'] = $widgetClass::getAttributesFromDca($config, $fieldName, null, $fieldName, $table, $dc);
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(\sprintf('Could not resolve the widget attributes for field "%s.%s". Make sure the DCA callbacks work statically without a record.', $table, $fieldName), previous: $exception);
+        }
+
+        return $config;
     }
 
     private function projectSchema(array $schema, string $operation): array
@@ -87,18 +145,10 @@ final class DataContainerSchemaFactory
         foreach ($schema['properties'] as $field => $property) {
             $excluded = 'read' === $operation
                 ? ($property['writeOnly'] ?? false)
-                : ($property['readOnly'] ?? false) || \in_array($field, 'update' === $operation ? ['pid', 'ptable', 'sorting'] : ['sorting'], true);
+                : ($property['readOnly'] ?? false) || \in_array($field, ['pid', 'ptable', 'sorting'], true);
 
             if ($excluded) {
                 unset($schema['properties'][$field]);
-            }
-        }
-
-        if ('create' === $operation) {
-            foreach (['pid' => 'Destination parent ID for the new record.', 'ptable' => 'Destination parent table for the new record.'] as $field => $description) {
-                if (isset($schema['properties'][$field])) {
-                    $schema['properties'][$field]['description'] = $description;
-                }
             }
         }
 
@@ -110,37 +160,40 @@ final class DataContainerSchemaFactory
     }
 
     /**
-     * @param array<string, mixed> $config
-     *
      * @return array<string, mixed>
      */
-    private function createFieldSchema(string $fieldName, array $config): array
+    private function createFieldSchema(DataContainerFieldContext $field): array
     {
-        $converter = $this->converters->get($config);
+        $converter = $this->converters->get($field->config);
 
-        if (!$converter && (isset($config['inputType']) || !\in_array($fieldName, DataContainerRecord::METADATA_FIELDS, true))) {
+        if (!$converter && (isset($field->config['inputType']) || !\in_array($field->name, DataContainerRecord::METADATA_FIELDS, true))) {
             return [];
         }
 
-        $schema = $this->createSchema($config, $converter);
+        $schema = $this->createSchema($field, $converter);
 
-        if (\in_array($fieldName, ['id', 'tstamp'], true)) {
+        if (\in_array($field->name, ['id', 'tstamp'], true)) {
             $schema['readOnly'] = true;
         }
 
-        if (\in_array($fieldName, ['pid', 'ptable', 'sorting'], true)) {
+        if (\in_array($field->name, ['pid', 'ptable', 'sorting'], true)) {
             $schema['description'] = trim(($schema['description'] ?? '').' Use the move operation to change the parent or position of an existing record.');
         }
 
-        if ('id' === $fieldName) {
-            $schema['type'] = 'integer';
+        if ('id' === $field->name) {
+            $schema = $this->createRelationSchema($schema);
+        }
+
+        if ('tstamp' === $field->name) {
+            $schema = $this->createDateTimeSchema($schema);
         }
 
         return $schema;
     }
 
-    private function createSchema(array $config, WidgetConverterInterface|null $converter): array
+    private function createSchema(DataContainerFieldContext $field, WidgetConverterInterface|null $converter): array
     {
+        $config = $field->config;
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
 
@@ -152,6 +205,12 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
+        $schema += $this->createLabelSchema($config['label'] ?? null);
+
+        if ($this->relationResolver->supports($field)) {
+            $schema = $this->createRelationSchema($schema);
+        }
+
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
         if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
@@ -161,12 +220,57 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
+    /**
+     * @return array{title?: string, description?: string}
+     */
+    private function createLabelSchema(mixed $label): array
+    {
+        $label = \is_array($label) ? array_values(\array_slice($label, 0, 2)) : [$label];
+        $schema = [];
+
+        foreach (['title', 'description'] as $index => $key) {
+            $part = $label[$index] ?? null;
+
+            if (\is_string($part) && '' !== ($part = trim(strip_tags($part)))) {
+                $schema[$key] = $part;
+            }
+        }
+
+        return $schema;
+    }
+
+    private function createRelationSchema(array $schema): array
+    {
+        $referenceSchema = [
+            'type' => ['object', 'null'],
+            'required' => ['iri'],
+            'properties' => [
+                'id' => ['type' => ['integer', 'string'], 'readOnly' => true],
+                'iri' => ['type' => 'string', 'format' => 'iri-reference'],
+            ],
+            'additionalProperties' => false,
+        ];
+
+        if ('array' === ($schema['type'] ?? null)) {
+            $schema['items'] = $referenceSchema;
+
+            return $schema;
+        }
+
+        unset($schema['enum'], $schema['default'], $schema['maxLength'], $schema['minLength'], $schema['pattern']);
+
+        return $referenceSchema + $schema;
+    }
+
     private function createValueSchema(array $config, array $sql): array
     {
         $schema = [];
         $eval = $config['eval'] ?? [];
+        $rgxp = isset($eval['rgxp']) ? (string) $eval['rgxp'] : null;
 
-        if (null !== ($type = $this->guessType($config, $sql))) {
+        if (\in_array($rgxp, ['date', 'time', 'datim'], true)) {
+            $schema = $this->createDateTimeSchema($schema);
+        } elseif (null !== ($type = $this->guessType($config, $sql))) {
             $schema['type'] = $type;
         }
 
@@ -178,12 +282,25 @@ final class DataContainerSchemaFactory
             $schema['enum'] = $choices;
         }
 
-        if (isset($eval['rgxp'])) {
-            $schema += $this->getFormatForRgxp((string) $eval['rgxp']);
+        if (null !== $rgxp) {
+            $schema += $this->getFormatForRgxp($rgxp);
         }
 
         if (isset($sql['default'])) {
-            $schema['default'] = $sql['default'];
+            $schema['default'] = 'date-time' === ($schema['format'] ?? null)
+                ? ($sql['default'] ? date(\DateTimeInterface::ATOM, (int) $sql['default']) : null)
+                : $sql['default'];
+        }
+
+        return $schema;
+    }
+
+    private function createDateTimeSchema(array $schema): array
+    {
+        $schema = ['type' => ['string', 'null'], 'format' => 'date-time'] + $schema;
+
+        if (isset($schema['default'])) {
+            $schema['default'] = $schema['default'] ? date(\DateTimeInterface::ATOM, (int) $schema['default']) : null;
         }
 
         return $schema;
@@ -204,6 +321,10 @@ final class DataContainerSchemaFactory
 
         if (isset($eval['minlength']) && is_numeric($eval['minlength'])) {
             $schema['minLength'] = (int) $eval['minlength'];
+        }
+
+        if ($eval['allowHtml'] ?? null) {
+            $schema['contentMediaType'] = 'text/html';
         }
 
         return $schema;
