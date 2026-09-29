@@ -85,8 +85,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
                 $this->tokenStorage->setToken($authenticatedToken);
             } else {
-                $user->save();
-
                 $response = new RedirectResponse($request->getUri());
 
                 // Used by the TwoFactorListener to redirect a user back to the authentication page
