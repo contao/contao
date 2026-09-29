@@ -29,8 +29,8 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->exactly(4))
-            ->method('isGranted')
             ->with('ROLE_ADMIN')
+            ->method('isGranted')
             ->willReturn(false)
         ;
 
@@ -125,8 +125,9 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->method('isGranted')
+            ->expects($this->atLeastOnce())
             ->with('ROLE_ADMIN')
+            ->method('isGranted')
             ->willReturn(true)
         ;
 
