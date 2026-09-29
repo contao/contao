@@ -53,8 +53,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $container = $this->getContainerWithContaoConfiguration();
         System::setContainer($container);
+
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
 
@@ -62,9 +64,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        $this->resetStaticProperties([
-            System::class,
-        ]);
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -101,6 +101,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             Controller::class => $controllerAdapter,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
@@ -234,6 +235,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             Controller::class => $this->createAdapterStub(['loadDataContainer']),
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/contao/api');
         $openApi = $factory();
 

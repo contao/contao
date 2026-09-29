@@ -68,9 +68,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        $this->resetStaticProperties([
-            System::class,
-        ]);
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }

@@ -58,9 +58,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
 
-        $this->resetStaticProperties([
-            System::class,
-        ]);
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -151,6 +149,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);

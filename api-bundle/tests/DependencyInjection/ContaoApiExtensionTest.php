@@ -36,9 +36,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([
-            System::class,
-        ]);
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
