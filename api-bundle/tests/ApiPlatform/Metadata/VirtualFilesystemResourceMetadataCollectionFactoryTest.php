@@ -111,6 +111,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->expects($this->once())
             ->method('create')
             ->with('App\\Entity\\Foo')
+            ->willReturn($collection)
         ;
 
         $factory = $this->createFactory($decorated);
