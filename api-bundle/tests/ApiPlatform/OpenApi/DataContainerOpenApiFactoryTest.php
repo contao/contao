@@ -97,7 +97,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
         $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
@@ -227,7 +230,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->willReturn(new OpenApi(new Info('API', '1'), [], new Paths()))
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $this->createAdapterStub(['loadDataContainer'])]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
         $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/contao/api');
         $openApi = $factory();
 

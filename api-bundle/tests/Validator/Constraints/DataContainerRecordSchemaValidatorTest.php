@@ -147,7 +147,10 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkStub([Controller::class => $controller]);
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
         $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
@@ -229,7 +232,11 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkMock([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkMock([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')
