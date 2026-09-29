@@ -68,7 +68,7 @@ class AuthorizeController
             $authRequest = $server->validateAuthorizationRequest($this->psrMessageConverter->toPsr($request));
         } catch (OAuthServerException $e) {
             // League does not redirect in case of invalid client or redirect_uri
-            return $this->psrMessageConverter->toSymfony($e->generateHttpResponse($this->psrMessageConverter->newResponse()));
+            return $this->addIssuer($this->psrMessageConverter->toSymfony($e->generateHttpResponse($this->psrMessageConverter->newResponse())));
         }
 
         // League silently falls back to "plain" if no method is given
@@ -126,13 +126,7 @@ class AuthorizeController
             $psrResponse = $e->generateHttpResponse($this->psrMessageConverter->newResponse());
         }
 
-        $response = $this->psrMessageConverter->toSymfony($psrResponse);
-
-        if ($response->headers->has('Location')) {
-            $response->headers->set('Location', $this->withIssuer((string) $response->headers->get('Location')));
-        }
-
-        return $response;
+        return $this->addIssuer($this->psrMessageConverter->toSymfony($psrResponse));
     }
 
     private function errorRedirect(AuthorizationRequestInterface $authRequest, string $error, string $description): Response
@@ -148,6 +142,18 @@ class AuthorizeController
         $uris = (array) $authRequest->getClient()->getRedirectUri();
 
         return $authRequest->getRedirectUri() ?? (string) ($uris[0] ?? '');
+    }
+
+    /**
+     * RFC 9207 requires the "iss" parameter in all authorization responses
+     */
+    private function addIssuer(Response $response): Response
+    {
+        if ($response->headers->has('Location')) {
+            $response->headers->set('Location', $this->withIssuer((string) $response->headers->get('Location')));
+        }
+
+        return $response;
     }
 
     private function withIssuer(string $location): string
