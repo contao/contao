@@ -38,7 +38,7 @@ final class FrontendTools
     ) {
     }
 
-    #[McpTool(name: 'contao_frontend_inspect', description: 'Render a Contao page as the current backend user would see it in frontend preview, including unpublished content. Returns response metadata and up to 256 KiB of HTML.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
+    #[McpTool(name: 'contao_frontend_inspect', description: 'Render a Contao page as the current backend user would see it in frontend preview, including unpublished content. For publishable content, prefer creating or updating it as unpublished, inspect the affected page with this tool, and publish only after verifying the result. Returns response metadata and up to 256 KiB of HTML.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
     public function inspect(#[Schema(minimum: 1)] int $page): array
     {
         if ($page < 1) {
