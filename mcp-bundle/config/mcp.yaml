@@ -5,6 +5,8 @@ mcp:
             registry:
                 tools:
                     - Contao\McpBundle\Tool\
+                resources:
+                    - Contao\McpBundle\Resource\
             transports:
                 http: true
                 stdio: false

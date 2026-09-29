@@ -54,6 +54,41 @@ class InspectorTest extends TestCase
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
 
+    public function testAnalyzesTemplateReferences(): void
+    {
+        $templates = [
+            'template.html.twig' => <<<'TWIG'
+                {% use 'blocks.html.twig' %}
+                {% include 'included.html.twig' %}
+                {% include dynamic_template %}
+                {{ include('function.html.twig') }}
+                {% embed 'embedded.html.twig' %}{% endembed %}
+                {% import 'macros.html.twig' as macros %}
+                {% from 'forms.html.twig' import field %}
+                TWIG,
+            'child.html.twig' => "{% extends 'base.html.twig' %}",
+            'base.html.twig' => '',
+            'blocks.html.twig' => '{% block reusable %}{% endblock %}',
+            'included.html.twig' => '',
+            'function.html.twig' => '',
+            'embedded.html.twig' => '',
+            'macros.html.twig' => '{% macro example() %}{% endmacro %}',
+            'forms.html.twig' => '{% macro field() %}{% endmacro %}',
+        ];
+
+        $references = $this->getInspector($templates)->inspectTemplate('template.html.twig')->getReferences();
+        $extendsReferences = $this->getInspector($templates)->inspectTemplate('child.html.twig')->getReferences();
+
+        $this->assertContains(['type' => 'extends', 'name' => 'base.html.twig', 'line' => 1, 'dynamic' => false], $extendsReferences);
+        $this->assertContains(['type' => 'use', 'name' => 'blocks.html.twig', 'line' => 1, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'include', 'name' => 'included.html.twig', 'line' => 2, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'include', 'name' => null, 'line' => 3, 'dynamic' => true], $references);
+        $this->assertContains(['type' => 'include', 'name' => 'function.html.twig', 'line' => 4, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'embed', 'name' => 'embedded.html.twig', 'line' => 5, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'import', 'name' => 'macros.html.twig', 'line' => 6, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'import', 'name' => 'forms.html.twig', 'line' => 7, 'dynamic' => false], $references);
+    }
+
     public function testHidesVirtualDeferredBlocks(): void
     {
         $templates = [
