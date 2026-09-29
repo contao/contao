@@ -48,6 +48,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $storage
+            ->expects($this->once())
             ->method('get')
             ->with('documents/example.txt')
             ->willReturn($item)
@@ -70,6 +71,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $storage
+            ->expects($this->once())
             ->method('get')
             ->with('archive/example.txt')
             ->willReturn($item)
@@ -97,6 +99,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $storage
+            ->expects($this->exactly(2))
             ->method('get')
             ->with('images/example.jpg')
             ->willReturn(new FilesystemItem(true, 'images/example.jpg', 123, 7, 'image/jpeg', $extra))
@@ -124,6 +127,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $storage
+            ->expects($this->exactly(2))
             ->method('get')
             ->with('images/example.jpg')
             ->willReturn(new FilesystemItem(true, 'images/example.jpg', 123, 7, 'image/jpeg', $extra))
@@ -185,6 +189,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     {
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
+            ->expects($this->once())
             ->method('get')
             ->with('missing.jpg')
             ->willReturn(null)
