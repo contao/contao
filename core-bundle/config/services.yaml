@@ -668,7 +668,7 @@ services:
         public: true
         arguments:
             - { id: contao.form_captcha, policy: fixed_window, limit: 1, interval: 30 minutes }
-            - '@contao.rate_limit.member_password_storage'
+            - '@contao.rate_limit.storage'
             - '@?lock_factory'
 
     contao.rate_limit.member_password_factory:
@@ -676,10 +676,10 @@ services:
         public: true
         arguments:
             - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
-            - '@contao.rate_limit.member_password_storage'
+            - '@contao.rate_limit.storage'
             - '@?lock_factory'
 
-    contao.rate_limit.member_password_storage:
+    contao.rate_limit.storage:
         class: Symfony\Component\RateLimiter\Storage\CacheStorage
         arguments:
             - '@cache.rate_limiter'
