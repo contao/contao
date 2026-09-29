@@ -27,7 +27,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(
         private readonly OAuthServerTokenRepository $tokenRepository,
-        private readonly ResourceContext            $context,
+        private readonly ResourceContext $context,
     ) {
     }
 
