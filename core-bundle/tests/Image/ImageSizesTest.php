@@ -55,6 +55,11 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
         $this->expectExamplePredefinedImageSizes();
 
+        $this->security
+            ->expects($this->never())
+            ->method('isGrantedForUser')
+        ;
+
         $options = $this->imageSizes->getAllOptions();
 
         $this->assertArrayHasKey('custom', $options);
@@ -69,6 +74,11 @@ class ImageSizesTest extends TestCase
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectImageSizes([]);
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGrantedForUser')
+        ;
 
         $options = $this->imageSizes->getAllOptions();
 
@@ -151,6 +161,11 @@ class ImageSizesTest extends TestCase
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
             ->willReturn([])
+        ;
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGrantedForUser')
         ;
 
         // Test that fetchAllAssociative() is only called once
