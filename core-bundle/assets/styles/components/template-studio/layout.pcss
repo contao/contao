@@ -5,6 +5,37 @@
 @import "info.pcss";
 @import "dialog.pcss";
 
+.template-studio--snapshots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 0 0 0 auto;
+    align-items: center;
+
+    .current-snapshot {
+        display: inline-flex;
+        gap: 4px;
+        align-items: baseline;
+        margin-right: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .snapshot-buttons {
+        display: flex;
+        gap: 6px;
+    }
+
+    button {
+        transition: transform 0.1s;
+
+        &:hover {
+            transform: scale(1.15);
+        }
+    }
+}
+
 @keyframes point-left {
     0% {
         transform: translateX(1ch);
@@ -133,4 +164,9 @@
     &:hover {
         transform: scale(1.25);
     }
+}
+
+main > .content-top:has(> #template-studio--snapshot-panel) {
+    gap: 15px 6px;
+    flex-wrap: wrap;
 }

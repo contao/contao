@@ -25,6 +25,7 @@ services:
             - '@Contao\McpBundle\Response\ApiResponseConverter'
             - '@Contao\McpBundle\UserTemplate\UserTemplateValidator'
             - '@Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer'
+            - '@security.helper'
 
     Contao\McpBundle\UserTemplate\UserTemplateValidator:
         arguments:

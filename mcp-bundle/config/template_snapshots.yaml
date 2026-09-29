@@ -1,0 +1,6 @@
+services:
+    Contao\McpBundle\Tool\TemplateSnapshotTools:
+        autoconfigure: true
+        arguments:
+            - '@contao.twig.studio.template_snapshots'
+            - '@security.helper'
