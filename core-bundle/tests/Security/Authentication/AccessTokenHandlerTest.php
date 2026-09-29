@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\AccessTokenHandler;
 use Contao\CoreBundle\Security\Authentication\AccessTokenManager;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class AccessTokenHandlerTest extends TestCase
@@ -35,7 +34,7 @@ class AccessTokenHandlerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $accessTokenHandler = new AccessTokenHandler($accessTokenManager, $this->createStub(ContaoUserProvider::class), $this->createStub(EntityManagerInterface::class));
+        $accessTokenHandler = new AccessTokenHandler($accessTokenManager, $this->createStub(ContaoUserProvider::class));
 
         $this->expectException(BadCredentialsException::class);
 
@@ -51,14 +50,6 @@ class AccessTokenHandlerTest extends TestCase
             ->expects($this->once())
             ->method('getUserId')
             ->willReturn(42)
-        ;
-
-        $personalAccessToken
-            ->expects($this->once())
-            ->method('setLastUsed')
-            ->with($this->callback(
-                static fn (\DateTimeInterface $lastUsed): bool => $lastUsed <= new \DateTimeImmutable(),
-            ))
         ;
 
         $accessTokenManager = $this->createMock(AccessTokenManager::class);
@@ -87,7 +78,6 @@ class AccessTokenHandlerTest extends TestCase
         $accessTokenHandler = new AccessTokenHandler(
             $accessTokenManager,
             $backendUserProvider,
-            $this->createStub(EntityManagerInterface::class),
         );
 
         $badge = $accessTokenHandler->getUserBadgeFrom($token);

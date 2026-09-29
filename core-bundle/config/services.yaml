@@ -1172,13 +1172,17 @@ services:
         arguments:
             - '@contao.security.access_token_manager'
             - '@contao.security.backend_user_provider'
-            - '@doctrine.orm.entity_manager'
 
     contao.security.access_token_manager:
         class: Contao\CoreBundle\Security\Authentication\AccessTokenManager
         public: true
         arguments:
             - '@security.password_hasher_factory'
+            - '@doctrine.orm.entity_manager'
+
+    contao.security.access_token_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessTokenSuccessHandler
+        arguments:
             - '@doctrine.orm.entity_manager'
 
     contao.security.authentication_failure_handler:
