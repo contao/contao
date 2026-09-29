@@ -36,18 +36,18 @@ class TemplateSnapshotsTest extends TestCase
         parent::tearDown();
     }
 
-    public function testRestoresWholeTreeAndKeepsSafetySnapshot(): void
+    public function testRestoresWholeTree(): void
     {
         file_put_contents($this->directory.'/templates/first.twig', 'first');
         $cacheInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheInvalidator
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(2))
             ->method('invalidateCache')
             ->with('')
         ;
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('warmUp')
             ->with(true)
         ;
@@ -75,12 +75,6 @@ class TemplateSnapshotsTest extends TestCase
         $this->assertFileDoesNotExist($this->directory.'/templates/second.twig');
         $this->assertSame('', $snapshots->diff());
         $this->assertSame($initial, $snapshots->latestSnapshot()['hash'] ?? null);
-        $this->assertStringContainsString('-changed', $snapshots->diff($result['safety']));
-
-        $snapshots->rollback($result['safety']);
-        $this->assertSame('changed', file_get_contents($this->directory.'/templates/first.twig'));
-        $this->assertSame('added', file_get_contents($this->directory.'/templates/second.twig'));
-        $this->assertStringContainsString('+changed', $snapshots->diff());
     }
 
     public function testProjectRepositoryIsIndependent(): void

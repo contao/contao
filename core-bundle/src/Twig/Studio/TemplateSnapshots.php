@@ -57,7 +57,7 @@ final class TemplateSnapshots
     }
 
     /**
-     * @return list<array{hash: string, date: string, message: string, safety: bool}>
+     * @return list<array{hash: string, date: string, message: string}>
      */
     public function listSnapshots(): array
     {
@@ -73,7 +73,7 @@ final class TemplateSnapshots
                 foreach (explode("\n", trim($output)) as $line) {
                     [$hash, $date, $message] = array_pad(explode("\0", $line), 3, '');
 
-                    if (!str_starts_with($message, 'Template snapshot: ') && 'Safety snapshot before restore' !== $message) {
+                    if (!str_starts_with($message, 'Template snapshot: ')) {
                         continue;
                     }
 
@@ -81,7 +81,6 @@ final class TemplateSnapshots
                         'hash' => $hash,
                         'date' => $date,
                         'message' => $message,
-                        'safety' => 'Safety snapshot before restore' === $message,
                     ];
                 }
 
@@ -127,22 +126,19 @@ final class TemplateSnapshots
     }
 
     /**
-     * @return array{restored: string, safety: string}
+     * @return array{restored: string}
      */
     public function rollback(string|null $hash = null): array
     {
         return $this->locked(
             function () use ($hash): array {
-                // Resolve before committing the safety copy so the default still means the
-                // latest manual snapshot.
                 $target = $this->resolve($hash);
-                $safety = $this->commit('Safety snapshot before restore');
                 $this->cacheInvalidator->invalidateCache('');
                 $this->git(['read-tree', '--reset', '-u', $target]);
                 $this->loader->warmUp(true);
                 $this->cacheInvalidator->invalidateCache('');
 
-                return ['restored' => $target, 'safety' => $safety];
+                return ['restored' => $target];
             },
         );
     }

@@ -93,9 +93,9 @@ final class TemplateGuidance
             ## Snapshot recovery
 
             - A snapshot covers the entire project `templates/` directory, not just the template being edited. Its history is stored in the application cache, separate from the project Git repository, and can be cleared with that cache; it is not a durable backup.
-            - Use `contao_template_diff` with the saved hash to inspect changes against that recovery point. Omitting the hash compares with the latest manual snapshot.
-            - Use `contao_template_snapshots` to find manual and safety snapshot hashes. An explicit hash can be used with both `contao_template_diff` and `contao_template_rollback`.
-            - `contao_template_rollback` replaces the entire `templates/` directory. Only call it when the user explicitly requests a restore and identifies the intended snapshot, preferably by hash. If hash is omitted, the latest manual snapshot is restored. It creates a safety snapshot first; keep the returned safety hash in case the restore needs to be undone.
+            - Use `contao_template_diff` with the saved hash to inspect changes against that recovery point. Omitting the hash compares with the latest snapshot.
+            - Use `contao_template_snapshots` to find snapshot hashes. An explicit hash can be used with both `contao_template_diff` and `contao_template_rollback`.
+            - `contao_template_rollback` replaces the entire `templates/` directory. Only call it when the user explicitly requests a restore and identifies the intended snapshot, preferably by hash. If hash is omitted, the latest snapshot is restored.
             MARKDOWN);
     }
 

@@ -168,16 +168,16 @@
         <source>Rollback</source>
       </trans-unit>
       <trans-unit id="template_studio.snapshots.confirm">
-        <source>Restore the entire templates directory to the latest manual snapshot? A safety snapshot will be created first.</source>
+        <source>Restore the entire templates directory to the latest snapshot?</source>
       </trans-unit>
       <trans-unit id="template_studio.snapshots.no_changes">
-        <source>No changes since the latest manual snapshot.</source>
+        <source>No changes since the latest snapshot.</source>
       </trans-unit>
       <trans-unit id="template_studio.snapshots.created">
-        <source>Template snapshot created: %s</source>
+        <source>Snapshot %s created. Note, that snapshots are deleted when the cache is cleared.</source>
       </trans-unit>
       <trans-unit id="template_studio.snapshots.restored">
-        <source>Templates restored. Safety snapshot: %s</source>
+        <source>The latest snapshot has been restored.</source>
       </trans-unit>
     </body>
   </file>

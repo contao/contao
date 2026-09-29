@@ -67,7 +67,6 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
 
         $result = $tools->rollback();
         $this->assertSame($hash, $result['restored']);
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{40}$/', $result['safety']);
         $this->assertSame('original', file_get_contents(self::getTempDir().'/templates/page.twig'));
         $this->assertSame('', $tools->diff()['diff']);
     }

@@ -522,7 +522,7 @@ class TemplateStudioController extends AbstractBackendController
                 return $this->render('@Contao/backend/template_studio/snapshot/rollback_confirm.stream.html.twig');
             }
 
-            $result = $this->snapshots->rollback();
+            $this->snapshots->rollback();
         } catch (TemplateSnapshotException $exception) {
             return $this->snapshotError($exception);
         }
@@ -532,7 +532,6 @@ class TemplateStudioController extends AbstractBackendController
         return $this->render('@Contao/backend/template_studio/snapshot/rollback_result.stream.html.twig', [
             'open_tabs' => $validTabs,
             'removed_tabs' => array_diff($openTabs, $validTabs),
-            'safety_hash' => $result['safety'],
         ]);
     }
 
