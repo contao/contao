@@ -7,7 +7,7 @@
     {% block content %}
         {% if diff %}
             <div class="template-studio--snapshot-diff">
-                {% for line in diff|split("\n") %}
+                {% for line in diff|split('\n') %}
                     {% if line starts with 'diff --git ' %}
                         {% set kind = 'file' %}
                     {% elseif line starts with '@@ ' %}
