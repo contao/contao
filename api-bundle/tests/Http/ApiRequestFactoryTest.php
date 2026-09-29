@@ -118,6 +118,16 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('{"title":null}', $request->getContent());
     }
 
+    public function testCreatesRawRequests(): void
+    {
+        $operation = new Post(outputFormats: ['json' => ['application/json']], name: 'records');
+        $request = $this->createFactory()->createRaw(Request::create('/contao/mcp'), $operation, ['id' => 42], "\0binary", 'application/octet-stream');
+
+        $this->assertSame('application/octet-stream', $request->headers->get('Content-Type'));
+        $this->assertSame('application/json', $request->headers->get('Accept'));
+        $this->assertSame("\0binary", $request->getContent());
+    }
+
     public function testRejectsOperationsWithoutJsonOutput(): void
     {
         $this->expectException(UnsupportedFormatException::class);

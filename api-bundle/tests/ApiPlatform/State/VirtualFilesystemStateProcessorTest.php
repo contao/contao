@@ -31,12 +31,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Uid\Uuid;
 
 final class VirtualFilesystemStateProcessorTest extends TestCase
 {
     public function testUploadsTheRequestBody(): void
     {
-        $item = new FilesystemItem(true, 'documents/example.txt', 123, 7, 'text/plain');
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $item = new FilesystemItem(true, 'documents/example.txt', 123, 7, 'text/plain', new ExtraMetadata(['uuid' => $uuid]));
 
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
@@ -59,6 +61,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $result = $processor->process(null, new Put(), ['path' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
+        $this->assertSame($uuid->toRfc4122(), $result->metadata['uuid']);
     }
 
     public function testMovesTheItem(): void

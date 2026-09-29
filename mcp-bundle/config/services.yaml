@@ -15,6 +15,15 @@ services:
             - '@request_stack'
             - '@Contao\McpBundle\Response\ApiResponseConverter'
 
+    Contao\McpBundle\Tool\FileTools:
+        autoconfigure: true
+        arguments:
+            - '@api_platform.metadata.resource.metadata_collection_factory'
+            - '@http_kernel'
+            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@request_stack'
+            - '@Contao\McpBundle\Response\ApiResponseConverter'
+
     Contao\McpBundle\Tool\UserTemplateTools:
         autoconfigure: true
         arguments:

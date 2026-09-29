@@ -71,6 +71,11 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_dc_update_record',
                 'contao_dc_delete_record',
                 'contao_dc_move_record',
+                'contao_files_list',
+                'contao_files_inspect',
+                'contao_files_upload',
+                'contao_files_move',
+                'contao_files_update_metadata',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -144,7 +149,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(18, $tools);
+        $this->assertCount(23, $tools);
     }
 
     private function getContainerBuilder(bool $withBackendSearch = false): ContainerBuilder
