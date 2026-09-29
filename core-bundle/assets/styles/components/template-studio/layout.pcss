@@ -5,6 +5,30 @@
 @import "info.pcss";
 @import "dialog.pcss";
 
+.template-studio--snapshots {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    align-items: center;
+
+    .current-snapshot {
+        display: inline-flex;
+        gap: 4px;
+        align-items: baseline;
+        margin-right: 6px;
+        color: var(--gray);
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    button {
+        padding: 3px 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--border-radius);
+        white-space: nowrap;
+    }
+}
+
 @keyframes point-left {
     0% {
         transform: translateX(1ch);

@@ -18,3 +18,41 @@ dialog[data-controller="contao--dialog"].template-studio {
         color: var(--red) !important;
     }
 }
+
+dialog[data-controller="contao--dialog"].template-studio--snapshot-compare {
+    .dialog_wrapper {
+        width: min(90vw, 1200px);
+        max-width: none;
+    }
+
+    .template-studio--snapshot-diff {
+        max-height: 70vh;
+        overflow: auto;
+        font: 0.75rem "Roboto Mono", monospace;
+
+        .line {
+            min-height: 1.3em;
+            padding: 0 10px;
+            white-space: pre;
+        }
+
+        .line--file {
+            margin-top: 8px;
+            background: var(--table-header);
+            font-weight: 600;
+        }
+
+        .line--hunk {
+            background: var(--table-odd);
+            color: var(--blue);
+        }
+
+        .line--added {
+            background: var(--diff-right);
+        }
+
+        .line--deleted {
+            background: var(--diff-left);
+        }
+    }
+}

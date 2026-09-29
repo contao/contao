@@ -1,0 +1,26 @@
+{% trans_default_domain 'contao_template_studio' %}
+
+{% if snapshots_available %}
+    <form id="template-studio--snapshot-panel" class="template-studio--snapshots" method="post" data-turbo="true" data-turbo-stream>
+        <span class="current-snapshot">
+            {% if current_snapshot %}
+                {% set snapshot_token -%}
+                    <code>{{ current_snapshot.hash|slice(0, 10) }}</code>
+                {%- endset %}
+                {% set snapshot_date -%}
+                    <time datetime="{{ current_snapshot.date }}">{{ current_snapshot.date|date('Y-m-d H:i') }}</time>
+                {%- endset %}
+                {{ 'template_studio.snapshots.current'|trans([snapshot_token, snapshot_date])|raw }}
+            {% else %}
+                {{ 'template_studio.snapshots.none'|trans }}
+            {% endif %}
+        </span>
+
+        <button type="submit" formaction="{{ path('_contao_template_studio_snapshot.stream') }}">{{ 'template_studio.snapshots.create'|trans }}</button>
+
+        {% if current_snapshot %}
+            <button type="submit" formaction="{{ path('_contao_template_studio_snapshot_compare.stream') }}">{{ 'template_studio.snapshots.compare'|trans }}</button>
+            <button type="submit" formaction="{{ path('_contao_template_studio_snapshot_rollback.stream') }}" data-snapshot-operation="rollback">{{ 'template_studio.snapshots.rollback'|trans }}</button>
+        {% endif %}
+    </form>
+{% endif %}

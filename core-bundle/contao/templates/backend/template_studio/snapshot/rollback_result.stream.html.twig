@@ -1,0 +1,23 @@
+{# Show a message #}
+{% embed '@Contao/backend/component/message/add_message.stream.html.twig' with {success: true} %}
+    {% trans_default_domain 'contao_template_studio' %}
+
+    {% block content %}
+        {% set snapshot_token -%}
+            <span class="token">{{ safety_hash|slice(0, 10) }}</span>
+        {%- endset %}
+        {{ 'template_studio.snapshots.restored'|trans([snapshot_token])|raw }}
+    {% endblock %}
+{% endembed %}
+
+{# Update all views #}
+{{ render(path('_contao_template_studio_tree.stream')) }}
+{{ render(path('_contao_template_studio_snapshot_panel.stream')) }}
+
+{% for identifier in removed_tabs %}
+    <turbo-stream action="remove" target="template-studio--tab_{{ identifier }}"></turbo-stream>
+{% endfor %}
+
+{% for identifier in open_tabs %}
+    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
+{% endfor %}
