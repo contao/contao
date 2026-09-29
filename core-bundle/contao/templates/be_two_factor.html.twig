@@ -189,6 +189,7 @@
                 <thead>
                 <tr>
                     <th class="name">{{ 'MSC.personalAccessTokenName'|trans }}</th>
+                    <th class="last-used">{{ 'MSC.lastUsed'|trans }}</th>
                     <th class="expires">{{ 'MSC.personalAccessTokenExpiresAt'|trans }}</th>
                     <th class="actions"></th>
                 </tr>
@@ -197,7 +198,7 @@
                 {% for access_token in personal_access_tokens %}
                     <tr class="hover-row">
                         {% if access_token.id.equals(created_pat_id|default) %}
-                            <td class="name tl_confirm" colspan="2">
+                            <td class="name tl_confirm" colspan="3">
                                 <button
                                     type="button"
                                     data-controller="contao--clipboard"
@@ -211,8 +212,12 @@
                         {% else %}
                             <td class="name">
                                 {{ access_token.name }}
+                            </td>
+                            <td class="last-used">
                                 {% if access_token.lastUsed|default %}
-                                    <span class="last-used">{{ 'MSC.lastUsed'|trans }}: {{ access_token.lastUsed.format('j. F Y, H:i') }}</span>
+                                    {{ access_token.lastUsed.format('j. F Y, H:i') }}
+                                {% else %}
+                                    –
                                 {% endif %}
                             </td>
                             <td class="expires">

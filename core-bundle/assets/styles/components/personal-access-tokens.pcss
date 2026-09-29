@@ -23,12 +23,6 @@
             &.tl_confirm {
                 background-position: 11px center;
             }
-
-            .last-used {
-                color: var(--gray);
-                font-size: 0.8em;
-                display: block;
-            }
         }
 
         td.tl_confirm {
@@ -44,6 +38,14 @@
 
             .expired {
                 color: var(--red);
+            }
+        }
+
+        td.last-used {
+            width: 30%;
+
+            @media (width < 768px) {
+                width: auto;
             }
         }
 
