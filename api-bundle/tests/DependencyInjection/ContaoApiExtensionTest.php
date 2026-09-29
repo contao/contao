@@ -31,6 +31,7 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class ContaoApiExtensionTest extends ContaoTestCase
 {
@@ -212,9 +213,22 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $container->register('contao.framework', ContaoFramework::class)->setSynthetic(true)->setPublic(true);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
+        $container->register('translation.locale_switcher', LocaleSwitcher::class)->setSynthetic(true);
+        $container->set('translation.locale_switcher', $this->createLocaleSwitcher());
 
         System::setContainer($container);
 
         return $container;
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

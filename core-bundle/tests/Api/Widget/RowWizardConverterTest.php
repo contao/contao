@@ -26,6 +26,7 @@ use Contao\StringUtil;
 use Contao\TextField;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class RowWizardConverterTest extends TestCase
 {
@@ -189,9 +190,20 @@ class RowWizardConverterTest extends TestCase
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
         $registry = new WidgetConverterRegistry($converters);
 
-        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry));
+        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $this->createLocaleSwitcher()));
         $converters[] = $converter;
 
         return $converter;
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

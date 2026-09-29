@@ -22,12 +22,14 @@ use Contao\DC_Table;
 use Contao\System;
 use Contao\Validator as ContaoValidator;
 use Contao\Widget;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactory
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
+        private readonly LocaleSwitcher $localeSwitcher,
     ) {
     }
 
@@ -41,8 +43,28 @@ final class DataContainerSchemaFactory
     public function create(string $table): array
     {
         $this->framework->initialize();
+
+        try {
+            return $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
+        } finally {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile('default');
+            $system->loadLanguageFile($table);
+        }
+    }
+
+    /**
+     * @return array{
+     *     type: 'object',
+     *     properties: array<string, array<string, mixed>>,
+     *     additionalProperties: bool
+     * }
+     */
+    private function createTableSchema(string $table): array
+    {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
         $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+        $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
         $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
@@ -51,7 +73,7 @@ final class DataContainerSchemaFactory
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
             $fieldName = (string) $fieldName;
             $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
-            $schema = $this->createFieldSchema($fieldName, $config);
+            $schema = $this->createFieldSchema($fieldName, $config, $this->createLabelSchema($config['label'] ?? null));
 
             if ([] === $schema) {
                 continue;
@@ -139,7 +161,7 @@ final class DataContainerSchemaFactory
      *
      * @return array<string, mixed>
      */
-    private function createFieldSchema(string $fieldName, array $config): array
+    private function createFieldSchema(string $fieldName, array $config, array $labelSchema): array
     {
         $converter = $this->converters->get($config);
 
@@ -147,7 +169,7 @@ final class DataContainerSchemaFactory
             return [];
         }
 
-        $schema = $this->createSchema($config, $converter);
+        $schema = $this->createSchema($config, $converter, $labelSchema);
 
         if (\in_array($fieldName, ['id', 'tstamp'], true)) {
             $schema['readOnly'] = true;
@@ -168,7 +190,7 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
-    private function createSchema(array $config, WidgetConverterInterface|null $converter): array
+    private function createSchema(array $config, WidgetConverterInterface|null $converter, array $labelSchema = []): array
     {
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
@@ -181,10 +203,31 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
+        $schema += $labelSchema;
+
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
         if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
             $schema['readOnly'] = true;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * @return array{title?: string, description?: string}
+     */
+    private function createLabelSchema(mixed $label): array
+    {
+        $label = \is_array($label) ? array_values(\array_slice($label, 0, 2)) : [$label];
+        $schema = [];
+
+        foreach (['title', 'description'] as $index => $key) {
+            $part = $label[$index] ?? null;
+
+            if (\is_string($part) && '' !== ($part = trim(strip_tags($part)))) {
+                $schema[$key] = $part;
+            }
         }
 
         return $schema;

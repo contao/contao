@@ -83,6 +83,7 @@ services:
         arguments:
             $framework: '@contao.framework'
             $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
+            $localeSwitcher: '@translation.locale_switcher'
 
     # Serialize DataContainerRecord payloads and handle reads/writes through
     # API Platform's serializer and state layers. The metadata factory points
