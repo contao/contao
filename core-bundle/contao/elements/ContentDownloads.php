@@ -49,10 +49,8 @@ class ContentDownloads extends ContentDownload
 		}
 
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if ($this->useHomeDir && ($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser)
 		{
-			$user = FrontendUser::getInstance();
-
 			if ($user->assignDir && $user->homeDir)
 			{
 				$this->multiSRC = array($user->homeDir);

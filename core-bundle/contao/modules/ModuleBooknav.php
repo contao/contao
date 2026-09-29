@@ -74,9 +74,9 @@ class ModuleBooknav extends Module
 		$groups = array();
 
 		// Get all groups of the current front end user
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if (($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser)
 		{
-			$groups = FrontendUser::getInstance()->groups;
+			$groups = $user->groups;
 		}
 
 		// Get all book pages
