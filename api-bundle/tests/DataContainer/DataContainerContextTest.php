@@ -57,4 +57,15 @@ final class DataContainerContextTest extends TestCase
 
         DataContainerContext::fromOperation($operation, ['nested' => '5/content/1 OR 1=1']);
     }
+
+    public function testBuildsARecursiveParentChainFromAnIntegerIdentifier(): void
+    {
+        $operation = new Get(extraProperties: ['contao' => [
+            'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
+        ]]);
+
+        $context = DataContainerContext::fromOperation($operation, ['nested' => 487]);
+
+        $this->assertSame([['table' => 'tl_content', 'id' => 487]], $context->getParents());
+    }
 }
