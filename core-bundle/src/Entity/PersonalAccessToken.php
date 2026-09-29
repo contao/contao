@@ -47,6 +47,7 @@ class PersonalAccessToken
     protected string $name;
 
     #[Column(type: Types::STRING)]
+    #[\SensitiveParameter]
     protected string $secret;
 
     public function __construct(int $userId, string $name, string $secret, \DateTimeInterface|null $expiresAt = null)
@@ -146,7 +147,7 @@ class PersonalAccessToken
         return $this->secret;
     }
 
-    public function setSecret(string $secret): self
+    public function setSecret(#[\SensitiveParameter] string $secret): self
     {
         $this->secret = $secret;
 
