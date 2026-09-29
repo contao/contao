@@ -6,8 +6,8 @@
         <target>Rich-Text-Editor</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
-        <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
-        <target>Weitere Informationen zu TinyMCE finden Sie unter &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</target>
+        <source>For more information about HugeRTE, see &lt;a href=&quot;https://hugerte.org/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://hugerte.org/&lt;/a&gt;.</source>
+        <target>Weitere Informationen zu HugeRTE finden Sie unter &lt;a href=&quot;https://hugerte.org/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://hugerte.org/&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
