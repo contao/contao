@@ -47,6 +47,7 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
@@ -102,7 +103,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
             public function __construct(private readonly ResourceMetadataCollection $collection)
@@ -236,7 +237,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new Pagination(), '/contao/api');
+        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher()), new Pagination(), '/contao/api');
         $openApi = $factory();
 
         $this->assertNull($openApi->getPaths()->getPath('/contao/api/dc/content/{id}')->getGet()->getResponses()['200']->getLinks());
@@ -258,7 +259,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                     return new ResourceMetadataCollection(DataContainerRecord::class, []);
                 }
             },
-            new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])),
+            new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher()),
             new Pagination(),
             '/contao/api',
         );
@@ -324,5 +325,16 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         $paths->addPath('/unrelated', new PathItem(get: new Operation(summary: 'Unrelated resource')));
 
         return new OpenApi(new Info('Contao API', '1.0.0'), [], $paths);
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

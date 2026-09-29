@@ -16,6 +16,7 @@ use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
+use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
@@ -29,6 +30,7 @@ use Contao\TextArea;
 use Contao\TextField;
 use Contao\Validator;
 use Contao\Widget;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactoryTest extends ContaoTestCase
 {
@@ -122,7 +124,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
 
         $schema = $factory->create('tl_content');
 
@@ -156,7 +158,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'internal' => ['sql' => ['type' => 'string']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
 
         $this->assertSame(['id', 'title'], array_keys($factory->create('tl_content')['properties']));
         $this->assertArrayNotHasKey('required', $factory->create('tl_content'));
@@ -175,7 +177,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'passwords' => ['inputType' => 'password', 'eval' => ['multiple' => true], 'sql' => ['type' => 'string']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertTrue($properties['secret']['writeOnly']);
@@ -183,6 +185,49 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertTrue($properties['disabled']['readOnly']);
         $this->assertTrue($properties['passwords']['writeOnly']);
         $this->assertArrayNotHasKey('writeOnly', $properties['passwords']['items']);
+    }
+
+    public function testCreatesEnglishDescriptionsFromLabelsUnlessExplicitlyConfigured(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'title' => ['inputType' => 'text', 'label' => ['Deutscher Titel', 'Deutsche Hilfe.']],
+            'labelOnly' => ['inputType' => 'text', 'label' => 'English label'],
+            'explicit' => [
+                'inputType' => 'text',
+                'label' => ['Deutsche Bezeichnung', 'Deutsche Hilfe.'],
+                'api' => ['schema' => ['description' => 'Explicit description.']],
+            ],
+        ];
+
+        $localeSwitcher = $this->createLocaleSwitcher('de');
+        $controller = $this->createAdapterMock(['loadDataContainer', 'loadLanguageFile']);
+        $controller
+            ->expects($this->exactly(2))
+            ->method('loadLanguageFile')
+            ->willReturnCallback(
+                static function () use ($localeSwitcher): void {
+                    if ('en' === $localeSwitcher->getLocale()) {
+                        $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label'] = ['English title', 'English <em>help</em>.'];
+
+                        return;
+                    }
+
+                    $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label'] = ['Deutscher Titel', 'Deutsche Hilfe.'];
+                },
+            )
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+        ]);
+        $factory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $localeSwitcher);
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame("English title\n\nEnglish help.", $properties['title']['description']);
+        $this->assertSame('English label', $properties['labelOnly']['description']);
+        $this->assertSame('Explicit description.', $properties['explicit']['description']);
+        $this->assertSame('de', $localeSwitcher->getLocale());
+        $this->assertSame(['Deutscher Titel', 'Deutsche Hilfe.'], $GLOBALS['TL_DCA']['tl_content']['fields']['title']['label']);
     }
 
     public function testInheritsWidgetSchemaForEveryFieldUsingThatWidget(): void
@@ -201,7 +246,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'textual' => ['inputType' => 'customFiles', 'eval' => ['binary' => false]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'uuid'], $properties['single']);
@@ -237,7 +282,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ->willReturn(['type' => 'string', 'readOnly' => true])
         ;
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame($properties['first'], $properties['second']);
@@ -254,7 +299,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'options' => ['inputType' => 'checkbox', 'options' => ['one', 'two'], 'eval' => ['multiple' => true]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame('integer', $properties['page']['type']);
@@ -276,7 +321,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'sorting' => ['sql' => ['type' => 'integer']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         foreach (['pid', 'ptable', 'sorting'] as $field) {
@@ -301,7 +346,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'eventDateTime' => ['inputType' => 'text', 'eval' => ['rgxp' => 'datim'], 'sql' => ['type' => 'integer']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time', 'default' => null, 'readOnly' => true], $properties['tstamp']);
@@ -329,7 +374,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'secret' => ['inputType' => 'password', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => true]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $schemas = $factory->createOperationSchemas('tl_content');
 
         $this->assertSame(['id', 'pid', 'ptable', 'sorting', 'title'], array_keys($schemas['read']['properties']));
@@ -345,12 +390,42 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['id'] = ['sql' => ['type' => 'integer']];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]));
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
         $schema = json_decode(json_encode($factory->createOperationSchemas('tl_content')['update'], JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
 
         $validator = new \Opis\JsonSchema\Validator();
 
         $this->assertTrue($validator->validate(new \stdClass(), $schema)->isValid());
         $this->assertFalse($validator->validate((object) ['id' => 1], $schema)->isValid());
+    }
+
+    private function createLocaleSwitcher(string $locale = 'en'): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('getLocale')
+            ->willReturnCallback(
+                static function () use (&$locale): string {
+                    return $locale;
+                },
+            )
+        ;
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(
+                static function (string $newLocale, callable $callback) use (&$locale): mixed {
+                    $previousLocale = $locale;
+                    $locale = $newLocale;
+
+                    try {
+                        return $callback($newLocale);
+                    } finally {
+                        $locale = $previousLocale;
+                    }
+                },
+            )
+        ;
+
+        return $localeSwitcher;
     }
 }

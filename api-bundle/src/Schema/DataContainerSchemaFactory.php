@@ -22,12 +22,14 @@ use Contao\DC_Table;
 use Contao\System;
 use Contao\Validator as ContaoValidator;
 use Contao\Widget;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactory
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
+        private readonly LocaleSwitcher $localeSwitcher,
     ) {
     }
 
@@ -41,8 +43,28 @@ final class DataContainerSchemaFactory
     public function create(string $table): array
     {
         $this->framework->initialize();
-        $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+
+        try {
+            return $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
+        } finally {
+            $system = $this->framework->getAdapter(System::class);
+            $system->loadLanguageFile('default');
+            $system->loadLanguageFile($table);
+        }
+    }
+
+    /**
+     * @return array{
+     *     type: 'object',
+     *     properties: array<string, array<string, mixed>>,
+     *     additionalProperties: bool
+     * }
+     */
+    private function createTableSchema(string $table): array
+    {
         $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+        $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
+        $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
         $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
@@ -51,7 +73,10 @@ final class DataContainerSchemaFactory
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
             $fieldName = (string) $fieldName;
             $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
-            $schema = $this->createFieldSchema($fieldName, $config);
+            $description = \array_key_exists('description', $config['api']['schema'] ?? [])
+                ? null
+                : $this->createDescription($config['label'] ?? null);
+            $schema = $this->createFieldSchema($fieldName, $config, $description);
 
             if ([] === $schema) {
                 continue;
@@ -139,7 +164,7 @@ final class DataContainerSchemaFactory
      *
      * @return array<string, mixed>
      */
-    private function createFieldSchema(string $fieldName, array $config): array
+    private function createFieldSchema(string $fieldName, array $config, string|null $description): array
     {
         $converter = $this->converters->get($config);
 
@@ -147,7 +172,7 @@ final class DataContainerSchemaFactory
             return [];
         }
 
-        $schema = $this->createSchema($config, $converter);
+        $schema = $this->createSchema($config, $converter, $description);
 
         if (\in_array($fieldName, ['id', 'tstamp'], true)) {
             $schema['readOnly'] = true;
@@ -168,7 +193,7 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
-    private function createSchema(array $config, WidgetConverterInterface|null $converter): array
+    private function createSchema(array $config, WidgetConverterInterface|null $converter, string|null $description = null): array
     {
         $sql = \is_array($config['sql'] ?? null) ? $config['sql'] : [];
         $schema = $this->createValueSchema($config, $sql);
@@ -181,6 +206,10 @@ final class DataContainerSchemaFactory
             $schema = $converter->getSchema($config, $schema);
         }
 
+        if (null !== $description) {
+            $schema += ['description' => $description];
+        }
+
         $schema = array_replace($schema, $config['api']['schema'] ?? []);
 
         if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
@@ -188,6 +217,20 @@ final class DataContainerSchemaFactory
         }
 
         return $schema;
+    }
+
+    private function createDescription(mixed $label): string|null
+    {
+        $label = \is_array($label) ? \array_slice($label, 0, 2) : [$label];
+        $parts = [];
+
+        foreach ($label as $part) {
+            if (\is_string($part) && '' !== ($part = trim(strip_tags($part)))) {
+                $parts[] = $part;
+            }
+        }
+
+        return $parts ? implode(': ', $parts) : null;
     }
 
     private function createValueSchema(array $config, array $sql): array

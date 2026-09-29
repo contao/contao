@@ -45,12 +45,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class TableDataContainerRecordsTest extends ContaoTestCase
 {
     private RequestStack $requestStack;
 
     private WidgetConverterRegistry $converters;
+
+    private LocaleSwitcher $localeSwitcher;
 
     protected function setUp(): void
     {
@@ -60,6 +63,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         System::setContainer($container);
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]);
+        $this->localeSwitcher = $this->createLocaleSwitcher();
 
         $GLOBALS['BE_FFL']['text'] = TextField::class;
     }
@@ -514,7 +518,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             )
         ;
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters), $this->converters);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->localeSwitcher), $this->converters);
 
         if (!$connection) {
             $connection = $this->createStub(Connection::class);
@@ -540,5 +544,16 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerToolsTest extends TestCase
 {
@@ -224,6 +225,17 @@ final class DataContainerToolsTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
+        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher()));
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }
