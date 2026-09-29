@@ -801,6 +801,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -810,6 +812,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersAsContentElementAttribute(): void
