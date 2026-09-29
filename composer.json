@@ -306,7 +306,7 @@
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
-            "Contao\\OAuthBundle\\\\": "core-bundle/tests/Fixtures/vendor/contao/oauth-bundle/",
+            "Contao\\OAuthBundle\\Tests\\": "oauth-bundle/test/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
