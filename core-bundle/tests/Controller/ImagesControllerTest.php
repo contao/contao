@@ -85,6 +85,7 @@ class ImagesControllerTest extends TestCase
         ;
 
         $response = new Response('', Response::HTTP_ACCEPTED);
+
         $responseFactory = $this->createMock(DeferredImageResponseFactory::class);
         $responseFactory
             ->method('create')

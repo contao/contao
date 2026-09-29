@@ -125,6 +125,7 @@ class DeferredImageResponseFactoryTest extends TestCase
 
         $image = $this->createDeferredImage();
         $filesystem = new Filesystem();
+
         $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')

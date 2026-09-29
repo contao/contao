@@ -26,6 +26,7 @@ class ResizeDeferredImageMessageHandlerTest extends TestCase
     public function testProcessesImageOnCli(): void
     {
         $image = $this->createStub(DeferredImageInterface::class);
+
         $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
@@ -55,6 +56,7 @@ class ResizeDeferredImageMessageHandlerTest extends TestCase
             $imageFactory,
             $this->createStub(DeferredResizerInterface::class),
         );
+
         $handler($this->createMessage(ScopeAwareMessageInterface::SCOPE_WEB));
     }
 
