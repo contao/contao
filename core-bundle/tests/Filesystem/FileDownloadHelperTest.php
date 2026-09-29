@@ -153,6 +153,22 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('https://example.com/path?_hash=TUK%2BRJDS6D7dOg8zPyttlPmt0mMRi3bx17OHbD8NIro%3D&d=attachment&foo=bar&p=my_file.txt', $url);
     }
 
+    public function testRemovesParametersOfPreviousDownloadUrls(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $downloadUrl = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt', 'custom_name.txt', ['id' => 1]);
+
+        $this->assertSame(
+            $helper->generateInlineUrl('https://example.com/path?foo=bar', 'my_file.unknown', ['id' => 2]),
+            $helper->generateInlineUrl($downloadUrl, 'my_file.unknown', ['id' => 2]),
+        );
+
+        $this->assertSame(
+            $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.unknown'),
+            $helper->generateDownloadUrl($downloadUrl, 'my_file.unknown'),
+        );
+    }
+
     public static function provideDownloadContext(): iterable
     {
         yield 'without filename or context' => [

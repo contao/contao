@@ -140,10 +140,19 @@ class FileDownloadHelper
     {
         $uri = new Uri($url);
         parse_str($uri->getQuery(), $existingParams);
-        $params = [...$existingParams, ...array_filter($params)];
 
-        // Unset default uri_signer parameters (#7989)
-        unset($params['_hash'], $params['_expiration']);
+        // Unset the default uri_signer parameters (#7989) and the parameters of a
+        // previous download URL, in case the current URL is a download URL itself
+        unset(
+            $existingParams['_hash'],
+            $existingParams['_expiration'],
+            $existingParams[self::PARAM_PATH],
+            $existingParams[self::PARAM_CONTEXT],
+            $existingParams[self::PARAM_DISPOSITION],
+            $existingParams[self::PARAM_FILE_NAME],
+        );
+
+        $params = [...$existingParams, ...array_filter($params)];
 
         return $this->signer->sign((string) $uri->withQuery(http_build_query($params)));
     }
