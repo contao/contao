@@ -41,40 +41,39 @@
 
 /* Handheld */
 @media (width < 768px) {
-    #home {
-        min-width: 22px;
-        padding: 12px;
-    }
-
-    #header .app-title {
-        display: none;
-    }
-
-    #header .badge-title {
-        margin-left: 32px;
-    }
-
     #tmenu > li > a {
         width: 16px;
         margin-bottom: -2px;
         position: relative;
+    }
+
+    #tmenu > li > a .label {
+        border: 0;
+        clip-path: inset(50%);
+        height: 1px;
+        margin: 0;
         overflow: hidden;
+        padding: 0;
+        position: absolute;
         white-space: nowrap;
-        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
-        background-size: 18px !important;
+        width: 1px;
+    }
+
+    #tmenu :not(.icon-alert) .icon {
+        width: 18px;
+        height: 18px;
+        margin: -2px -1px;
+    }
+
+    #tmenu .icon-alert .icon {
+        width: 14px;
+        height: 14px;
+        margin: 0 1px;
     }
 
     #tmenu sup {
         top: 6px;
         font-size: 0.5rem;
-    }
-
-    #tmenu .icon-debug {
-        background: var(--icon-debug) center center no-repeat;
-    }
-
-    #tmenu .icon-preview {
-        background: var(--icon-preview) center center no-repeat;
     }
 
     #tmenu .profile button {
@@ -225,16 +224,17 @@
         width: 100%;
     }
 
+    #home {
+        min-width: 22px;
+        padding: 12px;
+    }
+
+    #header .app-title {
+        display: none;
+    }
+
     #header:has(.badge-title) {
         padding-top: 18px;
-
-        h1 {
-            width: 100%;
-        }
-
-        + #container #left {
-            top: 58px;
-        }
     }
 
     #header .badge-title {
@@ -242,19 +242,11 @@
         inset: 0 0 auto;
         margin: -18px 0 0;
         border-radius: 0;
-        padding: 3px 5px;
-        background-color: var(--text);
-        color: var(--white);
+        background-color: var(--invert-bg);
+        color: var(--invert-text);
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-    }
-
-    html[data-color-scheme="dark"] {
-        #header .badge-title {
-            background-color: var(--invert-text);
-            color: var(--black);
-        }
     }
 }
 
@@ -272,6 +264,14 @@
 @media (width >= 768px) {
     .widget-group {
         --widget-gap-cols: 30px;
+    }
+
+    #tmenu .icon-alert,
+    #tmenu .icon-manual {
+        img {
+            width: 16px;
+            align-items: center;
+        }
     }
 
     .w16,
@@ -444,6 +444,12 @@
 
     .split-button > button[type="button"]:focus {
         outline: none;
+    }
+}
+
+@media (width >= 768px) {
+    .d-md-none {
+        display: none !important;
     }
 }
 

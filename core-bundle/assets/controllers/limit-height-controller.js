@@ -14,7 +14,6 @@ export default class extends Controller {
     static targets = ['operation', 'node'];
 
     initialize() {
-        super.initialize();
         this.togglerMap = new WeakMap();
         this.nextId = 1;
     }
@@ -130,7 +129,7 @@ export default class extends Controller {
             return;
         }
 
-        const hasTogglers = !!this.nodeTargets.find((el) => this.togglerMap.has(el));
+        const hasTogglers = this.nodeTargets.some((el) => this.togglerMap.has(el));
         const expanded = this.hasExpanded();
 
         for (const operationTarget of this.operationTargets) {
@@ -153,6 +152,6 @@ export default class extends Controller {
     }
 
     hasExpanded() {
-        return !!this.nodeTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
+        return this.nodeTargets.some((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
     }
 }

@@ -55,8 +55,21 @@ services:
         arguments:
             - !tagged_iterator contao.backend_search_provider
             - '@event_dispatcher'
+            - '@contao.search.backend.security.document_allowed_groups_resolver'
         tags:
             - { name: cmsig_seal.reindex_provider }
+
+    contao.search.backend.security.document_access_evaluator:
+        class: Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator
+        arguments:
+            - '@contao.search.security.virtual_backend_user_factory'
+            - '@contao.security.authentication.contao_strategy_context'
+
+    contao.search.backend.security.document_allowed_groups_resolver:
+        class: Contao\CoreBundle\Search\Backend\Security\DocumentAllowedGroupsResolver
+        arguments:
+            - '@database_connection'
+            - '@contao.search.backend.security.document_access_evaluator'
 
     contao.search.backend.table_data_container_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider
@@ -80,6 +93,11 @@ services:
         class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
         arguments:
             - '@contao.search.backend'
+
+    contao.search.security.virtual_backend_user_factory:
+        class: Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory
+        arguments:
+            - '@contao.framework'
 
     contao.search_backend.adapter:
         class: CmsIg\Seal\Adapter\AdapterInterface

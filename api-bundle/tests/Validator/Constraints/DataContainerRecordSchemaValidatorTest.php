@@ -12,33 +12,69 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\Validator\Constraints;
 
+use ApiPlatform\JsonLd\AnonymousContextBuilderInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CheckBox;
 use Contao\Controller;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
+use Contao\FileTree;
+use Contao\PageTree;
+use Contao\Password;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Contao\TextField;
 use Contao\Validator;
+use Doctrine\DBAL\Connection;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
+
+        $GLOBALS['BE_FFL'] = [
+            'text' => TextField::class,
+            'custom' => TextField::class,
+            'checkbox' => CheckBox::class,
+            'fileTree' => FileTree::class,
+            'pageTree' => PageTree::class,
+            'password' => Password::class,
+        ];
+    }
+
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
+
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
 
-    public function testValidatesAPartialUpdateAgainstTheExistingRecord(): void
+    public function testValidatesOnlySubmittedFieldsDuringAPartialUpdate(): void
     {
-        $record = new DataContainerRecord('tl_content', ['title' => 'abc', 'published' => false], 17);
+        $record = new DataContainerRecord('tl_content', ['title' => 'Too long for the current schema', 'published' => false, 'image' => null], 17);
 
-        $record = new DataContainerRecordNormalizer()->denormalize(
+        $record = $this->createNormalizer()->denormalize(
             ['published' => true],
             DataContainerRecord::class,
             context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
@@ -57,7 +93,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
 
     public function testStillValidatesExplicitlyClearedFieldsDuringAPartialUpdate(): void
     {
-        $record = new DataContainerRecordNormalizer()->denormalize(
+        $record = $this->createNormalizer()->denormalize(
             ['title' => null],
             DataContainerRecord::class,
             context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => new DataContainerRecord('tl_content', ['title' => 'abc'], 17)],
@@ -98,6 +134,39 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
                 'digits' => '12a',
             ]),
         );
+    }
+
+    public function testDoesNotRequireAnExistingPasswordToBeExposedForUpdates(): void
+    {
+        $controller = $this->createAdapterMock(['loadDataContainer']);
+        $controller
+            ->expects($this->once())
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (): void {
+                    $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+                        'password' => ['inputType' => 'password', 'eval' => ['mandatory' => true], 'sql' => ['type' => 'string']],
+                        'title' => ['inputType' => 'text', 'sql' => ['type' => 'string']],
+                    ];
+                },
+            )
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $controller,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()), new JsonSchemaValidator());
+
+        $context = $this->createMock(ExecutionContextInterface::class);
+        $context
+            ->expects($this->never())
+            ->method('buildViolation')
+        ;
+
+        $validator->initialize($context);
+        $validator->validate(new DataContainerRecord('tl_content', ['title' => 'Updated'], 17), new DataContainerRecordSchema());
     }
 
     private function assertViolation(string $expectedMessage, string $expectedPath, DataContainerRecord $record): void
@@ -156,6 +225,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
                             ],
                         ],
                         'digits' => [
+                            'inputType' => 'text',
                             'eval' => [
                                 'rgxp' => 'digit',
                             ],
@@ -168,14 +238,50 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->createContaoFrameworkMock([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkMock([
+            Controller::class => $controllerAdapter,
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework);
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher());
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            new ForeignKeyParser($connection),
+            new WidgetConverterRegistry([]),
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+        );
+    }
+
+    private function createNormalizer(): DataContainerRecordNormalizer
+    {
+        return new DataContainerRecordNormalizer(
+            $this->createRelationResolver(),
+            $this->createStub(AnonymousContextBuilderInterface::class),
+        );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

@@ -93,11 +93,6 @@ export default class extends Controller {
 
     #updateWrapperLevel() {
         const divs = this.element.querySelectorAll('li > div:first-child');
-
-        if (!divs) {
-            return;
-        }
-
         let wrapLevel = 0;
 
         for (let i = 0; i < divs.length; i++) {

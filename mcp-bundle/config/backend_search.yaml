@@ -1,0 +1,5 @@
+services:
+    Contao\McpBundle\Tool\BackendSearchTools:
+        autoconfigure: true
+        arguments:
+            - '@contao.search.backend'

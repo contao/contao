@@ -20,11 +20,19 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerResourceRegistryTest extends TestCase
 {
@@ -38,7 +46,7 @@ final class DataContainerResourceRegistryTest extends TestCase
 
         $registry = $this->createRegistry($framework);
 
-        $this->assertSame(['resources' => [['resource' => 'tl_news', 'title' => 'News']]], $registry->discover('NEWS'));
+        $this->assertSame(['resources' => [['resource' => 'news', 'title' => 'News']]], $registry->discover('NEWS'));
         $this->assertCount(200, $registry->discover()['resources']);
         $this->assertSame(['resources' => []], $registry->discover('unknown'));
     }
@@ -51,11 +59,34 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->method('initialize')
         ;
 
-        $description = $this->createRegistry($framework)->describe('tl_news');
+        $description = $this->createRegistry($framework)->describe('news');
 
-        $this->assertSame('tl_news', $description['resource']);
-        $this->assertSame(['list', 'read', 'create', 'update'], $description['operations']);
+        $this->assertSame('news', $description['resource']);
+        $this->assertSame(['list', 'read', 'create', 'update', 'move'], $description['operations']);
         $this->assertSame('object', $description['schema']['type']);
+        $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
+        $this->assertSame('news_post', $this->createRegistry()->getOperation('news', 'create')->getName());
+        $this->assertSame('news_move', $this->createRegistry()->getOperation('news', 'move')->getName());
+    }
+
+    public function testDiscoveryLinksPositionFieldsToTheMoveSchema(): void
+    {
+        $previous = $GLOBALS['TL_DCA'] ?? null;
+        $GLOBALS['TL_DCA']['tl_news']['fields']['pid'] = ['sql' => ['type' => 'integer']];
+
+        try {
+            $description = $this->createRegistry()->describe('news');
+            $this->assertContains('move', $description['operations']);
+            $this->assertSame(['target'], $description['operationSchemas']['move']['required']);
+            $this->assertArrayHasKey('pid', $description['schema']['properties']);
+            $this->assertArrayNotHasKey('pid', $description['operationSchemas']['update']['properties'] ?? []);
+        } finally {
+            unset($GLOBALS['TL_DCA']);
+
+            if (null !== $previous) {
+                $GLOBALS['TL_DCA'] = $previous;
+            }
+        }
     }
 
     public function testRejectsUnknownResources(): void
@@ -69,14 +100,14 @@ final class DataContainerResourceRegistryTest extends TestCase
     public function testRejectsUnsupportedOperations(): void
     {
         $this->expectException(OperationNotFoundException::class);
-        $this->expectExceptionMessage('Resource "tl_news" does not support "delete".');
+        $this->expectExceptionMessage('Resource "news" does not support "delete".');
 
-        $this->createRegistry()->getOperation('tl_news', 'delete');
+        $this->createRegistry()->getOperation('news', 'delete');
     }
 
     public function testResolvesTheResourceOperation(): void
     {
-        $operation = $this->createRegistry()->getOperation('tl_news', 'update');
+        $operation = $this->createRegistry()->getOperation('news', 'update');
 
         $this->assertInstanceOf(Patch::class, $operation);
         $this->assertSame('news_patch', $operation->getName());
@@ -94,8 +125,9 @@ final class DataContainerResourceRegistryTest extends TestCase
                     'news_read' => new Get(name: 'news_read'),
                     'news_post' => new Post(name: 'news_post'),
                     'news_patch' => new Patch(name: 'news_patch'),
+                    'news_move' => new Post(name: 'news_move', extraProperties: ['contao' => ['action' => 'move']]),
                 ],
-                extraProperties: ['contao' => ['table' => 0 === $i ? 'tl_news' : 'tl_resource_'.$i]],
+                extraProperties: ['contao' => ['table' => 0 === $i ? 'tl_news' : 'tl_resource_'.$i, 'resource' => 0 === $i ? 'news' : 'resource_'.$i, 'parents' => []]],
             );
         }
 
@@ -105,6 +137,30 @@ final class DataContainerResourceRegistryTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class)));
+        return new DataContainerResourceRegistry($metadata, new DataContainerSchemaFactory($framework ?? $this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()));
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            new ForeignKeyParser($connection),
+            new WidgetConverterRegistry([]),
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+        );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

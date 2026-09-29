@@ -36,6 +36,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($GLOBALS['TL_USERNAME']);
+    }
+
     public function testUpdatesTheUserAndAlwaysRedirectsToTargetPathInBackend(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -294,17 +301,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/failure')
         ;
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createStub(FrontendUser::class))
         ;
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);

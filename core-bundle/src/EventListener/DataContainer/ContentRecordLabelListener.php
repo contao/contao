@@ -38,7 +38,7 @@ class ContentRecordLabelListener
         }
 
         if ($event->getData()['title'] ?? null) {
-            $event->setLabel($event->getData()['title']);
+            $event->setLabel(StringUtil::decodeEntities($event->getData()['title']));
 
             return;
         }

@@ -36,7 +36,7 @@ class ContentTable extends ContentElement
 		$rows = StringUtil::deserialize($this->tableitems, true);
 
 		$this->Template->id = 'table_' . $this->id;
-		$this->Template->summary = StringUtil::specialchars($this->summary);
+		$this->Template->summary = $this->summary;
 		$this->Template->useHeader = $this->thead;
 		$this->Template->useFooter = $this->tfoot;
 		$this->Template->useLeftTh = $this->tleft;

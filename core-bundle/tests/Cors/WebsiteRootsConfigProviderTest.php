@@ -37,6 +37,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement = $this->createMock(Statement::class);
         $statement
+            ->expects($this->once())
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
@@ -76,6 +77,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement = $this->createMock(Statement::class);
         $statement
+            ->expects($this->once())
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;

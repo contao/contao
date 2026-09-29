@@ -208,7 +208,7 @@ class tl_module_calendar extends Backend
 	 */
 	public function getFormats(DataContainer $dc)
 	{
-		if ($dc->activeRecord->type == 'eventmenu')
+		if ($dc->activeRecord?->type == 'eventmenu')
 		{
 			return array('cal_day', 'cal_month', 'cal_year');
 		}

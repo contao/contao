@@ -27,6 +27,7 @@ class HitTest extends TestCase
             ->withContext('context')
             ->withImageFigureBuilder($figureBuilder)
             ->withEditUrl('https://example.com?edit=true')
+            ->withBreadcrumbs([['label' => 'Website']])
             ->withMetadata(['foo' => 'bar'])
         ;
 
@@ -37,6 +38,21 @@ class HitTest extends TestCase
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
         $this->assertSame('type', $hit->getVisibleType());
+
+        $this->assertSame(
+            [
+                'id' => '42',
+                'type' => 'type',
+                'visibleType' => 'type',
+                'title' => 'title',
+                'viewUrl' => 'https://example.com',
+                'editUrl' => 'https://example.com?edit=true',
+                'breadcrumbs' => [['label' => 'Website']],
+                'context' => 'context',
+                'metadata' => ['foo' => 'bar'],
+            ],
+            $hit->toArray(),
+        );
 
         $hit = $hit->withVisibleType('visible-type');
         $this->assertSame('visible-type', $hit->getVisibleType());

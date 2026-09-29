@@ -8,7 +8,7 @@
 <div{{ wrapper_attributes }}>
     {% if add_jump_targets|default(true) %}
         <div class="jump-targets" data-controller="contao--sticky-observer">
-            <div class="inner" data-contao--jump-targets-target="navigation"></div>
+            <div class="inner" data-contao--jump-targets-target="navigation" data-action="scroll->contao--jump-targets#updateScrollButtonVisibility resize@window->contao--jump-targets#updateScrollButtonVisibility"></div>
         </div>
     {% endif %}
 

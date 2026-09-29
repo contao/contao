@@ -83,6 +83,21 @@ final class Hit
         return $this->metadata;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getDocument()->getId(),
+            'type' => $this->getDocument()->getType(),
+            'visibleType' => $this->getVisibleType(),
+            'title' => $this->getTitle(),
+            'viewUrl' => $this->getViewUrl(),
+            'editUrl' => $this->getEditUrl(),
+            'breadcrumbs' => $this->getBreadcrumbs(),
+            'context' => $this->getContext(),
+            'metadata' => $this->getMetadata(),
+        ];
+    }
+
     public function withEditUrl(string $editUrl): self
     {
         $clone = clone $this;

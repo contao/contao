@@ -14,7 +14,6 @@ use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
 use Contao\EasyCodingStandard\Set\SetList;
-use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesPositionFixer;
@@ -106,7 +105,6 @@ return ECSConfig::configure()
         UseArrowFunctionsFixer::class,
         UselessParenthesesSniff::class,
         UselessVariableSniff::class,
-        UseSprintfInExceptionsSniff::class,
         VoidReturnFixer::class,
         YodaStyleFixer::class,
     ])

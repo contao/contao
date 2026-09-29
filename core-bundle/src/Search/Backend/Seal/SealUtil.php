@@ -79,11 +79,14 @@ class SealUtil
 
     public static function convertProviderDocumentForSearchIndex(Document $document): array
     {
+        $allowedGroups = $document->getMetadata()['allowedGroups'] ?? [];
+
         return [
             'id' => self::getGlobalDocumentId($document->getType(), $document->getId()),
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),
+            'allowedGroups' => \is_array($allowedGroups) ? array_values(array_filter(array_map(intval(...), $allowedGroups), static fn (int $id): bool => $id > 0)) : [],
             'document' => json_encode($document->toArray(), JSON_THROW_ON_ERROR),
         ];
     }
