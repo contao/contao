@@ -30,7 +30,7 @@ class ContaoMcpBundle extends AbstractBundle
 
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        $container->prependExtensionConfig('contao_oauth', [
+        $container->prependExtensionConfig('contao_oauth_server', [
             'resource' => [
                 'route' => McpRequestMatcher::ROUTE,
                 'name' => 'Contao MCP',

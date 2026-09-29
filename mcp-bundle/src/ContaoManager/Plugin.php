@@ -22,7 +22,7 @@ use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\McpBundle\ContaoMcpBundle;
-use Contao\OAuthBundle\ContaoOAuthBundle;
+use Contao\OAuthServerBundle\ContaoOAuthServerBundle;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -39,7 +39,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
     {
         return [
             BundleConfig::create(ContaoMcpBundle::class)
-                ->setLoadAfter([ContaoApiBundle::class, ContaoCoreBundle::class, ContaoOAuthBundle::class]),
+                ->setLoadAfter([ContaoApiBundle::class, ContaoCoreBundle::class, ContaoOAuthServerBundle::class]),
             BundleConfig::create(McpBundle::class)
                 ->setLoadAfter([ContaoMcpBundle::class]),
         ];
@@ -88,8 +88,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
                         'stateless' => true,
                         'provider' => 'contao.security.backend_user_provider',
                         'user_checker' => 'contao.security.user_checker',
-                        'custom_authenticators' => ['contao_oauth.security.bearer_authenticator'],
-                        'entry_point' => 'contao_oauth.security.bearer_authenticator',
+                        'custom_authenticators' => ['contao_oauth_server.security.bearer_authenticator'],
+                        'entry_point' => 'contao_oauth_server.security.bearer_authenticator',
                     ];
                 }
 

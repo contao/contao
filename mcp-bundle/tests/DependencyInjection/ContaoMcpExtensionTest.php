@@ -191,7 +191,7 @@ final class ContaoMcpExtensionTest extends TestCase
                     ],
                 ],
             ],
-            $container->getExtensionConfig('contao_oauth'),
+            $container->getExtensionConfig('contao_oauth_server'),
         );
     }
 

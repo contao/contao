@@ -29,7 +29,7 @@ The monorepo is automatically split into separate packages:
  * [McpBundle](https://github.com/contao/mcp-bundle)
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
- * [OauthBundle](https://github.com/contao/oauth-bundle)
+ * [OauthServerBundle](https://github.com/contao/oauth-server-bundle)
 
 **Please do not use `contao/contao` in production**! Use the split packages instead.
 

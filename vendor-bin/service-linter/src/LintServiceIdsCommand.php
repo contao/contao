@@ -189,7 +189,7 @@ class LintServiceIdsCommand
                 $this->projectDir.'/manager-bundle/config',
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
-                $this->projectDir.'/oauth-bundle/config',
+                $this->projectDir.'/oauth-server-bundle/config',
             ])
         ;
 

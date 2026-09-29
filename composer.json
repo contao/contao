@@ -221,7 +221,7 @@
         "contao/mcp-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
-        "contao/oauth-bundle": "self.version",
+        "contao/oauth-server-bundle": "self.version",
         "contao/test-case": "self.version"
     },
     "conflict": {
@@ -250,7 +250,7 @@
             "Contao\\McpBundle\\": "mcp-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
-            "Contao\\OAuthBundle\\": "oauth-bundle/src/",
+            "Contao\\OAuthServerBundle\\": "oauth-server-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
@@ -306,7 +306,7 @@
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
-            "Contao\\OAuthBundle\\Tests\\": "oauth-bundle/tests/",
+            "Contao\\OAuthServerBundle\\Tests\\": "oauth-server-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
@@ -344,7 +344,7 @@
             "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
-            "contao/oauth-bundle": "Contao\\OAuthBundle\\ContaoManager\\Plugin"
+            "contao/oauth-server-bundle": "Contao\\OAuthServerBundle\\ContaoManager\\Plugin"
         }
     },
     "scripts": {

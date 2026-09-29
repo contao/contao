@@ -18,7 +18,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder;
 use Contao\McpBundle\ContaoManager\Plugin;
 use Contao\McpBundle\ContaoMcpBundle;
-use Contao\OAuthBundle\ContaoOAuthBundle;
+use Contao\OAuthServerBundle\ContaoOAuthServerBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -37,7 +37,7 @@ final class PluginTest extends TestCase
 
         $this->assertCount(2, $bundles);
         $this->assertSame(ContaoMcpBundle::class, $bundles[0]->getName());
-        $this->assertSame([ContaoApiBundle::class, ContaoCoreBundle::class, ContaoOAuthBundle::class], $bundles[0]->getLoadAfter());
+        $this->assertSame([ContaoApiBundle::class, ContaoCoreBundle::class, ContaoOAuthServerBundle::class], $bundles[0]->getLoadAfter());
         $this->assertSame(McpBundle::class, $bundles[1]->getName());
         $this->assertSame([ContaoMcpBundle::class], $bundles[1]->getLoadAfter());
     }
@@ -134,8 +134,8 @@ final class PluginTest extends TestCase
                 'stateless' => true,
                 'provider' => 'contao.security.backend_user_provider',
                 'user_checker' => 'contao.security.user_checker',
-                'custom_authenticators' => ['contao_oauth.security.bearer_authenticator'],
-                'entry_point' => 'contao_oauth.security.bearer_authenticator',
+                'custom_authenticators' => ['contao_oauth_server.security.bearer_authenticator'],
+                'entry_point' => 'contao_oauth_server.security.bearer_authenticator',
             ],
             $config[0]['firewalls']['contao_mcp'],
         );
