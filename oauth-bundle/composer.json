@@ -66,6 +66,11 @@
             "Contao\\OAuthBundle\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\OauthBundle\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "contao-components/installer": true,

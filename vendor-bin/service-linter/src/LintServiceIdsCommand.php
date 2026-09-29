@@ -72,6 +72,13 @@ class LintServiceIdsCommand
     ];
 
     /**
+     * @var array<string, string>
+     */
+    private static array $renameChunks = [
+        'o_auth' => 'oauth',
+    ];
+
+    /**
      * Strip these prefixes from the last chunk of the service ID.
      *
      * @var array<string>
@@ -182,6 +189,7 @@ class LintServiceIdsCommand
                 $this->projectDir.'/manager-bundle/config',
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
+                $this->projectDir.'/oauth-bundle/config',
             ])
         ;
 
@@ -315,6 +323,12 @@ class LintServiceIdsCommand
 
         foreach ($chunks as &$chunk) {
             $chunk = preg_replace('(^([a-z]+)(\d+)(.*)$)', '$1_$2$3', $chunk);
+
+            foreach (self::$renameChunks as $search => $replace) {
+                if (str_contains($search, 'o_auth')) {
+                    $chunk = str_replace($search, $replace, $chunk);
+                }
+            }
         }
 
         unset($chunk);

@@ -41,7 +41,7 @@ final class ContaoOAuthBundleTest extends TestCase
         $this->assertSame(['mcp'], $container->getParameter('contao_oauth.resource.scopes'));
         $this->assertSame('Contao', $container->getParameter('contao_oauth.resource.name'));
         $this->assertSame(['claude.ai'], $container->getParameter('contao_oauth.cimd_trusted_domains'));
-        $this->assertTrue($container->hasDefinition('contao.oauth_bundle.security.bearer_authenticator'));
+        $this->assertTrue($container->hasDefinition('contao_oauth.security.bearer_authenticator'));
     }
 
     public function testRequiresAResource(): void

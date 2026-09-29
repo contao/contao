@@ -88,8 +88,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
                         'stateless' => true,
                         'provider' => 'contao.security.backend_user_provider',
                         'user_checker' => 'contao.security.user_checker',
-                        'custom_authenticators' => ['contao.oauth_bundle.security.bearer_authenticator'],
-                        'entry_point' => 'contao.oauth_bundle.security.bearer_authenticator',
+                        'custom_authenticators' => ['contao_oauth.security.bearer_authenticator'],
+                        'entry_point' => 'contao_oauth.security.bearer_authenticator',
                     ];
                 }
 
