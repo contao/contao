@@ -870,9 +870,6 @@ services:
     contao.repository.webauthn_credential:
         class: Contao\CoreBundle\Repository\WebauthnCredentialRepository
         public: true
-        autoconfigure: false
-        tags:
-            - doctrine.repository_service
         arguments:
             - '@doctrine'
 
