@@ -223,7 +223,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $factory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $localeSwitcher);
         $properties = $factory->create('tl_content')['properties'];
 
-        $this->assertSame("English title\n\nEnglish help.", $properties['title']['description']);
+        $this->assertSame('English title: English help.', $properties['title']['description']);
         $this->assertSame('English label', $properties['labelOnly']['description']);
         $this->assertSame('Explicit description.', $properties['explicit']['description']);
         $this->assertSame('de', $localeSwitcher->getLocale());
