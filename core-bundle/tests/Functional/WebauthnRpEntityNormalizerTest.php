@@ -23,6 +23,7 @@ class WebauthnRpEntityNormalizerTest extends FunctionalTestCase
     public function testTheNormalizerIsRegisteredWithTheSymfonySerializer(): void
     {
         static::bootKernel();
+
         $requestStack = self::getContainer()->get('request_stack');
         $requestStack->push(Request::create('https://www.example.org/'));
 
@@ -34,6 +35,7 @@ class WebauthnRpEntityNormalizerTest extends FunctionalTestCase
     public function testTheCreationProfileContainsAnRpNode(): void
     {
         static::bootKernel();
+
         $requestStack = self::getContainer()->get('request_stack');
         $requestStack->push(Request::create('https://www.example.org/'));
 

@@ -25,7 +25,7 @@ final class WebauthnRpEntityNormalizer implements NormalizerInterface
     ) {
     }
 
-    public function normalize(mixed $object, string|null $format = null, array $context = []): array
+    public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {
         $request = $this->requestStack->getCurrentRequest();
         $rpId = $request?->getHost();
