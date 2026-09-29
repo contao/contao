@@ -59,6 +59,7 @@
         "contao-components/datepicker": "^3.0",
         "contao-components/dropzone": "^6.0",
         "contao-components/handorgel": "^1.0",
+        "contao-components/hugerte": "^1.0",
         "contao-components/jquery": "^3.5",
         "contao-components/jquery-ui": "^1.11.4",
         "contao-components/mediabox": "^1.5",
@@ -68,7 +69,6 @@
         "contao-components/swiper": "^11.0 || ^12.0 || ^14.0",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
-        "contao-components/hugerte": "^1.0",
         "contao-components/tristen-tablesort": "^5.3",
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0.2",
@@ -306,7 +306,7 @@
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
-            "Contao\\OAuthBundle\\Tests\\": "oauth-bundle/test/",
+            "Contao\\OAuthBundle\\Tests\\": "oauth-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
