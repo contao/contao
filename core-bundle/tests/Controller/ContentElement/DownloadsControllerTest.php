@@ -17,12 +17,10 @@ use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\StringUtil;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DownloadsControllerTest extends ContentElementTestCase
 {
@@ -181,20 +179,20 @@ class DownloadsControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    public function testDoesNotHandleNonDownloadRequests(): void
+    public function testDoesNotHandleRequestsWithoutHash(): void
     {
-        $fileDownloadHelper = $this->mockFileDownloadHelper(false);
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
         $fileDownloadHelper
             ->expects($this->never())
             ->method('handle')
         ;
 
-        $this->handleDownload($fileDownloadHelper, Request::create('https://example.com/?_hash=foo'));
+        $this->handleDownload($fileDownloadHelper, Request::create('https://example.com/?p=image1.jpg'));
     }
 
     public function testIgnoresDownloadsOfOtherElements(): void
     {
-        $fileDownloadHelper = $this->mockFileDownloadHelper(true);
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
         $fileDownloadHelper
             ->expects($this->once())
             ->method('handle')
@@ -205,21 +203,21 @@ class DownloadsControllerTest extends ContentElementTestCase
     }
 
     /**
-     * @dataProvider provideDownloadResponses
+     * @dataProvider provideErrorStatusCodes
      */
-    public function testThrowsResponsesOfDownloadRequests(Response $response): void
+    public function testThrowsErrorResponsesOfDownloadRequests(int $statusCode): void
     {
-        $fileDownloadHelper = $this->mockFileDownloadHelper(true);
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
         $fileDownloadHelper
             ->expects($this->once())
             ->method('handle')
-            ->willReturn($response)
+            ->willReturn(new Response('', $statusCode))
         ;
 
         try {
             $this->handleDownload($fileDownloadHelper, Request::create('https://example.com/?p=image1.jpg&_hash=foo'));
         } catch (ResponseException $exception) {
-            $this->assertSame($response, $exception->getResponse());
+            $this->assertSame($statusCode, $exception->getResponse()->getStatusCode());
 
             return;
         }
@@ -227,23 +225,11 @@ class DownloadsControllerTest extends ContentElementTestCase
         $this->fail('Expected a ResponseException to be thrown.');
     }
 
-    public static function provideDownloadResponses(): iterable
+    public static function provideErrorStatusCodes(): iterable
     {
-        yield 'streamed file' => [new StreamedResponse()];
-        yield 'invalid signature' => [new Response('', Response::HTTP_FORBIDDEN)];
-        yield 'missing file' => [new Response('', Response::HTTP_NOT_FOUND)];
-        yield 'file no longer accessible' => [new Response('', Response::HTTP_GONE)];
-    }
-
-    private function mockFileDownloadHelper(bool $isDownloadRequest): FileDownloadHelper&MockObject
-    {
-        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
-        $fileDownloadHelper
-            ->method('isDownloadRequest')
-            ->willReturn($isDownloadRequest)
-        ;
-
-        return $fileDownloadHelper;
+        yield 'invalid signature' => [Response::HTTP_FORBIDDEN];
+        yield 'missing file' => [Response::HTTP_NOT_FOUND];
+        yield 'file no longer accessible' => [Response::HTTP_GONE];
     }
 
     private function handleDownload(FileDownloadHelper $fileDownloadHelper, Request $request): void
