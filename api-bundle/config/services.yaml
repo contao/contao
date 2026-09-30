@@ -70,11 +70,6 @@ services:
         arguments:
             $urlGenerator: '@router'
 
-    Contao\ApiBundle\Resource\DataContainerResourceRegistry:
-        arguments:
-            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
-            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
-
     Contao\ApiBundle\Widget\WidgetConverterRegistry:
         arguments:
             $converters: !tagged_iterator contao.api.widget_converter

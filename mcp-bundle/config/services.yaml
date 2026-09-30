@@ -6,10 +6,17 @@ services:
 
     Contao\McpBundle\Resource\TemplateGuidance: ~
 
-    Contao\McpBundle\Tool\DataContainerTools:
+    Contao\McpBundle\Api\ApiOperationRegistry:
+        arguments:
+            - '@api_platform.metadata.resource.name_collection_factory'
+            - '@api_platform.metadata.resource.metadata_collection_factory'
+            - '@api_platform.openapi.factory'
+            - '@serializer'
+
+    Contao\McpBundle\Tool\ApiTools:
         autoconfigure: true
         arguments:
-            - '@Contao\ApiBundle\Resource\DataContainerResourceRegistry'
+            - '@Contao\McpBundle\Api\ApiOperationRegistry'
             - '@http_kernel'
             - '@Contao\ApiBundle\Http\ApiRequestFactory'
             - '@request_stack'

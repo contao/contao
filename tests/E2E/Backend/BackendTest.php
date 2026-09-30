@@ -62,6 +62,17 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSelectorTextContains('.tl_error', $message);
     }
 
+    public function testAuthenticatesAConfiguredRole(): void
+    {
+        $backend = self::managedEdition()->createBackendBrowser();
+        $backend->visit('/contao/login');
+        $backend->submitLogin('content-editor', 'backend');
+        $backend->waitFor('h1');
+
+        $this->assertSelectorTextContains('h1', 'Dashboard');
+        $this->assertSelectorTextContains('#tmenu', 'content-editor');
+    }
+
     /**
      * @return iterable<string, array{string, string}>
      */
@@ -97,13 +108,28 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     protected static function createManagedEditionConfig(): ManagedEditionConfig
     {
-        $composer = self::createMonorepoComposerConfig('core-bundle');
+        $composer = self::createMonorepoComposerConfig(
+            'calendar-bundle',
+            'core-bundle',
+            'faq-bundle',
+            'news-bundle',
+            'newsletter-bundle',
+        );
 
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
+            ->withFixtureFile(self::fixtureDirectory().'/default.yaml')
             ->withFileMapping(new FileMapping(
                 self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
                 'files/images/dummy.jpg',
+            ))
+            ->withFileMapping(new FileMapping(
+                self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
+                'files/media/dummy.jpg',
+            ))
+            ->withFileMapping(new FileMapping(
+                self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
+                'files/private/dummy.jpg',
             ))
         ;
 
@@ -112,7 +138,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     private static function fixtureDirectory(): string
     {
-        return self::projectDirectory().'/core-bundle/tests/Fixtures/Functional/Backend';
+        return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
     }
 
     private function createTheme(BackendBrowser $backend): void
@@ -159,9 +185,15 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
             'language' => 'en',
         ]);
 
+        $rootPage = self::managedEdition()
+            ->database()
+            ->connection()
+            ->fetchOne('SELECT id FROM tl_page WHERE title = ?', ['Root Page'])
+        ;
+
         $backend->clickLink('Pages');
         $backend->submitNew();
-        $backend->submitAction('Paste into page');
+        $backend->submitAction('Paste into page ID '.$rootPage);
         $backend->check('published');
 
         $backend->submitForm(

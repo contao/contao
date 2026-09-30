@@ -13,19 +13,17 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 /**
- * @implements ProcessorInterface<DataContainerRecord|DataContainerMcpRecord|mixed, DataContainerRecord|mixed>
+ * @implements ProcessorInterface<DataContainerRecord|mixed, DataContainerRecord|mixed>
  */
 final class DataContainerStateProcessor implements ProcessorInterface
 {
@@ -47,34 +45,25 @@ final class DataContainerStateProcessor implements ProcessorInterface
             return $this->records->move($table, $uriVariables['id'], $data, $context);
         }
 
-        if (!$data instanceof DataContainerRecord && !$data instanceof DataContainerMcpRecord) {
+        if (!$data instanceof DataContainerRecord) {
             return $data;
         }
 
-        if ($data instanceof DataContainerMcpRecord) {
-            $data = DataContainerRecord::fromArray($table, $data->data, $data->id ?? $uriVariables['id'] ?? null);
-        }
-
-        if ($operation instanceof Delete || $this->hasMethod($operation, 'DELETE')) {
+        if ($operation instanceof Delete) {
             $this->records->delete($data, $context);
 
             return null;
         }
 
-        if ($operation instanceof Post || $this->hasMethod($operation, 'POST')) {
+        if ($operation instanceof Post) {
             return $this->records->create($data, $context);
         }
 
-        if ($operation instanceof Patch || $this->hasMethod($operation, 'PATCH')) {
+        if ($operation instanceof Patch) {
             return $this->records->update($data, $context);
         }
 
         return $data;
-    }
-
-    private function hasMethod(Operation $operation, string $method): bool
-    {
-        return $operation instanceof HttpOperation && $method === $operation->getMethod();
     }
 
     private function getTable(Operation $operation): string|null

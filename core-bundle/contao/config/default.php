@@ -93,7 +93,6 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
 	. 'ttf,ttc,otf,eot,woff,woff2,'
 	. 'css,scss,less,txt,zip,rar,7z,cto,md,ics';
-$GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
 
@@ -125,4 +124,3 @@ $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['defaultFileChmod']     = 0644;
 $GLOBALS['TL_CONFIG']['defaultFolderChmod']   = 0755;
-$GLOBALS['TL_CONFIG']['maxPaginationLinks']   = 7;

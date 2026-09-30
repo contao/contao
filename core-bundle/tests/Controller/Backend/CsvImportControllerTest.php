@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -189,6 +190,7 @@ class CsvImportControllerTest extends TestCase
             $connection,
             new RequestStack(),
             $this->createStub(TranslatorInterface::class),
+            new UploadSizeProvider(2048000, 2048000),
             $this->getFixturesDir(),
         );
 
@@ -287,6 +289,7 @@ class CsvImportControllerTest extends TestCase
             $connection ?? $this->createStub(Connection::class),
             $requestStack,
             $translator,
+            new UploadSizeProvider(2048000, 2048000),
             $this->getFixturesDir(),
         );
 
