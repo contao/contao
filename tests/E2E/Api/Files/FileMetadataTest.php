@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\E2eTests\Api\Files;
+
+use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
+use Contao\E2eTests\Api\ApiTestTrait;
+
+class FileMetadataTest extends AbstractContaoMonorepoE2ETestCase
+{
+    use ApiTestTrait;
+
+    public function testUpdatesTheMetadataOfAFile(): void
+    {
+        $path = 'media/api-'.bin2hex(random_bytes(4)).'.txt';
+
+        $this->apiRequest('PUT', '/contao/api/files/'.$path, 'Metadata', 'application/octet-stream');
+
+        [$status, $response] = $this->apiRequest('POST', '/contao/api/files_operations/metadata', [
+            'path' => $path,
+            'data' => ['localized' => ['en' => ['title' => 'Title via API']]],
+        ], 'application/json');
+
+        $this->assertSame(200, $status, json_encode($response, JSON_PRETTY_PRINT));
+
+        [$status, $file] = $this->apiRequest('GET', '/contao/api/files/'.$path);
+
+        $this->assertSame(200, $status);
+        $this->assertSame('Title via API', $file['metadata']['localized']['en']['title']);
+    }
+}
