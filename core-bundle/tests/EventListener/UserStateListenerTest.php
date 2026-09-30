@@ -50,8 +50,8 @@ class UserStateListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $request = $this->createMock(Request::class);
-        $translator = $this->createMock(LocaleAwareInterface::class);
+        $request = $this->createStub(Request::class);
+        $translator = $this->createStub(LocaleAwareInterface::class);
 
         $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
@@ -96,8 +96,8 @@ class UserStateListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $request = $this->createMock(Request::class);
-        $translator = $this->createMock(LocaleAwareInterface::class);
+        $request = $this->createStub(Request::class);
+        $translator = $this->createStub(LocaleAwareInterface::class);
 
         $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
