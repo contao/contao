@@ -32,7 +32,7 @@ services:
         arguments:
             - '@contao_mcp.api.operation_registry'
             - '@http_kernel'
-            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@contao_api.http.api_request_factory'
             - '@request_stack'
             - '@contao_mcp.response.api_converter'
 
@@ -42,7 +42,7 @@ services:
         arguments:
             - '@api_platform.metadata.resource.metadata_collection_factory'
             - '@http_kernel'
-            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@contao_api.http.api_request_factory'
             - '@request_stack'
             - '@contao_mcp.response.api_converter'
             - '@contao_mcp.user_template.validator'

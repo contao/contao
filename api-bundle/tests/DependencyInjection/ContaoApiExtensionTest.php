@@ -13,11 +13,8 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\DependencyInjection;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
-use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory;
-use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
-use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
@@ -56,7 +53,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
-        $this->assertSame('/admin/api', $container->getParameterBag()->resolveValue($container->getDefinition(DataContainerOpenApiFactory::class)->getArgument('$apiPrefix')));
+        $this->assertSame('/admin/api', $container->getParameterBag()->resolveValue($container->getDefinition('contao_api.api_platform.data_container_open_api_factory')->getArgument('$apiPrefix')));
     }
 
     public function testLoadsServices(): void
@@ -67,8 +64,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
-        $this->assertTrue($container->hasDefinition(DataContainerSchemaFactory::class));
-        $this->assertTrue($container->hasDefinition(WidgetConverterRegistry::class));
+        $this->assertTrue($container->hasDefinition('contao_api.schema.data_container_factory'));
+        $this->assertTrue($container->hasDefinition('contao_api.widget.converter_registry'));
     }
 
     public function testResolvesTemplateMetadataFactoryArguments(): void
@@ -81,7 +78,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         new ResolveClassPass()->process($container);
         new ResolveNamedArgumentsPass()->process($container);
 
-        $operations = $container->getDefinition(UserTemplateResourceMetadataCollectionFactory::class)->getArgument(1);
+        $operations = $container->getDefinition('contao_api.api_platform.user_template_resource_metadata_collection_factory')->getArgument(1);
         $this->assertInstanceOf(TaggedIteratorArgument::class, $operations);
         $this->assertSame('contao.operation.template_studio_element', $operations->getTag());
     }
@@ -97,11 +94,11 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $container = $this->createConverterContainer();
         $container->register($converter::class, $converter::class)->setAutoconfigured(true)->setSynthetic(true)->setPublic(true);
-        $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
+        $container->getDefinition('contao_api.widget.converter_registry')->setPublic(true);
         $container->compile();
         $container->set($converter::class, $converter);
 
-        $registry = $container->get(WidgetConverterRegistry::class);
+        $registry = $container->get('contao_api.widget.converter_registry');
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
         $GLOBALS['BE_FFL']['custom'] = TextField::class;
@@ -122,7 +119,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
     public function testResolvesTheRowConverterThroughTheRegistry(): void
     {
         $container = $this->createConverterContainer();
-        $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
+        $container->getDefinition('contao_api.widget.converter_registry')->setPublic(true);
         $container->compile();
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
@@ -130,7 +127,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $GLOBALS['BE_FFL']['text'] = TextField::class;
 
         try {
-            $registry = $container->get(WidgetConverterRegistry::class);
+            $registry = $container->get('contao_api.widget.converter_registry');
             $config = ['inputType' => 'rows', 'fields' => ['title' => ['inputType' => 'text']]];
             $converter = $registry->get($config);
 
@@ -148,8 +145,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
     public function testUnsupportedRowChildrenExcludeTheEntireField(): void
     {
         $container = $this->createConverterContainer();
-        $container->getDefinition(WidgetConverterRegistry::class)->setPublic(true);
-        $container->getDefinition(DataContainerSchemaFactory::class)->setPublic(true);
+        $container->getDefinition('contao_api.widget.converter_registry')->setPublic(true);
+        $container->getDefinition('contao_api.schema.data_container_factory')->setPublic(true);
         $container->compile();
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
@@ -169,8 +166,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
         ];
 
         try {
-            $this->assertNull($container->get(WidgetConverterRegistry::class)->get($unsupported));
-            $factory = $container->get(DataContainerSchemaFactory::class);
+            $this->assertNull($container->get('contao_api.widget.converter_registry')->get($unsupported));
+            $factory = $container->get('contao_api.schema.data_container_factory');
             $this->assertSame(['title'], array_keys($factory->create('tl_test')['properties']));
 
             foreach (['read', 'create', 'update'] as $operation) {
@@ -207,7 +204,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $extension->load([], $container);
 
         foreach (array_keys($container->getDefinitions()) as $id) {
-            if (!\in_array($id, ['service_container', WidgetConverterRegistry::class, 'contao.api.widget_converter', 'contao.api.widget.row_wizard_converter', DataContainerSchemaFactory::class, 'contao.widget.date_value_formatter'], true)) {
+            if (!\in_array($id, ['service_container', 'contao_api.widget.converter_registry', 'contao.api.widget_converter', 'contao.api.widget.row_wizard_converter', 'contao_api.schema.data_container_factory', 'contao.widget.date_value_formatter'], true)) {
                 $container->removeDefinition($id);
             }
         }
@@ -218,8 +215,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $container->register('contao.framework', ContaoFramework::class)->setSynthetic(true)->setPublic(true);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
-        $container->register(DataContainerRelationResolver::class, DataContainerRelationResolver::class)->setSynthetic(true);
-        $container->set(DataContainerRelationResolver::class, $this->createRelationResolver());
+        $container->register('contao_api.data_container.relation_resolver', DataContainerRelationResolver::class)->setSynthetic(true);
+        $container->set('contao_api.data_container.relation_resolver', $this->createRelationResolver());
         $container->register('translation.locale_switcher', LocaleSwitcher::class)->setSynthetic(true);
         $container->set('translation.locale_switcher', $this->createLocaleSwitcher());
 
