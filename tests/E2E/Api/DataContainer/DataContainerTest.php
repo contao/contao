@@ -21,7 +21,7 @@ class DataContainerTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCreatedRecordAppearsInTheBackend(): void
     {
-        // The redirect page is mandatory. Relations are passed as references, so use
+        // The redirect page is mandatory. Relations are passed as {"iri": …}, so use
         // the IRI the API returns for the page instead of building it.
         [$status, $page] = $this->apiRequest('GET', '/contao/api/dc/page/'.$this->fixtureId('page_main_home'));
 
@@ -29,7 +29,7 @@ class DataContainerTest extends AbstractContaoMonorepoE2ETestCase
 
         [$status, $archive] = $this->apiRequest('POST', '/contao/api/dc/news_archive', [
             'title' => 'Created via API',
-            'jumpTo' => ['@id' => $page['@id']],
+            'jumpTo' => ['iri' => $page['@id']],
         ]);
 
         $this->assertSame(201, $status, json_encode($archive, JSON_PRETTY_PRINT));

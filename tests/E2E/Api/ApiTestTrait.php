@@ -28,6 +28,8 @@ trait ApiTestTrait
 
     private const string FIXTURE_ARTICLE = 'article.yaml';
 
+    private const string FIXTURE_RECORDS = 'tests/E2E/Fixtures/Api/records.yaml';
+
     // Provided by AbstractContaoMonorepoE2ETestCase and its ManagedEditionTestTrait
     abstract protected static function projectDirectory(): string;
 
@@ -66,14 +68,23 @@ trait ApiTestTrait
      */
     private function fixtureId(string $fixture): string
     {
+        return $this->interpolate('{'.$fixture.'}');
+    }
+
+    /**
+     * Replaces the fixture placeholders in a string, e.g. "/dc/form/{form_contact}".
+     */
+    private function interpolate(string $value): string
+    {
         return self::managedEdition()
             ->prepareDatabase(new FixtureSet([
                 self::fixtureDirectory().'/'.self::FIXTURE_USERS,
                 self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT,
                 self::fixtureDirectory().'/'.self::FIXTURE_ARTICLE,
+                self::projectDirectory().'/'.self::FIXTURE_RECORDS,
             ]))
-            ->interpolate('{'.$fixture.'}')
-            ;
+            ->interpolate($value)
+        ;
     }
 
     /**
