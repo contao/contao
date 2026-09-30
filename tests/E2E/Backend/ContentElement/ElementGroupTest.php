@@ -34,11 +34,13 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
         $backend->visit($articleUrl);
         $this->clipboard($backend, $record, $operation);
 
-        // Paste at the top always works, paste after the element group itself only when copying
+        // Paste at the top always works, paste after the element group itself only
+        // when copying
         $this->assertPasteButton($backend, '.tl_header', 'pasteafter', true);
         $this->assertPasteButton($backend, $record, 'pasteafter', $canPaste);
 
-        // Inside the outer element group: paste at the top and paste into the inner element group
+        // Inside the outer element group: paste at the top and paste into the inner
+        // element group
         $backend->clickTitlePrefix('Edit the child elements');
 
         $this->assertPasteButton($backend, '.tl_header', 'pasteafter', $canPaste);
@@ -75,7 +77,8 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->clipboard($backend, $group, 'Move');
 
-        // Pasting after the text element is allowed, pasting after or into the element group itself is not
+        // Pasting after the text element is allowed, pasting after or into the element
+        // group itself is not
         $this->assertPasteButton($backend, $text, 'pasteafter', true);
         $this->assertPasteButton($backend, $group, 'pasteafter', false);
         $this->assertPasteButton($backend, $group, 'pasteinto', false);

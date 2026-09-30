@@ -43,7 +43,7 @@ trait ContentElementTestTrait
         $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
             self::fixtureDirectory().'/users.yaml',
             // Update fixtureDirectory after #10353 has been merged but low Prio ¯\_(ツ)_/¯
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend'.'/article.yaml',
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/article.yaml',
         ]));
 
         $backend = self::managedEdition()->createBackendBrowser();
@@ -68,8 +68,8 @@ trait ContentElementTestTrait
     }
 
     /**
-     * Asserts whether an enabled paste button (PASTE_AFTER or PASTE_INTO) exists
-     * in the given container. Paste at the top uses the PASTE_AFTER icon.
+     * Asserts whether an enabled paste button (PASTE_AFTER or PASTE_INTO) exists in
+     * the given container. Paste at the top uses the PASTE_AFTER icon.
      */
     private function assertPasteButton(BackendBrowser $backend, string $container, string $icon, bool $enabled): void
     {
