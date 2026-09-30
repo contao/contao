@@ -275,7 +275,8 @@ class FileUpload extends Backend
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use the contao.file.upload_size_provider service instead.
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             use the contao.file.upload_size_provider service instead.
 	 */
 	public static function getMaxUploadSize()
 	{
