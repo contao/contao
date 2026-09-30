@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Mailer;
 use Contao\Config;
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\ContaoMailer;
+use Contao\CoreBundle\Mailer\InlineImageEmbedder;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -218,7 +219,42 @@ class ContaoMailerTest extends TestCase
         $this->assertSame('sender@example.com', $email->getSender()->getAddress());
     }
 
-    private function getContaoMailer(RequestStack $requestStack, array $adapters = []): ContaoMailer
+    public function testEmbedsImagesIfTheHeaderIsSet(): void
+    {
+        $request = Request::create('https://example.com/');
+
+        $email = new Email()->to('foo@example.com')->from('bar@example.com')->html('<p><img src="https://example.com/images/dummy.jpg"></p>');
+        $email->getHeaders()->addTextHeader(ContaoMailer::EMBED_IMAGES_HEADER, '1');
+
+        $this->getContaoMailer(new RequestStack([$request]), [], $this->getInlineImageEmbedder())->send($email);
+
+        $this->assertStringContainsString('src="cid:images/dummy.jpg"', $email->getHtmlBody());
+        $this->assertCount(1, $email->getAttachments());
+        $this->assertFalse($email->getHeaders()->has(ContaoMailer::EMBED_IMAGES_HEADER));
+    }
+
+    public function testDoesNotEmbedImagesIfTheHeaderIsNotSet(): void
+    {
+        $email = new Email()->to('foo@example.com')->from('bar@example.com')->html('<p><img src="images/dummy.jpg"></p>');
+
+        $this->getContaoMailer(new RequestStack(), [], $this->getInlineImageEmbedder())->send($email);
+
+        $this->assertSame('<p><img src="images/dummy.jpg"></p>', $email->getHtmlBody());
+        $this->assertCount(0, $email->getAttachments());
+    }
+
+    public function testRemovesTheEmbedImagesHeaderWithoutAnEmbedder(): void
+    {
+        $email = new Email()->to('foo@example.com')->from('bar@example.com')->html('<p><img src="images/dummy.jpg"></p>');
+        $email->getHeaders()->addTextHeader(ContaoMailer::EMBED_IMAGES_HEADER, '1');
+
+        $this->getContaoMailer(new RequestStack())->send($email);
+
+        $this->assertSame('<p><img src="images/dummy.jpg"></p>', $email->getHtmlBody());
+        $this->assertFalse($email->getHeaders()->has(ContaoMailer::EMBED_IMAGES_HEADER));
+    }
+
+    private function getContaoMailer(RequestStack $requestStack, array $adapters = [], InlineImageEmbedder|null $inlineImageEmbedder = null): ContaoMailer
     {
         return new ContaoMailer(
             new Mailer($this->createStub(TransportInterface::class)),
@@ -226,6 +262,12 @@ class ContaoMailerTest extends TestCase
             $requestStack,
             null,
             $this->createContaoFrameworkStub($adapters),
+            $inlineImageEmbedder,
         );
+    }
+
+    private function getInlineImageEmbedder(): InlineImageEmbedder
+    {
+        return new InlineImageEmbedder($this->createContaoFrameworkStub(), $this->getFixturesDir());
     }
 }

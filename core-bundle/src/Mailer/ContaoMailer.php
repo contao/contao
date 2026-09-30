@@ -24,12 +24,15 @@ use Symfony\Component\Mime\RawMessage;
 
 final class ContaoMailer implements MailerInterface
 {
+    public const EMBED_IMAGES_HEADER = 'X-Contao-Embed-Images';
+
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly AvailableTransports $transports,
         private readonly RequestStack $requestStack,
         private readonly string|null $overrideFrom = null,
         private readonly ContaoFramework|null $framework = null,
+        private readonly InlineImageEmbedder|null $inlineImageEmbedder = null,
     ) {
     }
 
@@ -41,9 +44,28 @@ final class ContaoMailer implements MailerInterface
 
         if ($message instanceof Email) {
             $this->setFrom($message);
+            $this->embedImages($message);
         }
 
         $this->mailer->send($message, $envelope);
+    }
+
+    private function embedImages(Email $message): void
+    {
+        if (!$message->getHeaders()->has(self::EMBED_IMAGES_HEADER)) {
+            return;
+        }
+
+        $message->getHeaders()->remove(self::EMBED_IMAGES_HEADER);
+
+        if (!$this->inlineImageEmbedder) {
+            return;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+        $baseUrl = $request ? $request->getSchemeAndHttpHost().$request->getBasePath().'/' : '';
+
+        $this->inlineImageEmbedder->embedImages($message, $baseUrl);
     }
 
     /**

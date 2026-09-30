@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Mailer\ContaoMailer;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
@@ -399,6 +400,12 @@ class Newsletter extends Backend
 			$objEmail->getHeaders()->addHeader('X-Transport', $objNewsletter->mailerTransport ?: $objNewsletter->channelMailerTransport);
 		}
 
+		// Embed images
+		if (!$objNewsletter->externalImages)
+		{
+			$objEmail->getHeaders()->addTextHeader(ContaoMailer::EMBED_IMAGES_HEADER, '1');
+		}
+
 		return $objEmail;
 	}
 
@@ -455,11 +462,6 @@ class Newsletter extends Backend
 		$objEmail->text($event->getText());
 		$objEmail->html($event->isHtmlAllowed() ? $event->getHtml() : '');
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
-
-		if (!$objNewsletter->externalImages)
-		{
-			System::getContainer()->get('contao.mailer.inline_image_embedder')->embedImages($objEmail, Environment::get('base'));
-		}
 
 		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$arrRejected = $objSession->get('rejected_recipients', array());
