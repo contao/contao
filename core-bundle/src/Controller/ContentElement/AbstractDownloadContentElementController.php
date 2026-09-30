@@ -31,8 +31,10 @@ use Contao\Image\ResizeConfiguration;
 use Contao\LayoutModel;
 use Contao\StringUtil;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
@@ -79,12 +81,13 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     protected function handleDownload(Request $request, ContentModel $model): void
     {
-        // Not a download request
-        if (!$request->query->has('_hash')) {
+        $fileDownloadHelper = $this->container->get('contao.filesystem.file_download_helper');
+
+        if (!$fileDownloadHelper->isDownloadRequest($request)) {
             return;
         }
 
-        $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
+        $response = $fileDownloadHelper->handle(
             $request,
             $this->getVirtualFilesystem(),
             function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
@@ -102,12 +105,13 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             },
         );
 
-        // Another download element on the same page is responsible (see #5568)
-        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
-            return;
+        if (
+            $response instanceof StreamedResponse
+            || $response instanceof BinaryFileResponse
+            || !$response->isSuccessful()
+        ) {
+            throw new ResponseException($response);
         }
-
-        throw new ResponseException($response);
     }
 
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator

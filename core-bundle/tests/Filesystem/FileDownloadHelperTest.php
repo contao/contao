@@ -145,6 +145,16 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
+    public function testDetectsDownloadRequests(): void
+    {
+        $fileDownloadHelper = $this->getFileDownloadHelper();
+        $url = $fileDownloadHelper->generateDownloadUrl('https://example.com/', 'my_file.txt');
+
+        $this->assertTrue($fileDownloadHelper->isDownloadRequest(Request::create($url)));
+        $this->assertFalse($fileDownloadHelper->isDownloadRequest(Request::create((new UriSigner('secret'))->sign('https://example.com/?foo=bar'))));
+        $this->assertFalse($fileDownloadHelper->isDownloadRequest(Request::create('https://example.com/')));
+    }
+
     public function testPreservesQueryParameters(): void
     {
         $helper = $this->getFileDownloadHelper();
