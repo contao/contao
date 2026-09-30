@@ -1658,10 +1658,7 @@ services:
         class: Contao\CoreBundle\Webhook\MessageHandler\ConsumeWebhookHandler
         arguments:
             - '@contao.webhook.repository'
-            - !service
-                class: Symfony\Component\RemoteEvent\Messenger\ConsumeRemoteEventHandler
-                arguments:
-                    - !tagged_locator { tag: remote_event.consumer, index_by: consumer }
+            - !service { class: Symfony\Component\RemoteEvent\Messenger\ConsumeRemoteEventHandler, arguments: [!tagged_locator { tag: remote_event.consumer, index_by: consumer }] }
 
     contao.webhook.message_handler.deliver_handler:
         class: Contao\CoreBundle\Webhook\MessageHandler\DeliverWebhookHandler
