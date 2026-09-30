@@ -71,6 +71,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
         $this->assertInstanceOf(Get::class, $download);
         $this->assertSame('/files_operations/download/{path}', $download->getUriTemplate());
+        $this->assertSame(['binary' => ['application/octet-stream']], $download->getOutputFormats());
         $this->assertFalse($download->getOutput());
         $this->assertSame(VirtualFilesystemContentStateProvider::class, $download->getProvider());
 

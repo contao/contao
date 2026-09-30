@@ -12,15 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Response;
 
+use Mcp\Schema\Content\BlobResourceContents;
+use Mcp\Schema\Content\EmbeddedResource;
 use Mcp\Schema\Content\TextContent;
 use Mcp\Schema\Result\CallToolResult;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ApiResponseConverter
 {
-    public function convert(Response $response): CallToolResult
+    public function convert(Response $response, string|null $resourceUri = null, bool $outputIsResource = false): CallToolResult
     {
-        $content = $response->getContent();
+        $content = $this->getContent($response);
+
+        if (false !== $content && $response->isSuccessful() && $outputIsResource) {
+            return $this->convertResource($response, $content, $resourceUri);
+        }
 
         try {
             if (false === $content) {
@@ -40,5 +46,43 @@ final class ApiResponseConverter
             !$response->isSuccessful(),
             $result,
         );
+    }
+
+    private function convertResource(Response $response, string $content, string|null $resourceUri): CallToolResult
+    {
+        $mimeType = $response->headers->get('Content-Type', 'application/octet-stream');
+        $resourceUri ??= 'contao://api-response';
+        $result = [
+            'status' => $response->getStatusCode(),
+            'data' => [
+                'uri' => $resourceUri,
+                'mimeType' => $mimeType,
+                'size' => \strlen($content),
+            ],
+        ];
+
+        return new CallToolResult(
+            [new EmbeddedResource(new BlobResourceContents($resourceUri, $mimeType, base64_encode($content)))],
+            structuredContent: $result,
+        );
+    }
+
+    private function getContent(Response $response): false|string
+    {
+        if (false !== ($content = $response->getContent())) {
+            return $content;
+        }
+
+        ob_start();
+
+        try {
+            $response->sendContent();
+
+            return ob_get_clean();
+        } catch (\Throwable $exception) {
+            ob_end_clean();
+
+            throw $exception;
+        }
     }
 }

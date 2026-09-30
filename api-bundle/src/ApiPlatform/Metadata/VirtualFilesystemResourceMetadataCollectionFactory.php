@@ -122,6 +122,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
     {
         return new Get(
             uriTemplate: '/files_operations/download/{path}',
+            outputFormats: ['binary' => ['application/octet-stream']],
             shortName: 'File',
             class: VirtualFilesystemItem::class,
             requirements: ['path' => '.+'],

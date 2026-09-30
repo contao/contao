@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tool;
 
+use ApiPlatform\Metadata\HttpOperation;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\McpBundle\Api\ApiOperationRegistry;
 use Contao\McpBundle\Response\ApiResponseConverter;
@@ -71,6 +72,15 @@ final class ApiTools
 
         // Use the API pipeline so serialization, validation and operation security also
         // apply to internal calls. Authentication belongs to the enclosing request.
-        return $this->responseConverter->convert($this->httpKernel->handle($apiRequest, HttpKernelInterface::SUB_REQUEST));
+        return $this->responseConverter->convert(
+            $this->httpKernel->handle($apiRequest, HttpKernelInterface::SUB_REQUEST),
+            $apiRequest->getUri(),
+            $this->outputIsResource($metadata),
+        );
+    }
+
+    private function outputIsResource(HttpOperation $operation): bool
+    {
+        return isset($operation->getOutputFormats()['binary']);
     }
 }

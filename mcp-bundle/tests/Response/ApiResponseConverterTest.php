@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\McpBundle\Tests\Response;
 
 use Contao\McpBundle\Response\ApiResponseConverter;
+use Mcp\Schema\Content\BlobResourceContents;
+use Mcp\Schema\Content\EmbeddedResource;
 use Mcp\Schema\Content\TextContent;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -39,9 +41,47 @@ final class ApiResponseConverterTest extends TestCase
         $this->assertSame('{"status":200,"data":{"empty":{},"list":[],"id":"9223372036854775808"}}', $result->content[0]->text);
     }
 
-    public function testRejectsStreamingResponses(): void
+    public function testConvertsDeclaredResourceResponsesToEmbeddedResources(): void
     {
-        $response = new StreamedResponse();
+        $response = new StreamedResponse(
+            static function (): void {
+                echo '{"type":"downloaded JSON file"}';
+            },
+        );
+        $response->headers->set('Content-Type', 'application/json');
+
+        $result = new ApiResponseConverter()->convert(
+            $response,
+            'https://example.org/contao/api/files_operations/download/file.json',
+            outputIsResource: true,
+        );
+
+        $this->assertFalse($result->isError);
+        $this->assertInstanceOf(EmbeddedResource::class, $result->content[0]);
+        $this->assertInstanceOf(BlobResourceContents::class, $result->content[0]->resource);
+        $this->assertSame('https://example.org/contao/api/files_operations/download/file.json', $result->content[0]->resource->uri);
+        $this->assertSame('application/json', $result->content[0]->resource->mimeType);
+        $this->assertSame('{"type":"downloaded JSON file"}', base64_decode($result->content[0]->resource->blob, true));
+        $this->assertSame(
+            [
+                'status' => 200,
+                'data' => [
+                    'uri' => 'https://example.org/contao/api/files_operations/download/file.json',
+                    'mimeType' => 'application/json',
+                    'size' => 31,
+                ],
+            ],
+            $result->structuredContent,
+        );
+    }
+
+    public function testRejectsNonJsonResponsesThatAreNotAttachments(): void
+    {
+        $response = new StreamedResponse(
+            static function (): void {
+                echo '<html>Login</html>';
+            },
+        );
 
         $this->assertTrue(new ApiResponseConverter()->convert($response)->isError);
     }

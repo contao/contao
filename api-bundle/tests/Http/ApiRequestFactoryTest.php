@@ -136,11 +136,14 @@ final class ApiRequestFactoryTest extends TestCase
         $this->createFactory()->create(Request::create('/contao/mcp'), $operation, payload: ['contents']);
     }
 
-    public function testRejectsOperationsWithoutJsonOutput(): void
+    public function testUsesNonJsonOutputFormats(): void
     {
-        $this->expectException(UnsupportedFormatException::class);
+        $request = $this->createFactory()->create(
+            Request::create('/contao/mcp'),
+            new Get(name: 'records', outputFormats: ['binary' => ['application/octet-stream']]),
+        );
 
-        $this->createFactory()->create(Request::create('/contao/mcp'), new Get(name: 'records', outputFormats: ['html' => ['text/html']]));
+        $this->assertSame('application/octet-stream', $request->headers->get('Accept'));
     }
 
     private function createFactory(RequestContext|null $context = null): ApiRequestFactory
