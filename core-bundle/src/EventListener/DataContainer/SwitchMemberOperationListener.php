@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,7 +43,7 @@ class SwitchMemberOperationListener
         if (
             !$row['login']
             || !$row['username']
-            || !$this->security->isGranted('contao_user.amg', StringUtil::deserialize($row['groups'], true))
+            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, StringUtil::deserialize($row['groups'], true))
         ) {
             $operation->disable();
 

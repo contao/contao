@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\SwitchMemberOperationListener;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -99,7 +100,7 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('isGranted')
             ->willReturnMap([
                 ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
-                ['contao_user.amg', ['42'], false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, ['42'], false],
             ])
         ;
 
@@ -126,7 +127,7 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('isGranted')
             ->willReturnMap([
                 ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
-                ['contao_user.amg', ['42'], true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, ['42'], true],
             ])
         ;
 
