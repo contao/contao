@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 
 class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInterface
@@ -72,19 +73,16 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
             return \is_array($user->$field) && [] !== $user->$field;
         }
 
-        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
-            return true;
+        if ('subfilemounts' === $field) {
+            return $this->hasAccessToFilemount($user->filemounts, $subject[0], true);
         }
 
-        // Additionally check the subfolders of the mounted files
         if ('filemounts' === $field) {
-            foreach ($user->filemounts as $folder) {
-                if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
-                    return true;
-                }
-            }
+            return $this->hasAccessToFilemount($user->filemounts, $subject[0], false);
+        }
 
-            return false;
+        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
+            return true;
         }
 
         // Additionally check the child pages of the mounted pages
@@ -105,6 +103,29 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
                         return true;
                     }
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Additionally check the subfolders of the mounted files.
+     */
+    private function hasAccessToFilemount(array $filemounts, string $path, bool $subpath): bool
+    {
+        $path = Path::canonicalize($path);
+
+        foreach ($filemounts as $folder) {
+            if (!\is_string($folder) || '' === $folder) {
+                continue;
+            }
+
+            $regexp = '/^'.preg_quote($folder, '/');
+            $regexp .= $subpath ? '(\/.+)/i' : '(\/|$)/i';
+
+            if (preg_match($regexp, $path)) {
+                return true;
             }
         }
 

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -36,6 +37,7 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
     public function __construct(
         VirtualFilesystem $virtualFilesystem,
         private readonly Security $security,
+        private readonly UserInterface|false|null $user = false,
     ) {
         $this->inner = $virtualFilesystem;
     }
@@ -77,50 +79,57 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 
     public function write(Uuid|string $location, string $contents, array $options = []): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 
         $this->inner->write($location, $contents, $options);
     }
 
     public function writeStream(Uuid|string $location, $contents, array $options = []): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 
         $this->inner->writeStream($location, $contents, $options);
     }
 
     public function delete(Uuid|string $location): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE);
 
         $this->inner->delete($location);
     }
 
     public function deleteDirectory(Uuid|string $location): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY);
 
         $this->inner->deleteDirectory($location);
     }
 
     public function createDirectory(Uuid|string $location, array $options = []): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $location);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 
         $this->inner->createDirectory($location, $options);
     }
 
     public function copy(Uuid|string $source, string $destination, array $options = []): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $destination);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $destination);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 
         $this->inner->copy($source, $destination, $options);
     }
 
     public function move(Uuid|string $source, string $destination, array $options = []): void
     {
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE, $source);
-        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $destination);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $source);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $destination);
+        $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
         $this->inner->move($source, $destination, $options);
     }
@@ -186,16 +195,24 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         return $this->canAccess(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $location);
     }
 
-    private function denyAccessUnlessGranted(string $attribute, Uuid|string $location): void
+    private function denyAccessUnlessGranted(string $attribute, Uuid|string|null $location = null): void
     {
-        if ($this->canAccess($attribute, $location)) {
+        $isGranted = null === $location ? $this->isGranted($attribute) : $this->canAccess($attribute, $location);
+
+        if ($isGranted) {
             return;
         }
 
         $permission = array_flip((new \ReflectionClass(ContaoCorePermissions::class))->getConstants())[$attribute];
         $action = strtolower(str_replace('_', ' ', substr($permission, 9)));
 
-        $exception = new AccessDeniedException(\sprintf('Access denied to %s at location "%s".', $action, $location));
+        if (null === $location) {
+            $message = \sprintf('Access denied to %s.', $action);
+        } else {
+            $message = \sprintf('Access denied to %s at location "%s".', $action, $location);
+        }
+
+        $exception = new AccessDeniedException($message);
         $exception->setAttributes($attribute);
         $exception->setSubject($location);
 
@@ -216,6 +233,18 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 
         $rootStorageRelativePath = Path::join($this->inner->getPrefix(), $path);
 
-        return $this->security->isGranted($attribute, $rootStorageRelativePath);
+        return $this->isGranted($attribute, $rootStorageRelativePath);
+    }
+
+    /**
+     * @param mixed|null $subject
+     */
+    private function isGranted(string $attribute, $subject = null): bool
+    {
+        if (false === $this->user) {
+            return $this->security->isGranted($attribute, $subject);
+        }
+
+        return $this->security->isGrantedForUser($this->user, $attribute, $subject);
     }
 }

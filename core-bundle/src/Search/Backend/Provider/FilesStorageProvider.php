@@ -31,19 +31,14 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
 {
     public const TYPE = 'contao.vfs.files';
 
-    private readonly PermissionCheckingVirtualFilesystem $permissionCheckingFilesStorage;
-
     public function __construct(
         private readonly VirtualFilesystem $filesStorage,
-        Security $security,
+        private readonly Security $security,
         private readonly Studio $studio,
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly string $uploadPath,
     ) {
-        $this->permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
-            $this->filesStorage, $security,
-        );
     }
 
     public function supportsType(string $type): bool
@@ -135,7 +130,13 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
 
     public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
-        return $this->permissionCheckingFilesStorage->canAccessLocation(
+        $permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
+            $this->filesStorage,
+            $this->security,
+            $token->getUser(),
+        );
+
+        return $permissionCheckingFilesStorage->canAccessLocation(
             $document->getMetadata()['path'] ?? '',
         );
     }
