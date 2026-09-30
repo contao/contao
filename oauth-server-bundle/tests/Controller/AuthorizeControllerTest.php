@@ -17,9 +17,9 @@ use Contao\OAuthServerBundle\AuthorizationServer\AuthorizationServerFactory;
 use Contao\OAuthServerBundle\Controller\AuthorizeController;
 use Contao\OAuthServerBundle\Http\PsrMessageConverter;
 use Contao\OAuthServerBundle\ResourceContext;
+use Contao\TestCase\ContaoTestCase;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +27,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment;
 
-final class AuthorizeControllerTest extends TestCase
+final class AuthorizeControllerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([[Request::class, ['formats']]]);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheIssuerToRedirectedValidationErrors(): void
     {
         $server = $this->createStub(AuthorizationServer::class);
