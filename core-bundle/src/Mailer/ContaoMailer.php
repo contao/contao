@@ -148,19 +148,16 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        if ($this->framework) {
-            $this->framework->initialize();
-            $config = $this->framework->getAdapter(Config::class);
-
-            $adminEmail = $config->get('adminEmail');
-
-            if (!empty($adminEmail)) {
-                $this->doSetFrom($message, $adminEmail);
-
-                return;
-            }
+        if (!$this->framework) {
+            return;
         }
 
-        throw new \LogicException('No administrator e-mail address has been set.');
+        $this->framework->initialize();
+
+        // Do not throw if there is no admin e-mail address, so the From header can still
+        // be set elsewhere (e.g. via "framework.mailer.headers")
+        if ($adminEmail = $this->framework->getAdapter(Config::class)->get('adminEmail')) {
+            $this->doSetFrom($message, $adminEmail);
+        }
     }
 }

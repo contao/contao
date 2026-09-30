@@ -178,7 +178,7 @@ class ContaoMailerTest extends TestCase
         $this->assertSame('lorem@example.com', $from[0]->getAddress());
     }
 
-    public function testThrowsIfNoAdminEmailHasBeenSet(): void
+    public function testDoesNotSetADefaultFromIfNoAdminEmailHasBeenSet(): void
     {
         $config = $this->createAdapterStub(['get']);
         $config
@@ -188,10 +188,9 @@ class ContaoMailerTest extends TestCase
 
         $email = new Email()->to('foo@example.com')->text('foo');
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('No administrator e-mail address has been set.');
-
         $this->getContaoMailer(new RequestStack(), [Config::class => $config])->send($email);
+
+        $this->assertSame([], $email->getFrom());
     }
 
     public function testDoesNotOverrideAnExistingFrom(): void
