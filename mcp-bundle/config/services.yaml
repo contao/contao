@@ -2,6 +2,13 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.mcp_bundle.controller.serialized_mcp_controller:
+        class: Contao\McpBundle\Controller\SerializedMcpController
+        decorates: mcp.server.contao_backend.controller
+        arguments:
+            - '@.inner'
+            - '@lock.factory'
+
     Contao\McpBundle\Response\ApiResponseConverter: ~
 
     Contao\McpBundle\Resource\TemplateGuidance: ~
@@ -43,3 +50,6 @@ services:
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.inspector'
+
+    contao.mcp_bundle.routing.mcp_request_matcher:
+        class: Contao\McpBundle\Routing\McpRequestMatcher
