@@ -22,7 +22,6 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
 use Contao\McpBundle\Controller\SerializedMcpController;
-use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
 use PHPUnit\Framework\TestCase;
@@ -142,7 +141,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $container->compile();
 
-        $this->assertFalse($container->hasDefinition(TemplateSnapshotTools::class));
+        $this->assertFalse($container->hasDefinition('contao_mcp.tool.template_snapshot_tools'));
     }
 
     public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void

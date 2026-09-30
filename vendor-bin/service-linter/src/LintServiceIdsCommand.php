@@ -190,6 +190,7 @@ class LintServiceIdsCommand
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
                 $this->projectDir.'/oauth-server-bundle/config',
+                $this->projectDir.'/mcp-bundle/config',
             ])
         ;
 
