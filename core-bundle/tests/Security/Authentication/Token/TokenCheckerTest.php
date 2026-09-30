@@ -371,6 +371,34 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->getPreviewTime()?->getTimestamp());
     }
 
+    public function testReturnsThePreviewTimeInTheDefaultTimeZone(): void
+    {
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('Europe/Zurich');
+
+        $request = new Request();
+        $session = $this->mockSessionWithPreview(true, 1790617920);
+
+        $request->attributes->set('_preview', true);
+        $request->cookies->set($session->getName(), 'foo');
+        $request->setSession($session);
+
+        $tokenChecker = new TokenChecker(
+            new RequestStack([$request]),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->createTokenStorageStub(BackendUser::class),
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter(),
+            $this->createStub(Connection::class),
+        );
+
+        $previewTime = $tokenChecker->getPreviewTime();
+
+        date_default_timezone_set($timezone);
+
+        $this->assertSame('2026-09-28T19:52', $previewTime?->format('Y-m-d\TH:i'));
+    }
+
     public static function getPreviewTimeData(): iterable
     {
         yield 'Not in preview' => [false, 637974000, null];

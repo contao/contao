@@ -322,13 +322,13 @@ class TokenChecker
                 return null;
             }
 
-            return new \DateTimeImmutable('@'.$previewLink['previewTime']);
+            return new \DateTimeImmutable()->setTimestamp((int) $previewLink['previewTime']);
         }
 
         if (!isset($preview['previewTime'])) {
             return null;
         }
 
-        return new \DateTimeImmutable('@'.$preview['previewTime']);
+        return new \DateTimeImmutable()->setTimestamp((int) $preview['previewTime']);
     }
 }
