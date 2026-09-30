@@ -316,16 +316,26 @@ class Combiner extends System
 			$arrPrefix[] = basename($arrFile['name']);
 		}
 
-		$strKey = StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
+		$strPrefix = StringUtil::substr(implode(',', $arrPrefix), 64, '...');
+		$strKey = $strPrefix . '-' . substr(md5($this->strKey), 0, 8);
+		$strPath = 'assets/' . $strTarget . '/' . $strKey;
+		$strHashFile = $strPath . $this->strMode . '.hash';
 
-		// Load the existing file
-		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
+		// Load the existing hash lookup file
+		if (file_exists($this->strRootDir . '/' . $strHashFile))
 		{
-			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+			$strHash = file_get_contents($this->strRootDir . '/' . $strHashFile);
+			$strCachedPath = 'assets/' . $strTarget . '/' . $strPrefix . '-' . $strHash . $this->strMode;
+
+			// Load the existing file
+			if (preg_match('/^[a-f0-9]{8}$/D', $strHash) && file_exists($this->strRootDir . '/' . $strCachedPath))
+			{
+				return $strUrl . $strCachedPath;
+			}
 		}
 
 		// Create the file
-		$objFile = new File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
+		$objFile = new File($strPath . $this->strMode);
 		$objFile->truncate();
 
 		foreach ($this->arrFiles as $arrFile)
@@ -362,7 +372,16 @@ class Combiner extends System
 		unset($content);
 		$objFile->close();
 
-		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+		// Include the compiled contents in the hash
+		$strHash = substr(md5($this->strKey . '-c' . md5_file($this->strRootDir . '/' . $strPath . $this->strMode)), 0, 8);
+		$strKey = $strPrefix . '-' . $strHash;
+		$strPath = 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+		$objFile->renameTo($strPath);
+
+		// Store the hash alongside the scripts so clearing the script cache also clears the lookup
+		File::putContent($strHashFile, $strHash);
+
+		return $strUrl . $strPath;
 	}
 
 	/**
