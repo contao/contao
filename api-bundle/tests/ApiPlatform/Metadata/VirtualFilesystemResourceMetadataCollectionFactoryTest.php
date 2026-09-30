@@ -31,6 +31,7 @@ use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,6 +77,8 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('Upload a file', $uploadOpenApi->getSummary());
         $this->assertInstanceOf(RequestBody::class, $uploadOpenApi->getRequestBody());
         $this->assertSame('The raw contents of the file.', $uploadOpenApi->getRequestBody()->getDescription());
+        $uploadSchema = $uploadOpenApi->getRequestBody()->getContent()['application/octet-stream']->getSchema();
+        $this->assertSame(1234, $uploadSchema['maxLength']);
         $this->assertSame(VirtualFilesystemStateProcessor::class, $upload->getProcessor());
 
         $this->assertInstanceOf(Post::class, $metadata);
@@ -169,6 +172,11 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
     {
         $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
 
-        return new VirtualFilesystemResourceMetadataCollectionFactory($decorated, $normalizer);
+        return new VirtualFilesystemResourceMetadataCollectionFactory($decorated, $normalizer, $this->createUploadSizeProvider());
+    }
+
+    private function createUploadSizeProvider(int $maximumUploadSize = 1234): UploadSizeProvider
+    {
+        return new UploadSizeProvider($maximumUploadSize, $maximumUploadSize);
     }
 }
