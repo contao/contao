@@ -376,6 +376,12 @@ services:
         arguments:
             - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
+    contao.file.upload_size_provider:
+        class: Contao\CoreBundle\File\UploadSizeProvider
+        public: true
+        arguments:
+            - '%contao.max_file_upload_size%'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -1677,6 +1683,7 @@ services:
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
+    Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'

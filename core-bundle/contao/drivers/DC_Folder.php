@@ -588,7 +588,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
 		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
-		$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
+		$intMaxSize = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSizeInMegabytes();
 
 		$strRoot = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath;
 		$strUploadUrl = html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($strRoot)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
@@ -1402,7 +1402,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_upload">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize() . '">
 <div class="tl_tbox">
 <div class="widget">
   <h3>' . $GLOBALS['TL_LANG'][$this->strTable]['fileupload'][0] . '</h3>' . $objUploader->generateMarkup() . '
