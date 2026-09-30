@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\CoreBundle\Exception\ResponseException;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
 
 /**
@@ -605,7 +604,6 @@ class ModuleRegistration extends Module
 
 		$objEmail = new EmailMessage()
 			->to($GLOBALS['TL_ADMIN_EMAIL'])
-			->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''))
 			->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host'))))
 		;
 
