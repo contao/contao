@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -43,7 +44,9 @@ class UserStateListener
 
         $user = $this->security->getUser();
 
-        $GLOBALS['TL_USERNAME'] = $user->getUserIdentifier();
+        if ($user instanceof User) {
+            $GLOBALS['TL_USERNAME'] = $user->getUserIdentifier();
+        }
 
         if (!$user instanceof BackendUser) {
             return;
