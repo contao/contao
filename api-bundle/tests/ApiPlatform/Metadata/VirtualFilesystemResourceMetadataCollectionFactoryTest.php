@@ -77,6 +77,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('Upload a file', $uploadOpenApi->getSummary());
         $this->assertInstanceOf(RequestBody::class, $uploadOpenApi->getRequestBody());
         $this->assertSame('The raw contents of the file.', $uploadOpenApi->getRequestBody()->getDescription());
+
         $uploadSchema = $uploadOpenApi->getRequestBody()->getContent()['application/octet-stream']->getSchema();
         $this->assertSame(1234, $uploadSchema['maxLength']);
         $this->assertSame(VirtualFilesystemStateProcessor::class, $upload->getProcessor());

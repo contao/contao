@@ -76,6 +76,7 @@ final class BinaryPayloadHandlerTest extends TestCase
                 ])),
             ),
         );
+
         $payload = base64_encode('<root/>');
 
         $this->assertSame($payload, $this->createHandler(10)->decode($operation, $payload));
