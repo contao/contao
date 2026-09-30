@@ -489,6 +489,13 @@ services:
             - '%kernel.project_dir%/var/deferred-images'
             - '@?filesystem'
 
+    contao.image.deferred_response_factory:
+        class: Contao\CoreBundle\Image\DeferredImageResponseFactory
+        arguments:
+            - '@messenger.bus.default'
+            - '@contao.image.resizer'
+            - '@?contao.messenger.web_worker'
+
     contao.image.factory:
         class: Contao\CoreBundle\Image\ImageFactory
         public: true
@@ -773,6 +780,12 @@ services:
             - '@messenger.bus.default'
             - '%kernel.project_dir%'
             - '%contao.backend.crawl_concurrency%'
+
+    contao.messenger.resize_deferred_image_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\ResizeDeferredImageMessageHandler
+        arguments:
+            - '@contao.image.factory'
+            - '@contao.image.resizer'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler

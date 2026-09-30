@@ -27,6 +27,8 @@ use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshotException;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +61,7 @@ class TemplateStudioController extends AbstractBackendController
         private readonly Autocomplete $autocomplete,
         private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
+        private readonly TemplateSnapshots $snapshots,
         iterable $taggedOperations,
     ) {
         $operationsByName = [];
@@ -115,7 +118,23 @@ class TemplateStudioController extends AbstractBackendController
             'themes' => $availableThemes,
             'current_theme' => $themeContext,
             'environment_information' => $this->environmentInformation->getData(),
+            ...$this->getSnapshotPanelData(),
         ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/panel',
+        name: '_contao_template_studio_snapshot_panel.stream',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function snapshotPanel(): Response
+    {
+        return $this->render(
+            '@Contao/backend/template_studio/snapshot/panel.stream.html.twig',
+            $this->getSnapshotPanelData(),
+        );
     }
 
     /**
@@ -445,6 +464,95 @@ class TemplateStudioController extends AbstractBackendController
             'operation' => $operationName,
             'context' => $operationContext,
         ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot',
+        name: '_contao_template_studio_snapshot.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function snapshot(): Response
+    {
+        try {
+            $hash = $this->snapshots->snapshot();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        return $this->render('@Contao/backend/template_studio/snapshot/created.stream.html.twig', [
+            'snapshot_hash' => $hash,
+        ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/compare',
+        name: '_contao_template_studio_snapshot_compare.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function compareSnapshots(): Response
+    {
+        try {
+            $diff = $this->snapshots->diff();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        return $this->render('@Contao/backend/template_studio/snapshot/compare.stream.html.twig', [
+            'diff' => $diff,
+        ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/rollback',
+        name: '_contao_template_studio_snapshot_rollback.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function rollbackSnapshots(Request $request, #[MapQueryParameter('open_tab')] array $openTabs = []): Response
+    {
+        try {
+            if (!$request->request->has('confirm_rollback')) {
+                $this->snapshots->diff();
+
+                return $this->render('@Contao/backend/template_studio/snapshot/rollback_confirm.stream.html.twig');
+            }
+
+            $this->snapshots->rollback();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        $validTabs = array_filter($openTabs, $this->isAllowedIdentifier(...));
+
+        return $this->render('@Contao/backend/template_studio/snapshot/rollback_result.stream.html.twig', [
+            'open_tabs' => $validTabs,
+            'removed_tabs' => array_diff($openTabs, $validTabs),
+        ]);
+    }
+
+    private function snapshotError(TemplateSnapshotException $exception): Response
+    {
+        return $this->render('@Contao/backend/template_studio/snapshot/failed.stream.html.twig', [
+            'error' => $exception->getMessage(),
+        ]);
+    }
+
+    /**
+     * @return array{snapshots_available: bool, current_snapshot: array{hash: string, date: string}|null}
+     */
+    private function getSnapshotPanelData(): array
+    {
+        $available = $this->snapshots->isAvailable();
+
+        return [
+            'snapshots_available' => $available,
+            'current_snapshot' => $available ? $this->snapshots->latestSnapshot() : null,
+        ];
     }
 
     protected function getOperationContext(string $identifier): OperationContext

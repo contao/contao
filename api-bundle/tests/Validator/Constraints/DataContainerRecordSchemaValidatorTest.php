@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\Validator\Constraints;
 
+use ApiPlatform\JsonLd\AnonymousContextBuilderInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
@@ -21,6 +24,7 @@ use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
@@ -30,7 +34,9 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Contao\Validator;
+use Doctrine\DBAL\Connection;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -68,7 +74,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Too long for the current schema', 'published' => false, 'image' => null], 17);
 
-        $record = new DataContainerRecordNormalizer()->denormalize(
+        $record = $this->createNormalizer()->denormalize(
             ['published' => true],
             DataContainerRecord::class,
             context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => $record],
@@ -87,7 +93,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
 
     public function testStillValidatesExplicitlyClearedFieldsDuringAPartialUpdate(): void
     {
-        $record = new DataContainerRecordNormalizer()->denormalize(
+        $record = $this->createNormalizer()->denormalize(
             ['title' => null],
             DataContainerRecord::class,
             context: ['contao_table' => 'tl_content', AbstractNormalizer::OBJECT_TO_POPULATE => new DataContainerRecord('tl_content', ['title' => 'abc'], 17)],
@@ -151,7 +157,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher()), new JsonSchemaValidator());
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
@@ -242,9 +248,30 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createLocaleSwitcher());
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher());
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            new ForeignKeyParser($connection),
+            new WidgetConverterRegistry([]),
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+        );
+    }
+
+    private function createNormalizer(): DataContainerRecordNormalizer
+    {
+        return new DataContainerRecordNormalizer(
+            $this->createRelationResolver(),
+            $this->createStub(AnonymousContextBuilderInterface::class),
+        );
     }
 
     private function createLocaleSwitcher(): LocaleSwitcher

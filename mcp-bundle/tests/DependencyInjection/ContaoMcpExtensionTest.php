@@ -18,13 +18,16 @@ use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
+use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\AI\McpBundle\Controller\McpController;
 use Symfony\AI\McpBundle\McpBundle;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -80,6 +83,10 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_template_save',
                 'contao_template_delete_override',
                 'contao_template_execute_operation',
+                'contao_template_snapshot',
+                'contao_template_snapshots',
+                'contao_template_diff',
+                'contao_template_rollback',
             ],
             $tools,
         );
@@ -123,6 +130,20 @@ final class ContaoMcpExtensionTest extends TestCase
         $this->assertSame(['frontend_example'], $tools);
     }
 
+    public function testDoesNotRegisterSnapshotToolsWithoutTemplateStudio(): void
+    {
+        $container = $this->getContainerBuilder(withSnapshots: false);
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
+
+        $bundle = new McpBundle();
+        $bundle->getContainerExtension()->load([$config], $container);
+        $bundle->build($container);
+
+        $container->compile();
+
+        $this->assertFalse($container->hasDefinition(TemplateSnapshotTools::class));
+    }
+
     public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void
     {
         $container = $this->getContainerBuilder(true);
@@ -144,10 +165,10 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(18, $tools);
+        $this->assertCount(22, $tools);
     }
 
-    private function getContainerBuilder(bool $withBackendSearch = false): ContainerBuilder
+    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -169,8 +190,13 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
+        }
+
+        if ($withSnapshots) {
+            $container->register('contao.twig.studio.template_snapshots', TemplateSnapshots::class)->setSynthetic(true)->setPublic(true);
         }
 
         if ($withBackendSearch) {

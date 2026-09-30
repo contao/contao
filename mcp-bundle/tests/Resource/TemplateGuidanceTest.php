@@ -28,7 +28,10 @@ final class TemplateGuidanceTest extends TestCase
         $this->assertStringContainsString('scoped `{% with {…} %}`', $guidance);
         $this->assertStringContainsString("sanitize_html('contao')", $guidance);
         $this->assertStringContainsString("csp_nonce('script-src')", $guidance);
-        $this->assertStringContainsString('Validate', $guidance);
+        $this->assertStringContainsString('administrator privileges (`ROLE_ADMIN`)', $guidance);
+        $this->assertStringContainsString('Validation compiles the complete proposed source', $guidance);
+        $this->assertStringContainsString('contao_template_snapshot', $guidance);
+        $this->assertStringContainsString('contao_template_rollback', $guidance);
     }
 
     public function testProvidesHtmlAttributesGuidanceForAvailableMethods(): void
