@@ -1,0 +1,465 @@
+tl_page:
+    page_main_website:
+        pid: 0
+        sorting: 128
+        tstamp: 1704067200
+        title: Main website
+        alias: main-website
+        type: root
+        language: en
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_pages_main_content'
+        chmod:
+            - g4
+            - g5
+    page_main_home:
+        pid: '@page_main_website'
+        sorting: 128
+        tstamp: 1704067200
+        title: Main website home
+        alias: main-home
+        type: regular
+        published: 1
+    page_microsite:
+        pid: 0
+        sorting: 256
+        tstamp: 1704067200
+        title: Microsite
+        alias: microsite
+        type: root
+        language: en
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_pages_microsite_structure'
+        chmod:
+            - g1
+            - g2
+            - g3
+            - g4
+            - g5
+            - g6
+    page_microsite_home:
+        pid: '@page_microsite'
+        sorting: 128
+        tstamp: 1704067200
+        title: Microsite home
+        alias: microsite-home
+        type: regular
+        published: 1
+
+tl_files:
+    files_media:
+        tstamp: 1704067200
+        uuid: media-files-uuid
+        type: folder
+        path: files/media
+        name: media
+        found: 1
+    files_private:
+        tstamp: 1704067200
+        uuid: privatefile-uuid
+        type: folder
+        path: files/private
+        name: private
+        found: 1
+
+tl_theme:
+    theme_editorial:
+        tstamp: 1704067200
+        name: Editorial
+        author: Contao
+
+tl_image_size:
+    image_size_content:
+        pid: '@theme_editorial'
+        tstamp: 1704067200
+        name: Content image
+        width: 1200
+        height: 800
+        resizeMode: crop
+    image_size_teaser:
+        pid: '@theme_editorial'
+        tstamp: 1704067200
+        name: Teaser image
+        width: 600
+        height: 400
+        resizeMode: crop
+
+tl_form:
+    form_contact:
+        tstamp: 1704067200
+        title: Contact
+        alias: contact
+    form_newsletter_signup:
+        tstamp: 1704067200
+        title: Newsletter signup
+        alias: newsletter-signup
+
+tl_member_group:
+    member_group_customers:
+        tstamp: 1704067200
+        name: Customers
+    member_group_partners:
+        tstamp: 1704067200
+        name: Partners
+
+tl_news_archive:
+    news_archive_corporate:
+        tstamp: 1704067200
+        title: Corporate news
+        jumpTo: '@page_main_home'
+    news_archive_press:
+        tstamp: 1704067200
+        title: Press releases
+        jumpTo: '@page_main_home'
+
+tl_calendar:
+    calendar_events:
+        tstamp: 1704067200
+        title: Events
+        jumpTo: '@page_main_home'
+    calendar_internal:
+        tstamp: 1704067200
+        title: Internal events
+        jumpTo: '@page_main_home'
+
+tl_faq_category:
+    faq_category_support:
+        tstamp: 1704067200
+        title: Support
+        headline: Support
+        jumpTo: '@page_main_home'
+    faq_category_products:
+        tstamp: 1704067200
+        title: Products
+        headline: Products
+        jumpTo: '@page_main_home'
+
+tl_newsletter_channel:
+    newsletter_channel_marketing:
+        tstamp: 1704067200
+        title: Marketing
+        jumpTo: '@page_main_home'
+    newsletter_channel_product_updates:
+        tstamp: 1704067200
+        title: Product updates
+        jumpTo: '@page_main_home'
+
+tl_user_group:
+    group_pages_main_content:
+        tstamp: 1704067200
+        name: Pages | Main website | Edit content
+        modules:
+            - page
+            - article
+        alpty:
+            - regular
+        disable: 0
+    group_pages_microsite_structure:
+        tstamp: 1704067200
+        name: Pages | Microsite | Manage structure
+        modules:
+            - page
+            - article
+        alpty:
+            - regular
+            - forward
+            - redirect
+        disable: 0
+    group_files_media_upload:
+        tstamp: 1704067200
+        name: Files | Media | Upload
+        modules:
+            - files
+        filemounts:
+            - '@files_media->uuid'
+        fop:
+            - f1
+        disable: 0
+    group_files_private_manage:
+        tstamp: 1704067200
+        name: Files | Private | Manage
+        modules:
+            - files
+        filemounts:
+            - '@files_private->uuid'
+        fop:
+            - f1
+            - f2
+            - f3
+            - f4
+            - f5
+            - f6
+        disable: 0
+    group_content_elements_basic:
+        tstamp: 1704067200
+        name: Content elements | Basic
+        elements:
+            - headline
+            - text
+            - image
+            - hyperlink
+            - list
+        disable: 0
+    group_form_fields_basic:
+        tstamp: 1704067200
+        name: Form fields | Basic
+        fields:
+            - text
+            - textarea
+            - select
+            - checkbox
+            - submit
+        disable: 0
+    group_frontend_modules_navigation:
+        tstamp: 1704067200
+        name: Front end modules | Navigation
+        frontendModules:
+            - navigation
+        disable: 0
+    group_themes_layouts:
+        tstamp: 1704067200
+        name: Themes | Layouts
+        modules:
+            - themes
+        themes:
+            - layout
+            - image_sizes
+            - elements
+            - modules
+        disable: 0
+    group_image_sizes_editorial:
+        tstamp: 1704067200
+        name: Image sizes | Editorial
+        imageSizes:
+            - '@image_size_content'
+            - '@image_size_teaser'
+        disable: 0
+    group_forms_contact:
+        tstamp: 1704067200
+        name: Forms | Contact | Edit
+        modules:
+            - form
+        forms:
+            - '@form_contact'
+        disable: 0
+    group_records_forms_create_update:
+        tstamp: 1704067200
+        name: Records | Forms | Create and update
+        cud:
+            - 'tl_form::create'
+            - 'tl_form::update'
+            - 'tl_form_field::create'
+            - 'tl_form_field::update'
+        disable: 0
+    group_members_customers:
+        tstamp: 1704067200
+        name: Members | Customers | Access
+        modules:
+            - member
+            - mgroup
+        amg:
+            - '@member_group_customers'
+        disable: 0
+    group_news_corporate:
+        tstamp: 1704067200
+        name: News | Corporate news | Edit
+        modules:
+            - news
+        news:
+            - '@news_archive_corporate'
+        disable: 0
+    group_calendars_events:
+        tstamp: 1704067200
+        name: Calendars | Events | Edit
+        modules:
+            - calendar
+        calendars:
+            - '@calendar_events'
+        disable: 0
+    group_faqs_support:
+        tstamp: 1704067200
+        name: FAQs | Support | Edit
+        modules:
+            - faq
+        faqs:
+            - '@faq_category_support'
+        disable: 0
+    group_newsletters_marketing:
+        tstamp: 1704067200
+        name: Newsletters | Marketing | Edit
+        modules:
+            - newsletter
+        newsletters:
+            - '@newsletter_channel_marketing'
+        disable: 0
+    group_fields_pages_seo:
+        tstamp: 1704067200
+        name: Fields | Pages | SEO only
+        modules:
+            - page
+        alexf:
+            - 'tl_page::title'
+            - 'tl_page::alias'
+            - 'tl_page::pageTitle'
+            - 'tl_page::description'
+            - 'tl_page::robots'
+        disable: 0
+
+tl_user:
+    user_administrator:
+        tstamp: 1704067200
+        username: administrator
+        name: Administrator
+        email: administrator@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        admin: 1
+        disable: 0
+        dateAdded: 1704067200
+    user_content_editor:
+        tstamp: 1704067200
+        username: content-editor
+        name: Content editor
+        email: content-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_pages_main_content'
+            - '@group_content_elements_basic'
+            - '@group_image_sizes_editorial'
+        inherit: extend
+        pagemounts:
+            - '@page_main_website'
+        disable: 0
+        dateAdded: 1704067200
+    user_site_manager:
+        tstamp: 1704067200
+        username: site-manager
+        name: Site manager
+        email: site-manager@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_pages_microsite_structure'
+            - '@group_themes_layouts'
+            - '@group_frontend_modules_navigation'
+            - '@group_image_sizes_editorial'
+        inherit: extend
+        pagemounts:
+            - '@page_microsite'
+        disable: 0
+        dateAdded: 1704067200
+    user_file_uploader:
+        tstamp: 1704067200
+        username: file-uploader
+        name: File uploader
+        email: file-uploader@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_files_media_upload'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_file_manager:
+        tstamp: 1704067200
+        username: file-manager
+        name: File manager
+        email: file-manager@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_files_private_manage'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_form_editor:
+        tstamp: 1704067200
+        username: form-editor
+        name: Form editor
+        email: form-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_forms_contact'
+            - '@group_form_fields_basic'
+            - '@group_records_forms_create_update'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_member_manager:
+        tstamp: 1704067200
+        username: member-manager
+        name: Member manager
+        email: member-manager@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_members_customers'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_news_editor:
+        tstamp: 1704067200
+        username: news-editor
+        name: News editor
+        email: news-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_news_corporate'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_calendar_editor:
+        tstamp: 1704067200
+        username: calendar-editor
+        name: Calendar editor
+        email: calendar-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_calendars_events'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_faq_editor:
+        tstamp: 1704067200
+        username: faq-editor
+        name: FAQ editor
+        email: faq-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_faqs_support'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_newsletter_editor:
+        tstamp: 1704067200
+        username: newsletter-editor
+        name: Newsletter editor
+        email: newsletter-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_newsletters_marketing'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_restricted_editor:
+        tstamp: 1704067200
+        username: restricted-editor
+        name: Restricted editor
+        email: restricted-editor@example.com
+        language: en
+        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        groups:
+            - '@group_fields_pages_seo'
+        inherit: extend
+        pagemounts:
+            - '@page_main_website'
+        disable: 0
+        dateAdded: 1704067200
