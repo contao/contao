@@ -129,14 +129,16 @@ body {
     margin-top: 2px;
 }
 
-.be_login_two_factor .submit_container,
-.be_password .submit_container,
-.be_oauth_consent .submit_container {
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    align-items: center;
+.be_login_two_factor,
+.be_password,
+.be_oauth_server_consent {
+    .submit_container {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        align-items: center;
+    }
 }
 
 .tl_submit {
@@ -173,7 +175,7 @@ label[for="verify"] {
 }
 
 /* OAuth */
-.be_oauth_consent {
+.be_oauth_server_consent {
     #main {
         max-width: 450px;
     }
