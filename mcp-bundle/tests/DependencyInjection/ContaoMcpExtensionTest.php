@@ -227,6 +227,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $extension->load(null === $maximumBinaryPayloadSize ? [] : [['max_binary_payload_size' => $maximumBinaryPayloadSize]], $container);
+        new ContaoMcpBundle()->build($container);
 
         return $container;
     }
