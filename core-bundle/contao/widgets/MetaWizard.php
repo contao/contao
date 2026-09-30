@@ -218,14 +218,16 @@ class MetaWizard extends Widget
 			++$count;
 		}
 
+		$currentLanguage = LocaleUtil::formatAsLocale(System::getContainer()->get('translator')->getLocale());
+
 		// Sort the items by language name with the user language on top (see #3818)
-		uksort($items, static function ($a, $b) use ($languages) {
-			if ($GLOBALS['TL_LANGUAGE'] === $a)
+		uksort($items, static function ($a, $b) use ($languages, $currentLanguage) {
+			if ($currentLanguage === $a)
 			{
 				return -1;
 			}
 
-			if ($GLOBALS['TL_LANGUAGE'] === $b)
+			if ($currentLanguage === $b)
 			{
 				return 1;
 			}
