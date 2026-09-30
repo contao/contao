@@ -48,6 +48,7 @@ services:
         arguments:
             $decorated: '@.inner'
             $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
+            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
 
     Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory:
         decorates: api_platform.metadata.property.metadata_factory
@@ -69,11 +70,6 @@ services:
     Contao\ApiBundle\Http\ApiRequestFactory:
         arguments:
             $urlGenerator: '@router'
-
-    Contao\ApiBundle\Resource\DataContainerResourceRegistry:
-        arguments:
-            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
-            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
 
     Contao\ApiBundle\Widget\WidgetConverterRegistry:
         arguments:
@@ -139,6 +135,7 @@ services:
             $requestStack: '@request_stack'
             $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
             $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
+            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
 
     Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
         arguments:
