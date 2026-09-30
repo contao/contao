@@ -4233,7 +4233,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($blnClipboard)
 			{
 				$headerOperations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $objParent->id . (!$blnMultiboard ? '&id=' . $arrClipboard['id'] : '')));
+
+				$href = null;
+
+				if ($this->canPasteClipboard($arrClipboard, $this->addDynamicPtable($blnIsSortable ? array('pid' => $objParent->id, 'sorting' => 0) : array('pid' => $objParent->id))))
+				{
+					$href = $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $objParent->id . (!$blnMultiboard ? '&id=' . $arrClipboard['id'] : ''));
+				}
+
+				$headerOperations->addPasteButton('pastetop', $table, $href);
 			}
 			else
 			{
@@ -4447,7 +4455,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($blnHasSorting)
 					{
 						// Prevent circular references
-						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
+						if ($blnClipboard && (!System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']) || !$this->canPasteClipboard($arrClipboard, $this->addDynamicPtable(array('pid' => $row[$i]['id'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
 							$recordOperations->addSeparator();
 							$recordOperations->addPasteButton('pasteafter', $table, null);

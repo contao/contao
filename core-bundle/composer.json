@@ -160,8 +160,8 @@
         "twig/twig": "^3.21",
         "ua-parser/uap-php": "^3.9",
         "vstelmakh/url-highlight": "^4.0",
-        "web-auth/webauthn-lib": "^5.0",
-        "web-auth/webauthn-symfony-bundle": "^5.0",
+        "web-auth/webauthn-lib": "^5.3",
+        "web-auth/webauthn-symfony-bundle": "^5.3",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
     },
