@@ -246,6 +246,11 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
             $this->createResourceFinder(['tl_article', 'tl_content']),
         );
 
+        $resources = iterator_to_array($factory->create(DataContainerRecord::class));
+        $operation = iterator_to_array($resources[1]->getOperations())['contao_api_dc_article_content_nested_get'];
+
+        $this->assertTrue($operation->getUriVariables()['nested']->getCompositeIdentifier());
+
         $routes = $this->createApiLoader($factory)->load(null);
         $generator = new UrlGenerator($routes, new RequestContext());
         $parameters = ['article_id' => 3, 'nested' => '4/content/5'];

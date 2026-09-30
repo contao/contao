@@ -167,6 +167,7 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
+        "api-platform/core": "^5.0",
         "cmsig/seal-memory-adapter": "^0.12",
         "contao/api-bundle": "self.version",
         "contao/manager-plugin": "^2.3.1",

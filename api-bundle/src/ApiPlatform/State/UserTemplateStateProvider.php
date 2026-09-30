@@ -31,8 +31,45 @@ final class UserTemplateStateProvider implements ProviderInterface
         $request = $context['request'];
         $themeSlug = $request->query->get('theme');
 
-        return isset($uriVariables['name'])
-            ? $this->client->read($uriVariables['name'], $themeSlug)
-            : $this->client->discover($themeSlug);
+        if ('themes' === ($operation->getExtraProperties()['template_studio_action'] ?? null)) {
+            return $this->client->themes();
+        }
+
+        if (!isset($uriVariables['name'])) {
+            $response = $this->client->discover($themeSlug);
+            $query = trim($request->query->getString('query'));
+
+            if ('' === $query) {
+                return $response;
+            }
+
+            $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            $data['tree'] = $this->filterTree($data['tree'] ?? [], $query);
+
+            return new JsonResponse($data);
+        }
+
+        return $this->client->read($uriVariables['name'], $themeSlug);
+    }
+
+    private function filterTree(array $tree, string $query): array
+    {
+        $filtered = [];
+
+        foreach ($tree as $key => $node) {
+            if (isset($node['identifier'])) {
+                if (str_contains(strtolower($node['identifier']), strtolower($query))) {
+                    $filtered[$key] = $node;
+                }
+
+                continue;
+            }
+
+            if ([] !== ($children = $this->filterTree($node, $query))) {
+                $filtered[$key] = $children;
+            }
+        }
+
+        return $filtered;
     }
 }

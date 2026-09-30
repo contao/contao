@@ -352,7 +352,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         }
 
         if ($recursive) {
-            $variables['nested'] = new Link(parameterName: 'nested', fromClass: DataContainerRecord::class, identifiers: ['id']);
+            $variables['nested'] = new Link(parameterName: 'nested', fromClass: DataContainerRecord::class, identifiers: ['id'], compositeIdentifier: true);
         }
 
         if ($item) {
