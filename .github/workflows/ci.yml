@@ -317,8 +317,27 @@ jobs:
             - name: Install the dependencies
               uses: ramsey/composer-install@v4
 
-            - name: Install Playwright
-              run: vendor/bin/playwright-install --with-deps
+            - name: Prepare Playwright Node dependencies
+              run: vendor/bin/playwright-install
+
+            - name: Calculate E2E cache metadata
+              id: e2e-cache
+              run: vendor/bin/contao-e2e cache:metadata --github-output
+
+            - name: Restore Playwright browsers
+              uses: actions/cache@v5
+              with:
+                  path: ${{ steps.e2e-cache.outputs.playwright_path }}
+                  key: playwright-${{ steps.e2e-cache.outputs.playwright_fingerprint }}
+
+            - name: Restore Managed Edition caches
+              uses: actions/cache@v5
+              with:
+                  path: ${{ steps.e2e-cache.outputs.managed_edition_paths }}
+                  key: contao-e2e-${{ steps.e2e-cache.outputs.managed_edition_fingerprint }}
+
+            - name: Install and verify Playwright browsers
+              run: vendor/bin/playwright-install --browsers
 
             - name: Run the E2E tests
               run: vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit
