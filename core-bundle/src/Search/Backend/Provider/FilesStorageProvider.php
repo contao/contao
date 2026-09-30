@@ -136,9 +136,7 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
             $token->getUser(),
         );
 
-        return $permissionCheckingFilesStorage->canAccessLocation(
-            $document->getMetadata()['path'] ?? '',
-        );
+        return $permissionCheckingFilesStorage->canAccessLocation($document->getMetadata()['path'] ?? '');
     }
 
     public function convertTypeToVisibleType(string $type): string
