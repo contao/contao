@@ -103,14 +103,6 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    public function testReturnsNoOptionsForFragmentsWithoutTemplate(): void
-    {
-        $callback = $this->getTemplateOptionsListener();
-        $callback->setDefaultIdentifiersByType('tl_module', ['root_page_dependent_modules' => false]);
-
-        $this->assertSame([], $callback($this->mockDataContainer('tl_module', ['type' => 'root_page_dependent_modules'])));
-    }
-
     #[DataProvider('provideOverrideAllScenarios')]
     public function testReturnsCommonElementTemplatesInOverrideAllMode(string|null $commonType, array $expectedOptions): void
     {

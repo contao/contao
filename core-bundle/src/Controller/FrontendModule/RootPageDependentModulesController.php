@@ -19,7 +19,7 @@ use Contao\ModuleModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(category: 'miscellaneous', template: false)]
+#[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
     use RootPageDependentTrait;

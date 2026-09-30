@@ -19,7 +19,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'includes', template: false)]
+#[AsContentElement(category: 'includes')]
 class RootPageDependentElementsController extends AbstractContentElementController
 {
     use RootPageDependentTrait;
