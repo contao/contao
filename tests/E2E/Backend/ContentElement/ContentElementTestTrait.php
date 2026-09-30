@@ -30,7 +30,7 @@ trait ContentElementTestTrait
 
     private static function fixtureDirectory(): string
     {
-        return self::projectDirectory().'/core-bundle/tests/Fixtures/Functional/Backend';
+        return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
     }
 
     /**
@@ -42,8 +42,7 @@ trait ContentElementTestTrait
     {
         $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
             self::fixtureDirectory().'/users.yaml',
-            // Update fixtureDirectory after #10353 has been merged but low Prio ¯\_(ツ)_/¯
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/article.yaml',
+            self::fixtureDirectory().'/article.yaml',
         ]));
 
         $backend = self::managedEdition()->createBackendBrowser();

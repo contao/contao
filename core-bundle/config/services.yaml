@@ -1207,6 +1207,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.fragment.compositor'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.content_element_type_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementTypeVoter
