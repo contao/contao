@@ -135,7 +135,7 @@ class Theme extends Backend
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize() . '">
 
 <div class="tl_tbox">
   <div class="widget">

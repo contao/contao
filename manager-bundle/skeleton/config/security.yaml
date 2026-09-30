@@ -45,6 +45,15 @@ security:
             logout:
                 path: contao_backend_logout
 
+        contao_frontend_api:
+            request_matcher: contao.routing.frontend_api_matcher
+            provider: contao.security.frontend_user_provider
+            user_checker: contao.security.user_checker
+            stateless: true
+            login_throttling: ~
+            access_token:
+                token_handler: contao.security.access_token_handler
+
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
             provider: contao.security.frontend_user_provider

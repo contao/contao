@@ -13,19 +13,20 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\ApiPlatform\State;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
-use ApiPlatform\Metadata\HttpOperation;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 
 /**
- * @implements ProviderInterface<DataContainerMcpRecord|DataContainerRecord>
+ * @implements ProviderInterface<DataContainerRecord>
  */
 final class DataContainerStateProvider implements ProviderInterface
 {
@@ -48,22 +49,13 @@ final class DataContainerStateProvider implements ProviderInterface
             return $this->provideCollection($table, $operation, $context, $dataContainerContext);
         }
 
-        if ($operation instanceof HttpOperation && \in_array($operation->getMethod(), ['GET', 'PATCH', 'DELETE'], true)) {
+        if ($operation instanceof Get || $operation instanceof Patch || $operation instanceof Delete) {
             $id = $uriVariables['id'] ?? null;
 
             return null === $id ? null : $this->records->find($table, $id, $dataContainerContext);
         }
 
-        $data = $context['mcp_data'] ?? null;
-
-        if (!\is_array($data)) {
-            return null;
-        }
-
-        return new DataContainerMcpRecord(
-            \is_array($data['data'] ?? null) ? $data['data'] : [],
-            \is_int($data['id'] ?? null) || \is_string($data['id'] ?? null) ? $data['id'] : null,
-        );
+        return null;
     }
 
     private function provideCollection(string $table, Operation $operation, array $context, DataContainerContext $dataContainerContext): DataContainerPage

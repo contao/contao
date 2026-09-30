@@ -46,7 +46,7 @@ class DefaultLabelsListener
                     }
                 }
 
-                if (\is_array($v['label']) && !isset($v['label'][0]) && \is_array($GLOBALS['TL_LANG']['DCA'][$k] ?? null)) {
+                if (\is_array($v['label']) && !\array_key_exists(0, $v['label']) && \is_array($GLOBALS['TL_LANG']['DCA'][$k] ?? null)) {
                     $v['label'][0] = &$GLOBALS['TL_LANG']['DCA'][$k][0];
                 }
             }
@@ -57,7 +57,7 @@ class DefaultLabelsListener
         // Fields
         if (isset($GLOBALS['TL_DCA'][$table]['fields'])) {
             foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $k => &$v) {
-                if (isset($v['label'])) {
+                if (\array_key_exists('label', $v)) {
                     continue;
                 }
 

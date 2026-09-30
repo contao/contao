@@ -75,10 +75,12 @@
                 {% if twoFactorEnabled|default %}
                     <a href="{{ path('contao_frontend_logout') }}">{{ 'MSC.cancelBT'|trans }} ›</a>
                 {% endif %}
-                {% if not logout|default and not twoFactorEnabled|default %}
-                    <button type="button" class="passkey-login" data-passkey-button>{{ 'MSC.passkeyLogin'|trans }}</button>
-                    <p class="error" data-passkey-error></p>
-                {% endif %}
+                {% block passkey_login %}
+                    {% if not logout|default and not twoFactorEnabled|default %}
+                        <button type="button" class="passkey-login" data-passkey-button>{{ 'MSC.passkeyLogin'|trans }}</button>
+                        <p class="error" data-passkey-error></p>
+                    {% endif %}
+                {% endblock %}
             </div>
             {% if pwResetUrl|default %}
                 <div class="password-reset">

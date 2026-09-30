@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 7. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', Config::getDeprecatedSince($option), 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 7. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -93,6 +93,11 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
+                ->end()
+                ->integerNode('max_file_upload_size')
+                    ->info('The maximum size in bytes for uploaded files.')
+                    ->min(1)
+                    ->defaultValue(2048000)
                 ->end()
                 ->scalarNode('console_path')
                     ->info('The path to the Symfony console. Defaults to %kernel.project_dir%/bin/console.')

@@ -27,6 +27,7 @@ use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 
 final class VirtualFilesystemResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
@@ -34,6 +35,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly SchemaAwareObjectNormalizer $objectNormalizer,
+        private readonly UploadSizeProvider $uploadSizeProvider,
     ) {
     }
 
@@ -90,6 +92,8 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
 
     private function createUploadOperation(): Put
     {
+        $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
+
         return new Put(
             uriTemplate: '/files/{path}',
             inputFormats: ['binary' => ['application/octet-stream']],
@@ -104,7 +108,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 requestBody: new RequestBody(
                     description: 'The raw contents of the file.',
                     content: new \ArrayObject([
-                        'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary'])),
+                        'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary', 'maxLength' => $maximumUploadSize])),
                     ]),
                     required: true,
                 ),

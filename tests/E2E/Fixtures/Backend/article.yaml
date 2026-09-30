@@ -1,0 +1,14 @@
+tl_page:
+    root:
+        pid: 0
+        type: root
+        title: Root
+        language: en
+        published: true
+
+tl_article:
+    article:
+        pid: '@root'
+        title: Article
+        inColumn: main
+        published: true

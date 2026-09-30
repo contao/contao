@@ -26,23 +26,24 @@ final class ApiRequestFactory
     {
     }
 
-    public function create(Request $parent, HttpOperation $operation, array $parameters = [], array|null $payload = null): Request
+    public function create(Request $parent, HttpOperation $operation, array $parameters = [], mixed $payload = null): Request
     {
         $uri = $this->urlGenerator->generate($operation->getRouteName() ?? $operation->getName(), $parameters);
+        $contentType = null === $payload ? null : $this->getInputFormat($operation);
 
         $request = Request::create(
             $parent->getSchemeAndHttpHost().$uri,
             $operation->getMethod(),
             cookies: $parent->cookies->all(),
             server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
-            content: null === $payload ? null : json_encode((object) $payload, JSON_THROW_ON_ERROR),
+            content: null === $payload ? null : $this->encodePayload($payload, $contentType),
         );
 
         $request->server->set('REMOTE_ADDR', $parent->getClientIp());
         $request->headers->set('Accept', $this->getJsonFormat($operation->getOutputFormats(), 'application/ld+json'));
 
         if (null !== $payload) {
-            $request->headers->set('Content-Type', $this->getJsonFormat($operation->getInputFormats(), 'PATCH' === $operation->getMethod() ? 'application/merge-patch+json' : 'application/ld+json'));
+            $request->headers->set('Content-Type', $contentType);
         } else {
             $request->headers->remove('Content-Type');
         }
@@ -56,6 +57,40 @@ final class ApiRequestFactory
         }
 
         return $request;
+    }
+
+    private function getInputFormat(HttpOperation $operation): string
+    {
+        $formats = $operation->getInputFormats();
+
+        if (null === $formats) {
+            return 'PATCH' === $operation->getMethod() ? 'application/merge-patch+json' : 'application/ld+json';
+        }
+
+        foreach ($formats as $mimeTypes) {
+            foreach ($mimeTypes as $mimeType) {
+                if ('application/json' === $mimeType || str_ends_with($mimeType, '+json')) {
+                    return $mimeType;
+                }
+            }
+        }
+
+        return reset($formats)[0] ?? throw new UnsupportedFormatException('The API operation does not support an input representation.');
+    }
+
+    private function encodePayload(mixed $payload, string $contentType): string
+    {
+        if ('application/json' === $contentType || str_ends_with($contentType, '+json')) {
+            $payload = \is_array($payload) && ([] === $payload || !array_is_list($payload)) ? (object) $payload : $payload;
+
+            return json_encode($payload, JSON_THROW_ON_ERROR);
+        }
+
+        if (!\is_string($payload)) {
+            throw new UnsupportedFormatException(\sprintf('The API operation requires a string payload for "%s".', $contentType));
+        }
+
+        return $payload;
     }
 
     /**

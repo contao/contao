@@ -21,6 +21,7 @@ use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -30,6 +31,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class VirtualFilesystemStateProcessorTest extends TestCase
@@ -59,6 +61,30 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $result = $processor->process(null, new Put(), ['path' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
+    }
+
+    public function testRejectsUploadsLargerThanTheConfiguredMaximum(): void
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('writeStream')
+            ->willReturnCallback(
+                static function (string $location, $contents): void {
+                    stream_get_contents($contents);
+                },
+            )
+        ;
+
+        $processor = $this->createProcessor($storage, 3);
+
+        try {
+            $processor->process(null, new Put(), ['path' => 'example.txt'], ['request' => Request::create('/', 'PUT', content: 'four')]);
+            $this->fail('The oversized upload was not rejected.');
+        } catch (HttpException $exception) {
+            $this->assertSame(413, $exception->getStatusCode());
+            $this->assertSame('The upload exceeds the maximum size of 3 bytes.', $exception->getMessage());
+        }
     }
 
     public function testMovesTheItem(): void
@@ -235,11 +261,16 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         return $security;
     }
 
-    private function createProcessor(VirtualFilesystem $storage): VirtualFilesystemStateProcessor
+    private function createProcessor(VirtualFilesystem $storage, int $maximumUploadSize = 1234): VirtualFilesystemStateProcessor
     {
         $normalizer = $this->createObjectNormalizer();
 
-        return new VirtualFilesystemStateProcessor($storage, $this->createSecurityStub(), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer));
+        return new VirtualFilesystemStateProcessor($storage, $this->createSecurityStub(), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider($maximumUploadSize));
+    }
+
+    private function createUploadSizeProvider(int $maximumUploadSize): UploadSizeProvider
+    {
+        return new UploadSizeProvider($maximumUploadSize, $maximumUploadSize);
     }
 
     private function createObjectNormalizer(): SchemaAwareObjectNormalizer
