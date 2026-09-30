@@ -274,6 +274,7 @@ class CombinerTest extends TestCase
 
         $combiner = new Combiner();
         $combiner->add('file.scss', '1');
+
         $originalFile = $combiner->getCombinedFile();
 
         $this->filesystem->dumpFile($this->getTempDir().'/_partial.scss', 'body { color: green }');
@@ -331,6 +332,7 @@ class CombinerTest extends TestCase
 
         $combiner = new Combiner();
         $combiner->add('file[1].css', '1');
+
         $combinedFile = $combiner->getCombinedFile();
 
         $cachedCombiner = $this->getMockBuilder(Combiner::class)
@@ -354,10 +356,12 @@ class CombinerTest extends TestCase
 
         $combiner = new Combiner();
         $combiner->add('file.css', '1');
+
         $originalFile = $combiner->getCombinedFile();
 
         $combiner = new Combiner();
         $combiner->add('file.css', '2');
+
         $updatedFile = $combiner->getCombinedFile();
 
         $this->assertNotSame($originalFile, $updatedFile);
