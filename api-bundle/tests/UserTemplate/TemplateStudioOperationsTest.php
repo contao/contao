@@ -140,7 +140,7 @@ class TemplateStudioOperationsTest extends TestCase
         $client = new TemplateStudioClient($kernel, $router, new RequestStack([Request::create('/')]));
 
         $this->expectException(UnprocessableEntityHttpException::class);
-        $this->expectExceptionMessage('failure');
+        $this->expectExceptionMessage('Template Studio returned a non-JSON response (HTTP 200).');
         $client->call('save', 'content_element/test', null, []);
     }
 }

@@ -34,6 +34,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@translator'
+            - '@contao.file.upload_size_provider'
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
@@ -230,9 +231,8 @@ services:
         public: true
         arguments:
             - '@contao.image.factory'
-            - '@contao.image.resizer'
+            - '@contao.image.deferred_response_factory'
             - '%contao.image.target_dir%'
-            - '@?filesystem'
         tags:
             - controller.service_arguments
 

@@ -12,27 +12,41 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Tests\DependencyInjection;
 
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
 use Contao\ApiBundle\ContaoApiBundle;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Api\Widget\RowWizardConverter;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Password;
 use Contao\RowWizard;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
-use PHPUnit\Framework\TestCase;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
-class ContaoApiExtensionTest extends TestCase
+class ContaoApiExtensionTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testApiPrefixFollowsTheBackendPrefix(): void
     {
         $container = new ContainerBuilder();
@@ -204,7 +218,37 @@ class ContaoApiExtensionTest extends TestCase
 
         $container->register('contao.framework', ContaoFramework::class)->setSynthetic(true)->setPublic(true);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
+        $container->register(DataContainerRelationResolver::class, DataContainerRelationResolver::class)->setSynthetic(true);
+        $container->set(DataContainerRelationResolver::class, $this->createRelationResolver());
+        $container->register('translation.locale_switcher', LocaleSwitcher::class)->setSynthetic(true);
+        $container->set('translation.locale_switcher', $this->createLocaleSwitcher());
+
+        System::setContainer($container);
 
         return $container;
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            new ForeignKeyParser($connection),
+            new WidgetConverterRegistry([]),
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+        );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }

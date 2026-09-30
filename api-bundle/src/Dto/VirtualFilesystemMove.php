@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Dto;
 
-final class DataContainerMcpRecord
+final readonly class VirtualFilesystemMove
 {
     public function __construct(
-        public array $data = [],
-        public int|string|null $id = null,
+        public string $source,
+        public string $destination,
     ) {
     }
 }

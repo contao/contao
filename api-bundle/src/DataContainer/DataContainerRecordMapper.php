@@ -27,6 +27,7 @@ final class DataContainerRecordMapper
     public function __construct(
         private readonly DataContainerSchemaFactory $schemaFactory,
         private readonly WidgetConverterRegistry $converters,
+        private readonly DataContainerRelationResolver $relationResolver,
     ) {
     }
 
@@ -41,17 +42,22 @@ final class DataContainerRecordMapper
 
             $config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? [];
             $converter = $this->converters->get($config);
+            $fieldContext = new DataContainerFieldContext($config, $table, (string) $field);
 
             if ($converter) {
-                $data[$field] = $converter->convertToApiValue($row[$field], $config, $schema);
+                $value = $converter->convertToApiValue($row[$field], $config, $schema);
             } elseif (!isset($config['inputType']) && \in_array($field, DataContainerRecord::METADATA_FIELDS, true)) {
-                $data[$field] = match (true) {
+                $value = match (true) {
                     null === $row[$field] => null,
                     'ptable' === $field => (string) $row[$field],
                     'tstamp' === $field => $row[$field] ? date(\DateTimeInterface::ATOM, (int) $row[$field]) : null,
                     default => (int) $row[$field],
                 };
+            } else {
+                continue;
             }
+
+            $data[$field] = $this->relationResolver->resolveToReference($value, $fieldContext, $row);
         }
 
         return new DataContainerRecord($table, $data, $row['id']);
@@ -76,6 +82,7 @@ final class DataContainerRecordMapper
                 throw new UnprocessableEntityHttpException('Field "'.$field.'" has no API-capable widget.');
             }
 
+            $value = $this->relationResolver->resolveToIdentifier($value, new DataContainerFieldContext($config, $table, (string) $field));
             $form[$field] = $converter->convertToFormValue($value, $config, $schema);
         }
 

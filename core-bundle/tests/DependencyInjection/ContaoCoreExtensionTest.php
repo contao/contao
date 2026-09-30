@@ -50,6 +50,13 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumFileUploadSize(): void
+    {
+        $container = $this->getContainerBuilder(['contao' => ['max_file_upload_size' => 1234]]);
+
+        $this->assertSame(1234, $container->getParameter('contao.max_file_upload_size'));
+    }
+
     public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
     {
         $container = new ContainerBuilder(new ParameterBag([
@@ -801,6 +808,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -810,6 +819,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

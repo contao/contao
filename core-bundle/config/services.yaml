@@ -376,6 +376,12 @@ services:
         arguments:
             - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
+    contao.file.upload_size_provider:
+        class: Contao\CoreBundle\File\UploadSizeProvider
+        public: true
+        arguments:
+            - '%contao.max_file_upload_size%'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -488,6 +494,13 @@ services:
         arguments:
             - '%kernel.project_dir%/var/deferred-images'
             - '@?filesystem'
+
+    contao.image.deferred_response_factory:
+        class: Contao\CoreBundle\Image\DeferredImageResponseFactory
+        arguments:
+            - '@messenger.bus.default'
+            - '@contao.image.resizer'
+            - '@?contao.messenger.web_worker'
 
     contao.image.factory:
         class: Contao\CoreBundle\Image\ImageFactory
@@ -773,6 +786,12 @@ services:
             - '@messenger.bus.default'
             - '%kernel.project_dir%'
             - '%contao.backend.crawl_concurrency%'
+
+    contao.messenger.resize_deferred_image_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\ResizeDeferredImageMessageHandler
+        arguments:
+            - '@contao.image.factory'
+            - '@contao.image.resizer'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
@@ -1381,6 +1400,14 @@ services:
     contao.security.webauthn_credential_voter:
         class: Contao\CoreBundle\Security\Voter\WebauthnCredentialVoter
 
+    contao.serializer.webauthn_rp_entity_normalizer:
+        class: Contao\CoreBundle\Serializer\WebauthnRpEntityNormalizer
+        arguments:
+            - '@request_stack'
+            - '@Webauthn\Denormalizer\PublicKeyCredentialRpEntityDenormalizer'
+        tags:
+            - { name: serializer.normalizer, priority: 1025 }
+
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
@@ -1659,6 +1686,7 @@ services:
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
+    Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'

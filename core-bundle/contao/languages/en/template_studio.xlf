@@ -155,6 +155,30 @@
       <trans-unit id="template_studio.info.block.overwrite_warning">
         <source>This template defines content for the %block% block without using the %expression_to_use% expression. This overwrites previously defined content.</source>
       </trans-unit>
+      <trans-unit id="template_studio.snapshots.create">
+        <source>Create snapshot</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.current">
+        <source>Current snapshot: %s %s</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.compare">
+        <source>Compare changes</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.rollback">
+        <source>Rollback</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.confirm">
+        <source>Restore the entire templates directory to the latest snapshot?</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.no_changes">
+        <source>No changes since the latest snapshot.</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.created">
+        <source>Snapshot %s created. Note, that snapshots are deleted when the cache is cleared.</source>
+      </trans-unit>
+      <trans-unit id="template_studio.snapshots.restored">
+        <source>The latest snapshot has been restored.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

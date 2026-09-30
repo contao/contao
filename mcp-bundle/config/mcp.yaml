@@ -5,11 +5,15 @@ mcp:
             registry:
                 tools:
                     - Contao\McpBundle\Tool\
+                resources:
+                    - Contao\McpBundle\Resource\
             transports:
                 http: true
                 stdio: false
             http:
                 path: '%contao.backend.route_prefix%/mcp'
+                # TODO: only disable host header check, but keep validation for the Origin header
+                allowed_hosts: false
             session:
                 store: file
                 directory: '%kernel.cache_dir%/mcp/contao_backend'

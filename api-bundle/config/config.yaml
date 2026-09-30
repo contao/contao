@@ -2,4 +2,7 @@ api_platform:
     title: Contao API
     description: The Contao API exposes backend and custom API resources through API Platform.
     version: 1.0.0
+    enable_swagger_ui: false
+    enable_re_doc: true
+    enable_scalar: false
     show_webby: false

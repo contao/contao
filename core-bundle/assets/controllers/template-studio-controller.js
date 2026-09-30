@@ -31,8 +31,11 @@ export default class extends Controller {
     }
 
     submitStart(event) {
-        // Add the currently open editor tabs to the request when selecting a theme
-        if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
+        // Keep open tabs current after changing the theme or restoring templates
+        if (
+            (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) ||
+            event.detail.formSubmission.submitter?.dataset?.snapshotOperation === 'rollback'
+        ) {
             this.#addOpenEditorTabsToRequest(event);
         }
 

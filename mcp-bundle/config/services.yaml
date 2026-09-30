@@ -4,11 +4,42 @@ services:
 
     Contao\McpBundle\Response\ApiResponseConverter: ~
 
-    Contao\McpBundle\Tool\DataContainerTools:
+    Contao\McpBundle\Resource\TemplateGuidance: ~
+
+    Contao\McpBundle\Api\ApiOperationRegistry:
+        arguments:
+            - '@api_platform.metadata.resource.name_collection_factory'
+            - '@api_platform.metadata.resource.metadata_collection_factory'
+            - '@api_platform.openapi.factory'
+            - '@serializer'
+
+    Contao\McpBundle\Tool\ApiTools:
         autoconfigure: true
         arguments:
-            - '@Contao\ApiBundle\Resource\DataContainerResourceRegistry'
+            - '@Contao\McpBundle\Api\ApiOperationRegistry'
             - '@http_kernel'
             - '@Contao\ApiBundle\Http\ApiRequestFactory'
             - '@request_stack'
             - '@Contao\McpBundle\Response\ApiResponseConverter'
+
+    Contao\McpBundle\Tool\UserTemplateTools:
+        autoconfigure: true
+        arguments:
+            - '@api_platform.metadata.resource.metadata_collection_factory'
+            - '@http_kernel'
+            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@request_stack'
+            - '@Contao\McpBundle\Response\ApiResponseConverter'
+            - '@Contao\McpBundle\UserTemplate\UserTemplateValidator'
+            - '@Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer'
+            - '@security.helper'
+
+    Contao\McpBundle\UserTemplate\UserTemplateValidator:
+        arguments:
+            - '@twig'
+            - '@contao.twig.filesystem_loader'
+
+    Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer:
+        arguments:
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.inspector'
