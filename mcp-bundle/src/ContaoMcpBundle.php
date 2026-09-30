@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\McpBundle;
 
 use Contao\McpBundle\DependencyInjection\Compiler\RemoveUnavailableToolsPass;
+use Contao\McpBundle\Routing\McpRequestMatcher;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -25,6 +26,22 @@ class ContaoMcpBundle extends AbstractBundle
         parent::build($container);
 
         $container->addCompilerPass(new RemoveUnavailableToolsPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 20);
+    }
+
+    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('contao_oauth_server', [
+            'resource' => [
+                'route' => McpRequestMatcher::ROUTE,
+                'name' => 'Contao MCP',
+                'scopes' => ['mcp'],
+            ],
+            'cimd_trusted_domains' => [
+                'chatgpt.com',
+                'claude.ai',
+                'vscode.dev',
+            ],
+        ]);
     }
 
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void

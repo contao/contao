@@ -21,19 +21,23 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
+use Contao\McpBundle\Controller\SerializedMcpController;
 use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Symfony\AI\McpBundle\Controller\McpController;
 use Symfony\AI\McpBundle\McpBundle;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\InMemoryStore;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
@@ -52,7 +56,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->getDefinition('mcp.server.contao_backend.builder')->setPublic(true);
         $container->compile();
 
-        $this->assertInstanceOf(McpController::class, $container->get('mcp.server.contao_backend.controller'));
+        $this->assertInstanceOf(SerializedMcpController::class, $container->get('mcp.server.contao_backend.controller'));
 
         $builder = $container->get('mcp.server.contao_backend.builder');
         $this->assertInstanceOf(Builder::class, $builder);
@@ -165,6 +169,33 @@ final class ContaoMcpExtensionTest extends TestCase
         $this->assertCount(17, $tools);
     }
 
+    public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoMcpBundle()->getContainerExtension();
+        $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
+        $extension->prepend($container);
+
+        $this->assertSame(
+            [
+                [
+                    'resource' => [
+                        'route' => 'contao_mcp_backend',
+                        'name' => 'Contao MCP',
+                        'scopes' => ['mcp'],
+                    ],
+                    'cimd_trusted_domains' => [
+                        'chatgpt.com',
+                        'claude.ai',
+                        'vscode.dev',
+                    ],
+                ],
+            ],
+            $container->getExtensionConfig('contao_oauth_server'),
+        );
+    }
+
     private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
     {
         $container = new ContainerBuilder(
@@ -215,6 +246,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->register('frontend_example', $otherTool::class)->addTag('mcp.tool', ['method' => '__invoke']);
         $container->register('event_dispatcher', EventDispatcher::class);
         $container->register('logger', NullLogger::class);
+        $container->register('lock.factory', LockFactory::class)->addArgument(new Definition(InMemoryStore::class));
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $extension->load([], $container);
