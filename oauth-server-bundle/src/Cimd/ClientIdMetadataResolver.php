@@ -35,7 +35,7 @@ class ClientIdMetadataResolver
     {
         $this->assertValidClientId($clientId);
 
-        $item = $this->cache->getItem('contao_oauth_cimd_'.hash('xxh128', $clientId));
+        $item = $this->cache->getItem('contao_oauth_server_cimd_'.hash('xxh128', $clientId));
 
         if ($item->isHit() && ($cached = $item->get()) instanceof ClientIdMetadataDocument) {
             return $cached;
