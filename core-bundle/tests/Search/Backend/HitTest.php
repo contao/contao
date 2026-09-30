@@ -57,4 +57,22 @@ class HitTest extends TestCase
         $hit = $hit->withVisibleType('visible-type');
         $this->assertSame('visible-type', $hit->getVisibleType());
     }
+
+    public function testTitleAndViewUrlCanBeReplacedWithoutChangingTheOriginalHit(): void
+    {
+        $document = new Document('42', 'type', 'searchable');
+        $hit = new Hit($document, 'title', 'https://example.com');
+
+        $updatedHit = $hit
+            ->withTitle('new title')
+            ->withViewUrl('https://example.com/new')
+        ;
+
+        $this->assertSame($document, $hit->getDocument());
+        $this->assertSame('title', $hit->getTitle());
+        $this->assertSame('https://example.com', $hit->getViewUrl());
+        $this->assertSame($document, $updatedHit->getDocument());
+        $this->assertSame('new title', $updatedHit->getTitle());
+        $this->assertSame('https://example.com/new', $updatedHit->getViewUrl());
+    }
 }
