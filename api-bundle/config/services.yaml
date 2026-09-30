@@ -48,6 +48,7 @@ services:
         arguments:
             $decorated: '@.inner'
             $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
+            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
 
     Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory:
         decorates: api_platform.metadata.property.metadata_factory
@@ -134,6 +135,7 @@ services:
             $requestStack: '@request_stack'
             $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
             $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
+            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
 
     Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
         arguments:
