@@ -14,7 +14,6 @@ namespace Contao\McpBundle\Tests\Tool;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\McpBundle\Tool\FrontendTools;
 use Contao\TestCase\ContaoTestCase;
 use Mcp\Exception\ToolCallException;
@@ -23,19 +22,17 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 final class FrontendToolsTest extends ContaoTestCase
 {
-    public function testInspectsAPageInPreviewModeAndRestoresTheSession(): void
+    public function testInspectsAPageInPreviewModeWithoutUsingTheStatelessParentSession(): void
     {
-        $session = new Session(new MockArraySessionStorage());
-        $session->set(FrontendPreviewAuthenticator::SESSION_NAME, ['showUnpublished' => false]);
         $stack = new RequestStack();
         $request = Request::create('https://example.org/contao/mcp');
-        $request->setSession($session);
+        $request->attributes->set('_stateless', true);
         $stack->push($request);
 
         $dispatcher = new EventDispatcher();
@@ -46,20 +43,6 @@ final class FrontendToolsTest extends ContaoTestCase
             },
         );
 
-        $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
-        $authenticator
-            ->expects($this->once())
-            ->method('authenticateFrontendGuest')
-            ->with(true)
-            ->willReturnCallback(
-                static function () use ($session): bool {
-                    $session->set(FrontendPreviewAuthenticator::SESSION_NAME, ['showUnpublished' => true]);
-
-                    return true;
-                },
-            )
-        ;
-
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -67,19 +50,20 @@ final class FrontendToolsTest extends ContaoTestCase
             ->with(
                 $this->callback(static fn (Request $request): bool => 'https://example.org/example.html' === $request->getUri()
                     && true === $request->attributes->get('_preview')
-                    && true === $request->getSession()->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']),
+                    && true === $request->getSession()->get('_contao_frontend_preview')['showUnpublished']
+                    && $request->cookies->has($request->getSession()->getName())
+                    && $request->getSession()->has('_security_contao_backend')),
                 HttpKernelInterface::SUB_REQUEST,
             )
             ->willReturn(new Response('<html><head><title>Example &amp; preview</title></head><body>Unpublished</body></html>', 200, ['Content-Type' => 'text/html; charset=UTF-8']))
         ;
 
-        $result = new FrontendTools($kernel, $stack, $dispatcher, $authenticator, $this->createSecurityStub())->inspect(42);
+        $result = new FrontendTools($kernel, $stack, $dispatcher, $this->createSecurityStub())->inspect(42);
 
         $this->assertSame(200, $result['status']);
-        $this->assertSame('Example & preview', $result['title']);
         $this->assertStringContainsString('Unpublished', $result['html']);
         $this->assertFalse($result['truncated']);
-        $this->assertSame(['showUnpublished' => false], $session->get(FrontendPreviewAuthenticator::SESSION_NAME));
+        $this->assertFalse($request->hasSession());
     }
 
     public function testRejectsUnknownPages(): void
@@ -87,17 +71,14 @@ final class FrontendToolsTest extends ContaoTestCase
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessageIs('Could not create a frontend preview URL for page ID 42.');
 
-        $session = new Session(new MockArraySessionStorage());
         $stack = new RequestStack();
         $request = Request::create('https://example.org/contao/mcp');
-        $request->setSession($session);
         $stack->push($request);
 
         new FrontendTools(
             $this->createStub(HttpKernelInterface::class),
             $stack,
             new EventDispatcher(),
-            $this->createStub(FrontendPreviewAuthenticator::class),
             $this->createSecurityStub(),
         )->inspect(42);
     }
@@ -105,6 +86,11 @@ final class FrontendToolsTest extends ContaoTestCase
     private function createSecurityStub(): Security
     {
         $security = $this->createStub(Security::class);
+        $security
+            ->method('getToken')
+            ->willReturn(new UsernamePasswordToken(new InMemoryUser('admin', null, ['ROLE_USER']), 'contao_mcp', ['ROLE_USER']))
+        ;
+
         $security
             ->method('isGranted')
             ->willReturn(true)

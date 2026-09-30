@@ -23,6 +23,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 final class FrontendTools
@@ -33,7 +35,6 @@ final class FrontendTools
         private readonly HttpKernelInterface $httpKernel,
         private readonly RequestStack $requestStack,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly FrontendPreviewAuthenticator $previewAuthenticator,
         private readonly Security $security,
     ) {
     }
@@ -49,10 +50,14 @@ final class FrontendTools
             throw new ToolCallException('Frontend inspection requires an authenticated backend user.');
         }
 
+        if (!$token = $this->security->getToken()) {
+            throw new ToolCallException('Frontend inspection requires an authenticated backend user.');
+        }
+
         $parent = $this->requestStack->getCurrentRequest();
 
-        if (!$parent || !$parent->hasSession()) {
-            throw new ToolCallException('Frontend inspection requires an HTTP request with a session.');
+        if (!$parent) {
+            throw new ToolCallException('Frontend inspection requires an HTTP request.');
         }
 
         $conversionRequest = Request::create(
@@ -70,33 +75,22 @@ final class FrontendTools
             throw new ToolCallException(\sprintf('Could not create a frontend preview URL for page ID %d.', $page));
         }
 
-        $session = $parent->getSession();
-        $hadPreview = $session->has(FrontendPreviewAuthenticator::SESSION_NAME);
-        $previousPreview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('_security_contao_backend', serialize($token));
+        $session->set(FrontendPreviewAuthenticator::SESSION_NAME, ['showUnpublished' => true]);
 
-        if (!$this->previewAuthenticator->authenticateFrontendGuest(true)) {
-            throw new ToolCallException('Could not enable frontend preview mode.');
-        }
+        $request = Request::create(
+            $url,
+            'GET',
+            cookies: $parent->cookies->all(),
+            server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
+        );
 
-        try {
-            $request = Request::create(
-                $url,
-                'GET',
-                cookies: $parent->cookies->all(),
-                server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
-            );
+        $request->attributes->set('_preview', true);
+        $request->setSession($session);
+        $request->cookies->set($session->getName(), $session->getId());
 
-            $request->attributes->set('_preview', true);
-            $request->setSession($session);
-
-            $response = $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST);
-        } finally {
-            if ($hadPreview) {
-                $session->set(FrontendPreviewAuthenticator::SESSION_NAME, $previousPreview);
-            } else {
-                $session->remove(FrontendPreviewAuthenticator::SESSION_NAME);
-            }
-        }
+        $response = $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST);
 
         $contentType = $response->headers->get('Content-Type');
 
@@ -104,31 +98,16 @@ final class FrontendTools
             throw new ToolCallException(\sprintf('The frontend returned unsupported content type "%s".', $contentType));
         }
 
-        $content = $response->getContent();
-        $content = false === $content ? '' : $content;
-        $truncated = \strlen($content) > self::MAX_CONTENT_LENGTH;
-
-        if ($truncated) {
-            $content = substr($content, 0, self::MAX_CONTENT_LENGTH);
-        }
+        $content = $response->getContent() ?: '';
+        $isTruncated = \strlen($content) > self::MAX_CONTENT_LENGTH;
 
         return [
-            'status' => $response->getStatusCode(),
             'url' => $url,
+            'status' => $response->getStatusCode(),
             'contentType' => $contentType,
-            'title' => $this->getTitle($content),
-            'html' => $content,
-            'truncated' => $truncated,
+            'html' => $isTruncated ? substr($content, 0, self::MAX_CONTENT_LENGTH) : $content,
+            'truncated' => $isTruncated,
             'location' => $response->headers->get('Location'),
         ];
-    }
-
-    private function getTitle(string $content): string|null
-    {
-        if (!preg_match('/<title(?:\s[^>]*)?>(.*?)<\/title>/is', $content, $matches)) {
-            return null;
-        }
-
-        return trim(html_entity_decode(strip_tags($matches[1]), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
     }
 }

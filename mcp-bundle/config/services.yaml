@@ -50,7 +50,6 @@ services:
             - '@http_kernel'
             - '@request_stack'
             - '@event_dispatcher'
-            - '@contao.security.frontend_preview_authenticator'
             - '@security.helper'
 
     contao_mcp.tool.user_template_tools:
