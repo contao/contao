@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import Sortable from 'sortablejs';
+import * as Message from '../modules/message';
 
 export default class extends Controller {
     static values = {
@@ -11,6 +12,8 @@ export default class extends Controller {
         handle: String,
         draggable: String,
         group: String,
+        confirmUrl: String,
+        errorMessage: String,
     };
 
     static targets = ['primaryHandle', 'fallbackHandle'];
@@ -27,6 +30,7 @@ export default class extends Controller {
             onSort: (event) => {
                 this.#onSorted(event.item, event);
             },
+            onStart: (event) => this.#rememberOrigin(event.item),
             onMove: (event) => this.#onMove(event),
             onEnd: () => this.#highlight(),
         };
@@ -73,6 +77,8 @@ export default class extends Controller {
 
     move(event) {
         const item = this.#getItem(event.target);
+
+        this.#rememberOrigin(item);
 
         if (event.code === 'ArrowUp' || event.keyCode === 38) {
             event.preventDefault();
@@ -154,8 +160,32 @@ export default class extends Controller {
         }
 
         fetch(url, {
-            redirect: 'manual',
-        });
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then((response) => {
+                const redirect = response.headers.get('X-Ajax-Location');
+
+                // A successful cut redirects back, an invalid request token to the confirm page
+                if (!redirect || new URL(redirect, window.location.href).pathname === new URL(this.confirmUrlValue, window.location.href).pathname) {
+                    throw new Error(response.statusText);
+                }
+            })
+            .catch(() => this.#restoreOrigin(el));
+    }
+
+    // Stored on the element, because the drop target can be a different controller instance
+    #rememberOrigin(el) {
+        el.sortableOrigin = { parent: el.parentNode, next: el.nextSibling };
+    }
+
+    #restoreOrigin(el) {
+        const { parent, next } = el.sortableOrigin;
+
+        parent.insertBefore(el, next);
+        this.#updateLevel(el);
+        this.#updateWrapperLevel();
+
+        Message.error(this.errorMessageValue);
     }
 
     #getLevel(el) {

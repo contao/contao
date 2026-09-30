@@ -65,6 +65,8 @@
             .set('data-contao--sortable-group-value', records_group, is_sortable)
             .set('data-contao--sortable-draggable-value', 'li[data-id]', is_sortable)
             .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
+            .set('data-contao--sortable-confirm-url-value', path('contao_backend_confirm'), is_sortable)
+            .set('data-contao--sortable-error-message-value', 'ERR.moveFailed'|trans, is_sortable)
         %}
         <ul{{ records_attributes }}>
             {{ records|join|raw }}
@@ -84,6 +86,8 @@
             .set('data-contao--sortable-group-value', 'tree', is_sortable)
             .set('data-contao--sortable-draggable-value', 'li[data-id]', is_sortable)
             .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
+            .set('data-contao--sortable-confirm-url-value', path('contao_backend_confirm'), is_sortable)
+            .set('data-contao--sortable-error-message-value', 'ERR.moveFailed'|trans, is_sortable)
         %}
         <ul{{ list_attributes }}>
             {{ children|join|raw }}

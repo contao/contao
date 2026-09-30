@@ -952,6 +952,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($currentRecord === null)
 		{
+			// Let asynchronous requests know that nothing has been moved (e.g. drag and drop - see #10091)
+			if (Environment::get('isAjaxRequest'))
+			{
+				throw new AccessDeniedException('Cannot move record "' . $this->strTable . '.id=' . $this->intId . '".');
+			}
+
 			if (!$blnDoNotRedirect)
 			{
 				$this->redirect($this->getReferer());
