@@ -218,7 +218,7 @@ class ContentGallery extends ContentElement
 			$offset = ($page - 1) * $this->perPage;
 			$limit = min($this->perPage + $offset, $total);
 
-			$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
+			$objPagination = new Pagination($total, $this->perPage, System::getContainer()->getParameter('contao.pagination.default_range'), $id);
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 

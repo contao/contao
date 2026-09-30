@@ -13,7 +13,6 @@ namespace Contao;
 use enshrined\svgSanitize\Sanitizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provide methods to handle file uploads in the back end.
@@ -92,7 +91,7 @@ class FileUpload extends Backend
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
 
-		$maxlength_kb = static::getMaxUploadSize();
+		$maxlength_kb = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 		$arrUploaded = array();
 		$arrFiles = $this->getFilesFromGlobal();
@@ -229,7 +228,7 @@ class FileUpload extends Backend
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;
@@ -275,10 +274,14 @@ class FileUpload extends Backend
 	 * Return the maximum upload file size in bytes
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7. Use the contao.file.upload_size_provider service instead.
 	 */
 	public static function getMaxUploadSize()
 	{
-		return min(UploadedFile::getMaxFilesize(), Config::get('maxFileSize'));
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "contao.file.upload_size_provider" service instead.', __METHOD__);
+
+		return System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 	}
 
 	/**

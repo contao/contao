@@ -354,7 +354,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	/**
 	 * Return the maximum upload file size in bytes
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getMaximumUploadSize()
 	{
@@ -363,6 +363,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			return $this->maxlength;
 		}
 
-		return FileUpload::getMaxUploadSize();
+		return System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 	}
 }
