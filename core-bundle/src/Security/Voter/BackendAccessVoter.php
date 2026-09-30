@@ -73,16 +73,16 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
             return \is_array($user->$field) && [] !== $user->$field;
         }
 
-        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
-            return true;
-        }
-
         if ('subfilemounts' === $field) {
             return $this->hasAccessToFilemount($user->filemounts, $subject[0], true);
         }
 
         if ('filemounts' === $field) {
             return $this->hasAccessToFilemount($user->filemounts, $subject[0], false);
+        }
+
+        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
+            return true;
         }
 
         // Additionally check the child pages of the mounted pages
