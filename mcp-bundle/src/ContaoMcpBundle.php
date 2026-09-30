@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\McpBundle;
 
 use Contao\McpBundle\DependencyInjection\Compiler\RemoveUnavailableToolsPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Contao\McpBundle\Routing\McpRequestMatcher;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
