@@ -92,12 +92,11 @@ trait BackendTestTrait
         $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
             self::fixtureDirectory().'/users.yaml',
             self::fixtureDirectory().'/default.yaml',
-            self::fixtureDirectory().'/article.yaml',
         ]));
 
         $backend = $this->login();
 
-        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article}');
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article_main_home}');
         $backend->visit($articleUrl);
 
         return [$backend, $articleUrl];
