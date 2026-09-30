@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -24,17 +27,15 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  * @internal
  */
 #[AsEventListener(priority: 7)]
-class BackendLocaleListener
+class UserStateListener
 {
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly Security $security,
         private readonly LocaleAwareInterface $localeSwitcher,
     ) {
     }
 
-    /**
-     * Sets the default locale based on the user language.
-     */
     public function __invoke(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -43,13 +44,27 @@ class BackendLocaleListener
 
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser || !$user->language) {
+        if ($user instanceof User) {
+            $GLOBALS['TL_USERNAME'] = $user->getUserIdentifier();
+        }
+
+        if (!$user instanceof BackendUser) {
             return;
         }
 
-        $request = $event->getRequest();
-        $request->setLocale($user->language);
+        $config = $this->framework->getAdapter(Config::class);
 
-        $this->localeSwitcher->setLocale($user->language);
+        $config->set('showHelp', $user->showHelp);
+        $config->set('useRTE', $user->useRTE);
+        $config->set('useCE', $user->useCE);
+        $config->set('doNotCollapse', $user->doNotCollapse);
+        $config->set('thumbnails', $user->thumbnails);
+
+        if ($user->language) {
+            $request = $event->getRequest();
+            $request->setLocale($user->language);
+
+            $this->localeSwitcher->setLocale($user->language);
+        }
     }
 }
