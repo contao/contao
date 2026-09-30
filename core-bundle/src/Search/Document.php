@@ -226,6 +226,7 @@ class Document
             foreach ($data as $key => $value) {
                 if ('@type' === $key) {
                     $context = $data['@context'];
+
                     $data[$key] = array_map(
                         static fn (string $type): string => $context.$type,
                         (array) $value,
