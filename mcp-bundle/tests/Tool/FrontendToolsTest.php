@@ -30,16 +30,19 @@ final class FrontendToolsTest extends ContaoTestCase
 {
     public function testInspectsAPageInPreviewModeWithoutUsingTheStatelessParentSession(): void
     {
-        $stack = new RequestStack();
         $request = Request::create('https://example.org/contao/mcp');
         $request->attributes->set('_stateless', true);
+
+        $stack = new RequestStack();
         $stack->push($request);
 
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 42;
+
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
         ]);
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
