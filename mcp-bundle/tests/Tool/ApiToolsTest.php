@@ -212,9 +212,9 @@ final class ApiToolsTest extends TestCase
         return new ApiOperationRegistry($names, $metadata, $this->createOpenApiFactory(), $this->createNormalizer());
     }
 
-    private function createBinaryPayloadHandler(int $maximumUploadSize = 1000, int|null $maximumPayloadSize = null): BinaryPayloadHandler
+    private function createBinaryPayloadHandler(int $maximumUploadSize = 1000, int|null $maximumMcpPayloadSize = null): BinaryPayloadHandler
     {
-        return new BinaryPayloadHandler(new UploadSizeProvider($maximumUploadSize, $maximumUploadSize), $maximumPayloadSize);
+        return new BinaryPayloadHandler(new UploadSizeProvider($maximumUploadSize, $maximumUploadSize), $maximumMcpPayloadSize);
     }
 
     private function createOpenApiFactory(): OpenApiFactoryInterface

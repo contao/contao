@@ -22,7 +22,7 @@ final class BinaryPayloadHandler
 {
     public function __construct(
         private readonly UploadSizeProvider $uploadSizeProvider,
-        private readonly int|null $maximumPayloadSize = null,
+        private readonly int|null $maximumMcpPayloadSize = null,
     ) {
     }
 
@@ -104,7 +104,7 @@ final class BinaryPayloadHandler
             $maximumSize = min($maximumSize, $operationMaximum);
         }
 
-        return null === $this->maximumPayloadSize ? $maximumSize : min($maximumSize, $this->maximumPayloadSize);
+        return null === $this->maximumMcpPayloadSize ? $maximumSize : min($maximumSize, $this->maximumMcpPayloadSize);
     }
 
     private function getOperationMaximumSize(HttpOperation $operation, string $contentType): int|null

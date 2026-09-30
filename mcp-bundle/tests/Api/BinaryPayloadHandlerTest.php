@@ -81,9 +81,9 @@ final class BinaryPayloadHandlerTest extends TestCase
         $this->assertSame($payload, $this->createHandler(10)->decode($operation, $payload));
     }
 
-    private function createHandler(int $maximumUploadSize, int|null $maximumPayloadSize = null): BinaryPayloadHandler
+    private function createHandler(int $maximumUploadSize, int|null $maximumMcpPayloadSize = null): BinaryPayloadHandler
     {
-        return new BinaryPayloadHandler(new UploadSizeProvider($maximumUploadSize, $maximumUploadSize), $maximumPayloadSize);
+        return new BinaryPayloadHandler(new UploadSizeProvider($maximumUploadSize, $maximumUploadSize), $maximumMcpPayloadSize);
     }
 
     private function createOperation(int|null $maximumSize = null): Put
