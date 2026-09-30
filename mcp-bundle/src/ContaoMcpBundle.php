@@ -12,22 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle;
 
+use Contao\McpBundle\DependencyInjection\Compiler\RemoveUnavailableToolsPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ContaoMcpBundle extends AbstractBundle
 {
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new RemoveUnavailableToolsPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 20);
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import('../config/services.yaml');
-
-        if ($container->has('contao.twig.studio.template_snapshots')) {
-            $configurator->import('../config/template_snapshots.yaml');
-        }
-
-        if ($container->has('contao.search.backend')) {
-            $configurator->import('../config/backend_search.yaml');
-        }
+        $configurator->import('../config/template_snapshots.yaml');
+        $configurator->import('../config/backend_search.yaml');
     }
 }

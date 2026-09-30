@@ -218,6 +218,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $extension->load([], $container);
+        new ContaoMcpBundle()->build($container);
 
         return $container;
     }
