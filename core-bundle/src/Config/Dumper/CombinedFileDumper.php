@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -49,6 +50,9 @@ class CombinedFileDumper implements DumperInterface
         $line = 1;
         $type = $options['type'] ?? null;
 
+        $cachePath = Path::join($this->cacheDir, $cacheFile);
+        $cacheDir = Path::getDirectory($cachePath);
+
         foreach ((array) $files as $file) {
             $code = (string) $this->loader->load($file, $type);
 
@@ -56,18 +60,25 @@ class CombinedFileDumper implements DumperInterface
                 continue;
             }
 
+            if (!str_starts_with($code, "\n")) {
+                $code = "\n".$code;
+            }
+
             if (!str_ends_with($code, "\n")) {
                 $code .= "\n";
             }
 
+            $relativeFile = $this->getRelative((string) $file, $cacheDir);
             $lineCount = substr_count($code, "\n");
-            $sources[] = [(string) $file, $line, $line + $lineCount - 1];
-            $line += $lineCount;
+            $sources[] = [$relativeFile, $line + 2, $line + $lineCount];
+            $line += $lineCount + 2;
+
+            $buffer .= "\n/* START of file: $relativeFile */";
             $buffer .= $code;
+            $buffer .= "/* END of file: $relativeFile */\n";
         }
 
-        $cachePath = Path::join($this->cacheDir, $cacheFile);
-        $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, Path::getDirectory($cachePath)).$buffer);
+        $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, $cacheDir).$buffer);
     }
 
     /**
@@ -90,14 +101,25 @@ class CombinedFileDumper implements DumperInterface
         $header .= "/*\n * Source files (line ranges in this cache file):\n";
 
         foreach ($sources as [$file, $start, $end]) {
-            if (Path::isAbsolute($file)) {
-                $file = Path::makeRelative($file, $cacheDirectory);
-            }
-
-            $file = str_replace(['../', "\r", "\n", '*/'], ['', '\\r', '\\n', '* /'], $file);
+            $file = $this->getRelative($file, $cacheDirectory);
             $header .= \sprintf(" * %d-%d: %s\n", $start + $offset, $end + $offset, $file);
         }
 
         return $header." */\n";
+    }
+
+    private function getRelative(string $file, string $cacheDirectory): string
+    {
+        if (Path::isAbsolute($file)) {
+            try {
+                $file = Path::makeRelative($file, $cacheDirectory);
+            } catch (InvalidArgumentException) {
+                // noop
+            }
+        }
+
+        $file = Path::canonicalize($file);
+
+        return str_replace(["\r", "\n", '*/'], ['\\r', '\\n', '* /'], $file);
     }
 }

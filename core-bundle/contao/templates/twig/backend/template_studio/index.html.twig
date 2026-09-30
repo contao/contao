@@ -9,7 +9,7 @@
         .set('id', 'main')
         .set('aria-labelledby', 'main_headline')
         .set('data-controller', 'contao--template-studio')
-        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange')
+        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange twig-editor:lens:follow->contao--template-studio#follow twig-editor:lens:block-info->contao--template-studio#blockInfo turbo:submit-start->contao--template-studio#submitStart')
         .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
         .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
         .set('data-twig-environment', environment_information|json_encode)
@@ -43,15 +43,15 @@
                 {# Theme selector #}
                 {% if themes|length %}
                     <form id="template-studio--theme-selector" method="post" action="{{ path('_contao_template_studio_select_theme.stream') }}" data-turbo-stream data-contao--template-studio-target="themeSelector">
-                        <label data-controller="contao--choices">
-                            <span>{{ 'template_studio.theme-selector'|trans }}</span>
-                            <select name="theme" onchange="this.form.requestSubmit()" class="tl_select">
+                        <label for="template-studio--theme">{{ 'template_studio.theme-selector'|trans }}</label>
+                        <div class="tl_select_wrapper" data-controller="contao--choices">
+                            <select id="template-studio--theme" name="theme" onchange="this.form.requestSubmit()" class="tl_select">
                                 <option{{ attrs().set('value', '').set('selected', current_theme is null) }}>{{ 'template_studio.no_theme_context'|trans }}</option>
                                 {% for slug, name in themes %}
                                     <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug }}]</option>
                                 {% endfor %}
                             </select>
-                        </label>
+                        </div>
                     </form>
                 {% endif %}
 

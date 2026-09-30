@@ -21,6 +21,7 @@ use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\NodeTraverser;
 use Twig\Source;
@@ -49,7 +50,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
             new BodyNode(),
             null,
             new EmptyNode(),
-            new EmptyNode(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new EmptyNode(),
             new EmptyNode(),
             null,
             new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5'),

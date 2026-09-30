@@ -1062,7 +1062,12 @@ class InsertTagsTest extends TestCase
 
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
+        if (!\ini_get('pcre.jit') || 'off' === strtolower((string) \ini_get('pcre.jit'))) {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+        } else {
+            $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
+        }
 
         InsertTags::reset();
 

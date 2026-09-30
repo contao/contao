@@ -48,6 +48,7 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -290,7 +291,7 @@ class ContaoExtensionTest extends TestCase
             ]),
             null,
             new EmptyNode(),
-            new EmptyNode(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new EmptyNode(),
             new EmptyNode(),
             null,
             new Source('<code>', 'foo.html.twig'),

@@ -388,43 +388,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					return $currentRecord['ptable'];
 				}
 			}
-
-			// Find the parent table in the backend module
-			if ($do = Input::get('do'))
-			{
-				$tables = array();
-
-				foreach ($GLOBALS['BE_MOD'] ?? array() as $group)
-				{
-					if (isset($group[$do]))
-					{
-						$tables = (array) ($group[$do]['tables'] ?? array());
-						break;
-					}
-				}
-
-				// Use the parent table if it has been set in the DCA file
-				if (($ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null) && \in_array($ptable, $tables, true))
-				{
-					array_unshift($tables, $ptable);
-				}
-
-				// Use the ptable query parameter if there is another possible dynamic parent in the back end module (see #10146)
-				if (($ptable = Input::get('ptable')) && \in_array($ptable, $tables, true))
-				{
-					array_unshift($tables, $ptable);
-				}
-
-				foreach ($tables as $ptable)
-				{
-					$this->loadDataContainer($ptable);
-
-					if (\in_array($this->strTable, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? array(), true))
-					{
-						return $ptable;
-					}
-				}
-			}
 		}
 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
@@ -4234,7 +4197,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($blnClipboard)
 			{
 				$headerOperations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')));
+
+				$href = null;
+
+				if ($this->canPasteClipboard($arrClipboard, $this->addDynamicPtable($blnIsSortable ? array('pid' => $objParent->id, 'sorting' => 0) : array('pid' => $objParent->id))))
+				{
+					$href = $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : ''));
+				}
+
+				$headerOperations->addPasteButton('pastetop', $table, $href);
 			}
 			else
 			{
@@ -4448,7 +4419,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($blnHasSorting)
 					{
 						// Prevent circular references
-						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
+						if ($blnClipboard && (!System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']) || !$this->canPasteClipboard($arrClipboard, $this->addDynamicPtable(array('pid' => $row[$i]['id'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
 							$recordOperations->addSeparator();
 							$recordOperations->addPasteButton('pasteafter', $table, null);

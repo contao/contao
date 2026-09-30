@@ -77,10 +77,6 @@ export default class extends Controller {
         }
     }
 
-    initialize() {
-        this.store = this.store.bind(this);
-    }
-
     connect() {
         this.restore();
     }
