@@ -13,11 +13,12 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Backend\ContentElement;
 
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
+use Contao\E2eTests\Backend\BackendTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 {
-    use ContentElementTestTrait;
+    use BackendTestTrait;
 
     #[DataProvider('clipboardOperationProvider')]
     public function testPasteElementGroupIntoItselfOrItsChildren(string $operation, bool $canPaste): void

@@ -1,4 +1,4 @@
-{% trans_default_domain 'contao_default' -%}
+{% trans_default_domain 'ContaoOAuthServerBundle' -%}
 
 <!DOCTYPE html>
 <html lang="{{ app.locale|language_tag }}" data-turbo="false">
@@ -7,7 +7,7 @@
 
     {% block head %}
         <meta charset="UTF-8">
-        <title>Contao | {{ app.request.host }} - Connect {{ client_name }}</title>
+        <title>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }} | {{ app.request.host }}</title>
 
         {% block meta %}
             <meta name="generator" content="Contao Open Source CMS">
@@ -22,23 +22,21 @@
         {{ javascripts|default|raw }}
     {% endblock %}
 </head>
-<body{{ attrs(attributes|default).addClass('be_oauth_consent') }}>
+<body{{ attrs(attributes|default).addClass('be_oauth_server_consent') }}>
 
     {% block container %}
         <div id="container">
             <main id="main">
-                <h1>Connect <i>{{ client_name }}</i> with Contao?</h1>
-                <p>The application will act as <strong>{{ user.username }}</strong> and can do <strong>everything</strong> this user account is allowed to do in the back end.</p>
-                <p>The client <strong>{{ client_host }}</strong> will redirect you to <strong>{{ redirect_host }}</strong> after you allowed the connection.</p>
                 <form class="tl_login_form" method="post">
                     <div class="formbody">
-                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
                         <input type="hidden" name="request_key" value="{{ request_key }}">
+                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                        <h1>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }}</h1>
+                        <p>{{ 'oauth_server_connect'|trans({'%username%': user.username|e})|raw }}</p>
+                        <p>{{ 'oauth_server_redirect'|trans({'%client_host%': client_host|e, '%redirect_host%': redirect_host|e})|raw }}</p>
                         <div class="submit_container">
-                            <button type="submit" class="tl_submit" name="decision" value="allow">Allow</button>
-                        </div>
-                        <div class="submit_container">
-                            <button type="submit" class="tl_submit" name="decision" value="deny">Deny</button>
+                            <button type="submit" class="tl_submit" name="decision" value="allow">{{ 'oauth_server_allow'|trans }}</button>
+                            <button type="submit" class="tl_submit" name="decision" value="deny">{{ 'oauth_server_deny'|trans }}</button>
                         </div>
                     </div>
                 </form>

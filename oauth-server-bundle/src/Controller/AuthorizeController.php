@@ -37,7 +37,7 @@ use Twig\Environment;
  */
 class AuthorizeController
 {
-    private const string SESSION_PREFIX = 'contao_oauth_request.';
+    private const string SESSION_PREFIX = 'contao_oauth_server_request.';
 
     public function __construct(
         private readonly AuthorizationServerFactory $serverFactory,
@@ -89,7 +89,7 @@ class AuthorizeController
 
         $client = $authRequest->getClient();
 
-        return new Response($this->twig->render('@ContaoOAuthServer/backend/oauth_consent.html.twig', [
+        return new Response($this->twig->render('@ContaoOAuthServer/backend/oauth_server_consent.html.twig', [
             'client_name' => $client->getName(),
             'client_host' => parse_url($client->getIdentifier(), PHP_URL_HOST),
             'redirect_host' => parse_url($this->redirectUri($authRequest), PHP_URL_HOST),

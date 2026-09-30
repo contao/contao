@@ -20,6 +20,11 @@ services:
             - '@api_platform.openapi.factory'
             - '@serializer'
 
+    Contao\McpBundle\Api\BinaryPayloadHandler:
+        arguments:
+            - '@Contao\CoreBundle\File\UploadSizeProvider'
+            - '%contao.mcp.max_binary_payload_size%'
+
     Contao\McpBundle\Tool\ApiTools:
         autoconfigure: true
         arguments:
@@ -28,6 +33,7 @@ services:
             - '@Contao\ApiBundle\Http\ApiRequestFactory'
             - '@request_stack'
             - '@Contao\McpBundle\Response\ApiResponseConverter'
+            - '@Contao\McpBundle\Api\BinaryPayloadHandler'
 
     Contao\McpBundle\Tool\UserTemplateTools:
         autoconfigure: true

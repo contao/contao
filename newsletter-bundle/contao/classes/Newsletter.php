@@ -900,11 +900,13 @@ class Newsletter extends Backend
 		$intUser = Input::get('id');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+		$user = null;
 
 		// Front end call
 		if ($isFrontend)
 		{
-			$intUser = FrontendUser::getInstance()->id;
+			$user = System::getContainer()->get('security.helper')->getUser();
+			$intUser = $user instanceof FrontendUser ? $user->id : 0;
 		}
 
 		// Return if there is no user (e.g. upon registration)
@@ -971,7 +973,10 @@ class Newsletter extends Backend
 				// Update the front end user object
 				if ($isFrontend)
 				{
-					FrontendUser::getInstance()->newsletter = $strNewsletters;
+					if ($user instanceof FrontendUser)
+					{
+						$user->newsletter = $strNewsletters;
+					}
 				}
 
 				// Check activation status

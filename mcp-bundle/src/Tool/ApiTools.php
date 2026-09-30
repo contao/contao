@@ -15,6 +15,7 @@ namespace Contao\McpBundle\Tool;
 use ApiPlatform\Metadata\HttpOperation;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\McpBundle\Api\ApiOperationRegistry;
+use Contao\McpBundle\Api\BinaryPayloadHandler;
 use Contao\McpBundle\Response\ApiResponseConverter;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
@@ -33,6 +34,7 @@ final class ApiTools
         private readonly ApiRequestFactory $requestFactory,
         private readonly RequestStack $requestStack,
         private readonly ApiResponseConverter $responseConverter,
+        private readonly BinaryPayloadHandler $binaryPayloadHandler,
     ) {
     }
 
@@ -46,7 +48,13 @@ final class ApiTools
     public function describe(string $operation): array
     {
         try {
-            return $this->operations->describe($operation);
+            $description = $this->operations->describe($operation);
+
+            if (null !== $transport = $this->binaryPayloadHandler->describe($this->operations->getOperation($operation))) {
+                $description['mcpTransport'] = $transport;
+            }
+
+            return $description;
         } catch (\OutOfBoundsException $exception) {
             throw new ToolCallException($exception->getMessage().' Use contao_api_discover first.', previous: $exception);
         }
@@ -63,6 +71,7 @@ final class ApiTools
 
         try {
             $metadata = $this->operations->getOperation($operation);
+            $data = $this->binaryPayloadHandler->decode($metadata, $data);
             $apiRequest = $this->requestFactory->create($request, $metadata, $parameters, $data);
         } catch (\OutOfBoundsException $exception) {
             throw new ToolCallException($exception->getMessage().' Use contao_api_discover first.', previous: $exception);

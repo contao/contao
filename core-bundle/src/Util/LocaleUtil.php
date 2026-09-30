@@ -39,7 +39,7 @@ class LocaleUtil
         $locale = \Locale::canonicalize($locale);
 
         // Fix parsing for older ICU versions
-        return preg_replace('/^und\b|^_$|^__$/', '', $locale);
+        return preg_replace('/^und(?:\b|(?=_))|^_$|^__$/', '', $locale);
     }
 
     public static function getPrimaryLanguage(string $locale): string
