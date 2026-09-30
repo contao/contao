@@ -23,7 +23,7 @@ class DropZone extends FileUpload
 	public function generateMarkup()
 	{
 		// Maximum file size in MB
-		$intMaxSize = round(static::getMaxUploadSize() / 1024 / 1024);
+		$intMaxSize = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSizeInMegabytes();
 
 		// String of accepted file extensions
 		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
@@ -74,7 +74,7 @@ class DropZone extends FileUpload
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;

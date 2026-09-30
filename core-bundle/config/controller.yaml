@@ -34,6 +34,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@translator'
+            - '@contao.file.upload_size_provider'
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Controller\BackendCsvImportController:

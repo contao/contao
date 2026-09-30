@@ -50,6 +50,13 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumFileUploadSize(): void
+    {
+        $container = $this->getContainerBuilder(['contao' => ['max_file_upload_size' => 1234]]);
+
+        $this->assertSame(1234, $container->getParameter('contao.max_file_upload_size'));
+    }
+
     public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
     {
         $container = new ContainerBuilder(new ParameterBag([
