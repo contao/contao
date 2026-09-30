@@ -236,6 +236,9 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         return $this->isGranted($attribute, $rootStorageRelativePath);
     }
 
+    /**
+     * @param mixed|null $subject
+     */
     private function isGranted(string $attribute, $subject = null): bool
     {
         if (false === $this->user) {
