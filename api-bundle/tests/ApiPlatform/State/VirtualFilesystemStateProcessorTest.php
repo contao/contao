@@ -161,6 +161,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->willReturnCallback(static fn (Uuid $uuid): string => match ($uuid->toRfc4122()) {
                 $destinationUuid->toRfc4122() => 'archive/example.txt',
                 $sourceUuid->toRfc4122() => 'documents/example.txt',
+                default => throw new \LogicException(\sprintf('Unexpected UUID "%s".', $uuid->toRfc4122())),
             })
         ;
 
