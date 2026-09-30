@@ -40,6 +40,7 @@
     <env name="APP_ENV" value="test"/>
     <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
+    <env name="PW_TIMEOUT_MS" value="5000"/>
   </php>
   <testsuites>
     <testsuite name="unit">
