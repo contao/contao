@@ -50,7 +50,7 @@ class PersonalAccessToken
     #[\SensitiveParameter]
     protected string $secret;
 
-    public function __construct(int $userId, string $name, string $secret, \DateTimeInterface|null $expiresAt = null)
+    public function __construct(int $userId, string $name, #[\SensitiveParameter] string $secret, \DateTimeInterface|null $expiresAt = null)
     {
         $this->id = Uuid::v7();
         $this->userId = $userId;
@@ -75,31 +75,9 @@ class PersonalAccessToken
         return $this->createdAt;
     }
 
-    public function setCreated(\DateTimeInterface $createdAt): self
-    {
-        if (!$createdAt instanceof \DateTimeImmutable) {
-            $createdAt = \DateTimeImmutable::createFromInterface($createdAt);
-        }
-
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getExpiresAt(): \DateTimeInterface|null
     {
         return $this->expiresAt;
-    }
-
-    public function setExpiresAt(\DateTimeInterface|null $expiresAt): self
-    {
-        if ($expiresAt && !$expiresAt instanceof \DateTimeImmutable) {
-            $expiresAt = \DateTimeImmutable::createFromInterface($expiresAt);
-        }
-
-        $this->expiresAt = $expiresAt;
-
-        return $this;
     }
 
     public function getLastUsed(): \DateTimeInterface|null
@@ -123,34 +101,13 @@ class PersonalAccessToken
         return $this->userId;
     }
 
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getSecret(): string
     {
         return $this->secret;
-    }
-
-    public function setSecret(#[\SensitiveParameter] string $secret): self
-    {
-        $this->secret = $secret;
-
-        return $this;
     }
 }
