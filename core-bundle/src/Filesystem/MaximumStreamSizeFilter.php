@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-/**
- * @internal
- */
 final class MaximumStreamSizeFilter extends \php_user_filter
 {
     public const NAME = 'contao.maximum_stream_size';

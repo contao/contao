@@ -19,8 +19,6 @@ use Symfony\Component\Uid\Uuid;
  */
 final class SizeLimitingVirtualFilesystemWriter
 {
-    private static bool $filterRegistered = false;
-
     public function __construct(private readonly VirtualFilesystemInterface $virtualFilesystem)
     {
     }
@@ -62,11 +60,7 @@ final class SizeLimitingVirtualFilesystemWriter
      */
     private function appendFilter($contents, MaximumStreamSizeFilterState $state)
     {
-        if (!self::$filterRegistered) {
-            self::$filterRegistered = stream_filter_register(MaximumStreamSizeFilter::NAME, MaximumStreamSizeFilter::class);
-        }
-
-        if (!self::$filterRegistered || false === ($filter = stream_filter_append($contents, MaximumStreamSizeFilter::NAME, STREAM_FILTER_READ, $state))) {
+        if (false === ($filter = stream_filter_append($contents, MaximumStreamSizeFilter::NAME, STREAM_FILTER_READ, $state))) {
             throw new \RuntimeException('Could not apply the maximum stream size.');
         }
 

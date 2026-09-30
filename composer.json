@@ -238,6 +238,9 @@
         "zendframework/zend-code": "<3.3.1"
     },
     "autoload": {
+        "files": [
+            "core-bundle/functions.php"
+        ],
         "psr-4": {
             "Contao\\ApiBundle\\": "api-bundle/src/",
             "Contao\\CalendarBundle\\": "calendar-bundle/src/",
