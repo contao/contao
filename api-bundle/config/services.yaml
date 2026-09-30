@@ -127,6 +127,11 @@ services:
             $security: '@security.helper'
             $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
 
+    Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemContentStateProvider:
+        arguments:
+            $filesStorage: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+
     Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor:
         arguments:
             $filesStorage: '@contao.filesystem.virtual.files'
