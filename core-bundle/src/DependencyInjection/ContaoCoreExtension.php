@@ -36,6 +36,7 @@ use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookEvent;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookEventProvider;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
@@ -202,22 +203,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->registerAttributeForAutoconfiguration(
             AsWebhookReceiver::class,
-            static function (ChildDefinition $definition, AsWebhookReceiver $attribute, \Reflector $reflector): void {
-                if (!$reflector instanceof \ReflectionClass && !$reflector instanceof \ReflectionMethod) {
-                    throw new LogicException('The AsWebhookReceiver attribute can only be used on classes or methods.');
-                }
-
+            static function (ChildDefinition $definition, AsWebhookReceiver $attribute): void {
                 $definition->addTag('contao.webhook_receiver', ['name' => $attribute->name, 'parser' => $attribute->parser]);
             },
         );
 
         $container->registerAttributeForAutoconfiguration(
-            AsWebhookEventProvider::class,
-            static function (ChildDefinition $definition): void {
-                $definition->addTag('contao.webhook_event_provider');
+            AsWebhookEvent::class,
+            static function (ChildDefinition $definition, AsWebhookEvent $attribute): void {
+                $definition->addTag('contao.webhook_event', ['name' => $attribute->name]);
             },
         );
-
+        
         $container->registerAttributeForAutoconfiguration(
             AsContentElement::class,
             static function (ChildDefinition $definition, AsContentElement $attribute): void {

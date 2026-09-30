@@ -72,48 +72,36 @@ final class WebhookRegistryPass implements CompilerPassInterface
             }
         }
 
-        foreach ($container->findTaggedServiceIds('contao.webhook_event_provider', true) as $serviceId => $_) {
+        foreach ($container->findTaggedServiceIds('contao.webhook_event', true) as $serviceId => $_) {
             $class = $container->getDefinition($serviceId)->getClass();
 
-            if (null === $class || !class_exists($class) || !method_exists($class, 'getEvents')) {
-                throw new InvalidArgumentException(\sprintf('Webhook event provider "%s" must define a static getEvents() method.', $serviceId));
+            if (null === $class || !class_exists($class) || !is_subclass_of($class, WebhookEventInterface::class)) {
+                throw new InvalidArgumentException(\sprintf('Webhook event "%s" must implement %s.', $class, WebhookEventInterface::class));
             }
 
-            $reflection = new \ReflectionClass($class);
+            $eventReflection = new \ReflectionClass($class);
+            $attributes = $eventReflection->getAttributes(AsWebhookEvent::class);
 
-            if (!$reflection->getMethod('getEvents')->isStatic()) {
-                throw new InvalidArgumentException(\sprintf('Webhook event provider "%s::getEvents()" must be static.', $class));
+            if (!$attributes) {
+                throw new InvalidArgumentException(\sprintf('Webhook event "%s" must have the AsWebhookEvent attribute.', $class));
             }
 
-            foreach ($class::getEvents() as $eventClass) {
-                if (!class_exists($eventClass) || !is_subclass_of($eventClass, WebhookEventInterface::class)) {
-                    throw new InvalidArgumentException(\sprintf('Webhook event "%s" must implement %s.', $eventClass, WebhookEventInterface::class));
-                }
+            $metadata = $attributes[0]->newInstance();
 
-                $eventReflection = new \ReflectionClass($eventClass);
-                $attributes = $eventReflection->getAttributes(AsWebhookEvent::class);
-
-                if (!$attributes) {
-                    throw new InvalidArgumentException(\sprintf('Webhook event "%s" must have the AsWebhookEvent attribute.', $eventClass));
-                }
-
-                $metadata = $attributes[0]->newInstance();
-
-                if (!preg_match(self::NAME_PATTERN, $metadata->name)) {
-                    throw new InvalidArgumentException(\sprintf('Webhook event name "%s" is invalid.', $metadata->name));
-                }
-
-                if (isset($eventNames[$metadata->name])) {
-                    throw new InvalidArgumentException(\sprintf('Webhook event name "%s" is registered more than once.', $metadata->name));
-                }
-
-                $eventNames[$metadata->name] = true;
-                $events[$eventClass] = [
-                    'name' => $metadata->name,
-                    'provider' => $serviceId,
-                    'properties' => $this->getProperties($eventReflection),
-                ];
+            if (!preg_match(self::NAME_PATTERN, $metadata->name)) {
+                throw new InvalidArgumentException(\sprintf('Webhook event name "%s" is invalid.', $metadata->name));
             }
+
+            if (isset($eventNames[$metadata->name])) {
+                throw new InvalidArgumentException(\sprintf('Webhook event name "%s" is registered more than once.', $metadata->name));
+            }
+
+            $eventNames[$metadata->name] = true;
+            $events[$class] = [
+                'name' => $metadata->name,
+                'provider' => $serviceId,
+                'properties' => $this->getProperties($eventReflection),
+            ];
         }
 
         $locator = ServiceLocatorTagPass::register($container, $services);
