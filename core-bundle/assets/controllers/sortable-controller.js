@@ -15,6 +15,11 @@ export default class extends Controller {
     static targets = ['primaryHandle', 'fallbackHandle'];
 
     connect() {
+        // Avoid duplicate if instance still exists (see disconnect())
+        if (this.sortable) {
+            return;
+        }
+
         const options = {
             animation: 100,
             onSort: (event) => {
@@ -49,6 +54,11 @@ export default class extends Controller {
     }
 
     disconnect() {
+        // Don't disconnect sortables target whilst it is still connected to the dom when dragging it
+        if (this.element.isConnected) {
+            return;
+        }
+
         this.sortable?.destroy();
         this.sortable = undefined;
     }
