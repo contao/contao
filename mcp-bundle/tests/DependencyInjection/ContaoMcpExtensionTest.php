@@ -219,7 +219,7 @@ final class ContaoMcpExtensionTest extends TestCase
         foreach ([
             'http_kernel' => HttpKernelInterface::class,
             'contao_api.http.api_request_factory' => ApiRequestFactory::class,
-            UploadSizeProvider::class => UploadSizeProvider::class,
+            'contao.file.upload_size_provider' => UploadSizeProvider::class,
             'request_stack' => RequestStack::class,
             'api_platform.metadata.resource.name_collection_factory' => ResourceNameCollectionFactoryInterface::class,
             'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
