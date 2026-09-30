@@ -130,7 +130,8 @@ body {
 }
 
 .be_login_two_factor .submit_container,
-.be_password .submit_container {
+.be_password .submit_container,
+.be_oauth_consent .submit_container {
     margin-top: 12px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -169,6 +170,22 @@ label[for="verify"] {
     margin-top: 3em;
     font-size: 90%;
     text-align: center;
+}
+
+/* OAuth */
+.be_oauth_consent {
+    #main {
+        max-width: 450px;
+    }
+
+    .tl_submit {
+        margin-top: 9px;
+    }
+
+    .be_oauth_consent p {
+        line-height: 1.3;
+        hyphens: auto;
+    }
 }
 
 /* Error messages */
