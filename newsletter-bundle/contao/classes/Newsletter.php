@@ -899,8 +899,8 @@ class Newsletter extends Backend
 	{
 		$intUser = Input::get('id');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-		$user = null;
 		$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+		$user = null;
 
 		// Front end call
 		if ($isFrontend)

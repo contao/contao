@@ -49,9 +49,11 @@ class ContentDownloads extends ContentDownload
 		}
 
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && ($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser)
+		if ($this->useHomeDir)
 		{
-			if ($user->assignDir && $user->homeDir)
+			$user = System::getContainer()->get('security.helper')->getUser();
+
+			if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir)
 			{
 				$this->multiSRC = array($user->homeDir);
 			}

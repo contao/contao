@@ -222,7 +222,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
             // Front end user
             case 'user':
-                if (($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser) {
+                $user = System::getContainer()->get('security.helper')->getUser();
+
+                if ($user instanceof FrontendUser) {
                     $outputType = OutputType::text;
                     $value = $user->{$insertTag->getParameters()->get(0)};
 

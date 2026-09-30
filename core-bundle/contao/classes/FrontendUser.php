@@ -53,12 +53,12 @@ class FrontendUser extends User
 	 *
 	 * @return static|User The object instance
 	 *
-	 * @deprecated deprecated since Contao 6.1, to be removed in Contao 7.
-	 *             Get the user from the Symfony security services instead.
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             get the user from the Symfony security services instead.
 	 */
 	public static function getInstance()
 	{
-		trigger_deprecation('contao/core-bundle', '6.1', 'Calling % is deprecated in Contao 6.1 and will be removed in Contao 7. Get the user from the Symfony security services instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '6.1', 'Calling "%s()" is deprecated and will no longer work in Contao 7. Get the user from the Symfony security services instead.', __METHOD__);
 
 		if (static::$objInstance !== null)
 		{

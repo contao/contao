@@ -72,9 +72,10 @@ class ModuleBooknav extends Module
 		}
 
 		$groups = array();
+		$user = System::getContainer()->get('security.helper')->getUser();
 
 		// Get all groups of the current front end user
-		if (($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser)
+		if ($user instanceof FrontendUser)
 		{
 			$groups = $user->groups;
 		}

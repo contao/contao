@@ -247,9 +247,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 					$intUploadFolder = $this->uploadFolder;
 
 					// Overwrite the upload folder with user's home directory
-					if ($this->useHomeDir && ($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof FrontendUser)
+					if ($this->useHomeDir)
 					{
-						if ($user->assignDir && $user->homeDir)
+						$user = System::getContainer()->get('security.helper')->getUser();
+
+						if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir)
 						{
 							$intUploadFolder = $user->homeDir;
 						}
