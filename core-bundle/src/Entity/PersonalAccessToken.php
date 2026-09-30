@@ -47,7 +47,6 @@ class PersonalAccessToken
     protected string $name;
 
     #[Column(type: Types::STRING)]
-    #[\SensitiveParameter]
     protected string $secret;
 
     public function __construct(int $userId, string $name, #[\SensitiveParameter] string $secret, \DateTimeInterface|null $expiresAt = null)
