@@ -31,13 +31,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_USERNAME']);
-
-        parent::tearDown();
-    }
-
     public function testReturnsIfResponseIsAlreadySet(): void
     {
         $response = new Response();

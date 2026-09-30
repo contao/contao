@@ -76,10 +76,10 @@ final class GlobalStateWatcher implements Extension
     {
         $this->globalKeys = $this->buildGlobalKeys();
         $this->globals = $this->buildGlobals();
-        $this->staticMembers = $this->buildStaticMembers();
+        $this->staticMembers ??= $this->buildStaticMembers();
         $this->phpIni = $this->buildPhpIni();
         $this->setFunctions = $this->buildSetFunctions();
-        $this->fileSystem = $this->buildFileSystem();
+        $this->fileSystem ??= $this->buildFileSystem();
         $this->constants = $this->buildConstants();
         $this->env = $this->buildEnv();
     }

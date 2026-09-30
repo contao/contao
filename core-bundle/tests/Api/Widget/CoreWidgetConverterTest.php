@@ -190,6 +190,30 @@ class CoreWidgetConverterTest extends TestCase
         yield 'cud' => [CudTable::class, ['tl_content::create'], ['tl_content::create']];
     }
 
+    public function testDescribesTheImageSizeTuple(): void
+    {
+        $GLOBALS['BE_FFL']['imageSize'] = ImageSize::class;
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $schema = $converter->getSchema(['inputType' => 'imageSize'], []);
+
+        $this->assertStringContainsString('leave both dimensions empty and provide an image size reference', $schema['description']);
+        $this->assertSame(['Optional width', 'Optional height', 'Resize mode or image size reference'], array_column($schema['prefixItems'], 'title'));
+        $this->assertStringContainsString('pixels as a decimal string', $schema['prefixItems'][0]['description']);
+        $this->assertStringContainsString('pixels as a decimal string', $schema['prefixItems'][1]['description']);
+        $this->assertStringContainsString('integer ID of a database image size record', $schema['prefixItems'][2]['description']);
+        $this->assertStringContainsString('string identifier for a configuration-based image size', $schema['prefixItems'][2]['description']);
+        $this->assertSame(['crop', '42', 'content_teaser'], $schema['prefixItems'][2]['examples']);
+
+        $validator = new Validator();
+        $jsonSchema = json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertTrue($validator->validate(['800', '600', 'crop'], $jsonSchema)->isValid());
+        $this->assertTrue($validator->validate(['', '', '42'], $jsonSchema)->isValid());
+        $this->assertTrue($validator->validate(['', '', 'content_teaser'], $jsonSchema)->isValid());
+        $this->assertFalse($validator->validate(['wide', '600', 'crop'], $jsonSchema)->isValid());
+    }
+
     public function testPreparesStructuredFormValues(): void
     {
         $GLOBALS['BE_FFL']['options'] = OptionWizard::class;

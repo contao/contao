@@ -31,6 +31,8 @@ parameters:
         - %currentWorkingDirectory%/news-bundle/tests
         - %currentWorkingDirectory%/newsletter-bundle/src
         - %currentWorkingDirectory%/newsletter-bundle/tests
+        - %currentWorkingDirectory%/oauth-server-bundle/src
+        - %currentWorkingDirectory%/oauth-server-bundle/tests
         - %currentWorkingDirectory%/test-case/src
 
     universalObjectCratesClasses:
@@ -38,6 +40,7 @@ parameters:
         - Contao\Database\Result
         - Contao\Model
         - Contao\Template
+        - Contao\DataContainer
 
     excludePaths:
         - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*

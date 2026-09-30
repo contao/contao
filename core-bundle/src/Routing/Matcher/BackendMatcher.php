@@ -15,10 +15,14 @@ namespace Contao\CoreBundle\Routing\Matcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
+/**
+ * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+ */
 class BackendMatcher implements RequestMatcherInterface
 {
     public function matches(Request $request): bool
     {
-        return 'backend' === $request->attributes->get('_scope');
+        return 'backend' === $request->attributes->get('_scope')
+            && !$request->attributes->getBoolean('_stateless');
     }
 }

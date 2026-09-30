@@ -116,7 +116,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
 
-        if ($container->hasExtension('contao_api')) {
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
+
+        if (isset($bundles['ContaoApiBundle'])) {
             $loader->load('api.yaml');
         }
 
@@ -124,6 +126,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.console_path', $config['console_path']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
+        $container->setParameter('contao.max_file_upload_size', $config['max_file_upload_size']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
@@ -414,6 +417,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ->setArgument('$indexName', $indexName),
             )
         ;
+
+        if ($container->hasDefinition('contao.search.backend.security.document_allowed_groups_resolver')) {
+            $resolverDefinition = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+            $resolverDefinition->setArgument('$maxGroups', $config['backend_search']['facets']['max_groups']);
+        }
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

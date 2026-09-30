@@ -660,7 +660,7 @@ window.Backend =
 	},
 
 	/**
-	 * Open a TinyMCE file browser in a modal window
+	 * Open a HugeRTE file browser in a modal window
 	 *
 	 * @param {string} field_name The field name
 	 * @param {string} url        The URL
@@ -940,6 +940,8 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeDragAndDrop: function(ul, options) {
+		console.warn('Backend.enableFileTreeDragAndDrop() is deprecated. Please use the Stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -1769,6 +1771,8 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeUpload: function(wrap, options) {
+		console.warn('Backend.enableFileTreeUpload() is deprecated. Please use the Stimulus controllers instead.');
+
 		wrap = $(wrap);
 
 		var fallbackUrl = options.url,
