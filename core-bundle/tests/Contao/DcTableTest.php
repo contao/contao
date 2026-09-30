@@ -35,10 +35,9 @@ class DcTableTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
 
         $this->resetStaticProperties([System::class, DataContainer::class, Database::class]);
-        unset($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
 
         parent::tearDown();
     }
