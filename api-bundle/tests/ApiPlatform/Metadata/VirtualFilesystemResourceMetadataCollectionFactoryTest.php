@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Resource\Factory\InputOutputResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\MainControllerResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
@@ -73,6 +74,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('/files_operations/download/{path}', $download->getUriTemplate());
         $this->assertSame(['binary' => ['application/octet-stream']], $download->getOutputFormats());
         $this->assertFalse($download->getOutput());
+        $this->assertSame(200, $download->getStatus());
         $this->assertSame(VirtualFilesystemContentStateProvider::class, $download->getProvider());
 
         $downloadOpenApi = $download->getOpenapi();
@@ -130,6 +132,15 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $factory = $this->createFactory($decorated);
 
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
+    }
+
+    public function testDownloadStatusIsPreservedWhenNormalizingTheOutputMetadata(): void
+    {
+        $factory = new InputOutputResourceMetadataCollectionFactory($this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class)));
+        $resource = $factory->create(VirtualFilesystemItem::class)[0];
+        $operations = iterator_to_array($resource->getOperations());
+
+        $this->assertSame(200, $operations['contao_api_files_download']->getStatus());
     }
 
     public function testGeneratesRoutesForNestedPaths(): void

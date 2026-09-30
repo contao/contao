@@ -142,6 +142,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 description: 'Streams the contents of a file as an attachment.',
             ),
             output: false,
+            status: 200,
             provider: VirtualFilesystemContentStateProvider::class,
         );
     }
