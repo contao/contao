@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\CoreBundle\Repository\PersonalAccessTokenRepository:
+        public: true
+        arguments:
+            - '@doctrine'

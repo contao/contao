@@ -1169,6 +1169,21 @@ services:
 
     contao.security.access_token_handler:
         class: Contao\CoreBundle\Security\Authentication\AccessTokenHandler
+        arguments:
+            - '@contao.security.access_token_manager'
+            - '@contao.security.backend_user_provider'
+
+    contao.security.access_token_manager:
+        class: Contao\CoreBundle\Security\Authentication\AccessTokenManager
+        public: true
+        arguments:
+            - '@security.password_hasher_factory'
+            - '@doctrine.orm.entity_manager'
+
+    contao.security.access_token_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\AccessTokenSuccessHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
@@ -1369,6 +1384,9 @@ services:
 
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
+
+    contao.security.personal_access_token_voter:
+        class: Contao\CoreBundle\Security\Voter\PersonalAccessTokenVoter
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker

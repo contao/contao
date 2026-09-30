@@ -19,6 +19,7 @@ security:
             login_throttling: ~
             access_token:
                 token_handler: contao.security.access_token_handler
+                success_handler: contao.security.access_token_success_handler
 
         contao_backend:
             request_matcher: contao.routing.backend_matcher

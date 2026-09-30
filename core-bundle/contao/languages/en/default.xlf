@@ -2348,6 +2348,54 @@
       <trans-unit id="MSC.deletePasskey">
         <source>Delete passkey &quot;%s&quot;</source>
       </trans-unit>
+      <trans-unit id="MSC.personalAccessTokens">
+        <source>Personal access tokens</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokensDescription">
+        <source>Personal access tokens allow you to authenticate as your backend user for stateless APIs.</source>
+      </trans-unit>
+      <trans-unit id="MSC.generatePersonalAccessToken">
+        <source>Generate token</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenName">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenNameDescription">
+        <source>What‘s this token for?</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenCopy">
+        <source>Copy the token to your clipboard</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAt">
+        <source>Expires at</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresIn">
+        <source>Expires in</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtDescription">
+        <source>The token will expire on the given date.</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.7">
+        <source>7 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.30">
+        <source>30 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.60">
+        <source>60 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.90">
+        <source>90 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.365">
+        <source>1 year</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.unlimited">
+        <source>No expiration</source>
+      </trans-unit>
+      <trans-unit id="MSC.lastUsed">
+        <source>Last used</source>
+      </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
       </trans-unit>

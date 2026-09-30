@@ -10,15 +10,19 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Contao\CoreBundle\Security\Authentication\AccessTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Back end module "two factor".
@@ -83,6 +87,7 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
+		// Passkeys
 		/** @var WebauthnCredentialRepository $credentialRepo */
 		$credentialRepo = $container->get('contao.repository.webauthn_credential');
 
@@ -92,7 +97,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					$this->denyAccessUnlessGranted($credential);
+					$this->checkWebauthnCredentialAccess($credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -101,7 +106,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					$this->denyAccessUnlessGranted($credential);
+					$this->checkWebauthnCredentialAccess($credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -115,7 +120,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					$this->denyAccessUnlessGranted($credential);
+					$this->checkWebauthnCredentialAccess($credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -140,6 +145,93 @@ class ModuleTwoFactor extends BackendModule
 				$this->Template->editPassKeyId = $lastCredential->getId();
 			}
 		}
+
+		// Personal access tokens
+		/** @var PersonalAccessTokenRepository $patRepo */
+		$patRepo = $container->get(PersonalAccessTokenRepository::class);
+
+		/** @var AccessTokenManager $accessTokenManager */
+		$accessTokenManager = $container->get('contao.security.access_token_manager');
+		$session = $request->getSession();
+
+		if (Input::post('FORM_SUBMIT') === 'tl_pat_actions')
+		{
+			if ($deletePatId = Input::post('delete_pat'))
+			{
+				if ($accessToken = $patRepo->findOneById($deletePatId))
+				{
+					$this->checkPersonalAccessTokenAccess($accessToken);
+
+					$patRepo->remove($accessToken);
+				}
+			}
+
+			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
+		}
+
+		if (Input::get('act') === 'create_pat')
+		{
+			$translator = $container->get('translator');
+
+			$nameField = array(
+				'label' => $translator->trans('MSC.personalAccessTokenName', array(), 'contao_default'),
+				'eval' => array(
+					'mandatory' => true,
+					'maxlength' => 255
+				),
+			);
+
+			$expiresField = array(
+				'label' => $translator->trans('MSC.personalAccessTokenExpiresIn', array(), 'contao_default'),
+				'eval' => array(
+					'includeBlankOption' => true,
+					'mandatory' => true,
+				),
+				'options' => array('7', '30', '60', '90', '365', 'unlimited'),
+				'reference' => &$GLOBALS['TL_LANG']['MSC']['personalAccessTokenExpiresAtOptions'],
+			);
+
+			$nameWidget = new TextField(TextField::getAttributesFromDca($nameField, 'pat_name'));
+			$expiresWidget = new SelectMenu(SelectMenu::getAttributesFromDca($expiresField, 'pat_expires'));
+
+			if (Input::post('FORM_SUBMIT') === 'tl_pat_create')
+			{
+				$nameWidget->validate();
+				$expiresWidget->validate();
+
+				if (!$nameWidget->hasErrors() && !$expiresWidget->hasErrors())
+				{
+					$expiresAt = null;
+
+					if ($expiresWidget->value && 'unlimited' !== $expiresWidget->value)
+					{
+						$expiresAt = (new \DateTimeImmutable())->modify(\sprintf('+%d days', $expiresWidget->value));
+					}
+
+					$plainToken = $accessTokenManager->createToken($user, $nameWidget->value, $expiresAt);
+
+					$session->set('_created_pat_token', $plainToken);
+
+					$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
+				}
+
+				$container->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
+			}
+
+			$this->Template->create_pat = true;
+			$this->Template->pat_name_widget = $nameWidget;
+			$this->Template->pat_expires_widget = $expiresWidget;
+		}
+
+		if (($token = $session->get('_created_pat_token')) && ($parsedToken = $accessTokenManager->parseToken($token)))
+		{
+			$this->Template->created_pat_id = Uuid::fromString($parsedToken['id']);
+			$this->Template->created_pat_token = $token;
+		}
+
+		$this->Template->personal_access_tokens = $patRepo->getAllForUser((int) $user->id);
+
+		$session->remove('_created_pat_token');
 	}
 
 	/**
@@ -210,11 +302,19 @@ class ModuleTwoFactor extends BackendModule
 		throw new RedirectResponseException($return);
 	}
 
-	private function denyAccessUnlessGranted(WebauthnCredential $credential): void
+	private function checkWebauthnCredentialAccess(WebauthnCredential $credential): void
 	{
 		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP, $credential))
 		{
 			throw new AccessDeniedHttpException('Cannot access credential ID ' . $credential->getId());
+		}
+	}
+
+	private function checkPersonalAccessTokenAccess(PersonalAccessToken $accessToken): void
+	{
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::PERSONAL_ACCESS_TOKEN_OWNERSHIP, $accessToken))
+		{
+			throw new AccessDeniedHttpException('Cannot access personal access token ID ' . $accessToken->getId());
 		}
 	}
 }

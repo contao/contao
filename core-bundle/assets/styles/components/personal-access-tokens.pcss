@@ -1,0 +1,63 @@
+.personal-access-tokens {
+    border-top: 1px solid var(--border);
+
+    .pat-table {
+        margin: 0 15px 15px;
+        width: calc(100% - 30px);
+
+        td.name {
+            button {
+                box-sizing: border-box;
+                border: 0;
+                text-align: left;
+                margin: 0;
+                background-color: transparent;
+                display: flex;
+                align-items: center;
+
+                code {
+                    word-break: break-word;
+                }
+            }
+
+            &.tl_confirm {
+                background-position: 11px center;
+            }
+        }
+
+        td.tl_confirm {
+            padding-left: 32px;
+        }
+
+        td.expires {
+            width: 30%;
+
+            .expired {
+                color: var(--red);
+            }
+        }
+
+        td.last-used {
+            width: 30%;
+        }
+
+        td.actions {
+            text-align: right;
+            width: 50px;
+
+            button {
+                border: 0;
+                padding: 0;
+                background-color: transparent;
+
+                img {
+                    vertical-align: -3px;
+                }
+            }
+        }
+
+        td.tl_confirm + td {
+            background-color: var(--confirm-bg);
+        }
+    }
+}

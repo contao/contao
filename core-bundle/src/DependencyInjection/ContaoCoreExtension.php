@@ -114,6 +114,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('form.yaml');
         $loader->load('listener.yaml');
         $loader->load('migrations.yaml');
+        $loader->load('repositories.yaml');
         $loader->load('services.yaml');
 
         $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];

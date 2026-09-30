@@ -179,3 +179,99 @@
         <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
     </div>
 </div>
+
+<div class="two-factor personal-access-tokens">
+    <h2 class="sub_headline">{{ 'MSC.personalAccessTokens'|trans }}</h2>
+    <p>{{ 'MSC.personalAccessTokensDescription'|trans }}</p>
+    <turbo-frame id="personal-access-tokens" data-turbo-action="advance">
+        {% if personal_access_tokens|default %}
+            <table class="tl_listing showColumns with-border with-padding pat-table">
+                <thead>
+                <tr>
+                    <th class="name">{{ 'MSC.personalAccessTokenName'|trans }}</th>
+                    <th class="last-used">{{ 'MSC.lastUsed'|trans }}</th>
+                    <th class="expires">{{ 'MSC.personalAccessTokenExpiresAt'|trans }}</th>
+                    <th class="actions"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for access_token in personal_access_tokens %}
+                    <tr class="hover-row">
+                        {% if access_token.id.equals(created_pat_id|default) %}
+                            <td class="name tl_confirm" colspan="3">
+                                <button
+                                    type="button"
+                                    title="{{ 'MSC.personalAccessTokenCopy'|trans }}"
+                                    data-controller="contao--clipboard"
+                                    data-contao--clipboard-content-value="{{ created_pat_token }}"
+                                    data-contao--clipboard-message-value="{{ 'MSC.clipboardCopy'|trans }}"
+                                    data-action="contao--clipboard#write:prevent"
+                                    data-contao--tooltips-target="tooltip"
+                                >
+                                    <code>{{ created_pat_token }}</code>
+                                </button>
+                            </td>
+                        {% else %}
+                            <td class="name">
+                                {{ access_token.name }}
+                            </td>
+                            <td class="last-used">
+                                {% if access_token.lastUsed|default %}
+                                    {{ access_token.lastUsed.format('j. F Y, H:i') }}
+                                {% else %}
+                                    –
+                                {% endif %}
+                            </td>
+                            <td class="expires">
+                                {% if access_token.expiresAt|default %}
+                                    {% if access_token.expiresAt < date() %}
+                                        <span class="expired">{{ access_token.expiresAt.format('j. F Y, H:i') }}</span>
+                                    {% else %}
+                                        {{ access_token.expiresAt.format('j. F Y, H:i') }}
+                                    {% endif %}
+                                {% else %}
+                                    –
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        <td class="actions">
+                            <form method="post">
+                                <input type="hidden" name="FORM_SUBMIT" value="tl_pat_actions">
+                                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                                <button type="submit" name="delete_pat" value="{{ access_token.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([access_token.name|default(access_token.id)])|e('js')|e('html') }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if create_pat|default %}
+            <form class="tl_create_pat" method="post" novalidate>
+                <input type="hidden" name="FORM_SUBMIT" value="tl_pat_create">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <div class="formbody">
+                    <div class="widget w50">
+                        {{ pat_name_widget.parse()|raw }}
+                        {% if not pat_name_widget.hasErrors() %}
+                            <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ 'MSC.personalAccessTokenNameDescription'|trans }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="widget w50">
+                        {{ pat_expires_widget.parse()|raw }}
+                        {% if not pat_expires_widget.hasErrors() %}
+                            <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ 'MSC.personalAccessTokenExpiresAtDescription'|trans }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tl_submit_container">
+                    <button class="tl_submit" type="submit">{{ 'MSC.generatePersonalAccessToken'|trans }}</button>
+                </div>
+            </form>
+        {% else %}
+            <div class="submit_container">
+                <a href="{{ path('contao_backend', {'do': 'security', 'act': 'create_pat'}) }}" class="tl_submit">{{ 'MSC.generatePersonalAccessToken'|trans }}</a>
+            </div>
+        {% endif %}
+    </turbo-frame>
+</div>
