@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-final class MaximumStreamSizeFilter extends \php_user_filter
+final class LimitStreamSizeFilter extends \php_user_filter
 {
-    public const NAME = 'contao.maximum_stream_size';
+    public const NAME = 'contao.limit_stream_size';
 
-    private MaximumStreamSizeFilterState $state;
+    private LimitStreamSizeFilterState $state;
 
     public function onCreate(): bool
     {
-        if (!$this->params instanceof MaximumStreamSizeFilterState) {
+        if (!$this->params instanceof LimitStreamSizeFilterState) {
             return false;
         }
 

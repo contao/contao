@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Filesystem;
 /**
  * @internal
  */
-final class MaximumStreamSizeFilterState
+final class LimitStreamSizeFilterState
 {
     private int $readBytes = 0;
     private bool $exceeded = false;

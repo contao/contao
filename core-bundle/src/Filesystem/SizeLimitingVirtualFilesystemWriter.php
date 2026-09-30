@@ -29,7 +29,7 @@ final class SizeLimitingVirtualFilesystemWriter
     public function writeStream(Uuid|string $location, $contents, int $maximumSize): void
     {
         FilesystemUtil::assertIsResource($contents);
-        $state = new MaximumStreamSizeFilterState($maximumSize);
+        $state = new LimitStreamSizeFilterState($maximumSize);
         $filter = $this->appendFilter($contents, $state);
 
         try {
@@ -58,9 +58,9 @@ final class SizeLimitingVirtualFilesystemWriter
      *
      * @return resource
      */
-    private function appendFilter($contents, MaximumStreamSizeFilterState $state)
+    private function appendFilter($contents, LimitStreamSizeFilterState $state)
     {
-        if (false === ($filter = stream_filter_append($contents, MaximumStreamSizeFilter::NAME, STREAM_FILTER_READ, $state))) {
+        if (false === ($filter = stream_filter_append($contents, LimitStreamSizeFilter::NAME, STREAM_FILTER_READ, $state))) {
             throw new \RuntimeException('Could not apply the maximum stream size.');
         }
 
