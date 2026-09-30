@@ -10,19 +10,38 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\E2eTests\Backend\ContentElement;
+namespace Contao\E2eTests\Backend;
 
 use Contao\E2eTesting\Browser\BackendBrowser;
+use Contao\E2eTesting\Browser\BrowserOptions;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
+use Contao\InstallationRecipe\File\FileMapping;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
+use Symfony\Component\Uid\Uuid;
 
-trait ContentElementTestTrait
+trait BackendTestTrait
 {
+    private const string DUMMY_IMAGE = 'files/images/dummy.jpg';
+
     protected static function createManagedEditionConfig(): ManagedEditionConfig
     {
-        $recipe = InstallationRecipe::create(self::createMonorepoComposerConfig('core-bundle'))
+        $composer = self::createMonorepoComposerConfig(
+            'calendar-bundle',
+            'core-bundle',
+            'faq-bundle',
+            'news-bundle',
+            'newsletter-bundle',
+        );
+
+        $dummyImage = self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg';
+
+        $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
+            ->withFixtureFile(self::fixtureDirectory().'/default.yaml')
+            ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
+            ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
+            ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
         ;
 
         return ManagedEditionConfig::create($recipe, self::projectDirectory());
@@ -34,6 +53,36 @@ trait ContentElementTestTrait
     }
 
     /**
+     * Synchronizes a mapped file into tl_files and returns its UUID.
+     */
+    private function registerDummyImage(string $path = self::DUMMY_IMAGE): Uuid
+    {
+        self::managedEdition()->synchronizeFiles($path);
+
+        $uuid = self::managedEdition()
+            ->database()
+            ->connection()
+            ->fetchOne('SELECT uuid FROM tl_files WHERE path = ?', [$path])
+        ;
+
+        if (!\is_string($uuid)) {
+            throw new \LogicException(\sprintf('Could not find the synchronized file "%s".', $path));
+        }
+
+        return Uuid::fromBinary($uuid);
+    }
+
+    private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
+    {
+        $backend = self::managedEdition()->createBackendBrowser(options: $options);
+        $backend->visit('/contao/login');
+        $backend->submitLogin($username, $password);
+        $backend->waitFor('h1');
+
+        return $backend;
+    }
+
+    /**
      * Logs in and opens the content elements of the article fixture.
      *
      * @return array{BackendBrowser, string}
@@ -42,13 +91,11 @@ trait ContentElementTestTrait
     {
         $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
             self::fixtureDirectory().'/users.yaml',
+            self::fixtureDirectory().'/default.yaml',
             self::fixtureDirectory().'/article.yaml',
         ]));
 
-        $backend = self::managedEdition()->createBackendBrowser();
-        $backend->visit('/contao/login');
-        $backend->submitLogin('k.jones', 'kevinjones');
-        $backend->waitFor('h1');
+        $backend = $this->login();
 
         $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article}');
         $backend->visit($articleUrl);
