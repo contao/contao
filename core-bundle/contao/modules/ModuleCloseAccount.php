@@ -68,7 +68,7 @@ class ModuleCloseAccount extends Module
 	{
 		$user = System::getContainer()->get('security.helper')->getUser();
 
-		// Return if there is no logged-in user
+		// $user type is checked in `generate()`, but we need it here for type-safety
 		if (!$user instanceof FrontendUser)
 		{
 			throw new \RuntimeException('Invalid user object');
