@@ -204,6 +204,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsWebhookReceiver::class,
             static function (ChildDefinition $definition, AsWebhookReceiver $attribute): void {
                 $definition->addTag('contao.webhook_receiver', ['name' => $attribute->name, 'parser' => $attribute->parser]);
+                $definition->addTag('remote_event.consumer', ['consumer' => $attribute->name]);
             },
         );
 

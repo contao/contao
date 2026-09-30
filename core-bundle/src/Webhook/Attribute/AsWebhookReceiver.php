@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Webhook\Attribute;
 
+/**
+ * Registers a Symfony remote event consumer and its backend-selectable request
+ * parser mapping.
+ */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsWebhookReceiver
 {

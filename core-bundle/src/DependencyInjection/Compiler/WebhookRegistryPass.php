@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookEvent;
 use Contao\CoreBundle\Webhook\Attribute\WebhookProperty;
-use Contao\CoreBundle\Webhook\WebhookConsumerInterface;
 use Contao\CoreBundle\Webhook\WebhookEventInterface;
 use Contao\CoreBundle\Webhook\WebhookEventRegistry;
 use Contao\CoreBundle\Webhook\WebhookReceiverRegistry;
@@ -23,6 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\RemoteEvent\Consumer\ConsumerInterface;
 use Symfony\Component\Webhook\Client\RequestParserInterface;
 
 final class WebhookRegistryPass implements CompilerPassInterface
@@ -42,17 +42,18 @@ final class WebhookRegistryPass implements CompilerPassInterface
         $events = [];
         $services = [];
         $eventNames = [];
+        $consumers = [];
 
-        foreach ($container->findTaggedServiceIds('contao.webhook_receiver', true) as $serviceId => $tags) {
+        foreach ($container->findTaggedServiceIds('remote_event.consumer', true) as $serviceId => $tags) {
+            foreach ($tags as $attributes) {
+                $consumers[$attributes['consumer'] ?? $serviceId][] = $serviceId;
+            }
+        }
+
+        foreach ($container->findTaggedServiceIds('contao.webhook_receiver', true) as $tags) {
             foreach ($tags as $attributes) {
                 $name = $attributes['name'] ?? '';
                 $parser = $attributes['parser'] ?? '';
-                $consumerId = $serviceId;
-                $consumerClass = $container->hasDefinition($consumerId) ? $container->getDefinition($consumerId)->getClass() : null;
-
-                if (null === $consumerClass || !is_a($consumerClass, WebhookConsumerInterface::class, true)) {
-                    throw new InvalidArgumentException(\sprintf('Webhook consumer service "%s" must implement %s.', $consumerId, WebhookConsumerInterface::class));
-                }
 
                 if (!\is_string($name) || !preg_match(self::NAME_PATTERN, $name)) {
                     throw new InvalidArgumentException(\sprintf('Webhook receiver name "%s" is invalid.', $name));
@@ -62,12 +63,24 @@ final class WebhookRegistryPass implements CompilerPassInterface
                     throw new InvalidArgumentException(\sprintf('Webhook receiver name "%s" is registered more than once.', $name));
                 }
 
+                $consumerIds = array_values(array_unique($consumers[$name] ?? []));
+
+                if (1 !== \count($consumerIds)) {
+                    throw new InvalidArgumentException(\sprintf('Webhook receiver "%s" must have exactly one remote event consumer.', $name));
+                }
+
+                $consumerId = $consumerIds[0];
+                $consumerClass = $container->getDefinition($consumerId)->getClass();
+
+                if (null === $consumerClass || !is_a($consumerClass, ConsumerInterface::class, true)) {
+                    throw new InvalidArgumentException(\sprintf('Webhook consumer service "%s" must implement %s.', $consumerId, ConsumerInterface::class));
+                }
+
                 if (!\is_string($parser) || !class_exists($parser) || !is_a($parser, RequestParserInterface::class, true) || !$container->has($parser)) {
                     throw new InvalidArgumentException(\sprintf('Webhook parser "%s" must be a registered %s service.', $parser, RequestParserInterface::class));
                 }
 
-                $receivers[$name] = ['consumer' => $consumerId, 'parser' => $parser];
-                $services[$consumerId] = new Reference($consumerId);
+                $receivers[$name] = ['parser' => $parser];
                 $services[$parser] = new Reference($parser);
             }
         }

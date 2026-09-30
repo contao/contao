@@ -32,6 +32,7 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -962,6 +963,39 @@ class ContaoCoreExtensionTest extends TestCase
             $definition,
             new AsPickerProvider(32),
             new \ReflectionClass(ClassWithMethod::class),
+        );
+    }
+
+    public function testRegistersAsWebhookReceiverAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
+
+        $this->assertArrayHasKey(AsWebhookReceiver::class, $autoConfiguredAttributes);
+
+        $definition = new ChildDefinition('receiver');
+
+        foreach (['vendor.example', 'vendor.other'] as $name) {
+            $autoConfiguredAttributes[AsWebhookReceiver::class][0](
+                $definition,
+                new AsWebhookReceiver($name, 'ExampleRequestParser'),
+                new \ReflectionClass(ClassWithMethod::class),
+            );
+        }
+
+        $this->assertSame(
+            [
+                ['name' => 'vendor.example', 'parser' => 'ExampleRequestParser'],
+                ['name' => 'vendor.other', 'parser' => 'ExampleRequestParser'],
+            ],
+            $definition->getTag('contao.webhook_receiver'),
+        );
+        $this->assertSame(
+            [
+                ['consumer' => 'vendor.example'],
+                ['consumer' => 'vendor.other'],
+            ],
+            $definition->getTag('remote_event.consumer'),
         );
     }
 

@@ -18,7 +18,7 @@ use Symfony\Component\Webhook\Client\RequestParserInterface;
 final class WebhookReceiverRegistry
 {
     /**
-     * @param array<string, array{consumer: string, parser: string}> $receivers
+     * @param array<string, array{parser: string}> $receivers
      */
     public function __construct(
         private readonly array $receivers,
@@ -27,7 +27,7 @@ final class WebhookReceiverRegistry
     }
 
     /**
-     * @return array{consumer: string, parser: string}|null
+     * @return array{parser: string}|null
      */
     public function get(string $name): array|null
     {
@@ -51,25 +51,8 @@ final class WebhookReceiverRegistry
         return $parser;
     }
 
-    public function getConsumer(string $name): WebhookConsumerInterface
-    {
-        $receiver = $this->receivers[$name] ?? null;
-
-        if (null === $receiver) {
-            throw new \LogicException(\sprintf('Webhook receiver "%s" is not registered.', $name));
-        }
-
-        $consumer = $this->services->get($receiver['consumer']);
-
-        if (!$consumer instanceof WebhookConsumerInterface) {
-            throw new \LogicException(\sprintf('Webhook receiver "%s" has an invalid consumer service.', $name));
-        }
-
-        return $consumer;
-    }
-
     /**
-     * @return array<string, array{consumer: string, parser: string}>
+     * @return array<string, array{parser: string}>
      */
     public function all(): array
     {
