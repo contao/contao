@@ -55,10 +55,6 @@ final class FrontendTools
             throw new ToolCallException('Frontend inspection requires an authenticated backend user.');
         }
 
-        if (!$token = $this->security->getToken()) {
-            throw new ToolCallException('Frontend inspection requires an authenticated backend user.');
-        }
-
         $parent = $this->requestStack->getCurrentRequest();
 
         if (!$parent) {
@@ -78,7 +74,7 @@ final class FrontendTools
         }
 
         $session = new Session(new MockArraySessionStorage());
-        $session->set('_security_contao_backend', serialize($token));
+        $session->set('_security_contao_backend', serialize($this->security->getToken()));
         $session->set(FrontendPreviewAuthenticator::SESSION_NAME, ['showUnpublished' => true]);
 
         $request = Request::create(
