@@ -36,13 +36,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_USERNAME']);
-    }
-
     public function testUpdatesTheUserAndAlwaysRedirectsToTargetPathInBackend(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
