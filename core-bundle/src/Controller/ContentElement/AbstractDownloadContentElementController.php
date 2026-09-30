@@ -81,7 +81,13 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     protected function handleDownload(Request $request, ContentModel $model): void
     {
-        $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
+        $fileDownloadHelper = $this->container->get('contao.filesystem.file_download_helper');
+
+        if (!$fileDownloadHelper->isDownloadRequest($request)) {
+            return;
+        }
+
+        $response = $fileDownloadHelper->handle(
             $request,
             $this->getVirtualFilesystem(),
             function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
@@ -99,7 +105,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             },
         );
 
-        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {
+        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse || !$response->isSuccessful()) {
             throw new ResponseException($response);
         }
     }
