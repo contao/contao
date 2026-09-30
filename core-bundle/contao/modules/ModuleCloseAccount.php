@@ -50,8 +50,10 @@ class ModuleCloseAccount extends Module
 			return $objTemplate->parse();
 		}
 
+		$security = $container->get('security.helper');
+
 		// Return if there is no logged-in user
-		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
+		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
 		}
@@ -64,9 +66,15 @@ class ModuleCloseAccount extends Module
 	 */
 	protected function compile()
 	{
-		$this->loadDataContainer('tl_member');
+		$user = System::getContainer()->get('security.helper')->getUser();
 
-		$user = FrontendUser::getInstance();
+		// $user type is checked in `generate()`, but we need it here for type-safety
+		if (!$user instanceof FrontendUser)
+		{
+			throw new \RuntimeException('Invalid user object');
+		}
+
+		$this->loadDataContainer('tl_member');
 		$objMember = MemberModel::findById($user->id);
 
 		// Initialize the password widget
