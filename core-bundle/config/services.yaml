@@ -941,10 +941,16 @@ services:
             - '%contao.resources_paths%'
 
     contao.routing.backend_api_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\BackendApiMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - backend
+            - true
 
     contao.routing.backend_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - backend
+            - false
 
     contao.routing.content.article_resolver:
         class: Contao\CoreBundle\Routing\Content\ArticleResolver
@@ -973,8 +979,17 @@ services:
             - '@doctrine.orm.entity_manager'
             - !tagged_iterator contao.content_url_resolver
 
+    contao.routing.frontend_api_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - frontend
+            - true
+
     contao.routing.frontend_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - frontend
+            - false
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
@@ -1130,6 +1145,7 @@ services:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.backend_api_matcher'
             - '@contao.routing.frontend_matcher'
+            - '@contao.routing.frontend_api_matcher'
             - '@request_stack'
 
     contao.routing.url_matcher:
