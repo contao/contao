@@ -18,6 +18,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Lock\LockFactory;
 
+/**
+ * @internal
+ *
+ * TODO: Only used to fix a concurrent request problem in mcp/sdk. Can be removed when
+ * fixed upstream. See https://github.com/modelcontextprotocol/php-sdk/issues/275
+ * for more information.
+ */
 final class SerializedMcpController
 {
     public function __construct(
