@@ -62,11 +62,20 @@ class ClientRepository implements ClientRepositoryInterface
     {
         $parts = parse_url($uri);
 
-        if (!$parts || 'http' !== ($parts['scheme'] ?? null) || 'localhost' !== ($parts['host'] ?? null)) {
+        if (
+            !$parts
+            || 'http' !== ($parts['scheme'] ?? null)
+            || 'localhost' !== ($parts['host'] ?? null)
+            || isset($parts['user']) || isset($parts['pass']) || isset($parts['fragment'])
+        ) {
             return false;
         }
 
         $normalized = 'http://localhost'.($parts['path'] ?? '');
+
+        if (isset($parts['query'])) {
+            $normalized .= '?'.$parts['query'];
+        }
 
         return \in_array($normalized, $allowed, true);
     }
