@@ -22,8 +22,6 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\RequestBody;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
@@ -73,7 +71,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             paginationEnabled: false,
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
@@ -86,7 +84,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             requirements: ['path' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
@@ -115,7 +113,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             ),
             read: false,
             deserialize: false,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -130,7 +128,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             input: VirtualFilesystemMove::class,
             read: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -156,7 +154,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             read: false,
             deserialize: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
             extraProperties: ['contao' => ['operation' => 'metadata']],
         );
     }

@@ -25,8 +25,6 @@ use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\Symfony\Routing\ApiLoader;
 use Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceMetadataCollectionFactory;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
@@ -62,11 +60,11 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertInstanceOf(GetCollection::class, $collection);
         $this->assertSame('/files', $collection->getUriTemplate());
         $this->assertFalse($collection->getPaginationEnabled());
-        $this->assertSame(VirtualFilesystemStateProvider::class, $collection->getProvider());
+        $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $collection->getProvider());
 
         $this->assertInstanceOf(Get::class, $get);
         $this->assertSame('/files/{path}', $get->getUriTemplate());
-        $this->assertSame(VirtualFilesystemStateProvider::class, $get->getProvider());
+        $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $get->getProvider());
 
         $this->assertInstanceOf(Put::class, $upload);
         $this->assertFalse($upload->canRead());
@@ -80,7 +78,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
         $uploadSchema = $uploadOpenApi->getRequestBody()->getContent()['application/octet-stream']->getSchema();
         $this->assertSame(1234, $uploadSchema['maxLength']);
-        $this->assertSame(VirtualFilesystemStateProcessor::class, $upload->getProcessor());
+        $this->assertSame('contao_api.api_platform.virtual_filesystem_state_processor', $upload->getProcessor());
 
         $this->assertInstanceOf(Post::class, $metadata);
         $this->assertSame('/files_operations/metadata', $metadata->getUriTemplate());
@@ -99,7 +97,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('object', $metadataSchema['properties']['data']['type']);
         $this->assertSame(200, $metadata->getStatus());
         $this->assertSame("is_granted('ROLE_USER') and is_granted('contao_user.fop.f2')", $metadata->getSecurity());
-        $this->assertSame(VirtualFilesystemStateProcessor::class, $metadata->getProcessor());
+        $this->assertSame('contao_api.api_platform.virtual_filesystem_state_processor', $metadata->getProcessor());
 
         $this->assertInstanceOf(Post::class, $move);
         $this->assertSame(VirtualFilesystemMove::class, $move->getInput());
