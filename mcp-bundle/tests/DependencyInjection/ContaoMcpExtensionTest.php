@@ -17,6 +17,8 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\CoreBundle\File\UploadSizeProvider;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -229,6 +231,8 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'contao.framework' => ContaoFramework::class,
+            'contao.routing.content_url_generator' => ContentUrlGenerator::class,
             'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);

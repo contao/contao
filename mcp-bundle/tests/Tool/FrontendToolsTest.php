@@ -12,17 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tests\Tool;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\McpBundle\Tool\FrontendTools;
+use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Mcp\Exception\ToolCallException;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 
@@ -35,13 +35,18 @@ final class FrontendToolsTest extends ContaoTestCase
         $request->attributes->set('_stateless', true);
         $stack->push($request);
 
-        $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(
-            ContaoCoreEvents::PREVIEW_URL_CONVERT,
-            static function (PreviewUrlConvertEvent $event): void {
-                $event->setUrl('https://example.org/example.html');
-            },
-        );
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel->id = 42;
+        $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
+        ]);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.org/example.html')
+        ;
 
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
@@ -58,7 +63,7 @@ final class FrontendToolsTest extends ContaoTestCase
             ->willReturn(new Response('<html><head><title>Example &amp; preview</title></head><body>Unpublished</body></html>', 200, ['Content-Type' => 'text/html; charset=UTF-8']))
         ;
 
-        $result = new FrontendTools($kernel, $stack, $dispatcher, $this->createSecurityStub())->inspect(42);
+        $result = new FrontendTools($kernel, $stack, $framework, $urlGenerator, $this->createSecurityStub())->inspect(42);
 
         $this->assertSame(200, $result['status']);
         $this->assertStringContainsString('Unpublished', $result['html']);
@@ -78,7 +83,10 @@ final class FrontendToolsTest extends ContaoTestCase
         new FrontendTools(
             $this->createStub(HttpKernelInterface::class),
             $stack,
-            new EventDispatcher(),
+            $this->createContaoFrameworkStub([
+                PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => null]),
+            ]),
+            $this->createStub(ContentUrlGenerator::class),
             $this->createSecurityStub(),
         )->inspect(42);
     }

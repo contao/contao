@@ -49,7 +49,8 @@ services:
         arguments:
             - '@http_kernel'
             - '@request_stack'
-            - '@event_dispatcher'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
             - '@security.helper'
 
     contao_mcp.tool.user_template_tools:

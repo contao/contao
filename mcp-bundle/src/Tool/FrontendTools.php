@@ -12,20 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tool;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Contao\PageModel;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 use Mcp\Exception\ToolCallException;
 use Mcp\Schema\ToolAnnotations;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class FrontendTools
 {
@@ -34,7 +36,8 @@ final class FrontendTools
     public function __construct(
         private readonly HttpKernelInterface $httpKernel,
         private readonly RequestStack $requestStack,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly Security $security,
     ) {
     }
@@ -60,19 +63,16 @@ final class FrontendTools
             throw new ToolCallException('Frontend inspection requires an HTTP request.');
         }
 
-        $conversionRequest = Request::create(
-            $parent->getUri(),
-            'GET',
-            ['page' => $page],
-            $parent->cookies->all(),
-            server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
-        );
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
-        $event = new PreviewUrlConvertEvent($conversionRequest);
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CONVERT);
-
-        if ($event->getResponse() || !$url = $event->getUrl()) {
+        if (!$pageModel = $pageAdapter->findWithDetails($page)) {
             throw new ToolCallException(\sprintf('Could not create a frontend preview URL for page ID %d.', $page));
+        }
+
+        try {
+            $url = $this->urlGenerator->generate($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        } catch (ExceptionInterface $exception) {
+            throw new ToolCallException(\sprintf('Could not create a frontend preview URL for page ID %d.', $page), previous: $exception);
         }
 
         $session = new Session(new MockArraySessionStorage());
@@ -82,8 +82,7 @@ final class FrontendTools
         $request = Request::create(
             $url,
             'GET',
-            cookies: $parent->cookies->all(),
-            server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])),
+            server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME'])),
         );
 
         $request->attributes->set('_preview', true);
