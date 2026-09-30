@@ -14,6 +14,7 @@ namespace Contao\McpBundle\Tests\Api;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
@@ -44,7 +45,7 @@ final class ApiOperationRegistryTest extends TestCase
             $registry->discover('template'),
         );
 
-        $this->assertCount(2, $registry->discover()['operations']);
+        $this->assertCount(3, $registry->discover()['operations']);
     }
 
     public function testDescribesAnOperationFromOpenApiAndResolvesReferences(): void
@@ -85,6 +86,12 @@ final class ApiOperationRegistryTest extends TestCase
                 new ApiResource(shortName: 'UserTemplate', operations: [
                     'contao_api_user_template_read' => new Get(name: 'contao_api_user_template_read', description: 'Read a user template.'),
                 ]),
+                new ApiResource(shortName: 'File', operations: [
+                    'contao_api_files_upload' => new Put(
+                        name: 'contao_api_files_upload',
+                        inputFormats: ['binary' => ['application/octet-stream']],
+                    ),
+                ]),
             ]))
         ;
 
@@ -104,6 +111,13 @@ final class ApiOperationRegistryTest extends TestCase
                             'operationId' => 'contao_api_dc_news_get',
                             'parameters' => [['name' => 'id', 'schema' => ['$ref' => '#/components/schemas/Identifier']]],
                             'responses' => ['200' => ['content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/News']]]]],
+                        ],
+                    ],
+                    '/contao/api/files/{path}' => [
+                        'put' => [
+                            'operationId' => 'contao_api_files_upload',
+                            'requestBody' => ['content' => ['application/octet-stream' => ['schema' => ['type' => 'string', 'format' => 'binary']]]],
+                            'responses' => [],
                         ],
                     ],
                 ],

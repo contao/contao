@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -44,6 +45,13 @@ use Twig\Environment;
 
 final class ContaoMcpExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumBinaryPayloadSize(): void
+    {
+        $container = $this->getContainerBuilder(maximumBinaryPayloadSize: 1234);
+
+        $this->assertSame(1234, $container->getParameter('contao.mcp.max_binary_payload_size'));
+    }
+
     public function testRegistersTemplateToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
@@ -196,7 +204,7 @@ final class ContaoMcpExtensionTest extends TestCase
         );
     }
 
-    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
+    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true, int|null $maximumBinaryPayloadSize = null): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -212,6 +220,7 @@ final class ContaoMcpExtensionTest extends TestCase
         foreach ([
             'http_kernel' => HttpKernelInterface::class,
             ApiRequestFactory::class => ApiRequestFactory::class,
+            UploadSizeProvider::class => UploadSizeProvider::class,
             'request_stack' => RequestStack::class,
             'api_platform.metadata.resource.name_collection_factory' => ResourceNameCollectionFactoryInterface::class,
             'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
@@ -249,7 +258,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->register('lock.factory', LockFactory::class)->addArgument(new Definition(InMemoryStore::class));
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
-        $extension->load([], $container);
+        $extension->load(null === $maximumBinaryPayloadSize ? [] : [['max_binary_payload_size' => $maximumBinaryPayloadSize]], $container);
         new ContaoMcpBundle()->build($container);
 
         return $container;
