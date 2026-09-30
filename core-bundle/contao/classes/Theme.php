@@ -742,12 +742,13 @@ class Theme extends Backend
 	{
 		$connection = System::getContainer()->get('database_connection');
 		$user = System::getContainer()->get('security.helper')->getUser();
-		$userRow = null;
 
-		if ($user instanceof BackendUser)
+		if (!$user instanceof BackendUser)
 		{
-			$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array($user->id));
+			throw new AccessDeniedException('Cannot import themes without a BackendUser.');
 		}
+
+		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array($user->id));
 
 		if (!$preserveData && $insertOnly)
 		{

@@ -187,8 +187,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$andWhereGroups = '';
 
-		if (!$security->isGranted('ROLE_ADMIN') && $user instanceof BackendUser)
+		if (!$security->isGranted('ROLE_ADMIN'))
 		{
+			if (!$user instanceof BackendUser)
+			{
+				return array();
+			}
+
 			$amg = StringUtil::deserialize($user->amg);
 			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $amg);
 			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
