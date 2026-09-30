@@ -47,7 +47,14 @@ class BackendMain extends Backend
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
 
-		if (!$security->isGranted('ROLE_USER') || !($user = $security->getUser()) || !$user instanceof BackendUser)
+		if (!$security->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
+
+		$user = $security->getUser();
+
+		if (!$user instanceof BackendUser)
 		{
 			throw new AccessDeniedException('Access denied');
 		}

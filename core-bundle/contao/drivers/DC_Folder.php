@@ -1295,12 +1295,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$user = System::getContainer()->get('security.helper')->getUser();
+		$class = DropZone::class;
 
 		// See #4086
-		/** @var class-string<FileUpload> $class */
-		if (!$user instanceof BackendUser || !class_exists($class = $user->uploader))
+		if ($user instanceof BackendUser && class_exists($user->uploader))
 		{
-			$class = DropZone::class;
+			/** @var class-string<FileUpload> $class */
+			$class = $user->uploader;
 		}
 
 		$objUploader = new $class();

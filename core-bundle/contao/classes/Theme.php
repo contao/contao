@@ -741,9 +741,10 @@ class Theme extends Backend
 	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
 	{
 		$connection = System::getContainer()->get('database_connection');
+		$user = System::getContainer()->get('security.helper')->getUser();
 		$userRow = null;
 
-		if (($user = System::getContainer()->get('security.helper')->getUser()) && $user instanceof BackendUser)
+		if ($user instanceof BackendUser)
 		{
 			$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array($user->id));
 		}
