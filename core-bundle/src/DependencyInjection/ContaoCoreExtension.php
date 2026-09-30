@@ -213,7 +213,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 $definition->addTag('contao.webhook_event', ['name' => $attribute->name]);
             },
         );
-        
+
         $container->registerAttributeForAutoconfiguration(
             AsContentElement::class,
             static function (ChildDefinition $definition, AsContentElement $attribute): void {
