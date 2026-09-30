@@ -107,6 +107,7 @@ services:
         arguments:
             $decorated: '@.inner'
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
+            $uploadSizeProvider: '@contao.file.upload_size_provider'
 
     contao_api.api_platform.virtual_filesystem_state_processor:
         class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor
@@ -116,6 +117,7 @@ services:
             $requestStack: '@request_stack'
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
             $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
+            $uploadSizeProvider: '@contao.file.upload_size_provider'
 
     contao_api.api_platform.virtual_filesystem_state_provider:
         class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider

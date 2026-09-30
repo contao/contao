@@ -2,6 +2,12 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao_mcp.api.binary_payload_handler:
+        class: Contao\McpBundle\Api\BinaryPayloadHandler
+        arguments:
+            - '@contao.file.upload_size_provider'
+            - '%contao.mcp.max_binary_payload_size%'
+
     contao_mcp.api.operation_registry:
         class: Contao\McpBundle\Api\ApiOperationRegistry
         arguments:
@@ -35,6 +41,7 @@ services:
             - '@contao_api.http.api_request_factory'
             - '@request_stack'
             - '@contao_mcp.response.api_converter'
+            - '@contao_mcp.api.binary_payload_handler'
 
     contao_mcp.tool.user_template_tools:
         class: Contao\McpBundle\Tool\UserTemplateTools

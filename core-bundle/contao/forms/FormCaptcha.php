@@ -124,8 +124,17 @@ class FormCaptcha extends Widget
 	 */
 	public function validate()
 	{
-		if (Input::post($this->strCaptchaKey) === null || (Input::post($this->strCaptchaKey . '_name') !== null && Input::post($this->strCaptchaKey . '_name')) || !\in_array(Input::post($this->strCaptchaKey . '_hash' . (((int) Input::post($this->strCaptchaKey)) ** 2 + 1)), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
-		{
+		$sum = (int) Input::post($this->strCaptchaKey);
+		$hash = Input::post($this->strCaptchaKey . '_hash' . ($sum ** 2 + 1));
+		$parts = \is_string($hash) ? explode(':', $hash, 2) : array();
+
+		if (
+			Input::post($this->strCaptchaKey) === null
+			|| (Input::post($this->strCaptchaKey . '_name') !== null && Input::post($this->strCaptchaKey . '_name'))
+			|| !\in_array($parts[0] ?? null, $this->generateHashes($sum), true)
+			|| !isset($parts[1])
+			|| !System::getContainer()->get('contao.rate_limit.form_captcha_factory')->create($parts[1])->consume()->isAccepted()
+		) {
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
 		}
@@ -150,7 +159,8 @@ class FormCaptcha extends Widget
 			'int2' => $int2,
 			'sum' => $int1 + $int2,
 			'key' => $this->strCaptchaKey,
-			'hashes' => $this->generateHashes($int1 + $int2)
+			'hashes' => $this->generateHashes($int1 + $int2),
+			'proof' => bin2hex(random_bytes(16)),
 		);
 	}
 
@@ -218,7 +228,7 @@ class FormCaptcha extends Widget
 	{
 		$this->generateCaptcha();
 
-		return $this->arrCaptcha['hashes'][0];
+		return $this->arrCaptcha['hashes'][0] . ':' . $this->arrCaptcha['proof'];
 	}
 
 	/**
