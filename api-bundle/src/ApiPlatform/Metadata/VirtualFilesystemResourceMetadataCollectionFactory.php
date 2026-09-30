@@ -22,11 +22,10 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\RequestBody;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 
 final class VirtualFilesystemResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
@@ -34,6 +33,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly SchemaAwareObjectNormalizer $objectNormalizer,
+        private readonly UploadSizeProvider $uploadSizeProvider,
     ) {
     }
 
@@ -71,7 +71,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             paginationEnabled: false,
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
@@ -84,12 +84,14 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             requirements: ['path' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
     private function createUploadOperation(): Put
     {
+        $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
+
         return new Put(
             uriTemplate: '/files/{path}',
             inputFormats: ['binary' => ['application/octet-stream']],
@@ -104,14 +106,14 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 requestBody: new RequestBody(
                     description: 'The raw contents of the file.',
                     content: new \ArrayObject([
-                        'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary'])),
+                        'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary', 'maxLength' => $maximumUploadSize])),
                     ]),
                     required: true,
                 ),
             ),
             read: false,
             deserialize: false,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -126,7 +128,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             input: VirtualFilesystemMove::class,
             read: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -152,7 +154,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             read: false,
             deserialize: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
             extraProperties: ['contao' => ['operation' => 'metadata']],
         );
     }
