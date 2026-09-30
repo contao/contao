@@ -13,8 +13,9 @@ declare(strict_types=1);
 namespace Contao\McpBundle\Tests\DependencyInjection;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
-use Contao\ApiBundle\Resource\DataContainerResourceRegistry;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -33,6 +34,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
@@ -66,14 +68,9 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $this->assertSame(
             [
-                'contao_dc_discover_resources',
-                'contao_dc_describe_resource',
-                'contao_dc_list_records',
-                'contao_dc_read_record',
-                'contao_dc_create_record',
-                'contao_dc_update_record',
-                'contao_dc_delete_record',
-                'contao_dc_move_record',
+                'contao_api_discover',
+                'contao_api_describe',
+                'contao_api_execute',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -165,7 +162,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(22, $tools);
+        $this->assertCount(17, $tools);
     }
 
     private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
@@ -185,8 +182,10 @@ final class ContaoMcpExtensionTest extends TestCase
             'http_kernel' => HttpKernelInterface::class,
             ApiRequestFactory::class => ApiRequestFactory::class,
             'request_stack' => RequestStack::class,
-            DataContainerResourceRegistry::class => DataContainerResourceRegistry::class,
+            'api_platform.metadata.resource.name_collection_factory' => ResourceNameCollectionFactoryInterface::class,
             'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
+            'api_platform.openapi.factory' => OpenApiFactoryInterface::class,
+            'serializer' => NormalizerInterface::class,
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
