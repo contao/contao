@@ -76,15 +76,12 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
             return true;
         }
 
-        // Additionally check the subfolders of the mounted files
-        if ('filemounts' === $field) {
-            foreach ($user->filemounts as $folder) {
-                if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
-                    return true;
-                }
-            }
+        if ('subfilemounts' === $field) {
+            return $this->hasAccessToFilemount($user->filemounts, $subject[0], true);
+        }
 
-            return false;
+        if ('filemounts' === $field) {
+            return $this->hasAccessToFilemount($user->filemounts, $subject[0], false);
         }
 
         // Additionally check the child pages of the mounted pages
@@ -105,6 +102,23 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
                         return true;
                     }
                 }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Additionally check the subfolders of the mounted files.
+     */
+    private function hasAccessToFilemount(array $filemounts, string $path, bool $subpath): bool
+    {
+        foreach ($filemounts as $folder) {
+            $regexp = '/^'.preg_quote($folder, '/');
+            $regexp .= $subpath ? '(\/.+)/i' : '(\/|$)/i';
+
+            if (preg_match($regexp, $path)) {
+                return true;
             }
         }
 
