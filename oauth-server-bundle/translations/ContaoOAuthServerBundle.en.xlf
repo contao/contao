@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="translations/ContaoOAuthServerBundle.en.xlf">
+    <body>
+      <trans-unit id="1" resname="oauth_server_title">
+        <source>Connect %client_name% with Contao?</source>
+      </trans-unit>
+      <trans-unit id="2" resname="oauth_server_connect">
+        <source>The application will act as &lt;strong&gt;%username%&lt;/strong&gt; and can do &lt;strong&gt;everything&lt;/strong&gt; this user account is allowed to do in the backend.</source>
+      </trans-unit>
+      <trans-unit id="3" resname="oauth_server_redirect">
+        <source>The client &lt;strong&gt;%client_host%&lt;/strong&gt; will redirect you to &lt;strong&gt;%redirect_host%&lt;/strong&gt; after you allowed the connection.</source>
+      </trans-unit>
+      <trans-unit id="4" resname="oauth_server_allow">
+        <source>Allow</source>
+      </trans-unit>
+      <trans-unit id="5" resname="oauth_server_deny">
+        <source>Deny</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
