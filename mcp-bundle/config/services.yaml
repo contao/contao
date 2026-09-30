@@ -4,7 +4,7 @@ services:
 
     contao.mcp_bundle.controller.serialized_mcp_controller:
         class: Contao\McpBundle\Controller\SerializedMcpController
-        decorates: 'mcp.server.contao_backend.controller'
+        decorates: mcp.server.contao_backend.controller
         arguments:
             - '@.inner'
             - '@lock.factory'
