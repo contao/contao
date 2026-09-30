@@ -39,18 +39,14 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         $authorizationChecker
             ->method('isGranted')
             ->willReturnCallback(
-                function (string $attribute, mixed $subject) use ($permissionToDeny): bool {
+                static function (string $attribute, mixed $subject) use ($permissionToDeny): bool {
                     $permissionToDeny = (array) $permissionToDeny;
 
                     if ($attribute !== $permissionToDeny[0]) {
                         return true;
                     }
 
-                    if (null !== ($permissionToDeny[1] ?? null) && $subject !== $permissionToDeny[1]) {
-                        return true;
-                    }
-
-                    return false;
+                    return null !== ($permissionToDeny[1] ?? null) && $subject !== $permissionToDeny[1];
                 },
             )
         ;
