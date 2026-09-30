@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
@@ -277,7 +278,7 @@ abstract class Controller extends System
 	/**
 	 * Generate a front end module and return it as string
 	 *
-	 * @param mixed  $intId                       A module ID or a Model object
+	 * @param mixed  $intId                       A module ID, a Model object or a FrontendModuleReference
 	 * @param string $strColumn                   The name of the column
 	 * @param array  $arrPreloadedContentElements
 	 *
@@ -285,6 +286,20 @@ abstract class Controller extends System
 	 */
 	public static function getFrontendModule($intId, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
+		$frontendModuleReference = null;
+
+		if ($intId instanceof FrontendModuleReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name or preloaded content elements is not supported when using a FrontendModuleReference.');
+			}
+
+			$frontendModuleReference = $intId;
+			$strColumn = $frontendModuleReference->getSection();
+			$intId = $frontendModuleReference->getModuleModel();
+		}
+
 		if (!\is_object($intId) && !\strlen($intId))
 		{
 			return '';
@@ -400,7 +415,7 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		$objModule = new $strClass($objRow, $strColumn);
+		$objModule = new $strClass(is_a($strClass, ModuleProxy::class, true) && $frontendModuleReference ? $frontendModuleReference : $objRow, $strColumn);
 		$strBuffer = $objModule->generate();
 
 		// HOOK: add custom logic

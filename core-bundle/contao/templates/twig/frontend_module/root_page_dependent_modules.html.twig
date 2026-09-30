@@ -1,0 +1,7 @@
+{% extends '@Contao/frontend_module/_base.html.twig' %}
+
+{% block wrapper %}
+    {% block content %}
+        {{ is_content_element ? content_element(fragment) : frontend_module(fragment) }}
+    {% endblock %}
+{% endblock %}
