@@ -20,7 +20,9 @@ use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
+use Contao\CoreBundle\Filesystem\MaximumStreamSizeExceededException;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
+use Contao\CoreBundle\Filesystem\SizeLimitingVirtualFilesystemWriter;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -37,6 +39,7 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 final class VirtualFilesystemStateProcessor implements ProcessorInterface
 {
     private readonly VirtualFilesystemInterface $filesStorage;
+    private readonly SizeLimitingVirtualFilesystemWriter $filesWriter;
 
     public function __construct(
         VirtualFilesystem $filesStorage,
@@ -47,6 +50,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         private readonly UploadSizeProvider $uploadSizeProvider,
     ) {
         $this->filesStorage = new PermissionCheckingVirtualFilesystem($filesStorage, $security);
+        $this->filesWriter = new SizeLimitingVirtualFilesystemWriter($this->filesStorage);
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): VirtualFilesystemItem
@@ -148,36 +152,19 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new BadRequestHttpException('An upload body is required.');
         }
 
-        $this->filesStorage->writeStream($path, $this->getUploadStream($request));
+        $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
+
+        try {
+            $this->filesWriter->writeStream(
+                $path,
+                $request->getContent(true),
+                $maximumUploadSize,
+            );
+        } catch (MaximumStreamSizeExceededException $exception) {
+            throw new HttpException(413, \sprintf('The upload exceeds the maximum size of %d bytes.', $maximumUploadSize), $exception);
+        }
 
         return $this->getItem($path);
-    }
-
-    /**
-     * @return resource
-     */
-    private function getUploadStream(Request $request)
-    {
-        $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
-        $temporaryStream = tmpfile();
-
-        if (false === $temporaryStream) {
-            throw new \RuntimeException('Could not create a temporary upload stream.');
-        }
-
-        $copiedBytes = stream_copy_to_stream($request->getContent(true), $temporaryStream, $maximumUploadSize + 1);
-
-        if (false === $copiedBytes) {
-            throw new \RuntimeException('Could not read the upload body.');
-        }
-
-        if ($copiedBytes > $maximumUploadSize) {
-            throw new HttpException(413, \sprintf('The upload exceeds the maximum size of %d bytes.', $maximumUploadSize));
-        }
-
-        rewind($temporaryStream);
-
-        return $temporaryStream;
     }
 
     private function getItem(string $path): VirtualFilesystemItem

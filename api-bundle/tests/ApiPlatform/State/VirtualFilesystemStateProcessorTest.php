@@ -67,8 +67,13 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     {
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('writeStream')
+            ->willReturnCallback(
+                static function (string $location, $contents): void {
+                    stream_get_contents($contents);
+                },
+            )
         ;
 
         $processor = $this->createProcessor($storage, 3);
