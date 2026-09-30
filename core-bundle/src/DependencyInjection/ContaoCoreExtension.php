@@ -37,7 +37,6 @@ use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookEvent;
-use Contao\CoreBundle\Webhook\Attribute\AsWebhookEventProvider;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;

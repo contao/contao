@@ -60,12 +60,12 @@ class WebhookFieldListenerTest extends TestCase
         $this->assertSame($encrypted, $listener->saveSecret($encrypted, $dataContainer));
     }
 
-    public function testMasksIncomingSecret(): void
+    public function testMasksSecret(): void
     {
         $listener = $this->createListener();
 
-        $this->assertSame('********', $listener->loadIncomingSecret('encrypted-secret'));
-        $this->assertSame('', $listener->loadIncomingSecret(''));
+        $this->assertSame('********', $listener->loadSecret('encrypted-secret'));
+        $this->assertSame('', $listener->loadSecret(''));
     }
 
     public function testPreservesOutgoingSecretWhenPlaceholderIsSubmitted(): void

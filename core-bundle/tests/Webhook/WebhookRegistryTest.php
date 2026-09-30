@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Webhook;
 use Contao\CoreBundle\DependencyInjection\Compiler\WebhookRegistryPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookEvent;
-use Contao\CoreBundle\Webhook\Attribute\AsWebhookEventProvider;
 use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
 use Contao\CoreBundle\Webhook\IncomingWebhookContext;
 use Contao\CoreBundle\Webhook\WebhookConsumerInterface;
@@ -40,7 +39,7 @@ class WebhookRegistryTest extends TestCase
         $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class, [[]]));
         $container->setDefinition(TestWebhookReceiver::class, new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class]));
         $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class));
-        $container->setDefinition(TestWebhookProvider::class, new Definition(TestWebhookProvider::class)->addTag('contao.webhook_event_provider'));
+        $container->setDefinition(TestWebhookEvent::class, new Definition(TestWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
 
         $pass = new WebhookRegistryPass();
         $pass->process($container);
@@ -70,8 +69,8 @@ class WebhookRegistryTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class, [[], new Reference('service_container')]));
         $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class, [[]]));
-        $container->setDefinition(TestWebhookProvider::class, new Definition(TestWebhookProvider::class)->addTag('contao.webhook_event_provider'));
-        $container->setDefinition(TestDuplicateWebhookProvider::class, new Definition(TestDuplicateWebhookProvider::class)->addTag('contao.webhook_event_provider'));
+        $container->setDefinition(TestWebhookEvent::class, new Definition(TestWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
+        $container->setDefinition(TestDuplicateWebhookEvent::class, new Definition(TestDuplicateWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -123,20 +122,20 @@ final readonly class TestWebhookEvent implements WebhookEventInterface
     }
 }
 
-#[AsWebhookEventProvider]
-final class TestWebhookProvider
+#[AsWebhookEvent('test.event')]
+final readonly class TestDuplicateWebhookEvent implements WebhookEventInterface
 {
-    public static function getEvents(): iterable
+    public function __construct(public string $id)
     {
-        yield TestWebhookEvent::class;
     }
-}
 
-#[AsWebhookEventProvider]
-final class TestDuplicateWebhookProvider
-{
-    public static function getEvents(): iterable
+    public function getId(): string
     {
-        yield TestWebhookEvent::class;
+        return $this->id;
+    }
+
+    public function getPayload(): array
+    {
+        return ['id' => $this->id];
     }
 }
