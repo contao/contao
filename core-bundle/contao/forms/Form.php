@@ -579,7 +579,8 @@ class Form extends Hybrid
 							continue;
 						}
 
-						$email->attachFromPath($file['tmp_name'], $file['name'], $file['type']);
+						// Read the file right away, as the temporary file might be gone once the e-mail is sent asynchronously
+						$email->attach(file_get_contents($file['tmp_name']), $file['name'], $file['type']);
 					}
 				}
 			}

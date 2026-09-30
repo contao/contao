@@ -383,8 +383,6 @@ class Email
 			{
 				System::getContainer()->get('contao.mailer.inline_image_embedder')->embedImages($this->objMessage, Environment::get('base'), $this->strImageDir ?: null);
 			}
-
-			$this->objMessage->html($this->strHtml, $this->strCharset);
 		}
 
 		// Text content
