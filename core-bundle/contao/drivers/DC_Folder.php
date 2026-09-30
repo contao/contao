@@ -2988,7 +2988,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
-					if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $currentFolder))
+					if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $currentFolder) && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $currentFolder))
 					{
 						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
@@ -3290,7 +3290,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not allow file operations on root folders
 		if (\in_array(Input::get('act'), array('edit', 'paste', 'delete')))
 		{
-			if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strFile))
+			if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $strFile))
 			{
 				throw new AccessDeniedException('Attempt to edit, copy, move or delete the root folder "' . $strFile . '".');
 			}
