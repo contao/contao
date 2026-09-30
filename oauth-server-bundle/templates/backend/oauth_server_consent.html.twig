@@ -1,4 +1,4 @@
-{% trans_default_domain 'contao_default' -%}
+{% trans_default_domain 'ContaoOAuthServerBundle' -%}
 
 <!DOCTYPE html>
 <html lang="{{ app.locale|language_tag }}" data-turbo="false">
@@ -7,7 +7,7 @@
 
     {% block head %}
         <meta charset="UTF-8">
-        <title>{{ 'MSC.oauthTitle'|trans([client_name]) }} | {{ app.request.host }}</title>
+        <title>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }} | {{ app.request.host }}</title>
 
         {% block meta %}
             <meta name="generator" content="Contao Open Source CMS">
@@ -31,12 +31,12 @@
                     <div class="formbody">
                         <input type="hidden" name="request_key" value="{{ request_key }}">
                         <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
-                        <h1>{{ 'MSC.oauthTitle'|trans([client_name]) }}</h1>
-                        <p>{{ 'MSC.oauthConnect'|trans([user.username|e])|raw }}</p>
-                        <p>{{ 'MSC.oauthRedirect'|trans([client_host|e, redirect_host|e])|raw }}</p>
+                        <h1>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }}</h1>
+                        <p>{{ 'oauth_server_connect'|trans({'%username%': user.username|e})|raw }}</p>
+                        <p>{{ 'oauth_server_redirect'|trans({'%client_host%': client_host|e, '%redirect_host%': redirect_host|e})|raw }}</p>
                         <div class="submit_container">
-                            <button type="submit" class="tl_submit" name="decision" value="allow">{{ 'MSC.allow'|trans }}</button>
-                            <button type="submit" class="tl_submit" name="decision" value="deny">{{ 'MSC.deny'|trans }}</button>
+                            <button type="submit" class="tl_submit" name="decision" value="allow">{{ 'oauth_server_allow'|trans }}</button>
+                            <button type="submit" class="tl_submit" name="decision" value="deny">{{ 'oauth_server_deny'|trans }}</button>
                         </div>
                     </div>
                 </form>

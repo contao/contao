@@ -2426,21 +2426,6 @@
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
       </trans-unit>
-      <trans-unit id="MSC.oauthTitle">
-        <source>Connect %s with Contao?</source>
-      </trans-unit>
-      <trans-unit id="MSC.oauthConnect">
-        <source>The application will act as &lt;strong&gt;%s&lt;/strong&gt; and can do &lt;strong&gt;everything&lt;/strong&gt; this user account is allowed to do in the backend.</source>
-      </trans-unit>
-      <trans-unit id="MSC.oauthRedirect">
-        <source>The client &lt;strong&gt;%s&lt;/strong&gt; will redirect you to &lt;strong&gt;%s&lt;/strong&gt; after you allowed the connection.</source>
-      </trans-unit>
-      <trans-unit id="MSC.allow">
-        <source>Allow</source>
-      </trans-unit>
-      <trans-unit id="MSC.deny">
-        <source>Deny</source>
-      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
