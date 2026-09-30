@@ -248,10 +248,10 @@ tl_user_group:
         tstamp: 1704067200
         name: Records | Forms | Create and update
         cud:
-            - 'tl_form::create'
-            - 'tl_form::update'
-            - 'tl_form_field::create'
-            - 'tl_form_field::update'
+            - tl_form::create
+            - tl_form::update
+            - tl_form_field::create
+            - tl_form_field::update
         disable: 0
     group_members_customers:
         tstamp: 1704067200
@@ -300,11 +300,11 @@ tl_user_group:
         modules:
             - page
         alexf:
-            - 'tl_page::title'
-            - 'tl_page::alias'
-            - 'tl_page::pageTitle'
-            - 'tl_page::description'
-            - 'tl_page::robots'
+            - tl_page::title
+            - tl_page::alias
+            - tl_page::pageTitle
+            - tl_page::description
+            - tl_page::robots
         disable: 0
 
 tl_user:
@@ -314,7 +314,7 @@ tl_user:
         name: Administrator
         email: administrator@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         admin: 1
         disable: 0
         dateAdded: 1704067200
@@ -324,7 +324,7 @@ tl_user:
         name: Content editor
         email: content-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_pages_main_content'
             - '@group_content_elements_basic'
@@ -340,7 +340,7 @@ tl_user:
         name: Site manager
         email: site-manager@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_pages_microsite_structure'
             - '@group_themes_layouts'
@@ -357,7 +357,7 @@ tl_user:
         name: File uploader
         email: file-uploader@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_files_media_upload'
         inherit: group
@@ -369,7 +369,7 @@ tl_user:
         name: File manager
         email: file-manager@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_files_private_manage'
         inherit: group
@@ -381,7 +381,7 @@ tl_user:
         name: Form editor
         email: form-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_forms_contact'
             - '@group_form_fields_basic'
@@ -395,7 +395,7 @@ tl_user:
         name: Member manager
         email: member-manager@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_members_customers'
         inherit: group
@@ -407,7 +407,7 @@ tl_user:
         name: News editor
         email: news-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_news_corporate'
         inherit: group
@@ -419,7 +419,7 @@ tl_user:
         name: Calendar editor
         email: calendar-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_calendars_events'
         inherit: group
@@ -431,7 +431,7 @@ tl_user:
         name: FAQ editor
         email: faq-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_faqs_support'
         inherit: group
@@ -443,7 +443,7 @@ tl_user:
         name: Newsletter editor
         email: newsletter-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_newsletters_marketing'
         inherit: group
@@ -455,7 +455,7 @@ tl_user:
         name: Restricted editor
         email: restricted-editor@example.com
         language: en
-        password: '$argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g'
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
             - '@group_fields_pages_seo'
         inherit: extend
