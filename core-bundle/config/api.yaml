@@ -3,8 +3,8 @@ services:
     contao.api.widget.row_wizard_converter:
         class: Contao\CoreBundle\Api\Widget\RowWizardConverter
         arguments:
-            - '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
-            - '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
+            - '@contao_api.widget.converter_registry'
+            - '@contao_api.schema.data_container_factory'
         tags:
             - { name: contao.api.widget_converter, priority: -100 }
 
