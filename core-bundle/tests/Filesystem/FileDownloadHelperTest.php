@@ -145,6 +145,22 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
+    /**
+     * @dataProvider provideDownloadRequests
+     */
+    public function testDetectsDownloadRequests(string $url, bool $expected): void
+    {
+        $this->assertSame($expected, $this->getFileDownloadHelper()->isDownloadRequest(Request::create($url)));
+    }
+
+    public static function provideDownloadRequests(): iterable
+    {
+        yield 'download URL' => ['https://example.com/?_hash=foo&p=my_file.txt', true];
+        yield 'signed URL without path' => ['https://example.com/?_hash=foo', false];
+        yield 'path without signature' => ['https://example.com/?p=my_file.txt', false];
+        yield 'regular URL' => ['https://example.com/', false];
+    }
+
     public function testPreservesQueryParameters(): void
     {
         $helper = $this->getFileDownloadHelper();
