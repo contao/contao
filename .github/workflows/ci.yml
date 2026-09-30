@@ -462,6 +462,10 @@ jobs:
                               $data["repositories"][3]["type"] = "path";
                               $data["repositories"][3]["url"] = "../api-bundle";
                           }
+                          if ("contao/oauth-server-bundle" !== $data["name"]) {
+                              $data["repositories"][4]["type"] = "path";
+                              $data["repositories"][4]["url"] = "../oauth-server-bundle";
+                          }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
                       composer install --no-interaction --no-progress
