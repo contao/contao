@@ -166,7 +166,11 @@ export default class extends Controller {
                 const redirect = response.headers.get('X-Ajax-Location');
 
                 // A successful cut redirects back, an invalid request token to the confirm page
-                if (!redirect || new URL(redirect, window.location.href).pathname === new URL(this.confirmUrlValue, window.location.href).pathname) {
+                if (
+                    !redirect ||
+                    new URL(redirect, window.location.href).pathname ===
+                        new URL(this.confirmUrlValue, window.location.href).pathname
+                ) {
                     throw new Error(response.statusText);
                 }
             })
