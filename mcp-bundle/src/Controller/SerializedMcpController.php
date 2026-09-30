@@ -44,10 +44,7 @@ final class SerializedMcpController
             return $this->inner->handle($request);
         }
 
-        $lock = $this->lockFactory->createLock(
-            'contao-mcp-session-'.hash('sha256', $sessionId),
-        );
-
+        $lock = $this->lockFactory->createLock('contao-mcp-session-'.hash('sha256', $sessionId));
         $lock->acquire(true);
 
         try {
