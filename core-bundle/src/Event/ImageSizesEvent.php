@@ -19,7 +19,7 @@ class ImageSizesEvent extends Event
 {
     public function __construct(
         private array $imageSizes,
-        private readonly BackendUser|null $user = null,
+        private readonly BackendUser|false|null $user = false,
     ) {
     }
 
@@ -36,7 +36,7 @@ class ImageSizesEvent extends Event
         $this->imageSizes = $imageSizes;
     }
 
-    public function getUser(): BackendUser
+    public function getUser(): BackendUser|false|null
     {
         return $this->user;
     }

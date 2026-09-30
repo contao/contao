@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -86,28 +87,73 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('My theme', $options);
     }
 
-    public function testReturnsTheAdminUserOptions(): void
+    public function testReturnsTheRegularUserOptions1(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
-
         $this->security
-            ->expects($this->once())
-            ->method('isGrantedForUser')
-            ->with($user, 'ROLE_ADMIN')
-            ->willReturn(true)
+            ->expects($this->atLeastOnce())
+            ->method('isGranted')
+            ->willReturnMap([
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 42, true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'crop', false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'proportional', false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'box', false],
+            ])
         ;
 
-        $options = $this->imageSizes->getOptionsForUser($user);
+        $options = $this->imageSizes->getOptionsForUser();
 
-        // Default options would not be returned without the admin check, because it is
-        // not within the allowed image sizes
-        $this->assertArrayHasKey('custom', $options);
+        $this->assertArrayNotHasKey('custom', $options);
+        $this->assertArrayHasKey('My theme', $options);
+        $this->assertArrayHasKey('42', $options['My theme']);
     }
 
-    public function testReturnsTheRegularUserOptions(): void
+    public function testReturnsTheRegularUserOptions2(): void
+    {
+        $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
+        $this->expectExampleImageSizes();
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('isGranted')
+            ->willReturnMap([
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 42, false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'crop', false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'proportional', true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'box', true],
+            ])
+        ;
+
+        $options = $this->imageSizes->getOptionsForUser();
+
+        $this->assertArrayHasKey('custom', $options);
+        $this->assertArrayNotHasKey('My theme', $options);
+    }
+
+    public function testReturnsTheRegularUserOptions3(): void
+    {
+        $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
+        $this->expectExampleImageSizes();
+
+        $this->security
+            ->expects($this->atLeastOnce())
+            ->method('isGranted')
+            ->willReturnMap([
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 42, false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'crop', false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'proportional', false],
+                [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'box', false],
+            ])
+        ;
+
+        $options = $this->imageSizes->getOptionsForUser();
+
+        $this->assertSame([], $options);
+    }
+
+    public function testReturnsTheOptionsForASpecificUser(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
@@ -120,8 +166,12 @@ class ImageSizesTest extends TestCase
         $this->security
             ->expects($this->atLeastOnce())
             ->method('isGrantedForUser')
-            ->with($user, 'ROLE_ADMIN')
-            ->willReturn(false)
+            ->willReturnMap([
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 42, true],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'crop', false],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'proportional', false],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, 'box', false],
+            ])
         ;
 
         $options = $this->imageSizes->getOptionsForUser($user);
@@ -129,25 +179,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('custom', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
-
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
-
-        // Allow only some default options
-        $user->imageSizes = ['proportional', 'box'];
-
-        $options = $this->imageSizes->getOptionsForUser($user);
-
-        $this->assertArrayHasKey('custom', $options);
-        $this->assertArrayNotHasKey('My theme', $options);
-
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
-
-        // Allow nothing
-        $user->imageSizes = [];
-
-        $options = $this->imageSizes->getOptionsForUser($user);
-
-        $this->assertSame([], $options);
     }
 
     public function testServiceIsResetable(): void
