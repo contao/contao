@@ -157,8 +157,10 @@ class Comments extends Frontend
 	 */
 	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
+		$security = System::getContainer()->get('security.helper');
+
 		// Access control
-		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if ($objConfig->requireLogin && !$security->isGranted('ROLE_MEMBER'))
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];
@@ -174,7 +176,7 @@ class Comments extends Frontend
 			return;
 		}
 
-		$user = FrontendUser::getInstance();
+		$user = $security->getUser();
 
 		// Form fields
 		$arrFields = array
@@ -183,7 +185,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'name',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_name'],
-				'value'     => trim($user->firstname . ' ' . $user->lastname),
+				'value'     => $user instanceof FrontendUser ? trim($user->firstname . ' ' . $user->lastname) : '',
 				'inputType' => 'text',
 				'eval'      => array('mandatory'=>true, 'maxlength'=>64)
 			),
@@ -191,7 +193,7 @@ class Comments extends Frontend
 			(
 				'name'      => 'email',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
-				'value'     => $user->email,
+				'value'     => $user instanceof FrontendUser ? $user->email : '',
 				'inputType' => 'text',
 				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255)
 			),
@@ -306,13 +308,7 @@ class Comments extends Frontend
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
 
-			$intMember = 0;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$intMember = FrontendUser::getInstance()->id;
-			}
-
+			$intMember = $user instanceof FrontendUser ? $user->id : 0;
 			$time = time();
 
 			// Prepare the record

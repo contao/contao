@@ -45,11 +45,11 @@ class ContentGallery extends ContentElement
 	public function generate()
 	{
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if ($this->useHomeDir)
 		{
-			$user = FrontendUser::getInstance();
+			$user = System::getContainer()->get('security.helper')->getUser();
 
-			if ($user->assignDir && $user->homeDir)
+			if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir)
 			{
 				$this->multiSRC = array($user->homeDir);
 			}

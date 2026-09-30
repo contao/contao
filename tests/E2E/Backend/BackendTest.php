@@ -14,15 +14,14 @@ namespace Contao\E2eTests\Backend;
 
 use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTesting\Browser\BrowserOptions;
-use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\File\FileMapping;
-use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
 class BackendTest extends AbstractContaoMonorepoE2ETestCase
 {
+    use BackendTestTrait;
+
     public function testBackendLogin(): void
     {
         $backend = self::managedEdition()->createBackendBrowser();
@@ -64,10 +63,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testAuthenticatesAConfiguredRole(): void
     {
-        $backend = self::managedEdition()->createBackendBrowser();
-        $backend->visit('/contao/login');
-        $backend->submitLogin('content-editor', 'backend');
-        $backend->waitFor('h1');
+        $this->login('content-editor', 'backend');
 
         $this->assertSelectorTextContains('h1', 'Dashboard');
         $this->assertSelectorTextContains('#tmenu', 'content-editor');
@@ -86,10 +82,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
     {
         $options = BrowserOptions::create()->withViewport(1440, 1200);
 
-        $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->visit('/contao/login');
-        $backend->submitLogin('k.jones', 'kevinjones');
-        $backend->waitFor('h1');
+        $backend = $this->login(options: $options);
 
         $this->assertSelectorTextContains('h1', 'Dashboard');
 
@@ -104,41 +97,6 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSelectorTextContains('h1', 'Headline');
         $this->assertSelectorTextContains('p', 'Lorem ipsum dolor sit amet.');
         $this->assertSelectorExists('img[src*="dummy.jpg"]');
-    }
-
-    protected static function createManagedEditionConfig(): ManagedEditionConfig
-    {
-        $composer = self::createMonorepoComposerConfig(
-            'calendar-bundle',
-            'core-bundle',
-            'faq-bundle',
-            'news-bundle',
-            'newsletter-bundle',
-        );
-
-        $recipe = InstallationRecipe::create($composer)
-            ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
-            ->withFixtureFile(self::fixtureDirectory().'/default.yaml')
-            ->withFileMapping(new FileMapping(
-                self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
-                'files/images/dummy.jpg',
-            ))
-            ->withFileMapping(new FileMapping(
-                self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
-                'files/media/dummy.jpg',
-            ))
-            ->withFileMapping(new FileMapping(
-                self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg',
-                'files/private/dummy.jpg',
-            ))
-        ;
-
-        return ManagedEditionConfig::create($recipe, self::projectDirectory());
-    }
-
-    private static function fixtureDirectory(): string
-    {
-        return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
     }
 
     private function createTheme(BackendBrowser $backend): void
@@ -217,7 +175,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->checkAndWaitForAjax('addImage');
         $backend->waitFor('#ctrl_singleSRC');
         $backend->fillRichText('text', 'Lorem ipsum dolor sit amet.');
-        $backend->selectFile('singleSRC', 'files/images/dummy.jpg', $image->toRfc4122());
+        $backend->selectFile('singleSRC', self::DUMMY_IMAGE, $image->toRfc4122());
 
         $backend->submitForm(
             'Save and close',
@@ -226,22 +184,5 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
                 'headline[unit]' => 'h1',
             ],
         );
-    }
-
-    private function registerDummyImage(): Uuid
-    {
-        self::managedEdition()->synchronizeFiles('files/images/dummy.jpg');
-
-        $uuid = self::managedEdition()
-            ->database()
-            ->connection()
-            ->fetchOne('SELECT uuid FROM tl_files WHERE path = ?', ['files/images/dummy.jpg'])
-        ;
-
-        if (!\is_string($uuid)) {
-            throw new \LogicException('Could not find the synchronized dummy image.');
-        }
-
-        return Uuid::fromBinary($uuid);
     }
 }
