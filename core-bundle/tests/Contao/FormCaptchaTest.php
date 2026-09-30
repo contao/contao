@@ -38,6 +38,7 @@ class FormCaptchaTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.cache_dir', __DIR__);
+
         $container->set(
             'contao.rate_limit.form_captcha_factory',
             new RateLimiterFactory(
@@ -45,6 +46,7 @@ class FormCaptchaTest extends TestCase
                 new InMemoryStorage(),
             ),
         );
+
         $stack->push(new Request([], [
             'captcha_test' => '10',
             'captcha_test_hash101' => $this->getHash(10, 'proof'),
