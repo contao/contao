@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 
 class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInterface
@@ -113,7 +114,13 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
      */
     private function hasAccessToFilemount(array $filemounts, string $path, bool $subpath): bool
     {
+        $path = Path::canonicalize($path);
+
         foreach ($filemounts as $folder) {
+            if (!\is_string($folder) || '' === $folder) {
+                continue;
+            }
+
             $regexp = '/^'.preg_quote($folder, '/');
             $regexp .= $subpath ? '(\/.+)/i' : '(\/|$)/i';
 
