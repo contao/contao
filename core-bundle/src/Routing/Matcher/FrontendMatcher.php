@@ -16,19 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 /**
- * @internal
+ * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
  */
-class RequestMatcher implements RequestMatcherInterface
+class FrontendMatcher implements RequestMatcherInterface
 {
-    public function __construct(
-        private readonly string $scope,
-        private readonly bool $stateless,
-    ) {
-    }
-
     public function matches(Request $request): bool
     {
-        return $this->scope === $request->attributes->get('_scope')
-            && $this->stateless === $request->attributes->getBoolean('_stateless');
+        return 'frontend' === $request->attributes->get('_scope');
     }
 }
