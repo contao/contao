@@ -105,11 +105,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             },
         );
 
-        if (
-            $response instanceof StreamedResponse
-            || $response instanceof BinaryFileResponse
-            || !$response->isSuccessful()
-        ) {
+        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse || !$response->isSuccessful()) {
             throw new ResponseException($response);
         }
     }
