@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @experimental
@@ -31,7 +31,7 @@ interface ProviderInterface
 
     public function supportsType(string $type): bool;
 
-    public function isDocumentGranted(TokenInterface $token, Document $document): bool;
+    public function isDocumentGranted(UserInterface $user, Document $document): bool;
 
     public function convertTypeToVisibleType(string $type): string;
 }

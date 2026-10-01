@@ -21,7 +21,7 @@ use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -128,12 +128,12 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
         return $hit;
     }
 
-    public function isDocumentGranted(TokenInterface $token, Document $document): bool
+    public function isDocumentGranted(UserInterface $user, Document $document): bool
     {
         $permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
             $this->filesStorage,
             $this->security,
-            $token->getUser(),
+            $user,
         );
 
         return $permissionCheckingFilesStorage->canAccessLocation($document->getMetadata()['path'] ?? '');

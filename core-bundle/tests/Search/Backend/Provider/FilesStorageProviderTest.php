@@ -30,7 +30,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -199,14 +198,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
         $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
 
-        $token = $this->createStub(TokenInterface::class);
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
-        $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
+        $this->assertTrue($provider->isDocumentGranted($user, $allowedDocument));
+        $this->assertFalse($provider->isDocumentGranted($user, $disallowedDocument));
     }
 
     public function testConvertTypeToVisibleType(): void
