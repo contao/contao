@@ -26,6 +26,12 @@
             "url": "https://to.contao.org/donate"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Toflar/playwright.git"
+        }
+    ],
     "require": {
         "php": "^8.4",
         "ext-dom": "*",
@@ -39,7 +45,7 @@
         "ext-session": "*",
         "ext-zlib": "*",
         "composer-runtime-api": "^2.0.14",
-        "api-platform/core": "^4.3",
+        "api-platform/core": "^5.0",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^3.0.4",
         "cmsig/seal": "^0.12.2",
@@ -53,6 +59,7 @@
         "contao-components/datepicker": "^3.0",
         "contao-components/dropzone": "^6.0",
         "contao-components/handorgel": "^1.0",
+        "contao-components/hugerte": "^1.0",
         "contao-components/jquery": "^3.5",
         "contao-components/jquery-ui": "^1.11.4",
         "contao-components/mediabox": "^1.5",
@@ -62,7 +69,6 @@
         "contao-components/swiper": "^11.0 || ^12.0 || ^14.0",
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
-        "contao-components/tinymce": "^5.0 || ^6.0 || ^7.0 || ^8.0",
         "contao-components/tristen-tablesort": "^5.3",
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0.2",
@@ -77,14 +83,15 @@
         "friendsofsymfony/http-cache-bundle": "^3.0",
         "guzzlehttp/promises": "^2.0",
         "imagine/imagine": "^1.3",
-        "knplabs/knp-menu": "^3.1",
-        "knplabs/knp-menu-bundle": "^3.0",
+        "knplabs/knp-menu": "^3.8",
+        "knplabs/knp-menu-bundle": "^3.7",
         "knplabs/knp-time-bundle": "^1.11 || ^2.0",
         "lcobucci/jwt": "^5.5",
         "league/commonmark": "^2.2",
         "league/flysystem": "^3.7",
         "league/flysystem-bundle": "^3.7",
         "league/flysystem-local": "^3.0",
+        "league/oauth2-server": "^9.4",
         "loupe/loupe": "^0.13.2 || ^1.0",
         "matthiasmullie/minify": "^1.3",
         "mcp/sdk": "^0.8.1",
@@ -97,7 +104,7 @@
         "paragonie/constant_time_encoding": "^2.8 || ^3.1",
         "php-feed-io/feed-io": "^6.0",
         "phpspec/php-diff": "^1.0",
-        "phpunit/phpunit": "^12.4",
+        "phpunit/phpunit": "^13.0",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "psr/http-message": "^1.0 || ^2.0",
@@ -139,6 +146,7 @@
         "symfony/http-foundation": "^7.4 || ^8.0",
         "symfony/http-kernel": "^7.4.11 || ^8.0",
         "symfony/intl": "^7.4 || ^8.0",
+        "symfony/lock": "^7.4 || ^8.0",
         "symfony/mailer": "^7.4 || ^8.0",
         "symfony/maker-bundle": "^1.1",
         "symfony/mcp-bundle": "^0.13",
@@ -153,6 +161,7 @@
         "symfony/polyfill-php85": "^1.34",
         "symfony/process": "^7.4 || ^8.0",
         "symfony/property-access": "^7.4 || ^8.0",
+        "symfony/psr-http-message-bridge": "^7.4 || ^8.0",
         "symfony/rate-limiter": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0",
         "symfony/security-bundle": "^7.4 || ^8.0",
@@ -181,8 +190,8 @@
         "twig/twig": "^3.21",
         "ua-parser/uap-php": "^3.9",
         "vstelmakh/url-highlight": "^4.0",
-        "web-auth/webauthn-lib": "^5.0",
-        "web-auth/webauthn-symfony-bundle": "^5.0",
+        "web-auth/webauthn-lib": "^5.3",
+        "web-auth/webauthn-symfony-bundle": "^5.3",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
     },
@@ -191,9 +200,12 @@
         "bamarni/composer-bin-plugin": "^1.4",
         "cmsig/seal-memory-adapter": "^0.12",
         "composer/composer": "^2.0",
+        "contao/e2e-testing": "dev-main",
+        "contao/installation-recipe": "dev-main",
         "doctrine/collections": "^2.1 || ^3.0",
         "league/flysystem-memory": "^3.0",
-        "sebastian/diff": "^7.0",
+        "playwright-php/playwright": "dev-fix/native-playwright-action-waiting as 1.5.x-dev",
+        "sebastian/diff": "^9.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^7.4 || ^8.0"
     },
@@ -210,6 +222,7 @@
         "contao/mcp-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
+        "contao/oauth-server-bundle": "self.version",
         "contao/test-case": "self.version"
     },
     "conflict": {
@@ -220,11 +233,12 @@
         "masterminds/html5": "<2.8",
         "nikic/php-parser": "4.7.0",
         "symfony/doctrine-bridge": ">=7.4.14 <7.4.16 || >=8.0.14 <8.1.4",
-        "terminal42/contao-ce-access": "<3.0",
-        "web-auth/webauthn-symfony-bundle": "5.1.* <5.1.3 || 5.2.0 || 5.2.1",
         "zendframework/zend-code": "<3.3.1"
     },
     "autoload": {
+        "files": [
+            "core-bundle/functions.php"
+        ],
         "psr-4": {
             "Contao\\ApiBundle\\": "api-bundle/src/",
             "Contao\\CalendarBundle\\": "calendar-bundle/src/",
@@ -238,6 +252,7 @@
             "Contao\\McpBundle\\": "mcp-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
+            "Contao\\OAuthServerBundle\\": "oauth-server-bundle/src/",
             "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
@@ -285,6 +300,7 @@
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
             "Contao\\CoreBundle\\Fixtures\\": "core-bundle/tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
+            "Contao\\E2eTests\\": "tests/E2E/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\MakerBundle\\Fixtures\\": "maker-bundle/tests/Fixtures/src/",
             "Contao\\MakerBundle\\Tests\\": "maker-bundle/tests/",
@@ -292,6 +308,7 @@
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
+            "Contao\\OAuthServerBundle\\Tests\\": "oauth-server-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
@@ -328,7 +345,8 @@
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
-            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
+            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
+            "contao/oauth-server-bundle": "Contao\\OAuthServerBundle\\ContaoManager\\Plugin"
         }
     },
     "scripts": {
@@ -350,6 +368,7 @@
         "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
+        "e2e-tests": "@php vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",

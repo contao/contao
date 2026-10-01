@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Controller\Backend\SearchController;
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
@@ -49,6 +50,37 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumFileUploadSize(): void
+    {
+        $container = $this->getContainerBuilder(['contao' => ['max_file_upload_size' => 1234]]);
+
+        $this->assertSame(1234, $container->getParameter('contao.max_file_upload_size'));
+    }
+
+    public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
+    {
+        $container = new ContainerBuilder(new ParameterBag([
+            'kernel.debug' => false,
+            'kernel.charset' => 'UTF-8',
+            'kernel.project_dir' => $this->getTempDir(),
+            'kernel.default_locale' => 'en',
+            'kernel.bundles' => ['ContaoApiBundle' => true],
+        ]));
+
+        new ContaoCoreExtension()->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
+        $definition = $container->getDefinition('contao.api.widget_converter');
+
+        $this->assertSame(CoreWidgetConverter::class, $definition->getClass());
+        $this->assertSame([['priority' => -100]], $definition->getTag('contao.api.widget_converter'));
+    }
+
+    public function testDoesNotRegisterApiWidgetsWithoutTheApiBundle(): void
+    {
+        $this->assertFalse($this->getContainerBuilder()->hasDefinition('contao.api.widget_converter'));
+    }
+
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();
@@ -693,6 +725,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'backend_search' => [
                         'dsn' => 'whatever://search-adapter-you-like',
                         'index_name' => 'my_backend_search_index',
+                        'facets' => [
+                            'max_groups' => 42,
+                        ],
                     ],
                 ],
             ],
@@ -707,6 +742,12 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
         $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
         $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
+
+        $allowedGroupsResolver = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+        $this->assertSame(42, $allowedGroupsResolver->getArgument('$maxGroups'));
+
+        $documentAccessEvaluator = $container->getDefinition('contao.search.backend.security.document_access_evaluator');
+        $this->assertSame('contao.security.authentication.contao_strategy_context', (string) $documentAccessEvaluator->getArgument(1));
     }
 
     public function testCspConfiguration(): void
@@ -767,6 +808,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -776,6 +819,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

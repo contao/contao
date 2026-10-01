@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/12.4/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.3/phpunit.xsd"
         colors="true"
         defaultTestSuite="unit"
         bootstrap="vendor/autoload.php"
@@ -25,6 +25,7 @@
       <directory>./mcp-bundle/src</directory>
       <directory>./news-bundle/src</directory>
       <directory>./newsletter-bundle/src</directory>
+      <directory>./oauth-server-bundle/src</directory>
     </include>
     <exclude>
       <!-- exclude resources that are exempt from testing -->
@@ -39,6 +40,8 @@
     <env name="APP_ENV" value="test"/>
     <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
+    <env name="PW_TIMEOUT_MS" value="5000"/>
+    <env name="COLUMNS" value="120" force="true"/>
   </php>
   <testsuites>
     <testsuite name="unit">
@@ -49,6 +52,9 @@
     <testsuite name="functional">
       <directory>./core-bundle/tests/Functional</directory>
       <exclude>./core-bundle/tests/Functional/app</exclude>
+    </testsuite>
+    <testsuite name="e2e">
+      <directory>./tests/E2E</directory>
     </testsuite>
     <testsuite name="coverage">
       <directory>./*-bundle/tests</directory>

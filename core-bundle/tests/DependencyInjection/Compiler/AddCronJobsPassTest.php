@@ -29,7 +29,8 @@ class AddCronJobsPassTest extends TestCase
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container
-            ->method('hasDefinition')
+            ->expects($this->once())
+            ->method('has')
             ->with('contao.cron')
             ->willReturn(false)
         ;

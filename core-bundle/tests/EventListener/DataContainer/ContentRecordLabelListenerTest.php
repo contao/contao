@@ -36,6 +36,14 @@ class ContentRecordLabelListenerTest extends TestCase
         $this->assertSame('Internal', $event->getLabel());
     }
 
+    public function testDecodesEntities(): void
+    {
+        $listener = new ContentRecordLabelListener($this->createStub(TranslatorStub::class));
+        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_content.123', ['id' => 123, 'type' => 'foo', 'title' => 'Foo &#40;bar&#41;']));
+
+        $this->assertSame('Foo (bar)', $event->getLabel());
+    }
+
     public function testGetsLabelFromTranslator(): void
     {
         $catalogue = $this->createStub(MessageCatalogueInterface::class);

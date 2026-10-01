@@ -49,22 +49,17 @@ class FrontendUser extends User
 	protected $roles = array('ROLE_MEMBER');
 
 	/**
-	 * Initialize the object
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-
-		$this->strIp = Environment::get('ip');
-	}
-
-	/**
 	 * Instantiate a new user object
 	 *
 	 * @return static|User The object instance
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             get the user from the Symfony security services instead.
 	 */
 	public static function getInstance()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Calling "%s()" is deprecated and will no longer work in Contao 7. Get the user from the Symfony security services instead.', __METHOD__);
+
 		if (static::$objInstance !== null)
 		{
 			return static::$objInstance;
@@ -176,8 +171,6 @@ class FrontendUser extends User
 				$this->arrData[$k] = StringUtil::deserialize($v);
 			}
 		}
-
-		$GLOBALS['TL_USERNAME'] = $this->username;
 
 		// Make sure that groups is an array
 		if (!\is_array($this->groups))

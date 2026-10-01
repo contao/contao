@@ -37,7 +37,9 @@ class JobsController extends AbstractBackendController
     )]
     public function latestJobsAction(Request $request): Response
     {
-        $jobs = $this->jobs->findMyRecent($request->query->getInt('range'));
+        // Polling intervals are sent in milliseconds, but job timestamps use seconds
+        $window = (int) ceil($request->query->getInt('range') / 1000);
+        $jobs = $this->jobs->findMyRecent($window);
         $etag = $this->buildEtag($jobs);
 
         $etagResponse = new Response();

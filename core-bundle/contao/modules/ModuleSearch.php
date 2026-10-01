@@ -94,7 +94,7 @@ class ModuleSearch extends Module
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
-		$this->Template->keyword = StringUtil::specialchars($strKeywords);
+		$this->Template->keyword = $strKeywords;
 		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
 		$this->Template->search = $GLOBALS['TL_LANG']['MSC']['searchLabel'];
@@ -244,10 +244,10 @@ class ModuleSearch extends Module
 			{
 				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
-				$objTemplate->href = StringUtil::specialchars($arrResult[$i]['url']);
-				$objTemplate->link = StringUtil::specialchars($arrResult[$i]['title']);
-				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
-				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
+				$objTemplate->href = $arrResult[$i]['url'];
+				$objTemplate->link = $arrResult[$i]['title'];
+				$objTemplate->url = urldecode($arrResult[$i]['url']);
+				$objTemplate->title = StringUtil::stripInsertTags($arrResult[$i]['title']);
 				$objTemplate->relevance = \sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
