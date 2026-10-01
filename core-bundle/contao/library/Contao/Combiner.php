@@ -325,7 +325,7 @@ class Combiner extends System
 		$strLink = Path::join($strDirectory, $strKey . $this->strMode);
 		$strLinkPath = Path::join($this->strRootDir, $strLink);
 
-		// Resolve the version based symlink
+		// Resolve the key based symlink
 		if (is_link($strLinkPath) && is_file($strLinkPath))
 		{
 			return Path::join($strUrl, $strDirectory, basename(readlink($strLinkPath)));
@@ -374,7 +374,7 @@ class Combiner extends System
 		$strPath = Path::join($strDirectory, $strPrefix . '-' . $strHash . $this->strMode);
 		$objFile->renameTo($strPath);
 
-		// Create a symlink for the version based file
+		// Create a symlink for the key based file
 		if (!is_link($strLinkPath) && file_exists($strLinkPath))
 		{
 			(new Filesystem())->remove($strLinkPath);
