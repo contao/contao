@@ -47,10 +47,6 @@ final class FrontendTools
     #[McpTool(name: 'contao_frontend_inspect', description: 'Render a Contao page as the current backend user would see it in frontend preview, including unpublished content. For publishable content, prefer creating or updating it as unpublished, inspect the affected page with this tool, and publish only after verifying the result. Returns response metadata and up to '.(self::MAX_CONTENT_LENGTH / 1024).' KiB of HTML.', annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false))]
     public function inspect(#[Schema(minimum: 1)] int $page): array
     {
-        if ($page < 1) {
-            throw new ToolCallException('The page ID must be at least 1.');
-        }
-
         if (!$this->security->isGranted('ROLE_USER')) {
             throw new ToolCallException('Frontend inspection requires an authenticated backend user.');
         }
