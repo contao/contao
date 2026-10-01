@@ -83,8 +83,7 @@ return (new Configuration())
     // Allows us to use the Pdo/Mysql class in PHP <8.4 (see #9736).
     ->ignoreErrorsOnPackage('symfony/polyfill-php84', [ErrorType::UNUSED_DEPENDENCY])
 
-    // The rate limiter is used in service definitions, which are not detected
-    // by the analyser.
+    // The rate limiter is used in service definitions, which the analyzer does not detect.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
 
     // The web profiler uses the stopwatch component if it is installed.
