@@ -43,6 +43,12 @@ services:
             - '@contao_mcp.response.api_converter'
             - '@contao_mcp.api.binary_payload_handler'
 
+    contao_mcp.tool.twig_environment_tools:
+        class: Contao\McpBundle\Tool\TwigEnvironmentTools
+        arguments:
+            - '@contao_mcp.twig.environment_inspector'
+            - '@security.helper'
+
     contao_mcp.tool.user_template_tools:
         class: Contao\McpBundle\Tool\UserTemplateTools
         autoconfigure: true
@@ -55,6 +61,11 @@ services:
             - '@contao_mcp.user_template.validator'
             - '@contao_mcp.user_template.impact_analyzer'
             - '@security.helper'
+
+    contao_mcp.twig.environment_inspector:
+        class: Contao\McpBundle\Twig\TwigEnvironmentInspector
+        arguments:
+            - '@twig'
 
     contao_mcp.user_template.impact_analyzer:
         class: Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer
