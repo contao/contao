@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\Asset\ContaoPackage;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -141,6 +142,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     {
         $package = new ChildDefinition('assets.path_package');
         $package
+            ->setClass(ContaoPackage::class)
             ->setPublic(false)
             ->replaceArgument(0, $basePath)
             ->replaceArgument(1, $version)
