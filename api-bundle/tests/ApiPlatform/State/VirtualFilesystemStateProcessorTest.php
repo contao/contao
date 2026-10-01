@@ -187,6 +187,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
     public function testReturnsNotFoundForAnUnresolvedUuid(): void
     {
         $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+
         $storage = $this->createMock(VirtualFilesystem::class);
         $storage
             ->expects($this->once())
@@ -264,6 +265,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
+
         $result = $processor->process(
             null,
             $this->createMetadataOperation(),
