@@ -35,11 +35,12 @@ class DataContainerMoveTest extends AbstractContaoMonorepoE2ETestCase
 
         [$status, $moved] = $this->apiRequest(
             'POST',
-            $text['@id'].'/move', [
+            $text['@id'].'/move',
+            [
                 'target' => (int) basename($group['@id']),
                 'position' => 'first',
                 'ptable' => 'tl_content',
-        ],
+            ],
         );
 
         $this->assertSame(200, $status, json_encode($moved, JSON_PRETTY_PRINT));
@@ -59,11 +60,12 @@ class DataContainerMoveTest extends AbstractContaoMonorepoE2ETestCase
 
         [$status] = $this->apiRequest(
             'POST',
-            $group['@id'].'/move', [
+            $group['@id'].'/move',
+            [
                 'target' => (int) basename($group['@id']),
                 'position' => 'first',
                 'ptable' => 'tl_content',
-        ],
+            ],
         );
 
         $this->assertGreaterThanOrEqual(400, $status);

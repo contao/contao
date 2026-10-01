@@ -27,10 +27,12 @@ class FileMetadataTest extends AbstractContaoMonorepoE2ETestCase
 
         [$status, $response] = $this->apiRequest(
             'POST',
-            '/contao/api/files_operations/metadata', [
+            '/contao/api/files_operations/metadata',
+            [
                 'path' => $path,
                 'data' => ['localized' => ['en' => ['title' => 'Title via API']]],
-        ], 'application/json',
+            ],
+            'application/json',
         );
 
         $this->assertSame(200, $status, json_encode($response, JSON_PRETTY_PRINT));

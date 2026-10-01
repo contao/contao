@@ -159,10 +159,11 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$status, $response] = $this->apiRequest(
             'POST',
-            '/contao/api/user_template_operations/create_'.$prefix.'_variant', [
+            '/contao/api/user_template_operations/create_'.$prefix.'_variant',
+            [
                 'name' => $base,
                 'parameters' => ['identifier_fragment' => $fragment],
-        ],
+            ],
         );
 
         $this->assertLessThan(300, $status, json_encode($response, JSON_PRETTY_PRINT));
@@ -175,10 +176,11 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$status, $response] = $this->apiRequest(
             'POST',
-            '/contao/api/user_template_operations/rename_'.$prefix.'_variant', [
+            '/contao/api/user_template_operations/rename_'.$prefix.'_variant',
+            [
                 'name' => $variant,
                 'parameters' => ['identifier_fragment' => $fragment],
-        ],
+            ],
         );
 
         $this->assertLessThan(300, $status, json_encode($response, JSON_PRETTY_PRINT));
