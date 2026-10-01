@@ -10,8 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\SymlinkUtil;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Combines .css or .js files into one single file
@@ -318,29 +321,23 @@ class Combiner extends System
 
 		$strPrefix = StringUtil::substr(implode(',', $arrPrefix), 64, '...');
 		$strKey = $strPrefix . '-' . substr(md5($this->strKey), 0, 8);
-		$strPath = 'assets/' . $strTarget . '/' . $strKey;
-		$strHashFile = $strPath . $this->strMode . '.hash';
+		$strDirectory = Path::join('assets', $strTarget);
+		$strLink = Path::join($strDirectory, $strKey . $this->strMode);
+		$strLinkPath = Path::join($this->strRootDir, $strLink);
 
-		// Load the existing hash lookup file
-		if (file_exists($this->strRootDir . '/' . $strHashFile))
+		// Resolve the version based symlink
+		if (is_link($strLinkPath) && is_file($strLinkPath))
 		{
-			$strHash = file_get_contents($this->strRootDir . '/' . $strHashFile);
-			$strCachedPath = 'assets/' . $strTarget . '/' . $strPrefix . '-' . $strHash . $this->strMode;
-
-			// Load the existing file
-			if (preg_match('/^[a-f0-9]{8}$/D', $strHash) && file_exists($this->strRootDir . '/' . $strCachedPath))
-			{
-				return $strUrl . $strCachedPath;
-			}
+			return Path::join($strUrl, $strDirectory, basename(readlink($strLinkPath)));
 		}
 
 		// Create the file
-		$objFile = new File($strPath . $this->strMode);
+		$objFile = new File($strLink);
 		$objFile->truncate();
 
 		foreach ($this->arrFiles as $arrFile)
 		{
-			$content = file_get_contents($this->strRootDir . '/' . $arrFile['name']);
+			$content = file_get_contents(Path::join($this->strRootDir, $arrFile['name']));
 
 			// Remove UTF-8 BOM
 			if (str_starts_with($content, "\xEF\xBB\xBF"))
@@ -372,16 +369,20 @@ class Combiner extends System
 		unset($content);
 		$objFile->close();
 
-		// Include the compiled contents in the hash
-		$strHash = substr(md5($this->strKey . '-c' . md5_file($this->strRootDir . '/' . $strPath . $this->strMode)), 0, 8);
-		$strKey = $strPrefix . '-' . $strHash;
-		$strPath = 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+		// Update to a content based hash (#10372)
+		$strHash = substr(md5($this->strKey . '-c' . $objFile->hash), 0, 8);
+		$strPath = Path::join($strDirectory, $strPrefix . '-' . $strHash . $this->strMode);
 		$objFile->renameTo($strPath);
 
-		// Store the hash alongside the scripts so clearing the script cache also clears the lookup
-		File::putContent($strHashFile, $strHash);
+		// Create a symlink for the version based file
+		if (!is_link($strLinkPath) && file_exists($strLinkPath))
+		{
+			(new Filesystem())->remove($strLinkPath);
+		}
 
-		return $strUrl . $strPath;
+		SymlinkUtil::symlink(Path::join($this->strRootDir, $strPath), $strLinkPath, $this->strRootDir);
+
+		return Path::join($strUrl, $strPath);
 	}
 
 	/**

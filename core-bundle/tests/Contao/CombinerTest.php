@@ -17,6 +17,7 @@ use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Dbafs;
 use Contao\Files;
+use Contao\Folder;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -297,11 +298,10 @@ class CombinerTest extends TestCase
         $this->assertSame($updatedFile, $combiner->getCombinedFile());
         $this->assertFileExists($this->getTempDir().'/'.$updatedFile);
 
-        // An invalid lookup is replaced when the combined file is regenerated.
-        $hashFile = $this->getTempDir().'/assets/css/file.scss-'.substr(md5('-ffile.scss-v1-mall'), 0, 8).'.css.hash';
-        $this->filesystem->dumpFile($hashFile, 'invalid');
-        $this->assertSame($updatedFile, $combiner->getCombinedFile());
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/D', file_get_contents($hashFile));
+        $link = $this->getTempDir().'/assets/css/file.scss-'.substr(md5('-ffile.scss-v1-mall'), 0, 8).'.css';
+        $this->assertTrue(is_link($link));
+        $this->assertSame(realpath($this->getTempDir().'/'.$updatedFile), realpath($link));
+        $this->assertFileDoesNotExist($link.'.hash');
     }
 
     public function testDoesNotCompileCachedFilesAgain(): void
@@ -367,6 +367,32 @@ class CombinerTest extends TestCase
         $this->assertNotSame($originalFile, $updatedFile);
         $this->assertMatchesRegularExpression('/^assets\/css\/file\.css-[a-f0-9]{8}\.css$/', $updatedFile);
         $this->assertSame(file_get_contents($this->getTempDir().'/'.$originalFile), file_get_contents($this->getTempDir().'/'.$updatedFile));
+    }
+
+    public function testReplacesALegacyFileWithASymlink(): void
+    {
+        $this->filesystem->dumpFile($this->getTempDir().'/legacy.css', 'body { color: red }');
+        $link = $this->getTempDir().'/assets/css/legacy.css-'.substr(md5('-flegacy.css-v1-mall'), 0, 8).'.css';
+        $this->filesystem->dumpFile($link, 'legacy output');
+
+        $combiner = new Combiner();
+        $combiner->add('legacy.css', '1');
+        $combinedFile = $combiner->getCombinedFile();
+
+        $this->assertTrue(is_link($link));
+        $this->assertSame(realpath($this->getTempDir().'/'.$combinedFile), realpath($link));
+        $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "body { color: red }\n");
+
+        if ('\\' !== \DIRECTORY_SEPARATOR) {
+            $this->assertSame(basename($combinedFile), readlink($link));
+        }
+
+        (new Folder('assets/css'))->purge();
+
+        $this->assertFalse(is_link($link));
+        $this->assertFileDoesNotExist($this->getTempDir().'/'.$combinedFile);
+        $this->assertSame($combinedFile, $combiner->getCombinedFile());
+        $this->assertTrue(is_link($link));
     }
 
     public function testCombinesJsFiles(): void
