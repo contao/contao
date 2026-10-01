@@ -22,8 +22,6 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\RequestBody;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
@@ -73,7 +71,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             paginationEnabled: false,
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
@@ -86,7 +84,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             requirements: ['path' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
-            provider: VirtualFilesystemStateProvider::class,
+            provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
         );
     }
 
@@ -104,7 +102,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             security: "is_granted('ROLE_USER')",
             openapi: new OpenApiOperation(
                 summary: 'Upload a file',
-                description: 'Uploads raw file contents with PUT. An existing file at the path is replaced.',
+                description: 'Uploads raw file contents with PUT. An existing file at the path or UUID is replaced.',
                 requestBody: new RequestBody(
                     description: 'The raw contents of the file.',
                     content: new \ArrayObject([
@@ -115,7 +113,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             ),
             read: false,
             deserialize: false,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -130,7 +128,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             input: VirtualFilesystemMove::class,
             read: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
         );
     }
 
@@ -146,9 +144,9 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             input: false,
             openapi: new OpenApiOperation(
                 summary: 'Update file metadata',
-                description: 'Updates metadata for the file identified in the request body without changing its contents.',
+                description: 'Updates metadata for the file identified by path or UUID in the request body without changing its contents.',
                 requestBody: new RequestBody(
-                    description: 'The file path and metadata values to update.',
+                    description: 'The file path or UUID and metadata values to update.',
                     content: new \ArrayObject(['application/json' => new MediaType(new \ArrayObject($this->getMetadataRequestSchema()))]),
                     required: true,
                 ),
@@ -156,7 +154,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             read: false,
             deserialize: false,
             status: 200,
-            processor: VirtualFilesystemStateProcessor::class,
+            processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
             extraProperties: ['contao' => ['operation' => 'metadata']],
         );
     }
@@ -166,7 +164,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
         return [
             'type' => 'object',
             'properties' => [
-                'path' => ['type' => 'string', 'minLength' => 1],
+                'path' => ['type' => 'string', 'minLength' => 1, 'description' => 'The file path or UUID.'],
                 'data' => $this->objectNormalizer->getJsonSchema(ExtraMetadata::class),
             ],
             'required' => ['path', 'data'],

@@ -19,6 +19,7 @@ use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\CoreBundle\File\UploadSizeProvider;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\MaximumStreamSizeExceededException;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @implements ProcessorInterface<mixed, VirtualFilesystemItem>
@@ -55,6 +57,19 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): VirtualFilesystemItem
     {
+        try {
+            return $this->doProcess($data, $operation, $uriVariables, $context);
+        } catch (UnableToResolveUuidException $exception) {
+            throw new NotFoundHttpException('The requested file or directory does not exist.', $exception);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $uriVariables
+     * @param array<string, mixed> $context
+     */
+    private function doProcess(mixed $data, Operation $operation, array $uriVariables, array $context): VirtualFilesystemItem
+    {
         if ($data instanceof VirtualFilesystemMove) {
             return $this->move($data);
         }
@@ -68,15 +83,15 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         $path = $uriVariables['path'] ?? null;
 
         if (!\is_string($path) || '' === $path) {
-            throw new BadRequestHttpException('A file path is required.');
+            throw new BadRequestHttpException('A file path or UUID is required.');
         }
 
-        return $this->upload($path, $request);
+        return $this->upload($this->toLocation($path), $request);
     }
 
     private function updateMetadata(mixed $request): VirtualFilesystemItem
     {
-        [$path, $data] = $this->parseMetadataRequest($request);
+        [$location, $data] = $this->parseMetadataRequest($request);
 
         try {
             $update = $this->objectNormalizer->fromArray(ExtraMetadata::class, $data);
@@ -88,7 +103,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new \LogicException(\sprintf('Expected an instance of "%s".', ExtraMetadata::class));
         }
 
-        $item = $this->filesStorage->get($path);
+        $item = $this->filesStorage->get($location);
 
         if (!$item || !$item->isFile()) {
             throw new NotFoundHttpException('The requested file does not exist.');
@@ -100,13 +115,13 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             $metadata->set($key, $value);
         }
 
-        $this->filesStorage->setExtraMetadata($path, $metadata);
+        $this->filesStorage->setExtraMetadata($location, $metadata);
 
-        return $this->getItem($path);
+        return $this->getItem($location);
     }
 
     /**
-     * @return array{string, array<string, mixed>}
+     * @return array{Uuid|string, array<string, mixed>}
      */
     private function parseMetadataRequest(mixed $request): array
     {
@@ -122,31 +137,35 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         }
 
         if (!$object instanceof \stdClass || !\is_array($payload) || array_diff_key($payload, ['path' => true, 'data' => true])) {
-            throw new BadRequestHttpException('The metadata body must contain only a non-empty path and a data object.');
+            throw new BadRequestHttpException('The metadata body must contain only a non-empty path or UUID and a data object.');
         }
 
         $path = $payload['path'] ?? null;
         $data = $payload['data'] ?? null;
 
         if (!\is_string($path) || '' === $path || !(($object->data ?? null) instanceof \stdClass) || !\is_array($data)) {
-            throw new BadRequestHttpException('The metadata body must contain only a non-empty path and a data object.');
+            throw new BadRequestHttpException('The metadata body must contain only a non-empty path or UUID and a data object.');
         }
 
-        return [$path, $data];
+        return [$this->toLocation($path), $data];
     }
 
     private function move(VirtualFilesystemMove $move): VirtualFilesystemItem
     {
         if ('' === $move->source || '' === $move->destination) {
-            throw new BadRequestHttpException('Source and destination paths are required.');
+            throw new BadRequestHttpException('Source and destination paths or UUIDs are required.');
         }
 
-        $this->filesStorage->move($move->source, $move->destination);
+        $source = $this->toLocation($move->source);
+        $destination = $this->toLocation($move->destination);
+        $destination = $destination instanceof Uuid ? $this->filesStorage->resolveUuid($destination) : $destination;
 
-        return $this->getItem($move->destination);
+        $this->filesStorage->move($source, $destination);
+
+        return $this->getItem($destination);
     }
 
-    private function upload(string $path, mixed $request): VirtualFilesystemItem
+    private function upload(Uuid|string $location, mixed $request): VirtualFilesystemItem
     {
         if (!$request instanceof Request) {
             throw new BadRequestHttpException('An upload body is required.');
@@ -156,7 +175,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
 
         try {
             $this->filesWriter->writeStream(
-                $path,
+                $location,
                 $request->getContent(true),
                 $maximumUploadSize,
             );
@@ -164,17 +183,22 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new HttpException(413, \sprintf('The upload exceeds the maximum size of %d bytes.', $maximumUploadSize), $exception);
         }
 
-        return $this->getItem($path);
+        return $this->getItem($location);
     }
 
-    private function getItem(string $path): VirtualFilesystemItem
+    private function getItem(Uuid|string $location): VirtualFilesystemItem
     {
-        $item = $this->filesStorage->get($path);
+        $item = $this->filesStorage->get($location);
 
         if (!$item) {
-            throw new \LogicException(\sprintf('The filesystem item "%s" was not found after writing it.', $path));
+            throw new \LogicException(\sprintf('The filesystem item "%s" was not found after writing it.', $location));
         }
 
         return $this->itemFactory->create($item);
+    }
+
+    private function toLocation(string $location): Uuid|string
+    {
+        return Uuid::isValid($location) ? Uuid::fromString($location) : $location;
     }
 }

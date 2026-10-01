@@ -7,26 +7,21 @@ services:
             tags:
                 - contao.api.schema_aware_normalization_handler
 
-    # Merge Contao resources into API Platform's discovered resource names so the
-    # entrypoint, docs and metadata pipeline can see DataContainerRecord.
-    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory:
-        decorates: api_platform.metadata.resource.name_collection_factory
+    # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
+    # and add them as shared components so they only exist once in the spec.
+    contao_api.api_platform.data_container_open_api_factory:
+        class: Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory
+        decorates: api_platform.openapi.factory
         arguments:
             $decorated: '@.inner'
-
-    Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceNameCollectionFactory:
-        decorates: api_platform.metadata.resource.name_collection_factory
-        arguments:
-            $decorated: '@.inner'
-            $templateStudioEnabled: '%contao.template_studio.enabled%'
-
-    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceNameCollectionFactory:
-        decorates: api_platform.metadata.resource.name_collection_factory
-        arguments:
-            $decorated: '@.inner'
+            $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $schemaFactory: '@contao_api.schema.data_container_factory'
+            $pagination: '@api_platform.pagination'
+            $apiPrefix: '%contao.backend.route_prefix%/api'
 
     # Provide Contao-specific metadata for the hardcoded DataContainerRecord resource.
-    Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory:
+    contao_api.api_platform.data_container_resource_metadata_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory
         decoration_priority: 750
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
@@ -34,7 +29,51 @@ services:
             $framework: '@contao.framework'
             $resourceFinder: '@contao.resource_finder'
 
-    Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory:
+    contao_api.api_platform.data_container_state_processor:
+        class: Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor
+        arguments:
+            $records: '@contao_api.data_container.table_records'
+
+    contao_api.api_platform.data_container_state_provider:
+        class: Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider
+        arguments:
+            $records: '@contao_api.data_container.table_records'
+            $pagination: '@api_platform.pagination'
+
+    # Merge Contao resources into API Platform's discovered resource names so the
+    # entrypoint, docs and metadata pipeline can see DataContainerRecord.
+    contao_api.api_platform.metadata.data_container_resource_name_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceNameCollectionFactory
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+
+    contao_api.api_platform.metadata.user_template_resource_name_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceNameCollectionFactory
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+            $templateStudioEnabled: '%contao.template_studio.enabled%'
+
+    contao_api.api_platform.metadata.virtual_filesystem_resource_name_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceNameCollectionFactory
+        decorates: api_platform.metadata.resource.name_collection_factory
+        arguments:
+            $decorated: '@.inner'
+
+    # Serialize DataContainerRecord payloads and handle reads/writes through
+    # API Platform's serializer and state layers. The metadata factory points
+    # every Contao DCA-backed resource at these shared services.
+    contao_api.api_platform.serializer.data_container_record_normalizer:
+        class: Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer
+        arguments:
+            $relationResolver: '@contao_api.data_container.relation_resolver'
+            $contextBuilder: '@api_platform.jsonld.context_builder'
+        tags:
+            - { name: serializer.normalizer }
+
+    contao_api.api_platform.user_template_resource_metadata_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory
         decoration_priority: 750
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
@@ -42,117 +81,71 @@ services:
             $templateStudioOperations: !tagged_iterator contao.operation.template_studio_element
             $templateStudioEnabled: '%contao.template_studio.enabled%'
 
-    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceMetadataCollectionFactory:
+    contao_api.api_platform.user_template_state_processor:
+        class: Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor
+        tags: [api_platform.state_processor]
+        arguments:
+            $client: '@contao_api.user_template.template_studio_client'
+
+    contao_api.api_platform.user_template_state_provider:
+        class: Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider
+        tags: [api_platform.state_provider]
+        arguments:
+            $client: '@contao_api.user_template.template_studio_client'
+
+    contao_api.api_platform.virtual_filesystem_property_metadata_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory
+        decorates: api_platform.metadata.property.metadata_factory
+        arguments:
+            $decorated: '@.inner'
+            $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
+
+    contao_api.api_platform.virtual_filesystem_resource_metadata_collection_factory:
+        class: Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemResourceMetadataCollectionFactory
         decoration_priority: 750
         decorates: api_platform.metadata.resource.metadata_collection_factory
         arguments:
             $decorated: '@.inner'
-            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
-            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
+            $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
+            $uploadSizeProvider: '@contao.file.upload_size_provider'
 
-    Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory:
-        decorates: api_platform.metadata.property.metadata_factory
-        arguments:
-            $decorated: '@.inner'
-            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
-
-    # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
-    # and add them as shared components so they only exist once in the spec.
-    Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory:
-        decorates: api_platform.openapi.factory
-        arguments:
-            $decorated: '@.inner'
-            $resourceMetadataCollectionFactory: '@api_platform.metadata.resource.metadata_collection_factory'
-            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
-            $pagination: '@api_platform.pagination'
-            $apiPrefix: '%contao.backend.route_prefix%/api'
-
-    Contao\ApiBundle\Http\ApiRequestFactory:
-        arguments:
-            $urlGenerator: '@router'
-
-    Contao\ApiBundle\Widget\WidgetConverterRegistry:
-        arguments:
-            $converters: !tagged_iterator contao.api.widget_converter
-
-    Contao\ApiBundle\Schema\DataContainerSchemaFactory:
-        arguments:
-            $framework: '@contao.framework'
-            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
-            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
-            $localeSwitcher: '@translation.locale_switcher'
-
-    Contao\ApiBundle\DataContainer\DataContainerRelationResolver:
-        arguments:
-            $connection: '@database_connection'
-            $foreignKeyParser: '@contao.data_container.foreign_key_parser'
-            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
-            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
-            $router: '@router'
-
-    # Serialize DataContainerRecord payloads and handle reads/writes through
-    # API Platform's serializer and state layers. The metadata factory points
-    # every Contao DCA-backed resource at these shared services.
-    Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer:
-        arguments:
-            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
-            $contextBuilder: '@api_platform.jsonld.context_builder'
-        tags:
-            - { name: serializer.normalizer }
-
-    # This is an explicit schema-aware API boundary, not a global Symfony
-    # serializer normalizer. Domain-specific handlers are collected by tag.
-    Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer:
-        arguments:
-            $validator: '@Opis\JsonSchema\Validator'
-            $handlers: !tagged_iterator contao.api.schema_aware_normalization_handler
-
-    Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler: ~
-
-    Contao\ApiBundle\Dto\VirtualFilesystemItemFactory:
-        arguments:
-            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
-
-    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider:
-        arguments:
-            $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
-            $pagination: '@api_platform.pagination'
-
-    Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor:
-        arguments:
-            $records: '@Contao\ApiBundle\DataContainer\TableDataContainerRecords'
-
-    Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider:
-        arguments:
-            $filesStorage: '@contao.filesystem.virtual.files'
-            $security: '@security.helper'
-            $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
-
-    Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor:
+    contao_api.api_platform.virtual_filesystem_state_processor:
+        class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor
         arguments:
             $filesStorage: '@contao.filesystem.virtual.files'
             $security: '@security.helper'
             $requestStack: '@request_stack'
-            $objectNormalizer: '@Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer'
-            $itemFactory: '@Contao\ApiBundle\Dto\VirtualFilesystemItemFactory'
-            $uploadSizeProvider: '@Contao\CoreBundle\File\UploadSizeProvider'
+            $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
+            $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
+            $uploadSizeProvider: '@contao.file.upload_size_provider'
 
-    Contao\ApiBundle\DataContainer\DataContainerRecordMapper:
+    contao_api.api_platform.virtual_filesystem_state_provider:
+        class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider
         arguments:
-            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
-            $converters: '@Contao\ApiBundle\Widget\WidgetConverterRegistry'
-            $relationResolver: '@Contao\ApiBundle\DataContainer\DataContainerRelationResolver'
+            $filesStorage: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+            $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
 
-    Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator:
+    contao_api.data_container.record_mapper:
+        class: Contao\ApiBundle\DataContainer\DataContainerRecordMapper
         arguments:
-            $schemaFactory: '@Contao\ApiBundle\Schema\DataContainerSchemaFactory'
-            $validator: '@Opis\JsonSchema\Validator'
-        tags:
-            - { name: validator.constraint_validator }
+            $schemaFactory: '@contao_api.schema.data_container_factory'
+            $converters: '@contao_api.widget.converter_registry'
+            $relationResolver: '@contao_api.data_container.relation_resolver'
 
-    Contao\ApiBundle\DataContainer\TableDataContainerRecords:
+    contao_api.data_container.relation_resolver:
+        class: Contao\ApiBundle\DataContainer\DataContainerRelationResolver
         arguments:
-            $mapper: '@Contao\ApiBundle\DataContainer\DataContainerRecordMapper'
+            $connection: '@database_connection'
+            $foreignKeyParser: '@contao.data_container.foreign_key_parser'
+            $converters: '@contao_api.widget.converter_registry'
+            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $router: '@router'
+
+    contao_api.data_container.table_records:
+        class: Contao\ApiBundle\DataContainer\TableDataContainerRecords
+        arguments:
+            $mapper: '@contao_api.data_container.record_mapper'
             $connection: '@database_connection'
             $framework: '@contao.framework'
             $requestStack: '@request_stack'
@@ -160,20 +153,54 @@ services:
             $urlAnalyzer: '@contao.data_container.dca_url_analyzer'
             $urlGenerator: '@router'
 
-    Opis\JsonSchema\Validator: ~
-
-    Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider:
-        tags: [api_platform.state_provider]
+    contao_api.dto.virtual_filesystem_item_factory:
+        class: Contao\ApiBundle\Dto\VirtualFilesystemItemFactory
         arguments:
-            $client: '@Contao\ApiBundle\UserTemplate\TemplateStudioClient'
+            $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
 
-    Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor:
-        tags: [api_platform.state_processor]
+    contao_api.http.api_request_factory:
+        class: Contao\ApiBundle\Http\ApiRequestFactory
         arguments:
-            $client: '@Contao\ApiBundle\UserTemplate\TemplateStudioClient'
+            $urlGenerator: '@router'
 
-    Contao\ApiBundle\UserTemplate\TemplateStudioClient:
+    contao_api.json_schema_validator:
+        class: Opis\JsonSchema\Validator
+
+    contao_api.schema.data_container_factory:
+        class: Contao\ApiBundle\Schema\DataContainerSchemaFactory
+        arguments:
+            $framework: '@contao.framework'
+            $converters: '@contao_api.widget.converter_registry'
+            $relationResolver: '@contao_api.data_container.relation_resolver'
+            $localeSwitcher: '@translation.locale_switcher'
+
+    # This is an explicit schema-aware API boundary, not a global Symfony
+    # serializer normalizer. Domain-specific handlers are collected by tag.
+    contao_api.serializer.schema_aware_object_normalizer:
+        class: Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer
+        arguments:
+            $validator: '@contao_api.json_schema_validator'
+            $handlers: !tagged_iterator contao.api.schema_aware_normalization_handler
+
+    contao_api.serializer.virtual_filesystem_metadata_normalization_handler:
+        class: Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler
+
+    contao_api.user_template.template_studio_client:
+        class: Contao\ApiBundle\UserTemplate\TemplateStudioClient
         arguments:
             $kernel: '@http_kernel'
             $router: '@router'
             $requestStack: '@request_stack'
+
+    contao_api.validator.constraints.data_container_record_schema:
+        class: Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchemaValidator
+        arguments:
+            $schemaFactory: '@contao_api.schema.data_container_factory'
+            $validator: '@contao_api.json_schema_validator'
+        tags:
+            - { name: validator.constraint_validator }
+
+    contao_api.widget.converter_registry:
+        class: Contao\ApiBundle\Widget\WidgetConverterRegistry
+        arguments:
+            $converters: !tagged_iterator contao.api.widget_converter
