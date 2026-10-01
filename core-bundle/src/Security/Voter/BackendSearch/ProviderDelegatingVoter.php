@@ -56,7 +56,7 @@ class ProviderDelegatingVoter extends Voter
         /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             if ($provider->supportsType($subject->getType())) {
-                return $provider->isDocumentGranted($token, $subject);
+                return $provider->isDocumentGranted($token->getUser(), $subject);
             }
         }
 
