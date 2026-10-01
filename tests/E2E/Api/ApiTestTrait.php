@@ -111,8 +111,8 @@ trait ApiTestTrait
     }
 
     /**
-     * Sends a request to the back end API and returns the status code and the
-     * decoded response. Every token is currently authenticated as k.jones.
+     * Sends a request to the back end API and returns the status code and the decoded
+     * response. Every token is currently authenticated as k.jones.
      *
      * @param array<mixed>|string|null $body
      *

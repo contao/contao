@@ -33,7 +33,8 @@ class ResourceTest extends AbstractContaoMonorepoE2ETestCase
     {
         $collection = $this->interpolate($collection);
 
-        // Relations are IRIs with fixture placeholders, e.g. {"iri": "/contao/api/dc/page/{page_main_home}"}
+        // Relations are IRIs with fixture placeholders, e.g. {"iri":
+        // "/contao/api/dc/page/{page_main_home}"}
         array_walk_recursive(
             $create,
             function (&$value): void {

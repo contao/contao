@@ -52,10 +52,13 @@ class NestedResourceTest extends AbstractContaoMonorepoE2ETestCase
         $products = '/contao/api/dc/faq_category/'.$this->fixtureId('faq_category_products').'/faq';
 
         // The author is mandatory as well, but defaults to the current user
-        [$status, $faq] = $this->apiRequest('POST', $support, [
-            'question' => 'Created via API?',
-            'answer' => '<p>Yes</p>',
-        ]);
+        [$status, $faq] = $this->apiRequest(
+            'POST',
+            $support, [
+                'question' => 'Created via API?',
+                'answer' => '<p>Yes</p>',
+        ],
+        );
 
         $this->assertSame(201, $status, json_encode($faq, JSON_PRETTY_PRINT));
 

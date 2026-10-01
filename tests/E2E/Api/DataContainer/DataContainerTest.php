@@ -27,10 +27,13 @@ class DataContainerTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(200, $status, json_encode($page, JSON_PRETTY_PRINT));
 
-        [$status, $archive] = $this->apiRequest('POST', '/contao/api/dc/news_archive', [
-            'title' => 'Created via API',
-            'jumpTo' => ['iri' => $page['@id']],
-        ]);
+        [$status, $archive] = $this->apiRequest(
+            'POST',
+            '/contao/api/dc/news_archive', [
+                'title' => 'Created via API',
+                'jumpTo' => ['iri' => $page['@id']],
+        ],
+        );
 
         $this->assertSame(201, $status, json_encode($archive, JSON_PRETTY_PRINT));
 

@@ -33,11 +33,14 @@ class DataContainerMoveTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(201, $status, json_encode($text, JSON_PRETTY_PRINT));
 
-        [$status, $moved] = $this->apiRequest('POST', $text['@id'].'/move', [
-            'target' => (int) basename($group['@id']),
-            'position' => 'first',
-            'ptable' => 'tl_content',
-        ]);
+        [$status, $moved] = $this->apiRequest(
+            'POST',
+            $text['@id'].'/move', [
+                'target' => (int) basename($group['@id']),
+                'position' => 'first',
+                'ptable' => 'tl_content',
+        ],
+        );
 
         $this->assertSame(200, $status, json_encode($moved, JSON_PRETTY_PRINT));
 
@@ -54,19 +57,22 @@ class DataContainerMoveTest extends AbstractContaoMonorepoE2ETestCase
     {
         [, $group] = $this->apiRequest('POST', '/contao/api/dc/article/'.$this->fixtureId('article').'/content', ['type' => 'element_group']);
 
-        [$status] = $this->apiRequest('POST', $group['@id'].'/move', [
-            'target' => (int) basename($group['@id']),
-            'position' => 'first',
-            'ptable' => 'tl_content',
-        ]);
+        [$status] = $this->apiRequest(
+            'POST',
+            $group['@id'].'/move', [
+                'target' => (int) basename($group['@id']),
+                'position' => 'first',
+                'ptable' => 'tl_content',
+        ],
+        );
 
         $this->assertGreaterThanOrEqual(400, $status);
         $this->assertLessThan(500, $status);
     }
 
     /**
-     * Unlike tl_content, tl_article has no "target" field that could collide with
-     * the "target" of the move request.
+     * Unlike tl_content, tl_article has no "target" field that could collide with the
+     * "target" of the move request.
      */
     public function testMovesAnArticleToAnotherPage(): void
     {
