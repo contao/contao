@@ -29,12 +29,15 @@ class ContaoPackageTest extends TestCase
     {
         parent::setUp();
 
-        (new Filesystem())->dumpFile(static::getTempDir().'/manifest.json', json_encode([
-            'backend.js' => '/bundles/contaocore/backend.123.js',
-            'relative.js' => 'relative.123.js',
-            'external.js' => 'https://external.example.com/external.123.js',
-            'protocol-relative.js' => '//external.example.com/external.123.js',
-        ], JSON_THROW_ON_ERROR));
+        (new Filesystem())->dumpFile(
+            static::getTempDir().'/manifest.json',
+            json_encode([
+                'backend.js' => '/bundles/contaocore/backend.123.js',
+                'relative.js' => 'relative.123.js',
+                'external.js' => 'https://external.example.com/external.123.js',
+                'protocol-relative.js' => '//external.example.com/external.123.js',
+            ], JSON_THROW_ON_ERROR),
+        );
     }
 
     /**
@@ -102,15 +105,12 @@ class ContaoPackageTest extends TestCase
 
         $request = Request::create(
             'https://example.com/site/index.php',
-            'GET',
-            [],
-            [],
-            [],
-            [
+            server: [
                 'SCRIPT_FILENAME' => '/site/index.php',
                 'SCRIPT_NAME' => '/site/index.php',
             ],
         );
+
         $request->attributes->set('pageModel', $page);
 
         $requestStack = new RequestStack();
