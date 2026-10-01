@@ -102,7 +102,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             security: "is_granted('ROLE_USER')",
             openapi: new OpenApiOperation(
                 summary: 'Upload a file',
-                description: 'Uploads raw file contents with PUT. An existing file at the path is replaced.',
+                description: 'Uploads raw file contents with PUT. An existing file at the path or UUID is replaced.',
                 requestBody: new RequestBody(
                     description: 'The raw contents of the file.',
                     content: new \ArrayObject([
@@ -144,9 +144,9 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             input: false,
             openapi: new OpenApiOperation(
                 summary: 'Update file metadata',
-                description: 'Updates metadata for the file identified in the request body without changing its contents.',
+                description: 'Updates metadata for the file identified by path or UUID in the request body without changing its contents.',
                 requestBody: new RequestBody(
-                    description: 'The file path and metadata values to update.',
+                    description: 'The file path or UUID and metadata values to update.',
                     content: new \ArrayObject(['application/json' => new MediaType(new \ArrayObject($this->getMetadataRequestSchema()))]),
                     required: true,
                 ),
@@ -164,7 +164,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
         return [
             'type' => 'object',
             'properties' => [
-                'path' => ['type' => 'string', 'minLength' => 1],
+                'path' => ['type' => 'string', 'minLength' => 1, 'description' => 'The file path or UUID.'],
                 'data' => $this->objectNormalizer->getJsonSchema(ExtraMetadata::class),
             ],
             'required' => ['path', 'data'],

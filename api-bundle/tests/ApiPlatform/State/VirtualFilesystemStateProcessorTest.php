@@ -22,6 +22,7 @@ use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\UploadSizeProvider;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Uid\Uuid;
 
 final class VirtualFilesystemStateProcessorTest extends TestCase
 {
@@ -87,6 +89,41 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         }
     }
 
+    public function testUploadsTheRequestBodyByUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $item = new FilesystemItem(true, 'documents/example.txt', 123, 7, 'text/plain');
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->exactly(2))
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willReturn('documents/example.txt')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('writeStream')
+            ->with(
+                $uuid,
+                $this->callback(static fn ($stream): bool => \is_resource($stream) && 'content' === stream_get_contents($stream)),
+            )
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with($uuid)
+            ->willReturn($item)
+        ;
+
+        $processor = $this->createProcessor($storage);
+        $result = $processor->process(null, new Put(), ['path' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
+
+        $this->assertSame('documents/example.txt', $result->path);
+    }
+
     public function testMovesTheItem(): void
     {
         $item = new FilesystemItem(true, 'archive/example.txt', 123, 7, 'text/plain');
@@ -109,6 +146,61 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $result = $processor->process(new VirtualFilesystemMove('documents/example.txt', 'archive/example.txt'), new Post());
 
         $this->assertSame('archive/example.txt', $result->path);
+    }
+
+    public function testMovesTheItemByUuid(): void
+    {
+        $sourceUuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $destinationUuid = Uuid::fromString('26f19570-3e8e-4f03-9cf8-abc2a9bb6e0d');
+        $item = new FilesystemItem(true, 'archive/example.txt', 123, 7, 'text/plain');
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->exactly(2))
+            ->method('resolveUuid')
+            ->willReturnCallback(static fn (Uuid $uuid): string => match ($uuid->toRfc4122()) {
+                $destinationUuid->toRfc4122() => 'archive/example.txt',
+                $sourceUuid->toRfc4122() => 'documents/example.txt',
+                default => throw new \LogicException(\sprintf('Unexpected UUID "%s".', $uuid->toRfc4122())),
+            })
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('move')
+            ->with($sourceUuid, 'archive/example.txt')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with('archive/example.txt')
+            ->willReturn($item)
+        ;
+
+        $processor = $this->createProcessor($storage);
+        $result = $processor->process(new VirtualFilesystemMove($sourceUuid->toRfc4122(), $destinationUuid->toRfc4122()), new Post());
+
+        $this->assertSame('archive/example.txt', $result->path);
+    }
+
+    public function testReturnsNotFoundForAnUnresolvedUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willThrowException(new UnableToResolveUuidException($uuid))
+        ;
+
+        $processor = $this->createProcessor($storage);
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $processor->process(null, new Put(), ['path' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
     }
 
     public function testUpdatesLocalizedMetadataWithoutLosingOtherMetadata(): void
@@ -144,6 +236,43 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         $this->assertSame('New title', $result->metadata['localized']['en']['title']);
         $this->assertSame('kept', $result->metadata['custom']);
+    }
+
+    public function testUpdatesMetadataByUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $extra = new ExtraMetadata();
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->exactly(3))
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willReturn('images/example.jpg')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('setExtraMetadata')
+            ->with($uuid, $extra)
+        ;
+
+        $storage
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with($uuid)
+            ->willReturn(new FilesystemItem(true, 'images/example.jpg', 123, 7, 'image/jpeg', $extra))
+        ;
+
+        $processor = $this->createProcessor($storage);
+
+        $result = $processor->process(
+            null,
+            $this->createMetadataOperation(),
+            context: ['request' => Request::create('/', 'POST', content: \sprintf('{"path":"%s","data":{"custom":"value"}}', $uuid->toRfc4122()))],
+        );
+
+        $this->assertSame('value', $result->metadata['custom']);
     }
 
     public function testUpdatesImportantPartAndTextTrackMetadata(): void

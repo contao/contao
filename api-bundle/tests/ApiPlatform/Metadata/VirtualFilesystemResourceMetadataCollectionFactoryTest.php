@@ -90,10 +90,11 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertInstanceOf(OpenApiOperation::class, $metadataOpenApi);
         $this->assertSame('Update file metadata', $metadataOpenApi->getSummary());
         $this->assertInstanceOf(RequestBody::class, $metadataOpenApi->getRequestBody());
-        $this->assertSame('The file path and metadata values to update.', $metadataOpenApi->getRequestBody()->getDescription());
+        $this->assertSame('The file path or UUID and metadata values to update.', $metadataOpenApi->getRequestBody()->getDescription());
 
         $metadataSchema = $metadataOpenApi->getRequestBody()->getContent()['application/json']->getSchema();
         $this->assertSame(['path', 'data'], $metadataSchema['required']);
+        $this->assertSame('The file path or UUID.', $metadataSchema['properties']['path']['description']);
         $this->assertSame('object', $metadataSchema['properties']['data']['type']);
         $this->assertSame(200, $metadata->getStatus());
         $this->assertSame("is_granted('ROLE_USER') and is_granted('contao_user.fop.f2')", $metadata->getSecurity());

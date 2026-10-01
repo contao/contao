@@ -22,6 +22,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\TextTrack;
 use Contao\CoreBundle\File\TextTrackType;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
@@ -105,6 +106,76 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $this->assertSame('documents/Guide.pdf', $result[0]->path);
         $this->assertSame([], $result[0]->metadata);
         $this->assertSame('documents/notes.txt', $result[1]->path);
+    }
+
+    public function testProvidesAnItemByUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $item = new FilesystemItem(true, 'images/example.jpg', 123, 456, 'image/jpeg');
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willReturn('images/example.jpg')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with($uuid)
+            ->willReturn($item)
+        ;
+
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => $uuid->toRfc4122()]);
+
+        $this->assertSame('images/example.jpg', $result->path);
+    }
+
+    public function testListsItemsByUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+        $items = new FilesystemItemIterator([new FilesystemItem(true, 'documents/example.txt', 123, 7, 'text/plain')]);
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willReturn('documents')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('listContents')
+            ->with($uuid, false)
+            ->willReturn($items)
+        ;
+
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(
+            new GetCollection(),
+            context: ['filters' => ['path' => $uuid->toRfc4122()]],
+        );
+
+        $this->assertSame('documents/example.txt', $result[0]->path);
+    }
+
+    public function testReturnsNotFoundForAnUnresolvedUuid(): void
+    {
+        $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
+
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->once())
+            ->method('resolveUuid')
+            ->with($uuid)
+            ->willThrowException(new UnableToResolveUuidException($uuid))
+        ;
+
+        $this->expectException(NotFoundHttpException::class);
+
+        new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => $uuid->toRfc4122()]);
     }
 
     public function testReturnsNotFoundForAMissingItem(): void
