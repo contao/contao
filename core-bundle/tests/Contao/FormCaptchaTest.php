@@ -60,6 +60,7 @@ class FormCaptchaTest extends TestCase
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([Input::class, System::class, Config::class]);
 
         parent::tearDown();
