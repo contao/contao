@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\OpenApi\Model\MediaType;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\RequestBody;
+use ApiPlatform\OpenApi\Model\Response as OpenApiResponse;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
@@ -51,6 +52,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
                 'contao_api_files_get_collection' => $this->createCollectionOperation(),
                 'contao_api_files_move' => $this->createMoveOperation(),
                 'contao_api_files_get' => $this->createGetOperation(),
+                'contao_api_files_download' => $this->createDownloadOperation(),
                 'contao_api_files_upload' => $this->createUploadOperation(),
                 'contao_api_files_metadata' => $this->createMetadataOperation(),
             ],
@@ -114,6 +116,35 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             read: false,
             deserialize: false,
             processor: 'contao_api.api_platform.virtual_filesystem_state_processor',
+        );
+    }
+
+    private function createDownloadOperation(): Get
+    {
+        return new Get(
+            uriTemplate: '/files_operations/download/{path}',
+            outputFormats: ['binary' => ['application/octet-stream']],
+            shortName: 'File',
+            class: VirtualFilesystemItem::class,
+            requirements: ['path' => '.+'],
+            defaults: ['_scope' => 'backend'],
+            security: "is_granted('ROLE_USER')",
+            openapi: new OpenApiOperation(
+                responses: [
+                    200 => new OpenApiResponse(
+                        description: 'The streamed file contents.',
+                        content: new \ArrayObject([
+                            'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary'])),
+                        ]),
+                    ),
+                    304 => new OpenApiResponse(description: 'The file has not been modified.'),
+                ],
+                summary: 'Download a file',
+                description: 'Streams the contents of a file as an attachment.',
+            ),
+            output: false,
+            status: 200,
+            provider: 'contao_api.api_platform.virtual_filesystem_content_state_provider',
         );
     }
 

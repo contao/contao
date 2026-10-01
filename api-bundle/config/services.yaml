@@ -93,6 +93,12 @@ services:
         arguments:
             $client: '@contao_api.user_template.template_studio_client'
 
+    contao_api.api_platform.virtual_filesystem_content_state_provider:
+        class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemContentStateProvider
+        arguments:
+            $filesStorage: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+
     contao_api.api_platform.virtual_filesystem_property_metadata_factory:
         class: Contao\ApiBundle\ApiPlatform\Metadata\VirtualFilesystemPropertyMetadataFactory
         decorates: api_platform.metadata.property.metadata_factory

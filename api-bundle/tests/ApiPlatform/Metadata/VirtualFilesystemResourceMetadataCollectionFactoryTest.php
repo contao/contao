@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Resource\Factory\InputOutputResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\MainControllerResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
@@ -53,6 +54,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $operations = iterator_to_array($resource->getOperations());
         $collection = $operations['contao_api_files_get_collection'];
         $get = $operations['contao_api_files_get'];
+        $download = $operations['contao_api_files_download'];
         $upload = $operations['contao_api_files_upload'];
         $metadata = $operations['contao_api_files_metadata'];
         $move = $operations['contao_api_files_move'];
@@ -65,6 +67,18 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertInstanceOf(Get::class, $get);
         $this->assertSame('/files/{path}', $get->getUriTemplate());
         $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $get->getProvider());
+
+        $this->assertInstanceOf(Get::class, $download);
+        $this->assertSame('/files_operations/download/{path}', $download->getUriTemplate());
+        $this->assertSame(['binary' => ['application/octet-stream']], $download->getOutputFormats());
+        $this->assertFalse($download->getOutput());
+        $this->assertSame(200, $download->getStatus());
+        $this->assertSame('contao_api.api_platform.virtual_filesystem_content_state_provider', $download->getProvider());
+
+        $downloadOpenApi = $download->getOpenapi();
+        $this->assertInstanceOf(OpenApiOperation::class, $downloadOpenApi);
+        $this->assertSame('Download a file', $downloadOpenApi->getSummary());
+        $this->assertSame('binary', $downloadOpenApi->getResponses()[200]->getContent()['application/octet-stream']->getSchema()['format']);
 
         $this->assertInstanceOf(Put::class, $upload);
         $this->assertFalse($upload->canRead());
@@ -122,6 +136,15 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame($collection, $factory->create('App\\Entity\\Foo'));
     }
 
+    public function testDownloadStatusIsPreservedWhenNormalizingTheOutputMetadata(): void
+    {
+        $factory = new InputOutputResourceMetadataCollectionFactory($this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class)));
+        $resource = $factory->create(VirtualFilesystemItem::class)[0];
+        $operations = iterator_to_array($resource->getOperations());
+
+        $this->assertSame(200, $operations['contao_api_files_download']->getStatus());
+    }
+
     public function testGeneratesRoutesForNestedPaths(): void
     {
         $factory = $this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
@@ -130,6 +153,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
         $this->assertSame('/files', $generator->generate('contao_api_files_get_collection'));
         $this->assertSame('/files/images/example.jpg', $generator->generate('contao_api_files_get', ['path' => 'images/example.jpg']));
+        $this->assertSame('/files_operations/download/images/example.jpg', $generator->generate('contao_api_files_download', ['path' => 'images/example.jpg']));
         $this->assertSame('/files_operations/move', $generator->generate('contao_api_files_move'));
         $this->assertSame('/files_operations/metadata', $generator->generate('contao_api_files_metadata'));
         $this->assertSame('backend', $routes->get('contao_api_files_get')->getDefault('_scope'));
@@ -140,6 +164,10 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('contao_api_files_metadata', new UrlMatcher($routes, $context)->match('/files_operations/metadata')['_route']);
 
         $context->setMethod('GET');
+        $match = new UrlMatcher($routes, $context)->match('/files_operations/download/documents/guides/content');
+        $this->assertSame('contao_api_files_download', $match['_route']);
+        $this->assertSame('documents/guides/content', $match['path']);
+
         $match = new UrlMatcher($routes, $context)->match('/files/move');
         $this->assertSame('contao_api_files_get', $match['_route']);
         $this->assertSame('move', $match['path']);

@@ -40,7 +40,7 @@ final class ApiRequestFactory
         );
 
         $request->server->set('REMOTE_ADDR', $parent->getClientIp());
-        $request->headers->set('Accept', $this->getJsonFormat($operation->getOutputFormats(), 'application/ld+json'));
+        $request->headers->set('Accept', $this->getOutputFormat($operation->getOutputFormats(), 'application/ld+json'));
 
         if (null !== $payload) {
             $request->headers->set('Content-Type', $contentType);
@@ -96,7 +96,7 @@ final class ApiRequestFactory
     /**
      * @param array<string, list<string>>|null $formats
      */
-    private function getJsonFormat(array|null $formats, string $default): string
+    private function getOutputFormat(array|null $formats, string $default): string
     {
         if (null === $formats) {
             return $default;
@@ -110,6 +110,6 @@ final class ApiRequestFactory
             }
         }
 
-        throw new UnsupportedFormatException('The API operation does not support a JSON representation.');
+        return reset($formats)[0] ?? throw new UnsupportedFormatException('The API operation does not support an output representation.');
     }
 }
