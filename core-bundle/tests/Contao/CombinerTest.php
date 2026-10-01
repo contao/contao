@@ -377,6 +377,7 @@ class CombinerTest extends TestCase
 
         $combiner = new Combiner();
         $combiner->add('legacy.css', '1');
+
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertTrue(is_link($link));
@@ -384,7 +385,7 @@ class CombinerTest extends TestCase
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "body { color: red }\n");
 
         if ('\\' !== \DIRECTORY_SEPARATOR) {
-            $this->assertSame(basename($combinedFile), readlink($link));
+            $this->assertSame(basename($combinedFile), $this->filesystem->readlink($link));
         }
 
         (new Folder('assets/css'))->purge();

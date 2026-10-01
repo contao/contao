@@ -324,11 +324,12 @@ class Combiner extends System
 		$strDirectory = Path::join('assets', $strTarget);
 		$strLink = Path::join($strDirectory, $strKey . $this->strMode);
 		$strLinkPath = Path::join($this->strRootDir, $strLink);
+		$fs = new Filesystem();
 
 		// Resolve the key based symlink
 		if (is_link($strLinkPath) && is_file($strLinkPath))
 		{
-			return Path::join($strUrl, $strDirectory, basename(readlink($strLinkPath)));
+			return Path::join($strUrl, $strDirectory, basename($fs->readlink($strLinkPath)));
 		}
 
 		// Create the file
