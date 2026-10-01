@@ -15,6 +15,7 @@ namespace Contao\ApiBundle\ApiPlatform\Metadata;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
@@ -78,10 +79,11 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
     private function createGetOperation(): Get
     {
         return new Get(
-            uriTemplate: '/files/{path}',
+            uriTemplate: '/files/{pathOrUuid}',
+            uriVariables: ['pathOrUuid' => new Link(fromClass: VirtualFilesystemItem::class, identifiers: ['path'], description: 'The file path or UUID.')],
             shortName: 'File',
             class: VirtualFilesystemItem::class,
-            requirements: ['path' => '.+'],
+            requirements: ['pathOrUuid' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
             provider: 'contao_api.api_platform.virtual_filesystem_state_provider',
@@ -93,11 +95,12 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
         $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
 
         return new Put(
-            uriTemplate: '/files/{path}',
+            uriTemplate: '/files/{pathOrUuid}',
+            uriVariables: ['pathOrUuid' => new Link(fromClass: VirtualFilesystemItem::class, identifiers: ['path'], description: 'The file path or UUID.')],
             inputFormats: ['binary' => ['application/octet-stream']],
             shortName: 'File',
             class: VirtualFilesystemItem::class,
-            requirements: ['path' => '.+'],
+            requirements: ['pathOrUuid' => '.+'],
             defaults: ['_scope' => 'backend'],
             security: "is_granted('ROLE_USER')",
             openapi: new OpenApiOperation(

@@ -63,7 +63,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $collection->getProvider());
 
         $this->assertInstanceOf(Get::class, $get);
-        $this->assertSame('/files/{path}', $get->getUriTemplate());
+        $this->assertSame('/files/{pathOrUuid}', $get->getUriTemplate());
         $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $get->getProvider());
 
         $this->assertInstanceOf(Put::class, $upload);
@@ -105,6 +105,22 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertSame(200, $move->getStatus());
     }
 
+    public function testDocumentsPathOrUuidAndMapsItToTheFileIdentifier(): void
+    {
+        $factory = $this->createFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class));
+        $operations = iterator_to_array($factory->create(VirtualFilesystemItem::class)[0]->getOperations());
+
+        foreach (['contao_api_files_get', 'contao_api_files_upload'] as $name) {
+            $operation = $operations[$name];
+            $this->assertSame('/files/{pathOrUuid}', $operation->getUriTemplate());
+            $this->assertSame(['pathOrUuid' => '.+'], $operation->getRequirements());
+            $link = $operation->getUriVariables()['pathOrUuid'];
+            $this->assertSame(['path'], $link->getIdentifiers());
+            $this->assertSame(VirtualFilesystemItem::class, $link->getFromClass());
+            $this->assertSame('The file path or UUID.', $link->getDescription());
+        }
+    }
+
     public function testDelegatesOtherResources(): void
     {
         $collection = new ResourceMetadataCollection('App\\Entity\\Foo');
@@ -129,7 +145,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $generator = new UrlGenerator($routes, new RequestContext());
 
         $this->assertSame('/files', $generator->generate('contao_api_files_get_collection'));
-        $this->assertSame('/files/images/example.jpg', $generator->generate('contao_api_files_get', ['path' => 'images/example.jpg']));
+        $this->assertSame('/files/images/example.jpg', $generator->generate('contao_api_files_get', ['pathOrUuid' => 'images/example.jpg']));
         $this->assertSame('/files_operations/move', $generator->generate('contao_api_files_move'));
         $this->assertSame('/files_operations/metadata', $generator->generate('contao_api_files_metadata'));
         $this->assertSame('backend', $routes->get('contao_api_files_get')->getDefault('_scope'));
@@ -142,7 +158,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $context->setMethod('GET');
         $match = new UrlMatcher($routes, $context)->match('/files/move');
         $this->assertSame('contao_api_files_get', $match['_route']);
-        $this->assertSame('move', $match['path']);
+        $this->assertSame('move', $match['pathOrUuid']);
     }
 
     private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader

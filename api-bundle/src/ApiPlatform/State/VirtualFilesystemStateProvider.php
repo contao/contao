@@ -48,7 +48,7 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
                 return $this->provideCollection($context);
             }
 
-            $path = $uriVariables['path'] ?? null;
+            $path = $uriVariables['pathOrUuid'] ?? $uriVariables['path'] ?? null;
 
             if (!\is_string($path) || !$item = $this->filesStorage->get($this->toLocation($path))) {
                 throw new NotFoundHttpException('The requested file or directory does not exist.');
