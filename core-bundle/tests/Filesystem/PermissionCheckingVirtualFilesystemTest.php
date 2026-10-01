@@ -308,9 +308,10 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ];
     }
 
-    public function testChecksPermissionForSpecificUser(): void
+    #[DataProvider('provideUsersAndPermissions')]
+    public function testChecksPermissionForSpecificUser(bool $hasUser, bool $granted): void
     {
-        $user = $this->createStub(UserInterface::class);
+        $user = $hasUser ? $this->createStub(UserInterface::class) : null;
 
         $filesStorage = $this->createStub(VirtualFilesystem::class);
         $filesStorage
@@ -319,12 +320,32 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ;
 
         $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGrantedForUser')
-            ->with($user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo')
-            ->willReturn(true)
-        ;
+
+        if ($hasUser) {
+            $security
+                ->expects($this->once())
+                ->method('isGrantedForUser')
+                ->with($user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo')
+                ->willReturn($granted)
+            ;
+
+            $security
+                ->expects($this->never())
+                ->method('isGranted')
+            ;
+        } else {
+            $security
+                ->expects($this->once())
+                ->method('isGranted')
+                ->with(ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo')
+                ->willReturn($granted)
+            ;
+
+            $security
+                ->expects($this->never())
+                ->method('isGrantedForUser')
+            ;
+        }
 
         $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
             $filesStorage,
@@ -332,6 +353,14 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
             $user,
         );
 
-        $this->assertTrue($permissionCheckingVirtualFilesystem->canAccessLocation('foo'));
+        $this->assertSame($granted, $permissionCheckingVirtualFilesystem->canAccessLocation('foo'));
+    }
+
+    public static function provideUsersAndPermissions(): iterable
+    {
+        yield 'specific user granted' => [true, true];
+        yield 'specific user denied' => [true, false];
+        yield 'null user granted' => [false, true];
+        yield 'null user denied' => [false, false];
     }
 }
