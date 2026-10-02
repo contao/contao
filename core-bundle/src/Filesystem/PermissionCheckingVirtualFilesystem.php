@@ -236,15 +236,14 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         return $this->isGranted($attribute, $rootStorageRelativePath);
     }
 
-    /**
-     * @param mixed|null $subject
-     */
-    private function isGranted(string $attribute, $subject = null): bool
+    private function isGranted(string $attribute, mixed $subject = null): bool
     {
         if (false === $this->user) {
             return $this->security->isGranted($attribute, $subject);
         }
 
+        // Forward compatibility with symfony/security-core version 8.2, which allows
+        // passing null as first argument to isGrantedForUser().
         return $this->security->isGrantedForUser($this->user, $attribute, $subject);
     }
 }
