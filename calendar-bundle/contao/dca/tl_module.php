@@ -159,14 +159,12 @@ class tl_module_calendar extends Backend
 	public function getCalendars()
 	{
 		$security = System::getContainer()->get('security.helper');
-		$isAdmin = $security->isGranted('ROLE_ADMIN');
-
 		$arrCalendars = array();
 		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
 
 		while ($objCalendars->next())
 		{
-			if ($isAdmin || $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
+			if ($security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
 			{
 				$arrCalendars[$objCalendars->id] = $objCalendars->title;
 			}

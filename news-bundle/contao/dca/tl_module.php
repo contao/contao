@@ -128,14 +128,12 @@ class tl_module_news extends Backend
 	public function getNewsArchives()
 	{
 		$security = System::getContainer()->get('security.helper');
-		$isAdmin = $security->isGranted('ROLE_ADMIN');
-
 		$arrArchives = array();
 		$objArchives = Database::getInstance()->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
 
 		while ($objArchives->next())
 		{
-			if ($isAdmin || $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
+			if ($security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
 			{
 				$arrArchives[$objArchives->id] = $objArchives->title;
 			}

@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
@@ -422,15 +421,9 @@ class tl_form_field extends Backend
 	 */
 	public function filterFormFields()
 	{
-		$security = System::getContainer()->get('security.helper');
-
-		if ($security->isGranted('ROLE_ADMIN'))
-		{
-			return;
-		}
-
-		$user = $security->getUser();
-		$fields = $user instanceof BackendUser ? $user->fields : array();
+		$fields = $this->getFields();
+		$GLOBALS['TL_DCA']['tl_form_field']['fields']['options'] = $fields;
+		unset($GLOBALS['TL_DCA']['tl_form_field']['fields']['options_callback']);
 
 		if (empty($fields))
 		{

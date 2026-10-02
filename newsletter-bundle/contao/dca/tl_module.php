@@ -96,9 +96,6 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		$security = System::getContainer()->get('security.helper');
-		$isAdmin = $security->isGranted('ROLE_ADMIN');
-
 		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
 
 		// Show only channels with a redirect page in the web modules
@@ -115,7 +112,7 @@ class tl_module_newsletter extends Backend
 
 		while ($objChannels->next())
 		{
-			if ($isAdmin || $security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
+			if ($security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
 			{
 				$arrChannels[$objChannels->id] = $objChannels->title;
 			}

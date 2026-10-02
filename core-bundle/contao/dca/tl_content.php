@@ -1149,14 +1149,13 @@ class tl_content extends Backend
 	public function getForms()
 	{
 		$security = System::getContainer()->get('security.helper');
-		$isAdmin = $security->isGranted('ROLE_ADMIN');
 
 		$arrForms = array();
 		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
 
 		while ($objForms->next())
 		{
-			if ($isAdmin || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
