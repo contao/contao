@@ -97,6 +97,7 @@ services:
         class: Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory
         arguments:
             - '@contao.framework'
+            - '@contao.security.backend_user_factory'
 
     contao.search_backend.adapter:
         class: CmsIg\Seal\Adapter\AdapterInterface

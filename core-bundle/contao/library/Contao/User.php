@@ -16,13 +16,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Authenticates and initializes user objects
- *
- * The class supports user authentication, login and logout, persisting the
- * session data and initializing the user object from a database row. It
- * functions as abstract parent class for the "BackendUser" and "FrontendUser"
- * classes of the core.
- *
  * @property integer           $id
  * @property integer           $tstamp
  * @property string|null       $username

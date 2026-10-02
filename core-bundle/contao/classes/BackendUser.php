@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\User\BackendUserFactory;
+use Contao\CoreBundle\Security\User\ContaoUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -22,14 +24,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property array   $frontendModules
  * @property array   $pagemounts
  * @property array   $filemounts
- * @property array   $filemountIds
  * @property string  $fop
  * @property array   $alexf
  * @property array   $cud
  * @property array   $imageSizes
  * @property string  $doNotHideMessages
  */
-class BackendUser extends User
+class BackendUser extends ContaoUser
 {
 	/**
 	 * Current object instance (do not remove)
@@ -44,28 +45,10 @@ class BackendUser extends User
 	protected $strTable = 'tl_user';
 
 	/**
-	 * File mount IDs
-	 * @var array
-	 */
-	protected $arrFilemountIds;
-
-	/**
 	 * Symfony security roles
 	 * @var array
 	 */
 	protected $roles = array('ROLE_USER');
-
-	/**
-	 * @param array<string, mixed> $data
-	 */
-	public static function createFromData(array $data): self
-	{
-		$user = new self();
-		$user->arrData = $data;
-		$user->setUserFromDb();
-
-		return $user;
-	}
 
 	/**
 	 * Instantiate a new user object
@@ -74,6 +57,8 @@ class BackendUser extends User
 	 */
 	public static function getInstance()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Calling BackendUser::getInstance is deprecated in Contao 6.1 and will be removed in Contao 7. Get the user from the Symfony security services instead.');
+
 		if (static::$objInstance !== null)
 		{
 			return static::$objInstance;
@@ -92,7 +77,7 @@ class BackendUser extends User
 
 		if ($strUser !== null)
 		{
-			static::$objInstance = static::loadUserByIdentifier($strUser);
+			static::$objInstance = System::getContainer()->get('contao.security.backend_user_provider')->loadUserByIdentifier($strUser);
 
 			return static::$objInstance;
 		}
@@ -112,6 +97,8 @@ class BackendUser extends User
 		switch ($strKey)
 		{
 			case 'isAdmin':
+				trigger_deprecation('contao/core-bundle', '6.1', 'Using BackendUser::isAdmin is deprecated in Contao 6.1 and will be removed in Contao 7. Use the ROLE_ADMIN permission instead.');
+
 				return (bool) $this->arrData['admin'];
 
 			case 'groups':
@@ -125,7 +112,9 @@ class BackendUser extends User
 				return \is_array($this->arrData[$strKey] ?? null) ? $this->arrData[$strKey] : (($this->arrData[$strKey] ?? null) ? array($this->arrData[$strKey]) : false);
 
 			case 'filemountIds':
-				return $this->arrFilemountIds;
+				trigger_deprecation('contao/core-bundle', '6.1', 'Getting BackendUser::fileMountIds is deprecated in Contao 6.1 and will be removed in Contao 7.');
+
+				return FilesModel::findMultipleByPaths($this->filemounts)?->fetchEach('uuid') ?? array();
 		}
 
 		return parent::__get($strKey);
@@ -151,12 +140,16 @@ class BackendUser extends User
 
 	/**
 	 * Exclude permission fields while saving
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             Update the database directly instead.
 	 */
 	public function save()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Saving the BackendUser object is deprecated in Contao 6.1 and will be removed in Contao 7. Update the database directly instead.');
+
 		$arrData = $this->arrData;
-		$permissions = $this->getPermissionFields();
-		$permissionFields = array_unique(array(...$permissions['always'], ...$permissions['depends']));
+		$permissionFields = BackendUserFactory::getPermissionFields();
 
 		$this->arrData = array_diff_key($this->arrData, array_flip($permissionFields));
 
@@ -171,135 +164,17 @@ class BackendUser extends User
 	}
 
 	/**
-	 * @return array{always: array, depends: array}
-	 */
-	private function getPermissionFields(): array
-	{
-		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud');
-
-		// HOOK: Take custom permissions
-		if (\is_array($GLOBALS['TL_PERMISSIONS'] ?? null))
-		{
-			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
-		}
-
-		return array('always' => array('alexf'), 'depends' => $depends);
-	}
-
-	/**
 	 * Set all user properties from a database record
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
+	 *             Use the BackendUserFactory instead.
 	 */
 	protected function setUserFromDb()
 	{
-		$this->intId = $this->id;
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using %s is deprecated in Contao 6.1 and will be removed in Contao 7. Use the %s instead.', __METHOD__, BackendUserFactory::class);
 
-		// Unserialize values
-		foreach ($this->arrData as $k=>$v)
-		{
-			if (!is_numeric($v))
-			{
-				$this->arrData[$k] = StringUtil::deserialize($v);
-			}
-		}
-
-		// Inherit permissions
-		$permissions = $this->getPermissionFields();
-		$always = $permissions['always'];
-		$depends = $permissions['depends'];
-
-		// Overwrite user permissions if only group permissions shall be inherited
-		if ($this->inherit == 'group')
-		{
-			foreach ($depends as $field)
-			{
-				$this->arrData[$field] = array();
-			}
-		}
-
-		// Merge permissions
-		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_unique(array(...$always, ...$depends)) : $always;
-		$time = Date::floorToMinute();
-		$db = Database::getInstance();
-
-		foreach ($this->groups as $id)
-		{
-			$objGroup = $db
-				->prepare("SELECT * FROM tl_user_group WHERE id=? AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)")
-				->limit(1)
-				->execute($id);
-
-			if ($objGroup->numRows > 0)
-			{
-				foreach ($inherit as $field)
-				{
-					$value = StringUtil::deserialize($objGroup->$field, true);
-
-					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
-					if (!empty($value))
-					{
-						$this->arrData[$field] = array_merge(\is_array($this->arrData[$field] ?? null) ? $this->arrData[$field] : ($this->arrData[$field] ?? null ? array($this->arrData[$field]) : array()), $value);
-						$this->arrData[$field] = array_unique($this->arrData[$field]);
-					}
-				}
-			}
-		}
-
-		// Make sure pagemounts, filemounts, alexf and cud are set!
-		if (!\is_array($this->arrData['pagemounts'] ?? null))
-		{
-			$this->arrData['pagemounts'] = array();
-		}
-		else
-		{
-			$this->arrData['pagemounts'] = array_filter($this->arrData['pagemounts']);
-		}
-
-		if (!\is_array($this->arrData['filemounts'] ?? null))
-		{
-			$this->arrData['filemounts'] = array();
-		}
-		else
-		{
-			$this->arrData['filemounts'] = array_filter($this->arrData['filemounts']);
-		}
-
-		if (!\is_array($this->arrData['alexf'] ?? null))
-		{
-			$this->arrData['alexf'] = array();
-		}
-		else
-		{
-			$this->arrData['alexf'] = array_filter($this->arrData['alexf']);
-		}
-
-		if (!\is_array($this->arrData['cud'] ?? null))
-		{
-			$this->arrData['cud'] = array();
-		}
-		else
-		{
-			$this->arrData['cud'] = array_filter($this->arrData['cud']);
-		}
-
-		// Store the numeric file mounts
-		$this->arrFilemountIds = $this->filemounts;
-
-		// Convert the file mounts into paths
-		if (!$this->isAdmin && !empty($this->filemounts))
-		{
-			$objFiles = FilesModel::findMultipleByUuids($this->filemounts);
-
-			if ($objFiles !== null)
-			{
-				$this->filemounts = $objFiles->fetchEach('path');
-			}
-		}
-
-		// Hide the "admin" field if the user is not an admin (see #184)
-		if (!$this->isAdmin && ($index = array_search('tl_user::admin', $this->alexf)) !== false)
-		{
-			unset($this->arrData['alexf'][$index]);
-		}
+		$user = System::getContainer()->get('contao.security.backend_user_factory')->create($this->arrData);
+		$this->arrData = $user->arrData;
 	}
 
 	/**
@@ -307,7 +182,7 @@ class BackendUser extends User
 	 */
 	public function getRoles(): array
 	{
-		if ($this->isAdmin)
+		if ($this->admin)
 		{
 			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}

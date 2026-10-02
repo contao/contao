@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\Database;
 use Contao\Environment;
 use Contao\System;
@@ -59,11 +60,12 @@ class VirtualBackendUserFactoryTest extends ContaoTestCase
             ->method('initialize')
         ;
 
+        $connection = $this->createStub(Connection::class);
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $this->createStub(Connection::class));
+        $container->set('database_connection', $connection);
         System::setContainer($container);
 
-        $factory = new VirtualBackendUserFactory($framework);
+        $factory = new VirtualBackendUserFactory($framework, new BackendUserFactory($connection));
         $user = $factory->createForGroupId(42);
 
         $this->assertSame('__contao_backend_search_group_42', $user->getUserIdentifier());

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\TwoFactor;
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Lcobucci\JWT\Signer\InvalidKeyProvided;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
@@ -29,6 +30,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         private readonly RequestStack $requestStack,
         private readonly TrustedDeviceTokenStorage $trustedTokenStorage,
         private readonly EntityManagerInterface $entityManager,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -81,8 +83,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $this->entityManager->flush();
 
-        ++$user->trustedTokenVersion;
-        $user->save();
+        $this->connection->executeStatement("UPDATE {$user->getTable()} SET trustedTokenVersion = trustedTokenVersion + 1 WHERE id=?", [$user->id]);
     }
 
     /**

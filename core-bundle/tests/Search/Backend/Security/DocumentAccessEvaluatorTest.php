@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend\Security;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator;
 use Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory;
+use Contao\CoreBundle\Security\User\BackendUser;
 use PHPUnit\Framework\TestCase;
 
 class DocumentAccessEvaluatorTest extends TestCase

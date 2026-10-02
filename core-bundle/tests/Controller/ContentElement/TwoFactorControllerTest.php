@@ -26,6 +26,8 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
@@ -47,13 +49,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
     {
         $container = $this->getContainerWithFrameworkTemplate($this->createStub(BackendUser::class), true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -69,13 +65,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
     {
         $container = $this->getContainerWithFrameworkTemplate($this->createStub(BackendUser::class), true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -91,13 +81,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
     {
         $container = $this->getContainerWithFrameworkTemplate();
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -118,13 +102,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -144,13 +122,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -167,6 +139,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
     public function testRedirectsAfterTwoFactorHasBeenDisabled(): void
     {
         $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user->id = 1;
         $user->secret = '';
         $user->useTwoFactor = true;
 
@@ -179,12 +152,16 @@ class TwoFactorControllerTest extends ContentElementTestCase
             ->with($user)
         ;
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $trustedDeviceManager,
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with('tl_member', ['secret' => null, 'useTwoFactor' => false, 'backupCodes' => null], ['id' => 1], ['useTwoFactor' => Types::BOOLEAN])
+        ;
+
+        $controller = $this->getController(
+            trustedDeviceManager: $trustedDeviceManager,
+            connection: $connection,
         );
 
         $controller->setContainer($container);
@@ -202,8 +179,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertNull($user->backupCodes);
-        $this->assertFalse($user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
@@ -216,13 +191,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -250,12 +219,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+        $controller = $this->getController(
+            authenticationUtils: $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
         );
 
         $controller->setContainer($container);
@@ -284,12 +249,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->mockAuthenticator($user, false),
-            $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+        $controller = $this->getController(
+            authenticator: $this->mockAuthenticator($user, false),
+            authenticationUtils: $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
         );
 
         $controller->setContainer($container);
@@ -314,23 +276,24 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
     {
-        $user = $this->createClassWithPropertiesMock(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user->id = 1;
         $user->secret = '';
         $user->useTwoFactor = false;
 
-        $user
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('save')
+            ->method('update')
+            ->with('tl_member', ['useTwoFactor' => true], ['id' => 1], ['useTwoFactor' => Types::BOOLEAN])
         ;
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->mockAuthenticator($user, true),
-            $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+        $controller = $this->getController(
+            authenticator: $this->mockAuthenticator($user, true),
+            authenticationUtils: $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+            connection: $connection,
         );
 
         $controller->setContainer($container);
@@ -362,13 +325,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, true);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
-        );
+        $controller = $this->getController();
 
         $controller->setContainer($container);
 
@@ -399,12 +356,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container->set('contao.security.two_factor.backup_code_manager', $backupCodeManager);
 
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $backupCodeManager,
-            $this->createStub(TrustedDeviceManager::class),
-            $this->createStub(Authenticator::class),
-            $this->createStub(AuthenticationUtils::class),
+        $controller = $this->getController(
+            backupCodeManager: $backupCodeManager,
         );
 
         $controller->setContainer($container);
@@ -417,6 +370,18 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    private function getController(ContaoFramework|null $framework = null, BackupCodeManager|null $backupCodeManager = null, TrustedDeviceManager|null $trustedDeviceManager = null, Authenticator|null $authenticator = null, AuthenticationUtils|null $authenticationUtils = null, Connection|null $connection = null): TwoFactorController
+    {
+        return new TwoFactorController(
+            $framework ?? $this->getDefaultFramework(),
+            $backupCodeManager ?? $this->createStub(BackupCodeManager::class),
+            $trustedDeviceManager ?? $this->createStub(TrustedDeviceManager::class),
+            $authenticator ?? $this->createStub(Authenticator::class),
+            $authenticationUtils ?? $this->createStub(AuthenticationUtils::class),
+            $connection ?? $this->createStub(Connection::class),
+        );
     }
 
     private function mockAuthenticator(UserInterface $user, bool $return): Authenticator|MockObject
@@ -446,10 +411,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
     private function mockPageModel(): PageModel&Stub
     {
-        $page = $this->createClassWithPropertiesStub(PageModel::class);
-        $page->enforceTwoFactor = false;
-
-        return $page;
+        return $this->createClassWithPropertiesStub(PageModel::class, [
+            'enforceTwoFactor' => false,
+        ]);
     }
 
     private function mockFrameworkWithTemplate(): ContaoFramework&Stub

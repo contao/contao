@@ -12,24 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend\Security;
 
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\User\BackendUser;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
+use Symfony\Contracts\Service\ResetInterface;
 
-class VirtualBackendUserFactory
+class VirtualBackendUserFactory implements ResetInterface
 {
     /**
      * @var array<string, mixed>|null
      */
     private array|null $cachedDefaults = null;
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly BackendUserFactory $backendUserFactory,
+    ) {
     }
 
     public function createForGroupId(int $groupId): BackendUser
     {
-        return BackendUser::createFromData([
+        return $this->backendUserFactory->create([
             ...$this->getDefaultUserDataFromDca(),
             'id' => 0,
             'username' => '__contao_backend_search_group_'.$groupId,
@@ -38,6 +42,11 @@ class VirtualBackendUserFactory
             'inherit' => 'group',
             'groups' => [$groupId],
         ]);
+    }
+
+    public function reset(): void
+    {
+        $this->cachedDefaults = null;
     }
 
     /**

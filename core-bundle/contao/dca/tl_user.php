@@ -691,11 +691,16 @@ class tl_user extends Backend
 	 */
 	public function updateCurrentUser(DataContainer $dc)
 	{
-		$user = System::getContainer()->get('security.helper')->getUser();
+		$container = System::getContainer();
+		$token = $container->get('security.helper')->getToken();
+		$user = $token?->getUser();
 
-		if ($user instanceof BackendUser && $user->id == $dc->id)
+		if (!$user instanceof BackendUser || (int) $user->id !== (int) $dc->id)
 		{
-			$user->findBy('id', $user->id);
+			return;
 		}
+
+		$refreshedUser = $container->get('contao.security.backend_user_provider')->loadUserById((int) $dc->id);
+		$token->setUser($refreshedUser);
 	}
 }
