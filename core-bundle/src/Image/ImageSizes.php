@@ -68,8 +68,12 @@ class ImageSizes implements ResetInterface
      *
      * @return array<string, array<string>>
      */
-    public function getOptionsForUser(BackendUser|false|null $user = false): array
+    public function getOptionsForUser(BackendUser|null $user = null): array
     {
+        if (null !== $user) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Passing the user object to %s is deprecated in Contao 6.1 and will be removed in Contao 7.', __METHOD__);
+        }
+
         $this->loadOptions();
 
         $event = new ImageSizesEvent($this->filterOptions($user), $user);
@@ -145,7 +149,7 @@ class ImageSizes implements ResetInterface
      *
      * @return array<string, array<string>>
      */
-    private function filterOptions(BackendUser|false|null $user = false): array
+    private function filterOptions(BackendUser|null $user): array
     {
         $filteredSizes = [];
 
@@ -160,19 +164,19 @@ class ImageSizes implements ResetInterface
         return $filteredSizes;
     }
 
-    private function filterImageSizes(array $sizes, BackendUser|false|null $user, array &$filteredSizes, string $group): void
+    private function filterImageSizes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
-            if (false === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)) {
+            if (null === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)) {
                 $filteredSizes[$group][$key] = $size;
             }
         }
     }
 
-    private function filterResizeModes(array $sizes, BackendUser|false|null $user, array &$filteredSizes, string $group): void
+    private function filterResizeModes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {
-            if (false === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)) {
+            if (null === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)) {
                 $filteredSizes[$group][] = $size;
             }
         }
