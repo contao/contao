@@ -31,7 +31,11 @@ class TemplateSnapshotsTest extends TestCase
 
     protected function tearDown(): void
     {
-        new Filesystem()->remove($this->directory);
+        $filesystem = new Filesystem();
+
+        // Git object files are read-only and must be writable for removal on Windows.
+        $filesystem->chmod($this->directory.'/var/cache/test/template-snapshots', 0o700, recursive: true);
+        $filesystem->remove($this->directory);
 
         parent::tearDown();
     }
@@ -114,10 +118,16 @@ class TemplateSnapshotsTest extends TestCase
         }
 
         $snapshots->snapshot();
-        new Filesystem()->remove($this->directory.'/var/cache/test');
+
+        $filesystem = new Filesystem();
+
+        // Git object files are read-only and must be writable for removal on Windows.
+        $filesystem->chmod($this->directory.'/var/cache/test/template-snapshots', 0o700, recursive: true);
+        $filesystem->remove($this->directory.'/var/cache/test');
 
         $this->assertSame([], $snapshots->listSnapshots());
         $this->assertNull($snapshots->latestSnapshot());
+
         $snapshots->snapshot();
         $this->assertCount(1, $snapshots->listSnapshots());
     }
