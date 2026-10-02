@@ -4521,7 +4521,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($blnHasSorting)
 					{
 						// Prevent circular references
-						if ($blnClipboard && (!System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']) || !$this->canPasteClipboard($arrClipboard, $this->addDynamicPtable(array('pid' => $row[$i]['id'], 'sorting' => $row[$i]['sorting'] + 1)))))
+						if ($blnClipboard && (!System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']) || !$this->canPasteClipboard($arrClipboard, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
 							$recordOperations->addSeparator();
 							$recordOperations->addPasteButton('pasteafter', $table, null);

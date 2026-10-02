@@ -48,6 +48,16 @@ tl_page:
         type: regular
         published: 1
 
+tl_article:
+    article_main_home:
+        pid: '@page_main_home'
+        sorting: 128
+        tstamp: 1704067200
+        title: Main website home
+        alias: main-website-home
+        inColumn: main
+        published: 1
+
 tl_files:
     files_media:
         tstamp: 1704067200

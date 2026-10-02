@@ -22,6 +22,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
     public function testAllowsAStreamAtTheMaximumSize(): void
     {
         $stream = $this->createStream('content');
+
         $filesystem = $this->createMock(VirtualFilesystemInterface::class);
         $filesystem
             ->expects($this->once())
@@ -40,6 +41,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
     public function testRejectsAStreamLargerThanTheMaximumSize(): void
     {
         $stream = $this->createStream('content');
+
         $filesystem = $this->createMock(VirtualFilesystemInterface::class);
         $filesystem
             ->expects($this->once())
@@ -63,6 +65,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
     {
         $stream = $this->createStream('content');
         $writeException = new \RuntimeException('Write failed.');
+
         $filesystem = $this->createStub(VirtualFilesystemInterface::class);
         $filesystem
             ->method('writeStream')
@@ -99,6 +102,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
     {
         $stream = $this->createStream('content');
         $exception = new \RuntimeException('Write failed.');
+
         $filesystem = $this->createStub(VirtualFilesystemInterface::class);
         $filesystem
             ->method('writeStream')

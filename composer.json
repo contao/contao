@@ -233,6 +233,7 @@
         "masterminds/html5": "<2.8",
         "nikic/php-parser": "4.7.0",
         "symfony/doctrine-bridge": ">=7.4.14 <7.4.16 || >=8.0.14 <8.1.4",
+        "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
     },
     "autoload": {
