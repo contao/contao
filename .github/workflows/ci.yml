@@ -302,7 +302,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.4'
-                  extensions: dom, intl, mbstring, pdo_mysql, zip
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zip, zlib
                   coverage: none
 
             - name: Set up Node.js
