@@ -118,6 +118,7 @@ class TemplateSnapshotsTest extends TestCase
 
         $this->assertSame([], $snapshots->listSnapshots());
         $this->assertNull($snapshots->latestSnapshot());
+
         $snapshots->snapshot();
         $this->assertCount(1, $snapshots->listSnapshots());
     }

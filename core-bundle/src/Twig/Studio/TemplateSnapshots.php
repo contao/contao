@@ -153,7 +153,7 @@ final class TemplateSnapshots
         $filesystem->mkdir($this->workTree);
         $filesystem->mkdir(\dirname($this->gitDir));
 
-        $this->run(['git', 'init', '--bare', $this->gitDir]);
+        $this->run(['git', 'init', '--bare', '-c', 'core.sharedRepository=0644', $this->gitDir]);
     }
 
     private function hasHistory(): bool
