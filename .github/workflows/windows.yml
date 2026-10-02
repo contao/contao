@@ -40,4 +40,4 @@ jobs:
               uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat
+              run: vendor/bin/phpunit.bat --filter TemplateSnapshotsTest

@@ -33,7 +33,7 @@ final class TemplateSnapshots
         private readonly ContaoFilesystemLoader $loader,
     ) {
         $this->workTree = Path::join($projectDir, 'templates');
-        $this->gitDir = Path::join($cacheDir, 'template-snapshots', 'git');
+        $this->gitDir = Path::join($cacheDir, 'template-snapshots', '.git');
     }
 
     public function isAvailable(): bool
@@ -51,7 +51,11 @@ final class TemplateSnapshots
             function () use ($message): string {
                 $this->initialize();
 
-                return $this->commit('Template snapshot: '.preg_replace('/[\r\n]+/', ' ', trim($message)));
+                $return = $this->commit('Template snapshot: '.preg_replace('/[\r\n]+/', ' ', trim($message)));
+
+                $this->makeGitObjectsWritable();
+
+                return $return;
             },
         );
     }
@@ -193,8 +197,6 @@ final class TemplateSnapshots
         $this->git(['add', '-A', '-f']);
         $this->git(['-c', 'user.name=Contao', '-c', 'user.email=contao@localhost', 'commit', '--allow-empty', '-m', $message]);
 
-        $this->makeGitObjectsWritable();
-
         return trim($this->git(['rev-parse', 'HEAD']));
     }
 
@@ -267,11 +269,12 @@ final class TemplateSnapshots
 
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                $this->gitDir.'/objects',
+                Path::join($this->gitDir, 'objects'),
                 \FilesystemIterator::SKIP_DOTS,
             ),
         );
 
+        /** @var \SplFileObject $file */
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 chmod($file->getPathname(), 0644);
