@@ -158,9 +158,9 @@ class tl_module_calendar extends Backend
 	 */
 	public function getCalendars()
 	{
-		$security = System::getContainer()->get('security.helper');
 		$arrCalendars = array();
 		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
 		{

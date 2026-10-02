@@ -421,9 +421,15 @@ class tl_form_field extends Backend
 	 */
 	public function filterFormFields()
 	{
-		$fields = $this->getFields();
-		$GLOBALS['TL_DCA']['tl_form_field']['fields']['options'] = $fields;
-		unset($GLOBALS['TL_DCA']['tl_form_field']['fields']['options_callback']);
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted('ROLE_ADMIN'))
+		{
+			return;
+		}
+
+		$user = $security->getUser();
+		$fields = $user instanceof BackendUser ? $user->fields : array();
 
 		if (empty($fields))
 		{

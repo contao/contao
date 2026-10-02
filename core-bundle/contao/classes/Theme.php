@@ -740,14 +740,14 @@ class Theme extends Backend
 
 	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
 	{
-		$connection = System::getContainer()->get('database_connection');
 		$user = System::getContainer()->get('security.helper')->getUser();
 
 		if (!$user instanceof BackendUser)
 		{
-			throw new AccessDeniedException('Cannot import themes without a BackendUser.');
+			throw new AccessDeniedException('Cannot import themes without a backend user.');
 		}
 
+		$connection = System::getContainer()->get('database_connection');
 		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array($user->id));
 
 		if (!$preserveData && $insertOnly)
@@ -775,7 +775,7 @@ class Theme extends Backend
 		finally
 		{
 			// Restore backend user
-			if ($userRow && (int) $connection->fetchOne('SELECT COUNT(*) FROM tl_user') < 1)
+			if ((int) $connection->fetchOne('SELECT COUNT(*) FROM tl_user') < 1)
 			{
 				$connection->insert(
 					'tl_user',

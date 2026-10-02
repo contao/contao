@@ -1148,10 +1148,9 @@ class tl_content extends Backend
 	 */
 	public function getForms()
 	{
-		$security = System::getContainer()->get('security.helper');
-
 		$arrForms = array();
 		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{

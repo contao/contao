@@ -183,6 +183,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	{
 		$security = System::getContainer()->get('security.helper');
 		$connection = System::getContainer()->get('database_connection');
+
 		$andWhereGroups = '';
 
 		if (!$security->isGranted('ROLE_ADMIN'))
