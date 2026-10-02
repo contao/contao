@@ -37,7 +37,7 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
     public function __construct(
         VirtualFilesystem $virtualFilesystem,
         private readonly Security $security,
-        private readonly UserInterface|false|null $user = false,
+        private readonly UserInterface|null $user = null,
     ) {
         $this->inner = $virtualFilesystem;
     }
@@ -238,12 +238,10 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 
     private function isGranted(string $attribute, mixed $subject = null): bool
     {
-        if (false === $this->user) {
+        if (!$this->user) {
             return $this->security->isGranted($attribute, $subject);
         }
 
-        // Forward compatibility with symfony/security-core version 8.2, which allows
-        // passing null as first argument to isGrantedForUser().
         return $this->security->isGrantedForUser($this->user, $attribute, $subject);
     }
 }
