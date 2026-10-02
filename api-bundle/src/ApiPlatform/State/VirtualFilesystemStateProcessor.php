@@ -80,7 +80,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             return $this->updateMetadata($request);
         }
 
-        $path = $uriVariables['path'] ?? null;
+        $path = $uriVariables['pathOrUuid'] ?? $uriVariables['path'] ?? null;
 
         if (!\is_string($path) || '' === $path) {
             throw new BadRequestHttpException('A file path or UUID is required.');

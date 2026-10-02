@@ -60,7 +60,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(null, new Put(), ['path' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
+        $result = $processor->process(null, new Put(), ['pathOrUuid' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
     }
@@ -119,7 +119,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(null, new Put(), ['path' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
+        $result = $processor->process(null, new Put(), ['pathOrUuid' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
     }

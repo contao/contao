@@ -65,7 +65,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => 'images/example.jpg']);
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['pathOrUuid' => 'images/example.jpg']);
 
         $this->assertSame('images/example.jpg', $result->path);
         $this->assertSame(456, $result->fileSize);
@@ -128,7 +128,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => $uuid->toRfc4122()]);
+        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['pathOrUuid' => $uuid->toRfc4122()]);
 
         $this->assertSame('images/example.jpg', $result->path);
     }
