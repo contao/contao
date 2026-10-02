@@ -1302,6 +1302,9 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.root_page_dependent_elements_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\RootPageDependentElementsVoter
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
