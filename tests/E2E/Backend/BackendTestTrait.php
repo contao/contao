@@ -30,7 +30,7 @@ trait BackendTestTrait
 
     private const string DCA_CONTENT = 'tl_content.php';
 
-    protected static function createManagedEditionConfig(): ManagedEditionConfig
+    protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
             'calendar-bundle',

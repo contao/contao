@@ -295,12 +295,14 @@ jobs:
     e2e:
         name: E2E tests
         runs-on: ubuntu-latest
+        env:
+            PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.contao-e2e/cache/playwright
         steps:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.4'
-                  extensions: dom, intl, mbstring, pdo_mysql
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zip, zlib
                   coverage: none
 
             - name: Set up Node.js
@@ -317,8 +319,26 @@ jobs:
             - name: Install the dependencies
               uses: ramsey/composer-install@v4
 
-            - name: Install Playwright
-              run: vendor/bin/playwright-install --with-deps
+            - name: Prepare Playwright Node dependencies
+              run: vendor/bin/playwright-install
+
+            - name: Calculate E2E cache metadata
+              run: vendor/bin/contao-e2e cache:metadata
+
+            - name: Restore Playwright browsers
+              uses: actions/cache@v5
+              with:
+                  path: .contao-e2e/cache/playwright
+                  key: playwright-${{ hashFiles('.contao-e2e/cache-keys/playwright') }}
+
+            - name: Restore E2E setup cache
+              uses: actions/cache@v5
+              with:
+                  path: .contao-e2e/cache/e2e
+                  key: contao-e2e-${{ hashFiles('.contao-e2e/cache-keys/e2e') }}
+
+            - name: Install and verify Playwright browsers
+              run: vendor/bin/playwright-install --browsers
 
             - name: Run the E2E tests
               run: vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit
