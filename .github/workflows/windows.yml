@@ -1,7 +1,6 @@
 name: Windows
 
 on:
-    pull_request: ~
     workflow_dispatch: ~
     schedule:
         - cron: 0 13 * * 1-5
@@ -16,7 +15,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: [main]
+                contao: ['5.3', '5.7', '6.0', main]
         steps:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
@@ -40,4 +39,4 @@ jobs:
               uses: ramsey/composer-install@v4
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --filter TemplateSnapshotsTest
+              run: vendor/bin/phpunit.bat

@@ -33,7 +33,7 @@ final class TemplateSnapshots
         private readonly ContaoFilesystemLoader $loader,
     ) {
         $this->workTree = Path::join($projectDir, 'templates');
-        $this->gitDir = Path::join($cacheDir, 'template-snapshots', 'git');
+        $this->gitDir = Path::join($cacheDir, 'template-snapshots', '.git');
     }
 
     public function isAvailable(): bool
