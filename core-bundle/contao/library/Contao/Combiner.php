@@ -378,7 +378,7 @@ class Combiner extends System
 		// Create a symlink for the key based file
 		if (!is_link($strLinkPath) && file_exists($strLinkPath))
 		{
-			(new Filesystem())->remove($strLinkPath);
+			$fs->remove($strLinkPath);
 		}
 
 		SymlinkUtil::symlink(Path::join($this->strRootDir, $strPath), $strLinkPath, $this->strRootDir);
