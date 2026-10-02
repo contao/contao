@@ -34,7 +34,7 @@ class TemplateSnapshotsTest extends TestCase
         $filesystem = new Filesystem();
 
         // Git object files are read-only and must be writable for removal on Windows.
-        $filesystem->chmod($this->directory, 0o700, recursive: true);
+        $filesystem->chmod($this->directory.'/var/cache/test/template-snapshots', 0o700, recursive: true);
         $filesystem->remove($this->directory);
 
         parent::tearDown();
@@ -120,11 +120,14 @@ class TemplateSnapshotsTest extends TestCase
         $snapshots->snapshot();
 
         $filesystem = new Filesystem();
-        $filesystem->chmod($this->directory.'/var/cache/test', 0o700, recursive: true);
+
+        // Git object files are read-only and must be writable for removal on Windows.
+        $filesystem->chmod($this->directory.'/var/cache/test/template-snapshots', 0o700, recursive: true);
         $filesystem->remove($this->directory.'/var/cache/test');
 
         $this->assertSame([], $snapshots->listSnapshots());
         $this->assertNull($snapshots->latestSnapshot());
+
         $snapshots->snapshot();
         $this->assertCount(1, $snapshots->listSnapshots());
     }

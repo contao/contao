@@ -219,6 +219,7 @@ final class TemplateSnapshots
             'GIT_CONFIG_GLOBAL' => '/dev/null',
             'GIT_CONFIG_SYSTEM' => '/dev/null',
         ];
+
         $process = new Process($command, $this->workTree, $environment);
         $process->run();
 
