@@ -153,7 +153,7 @@ final class TemplateSnapshots
         $filesystem->mkdir($this->workTree);
         $filesystem->mkdir(\dirname($this->gitDir));
 
-        $this->run(['git', 'init', '--bare', '--shared=0644', $this->gitDir]);
+        $this->run(['git', 'init', '--bare', $this->gitDir]);
     }
 
     private function hasHistory(): bool
@@ -192,6 +192,8 @@ final class TemplateSnapshots
     {
         $this->git(['add', '-A', '-f']);
         $this->git(['-c', 'user.name=Contao', '-c', 'user.email=contao@localhost', 'commit', '--allow-empty', '-m', $message]);
+
+        $this->makeGitObjectsWritable();
 
         return trim($this->git(['rev-parse', 'HEAD']));
     }
@@ -254,6 +256,26 @@ final class TemplateSnapshots
         } finally {
             flock($lock, LOCK_UN);
             fclose($lock);
+        }
+    }
+
+    private function makeGitObjectsWritable(): void
+    {
+        if ('\\' !== \DIRECTORY_SEPARATOR) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $this->gitDir.'/objects',
+                \FilesystemIterator::SKIP_DOTS,
+            ),
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                chmod($file->getPathname(), 0644);
+            }
         }
     }
 }
