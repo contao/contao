@@ -73,7 +73,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         parent::initializeBundles();
 
-        $this->bundleClasses = array_filter($this->bundleClasses, fn (string $className) => ContaoModuleBundle::class !== $className);
+        $this->bundleClasses = array_filter($this->bundleClasses, static fn (string $className) => ContaoModuleBundle::class !== $className);
     }
 
     public function getProjectDir(): string
