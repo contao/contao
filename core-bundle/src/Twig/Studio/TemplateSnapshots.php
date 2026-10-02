@@ -51,11 +51,7 @@ final class TemplateSnapshots
             function () use ($message): string {
                 $this->initialize();
 
-                $return = $this->commit('Template snapshot: '.preg_replace('/[\r\n]+/', ' ', trim($message)));
-
-                $this->makeGitObjectsWritable();
-
-                return $return;
+                return $this->commit('Template snapshot: '.preg_replace('/[\r\n]+/', ' ', trim($message)));
             },
         );
     }
@@ -258,27 +254,6 @@ final class TemplateSnapshots
         } finally {
             flock($lock, LOCK_UN);
             fclose($lock);
-        }
-    }
-
-    private function makeGitObjectsWritable(): void
-    {
-        if ('\\' !== \DIRECTORY_SEPARATOR) {
-            return;
-        }
-
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                Path::join($this->gitDir, 'objects'),
-                \FilesystemIterator::SKIP_DOTS,
-            ),
-        );
-
-        /** @var \SplFileObject $file */
-        foreach ($iterator as $file) {
-            if ($file->isFile()) {
-                chmod($file->getPathname(), 0644);
-            }
         }
     }
 }

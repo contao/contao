@@ -32,7 +32,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v6
               with:
-                  ref: ${{ matrix.contao }}
+                  #ref: ${{ matrix.contao }}
                   show-progress: false
                   persist-credentials: false
 

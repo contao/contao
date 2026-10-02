@@ -32,23 +32,6 @@ class TemplateSnapshotsTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $this->assertDirectoryExists(Path::join($this->directory, 'var/cache/test/template-snapshots/.git/objects'));
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    Path::join($this->directory, 'var/cache/test/template-snapshots/.git/objects'),
-                    \FilesystemIterator::SKIP_DOTS,
-                ),
-            );
-
-            /** @var \SplFileObject $file */
-            foreach ($iterator as $file) {
-                if ($file->isFile()) {
-                    $this->assertFileIsWritable($file->getPathname());
-                }
-            }
-        }
-
         new Filesystem()->remove($this->directory);
 
         parent::tearDown();
@@ -132,23 +115,6 @@ class TemplateSnapshotsTest extends TestCase
         }
 
         $snapshots->snapshot();
-
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    Path::join($this->directory, 'var/cache/test/template-snapshots/.git/objects'),
-                    \FilesystemIterator::SKIP_DOTS,
-                ),
-            );
-
-            /** @var \SplFileObject $file */
-            foreach ($iterator as $file) {
-                if ($file->isFile()) {
-                    $this->assertFileIsWritable($file->getPathname());
-                }
-            }
-        }
-
         new Filesystem()->remove($this->directory.'/var/cache/test');
 
         $this->assertSame([], $snapshots->listSnapshots());
