@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use AppBundle\AppBundle;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
@@ -66,6 +67,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->addBundlesFromPlugins($bundles);
 
         return $bundles;
+    }
+
+    protected function initializeBundles(): void
+    {
+        parent::initializeBundles();
+
+        $this->bundleClasses = array_filter($this->bundleClasses, fn (string $className) => ContaoModuleBundle::class !== $className);
     }
 
     public function getProjectDir(): string
