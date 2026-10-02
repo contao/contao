@@ -1,6 +1,7 @@
 name: Windows
 
 on:
+    pull_request: ~
     workflow_dispatch: ~
     schedule:
         - cron: 0 13 * * 1-5
@@ -15,7 +16,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: ['5.3', '5.7', '6.0', main]
+                contao: [main]
         steps:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
