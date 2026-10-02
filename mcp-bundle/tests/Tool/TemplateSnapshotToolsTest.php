@@ -24,6 +24,14 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class TemplateSnapshotToolsTest extends ContaoTestCase
 {
+    public static function tearDownAfterClass(): void
+    {
+        // Git object files are read-only and must be writable for removal on Windows.
+        new Filesystem()->chmod(self::getTempDir(), 0o700, recursive: true);
+
+        parent::tearDownAfterClass();
+    }
+
     public function testRequiresAdministratorForEveryTool(): void
     {
         $security = $this->createMock(Security::class);
