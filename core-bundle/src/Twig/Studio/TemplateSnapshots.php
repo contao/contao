@@ -252,8 +252,17 @@ final class TemplateSnapshots
 
             return $callback();
         } finally {
-            flock($lock, LOCK_UN);
-            fclose($lock);
+            try {
+                $objectsDir = Path::join($this->gitDir, 'objects');
+
+                if ('\\' === \DIRECTORY_SEPARATOR && is_dir($objectsDir)) {
+                    // Clear Git's read-only attribute so Windows can delete the cache.
+                    $filesystem->chmod($objectsDir, 0o700, recursive: true);
+                }
+            } finally {
+                flock($lock, LOCK_UN);
+                fclose($lock);
+            }
         }
     }
 }
