@@ -1710,6 +1710,7 @@ services:
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
     Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
+    Contao\CoreBundle\Fragment\FragmentCompositor: '@contao.fragment.compositor'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'

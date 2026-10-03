@@ -26,21 +26,29 @@ class ModuleProxy extends Module
 	private $reference;
 
 	/**
-	 * @param ModuleModel|Collection $objElement
+	 * @param ModuleModel|Collection|FrontendModuleReference $objElement
 	 */
 	public function __construct($objElement, $strColumn = 'main')
 	{
-		if ($objElement instanceof Collection)
+		if ($objElement instanceof FrontendModuleReference)
 		{
-			$objElement = $objElement->current();
+			$this->reference = $objElement;
+		}
+		else
+		{
+			if ($objElement instanceof Collection)
+			{
+				$objElement = $objElement->current();
+			}
+
+			if (!$objElement instanceof ModuleModel)
+			{
+				throw new \RuntimeException('ModuleProxy must be constructed with a ModuleModel');
+			}
+
+			$this->reference = new FrontendModuleReference($objElement, $strColumn, array(), $objElement->isModified() || !Registry::getInstance()->isRegistered($objElement));
 		}
 
-		if (!$objElement instanceof ModuleModel)
-		{
-			throw new \RuntimeException('ModuleProxy must be constructed with a ModuleModel');
-		}
-
-		$this->reference = new FrontendModuleReference($objElement, $strColumn, array(), $objElement->isModified() || !Registry::getInstance()->isRegistered($objElement));
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor
