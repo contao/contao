@@ -1,0 +1,18 @@
+tl_page:
+    page_api_source:
+        pid: '@page_microsite'
+        sorting: 256
+        tstamp: 1704067200
+        title: API source
+        alias: api-source
+        type: regular
+        published: 1
+
+    page_api_target:
+        pid: '@page_main_website'
+        sorting: 256
+        tstamp: 1704067200
+        title: API target
+        alias: api-target
+        type: regular
+        published: 1

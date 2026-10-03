@@ -435,6 +435,27 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->createRecords($dc)->list('tl_content', context: $context);
     }
 
+    public function testRejectsAParentInThePayloadOfANestedRoute(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 7])
+        ;
+
+        $dc
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionMessage('The parent record is given by the route');
+
+        $this->createRecords($dc)->create(new DataContainerRecord('tl_content', ['pid' => ['iri' => '/contao/api/dc/page/8'], 'headline' => 'Example']), $context);
+    }
+
     public static function provideListingPages(): iterable
     {
         yield 'default size' => [30, [31, 32, 33]];
@@ -460,6 +481,40 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $result = $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'after'));
 
         $this->assertSame(17, $result->id);
+    }
+
+    public function testMovesIntoTheParentTableOfTheDca(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_page';
+        $modules = $GLOBALS['BE_MOD'] ?? null;
+        $GLOBALS['BE_MOD'] = [];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Moved'])
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_INTO)
+        ;
+
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+
+        try {
+            $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'first', 'tl_page'));
+        } finally {
+            if (null === $modules) {
+                unset($GLOBALS['BE_MOD']);
+            } else {
+                $GLOBALS['BE_MOD'] = $modules;
+            }
+        }
     }
 
     public function testRejectsAMissingMoveDestinationBeforeCutting(): void

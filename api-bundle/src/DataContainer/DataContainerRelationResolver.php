@@ -156,10 +156,17 @@ final class DataContainerRelationResolver
             throw new UnprocessableEntityHttpException('Relation values must be valid IRIs.');
         }
 
+        // An IRI identifies the resource to read, regardless of the current request method
+        $context = $this->router->getContext();
+        $method = $context->getMethod();
+        $context->setMethod('GET');
+
         try {
             $parameters = $this->router->match($path);
         } catch (RoutingExceptionInterface) {
             throw new UnprocessableEntityHttpException('The relation IRI does not match an API resource.');
+        } finally {
+            $context->setMethod($method);
         }
 
         foreach ($this->getReadOperations()[$relation->table] ?? [] as $operation) {
