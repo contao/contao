@@ -39,6 +39,65 @@ class ArrayUtilTest extends TestCase
         ];
     }
 
+    public function testSortsByOrderConstraints(): void
+    {
+        $items = [
+            'first' => 1,
+            'second' => 2,
+            'third' => 3,
+            'fourth' => 4,
+        ];
+
+        $this->assertSame(
+            [
+                'third' => 3,
+                'first' => 1,
+                'second' => 2,
+                'fourth' => 4,
+            ],
+            ArrayUtil::sortByOrderConstraints($items, [
+                'third' => ['before' => 'first'],
+                'fourth' => ['after' => 'first'],
+                'second' => ['after' => 'missing'],
+            ]),
+        );
+    }
+
+    public function testRejectsCyclicOrderConstraints(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cyclic array ordering constraints');
+
+        ArrayUtil::sortByOrderConstraints(
+            ['first' => 1, 'second' => 2],
+            [
+                'first' => ['after' => 'second'],
+                'second' => ['after' => 'first'],
+            ],
+        );
+    }
+
+    public function testDoesNotCreateCyclesWhenStabilizingTheOrder(): void
+    {
+        $this->assertSame(
+            [
+                'b' => 2,
+                'x' => 3,
+                'a' => 1,
+            ],
+            ArrayUtil::sortByOrderConstraints(
+                [
+                    'a' => 1,
+                    'b' => 2,
+                    'x' => 3,
+                ],
+                [
+                    'x' => ['after' => 'b', 'before' => 'a'],
+                ],
+            ),
+        );
+    }
+
     #[DataProvider('sortByOrderFieldProvider')]
     public function testSortsByOrderField(array $items, array $order, array $expected): void
     {

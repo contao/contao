@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\ResponseContext;
 
+use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
@@ -23,17 +24,16 @@ use Twig\Node\NodeCaptureInterface;
 #[YieldReady]
 final class AddNode extends Node implements NodeCaptureInterface
 {
-    public function __construct(string $extensionName, Node $body, string|null $identifier, DocumentLocation $location, int $lineno)
+    /**
+     * @param array{identifier: string|null, location: DocumentLocation, position: string|null, reference: string|null} $attributes
+     */
+    public function __construct(Node $body, array $attributes, int $lineno)
     {
         parent::__construct(
             [
                 'body' => $body,
             ],
-            [
-                'extension_name' => $extensionName,
-                'identifier' => $identifier,
-                'location' => $location,
-            ],
+            $attributes,
             $lineno,
         );
     }
@@ -62,16 +62,39 @@ final class AddNode extends Node implements NodeCaptureInterface
             ->write('}'."\n")
             ->outdent()
             ->write('} finally { ob_end_clean(); }'."\n")
-            ->write('$this->extensions[')
-            ->repr($this->getAttribute('extension_name'))
-            ->raw(']->addDocumentContent('."\n")
+            ->write('$this->env->getRuntime(')
+            ->repr(HtmlDocumentRuntime::class)
+            ->raw(')->add('."\n")
             ->indent()
-            ->write('')
-            ->repr($this->getAttribute('identifier'))
-            ->raw(', $__contao_document_content, ')
-            ->raw(\sprintf('\\%s::%s', DocumentLocation::class, $this->getAttribute('location')->name)."\n")
+            ->write('$__contao_document_content, ')
+            ->raw(\sprintf('\\%s::%s, ', DocumentLocation::class, $this->getAttribute('location')->name))
+            ->repr($this->getOptions())
+            ->raw("\n")
             ->outdent()
             ->write(');'."\n")
         ;
+    }
+
+    /**
+     * @return array{identifier?: string, before?: string, after?: string}
+     */
+    private function getOptions(): array
+    {
+        $options = [];
+
+        if (null !== $identifier = $this->getAttribute('identifier')) {
+            $options['identifier'] = $identifier;
+        }
+
+        $position = $this->getAttribute('position');
+        $reference = $this->getAttribute('reference');
+
+        if ('before' === $position && null !== $reference) {
+            $options['before'] = $reference;
+        } elseif ('after' === $position && null !== $reference) {
+            $options['after'] = $reference;
+        }
+
+        return $options;
     }
 }

@@ -35,6 +35,9 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -55,6 +58,7 @@ use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
@@ -114,6 +118,10 @@ abstract class ContentElementTestCase extends TestCase
     final public const ARTICLE2 = 456;
 
     final public const PAGE1 = 5;
+
+    private HtmlBodyBag|null $htmlBodyBag = null;
+
+    private HtmlHeadBag|null $htmlHeadBag = null;
 
     protected function tearDown(): void
     {
@@ -242,14 +250,12 @@ abstract class ContentElementTestCase extends TestCase
 
         // Record response context data
         $responseContextData = array_filter([
-            DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
-            DocumentLocation::stylesheets->value => $GLOBALS['TL_STYLE_SHEETS'] ?? [],
-            DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
+            DocumentLocation::head->value => $this->getAddedHeadContent(DocumentLocation::head),
+            DocumentLocation::stylesheets->value => $this->getAddedHeadContent(DocumentLocation::stylesheets),
+            DocumentLocation::endOfBody->value => $this->htmlBodyBag?->all() ?? [],
         ]);
 
         // Reset state
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
-
         $this->resetStaticProperties([Highlighter::class]);
 
         return $response;
@@ -343,14 +349,21 @@ abstract class ContentElementTestCase extends TestCase
         $environment->addExtension(new AssetExtension($packages));
         $environment->addExtension(new RoutingExtension($this->createStub(UrlGeneratorInterface::class)));
 
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $contaoFilesystemLoader,
-                $this->createStub(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
-            ),
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn(new ResponseContext()
+                ->add($this->htmlBodyBag = new HtmlBodyBag())
+                ->add($this->htmlHeadBag = new HtmlHeadBag()))
+        ;
+        $extension = new ContaoExtension(
+            $environment,
+            $contaoFilesystemLoader,
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
+
+        $environment->addExtension($extension);
 
         $sanitizers = new ContainerBuilder();
         $sanitizers->set('html', new HtmlSanitizer(new HtmlSanitizerConfig()));
@@ -360,11 +373,11 @@ abstract class ContentElementTestCase extends TestCase
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
-        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 FragmentRuntime::class => static fn () => new FragmentRuntime($framework),
+                HtmlDocumentRuntime::class => static fn () => new HtmlDocumentRuntime($responseContextAccessor),
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
@@ -614,6 +627,23 @@ abstract class ContentElementTestCase extends TestCase
             Controller::class => $controllerAdapter,
             StringUtil::class => $stringUtil,
         ]);
+    }
+
+    /**
+     * @return array<array-key, string>
+     */
+    private function getAddedHeadContent(DocumentLocation $location): array
+    {
+        $prefix = "contao.twig.{$location->value}.";
+        $content = [];
+
+        foreach ($this->htmlHeadBag?->all() ?? [] as $identifier => $tag) {
+            if (\is_string($tag) && str_starts_with($identifier, $prefix)) {
+                $content[substr($identifier, \strlen($prefix))] = $tag;
+            }
+        }
+
+        return $content;
     }
 
     private function setDefaultSanitizerConfig(): void
