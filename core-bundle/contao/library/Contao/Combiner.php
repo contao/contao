@@ -321,9 +321,11 @@ class Combiner extends System
 
 		$strPrefix = StringUtil::substr(implode(',', $arrPrefix), 64, '...');
 		$strKey = $strPrefix . '-' . substr(md5($this->strKey), 0, 8);
+
 		$strDirectory = Path::join('assets', $strTarget);
 		$strLink = Path::join($strDirectory, $strKey . $this->strMode);
 		$strLinkPath = Path::join($this->strRootDir, $strLink);
+
 		$fs = new Filesystem();
 
 		// Resolve the key based symlink
@@ -373,6 +375,7 @@ class Combiner extends System
 		// Update to a content based hash (#10372)
 		$strHash = substr(md5($this->strKey . '-c' . $objFile->hash), 0, 8);
 		$strPath = Path::join($strDirectory, $strPrefix . '-' . $strHash . $this->strMode);
+
 		$objFile->renameTo($strPath);
 
 		// Create a symlink for the key based file

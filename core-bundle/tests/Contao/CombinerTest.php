@@ -318,6 +318,7 @@ class CombinerTest extends TestCase
             ->method('handleScssLess')
             ->willReturn('body{color:red}')
         ;
+
         $combiner->add('file.scss');
 
         $combinedFile = $combiner->getCombinedFile();
@@ -344,6 +345,7 @@ class CombinerTest extends TestCase
             ->expects($this->never())
             ->method('handleCss')
         ;
+
         $cachedCombiner->add('file[1].css', '1');
 
         $this->assertSame($combinedFile, $cachedCombiner->getCombinedFile());
