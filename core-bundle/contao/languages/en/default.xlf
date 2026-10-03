@@ -2429,6 +2429,9 @@
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
       </trans-unit>
+      <trans-unit id="MSC.generatedWebhookSecret">
+        <source>The webhook's secret is %s. Make sure to copy it as you will not be able to see it again.</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

@@ -13,6 +13,7 @@ web_profiler:
 # Monolog configuration
 monolog:
     channels:
+        - contao.webhook
         - deprecation
     handlers:
         contao:

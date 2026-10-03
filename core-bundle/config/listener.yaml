@@ -384,6 +384,22 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.webhook_field:
+        class: Contao\CoreBundle\EventListener\DataContainer\WebhookFieldListener
+        arguments:
+            - '@router'
+            - '@contao.webhook.repository'
+            - '@contao.webhook.secret_encryption'
+            - '@request_stack'
+            - '@translator'
+
+    contao.listener.data_container.webhook_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\WebhookOptionsListener
+        arguments:
+            - '@contao.webhook.receiver_registry'
+            - '@contao.webhook.event_registry'
+            - '@translator'
+
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         arguments:

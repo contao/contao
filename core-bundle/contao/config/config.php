@@ -223,7 +223,18 @@ $GLOBALS['BE_MOD'] = array
 			'tables'                  => array('tl_job'),
 			'disablePermissionChecks' => true,
 			'hideInNavigation' 		  => true,
-		)
+		),
+	),
+	'webhooks' => array
+	(
+		'webhook_ingoing' => array
+		(
+			'tables' => array('tl_webhook_ingoing'),
+		),
+		'webhook_outgoing' => array
+		(
+			'tables' => array('tl_webhook_outgoing')
+		),
 	)
 );
 
