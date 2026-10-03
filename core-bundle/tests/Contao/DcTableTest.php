@@ -100,6 +100,7 @@ class DcTableTest extends TestCase
     {
         $operations = [];
         $database = $this->createMock(Database::class);
+
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('set')
@@ -117,7 +118,9 @@ class DcTableTest extends TestCase
             ->with('affectedRows')
             ->willReturnOnConsecutiveCalls(1, 'no affected rows' === $failure ? 0 : 1)
         ;
+
         $executions = 0;
+
         $statement
             ->expects($this->exactly(null === $failure || 'delete' === $failure ? 3 : 2))
             ->method('execute')
@@ -168,6 +171,7 @@ class DcTableTest extends TestCase
 
         $session = $this->mockSession();
         $this->assertInstanceOf(FlashBagAwareSessionInterface::class, $session);
+
         $request = new Request();
         $request->attributes->set('_scope', 'backend');
         $request->setSession($session);
@@ -194,6 +198,7 @@ class DcTableTest extends TestCase
         System::setContainer($container);
 
         $GLOBALS['TL_LANG']['ERR']['undoNotRestored'] = 'Restore failed.';
+
         $GLOBALS['TL_DCA']['tl_undo_test']['config']['onundo_callback'] = [static function (string $table, array $row) use ($failure): void {
             if ('callback' === $failure && 2 === $row['id']) {
                 throw new \Error('Callback failed.');

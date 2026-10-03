@@ -1923,8 +1923,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
-		$db = Database::getInstance();
 		$arrFields = array();
+
+		$db = Database::getInstance();
 		$db->beginTransaction();
 
 		try
