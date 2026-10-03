@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Widget;
 
-use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
-
 interface RelationAwareWidgetConverterInterface extends WidgetConverterInterface
 {
     /**
      * Returns relation metadata derived from the DCA field configuration.
      *
-     * The conversion methods expose and accept the related record identifiers. The
-     * API layer replaces those identifiers with IRIs after conversion.
+     * The conversion methods expose and accept the related identifiers. The API layer
+     * replaces those identifiers with IRIs after conversion.
      */
-    public function getRelation(array $config): DataContainerRelationDefinition|null;
+    public function getRelation(array $config): object|null;
 }
