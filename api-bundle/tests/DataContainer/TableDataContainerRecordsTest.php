@@ -435,6 +435,27 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->createRecords($dc)->list('tl_content', context: $context);
     }
 
+    public function testRejectsAParentInThePayloadOfANestedRoute(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 7])
+        ;
+
+        $dc
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionMessage('The parent record is given by the route');
+
+        $this->createRecords($dc)->create(new DataContainerRecord('tl_content', ['pid' => ['iri' => '/contao/api/dc/page/8'], 'headline' => 'Example']), $context);
+    }
+
     public static function provideListingPages(): iterable
     {
         yield 'default size' => [30, [31, 32, 33]];

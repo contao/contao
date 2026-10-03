@@ -89,6 +89,27 @@ final class DataContainerRecordMapper
         return $form;
     }
 
+    /**
+     * Resolves the parent reference of a new record to its identifier.
+     */
+    public function toParentIdentifier(string $table, mixed $value): int
+    {
+        $config = $GLOBALS['TL_DCA'][$table]['fields']['pid'] ?? [];
+        $value = $this->relationResolver->resolveToIdentifier($value, new DataContainerFieldContext($config, $table, 'pid'));
+
+        if (\is_array($value)) {
+            $value = $value['id'] ?? null;
+        }
+
+        $id = filter_var($value, FILTER_VALIDATE_INT);
+
+        if (false === $id || $id < 0) {
+            throw new UnprocessableEntityHttpException('Field "pid" must reference an existing parent record.');
+        }
+
+        return $id;
+    }
+
     public function toFormDefaults(string $table, array $row, array $fields): array
     {
         $form = [];
