@@ -1628,6 +1628,7 @@ services:
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
+    Contao\CoreBundle\Fragment\FragmentCompositor: '@contao.fragment.compositor'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'
