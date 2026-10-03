@@ -19,6 +19,9 @@ class NestedResourceTest extends AbstractContaoMonorepoE2ETestCase
 {
     use ApiTestTrait;
 
+    /**
+     * @throws \JsonException
+     */
     public function testCreatesASubpage(): void
     {
         $parentId = (int) $this->apiFixtures()->value('page_api_target');
@@ -38,6 +41,9 @@ class NestedResourceTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($parentId, $response['pid']['id']);
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function testRejectsAParentInThePayloadOfANestedRoute(): void
     {
         $fixtures = $this->apiFixtures();

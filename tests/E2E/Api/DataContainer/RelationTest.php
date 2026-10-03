@@ -19,6 +19,9 @@ class RelationTest extends AbstractContaoMonorepoE2ETestCase
 {
     use ApiTestTrait;
 
+    /**
+     * @throws \JsonException
+     */
     public function testCreatesANewsArchiveWithARedirectPage(): void
     {
         $pageId = (int) $this->apiFixtures()->value('page_api_target');
