@@ -220,6 +220,12 @@ final class ContaoCorePermissions
     public const USER_CAN_DELETE_FORMS = 'contao_user.cud.tl_form::delete';
 
     /**
+     * Access is granted if the current user authenticate as member of the given
+     * groups. Subject must be an array of member group ids.
+     */
+    public const USER_CAN_ACCESS_MEMBER_GROUP = 'contao_user.amg';
+
+    /**
      * Access is granted if the current user is allowed to see a given search document.
      *
      * @experimental

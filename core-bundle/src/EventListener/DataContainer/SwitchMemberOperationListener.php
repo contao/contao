@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -30,8 +30,7 @@ class SwitchMemberOperationListener
 
     public function __invoke(DataContainerOperation $operation): void
     {
-        $user = $this->security->getUser();
-        $blnCanSwitchUser = $user instanceof BackendUser && ($user->isAdmin || (!empty($user->amg) && \is_array($user->amg)));
+        $blnCanSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
 
         if (!$blnCanSwitchUser) {
             $operation->hide();
@@ -44,7 +43,7 @@ class SwitchMemberOperationListener
         if (
             !$row['login']
             || !$row['username']
-            || (!$user->isAdmin && \count(array_intersect(StringUtil::deserialize($row['groups'], true), $user->amg)) < 1)
+            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, StringUtil::deserialize($row['groups'], true))
         ) {
             $operation->disable();
 

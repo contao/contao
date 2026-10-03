@@ -308,27 +308,29 @@ class tl_files extends Backend
 	 */
 	public function checkPermission()
 	{
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return;
 		}
 
+		$user = $security->getUser();
+		$fop = $user instanceof BackendUser ? $user->fop : array();
+
 		// Permissions
-		if (!is_array($user->fop))
+		if (!is_array($fop))
 		{
-			$user->fop = array();
+			$fop = array();
 		}
 
-		$security = System::getContainer()->get('security.helper');
 		$canUpload = $security->isGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 		$canEdit = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 		$canDeleteOne = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE);
 		$canDeleteRecursive = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY);
 
 		// Set the file mounts
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $user->filemounts;
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = $user instanceof BackendUser ? $user->filemounts : array();
 
 		// Disable the upload button if uploads are not allowed
 		if (!$canUpload)
@@ -463,7 +465,7 @@ class tl_files extends Backend
 					break;
 
 				default:
-					if (empty($user->fop))
+					if (empty($fop))
 					{
 						throw new AccessDeniedException('No permission to manipulate files.');
 					}

@@ -409,7 +409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'pid' => $this->intCurrentPid,
 			'sorting_mode' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0),
 			'display_grid' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false),
-			'limit_height' => BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
+			'limit_height' => Config::get('doNotCollapse') ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
 			'is_upload_form' => $this->blnUploadable,
 			'form_onsubmit' => $this->onsubmit,
 			'error' => $this->noReload,
@@ -1873,9 +1873,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		$user = System::getContainer()->get('security.helper')->getUser();
+
 		$objUndoStmt = $db
 			->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-			->execute(BackendUser::getInstance()->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+			->execute($user instanceof BackendUser ? $user->id : 0, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -2477,7 +2479,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2705,7 +2706,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
@@ -2836,7 +2837,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2986,7 +2986,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
