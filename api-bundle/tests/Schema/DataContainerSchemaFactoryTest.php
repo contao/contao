@@ -429,7 +429,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $schemas = $factory->createOperationSchemas('tl_content');
 
         $this->assertSame(['id', 'pid', 'ptable', 'sorting', 'title'], array_keys($schemas['read']['properties']));
-        $this->assertSame(['title', 'secret'], array_keys($schemas['create']['properties']));
+        $this->assertSame(['pid', 'title', 'secret'], array_keys($schemas['create']['properties']));
         $this->assertSame(['title', 'secret'], array_keys($schemas['update']['properties']));
         $this->assertArrayNotHasKey('required', $schemas['create']);
         $this->assertArrayNotHasKey('required', $schemas['read']);
