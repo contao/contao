@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\ContentModel;
-use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\Fragment\FragmentCompositor;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -24,12 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: 'miscellaneous')]
 class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
+    public function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
-        if ($this->isBackendScope($request)) {
-            return $this->getBackendWildcard($model);
-        }
-
         if (!$pageModel = $this->getPageModel()) {
             return new Response();
         }
@@ -45,11 +43,12 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
             $id = substr($id, 8);
         }
 
-        if (!$contentModel = $this->getContaoAdapter($isElement ? ContentModel::class : ModuleModel::class)->findById($id)) {
+        if (!$fragmentModel = $this->getContaoAdapter($isElement ? ContentModel::class : ModuleModel::class)->findById($id)) {
             return new Response();
         }
 
-        $cssID = StringUtil::deserialize($contentModel->cssID, true);
+        $fragmentModel = $fragmentModel->cloneDetached();
+        $cssID = StringUtil::deserialize($fragmentModel->cssID, true);
         $modelCssID = StringUtil::deserialize($model->cssID, true);
 
         // Override the CSS ID (see #305)
@@ -64,18 +63,31 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         // Merge the CSS classes (see #6011)
         $cssID[1] = implode(' ', array_filter(array_map(trim(...), [$cssID[1] ?? '', $modelCssID[1] ?? '', ...(array) $model->classes])));
 
-        $contentModel->cssID = $cssID;
+        $fragmentModel->cssID = $cssID;
 
-        $controller = $this->getContaoAdapter(Controller::class);
-        $content = $isElement ? $controller->getContentElement($contentModel) : $controller->getFrontendModule($contentModel);
+        $section = $template->getData()['section'] ?? $template->getData()['inColumn'] ?? 'main';
 
-        $this->tagResponse($model);
+        // Create a fragment reference to be rendered in the template
+        $reference = $isElement
+            ? new ContentElementReference($fragmentModel, $section, inline: true)
+            : new FrontendModuleReference($fragmentModel, $section, inline: true);
 
-        return new Response($content);
+        // Compile the nested fragments for the content element, if applicable
+        if ($reference instanceof ContentElementReference && $fragmentModel->id) {
+            $reference->setNestedFragments($this->container->get('contao.fragment.compositor')->getNestedFragments($reference->controller, (int) ($fragmentModel->origId ?: $fragmentModel->id)));
+        }
+
+        $template->set('fragment', $reference);
+        $template->set('is_content_element', $isElement);
+
+        return $template->getResponse();
     }
 
-    public function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
+    public static function getSubscribedServices(): array
     {
-        throw new \LogicException('This method should never be called');
+        return [
+            ...parent::getSubscribedServices(),
+            'contao.fragment.compositor' => FragmentCompositor::class,
+        ];
     }
 }

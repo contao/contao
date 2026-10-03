@@ -252,7 +252,7 @@ class DownloadsControllerTest extends ContentElementTestCase
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class, ['id' => 42]);
 
-        (new \ReflectionMethod($controller, 'handleDownload'))->invoke($controller, $request, $model);
+        new \ReflectionMethod($controller, 'handleDownload')->invoke($controller, $request, $model);
     }
 
     private function getDownloadsController(): DownloadsController

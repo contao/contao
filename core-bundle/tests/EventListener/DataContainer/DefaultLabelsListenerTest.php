@@ -30,7 +30,7 @@ class DefaultLabelsListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_test']['fields']['size']['label'] = &$GLOBALS['TL_LANG']['MSC']['imgSize'];
 
-        (new \ReflectionClass(System::class))->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
+        new \ReflectionClass(System::class)->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
 
         $listener = new DefaultLabelsListener();
         $listener('tl_test');
@@ -49,7 +49,7 @@ class DefaultLabelsListenerTest extends TestCase
             'Description',
         ];
 
-        (new \ReflectionClass(System::class))->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
+        new \ReflectionClass(System::class)->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
 
         $listener = new DefaultLabelsListener();
         $listener('tl_test');
@@ -64,7 +64,7 @@ class DefaultLabelsListenerTest extends TestCase
         $GLOBALS['TL_LANG']['DCA']['edit'] = ['Fallback label'];
         $GLOBALS['TL_DCA']['tl_test']['list']['operations']['edit']['label'] = [1 => 'Description'];
 
-        (new \ReflectionClass(System::class))->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
+        new \ReflectionClass(System::class)->setStaticPropertyValue('arrLanguageFiles', ['tl_test' => ['en' => 'en']]);
 
         $listener = new DefaultLabelsListener();
         $listener('tl_test');
