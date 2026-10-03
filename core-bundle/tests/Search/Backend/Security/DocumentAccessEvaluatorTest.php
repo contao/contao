@@ -19,17 +19,13 @@ use Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator;
 use Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory;
 use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DocumentAccessEvaluatorTest extends TestCase
 {
     public function testEvaluatesAndCachesTheVirtualUserInAContaoContext(): void
     {
         $user = $this->createStub(BackendUser::class);
-        $user
-            ->method('getUserIdentifier')
-            ->willReturn('group-42')
-        ;
+        $document = new Document('5', 'type', 'content');
 
         $factory = $this->createMock(VirtualBackendUserFactory::class);
         $factory
@@ -51,17 +47,11 @@ class DocumentAccessEvaluatorTest extends TestCase
         $provider
             ->expects($this->exactly(2))
             ->method('isDocumentGranted')
-            ->with(
-                $this->callback(
-                    static fn (TokenInterface $token): bool => 'group-42' === $token->getUser()->getUserIdentifier(),
-                ),
-                $this->isInstanceOf(Document::class),
-            )
+            ->with($this->identicalTo($user), $this->identicalTo($document))
             ->willReturn(true)
         ;
 
         $evaluator = new DocumentAccessEvaluator($factory, $strategyContext);
-        $document = new Document('5', 'type', 'content');
 
         $this->assertTrue($evaluator->isGrantedForGroup($provider, $document, 42));
         $this->assertTrue($evaluator->isGrantedForGroup($provider, $document, 42));
