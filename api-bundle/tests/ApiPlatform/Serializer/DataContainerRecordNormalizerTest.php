@@ -22,6 +22,7 @@ use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
@@ -256,6 +257,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
                 new WidgetConverterRegistry([]),
                 $metadataFactory,
                 $router,
+                $this->createStub(DcaHierarchy::class),
             ),
             $contextBuilder,
         );
