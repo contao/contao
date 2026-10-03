@@ -29,6 +29,7 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -94,6 +95,25 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $this->assertSame(17, $record->id);
         $this->assertSame(['title' => 'Example'], $record->data);
+    }
+
+    public function testRunsDataContainerOperationsInTheBackendSecurityContext(): void
+    {
+        $dc = $this->createStub(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Example'])
+        ;
+
+        $strategyContext = $this->createMock(ContaoStrategyContext::class);
+        $strategyContext
+            ->expects($this->once())
+            ->method('runInContext')
+            ->with(ContaoStrategyContext::CONTEXT_BACKEND, $this->isCallable())
+            ->willReturnCallback(static fn (string $context, callable $callback) => $callback())
+        ;
+
+        $this->createRecords($dc, strategyContext: $strategyContext)->find('tl_content', 17);
     }
 
     #[DataProvider('providePreviousTitles')]
@@ -496,7 +516,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         return $dc;
     }
 
-    private function createRecords(DC_Table $dc, Connection|null $connection = null): TableDataContainerRecords
+    private function createRecords(DC_Table $dc, Connection|null $connection = null, ContaoStrategyContext|null $strategyContext = null): TableDataContainerRecords
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'sorting' => true, 'flag' => DataContainer::SORT_BOTH]];
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
@@ -548,7 +568,13 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->willReturnCallback(static fn ($route, $parameters) => '/contao?'.http_build_query($parameters))
         ;
 
-        return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
+        $strategyContext ??= $this->createStub(ContaoStrategyContext::class);
+        $strategyContext
+            ->method('runInContext')
+            ->willReturnCallback(static fn (string $context, callable $callback): mixed => $callback())
+        ;
+
+        return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack), $strategyContext);
     }
 
     private function createRelationResolver(): DataContainerRelationResolver
