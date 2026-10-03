@@ -15,7 +15,7 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Api\ApiTestTrait;
 
-class NewsArchiveTest extends AbstractContaoMonorepoE2ETestCase
+class RelationTest extends AbstractContaoMonorepoE2ETestCase
 {
     use ApiTestTrait;
 
