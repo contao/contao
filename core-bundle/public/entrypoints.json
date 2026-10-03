@@ -16,6 +16,14 @@
         "/bundles/contaocore/navigation.85a29788.js"
       ]
     },
+    "highlight": {
+      "css": [
+        "/bundles/contaocore/highlight.93eb841d.css"
+      ],
+      "js": [
+        "/bundles/contaocore/highlight.0796d87c.js"
+      ]
+    },
     "passkey_login": {
       "js": [
         "/bundles/contaocore/passkey_login.afe616fc.js"
