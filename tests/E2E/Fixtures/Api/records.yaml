@@ -1,0 +1,48 @@
+tl_theme:
+    theme_classic:
+        tstamp: 1704067200
+        name: Classic
+        author: Contao
+
+tl_news:
+    news_corporate:
+        pid: '@news_archive_corporate'
+        tstamp: 1704067200
+        headline: Corporate news item
+        alias: corporate-news-item
+        author: '@kevin_jones'
+        date: 1704067200
+        time: 1704067200
+        published: 1
+
+tl_calendar_events:
+    event_summer:
+        pid: '@calendar_events'
+        tstamp: 1704067200
+        title: Summer party
+        alias: summer-party
+        author: '@kevin_jones'
+        startDate: 1704067200
+        startTime: 1704067200
+        endTime: 1704067200
+        published: 1
+
+tl_content:
+    content_news_group:
+        pid: '@news_corporate'
+        ptable: tl_news
+        sorting: 128
+        tstamp: 1704067200
+        type: element_group
+    content_event_group:
+        pid: '@event_summer'
+        ptable: tl_calendar_events
+        sorting: 128
+        tstamp: 1704067200
+        type: element_group
+    content_theme_group:
+        pid: '@theme_editorial'
+        ptable: tl_theme
+        sorting: 128
+        tstamp: 1704067200
+        type: element_group
