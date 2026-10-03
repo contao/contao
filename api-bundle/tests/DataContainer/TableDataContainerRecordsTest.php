@@ -129,6 +129,58 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         yield 'unchanged value still reaches validation' => ['After'];
     }
 
+    #[DataProvider('provideUpdateTimestamps')]
+    public function testStoresSubmitOnChangeFieldsBeforeTheRemainingUpdateFields(int $tstamp): void
+    {
+        $dc = $this->createEditingDataContainer('{type_legend},type;{template_legend},customTpl;');
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'html', 'customTpl' => 'ce_html'],
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'text', 'customTpl' => 'ce_text'],
+            )
+        ;
+
+        $submitted = [];
+        $dc
+            ->expects($this->exactly(2))
+            ->method('edit')
+            ->willReturnCallback(
+                function () use (&$submitted): void {
+                    $submitted[] = $this->requestStack->getCurrentRequest()->request->all();
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'type' => ['inputType' => 'text', 'eval' => ['submitOnChange' => true], 'sql' => ['type' => 'string']],
+            'customTpl' => ['inputType' => 'text', 'sql' => ['type' => 'string']],
+        ];
+
+        $result = $records->update(new DataContainerRecord('tl_content', ['type' => 'text', 'customTpl' => 'ce_text'], 17));
+
+        $this->assertSame(
+            [
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text'],
+                ['FORM_SUBMIT' => 'tl_content', 'customTpl' => 'ce_text'],
+            ],
+            $submitted,
+        );
+
+        $this->assertSame(['type' => 'text', 'customTpl' => 'ce_text'], $result->data);
+    }
+
+    public static function provideUpdateTimestamps(): iterable
+    {
+        yield 'existing record' => [123];
+        yield 'draft' => [0];
+    }
+
     #[DataProvider('provideCreationValues')]
     public function testCreationFollowsTheRedirectIntoAnEditSubmission(array $input, string $default): void
     {
