@@ -22,6 +22,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
@@ -108,6 +109,7 @@ abstract class ContaoTestCase extends TestCase
             $cachedContainers[$projectDir]->setParameter('kernel.project_dir', $projectDir);
             $cachedContainers[$projectDir]->setParameter('kernel.root_dir', $projectDir.'/app');
             $cachedContainers[$projectDir]->setDefinition('request_stack', new Definition(RequestStack::class));
+            $cachedContainers[$projectDir]->setDefinition('clock', new Definition(Clock::class));
 
             // Load the default configuration
             $extension = new ContaoCoreExtension();
