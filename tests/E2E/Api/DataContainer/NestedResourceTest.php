@@ -15,7 +15,7 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Api\ApiTestTrait;
 
-class PageTest extends AbstractContaoMonorepoE2ETestCase
+class NestedResourceTest extends AbstractContaoMonorepoE2ETestCase
 {
     use ApiTestTrait;
 
@@ -36,5 +36,23 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(201, $status, json_encode($response, JSON_PRETTY_PRINT));
         $this->assertSame($parentId, $response['pid']['id']);
+    }
+
+    public function testRejectsAParentInThePayloadOfANestedRoute(): void
+    {
+        $fixtures = $this->apiFixtures();
+        $articleId = (int) $fixtures->value('article_main_home');
+
+        [$status, $response] = $this->apiRequest(
+            'POST',
+            '/dc/article/'.$articleId.'/content',
+            [
+                'pid' => ['iri' => '/contao/api/dc/article/'.$articleId],
+                'type' => 'text',
+            ],
+        );
+
+        $this->assertSame(422, $status, json_encode($response, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('given by the route', $response['detail'] ?? '');
     }
 }
