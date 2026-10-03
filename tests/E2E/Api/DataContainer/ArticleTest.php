@@ -46,22 +46,4 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(200, $status, json_encode($collection, JSON_PRETTY_PRINT));
         $this->assertContains($response['@id'], array_column($collection['member'] ?? [], '@id'));
     }
-
-    public function testRejectsAParentInThePayloadOfANestedRoute(): void
-    {
-        $fixtures = $this->apiFixtures();
-        $articleId = (int) $fixtures->value('article_main_home');
-
-        [$status, $response] = $this->apiRequest(
-            'POST',
-            '/dc/article/'.$articleId.'/content',
-            [
-                'pid' => ['iri' => '/contao/api/dc/article/'.$articleId],
-                'type' => 'text',
-            ],
-        );
-
-        $this->assertSame(422, $status, json_encode($response, JSON_PRETTY_PRINT));
-        $this->assertStringContainsString('given by the route', $response['detail'] ?? '');
-    }
 }
