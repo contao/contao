@@ -324,6 +324,7 @@ class ControllerTest extends TestCase
 
         $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['id' => 42, 'type' => 'test']);
         $reference = new FrontendModuleReference($model, 'header', ['cssID' => ' id="example"'], true);
+
         $handler = $this->createMock(FragmentHandler::class);
         $handler
             ->expects($this->once())

@@ -116,7 +116,9 @@ class RootPageDependentModulesControllerTest extends TestCase
             'type' => 'text',
             'cssID' => serialize(['selected-id', ' selected-class ']),
         ];
+
         $modelClass = $isContentElement ? ContentModel::class : ModuleModel::class;
+
         $selectedModel = $this->createClassWithPropertiesStub($modelClass, $selectedData);
         $selectedModel
             ->method('cloneDetached')
@@ -146,6 +148,7 @@ class RootPageDependentModulesControllerTest extends TestCase
                 return '<p>example-content</p>';
             },
         ));
+
         $controller->setFragmentOptions(['template' => 'frontend_module/root_page_dependent_modules']);
 
         $response = $controller($request, $module, 'header');
@@ -184,13 +187,14 @@ class RootPageDependentModulesControllerTest extends TestCase
         $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
         $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['rootPageDependentModules' => serialize([1 => 'content-10'])]);
         $selectedData = ['id' => 10, 'origId' => 11, 'type' => 'element_group'];
+
         $selectedModel = $this->createClassWithPropertiesStub(ContentModel::class, $selectedData);
         $selectedModel
             ->method('cloneDetached')
             ->willReturn($this->createClassWithPropertiesStub(ContentModel::class, $selectedData))
         ;
-        $nestedReference = new ContentElementReference($this->createStub(ContentModel::class));
 
+        $nestedReference = new ContentElementReference($this->createStub(ContentModel::class));
         $container = $this->mockContainer(new RequestStack([$request]), $selectedModel, function (ContentElementReference $reference) use ($nestedReference): string {
             $this->assertSame([$nestedReference], $reference->attributes['nestedFragments']);
 
@@ -204,6 +208,7 @@ class RootPageDependentModulesControllerTest extends TestCase
             ->with('contao.content_element.element_group', 11)
             ->willReturn([$nestedReference])
         ;
+
         $container->set('contao.fragment.compositor', $compositor);
 
         $controller = new RootPageDependentModulesController();
@@ -263,9 +268,11 @@ class RootPageDependentModulesControllerTest extends TestCase
             ->method('exists')
             ->willReturn(true)
         ;
+
         $this->container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         $twig = new Environment($loader, ['strict_variables' => true]);
+
         $extension = new ContaoExtension(
             $twig,
             $filesystemLoader,
