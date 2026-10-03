@@ -1960,74 +1960,86 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		$error = false;
 		$query = $currentRecord['query'] ?? null;
 		$data = StringUtil::deserialize($currentRecord['data'] ?? null);
 
 		if (!\is_array($data))
 		{
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
 			$this->redirect($this->getReferer());
 		}
 
-		$db = Database::getInstance();
 		$arrFields = array();
 
-		// Restore the data
-		foreach ($data as $table=>$fields)
+		$db = Database::getInstance();
+		$db->beginTransaction();
+
+		try
 		{
-			$this->loadDataContainer($table);
-
-			// Get the currently available fields
-			if (!isset($arrFields[$table]))
+			// Restore the data
+			foreach ($data as $table=>$fields)
 			{
-				$arrFields[$table] = array_flip($db->getFieldNames($table));
-			}
+				$this->loadDataContainer($table);
 
-			foreach ($fields as $row)
-			{
-				// Unset fields that no longer exist in the database
-				$row = array_intersect_key($row, $arrFields[$table]);
-
-				// Re-insert the data
-				$objInsertStmt = $db
-					->prepare("INSERT INTO " . $table . " %s")
-					->set($row)
-					->execute();
-
-				// Do not delete record from tl_undo if there is an error
-				if ($objInsertStmt->affectedRows < 1)
+				// Get the currently available fields
+				if (!isset($arrFields[$table]))
 				{
-					$error = true;
+					$arrFields[$table] = array_flip($db->getFieldNames($table));
 				}
 
-				// Trigger the undo_callback
-				if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+				foreach ($fields as $row)
 				{
-					foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
+					// Unset fields that no longer exist in the database
+					$row = array_intersect_key($row, $arrFields[$table]);
+
+					// Re-insert the data
+					$objInsertStmt = $db
+						->prepare("INSERT INTO " . $table . " %s")
+						->set($row)
+						->execute();
+
+					if ($objInsertStmt->affectedRows < 1)
 					{
-						if (\is_array($callback))
+						throw new \RuntimeException('Could not restore record "' . $table . '.id=' . ($row['id'] ?? '') . '".');
+					}
+
+					// Trigger the undo_callback
+					if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+					{
+						foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
 						{
-							System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($table, $row, $this);
+							if (\is_array($callback))
+							{
+								System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
+							}
+							elseif (\is_callable($callback))
+							{
+								$callback($table, $row, $this);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// Add log entry and delete record from tl_undo if there was no error
-		if (!$error)
-		{
-			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
-
+			// Delete the undo entry only if all records have been restored
 			$db
 				->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 				->limit(1)
 				->execute($this->intId);
+
+			$db->commitTransaction();
 		}
+		catch (\Throwable $e)
+		{
+			$db->rollbackTransaction();
+
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not undo ' . $query . ': ' . $e->getMessage());
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
+
+			$this->redirect($this->getReferer());
+		}
+
+		System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 		$this->invalidateCacheTags();
 
