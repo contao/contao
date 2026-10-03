@@ -32,6 +32,10 @@ final class TemplateGuidanceTest extends TestCase
         $this->assertStringContainsString('Validation compiles the complete proposed source', $guidance);
         $this->assertStringContainsString('contao_template_snapshot', $guidance);
         $this->assertStringContainsString('contao_template_rollback', $guidance);
+        $this->assertStringContainsString('contao_twig_environment_discover', $guidance);
+        $this->assertStringContainsString('contao_twig_environment_inspect', $guidance);
+        $this->assertStringContainsString('not current frontend or request values', $guidance);
+        $this->assertStringContainsString('best-effort reflection metadata', $guidance);
     }
 
     public function testProvidesHtmlAttributesGuidanceForAvailableMethods(): void
