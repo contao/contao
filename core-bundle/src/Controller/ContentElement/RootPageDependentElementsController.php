@@ -19,18 +19,13 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'includes')]
+#[AsContentElement(category: 'miscellaneous')]
 class RootPageDependentElementsController extends AbstractContentElementController
 {
     use RootPageDependentTrait;
 
-    public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
-    {
-        return $this->renderRootPageDependent($request, $model, $model->rootPageDependentElements, $classes ?? []);
-    }
-
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        throw new \LogicException('This method should never be called');
+        return $this->renderRootPageDependent($template, $request, $model, $model->rootPageDependentElements, $model->classes);
     }
 }
