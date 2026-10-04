@@ -130,7 +130,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     }
 
     #[DataProvider('provideUpdateTimestamps')]
-    public function testStoresSubmitOnChangeFieldsBeforeTheRemainingUpdateFields(int $tstamp): void
+    public function testStoresSubmitOnChangeFieldsBeforeTheCompleteUpdate(int $tstamp): void
     {
         $dc = $this->createEditingDataContainer('{type_legend},type;{template_legend},customTpl;');
         $dc
@@ -167,7 +167,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->assertSame(
             [
                 ['FORM_SUBMIT' => 'tl_content', 'type' => 'text'],
-                ['FORM_SUBMIT' => 'tl_content', 'customTpl' => 'ce_text'],
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text', 'customTpl' => 'ce_text'],
             ],
             $submitted,
         );

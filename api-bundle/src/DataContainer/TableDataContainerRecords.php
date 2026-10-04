@@ -258,8 +258,6 @@ class TableDataContainerRecords
         $main->attributes->remove('_contao_widget_error');
 
         try {
-            $submitOnChangeValues = [];
-
             if (!$create) {
                 $submitOnChangeValues = array_filter(
                     $values,
@@ -268,16 +266,15 @@ class TableDataContainerRecords
                 );
 
                 if ($submitOnChangeValues) {
-                    // These fields can change the palette and field options, so the remaining values
-                    // must be submitted against the updated DCA state
+                    // These fields can change the palette and field options, so persist them before
+                    // submitting the complete request data against the updated DCA state
                     $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
                     $this->submitFormValues($dc, $submitOnChangeValues, []);
-                    $values = array_diff_key($values, $submitOnChangeValues);
                 }
             }
 
             $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$values]);
-            $fields = array_diff($this->getPaletteFields($dc), $previousFields, array_keys([...$values, ...$submitOnChangeValues]));
+            $fields = array_diff($this->getPaletteFields($dc), $previousFields, array_keys($values));
 
             if (!$create && !$draft) {
                 // Only newly active mandatory fields need defaults during a partial update
@@ -285,10 +282,7 @@ class TableDataContainerRecords
             }
 
             $defaults = $this->mapper->toFormDefaults($record->table, $row, $fields);
-
-            if (!$submitOnChangeValues || $values || $defaults) {
-                $this->submitFormValues($dc, $values, $defaults);
-            }
+            $this->submitFormValues($dc, $values, $defaults);
         } finally {
             $request->request->replace($previous);
             $main->attributes->remove('_contao_widget_error');
