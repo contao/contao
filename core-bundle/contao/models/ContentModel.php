@@ -99,6 +99,7 @@ use Contao\Model\MetadataTrait;
  * @property integer           $article
  * @property integer           $form
  * @property integer           $module
+ * @property string|array|null $rootPageDependentElements
  * @property boolean           $protected
  * @property string|array|null $groups
  * @property string|array      $cssID
