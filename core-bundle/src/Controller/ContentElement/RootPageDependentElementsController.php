@@ -26,6 +26,6 @@ class RootPageDependentElementsController extends AbstractContentElementControll
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        return $this->renderRootPageDependent($template, $request, $model, $model->rootPageDependentElements, $model->classes);
+        return $this->renderRootPageDependent($template, $request, $model, $model->rootPageDependentElements, (array) $model->classes);
     }
 }
