@@ -1,0 +1,9 @@
+[main]
+host = https://app.transifex.com
+
+[o:contao:p:oauth-server-bundle:r:v6_1-ContaoOAuthServerBundle]
+file_filter = translations/ContaoOAuthServerBundle.<lang>.xlf
+source_file = translations/ContaoOAuthServerBundle.en.xlf
+type = XLIFF
+source_lang = en
+resource_name = v6_1-ContaoOAuthServerBundle

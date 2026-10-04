@@ -1052,7 +1052,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertResponse($browser, 200, 'Bar -');
     }
 
-    protected static function createManagedEditionConfig(): ManagedEditionConfig
+    protected static function createApplicationConfig(): ManagedEditionConfig
     {
         // The routing fixtures contain news modules and records in tl_news and
         // tl_news_archive.
@@ -1061,7 +1061,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
     }
 
-    protected function shouldResetContaoManagedEdition(): bool
+    protected function shouldResetApplication(): bool
     {
         // Every routing case selects and loads its own fixture set.
         return false;

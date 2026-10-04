@@ -10,16 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing\Matcher;
+namespace Contao\McpBundle\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
-class BackendApiMatcher implements RequestMatcherInterface
+class McpRequestMatcher implements RequestMatcherInterface
 {
+    final public const string ROUTE = 'contao_mcp_backend';
+
     public function matches(Request $request): bool
     {
-        return 'backend' === $request->attributes->get('_scope')
-            && $request->attributes->getBoolean('_stateless');
+        return self::ROUTE === $request->attributes->get('_route');
     }
 }

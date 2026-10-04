@@ -24,8 +24,6 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\DataContainer\DataContainerPage;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -87,8 +85,8 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         return new ApiResource()
             ->withClass(DataContainerRecord::class)
             ->withShortName($shortName)
-            ->withProvider(DataContainerStateProvider::class)
-            ->withProcessor(DataContainerStateProcessor::class)
+            ->withProvider('contao_api.api_platform.data_container_state_provider')
+            ->withProcessor('contao_api.api_platform.data_container_state_processor')
             ->withRoutePrefix($this->getRoutePrefix($path))
             ->withDefaults(['_scope' => 'backend'])
             ->withStateless(true)
@@ -179,8 +177,8 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                     ->withUriTemplate($this->getRoutePrefix($path).$suffix)
                     ->withUriVariables($this->getUriVariables($path, $item, $recursive))
                     ->withRequirements($recursive ? ['nested' => '.+'] : [])
-                    ->withProvider(DataContainerStateProvider::class)
-                    ->withProcessor(DataContainerStateProcessor::class)
+                    ->withProvider('contao_api.api_platform.data_container_state_provider')
+                    ->withProcessor('contao_api.api_platform.data_container_state_processor')
                     ->withDefaults(['_scope' => 'backend'])
                     ->withStateless(true)
                     ->withSecurity("is_granted('ROLE_USER')")

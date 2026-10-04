@@ -20,12 +20,6 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
-    contao.listener.backend_locale:
-        class: Contao\CoreBundle\EventListener\BackendLocaleListener
-        arguments:
-            - '@security.helper'
-            - '@translation.locale_switcher'
-
     contao.listener.backend_noindex:
         class: Contao\CoreBundle\EventListener\BackendNoindexListener
         arguments:
@@ -670,6 +664,13 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+
+    contao.listener.user_state:
+        class: Contao\CoreBundle\EventListener\UserStateListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@translation.locale_switcher'
 
     contao.listener.virtual_fields_mapping:
         class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
