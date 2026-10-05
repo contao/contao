@@ -262,6 +262,47 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame('4/content/5', $match['nested']);
     }
 
+    #[DataProvider('provideCreationConfigurations')]
+    public function testOnlyExposesPostForCreatableTables(bool|null $notCreatable, bool $creatable): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table) use ($notCreatable): void {
+                    $config = ['dataContainer' => DC_Table::class];
+
+                    if (null !== $notCreatable) {
+                        $config['notCreatable'] = $notCreatable;
+                    }
+
+                    $GLOBALS['TL_DCA'][$table] = ['config' => $config, 'fields' => ['id' => []]];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_preview_link']),
+        );
+
+        $routes = $this->createApiLoader($factory)->load(null);
+
+        $this->assertSame($creatable, null !== $routes->get('contao_api_dc_preview_link_post'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get_collection'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_patch'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_delete'));
+    }
+
+    public static function provideCreationConfigurations(): iterable
+    {
+        yield 'unset' => [null, true];
+        yield 'explicitly creatable' => [false, true];
+        yield 'not creatable' => [true, false];
+    }
+
     private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader
     {
         $names = $this->createStub(ResourceNameCollectionFactoryInterface::class);
