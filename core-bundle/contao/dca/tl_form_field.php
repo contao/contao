@@ -9,6 +9,7 @@
  */
 
 use Contao\Backend;
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
