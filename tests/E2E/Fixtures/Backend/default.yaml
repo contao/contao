@@ -487,3 +487,14 @@ tl_user:
             - '@page_main_website'
         disable: 0
         dateAdded: 1704067200
+
+tl_preview_link:
+    preview_link:
+        tstamp: 1704067200
+        url: https://example.test/preview
+        showUnpublished: 0
+        restrictToUrl: 1
+        createdAt: 1704067200
+        expiresAt: 1893456000
+        published: 0
+        createdBy: '@kevin_jones'
