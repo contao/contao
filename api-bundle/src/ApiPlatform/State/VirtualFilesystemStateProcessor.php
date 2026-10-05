@@ -18,7 +18,10 @@ use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
+use Contao\CoreBundle\File\ImageTooLargeException;
+use Contao\CoreBundle\File\InvalidImageException;
 use Contao\CoreBundle\File\UploadSizeProvider;
+use Contao\CoreBundle\File\UploadValidator;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\MaximumStreamSizeExceededException;
@@ -26,12 +29,15 @@ use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\SizeLimitingVirtualFilesystemWriter;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Uid\Uuid;
 
@@ -42,16 +48,19 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
 {
     private readonly VirtualFilesystemInterface $filesStorage;
     private readonly SizeLimitingVirtualFilesystemWriter $filesWriter;
+    private readonly VirtualFilesystem $filesStorageForCleanup;
 
     public function __construct(
         VirtualFilesystem $filesStorage,
-        Security $security,
+        private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly SchemaAwareObjectNormalizer $objectNormalizer,
         private readonly VirtualFilesystemItemFactory $itemFactory,
         private readonly UploadSizeProvider $uploadSizeProvider,
+        private readonly UploadValidator $uploadValidator,
     ) {
         $this->filesStorage = new PermissionCheckingVirtualFilesystem($filesStorage, $security);
+        $this->filesStorageForCleanup = $filesStorage;
         $this->filesWriter = new SizeLimitingVirtualFilesystemWriter($this->filesStorage);
     }
 
@@ -160,6 +169,23 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         $destination = $this->toLocation($move->destination);
         $destination = $destination instanceof Uuid ? $this->filesStorage->resolveUuid($destination) : $destination;
 
+        $source = $source instanceof Uuid ? $this->filesStorage->resolveUuid($source) : $source;
+        $this->validatePath($source);
+        $this->validatePath($destination);
+        $item = $this->filesStorage->get($source);
+
+        if (!$item) {
+            throw new NotFoundHttpException('The requested file or directory does not exist.');
+        }
+
+        if ($item->isFile()) {
+            $this->validateUploadFilename($destination);
+
+            if (Path::getExtension($source) !== Path::getExtension($destination)) {
+                throw new BadRequestHttpException('Changing the file extension is not allowed.');
+            }
+        }
+
         $this->filesStorage->move($source, $destination);
 
         return $this->getItem($destination);
@@ -171,19 +197,127 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new BadRequestHttpException('An upload body is required.');
         }
 
+        $location = $location instanceof Uuid ? $this->filesStorage->resolveUuid($location) : $location;
+        $this->validatePath($location);
+        $this->validateUploadFilename($location);
+
+        // Authorize before buffering or parsing content; the writer also checks permissions.
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, Path::join($this->filesStorageForCleanup->getPrefix(), $location)) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES)) {
+            throw new AccessDeniedException('Access denied to upload files at this location.');
+        }
+
         $maximumUploadSize = $this->uploadSizeProvider->getMaximumUploadSize();
+        $contents = $request->getContent(true);
+        $sanitizedStream = null;
 
         try {
-            $this->filesWriter->writeStream(
-                $location,
-                $request->getContent(true),
-                $maximumUploadSize,
-            );
+            if (\in_array(Path::getExtension($location, true), ['svg', 'svgz'], true)) {
+                $svg = stream_get_contents($contents, $maximumUploadSize);
+
+                if (false === $svg) {
+                    throw new \RuntimeException('Could not read the upload body.');
+                }
+
+                $overflow = fread($contents, 1);
+
+                if (false === $overflow) {
+                    throw new \RuntimeException('Could not read the upload body.');
+                }
+
+                if ('' !== $overflow) {
+                    throw new MaximumStreamSizeExceededException($maximumUploadSize);
+                }
+
+                $svg = $this->uploadValidator->sanitizeSvg($svg);
+
+                if (null === $svg) {
+                    throw new BadRequestHttpException('Invalid SVG.');
+                }
+
+                $sanitizedStream = fopen('php://temp', 'w+');
+
+                if (false === $sanitizedStream || \strlen($svg) !== fwrite($sanitizedStream, $svg)) {
+                    throw new \RuntimeException('Could not buffer the sanitized SVG.');
+                }
+
+                rewind($sanitizedStream);
+            }
+
+            $this->filesWriter->writeStream($location, $sanitizedStream ?? $contents, $maximumUploadSize);
         } catch (MaximumStreamSizeExceededException $exception) {
             throw new HttpException(413, \sprintf('The upload exceeds the maximum size of %d bytes.', $maximumUploadSize), $exception);
+        } finally {
+            if (\is_resource($sanitizedStream)) {
+                fclose($sanitizedStream);
+            }
+
+            if (\is_resource($contents)) {
+                fclose($contents);
+            }
+        }
+
+        if ($this->uploadValidator->requiresImageValidation($location)) {
+            try {
+                $this->validateStoredImage($location);
+            } catch (ImageTooLargeException|InvalidImageException $exception) {
+                // Rejection is part of the authorized upload, not a separate user delete operation.
+                $this->filesStorageForCleanup->delete($location);
+
+                throw new BadRequestHttpException($exception->getMessage(), $exception);
+            }
         }
 
         return $this->getItem($location);
+    }
+
+    private function validatePath(string $path): void
+    {
+        foreach (explode('/', $path) as $component) {
+            if (!$this->uploadValidator->isValidFilename($component)) {
+                throw new BadRequestHttpException('Invalid file or directory name.');
+            }
+        }
+    }
+
+    private function validateUploadFilename(string $path): void
+    {
+        if (!$this->uploadValidator->isAllowedFilename($path)) {
+            throw new BadRequestHttpException('The file extension is not allowed for uploads.');
+        }
+    }
+
+    private function validateStoredImage(string $location): void
+    {
+        $contents = $this->filesStorage->readStream($location);
+        $temporary = null;
+
+        try {
+            $metadata = stream_get_meta_data($contents);
+
+            if ('STDIO' === $metadata['stream_type'] && 'plainfile' === $metadata['wrapper_type'] && Path::isAbsolute($metadata['uri'] ?? '')) {
+                $this->uploadValidator->validateImage($metadata['uri']);
+
+                return;
+            }
+
+            $temporary = tmpfile();
+
+            if (false === $temporary) {
+                throw new \RuntimeException('Could not create a temporary image file.');
+            }
+
+            if (false === stream_copy_to_stream($contents, $temporary)) {
+                throw new \RuntimeException('Could not read the uploaded image.');
+            }
+
+            $this->uploadValidator->validateImage(stream_get_meta_data($temporary)['uri']);
+        } finally {
+            fclose($contents);
+
+            if (\is_resource($temporary)) {
+                fclose($temporary);
+            }
+        }
     }
 
     private function getItem(Uuid|string $location): VirtualFilesystemItem

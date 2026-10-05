@@ -118,6 +118,7 @@ services:
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
             $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
             $uploadSizeProvider: '@contao.file.upload_size_provider'
+            $uploadValidator: '@contao.file.upload_validator'
 
     contao_api.api_platform.virtual_filesystem_state_provider:
         class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider
