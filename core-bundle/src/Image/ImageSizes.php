@@ -70,7 +70,7 @@ class ImageSizes implements ResetInterface
      */
     public function getOptionsForUser(BackendUser|null $user = null): array
     {
-        if (null !== $user) {
+        if ($user) {
             trigger_deprecation('contao/core-bundle', '6.1', 'Passing the user object to %s is deprecated in Contao 6.1 and will be removed in Contao 7.', __METHOD__);
         }
 
@@ -167,7 +167,7 @@ class ImageSizes implements ResetInterface
     private function filterImageSizes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
-            if (null === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)) {
+            if (!$user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)) {
                 $filteredSizes[$group][$key] = $size;
             }
         }
@@ -176,7 +176,7 @@ class ImageSizes implements ResetInterface
     private function filterResizeModes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {
-            if (null === $user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)) {
+            if (!$user ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size) : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)) {
                 $filteredSizes[$group][] = $size;
             }
         }
