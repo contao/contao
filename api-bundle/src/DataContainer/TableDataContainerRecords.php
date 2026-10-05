@@ -456,12 +456,6 @@ class TableDataContainerRecords
 
     private function validateParentTable(string $table, string $parentTable): void
     {
-        $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
-
-        if (($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) === $parentTable) {
-            return;
-        }
-
         foreach ($GLOBALS['BE_MOD'] ?? [] as $modules) {
             if (!\is_array($modules)) {
                 continue;
