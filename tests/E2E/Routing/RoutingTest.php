@@ -1083,7 +1083,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         $browser = self::managedEdition()->createHttpBrowser(Origin::https($host));
         $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
         $browser->setServerParameter('HTTP_ACCEPT_LANGUAGE', $acceptLanguage);
-        $browser->request('GET', $path);
+        $browser->request('GET', self::managedEdition()->uri($path, Origin::https($host)));
 
         return $browser;
     }
