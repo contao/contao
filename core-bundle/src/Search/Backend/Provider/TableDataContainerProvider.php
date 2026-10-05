@@ -30,10 +30,10 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,7 +47,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly ContaoFramework $contaoFramework,
         private readonly ResourceFinder $resourceFinder,
         private readonly Connection $connection,
-        private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly Security $security,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
@@ -130,7 +130,7 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    public function isDocumentGranted(TokenInterface $token, Document $document): bool
+    public function isDocumentGranted(UserInterface $user, Document $document): bool
     {
         $document = $this->addCurrentRowToDocumentIfNotAlreadyLoaded($document);
         $row = $document->getMetadata()['row'] ?? null;
@@ -142,8 +142,8 @@ class TableDataContainerProvider implements ProviderInterface
 
         $table = $this->getTableFromDocument($document);
 
-        return $this->accessDecisionManager->decide(
-            $token,
+        return $this->security->isGrantedForUser(
+            $user,
             [ContaoCorePermissions::DC_PREFIX.$table],
             new ReadAction($table, $row),
         );
