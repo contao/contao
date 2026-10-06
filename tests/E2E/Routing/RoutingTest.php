@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\E2eTests\Routing;
 
-use Contao\E2eTesting\Http\Origin;
+use Contao\E2eTesting\Http\HttpBrowserOptions;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureResult;
@@ -1058,7 +1058,9 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         // tl_news_archive.
         $composer = self::createMonorepoComposerConfig('core-bundle', 'news-bundle');
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory())
+            ->withSimulatedOrigins()
+        ;
     }
 
     protected function shouldResetApplication(): bool
@@ -1080,7 +1082,8 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
     private function request(string $path, string $host, string $acceptLanguage = 'en'): HttpBrowser
     {
-        $browser = self::managedEdition()->createHttpBrowser(Origin::https($host));
+        $options = HttpBrowserOptions::create()->withSimulatedOrigin('https://'.$host);
+        $browser = self::managedEdition()->createHttpBrowser($options);
         $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
         $browser->setServerParameter('HTTP_ACCEPT_LANGUAGE', $acceptLanguage);
         $browser->request('GET', $path);
