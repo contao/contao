@@ -127,6 +127,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.max_file_upload_size', $config['max_file_upload_size']);
+        $container->setParameter('contao.retention.undo', $config['retention']['undo']);
+        $container->setParameter('contao.retention.versions', $config['retention']['versions']);
+        $container->setParameter('contao.retention.logs', $config['retention']['logs']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
