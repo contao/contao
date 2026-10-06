@@ -105,6 +105,7 @@ body {
     .api-content {
         background: var(--content-bg);
 
+        /* Copy link icon. */
         :is(h1, h2) > a[href^="#"] {
             &::before {
                 background: var(--gray);
