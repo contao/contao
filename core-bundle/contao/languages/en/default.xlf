@@ -575,6 +575,12 @@
       <trans-unit id="CTE.login.1">
         <source>Generates a login form.</source>
       </trans-unit>
+      <trans-unit id="CTE.root_page_dependent_elements.0">
+        <source>Root page dependent elements</source>
+      </trans-unit>
+      <trans-unit id="CTE.root_page_dependent_elements.1">
+        <source>Generates different elements depending on the website root page.</source>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
       </trans-unit>

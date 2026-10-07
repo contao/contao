@@ -21,6 +21,36 @@ use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class PageTest extends AbstractContaoMonorepoE2ETestCase
 {
+    public function testCreatesASubpage(): void
+    {
+        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
+        ]));
+
+        $parentId = (int) $fixtures->value('page_main_home');
+
+        $request = HttpRequest::json('POST', '/contao/api/dc/page')
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'pid' => ['iri' => $fixtures->interpolate('/contao/api/dc/page/{page_main_home}')],
+                'title' => 'API subpage',
+                'alias' => 'api-subpage',
+                'type' => 'regular',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(201, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($parentId, $data['pid']['id']);
+    }
+
     public function testCreatesPage(): void
     {
         self::managedEdition()->resetDatabase(new FixtureSet([
