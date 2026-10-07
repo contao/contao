@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
@@ -211,7 +212,7 @@ class TemplateStudioController extends AbstractBackendController
             return $this->render(
                 '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
                 ['identifier' => $identifier],
-                apiError: new \InvalidArgumentException('Given identifier does not exist.'),
+                apiError: new NotFoundHttpException('Given identifier does not exist.'),
             );
         }
 

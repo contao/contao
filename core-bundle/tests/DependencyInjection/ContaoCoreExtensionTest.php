@@ -747,7 +747,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(42, $allowedGroupsResolver->getArgument('$maxGroups'));
 
         $documentAccessEvaluator = $container->getDefinition('contao.search.backend.security.document_access_evaluator');
-        $this->assertSame('contao.security.authentication.contao_strategy_context', (string) $documentAccessEvaluator->getArgument(1));
+        $this->assertSame('contao.search.security.virtual_backend_user_factory', (string) $documentAccessEvaluator->getArgument(0));
     }
 
     public function testCspConfiguration(): void
