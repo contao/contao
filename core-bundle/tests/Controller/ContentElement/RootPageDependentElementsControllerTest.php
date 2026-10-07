@@ -73,6 +73,7 @@ class RootPageDependentElementsControllerTest extends TestCase
             'type' => 'element_group',
             'cssID' => serialize(['selected-id', ' selected-class ']),
         ];
+
         $selectedModel = $this->createClassWithPropertiesStub($modelClass, $selectedData);
         $selectedModel
             ->method('cloneDetached')
@@ -97,6 +98,7 @@ class RootPageDependentElementsControllerTest extends TestCase
         ;
 
         $renderMethod = $isContentElement ? 'getContentElement' : 'getFrontendModule';
+
         $controllerAdapter = $this->createAdapterMock([$renderMethod]);
         $controllerAdapter
             ->expects($this->once())

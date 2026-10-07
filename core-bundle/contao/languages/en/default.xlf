@@ -579,7 +579,7 @@
         <source>Root page dependent elements</source>
       </trans-unit>
       <trans-unit id="CTE.root_page_dependent_elements.1">
-        <source>Generates different elements depending on the website root page</source>
+        <source>Generates different elements depending on the website root page.</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>

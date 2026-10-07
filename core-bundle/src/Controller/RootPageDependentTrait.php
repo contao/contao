@@ -64,7 +64,6 @@ trait RootPageDependentTrait
 
         // Merge the CSS classes (see #6011)
         $cssID[1] = implode(' ', array_filter(array_map(trim(...), [$cssID[1] ?? '', $modelCssID[1] ?? '', ...$classes])));
-
         $fragmentModel->cssID = $cssID;
 
         $section = $template->getData()['section'] ?? $template->getData()['inColumn'] ?? 'main';
