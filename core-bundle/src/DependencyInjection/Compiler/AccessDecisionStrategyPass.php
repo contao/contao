@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Security\Authentication\ContaoStrategy;
-use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -34,21 +33,14 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
         $accessDecisionManager = $container->getDefinition('security.access.decision_manager');
         $originalStrategy = $accessDecisionManager->getArgument(1);
 
-        $strategyContext = new Definition(ContaoStrategyContext::class, [
+        $strategy = new Definition(ContaoStrategy::class, [
+            $originalStrategy,
+            new Definition(PriorityStrategy::class),
+            new Reference('security.helper'),
             new Reference('request_stack'),
             new Reference('security.firewall.map'),
         ]);
 
-        $container->setDefinition('contao.security.authentication.contao_strategy_context', $strategyContext);
-
-        $strategy = new Definition(ContaoStrategy::class, [
-            $originalStrategy,
-            new Definition(PriorityStrategy::class),
-            new Reference('contao.security.authentication.contao_strategy_context'),
-        ]);
-
-        $container->setDefinition('contao.security.authentication.contao_strategy', $strategy);
-
-        $accessDecisionManager->replaceArgument(1, new Reference('contao.security.authentication.contao_strategy'));
+        $accessDecisionManager->replaceArgument(1, $strategy);
     }
 }

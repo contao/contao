@@ -141,6 +141,7 @@ services:
             $converters: '@contao_api.widget.converter_registry'
             $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
             $router: '@router'
+            $dcaHierarchy: '@contao.data_container.dca_hierarchy'
 
     contao_api.data_container.table_records:
         class: Contao\ApiBundle\DataContainer\TableDataContainerRecords

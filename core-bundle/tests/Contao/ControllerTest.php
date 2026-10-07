@@ -14,14 +14,19 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Environment;
+use Contao\ModuleModel;
+use Contao\ModuleProxy;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class ControllerTest extends TestCase
 {
@@ -34,7 +39,7 @@ class ControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['FE_MOD']);
 
         $this->resetStaticProperties([
             DcaExtractor::class,
@@ -310,5 +315,39 @@ class ControllerTest extends TestCase
             ],
             'root_1.svg',
         ];
+    }
+
+    public function testRendersFrontendModuleReference(): void
+    {
+        $GLOBALS['FE_MOD'] = ['miscellaneous' => ['test' => ModuleProxy::class]];
+
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['id' => 42, 'type' => 'test']);
+        $reference = new FrontendModuleReference($model, 'header', ['cssID' => ' id="example"'], true);
+
+        $handler = $this->createMock(FragmentHandler::class);
+        $handler
+            ->expects($this->once())
+            ->method('render')
+            ->with($this->identicalTo($reference))
+            ->willReturn('<p>module</p>')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->setParameter('kernel.debug', false);
+        $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
+        $container->set('fragment.handler', $handler);
+        System::setContainer($container);
+
+        $this->assertSame('<p>module</p>', Controller::getFrontendModule($reference));
+    }
+
+    public function testRejectsColumnWhenRenderingFrontendModuleReference(): void
+    {
+        $reference = new FrontendModuleReference($this->createStub(ModuleModel::class));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Passing a column name or preloaded content elements is not supported when using a FrontendModuleReference.');
+
+        Controller::getFrontendModule($reference, 'header');
     }
 }
