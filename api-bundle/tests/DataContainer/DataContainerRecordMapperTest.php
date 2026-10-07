@@ -383,6 +383,24 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame(['jumpTo' => '42'], $mapper->toFormValues('tl_news', ['jumpTo' => ['id' => 42, 'iri' => '/contao/api/dc/page/42']]));
     }
 
+    public function testResolvesTheParentReferenceOfANewRecord(): void
+    {
+        $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+
+        $this->assertSame(42, $mapper->toParentIdentifier('tl_article', ['iri' => '/contao/api/dc/page/42']));
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+
+        $mapper->toParentIdentifier('tl_article', ['iri' => '']);
+    }
+
     public function testResolvesRelationsProvidedByAWidgetConverter(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['destination'] = [
