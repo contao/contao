@@ -37,6 +37,13 @@ services:
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
 
+    contao.cache.shared:
+        parent: cache.adapter.filesystem
+        arguments:
+            $directory: '%kernel.project_dir%/var/cache/shared'
+        tags:
+            - { name: cache.pool, namespace: contao_shared }
+
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
         public: true
