@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -188,15 +189,17 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		if (!$security->isGranted('ROLE_ADMIN'))
 		{
-			$user = $security->getUser();
+			$groups = array_filter(
+				$connection->fetchFirstColumn('SELECT id FROM tl_member_group'),
+				static fn ($groupId): bool => $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, $groupId),
+			);
 
-			if (!$user instanceof BackendUser)
+			if (empty($groups))
 			{
 				return array();
 			}
 
-			$amg = StringUtil::deserialize($user->amg);
-			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $amg);
+			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $groups);
 			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
 		}
 
