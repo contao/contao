@@ -15,17 +15,13 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testCreatesArticleOnPage(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
+        $fixtures = self::managedEdition()->database()->fixtures();
 
         $pageId = (int) $fixtures->value('page_main_home');
 
@@ -65,10 +61,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testMovesAnArticleIntoAnotherPage(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
+        $fixtures = self::managedEdition()->database()->fixtures();
 
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}');
         $parent = (int) $fixtures->value('page_microsite_home');
@@ -114,6 +107,11 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
             'newsletter-bundle',
         );
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory());
     }
 }
