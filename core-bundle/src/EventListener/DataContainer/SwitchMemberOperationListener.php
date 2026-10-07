@@ -40,11 +40,13 @@ class SwitchMemberOperationListener
 
         $row = $operation->getRecord();
 
-        if (
-            !$row['login']
-            || !$row['username']
-            || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, StringUtil::deserialize($row['groups'], true))
-        ) {
+        if (!$row['login'] || !$row['username']) {
+            $operation->disable();
+
+            return;
+        }
+
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, StringUtil::deserialize($row['groups'], true))) {
             $operation->disable();
 
             return;

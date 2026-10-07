@@ -136,7 +136,7 @@ class FrontendPreviewAuthenticator
 
         // The front end user does not belong to a group that the back end user is
         // allowed to log in
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, $frontendGroups)) {
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, $frontendGroups)) {
             return null;
         }
 

@@ -100,7 +100,7 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('isGranted')
             ->willReturnMap([
                 ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
-                [ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, ['42'], false],
+                [ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, ['42'], false],
             ])
         ;
 
@@ -127,7 +127,7 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('isGranted')
             ->willReturnMap([
                 ['ROLE_ALLOWED_TO_SWITCH_MEMBER', true],
-                [ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, ['42'], true],
+                [ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, ['42'], true],
             ])
         ;
 
