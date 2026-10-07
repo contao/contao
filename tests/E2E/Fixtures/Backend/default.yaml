@@ -8,6 +8,8 @@ tl_page:
         type: root
         language: en
         published: 1
+        includeLayout: 1
+        layout: '@layout_editorial'
         includeChmod: 1
         cgroup: '@group_pages_main_content'
         chmod:
@@ -79,6 +81,16 @@ tl_theme:
         tstamp: 1704067200
         name: Editorial
         author: Contao
+
+tl_layout:
+    layout_editorial:
+        pid: '@theme_editorial'
+        tstamp: 1704067200
+        name: Editorial
+        modules:
+            - mod: 0
+              col: main
+              enable: 1
 
 tl_image_size:
     image_size_content:
