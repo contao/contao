@@ -59,12 +59,11 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 
     private function isContaoContext(): bool
     {
+        $token = $this->security->getToken();
+
         // On command line, or when isGrantedForUser is called, we cannot rely on the
         // current firewall
-        if (
-            ($token = $this->security->getToken()) instanceof OfflineTokenInterface
-            && $token->getUser() instanceof User
-        ) {
+        if ($token instanceof OfflineTokenInterface && $token->getUser() instanceof User) {
             return true;
         }
 
