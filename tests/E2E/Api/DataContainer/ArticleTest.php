@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Api\DataContainer;
 
 use Contao\E2eTesting\Http\HttpRequest;
-use Contao\E2eTesting\Http\Origin;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
@@ -30,7 +29,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
         $pageId = (int) $fixtures->value('page_main_home');
 
-        $request = HttpRequest::json('POST', '/contao/api/dc/article', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', '/contao/api/dc/article')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -50,7 +49,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertArrayHasKey('@id', $data);
         $this->assertSame($pageId, $data['pid']['id']);
 
-        $request = HttpRequest::get('/contao/api/dc/article', Origin::http('example.test'))
+        $request = HttpRequest::get('/contao/api/dc/article')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
