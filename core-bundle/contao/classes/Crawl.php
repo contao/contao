@@ -182,26 +182,21 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 	private function getMembersDataList(): array
 	{
-		$security = System::getContainer()->get('security.helper');
 		$connection = System::getContainer()->get('database_connection');
+		$security = System::getContainer()->get('security.helper');
 
-		$andWhereGroups = '';
+		$groups = array_filter(
+			$connection->fetchFirstColumn('SELECT id FROM tl_member_group'),
+			static fn ($groupId): bool => $security->isGranted(ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, $groupId)
+		);
 
-		if (!$security->isGranted('ROLE_ADMIN'))
+		if (empty($groups))
 		{
-			$groups = array_filter(
-				$connection->fetchFirstColumn('SELECT id FROM tl_member_group'),
-				static fn ($groupId): bool => $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MEMBER_GROUP, $groupId),
-			);
-
-			if (empty($groups))
-			{
-				return array();
-			}
-
-			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $groups);
-			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
+			return array();
 		}
+
+		$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $groups);
+		$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
 
 		$time = Date::floorToMinute();
 
