@@ -28,6 +28,7 @@ use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -639,7 +640,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->willReturn(['_route' => 'page_get', 'id' => '42'])
         ;
 
-        return new DataContainerRelationResolver($connection, new ForeignKeyParser($connection), $converters, $metadataFactory, $router);
+        return new DataContainerRelationResolver($connection, new ForeignKeyParser($connection), $converters, $metadataFactory, $router, $this->createStub(DcaHierarchy::class));
     }
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface

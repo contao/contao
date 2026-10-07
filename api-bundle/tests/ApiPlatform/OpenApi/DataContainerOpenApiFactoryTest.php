@@ -39,6 +39,7 @@ use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
@@ -371,6 +372,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $metadataFactory,
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 

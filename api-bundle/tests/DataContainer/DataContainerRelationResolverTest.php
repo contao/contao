@@ -23,6 +23,7 @@ use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
@@ -89,6 +90,50 @@ final class DataContainerRelationResolverTest extends TestCase
         $this->assertSame('7', $resolver->resolveToIdentifier(['id' => 7, 'iri' => 'https://example.com/contao/api/dc/page/12/article/7'], $this->getArticleRelation()));
         $this->assertSame(['12', null], $resolver->resolveToIdentifier([['@id' => '/contao/api/dc/page/12', 'id' => 12], null], $this->getPageRelation()));
         $this->assertSame('12', $resolver->resolveToIdentifier('/contao/api/dc/page/12', $this->getPageRelation()));
+    }
+
+    public function testResolvesRecordsInsideSelfNestingTablesToIris(): void
+    {
+        $this->connection->executeStatement('CREATE TABLE tl_content (id INTEGER PRIMARY KEY, pid INTEGER NOT NULL, ptable VARCHAR(64) NOT NULL)');
+        $this->connection->executeStatement("INSERT INTO tl_content (id, pid, ptable) VALUES (30, 7, 'tl_article'), (31, 30, 'tl_content'), (32, 31, 'tl_content')");
+
+        $rows = [
+            30 => ['id' => 30, 'pid' => 7, 'ptable' => 'tl_article'],
+            31 => ['id' => 31, 'pid' => 30, 'ptable' => 'tl_content'],
+            32 => ['id' => 32, 'pid' => 31, 'ptable' => 'tl_content'],
+        ];
+
+        $dcaHierarchy = $this->createStub(DcaHierarchy::class);
+        $dcaHierarchy
+            ->method('getParentRows')
+            ->willReturnCallback(static fn (int|string $id): array => array_reverse(array_values(array_filter($rows, static fn (array $row): bool => $row['id'] <= (int) $id))))
+        ;
+
+        $parents = [['table' => 'tl_article', 'parameter' => 'article_id']];
+
+        $content = new ApiResource(
+            operations: [
+                new Get(name: 'content_get', extraProperties: ['contao' => ['parents' => $parents]]),
+                new Get(name: 'content_nested_get', extraProperties: ['contao' => ['parents' => $parents, 'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content']]]),
+            ],
+            extraProperties: ['contao' => ['table' => 'tl_content']],
+        );
+
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('generate')
+            ->willReturnCallback(static fn (string $route, array $parameters): string => match ($route) {
+                'content_get' => '/contao/api/dc/article/'.$parameters['article_id'].'/content/'.$parameters['id'],
+                'content_nested_get' => '/contao/api/dc/article/'.$parameters['article_id'].'/content/'.$parameters['nested'].'/content/'.$parameters['id'],
+                default => throw new \LogicException('Unexpected route.'),
+            })
+        ;
+
+        $resolver = $this->createResolver($router, additionalResources: [$content], dcaHierarchy: $dcaHierarchy);
+
+        $this->assertSame('/contao/api/dc/article/7/content/30', $resolver->resolveRecordToIri(new DataContainerRecord('tl_content', [], 30)));
+        $this->assertSame('/contao/api/dc/article/7/content/30/content/31', $resolver->resolveRecordToIri(new DataContainerRecord('tl_content', [], 31)));
+        $this->assertSame('/contao/api/dc/article/7/content/30/content/31/content/32', $resolver->resolveRecordToIri(new DataContainerRecord('tl_content', [], 32)));
     }
 
     public function testMatchesRelationIrisAsReadRequests(): void
@@ -205,7 +250,10 @@ final class DataContainerRelationResolverTest extends TestCase
         $this->assertEquals(new DataContainerRelationReference(7, '/contao/api/dc/page/12/article/7'), $resolver->resolveToReference(7, $field, ['ptable' => 'tl_article']));
     }
 
-    private function createResolver(RouterInterface $router, WidgetConverterRegistry|null $converters = null): DataContainerRelationResolver
+    /**
+     * @param list<ApiResource> $additionalResources
+     */
+    private function createResolver(RouterInterface $router, WidgetConverterRegistry|null $converters = null, array $additionalResources = [], DcaHierarchy|null $dcaHierarchy = null): DataContainerRelationResolver
     {
         $resources = [
             new ApiResource(
@@ -216,6 +264,7 @@ final class DataContainerRelationResolverTest extends TestCase
                 operations: [new Get(name: 'article_get', extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]])],
                 extraProperties: ['contao' => ['table' => 'tl_article']],
             ),
+            ...$additionalResources,
         ];
 
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
@@ -224,7 +273,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, $resources))
         ;
 
-        return new DataContainerRelationResolver($this->connection, new ForeignKeyParser($this->connection), $converters ?? new WidgetConverterRegistry([]), $metadataFactory, $router);
+        return new DataContainerRelationResolver($this->connection, new ForeignKeyParser($this->connection), $converters ?? new WidgetConverterRegistry([]), $metadataFactory, $router, $dcaHierarchy ?? $this->createStub(DcaHierarchy::class));
     }
 
     private function getPageRelation(): DataContainerFieldContext

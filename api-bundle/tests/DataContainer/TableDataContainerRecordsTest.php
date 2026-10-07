@@ -24,6 +24,7 @@ use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\DcaRequestSwitcher;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
@@ -582,6 +583,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 

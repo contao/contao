@@ -24,6 +24,7 @@ use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
@@ -263,6 +264,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 

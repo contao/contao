@@ -20,6 +20,85 @@ use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class ContentTest extends AbstractContaoMonorepoE2ETestCase
 {
+    public function testIdentifiesRecordsInsideElementGroups(): void
+    {
+        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
+        ]));
+
+        // Create the element group in the article.
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
+
+        $request = HttpRequest::json('POST', $path)
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['type' => 'element_group'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $group = $response->toArray(false);
+
+        $this->assertSame(201, $response->getStatusCode(), json_encode($group, JSON_PRETTY_PRINT));
+        $this->assertArrayHasKey('@id', $group);
+
+        // Nest another group using the first group's returned IRI
+        $request = HttpRequest::json('POST', $group['@id'].'/content')
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['type' => 'element_group'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $innerGroup = $response->toArray(false);
+
+        $this->assertSame(201, $response->getStatusCode(), json_encode($innerGroup, JSON_PRETTY_PRINT));
+        $this->assertArrayHasKey('@id', $innerGroup);
+        $this->assertSame($group['@id'], $innerGroup['pid']['@id'] ?? null);
+
+        // Add content in the second element group and check the parent reference.
+        $request = HttpRequest::json('POST', $innerGroup['@id'].'/content')
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'type' => 'headline',
+                'headline' => ['unit' => 'h2', 'value' => 'Nested'],
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(201, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertArrayHasKey('@id', $data);
+        $this->assertSame($innerGroup['@id'], $data['pid']['@id'] ?? null);
+
+        // Read the content through the returned IRI to verify the full nested route
+        $request = HttpRequest::get($data['@id'])
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $read = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($read, JSON_PRETTY_PRINT));
+        $this->assertSame($data['@id'], $read['@id']);
+        $this->assertSame($innerGroup['@id'], $read['pid']['@id'] ?? null);
+        $this->assertSame('Nested', $read['headline']['value']);
+    }
+
     public function testRejectsAParentInThePayloadOfANestedRoute(): void
     {
         $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([

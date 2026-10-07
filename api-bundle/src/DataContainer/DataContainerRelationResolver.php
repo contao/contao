@@ -18,7 +18,9 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\DataContainer as ContaoDataContainer;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -38,6 +40,7 @@ final class DataContainerRelationResolver
         private readonly WidgetConverterRegistry $converters,
         private readonly ResourceMetadataCollectionFactoryInterface $metadataFactory,
         private readonly RouterInterface $router,
+        private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
 
@@ -214,6 +217,19 @@ final class DataContainerRelationResolver
         $parents = array_values(array_reverse($operation->getExtraProperties()['contao']['parents'] ?? []));
         $currentRow = $row;
 
+        // Nested records need the path of their parent records
+        if (null !== ($recursive = $operation->getExtraProperties()['contao']['recursive_parent'] ?? null)) {
+            $rows = $this->dcaHierarchy->getParentRows($row['id'], $recursive['table'], new ParentTraversalOptions()->withColumns('ptable')->withBoundaryRow());
+            $chain = array_reverse(array_column(\array_slice($rows, 1), 'id'));
+
+            if ([] === $chain) {
+                return null;
+            }
+
+            $parameters[$recursive['parameter']] = implode('/'.$recursive['segment'].'/', $chain);
+            $currentRow = end($rows);
+        }
+
         foreach ($parents as $index => $parent) {
             if (!\is_string($parent['table'] ?? null) || !\is_string($parent['parameter'] ?? null)) {
                 return null;
@@ -258,7 +274,7 @@ final class DataContainerRelationResolver
             }
 
             foreach ($resource->getOperations() ?? [] as $operation) {
-                if ($operation instanceof Get && !isset($operation->getExtraProperties()['contao']['recursive_parent'])) {
+                if ($operation instanceof Get) {
                     $this->readOperations[$table][] = $operation;
                 }
             }
