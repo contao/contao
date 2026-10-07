@@ -57,7 +57,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
                 'Content-Type' => 'application/ld+json',
             ])
             ->withJson([
-                // Regular pages need a parent as  without one, Contao creates would just create a root page draft
+                // Regular pages need a parent as without one, Contao creates would just create a root page draft
                 'pid' => ['iri' => $fixtures->interpolate('/contao/api/dc/page/{page_main_website}')],
                 'type' => 'regular',
                 'title' => 'API page',
