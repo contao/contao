@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Api\DataContainer;
 
 use Contao\E2eTesting\Http\HttpRequest;
-use Contao\E2eTesting\Http\Origin;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
@@ -31,7 +30,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Create the element group in the article.
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
-        $request = HttpRequest::json('POST', $path, Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -47,7 +46,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertArrayHasKey('@id', $group);
 
         // Nest another group using the first group's returned IRI
-        $request = HttpRequest::json('POST', $group['@id'].'/content', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $group['@id'].'/content')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -64,7 +63,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($group['@id'], $innerGroup['pid']['@id'] ?? null);
 
         // Add content in the second element group and check the parent reference.
-        $request = HttpRequest::json('POST', $innerGroup['@id'].'/content', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $innerGroup['@id'].'/content')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -84,7 +83,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($innerGroup['@id'], $data['pid']['@id'] ?? null);
 
         // Read the content through the returned IRI to verify the full nested route
-        $request = HttpRequest::get($data['@id'], Origin::http('example.test'))
+        $request = HttpRequest::get($data['@id'])
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -109,7 +108,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
-        $request = HttpRequest::json('POST', $path, Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
