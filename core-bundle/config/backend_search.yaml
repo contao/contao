@@ -63,7 +63,6 @@ services:
         class: Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator
         arguments:
             - '@contao.search.security.virtual_backend_user_factory'
-            - '@contao.security.authentication.contao_strategy_context'
 
     contao.search.backend.security.document_allowed_groups_resolver:
         class: Contao\CoreBundle\Search\Backend\Security\DocumentAllowedGroupsResolver

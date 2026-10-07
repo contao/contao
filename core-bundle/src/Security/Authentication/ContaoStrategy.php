@@ -12,21 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\OfflineTokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 {
+    private int|null $contaoContextRequestId = null;
+
+    private bool|null $contaoContext = null;
+
     public function __construct(
         private readonly AccessDecisionStrategyInterface $defaultStrategy,
         private readonly AccessDecisionStrategyInterface $contaoStrategy,
-        private readonly ContaoStrategyContext $strategyContext,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
     ) {
     }
 
     public function __toString(): string
     {
-        $strategy = $this->strategyContext->isContaoContext() ? $this->contaoStrategy : $this->defaultStrategy;
+        $strategy = $this->isContaoContext() ? $this->contaoStrategy : $this->defaultStrategy;
 
         if (method_exists($strategy, '__toString')) {
             return (string) $strategy;
@@ -37,10 +50,52 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 
     public function decide(\Traversable $results, AccessDecision|null $accessDecision = null): bool
     {
-        if ($this->strategyContext->isContaoContext()) {
+        if ($this->isContaoContext()) {
             return $this->contaoStrategy->decide($results, $accessDecision);
         }
 
         return $this->defaultStrategy->decide($results, $accessDecision);
+    }
+
+    private function isContaoContext(): bool
+    {
+        $token = $this->security->getToken();
+
+        // On command line, or when isGrantedForUser is called, we cannot rely on the
+        // current firewall
+        if ($token instanceof OfflineTokenInterface && $token->getUser() instanceof User) {
+            return true;
+        }
+
+        // Use the main request here because sub-requests cannot have their own firewall
+        // in Symfony
+        $request = $this->requestStack->getMainRequest();
+
+        if (!$request || !$this->firewallMap instanceof FirewallMap) {
+            $this->contaoContextRequestId = null;
+            $this->contaoContext = false;
+
+            return false;
+        }
+
+        $requestId = spl_object_id($request);
+
+        if ($this->contaoContextRequestId === $requestId && null !== $this->contaoContext) {
+            return $this->contaoContext;
+        }
+
+        $this->contaoContextRequestId = $requestId;
+
+        $config = $this->firewallMap->getFirewallConfig($request);
+
+        if (!$config instanceof FirewallConfig) {
+            $this->contaoContext = false;
+
+            return false;
+        }
+
+        $context = $config->getContext();
+
+        return $this->contaoContext = str_starts_with($context, 'contao_');
     }
 }

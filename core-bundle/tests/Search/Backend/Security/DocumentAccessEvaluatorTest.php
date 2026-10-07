@@ -17,7 +17,6 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator;
 use Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory;
-use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
 use PHPUnit\Framework\TestCase;
 
 class DocumentAccessEvaluatorTest extends TestCase
@@ -35,14 +34,6 @@ class DocumentAccessEvaluatorTest extends TestCase
             ->willReturn($user)
         ;
 
-        $strategyContext = $this->createMock(ContaoStrategyContext::class);
-        $strategyContext
-            ->expects($this->exactly(2))
-            ->method('runInContext')
-            ->with(ContaoStrategyContext::CONTEXT_BACKEND, $this->isCallable())
-            ->willReturnCallback(static fn (string $context, callable $callback): mixed => $callback())
-        ;
-
         $provider = $this->createMock(ProviderInterface::class);
         $provider
             ->expects($this->exactly(2))
@@ -51,7 +42,7 @@ class DocumentAccessEvaluatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $evaluator = new DocumentAccessEvaluator($factory, $strategyContext);
+        $evaluator = new DocumentAccessEvaluator($factory);
 
         $this->assertTrue($evaluator->isGrantedForGroup($provider, $document, 42));
         $this->assertTrue($evaluator->isGrantedForGroup($provider, $document, 42));
