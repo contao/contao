@@ -20,10 +20,12 @@ const renderDocumentation = () => {
     const probe = document.createElement('span');
     probe.hidden = true;
     document.body.append(probe);
+
     const color = name => {
         probe.style.color = `var(${name})`;
         return getComputedStyle(probe).color;
     };
+
     const fontFamily = getComputedStyle(document.body).fontFamily;
 
     Redoc.init(data.spec, {
