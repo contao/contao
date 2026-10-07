@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Api\DataContainer;
 
 use Contao\E2eTesting\Http\HttpRequest;
-use Contao\E2eTesting\Http\Origin;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
@@ -74,7 +73,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}');
         $parent = (int) $fixtures->value('page_microsite_home');
 
-        $request = HttpRequest::json('POST', $path.'/move', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -93,7 +92,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
         $this->assertSame($parent, $data['pid']['id']);
 
-        $response = self::managedEdition()->send(HttpRequest::get($path, Origin::http('example.test'))->withHeaders([
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
             'Authorization' => 'Bearer e2e',
             'Accept' => 'application/ld+json',
         ]));
