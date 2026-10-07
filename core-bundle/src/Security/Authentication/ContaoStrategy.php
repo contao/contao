@@ -94,7 +94,7 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
             return false;
         }
 
-        $context = $config->getContext();
+        $context = $config->getContext() ?? $config->getName();
 
         return $this->contaoContext = str_starts_with($context, 'contao_');
     }
