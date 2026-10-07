@@ -668,12 +668,6 @@ class tl_calendar_events extends Backend
 	public function getSourceOptions(DataContainer $dc)
 	{
 		$security = System::getContainer()->get('security.helper');
-
-		if ($security->isGranted('ROLE_ADMIN'))
-		{
-			return array('default', 'internal', 'article', 'external');
-		}
-
 		$arrOptions = array('default');
 
 		// Add the "internal" option

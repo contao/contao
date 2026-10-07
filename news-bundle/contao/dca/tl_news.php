@@ -503,11 +503,6 @@ class tl_news extends Backend
 	 */
 	public function getSourceOptions(DataContainer $dc)
 	{
-		if (System::getContainer()->get('security.helper')->isGranted('ROLE_ADMIN'))
-		{
-			return array('default', 'internal', 'article', 'external');
-		}
-
 		$security = System::getContainer()->get('security.helper');
 		$arrOptions = array('default');
 
