@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'defineRoot'                  => 'rootPage',
 		'protected'                   => 'groups',
 		'reg_assignDir'               => 'reg_homeDir',
-		'reg_activate'                => 'reg_jumpTo,reg_text'
+		'reg_activate'                => 'reg_jumpTo,reg_text,reg_preventEnumeration'
 	),
 
 	// Fields
@@ -514,6 +514,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:120px'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+		),
+		'reg_preventEnumeration' => array
+		(
+			'inputType'               => 'checkbox',
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'reg_password' => array
 		(
