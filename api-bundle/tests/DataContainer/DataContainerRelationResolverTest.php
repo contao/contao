@@ -29,6 +29,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 final class DataContainerRelationResolverTest extends TestCase
@@ -88,6 +89,27 @@ final class DataContainerRelationResolverTest extends TestCase
         $this->assertSame('7', $resolver->resolveToIdentifier(['id' => 7, 'iri' => 'https://example.com/contao/api/dc/page/12/article/7'], $this->getArticleRelation()));
         $this->assertSame(['12', null], $resolver->resolveToIdentifier([['@id' => '/contao/api/dc/page/12', 'id' => 12], null], $this->getPageRelation()));
         $this->assertSame('12', $resolver->resolveToIdentifier('/contao/api/dc/page/12', $this->getPageRelation()));
+    }
+
+    public function testMatchesRelationIrisAsReadRequests(): void
+    {
+        $context = new RequestContext(method: 'POST');
+
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
+        $router
+            ->method('match')
+            ->willReturnCallback(static fn (): array => 'GET' === $context->getMethod() ? ['_route' => 'page_get', 'id' => '12'] : ['_route' => 'page_post'])
+        ;
+
+        $resolver = $this->createResolver($router);
+
+        $this->assertSame('12', $resolver->resolveToIdentifier('/contao/api/dc/page/12', $this->getPageRelation()));
+        $this->assertSame('POST', $context->getMethod());
     }
 
     public function testRejectsIrisForAnotherResource(): void
