@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Api\DataContainer;
 
 use Contao\E2eTesting\Http\HttpRequest;
-use Contao\E2eTesting\Http\Origin;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
@@ -30,7 +29,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
-        $request = HttpRequest::json('POST', $path, Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
