@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\E2eTests\Api\DataContainer;
 
 use Contao\E2eTesting\Http\HttpRequest;
-use Contao\E2eTesting\Http\Origin;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
@@ -53,18 +52,20 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCreatesPage(): void
     {
-        self::managedEdition()->resetDatabase(new FixtureSet([
+        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
             self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
             self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
         ]));
 
-        $request = HttpRequest::json('POST', '/contao/api/dc/page', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', '/contao/api/dc/page')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
             ->withJson([
+                // Regular pages need a parent as  without one, Contao creates would just create a root page draft
+                'pid' => ['iri' => $fixtures->interpolate('/contao/api/dc/page/{page_main_website}')],
                 'type' => 'regular',
                 'title' => 'API page',
             ])
@@ -87,7 +88,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_main_home}');
 
-        $request = HttpRequest::get($path, Origin::http('example.test'))
+        $request = HttpRequest::get($path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -111,7 +112,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
 
-        $request = HttpRequest::json('PATCH', $path, Origin::http('example.test'))
+        $request = HttpRequest::json('PATCH', $path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -126,7 +127,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
         $this->assertSame('Updated API page', $data['title']);
 
-        $response = self::managedEdition()->send(HttpRequest::get($path, Origin::http('example.test'))->withHeaders([
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
             'Authorization' => 'Bearer e2e',
             'Accept' => 'application/ld+json',
         ]));
@@ -146,7 +147,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
 
-        $request = HttpRequest::create('DELETE', $path, Origin::http('example.test'))
+        $request = HttpRequest::create('DELETE', $path)
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -157,7 +158,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(204, $response->getStatusCode(), $response->getContent(false));
 
-        $response = self::managedEdition()->send(HttpRequest::get($path, Origin::http('example.test'))->withHeaders([
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
             'Authorization' => 'Bearer e2e',
             'Accept' => 'application/ld+json',
         ]));
@@ -178,7 +179,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
         $parent = (int) $fixtures->value('page_main_home');
 
-        $request = HttpRequest::json('POST', $path.'/move', Origin::http('example.test'))
+        $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
                 'Authorization' => 'Bearer e2e',
                 'Accept' => 'application/ld+json',
@@ -196,7 +197,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
         $this->assertSame($parent, $data['pid']['id']);
 
-        $response = self::managedEdition()->send(HttpRequest::get($path, Origin::http('example.test'))->withHeaders([
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
             'Authorization' => 'Bearer e2e',
             'Accept' => 'application/ld+json',
         ]));
