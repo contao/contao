@@ -100,6 +100,34 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Nested', $read['headline']['value']);
     }
 
+    public function testRejectsAParentInThePayloadOfANestedRoute(): void
+    {
+        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
+            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
+        ]));
+
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
+
+        $request = HttpRequest::json('POST', $path, Origin::http('example.test'))
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'pid' => ['iri' => $fixtures->interpolate('/contao/api/dc/article/{article_main_home}')],
+                'type' => 'text',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(422, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('given by the route', $data['detail'] ?? '');
+    }
+
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
