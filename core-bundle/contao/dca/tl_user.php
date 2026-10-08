@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -224,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'inherit' => array
 		(
 			'inputType'               => 'radio',
-			'options'                 => array('group', 'extend', 'custom'),
+			'options'                 => array(BackendUserFactory::INHERIT_GROUP, BackendUserFactory::INHERIT_EXTEND, BackendUserFactory::INHERIT_CUSTOM),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'group')

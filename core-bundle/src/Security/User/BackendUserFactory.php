@@ -17,17 +17,26 @@ use Contao\Date;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 
 /**
  * @extends AbstractUserFactory<BackendUser>
  */
 class BackendUserFactory extends AbstractUserFactory
 {
-    private static array $permissionFields = ['modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud', 'alxef'];
+    public const string INHERIT_GROUP = 'group';
+
+    public const string INHERIT_EXTEND = 'extend';
+
+    public const string INHERIT_CUSTOM = 'custom';
+
+    private static array $permissionFields = ['modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud', 'alexf'];
 
     public function __construct(
         ContaoFramework $framework,
         private readonly Connection $connection,
+        private readonly ClockInterface $clock = new NativeClock(),
     ) {
         parent::__construct($framework);
     }
@@ -40,21 +49,18 @@ class BackendUserFactory extends AbstractUserFactory
         $permissions = self::getPermissionFields();
 
         // Overwrite user permissions if only group permissions shall be inherited
-        if ('group' === ($data['inherit'] ?? null)) {
+        if (self::INHERIT_GROUP === ($data['inherit'] ?? null)) {
             foreach ($permissions as $field) {
                 $data[$field] = [];
             }
         }
 
-        // Make sure pagemounts, filemounts, alexf and cud are set!
-        foreach (['pagemounts', 'filemounts', 'alexf', 'cud', 'groups'] as $field) {
-            $data[$field] = \is_array($data[$field] ?? null) ? array_filter($data[$field]) : [];
-        }
+        $data['groups'] = \is_array($data['groups'] ?? null) ? array_filter($data['groups']) : [];
 
         // Merge permissions
         if ([] !== $data['groups']) {
-            $inherit = \in_array($data['inherit'], ['group', 'extend'], true) ? $permissions : ['alexf'];
-            $time = Date::floorToMinute();
+            $inherit = \in_array($data['inherit'], [self::INHERIT_GROUP, self::INHERIT_EXTEND], true) ? $permissions : ['alexf'];
+            $time = $this->clock->now()->getTimestamp();
 
             $groups = $this->connection->fetchAllAssociative(
                 "SELECT * FROM tl_user_group WHERE id IN (?) AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)",
@@ -73,6 +79,11 @@ class BackendUserFactory extends AbstractUserFactory
                     }
                 }
             }
+        }
+
+        // Make sure pagemounts, filemounts, alexf and cud are set!
+        foreach (['pagemounts', 'filemounts', 'alexf', 'cud'] as $field) {
+            $data[$field] = \is_array($data[$field] ?? null) ? array_filter($data[$field]) : [];
         }
 
         if (!($data['admin'] ?? null)) {
