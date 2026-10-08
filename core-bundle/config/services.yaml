@@ -1209,6 +1209,7 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+            - '@contao.framework'
             - '@database_connection'
 
     contao.security.backend_user_provider:
@@ -1366,6 +1367,7 @@ services:
         class: Contao\CoreBundle\Security\User\FrontendUserFactory
         public: true
         arguments:
+            - '@contao.framework'
             - '@database_connection'
             - '@contao.security.token_checker'
 
