@@ -20,7 +20,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @template T of ContaoUser
  *
- * @extends UserFactoryInterface<T>
+ * @implements UserFactoryInterface<T>
  */
 abstract class AbstractUserFactory implements UserFactoryInterface, ResetInterface
 {
@@ -36,7 +36,7 @@ abstract class AbstractUserFactory implements UserFactoryInterface, ResetInterfa
     /**
      * @param array<string, mixed> $data
      *
-     * @return ContaoUser<T>
+     * @return T
      */
     public function createWithDefaults(array $data): ContaoUser
     {

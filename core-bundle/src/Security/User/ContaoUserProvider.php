@@ -32,6 +32,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
+        /** @var UserFactoryInterface<BackendUser|FrontendUser> */
         private readonly UserFactoryInterface $userFactory,
         private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {
@@ -71,7 +72,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     }
 
     /**
-     * @param class-string<User> $class
+     * @param class-string<UserInterface> $class
      */
     public function supportsClass(string $class): bool
     {

@@ -66,7 +66,7 @@ class FrontendUserFactory extends AbstractUserFactory
     /**
      * @param array<int|string> $groups
      *
-     * @return array<array{id: int, redirect: bool, jumpTo: int}>
+     * @return array<int, array<string, mixed>>
      */
     private function fetchGroups(array $groups): array
     {

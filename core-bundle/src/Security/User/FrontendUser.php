@@ -50,7 +50,7 @@ class FrontendUser extends \Contao\FrontendUser
     public function setLoginPage(int $pageId): self
     {
         // strLoginPage can be replaced when the parent class is obsolete
-        $this->strLoginPage = $pageId;
+        $this->strLoginPage = (string) $pageId;
 
         return $this;
     }

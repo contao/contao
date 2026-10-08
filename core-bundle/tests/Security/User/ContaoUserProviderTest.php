@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\User;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\User\BackendUser;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
+use Contao\CoreBundle\Security\User\FrontendUser;
 use Contao\CoreBundle\Security\User\UserFactoryInterface;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FrontendUser;
 use Contao\System;
 use Contao\UserModel;
 use Doctrine\DBAL\Connection;
@@ -255,6 +255,9 @@ class ContaoUserProviderTest extends TestCase
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
+    /**
+     * @param UserFactoryInterface<BackendUser|FrontendUser>|null $userFactory
+     */
     private function getProvider(ContaoFramework|null $framework = null, Connection|null $connection = null, UserFactoryInterface|null $userFactory = null, VirtualFieldsHandler|null $virtualFieldsHandler = null): ContaoUserProvider
     {
         $framework ??= $this->createContaoFrameworkStub();
