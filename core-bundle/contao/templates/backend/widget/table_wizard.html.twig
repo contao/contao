@@ -64,35 +64,35 @@
                     <table{{ table_attributes }}>
                         {% block table_head %}
                             <thead>
-                            {% set handle_row_attributes = attrs()
-                                .addClass('table-wizard-handle-row')
-                                .set('data-contao--table-wizard-target', 'columnHandleRow')
-                            %}
-                            <tr{{ handle_row_attributes }}>
-                                <th class="table-wizard-corner"></th>
+                                {% set handle_row_attributes = attrs()
+                                    .addClass('table-wizard-handle-row')
+                                    .set('data-contao--table-wizard-target', 'columnHandleRow')
+                                %}
+                                <tr{{ handle_row_attributes }}>
+                                    <th class="table-wizard-corner"></th>
 
-                                {% for handle in range(0, col_count - 1) %}
-                                    {% block column_handle_cell %}
-                                        {% set column_handle_cell_attributes = attrs()
-                                            .addClass('table-wizard-handle-cell')
-                                            .set('data-contao--table-wizard-target', 'columnHandle')
-                                        %}
-                                        <th{{ column_handle_cell_attributes }}>
-                                            {% set column_handle_attributes = attrs()
-                                                .addClass(['table-wizard-handle', 'table-wizard-handle-column'])
-                                                .set('role', 'button')
-                                                .set('tabindex', '0')
-                                                .set('aria-haspopup', 'menu')
-                                                .set('aria-expanded', 'false')
-                                                .set('data-contao--tooltips-target', 'tooltip')
-                                                .set('title', 'MSC.tw_col_actions'|trans)
-                                                .set('data-action', 'click->contao--table-wizard#openMenu keydown->contao--table-wizard#handleMenu pointerenter->contao--table-wizard#highlight pointerleave->contao--table-wizard#clearHighlight focus->contao--table-wizard#highlight blur->contao--table-wizard#clearHighlight')
+                                    {% for handle in range(0, col_count - 1) %}
+                                        {% block column_handle_cell %}
+                                            {% set column_handle_cell_attributes = attrs()
+                                                .addClass('table-wizard-handle-cell')
+                                                .set('data-contao--table-wizard-target', 'columnHandle')
                                             %}
-                                            <div{{ column_handle_attributes }}>{{ backend_icon('drag_horizontal.svg') }}</div>
-                                        </th>
-                                    {% endblock %}
-                                {% endfor %}
-                            </tr>
+                                            <th{{ column_handle_cell_attributes }}>
+                                                {% set column_handle_attributes = attrs()
+                                                    .addClass(['table-wizard-handle', 'table-wizard-handle-column'])
+                                                    .set('role', 'button')
+                                                    .set('tabindex', '0')
+                                                    .set('aria-haspopup', 'menu')
+                                                    .set('aria-expanded', 'false')
+                                                    .set('data-contao--tooltips-target', 'tooltip')
+                                                    .set('title', 'MSC.tw_col_actions'|trans)
+                                                    .set('data-action', 'click->contao--table-wizard#openMenu keydown->contao--table-wizard#handleMenu pointerenter->contao--table-wizard#highlight pointerleave->contao--table-wizard#clearHighlight focus->contao--table-wizard#highlight blur->contao--table-wizard#clearHighlight')
+                                                %}
+                                                <div{{ column_handle_attributes }}>{{ backend_icon('drag_horizontal.svg') }}</div>
+                                            </th>
+                                        {% endblock %}
+                                    {% endfor %}
+                                </tr>
                             </thead>
                         {% endblock %}
 
