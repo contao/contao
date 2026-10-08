@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Contao.
  *
@@ -30,24 +28,24 @@ class TableWizard extends Widget
 	 * Rows
 	 * @var integer
 	 */
-	protected int $intRows = 12;
+	protected $intRows = 12;
 
 	/**
 	 * Columns
 	 * @var integer
 	 */
-	protected int $intCols = 80;
+	protected $intCols = 80;
 
 	/**
 	 * Label that is passed to the widget template
 	 * @var string
 	 */
-	protected string $widgetLabel = '';
+	protected $widgetLabel = '';
 
 	/**
 	 * @var array<string, string>
 	 */
-	protected array $arrAppearance = array('head' => 'thead', 'foot' => 'tfoot', 'left' => 'tleft');
+	protected $arrAppearance = array('head' => 'thead', 'foot' => 'tfoot', 'left' => 'tleft');
 
 	/**
 	 * Template
@@ -134,7 +132,7 @@ class TableWizard extends Widget
 
 		if (!$this->allowHtml)
 		{
-			throw new \LogicException('The inline RTE of the table wizard requires the allowHtml eval option');
+			throw new \LogicException('The inline RTE of the table wizard requires the "allowHtml" eval option');
 		}
 
 		return true;
