@@ -48,7 +48,7 @@ class BackendUserFactory extends AbstractUserFactory
         $permissions = self::getPermissionFields();
 
         // Overwrite user permissions if only group permissions shall be inherited
-        if (self::INHERIT_GROUP === ($data['inherit'] ?? null)) {
+        if (($data['admin'] ?? null) || self::INHERIT_GROUP === ($data['inherit'] ?? null)) {
             foreach ($permissions as $field) {
                 $data[$field] = [];
             }
