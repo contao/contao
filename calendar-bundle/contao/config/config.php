@@ -43,7 +43,7 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 }
 
 // Add permissions
-BackendUserFactory::addPermissionField('calendars');
+BackendUserFactory::registerPermissionField('calendars');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;

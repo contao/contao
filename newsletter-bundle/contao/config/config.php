@@ -44,7 +44,7 @@ $GLOBALS['TL_HOOKS']['activateAccount'][] = array(Newsletter::class, 'activateAc
 $GLOBALS['TL_HOOKS']['closeAccount'][] = array(Newsletter::class, 'removeSubscriptions');
 
 // Add permissions
-BackendUserFactory::addPermissionField('newsletters');
+BackendUserFactory::registerPermissionField('newsletters');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_newsletter_channel'] = NewsletterChannelModel::class;

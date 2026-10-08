@@ -43,7 +43,7 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 }
 
 // Add permissions
-BackendUserFactory::addPermissionField('news');
+BackendUserFactory::registerPermissionField('news');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_news_archive'] = NewsArchiveModel::class;

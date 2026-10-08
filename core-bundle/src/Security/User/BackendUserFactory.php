@@ -112,7 +112,7 @@ class BackendUserFactory extends AbstractUserFactory
         return 'tl_user';
     }
 
-    public static function addPermissionField(string $field): void
+    public static function registerPermissionField(string $field): void
     {
         self::$permissionFields[] = $field;
     }

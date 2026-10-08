@@ -38,7 +38,7 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 }
 
 // Add permissions
-BackendUserFactory::addPermissionField('faqs');
+BackendUserFactory::registerPermissionField('faqs');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_faq_category'] = FaqCategoryModel::class;
