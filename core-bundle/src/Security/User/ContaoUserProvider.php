@@ -29,10 +29,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
+    /**
+     * @param UserFactoryInterface<BackendUser|FrontendUser> $userFactory
+     */
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
-        /** @var UserFactoryInterface<BackendUser|FrontendUser> */
         private readonly UserFactoryInterface $userFactory,
         private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {

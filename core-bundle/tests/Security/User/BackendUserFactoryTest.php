@@ -59,9 +59,9 @@ class BackendUserFactoryTest extends TestCase
 
         $user = $factory->create([
             'inherit' => BackendUserFactory::INHERIT_GROUP,
-            'modules' => [1,2,3],
-            'themes' => [1,2,3],
-            'elements' => [1,2,3],
+            'modules' => [1, 2, 3],
+            'themes' => [1, 2, 3],
+            'elements' => [1, 2, 3],
         ]);
 
         $this->assertSame([], $user->modules);
@@ -152,7 +152,7 @@ class BackendUserFactoryTest extends TestCase
         ];
 
         yield [
-            ['admin' => false, 'amg' => serialize([1,2,3])],
+            ['admin' => false, 'amg' => serialize([1, 2, 3])],
             ['ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER'],
         ];
 
@@ -181,10 +181,10 @@ class BackendUserFactoryTest extends TestCase
             ->with(
                 "SELECT * FROM tl_user_group WHERE id IN (?) AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)",
                 [[42]],
-                [ArrayParameterType::INTEGER]
+                [ArrayParameterType::INTEGER],
             )
             ->willReturn([[
-                'pagemounts' => serialize([4,5,6]),
+                'pagemounts' => serialize([4, 5, 6]),
                 'alexf' => serialize(['tl_bar::foo']),
             ]])
         ;
@@ -197,12 +197,12 @@ class BackendUserFactoryTest extends TestCase
 
         $user = $factory->create([
             'inherit' => BackendUserFactory::INHERIT_GROUP,
-            'pagemounts' => serialize([1,2,3]),
+            'pagemounts' => serialize([1, 2, 3]),
             'alexf' => ['tl_foo::bar'],
             'groups' => serialize([42]),
         ]);
 
-        $this->assertSame([4,5,6], $user->pagemounts);
+        $this->assertSame([4, 5, 6], $user->pagemounts);
         $this->assertSame(['tl_bar::foo'], $user->alexf);
     }
 
@@ -225,10 +225,10 @@ class BackendUserFactoryTest extends TestCase
             ->with(
                 "SELECT * FROM tl_user_group WHERE id IN (?) AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)",
                 [[42]],
-                [ArrayParameterType::INTEGER]
+                [ArrayParameterType::INTEGER],
             )
             ->willReturn([[
-                'pagemounts' => serialize([4,5,6]),
+                'pagemounts' => serialize([4, 5, 6]),
                 'alexf' => serialize(['tl_bar::foo']),
             ]])
         ;
@@ -241,12 +241,12 @@ class BackendUserFactoryTest extends TestCase
 
         $user = $factory->create([
             'inherit' => BackendUserFactory::INHERIT_EXTEND,
-            'pagemounts' => serialize([1,2,3]),
+            'pagemounts' => serialize([1, 2, 3]),
             'alexf' => ['tl_foo::bar'],
             'groups' => serialize([42]),
         ]);
 
-        $this->assertSame([1,2,3,4,5,6], $user->pagemounts);
+        $this->assertSame([1, 2, 3, 4, 5, 6], $user->pagemounts);
         $this->assertSame(['tl_foo::bar', 'tl_bar::foo'], $user->alexf);
     }
 }
