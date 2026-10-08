@@ -186,6 +186,12 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_PATH = 'contao_user.filemounts';
 
     /**
+     * Access is granted if the given path is a subpath of the mounted folders of the
+     * current user. Subject must be a path as string (e.g. "files/content/foo").
+     */
+    public const USER_CAN_ACCESS_SUBPATH = 'contao_user.subfilemounts';
+
+    /**
      * Access is granted if the current user can access the image size. Subject must
      * be an image size ID from tl_image_size or a configuration name (e.g. "crop").
      */
@@ -212,6 +218,12 @@ final class ContaoCorePermissions
      * Access is granted if the current user can delete forms.
      */
     public const USER_CAN_DELETE_FORMS = 'contao_user.cud.tl_form::delete';
+
+    /**
+     * Access is granted if the current user is allowed to use users of a given member
+     * group in the front end preview. Subject must be an array of member group IDs.
+     */
+    public const USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW = 'contao_user.amg';
 
     /**
      * Access is granted if the current user is allowed to see a given search document.

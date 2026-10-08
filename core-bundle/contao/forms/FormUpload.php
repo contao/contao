@@ -247,11 +247,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 					$intUploadFolder = $this->uploadFolder;
 
 					// Overwrite the upload folder with user's home directory
-					if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+					if ($this->useHomeDir)
 					{
-						$user = FrontendUser::getInstance();
+						$user = System::getContainer()->get('security.helper')->getUser();
 
-						if ($user->assignDir && $user->homeDir)
+						if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir)
 						{
 							$intUploadFolder = $user->homeDir;
 						}
@@ -354,7 +354,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	/**
 	 * Return the maximum upload file size in bytes
 	 *
-	 * @return string
+	 * @return integer
 	 */
 	protected function getMaximumUploadSize()
 	{
@@ -363,6 +363,6 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			return $this->maxlength;
 		}
 
-		return FileUpload::getMaxUploadSize();
+		return System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 	}
 }

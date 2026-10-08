@@ -675,14 +675,21 @@ class Versions extends Controller
 	public static function addToTemplate(BackendTemplate $objTemplate)
 	{
 		$arrVersions = array();
+		$params = array();
 
-		$objUser = BackendUser::getInstance();
-		$params = $objUser->isAdmin ? array() : array($objUser->id);
+		$security = System::getContainer()->get('security.helper');
+		$isAdmin = $security->isGranted('ROLE_ADMIN');
+
+		if (!$isAdmin)
+		{
+			$user = $security->getUser();
+			$params[] = $user instanceof BackendUser ? $user->id : 0;
+		}
 
 		$objDatabase = Database::getInstance();
 
 		// Get the total number of versions
-		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
+		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
@@ -697,7 +704,7 @@ class Versions extends Controller
 		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 
 		// Get the versions
-		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
+		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
 								   ->limit(15, $intOffset)
 								   ->execute(...$params);
 
@@ -709,7 +716,7 @@ class Versions extends Controller
 		while ($objVersions->next())
 		{
 			// Hide profile changes if the user does not have access to the "user" module (see #1309)
-			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
+			if ($objVersions->fromTable == 'tl_user' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
 			{
 				continue;
 			}
@@ -818,8 +825,10 @@ class Versions extends Controller
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
+			$user = System::getContainer()->get('security.helper')->getUser();
+
 			$pairs['do'] = 'user';
-			$pairs['id'] = BackendUser::getInstance()->id;
+			$pairs['id'] = $user instanceof BackendUser ? $user->id : 0;
 		}
 
 		if (isset($pairs['act']))

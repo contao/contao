@@ -22,6 +22,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class PermissionCheckingVirtualFilesystemTest extends TestCase
 {
@@ -38,18 +39,14 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         $authorizationChecker
             ->method('isGranted')
             ->willReturnCallback(
-                function (string $attribute, mixed $subject) use ($permissionToDeny): bool {
+                static function (string $attribute, mixed $subject) use ($permissionToDeny): bool {
                     $permissionToDeny = (array) $permissionToDeny;
 
                     if ($attribute !== $permissionToDeny[0]) {
                         return true;
                     }
 
-                    if (null !== ($permissionToDeny[1] ?? null)) {
-                        $this->assertSame($permissionToDeny[1], $subject, 'wrong subject');
-                    }
-
-                    return false;
+                    return null !== ($permissionToDeny[1] ?? null) && $subject !== $permissionToDeny[1];
                 },
             )
         ;
@@ -102,73 +99,122 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ];
 
         yield 'read' => [
-            'fileExists',
+            'read',
             ['foo'],
             [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
             'Access denied to access path at location "foo".',
         ];
 
         yield 'readStream' => [
-            'directoryExists',
+            'readStream',
             ['foo'],
             [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
             'Access denied to access path at location "foo".',
+        ];
+
+        yield 'write without subpath access' => [
+            'write',
+            ['foo', ''],
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
         yield 'write' => [
             'write',
             ['foo', ''],
             ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
-            'Access denied to upload files at location "foo".',
+            'Access denied to upload files.',
+        ];
+
+        yield 'write stream without subpath access' => [
+            'writeStream',
+            ['foo', $resource],
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
         yield 'write stream' => [
             'writeStream',
             ['foo', $resource],
             ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
-            'Access denied to upload files at location "foo".',
+            'Access denied to upload files.',
+        ];
+
+        yield 'delete without subpath access' => [
+            'delete',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
         yield 'delete' => [
             'delete',
             ['foo'],
             ContaoCorePermissions::USER_CAN_DELETE_FILE,
-            'Access denied to delete file at location "foo".',
+            'Access denied to delete file.',
+        ];
+
+        yield 'delete directory without subpath access' => [
+            'deleteDirectory',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
         yield 'delete directory' => [
             'deleteDirectory',
             ['foo'],
             ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY,
-            'Access denied to delete recursively at location "foo".',
+            'Access denied to delete recursively.',
+        ];
+
+        yield 'create directory without subpath access' => [
+            'createDirectory',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
         yield 'create directory' => [
             'createDirectory',
             ['foo'],
             ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
-            'Access denied to upload files at location "foo".',
+            'Access denied to upload files.',
+        ];
+
+        yield 'copy without path access' => [
+            'copy',
+            ['foo', 'bar'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/bar'],
+            'Access denied to access path at location "bar".',
         ];
 
         yield 'copy' => [
             'copy',
             ['foo', 'bar'],
             ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
-            'Access denied to upload files at location "bar".',
+            'Access denied to upload files.',
         ];
 
-        yield 'move without being able to delete' => [
+        yield 'move without being able to access source' => [
             'move',
             ['foo', 'bar'],
-            ContaoCorePermissions::USER_CAN_DELETE_FILE,
-            'Access denied to delete file at location "foo".',
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/foo'],
+            'Access denied to access subpath at location "foo".',
         ];
 
-        yield 'move without being able to create' => [
+        yield 'move without being able to access destination' => [
             'move',
             ['foo', 'bar'],
-            ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
-            'Access denied to upload files at location "bar".',
+            [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, 'files/bar'],
+            'Access denied to access subpath at location "bar".',
+        ];
+
+        yield 'move without being able to rename' => [
+            'move',
+            ['foo', 'bar'],
+            ContaoCorePermissions::USER_CAN_RENAME_FILE,
+            'Access denied to rename file.',
         ];
 
         yield 'get' => [
@@ -207,7 +253,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ];
 
         yield 'getExtraMetadata' => [
-            'getMimeType',
+            'getExtraMetadata',
             ['foo'],
             [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
             'Access denied to access path at location "foo".',
@@ -260,5 +306,32 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
             '/absolute/foo',
             'Access denied to access path at location "/absolute/foo".',
         ];
+    }
+
+    public function testChecksPermissionForSpecificUser(): void
+    {
+        $user = $this->createStub(UserInterface::class);
+
+        $filesStorage = $this->createStub(VirtualFilesystem::class);
+        $filesStorage
+            ->method('getPrefix')
+            ->willReturn('files')
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGrantedForUser')
+            ->with($user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo')
+            ->willReturn(true)
+        ;
+
+        $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
+            $filesStorage,
+            $security,
+            $user,
+        );
+
+        $this->assertTrue($permissionCheckingVirtualFilesystem->canAccessLocation('foo'));
     }
 }

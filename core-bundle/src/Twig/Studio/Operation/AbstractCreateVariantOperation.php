@@ -18,8 +18,20 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @experimental
  */
-abstract class AbstractCreateVariantOperation extends AbstractOperation
+abstract class AbstractCreateVariantOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Create a variant of an existing base template outside a theme context. Provide identifier_fragment as a
+            non-empty string containing the new variant name without the base identifier or file extension (for example,
+            {"identifier_fragment": "compact"}). The new identifier is the base identifier followed by "/" and the
+            fragment. Choose an unused name. Omit the fragment to obtain suggested_identifier_fragment and
+            allowed_identifier_fragment_pattern without creating a file. Creation uses generated default content; use
+            save to edit it. The response contains the new identifier.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         if ($context->isThemeContext()) {

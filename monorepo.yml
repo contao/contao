@@ -9,7 +9,13 @@ composer:
         zendframework/zend-code: <3.3.1
     require-dev:
         bamarni/composer-bin-plugin: ^1.4
+        contao/e2e-testing: dev-main
+        contao/installation-recipe: dev-main
+        playwright-php/playwright: dev-fix/native-playwright-action-waiting as 1.5.x-dev
         shipmonk/composer-dependency-analyser: ^1.4
+    autoload-dev:
+        psr-4:
+            'Contao\E2eTests\': tests/E2E/
 
 repositories:
     core-bundle:
@@ -87,6 +93,9 @@ repositories:
             22fb6437b09e08c022b507fcf0c5a9c2390fd9d9: 89ee40d099df11e777de0d6a1d8e02d46366b406
             68e318965dd839ad339936069055b2a169cbd8fe: 7f250dcce34ebd71f0aee8311597aea7a3117e96
             7086050842a5babf22fd552181874a0e72b1e4ee: 5ad35c1360dc582289506553e55f21cd3823c621
+
+    oauth-server-bundle:
+        url: https://github.com/contao/oauth-server-bundle.git
 
     test-case:
         url: https://github.com/contao/test-case.git
