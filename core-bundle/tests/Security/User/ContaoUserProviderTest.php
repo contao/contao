@@ -44,7 +44,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $this->resetStaticProperties([System::class]);
 
-        unset($GLOBALS['TL_MODELS']['tl_user']);
+        unset($GLOBALS['TL_MODELS']);
 
         parent::tearDown();
     }
