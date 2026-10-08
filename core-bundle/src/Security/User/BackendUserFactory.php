@@ -12,17 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\User;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 
-class BackendUserFactory implements UserFactoryInterface
+/**
+ * @extends AbstractUserFactory<BackendUser>
+ */
+class BackendUserFactory extends AbstractUserFactory
 {
     private static array $permissionFields = ['modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud', 'alxef'];
 
-    public function __construct(private readonly Connection $connection)
-    {
+    public function __construct(
+        ContaoFramework $framework,
+        private readonly Connection $connection,
+    ) {
+        parent::__construct($framework);
     }
 
     public function create(array $data): BackendUser

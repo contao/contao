@@ -1208,6 +1208,7 @@ services:
         class: Contao\CoreBundle\Security\User\BackendUserFactory
         public: true
         arguments:
+            - '@contao.framework'
             - '@database_connection'
 
     contao.security.backend_user_provider:

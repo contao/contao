@@ -12,18 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\User;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 
-class FrontendUserFactory implements UserFactoryInterface
+/**
+ * @extends AbstractUserFactory<FrontendUser>
+ */
+class FrontendUserFactory extends AbstractUserFactory
 {
     public function __construct(
+        ContaoFramework $framework,
         private readonly Connection $connection,
         private readonly TokenChecker $tokenChecker,
     ) {
+        parent::__construct($framework);
     }
 
     public function create(array $data): FrontendUser

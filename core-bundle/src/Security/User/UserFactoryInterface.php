@@ -12,14 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\User;
 
-use Contao\User;
-
+/**
+ * @template T of ContaoUser
+ */
 interface UserFactoryInterface
 {
-    public function create(array $data): User;
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @return ContaoUser<T>
+     */
+    public function create(array $data): ContaoUser;
 
     /**
-     * @param class-string<User> $className
+     * @param class-string<T> $className
      */
     public function supportsClass(string $className): bool;
 
