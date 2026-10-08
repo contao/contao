@@ -26,6 +26,7 @@ use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsAnything;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -37,7 +38,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
@@ -309,10 +309,17 @@ class AbstractBackendControllerTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
 
-        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
-        $authorizationChecker
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+
+        $security = $this->createStub(Security::class);
+        $security
             ->method('isGranted')
             ->willReturnMap([['ROLE_USER', true]])
+        ;
+
+        $security
+            ->method('getUser')
+            ->willReturn($user)
         ;
 
         $twig = $this->createStub(Environment::class);
@@ -367,7 +374,7 @@ class AbstractBackendControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $container->set('security.authorization_checker', $authorizationChecker);
+        $container->set('security.helper', $security);
         $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('database_connection', $this->createStub(Connection::class));

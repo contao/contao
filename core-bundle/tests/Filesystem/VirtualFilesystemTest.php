@@ -257,6 +257,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $dbafsManager
+            ->expects($this->exactly(3))
             ->method('match')
             ->with('prefix/path')
             ->willReturn(false)
@@ -653,6 +654,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $dbafsManager
+            ->expects($this->once())
             ->method('listContents')
             ->with('prefix/foo/bar', $deep)
             ->willReturn($this->getGenerator($listing))
@@ -728,6 +730,7 @@ class VirtualFilesystemTest extends TestCase
 
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
+            ->expects($this->once())
             ->method('match')
             ->with('prefix/foo/bar')
             ->willReturn(true)
@@ -740,13 +743,14 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $dbafsManager
+            ->expects($this->once())
             ->method('listContents')
             ->with('prefix/foo/bar', false)
             ->willReturn($this->getGenerator([]))
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
-        $filesystem->listContents('foo/bar', false, VirtualFilesystemInterface::FORCE_SYNC);
+        $filesystem->listContents('foo/bar', false, VirtualFilesystemInterface::FORCE_SYNC)->toArray();
     }
 
     #[DataProvider('provideAccessFlags')]

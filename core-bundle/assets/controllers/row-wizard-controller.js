@@ -47,6 +47,11 @@ export default class extends Controller {
 
         // Wait until Stimulus controllers are disconnected
         queueMicrotask(() => {
+            // cloneNode() only copies the selected attribute, not the current selection
+            for (const option of row.querySelectorAll('option')) {
+                option.defaultSelected = option.selected;
+            }
+
             const newRow = row.cloneNode(true);
 
             // Re-insert the previous and new row

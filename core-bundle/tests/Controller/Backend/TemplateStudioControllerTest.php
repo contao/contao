@@ -21,16 +21,19 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -104,6 +107,19 @@ class TemplateStudioControllerTest extends TestCase
                 $request,
             ];
         }
+    }
+
+    public function testReturnsAnApiErrorForAnUnknownTemplate(): void
+    {
+        $request = new Request();
+        $request->attributes->set('_contao_api', true);
+
+        $response = $this->getBackendTemplatedStudioController(request: $request)->editorTab('unknown_template');
+        $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(NotFoundHttpException::class, $data['errorClass']);
+        $this->assertSame('Given identifier does not exist.', $data['errorMessage']);
     }
 
     /**
@@ -182,6 +198,7 @@ class TemplateStudioControllerTest extends TestCase
             $this->createStub(Autocomplete::class),
             $this->createStub(EnvironmentInformation::class),
             $connection,
+            new TemplateSnapshots($this->getTempDir(), $this->getTempDir().'/cache', $this->createStub(CacheInvalidator::class), $loader),
             [$fooOperation],
         );
 

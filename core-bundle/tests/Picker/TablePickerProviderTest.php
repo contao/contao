@@ -654,11 +654,34 @@ class TablePickerProviderTest extends ContaoTestCase
 
     private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array|null $expectedCurrent = null): PickerConfig&Stub
     {
-        if (!$expectedCurrent && '' !== $current) {
-            $expectedCurrent = [[$current]];
+        if ($expectedCurrent) {
+            $config = $this->createMock(PickerConfig::class);
+            $config
+                ->expects($this->exactly(\count($expectedCurrent)))
+                ->method('cloneForCurrent')
+                ->with($this->callback(
+                    static function (...$parameters) use (&$expectedCurrent): bool {
+                        $pos = array_search($parameters, $expectedCurrent, true);
+
+                        if (false === $pos) {
+                            return false;
+                        }
+
+                        unset($expectedCurrent[$pos]);
+
+                        return true;
+                    },
+                ))
+                ->willReturnSelf()
+            ;
+        } else {
+            $config = $this->createStub(PickerConfig::class);
+            $config
+                ->method('cloneForCurrent')
+                ->willReturnSelf()
+            ;
         }
 
-        $config = $expectedCurrent ? $this->createMock(PickerConfig::class) : $this->createStub(PickerConfig::class);
         $config
             ->method('getContext')
             ->willReturn('dc.'.$table)
@@ -673,21 +696,6 @@ class TablePickerProviderTest extends ContaoTestCase
             ->method('getCurrent')
             ->willReturn($current)
         ;
-
-        $clone = $config->method('cloneForCurrent');
-
-        if ($expectedCurrent) {
-            $clone->with($this->callback(
-                static function (...$parameters) use (&$expectedCurrent) {
-                    $pos = array_search($parameters, $expectedCurrent, true);
-                    unset($expectedCurrent[$pos]);
-
-                    return false !== $pos;
-                },
-            ));
-        }
-
-        $clone->willReturnSelf();
 
         $config
             ->method('urlEncode')

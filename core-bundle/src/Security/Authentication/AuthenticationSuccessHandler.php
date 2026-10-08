@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -68,16 +66,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return new RedirectResponse($this->determineTargetUrl($request, null));
         }
 
-        $GLOBALS['TL_USERNAME'] = $user->username;
-
-        if ($user instanceof BackendUser) {
-            Config::set('showHelp', $user->showHelp);
-            Config::set('useRTE', $user->useRTE);
-            Config::set('useCE', $user->useCE);
-            Config::set('doNotCollapse', $user->doNotCollapse);
-            Config::set('thumbnails', $user->thumbnails);
-        }
-
         if ($token instanceof TwoFactorTokenInterface) {
             if ($this->uriSigner->checkRequest($request) && $request->query->getBoolean(TwoFactorAuthenticator::FLAG_2FA_COMPLETE)) {
                 $authenticatedToken = $token->getAuthenticatedToken();
@@ -85,8 +73,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
                 $this->tokenStorage->setToken($authenticatedToken);
             } else {
-                $user->save();
-
                 $response = new RedirectResponse($request->getUri());
 
                 // Used by the TwoFactorListener to redirect a user back to the authentication page

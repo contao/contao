@@ -111,7 +111,13 @@ class TableDataContainerRecords
         $parent = $context?->getImmediateParent();
 
         if (null !== $parent) {
-            $record = new DataContainerRecord($record->table, ['pid' => $parent['id'], 'ptable' => $parent['table']] + array_diff_key($record->data, array_flip(['pid', 'ptable'])));
+            if (\array_key_exists('pid', $record->data) || \array_key_exists('ptable', $record->data)) {
+                throw new UnprocessableEntityHttpException('The parent record is given by the route and cannot be set in the payload.');
+            }
+
+            $record = new DataContainerRecord($record->table, ['pid' => $parent['id'], 'ptable' => $parent['table']] + $record->data);
+        } elseif (\array_key_exists('pid', $record->data)) {
+            $record = new DataContainerRecord($record->table, ['pid' => $this->mapper->toParentIdentifier($record->table, $record->data['pid'])] + $record->data);
         }
 
         $parameters = ['act' => 'create', 'pid' => $record->data['pid'] ?? 0, 'mode' => DataContainer::PASTE_INTO_APPEND];
@@ -213,7 +219,7 @@ class TableDataContainerRecords
     private function getListingRecords(DC_Table $dc, int $offset, int $itemsPerPage): array
     {
         // Stop after the requested page without overflowing at the largest valid offset
-        $dc->limit = '0,'.($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
+        $dc->setLimit($offset > PHP_INT_MAX - $itemsPerPage ? PHP_INT_MAX : $offset + $itemsPerPage);
 
         $ids = $dc->showAll();
         $records = [];

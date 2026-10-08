@@ -4,3 +4,4 @@ contao_mcp_backend:
     methods: [GET, POST, DELETE, OPTIONS]
     defaults:
         _scope: backend
+        _stateless: true

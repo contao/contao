@@ -71,11 +71,18 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
+		'maxFileSize' => 'contao.max_file_upload_size',
 		'maxPaginationLinks' => 'contao.pagination.default_range',
 	);
 
 	private static $arrDeprecated = array
 	(
+	);
+
+	private static $arrDeprecatedSince = array
+	(
+		'maxFileSize' => '6.1',
+		'maxPaginationLinks' => '6.0',
 	);
 
 	private static $arrToBeRemoved = array
@@ -375,7 +382,7 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', self::getDeprecatedSince($strKey), 'Using "%s(\'%s\')" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
@@ -396,7 +403,7 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\', …)" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', self::getDeprecatedSince($strKey), 'Using "%s(\'%s\', …)" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
@@ -419,6 +426,25 @@ class Config
 	public static function getNewKey($strKey)
 	{
 		return self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey] ?? null;
+	}
+
+	/**
+	 * Return the version in which a configuration key was deprecated
+	 *
+	 * @internal
+	 *
+	 * @param string $strKey The short key
+	 *
+	 * @return string
+	 */
+	public static function getDeprecatedSince($strKey)
+	{
+		if (!isset(self::$arrDeprecatedSince[$strKey]))
+		{
+			throw new \InvalidArgumentException(\sprintf('No deprecation version is configured for the "%s" configuration key.', $strKey));
+		}
+
+		return self::$arrDeprecatedSince[$strKey];
 	}
 
 	/**

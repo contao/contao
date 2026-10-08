@@ -588,7 +588,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
 		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
-		$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
+		$intMaxSize = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSizeInMegabytes();
 
 		$strRoot = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath;
 		$strUploadUrl = html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($strRoot)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
@@ -1294,13 +1294,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 		}
 
-		/** @var class-string<FileUpload> $class */
-		$class = BackendUser::getInstance()->uploader;
+		$user = System::getContainer()->get('security.helper')->getUser();
+		$class = DropZone::class;
 
 		// See #4086
-		if (!class_exists($class))
+		if ($user instanceof BackendUser && class_exists($user->uploader))
 		{
-			$class = DropZone::class;
+			/** @var class-string<FileUpload> $class */
+			$class = $user->uploader;
 		}
 
 		$objUploader = new $class();
@@ -1402,7 +1403,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_upload">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize() . '">
 <div class="tl_tbox">
 <div class="widget">
   <h3>' . $GLOBALS['TL_LANG'][$this->strTable]['fileupload'][0] . '</h3>' . $objUploader->generateMarkup() . '
@@ -2851,7 +2852,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$files = array_values($files);
 		}
 
-		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
 		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
@@ -2988,7 +2988,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
-					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
+					if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $currentFolder) && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $currentFolder))
 					{
 						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
@@ -3290,9 +3290,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Do not allow file operations on root folders
 		if (\in_array(Input::get('act'), array('edit', 'paste', 'delete')))
 		{
-			$user = BackendUser::getInstance();
-
-			if (!$user->isAdmin && \in_array($strFile, $user->filemounts))
+			if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH, $strFile))
 			{
 				throw new AccessDeniedException('Attempt to edit, copy, move or delete the root folder "' . $strFile . '".');
 			}

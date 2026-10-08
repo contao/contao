@@ -17,11 +17,14 @@ use Contao\CoreBundle\Twig\Slots\SlotNode;
 use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
+use Twig\Node\EmbedNode;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\ParentExpression;
+use Twig\Node\ImportNode;
+use Twig\Node\IncludeNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
@@ -174,6 +177,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             'calls' => $this->calledBlocks,
             'parent' => $getParent($node),
             'uses' => $getUses($node),
+            'references' => $this->getModuleReferences($node),
             'deprecations' => $this->deprecations,
         ]);
 
@@ -183,6 +187,65 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         $this->calledBlocks = [];
 
         return $node;
+    }
+
+    /**
+     * @return list<array{type: string, name: string|null, line: int, dynamic: bool}>
+     */
+    private function getModuleReferences(ModuleNode $node): array
+    {
+        $references = [];
+
+        $collectReferences = function (Node $current) use (&$collectReferences, &$references): void {
+            if ($current instanceof IncludeNode && !$current instanceof EmbedNode) {
+                $references[] = $this->createReference('include', $current->getNode('expr'), $current->getTemplateLine());
+            } elseif ($current instanceof ImportNode) {
+                $references[] = $this->createReference('import', $current->getNode('expr'), $current->getTemplateLine());
+            } elseif ($current instanceof FunctionExpression && 'include' === $current->getAttribute('name') && $current->getNode('arguments')->hasNode('0')) {
+                $references[] = $this->createReference('include', $current->getNode('arguments')->getNode('0'), $current->getTemplateLine());
+            }
+
+            foreach ($current as $child) {
+                $collectReferences($child);
+            }
+        };
+
+        $collectReferences($node);
+
+        if ($node->hasNode('parent')) {
+            $references[] = $this->createReference('extends', $node->getNode('parent'), $node->getNode('parent')->getTemplateLine());
+        }
+
+        if ($node->hasNode('traits')) {
+            foreach ($node->getNode('traits') as $trait) {
+                $template = $trait->getNode('template');
+                $references[] = $this->createReference('use', $template, $template->getTemplateLine());
+            }
+        }
+
+        foreach ($node->getAttribute('embedded_templates') as $embeddedTemplate) {
+            if ($embeddedTemplate->hasNode('parent')) {
+                $parent = $embeddedTemplate->getNode('parent');
+                $references[] = $this->createReference('embed', $parent, $parent->getTemplateLine());
+            }
+        }
+
+        return $references;
+    }
+
+    /**
+     * @return array{type: string, name: string|null, line: int, dynamic: bool}
+     */
+    private function createReference(string $type, Node $expression, int $line): array
+    {
+        $name = $this->getValue($expression);
+
+        return [
+            'type' => $type,
+            'name' => $name,
+            'line' => $line,
+            'dynamic' => null === $name,
+        ];
     }
 
     /**

@@ -20,8 +20,19 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class DeleteOperation extends AbstractOperation
+class DeleteOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Delete the user template in the selected theme context. To execute, provide confirm_delete (for example,
+            {"confirm_delete": true}). The presence of this parameter confirms deletion, even if its value is false.
+            Omit it to request confirmation information without deleting the file. For content element and frontend
+            module variants, stored database selections are also reset; these selections are currently reset even on the
+            confirmation request.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         return $this->userTemplateExists($context);

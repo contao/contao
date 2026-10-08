@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\ApiPlatform\Serializer;
 
+use ApiPlatform\JsonLd\AnonymousContextBuilderInterface;
 use ApiPlatform\Metadata\Operation;
+use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -22,14 +25,36 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class DataContainerRecordNormalizer implements NormalizerInterface, DenormalizerInterface
 {
+    public function __construct(
+        private readonly DataContainerRelationResolver $relationResolver,
+        private readonly AnonymousContextBuilderInterface $contextBuilder,
+    ) {
+    }
+
     /**
      * @param array{operation?: Operation, contao_table?: string} $context
      */
     public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {
         \assert($data instanceof DataContainerRecord);
+        $normalized = $this->normalizeRelationReferences($data->toArray(), $format);
+        $iri = $this->relationResolver->resolveRecordToIri($data);
 
-        return $data->toArray();
+        if (null !== $data->id && null !== $iri) {
+            $normalized['id'] = $this->normalizeRelationReferences(new DataContainerRelationReference($data->id, $iri), $format);
+        }
+
+        if ('jsonld' !== $format || null === $iri) {
+            return $normalized;
+        }
+
+        $jsonLdContext = ['operation' => $context['operation'] ?? null, 'iri' => $iri];
+
+        if (isset($context['jsonld_has_context'])) {
+            $jsonLdContext['has_context'] = true;
+        }
+
+        return $this->contextBuilder->getAnonymousResourceContext($data, $jsonLdContext) + $normalized;
     }
 
     /**
@@ -57,8 +82,10 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
         }
 
         $data = $this->toArray($data);
+        unset($data['@context'], $data['@id'], $data['@type']);
+        $data = $this->normalizeInputReferences($data);
         $table = $this->getTable($context);
-        $id = $data['id'] ?? null;
+        $id = $this->getRecordIdentifier($data['id'] ?? null);
         $record = $context[AbstractNormalizer::OBJECT_TO_POPULATE] ?? null;
 
         if ($record instanceof DataContainerRecord) {
@@ -107,6 +134,40 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
         }
 
         throw new LogicException(\sprintf('Cannot denormalize "%s" from "%s".', DataContainerRecord::class, get_debug_type($data)));
+    }
+
+    private function normalizeRelationReferences(mixed $value, string|null $format): mixed
+    {
+        if ($value instanceof DataContainerRelationReference) {
+            return 'jsonld' === $format
+                ? ['@id' => $value->iri, 'id' => $value->id]
+                : ['id' => $value->id, 'iri' => $value->iri];
+        }
+
+        if (!\is_array($value)) {
+            return $value;
+        }
+
+        return array_map(fn (mixed $item): mixed => $this->normalizeRelationReferences($item, $format), $value);
+    }
+
+    private function normalizeInputReferences(mixed $value): mixed
+    {
+        if (!\is_array($value)) {
+            return $value;
+        }
+
+        if (\array_key_exists('@id', $value)) {
+            $value['iri'] = $value['@id'];
+            unset($value['@id']);
+        }
+
+        return array_map($this->normalizeInputReferences(...), $value);
+    }
+
+    private function getRecordIdentifier(mixed $value): mixed
+    {
+        return \is_array($value) ? ($value['id'] ?? null) : $value;
     }
 
     /**

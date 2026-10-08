@@ -1,93 +1,72 @@
 tl_article:
-    - id: 1
-      pid: 2
-      sorting: 128
-      tstamp: 1539686711
-      title: Home
-      author: 1
-      inColumn: main
-      published: 1
-
-    - id: 2
-      pid: 8
-      sorting: 128
-      tstamp: 1539686711
-      title: Home
-      author: 1
-      inColumn: main
-      published: 1
-
+    article_home:
+        pid: '@page_home'
+        sorting: 128
+        tstamp: 1539686711
+        title: Home
+        author: '@user_k_jones'
+        inColumn: main
+        published: 1
 tl_content:
-    - id: 1
-      pid: 1
-      ptable: tl_article
-      sorting: 128
-      tstamp: 1539686688
-      type: module
-      module: 1
-
-    - id: 2
-      pid: 2
-      ptable: tl_article
-      sorting: 128
-      tstamp: 1539686688
-      type: module
-      module: 1
-
+    content_module:
+        pid: '@article_home'
+        ptable: tl_article
+        sorting: 128
+        tstamp: 1539686688
+        type: module
+        module: '@module_news_archive'
 tl_module:
-    - id: 1
-      pid: 1
-      tstamp: 1539616752
-      name: News archive
-      type: newsarchive
-      news_archives: a:1:{i:0;s:1:"1";}
-      news_featured: all_items
-      news_jumpToCurrent: hide_module
-      news_readerModule: 2
-      news_template: news_latest
-      news_format: news_month
-      news_order: order_date_desc
-      news_showQuantity: 0
-
-    - id: 2
-      pid: 1
-      tstamp: 1539616572
-      name: News reader
-      type: newsreader
-      overviewPage: 2
-      news_archives: a:1:{i:0;s:1:"1";}
-      news_featured: all_items
-      news_template: news_latest
-      news_format: news_month
-      news_order: order_date_desc
-      news_showQuantity: 0
-
+    module_news_archive:
+        pid: '@theme_default'
+        tstamp: 1539616752
+        name: News archive
+        type: newsarchive
+        news_archives:
+            - '@news_archive_test'
+        news_featured: all_items
+        news_jumpToCurrent: hide_module
+        news_readerModule: '@module_news_reader'
+        news_template: news_latest
+        news_format: news_month
+        news_order: order_date_desc
+        news_showQuantity: 0
+    module_news_reader:
+        pid: '@theme_default'
+        tstamp: 1539616572
+        name: News reader
+        type: newsreader
+        overviewPage: '@page_home'
+        news_archives:
+            - '@news_archive_test'
+        news_featured: all_items
+        news_template: news_latest
+        news_format: news_month
+        news_order: order_date_desc
+        news_showQuantity: 0
 tl_news:
-    - id: 1
-      pid: 1
-      tstamp: 1539616623
-      headline: Foobar
-      alias: foobar
-      author: 1
-      date: 1539616560
-      time: 1539616560
-      teaser: ''
-      source: default
-      published: 1
-
+    news_foobar:
+        pid: '@news_archive_test'
+        tstamp: 1539616623
+        headline: Foobar
+        alias: foobar
+        author: '@user_k_jones'
+        date: 1539616560
+        time: 1539616560
+        teaser: ''
+        source: default
+        published: 1
 tl_news_archive:
-    - id: 1
-      tstamp: 1539616536
-      title: Test
-      jumpTo: 333
-
+    news_archive_test:
+        tstamp: 1539616536
+        title: Test
+        jumpTo: '@page_news_reader'
 tl_page:
-    - id: 333
-      pid: 1
-      tstamp: 1636915068
-      sorting: 512
-      title: News reader
-      alias: news-reader
-      type: regular
-      published: 1
-      requireItem: 1
+    page_news_reader:
+        pid: '@page_root'
+        tstamp: 1636915068
+        sorting: 512
+        title: News reader
+        alias: news-reader
+        type: regular
+        published: 1
+        requireItem: 1

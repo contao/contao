@@ -140,14 +140,16 @@ class tl_undo extends Backend
 	 */
 	public function adjustDca()
 	{
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return;
 		}
 
-		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['filter'][] = array('pid=?', $user->id);
+		$user = $security->getUser();
+
+		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['filter'][] = array('pid=?', $user instanceof BackendUser ? $user->id : 0);
 	}
 
 	/**

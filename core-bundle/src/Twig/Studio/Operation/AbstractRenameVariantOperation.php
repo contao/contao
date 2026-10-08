@@ -19,8 +19,19 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @experimental
  */
-abstract class AbstractRenameVariantOperation extends AbstractOperation
+abstract class AbstractRenameVariantOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Rename an existing user template variant outside a theme context. Provide identifier_fragment as a non-empty
+            string containing the new variant name without the base identifier or file extension (for example,
+            {"identifier_fragment": "compact"}). Choose an unused name. Omit the fragment to obtain the current fragment
+            and allowed_identifier_fragment_pattern without renaming the file. The operation moves the file and updates
+            its configured database references. The response contains old_identifier and new_identifier.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         if ($context->isThemeContext() || !$this->userTemplateExists($context)) {

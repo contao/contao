@@ -59,11 +59,11 @@ final class DataContainerContext
         $table = $recursive['table'] ?? null;
         $value = \is_string($parameter) ? $uriVariables[$parameter] ?? null : null;
 
-        if (!\is_string($table) || !\is_string($segment) || !\is_string($value)) {
+        if (!\is_string($table) || !\is_string($segment) || (!\is_int($value) && !\is_string($value))) {
             throw new UnprocessableEntityHttpException('The nested parent path is invalid.');
         }
 
-        foreach (explode('/'.$segment.'/', $value) as $id) {
+        foreach (explode('/'.$segment.'/', (string) $value) as $id) {
             $id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
             if (false === $id) {

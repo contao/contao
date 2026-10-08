@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Api\Widget\RowWizardConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
@@ -24,8 +28,11 @@ use Contao\Password;
 use Contao\RowWizard;
 use Contao\StringUtil;
 use Contao\TextField;
+use Doctrine\DBAL\Connection;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 class RowWizardConverterTest extends TestCase
 {
@@ -189,9 +196,34 @@ class RowWizardConverterTest extends TestCase
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
         $registry = new WidgetConverterRegistry($converters);
 
-        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry));
+        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $this->createRelationResolver(), $this->createLocaleSwitcher()));
         $converters[] = $converter;
 
         return $converter;
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            new ForeignKeyParser($connection),
+            new WidgetConverterRegistry([]),
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
+        );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
     }
 }
