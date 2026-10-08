@@ -285,6 +285,8 @@ class Newsletter extends Backend
 		$strToken = bin2hex(random_bytes(16));
 		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' <%s>' : '%s';
+		$user = System::getContainer()->get('security.helper')->getUser();
+		$email = $user instanceof BackendUser ? $user->email : '';
 
 		// Preview newsletter
 		$return = Message::generate() . '
@@ -342,7 +344,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . StringUtil::specialchars(Idna::decodeEmail(BackendUser::getInstance()->email)) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . StringUtil::specialchars(Idna::decodeEmail($email)) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>

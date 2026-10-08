@@ -603,6 +603,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@translator'
+            - '@security.helper'
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
