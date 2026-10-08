@@ -152,6 +152,18 @@ class ModuleLostPassword extends Module
 
 			if ($objMember === null)
 			{
+				// Respond as if the password link was sent if the account does not exist
+				if ($this->reg_preventEnumeration)
+				{
+					// Check whether there is a jumpTo page
+					if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
+					{
+						$this->jumpToOrReload($objJumpTo->row());
+					}
+
+					$this->reload();
+				}
+
 				$this->Template->error = $GLOBALS['TL_LANG']['MSC']['accountNotFound'];
 			}
 			else
@@ -306,6 +318,18 @@ class ModuleLostPassword extends Module
 
 		if (!$limiter->consume()->isAccepted())
 		{
+			// The rate limit only applies to existing accounts, so the error message would disclose the account
+			if ($this->reg_preventEnumeration)
+			{
+				// Check whether there is a jumpTo page
+				if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
+				{
+					$this->jumpToOrReload($objJumpTo->row());
+				}
+
+				$this->reload();
+			}
+
 			$this->strTemplate = 'mod_message';
 
 			$this->Template = new FrontendTemplate($this->strTemplate);

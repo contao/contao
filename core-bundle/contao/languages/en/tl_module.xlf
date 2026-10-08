@@ -384,7 +384,7 @@
         <source>Do not disclose registered e-mail addresses</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_preventEnumeration.1">
-        <source>Respond to the registration of an already registered e-mail address as if it were a new registration.</source>
+        <source>Respond the same way regardless of whether the e-mail address has been registered.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.0">
         <source>Password message</source>
