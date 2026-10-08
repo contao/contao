@@ -1209,7 +1209,6 @@ services:
         public: true
         arguments:
             - '@contao.framework'
-            - '@contao.framework'
             - '@database_connection'
 
     contao.security.backend_user_provider:
