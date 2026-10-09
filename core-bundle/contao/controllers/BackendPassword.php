@@ -19,28 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class BackendPassword extends Backend
 {
 	/**
-	 * Initialize the controller
-	 *
-	 * 1. Import the user
-	 * 2. Call the parent constructor
-	 * 3. Authenticate the user
-	 * 4. Load the language files
-	 * DO NOT CHANGE THIS ORDER!
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
-		{
-			throw new AccessDeniedException('Access denied');
-		}
-
-		System::loadLanguageFile('default');
-		System::loadLanguageFile('modules');
-	}
-
-	/**
 	 * Run the controller and parse the password template
 	 *
 	 * @return Response
@@ -48,11 +26,20 @@ class BackendPassword extends Backend
 	public function run()
 	{
 		$container = System::getContainer();
+		$security = $container->get('security.helper');
+		$user = $security->getUser();
+
+		if (!$user instanceof BackendUser || !$security->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
+
+		System::loadLanguageFile('default');
+		System::loadLanguageFile('modules');
+
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		Controller::loadDataContainer('tl_user');
-
-		$user = BackendUser::getInstance();
 
 		$dc = new DC_Table('tl_user');
 		$dc->id = $user->id;

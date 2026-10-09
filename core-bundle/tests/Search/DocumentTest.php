@@ -198,6 +198,16 @@ class DocumentTest extends TestCase
             ],
         ];
 
+        yield 'Test with one valid json ld element with multiple types' => [
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":["Product","SoftwareApplication"]}</script></body></html>',
+            [
+                [
+                    '@type' => ['Product', 'SoftwareApplication'],
+                ],
+            ],
+            'https://schema.org',
+        ];
+
         yield 'Test with one valid json ld element with context prefix' => [
             '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:Page","contao:foobar":true}</script></body></html>',
             [

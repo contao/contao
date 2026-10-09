@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
@@ -30,7 +31,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -165,24 +165,25 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testIsHitGranted(): void
     {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $method = new \ReflectionMethod(Security::class, 'isGranted');
 
         // Backwards compatibility with symfony/security-core <7.3
         if (2 === $method->getNumberOfParameters()) {
             $returnMap = [
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', true],
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', false],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', true],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', false],
             ];
         } else {
             $returnMap = [
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', null, true],
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', null, false],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', null, true],
+                [$user, ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', null, false],
             ];
         }
 
         $security = $this->createStub(Security::class);
         $security
-            ->method('isGranted')
+            ->method('isGrantedForUser')
             ->willReturnMap($returnMap)
         ;
 
@@ -198,10 +199,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $allowedDocument = new Document('', '', '')->withMetadata(['path' => 'foo']);
         $disallowedDocument = new Document('', '', '')->withMetadata(['path' => 'bar']);
 
-        $token = $this->createStub(TokenInterface::class);
-
-        $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
-        $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
+        $this->assertTrue($provider->isDocumentGranted($user, $allowedDocument));
+        $this->assertFalse($provider->isDocumentGranted($user, $disallowedDocument));
     }
 
     public function testConvertTypeToVisibleType(): void

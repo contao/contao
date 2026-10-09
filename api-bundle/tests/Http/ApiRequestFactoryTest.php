@@ -118,6 +118,24 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('{"title":null}', $request->getContent());
     }
 
+    public function testUsesNonJsonInputFormatsForStringPayloads(): void
+    {
+        $operation = new Post(name: 'records', inputFormats: ['binary' => ['application/octet-stream']]);
+        $request = $this->createFactory()->create(Request::create('/contao/mcp'), $operation, payload: 'contents');
+
+        $this->assertSame('application/octet-stream', $request->headers->get('Content-Type'));
+        $this->assertSame('contents', $request->getContent());
+    }
+
+    public function testRejectsStructuredPayloadsForNonJsonInputFormats(): void
+    {
+        $this->expectException(UnsupportedFormatException::class);
+        $this->expectExceptionMessage('requires a string payload');
+
+        $operation = new Post(name: 'records', inputFormats: ['binary' => ['application/octet-stream']]);
+        $this->createFactory()->create(Request::create('/contao/mcp'), $operation, payload: ['contents']);
+    }
+
     public function testRejectsOperationsWithoutJsonOutput(): void
     {
         $this->expectException(UnsupportedFormatException::class);

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Contao\CoreBundle\Fragment\FragmentCompositor;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -32,15 +34,19 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
 {
     private array $types = [];
 
+    private array $parentIds = [];
+
     public function __construct(
         private readonly Connection $connection,
         private readonly FragmentCompositor $compositor,
+        private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
 
     public function reset(): void
     {
         $this->types = [];
+        $this->parentIds = [];
     }
 
     protected function getTable(): string
@@ -70,10 +76,36 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
         $type = $action->getNew()['type'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['type'] ?? '' : '');
         $ptable = $action->getNew()['ptable'] ?? ($action instanceof UpdateAction ? $action->getCurrent()['ptable'] ?? null : null);
 
+        // Never allow to move an element into itself or one of its nested elements
+        // (copying is fine, because the original record stays where it is)
+        if (
+            $action instanceof UpdateAction
+            && 'tl_content' === $ptable
+            && ($id = (int) $action->getCurrentId()) > 0
+            && ($pid = (int) $action->getNewPid()) > 0
+            && \in_array($id, $this->getParentIds($pid), true)
+        ) {
+            return false;
+        }
+
         // Check access if element is moved to or created in a new ptable
         return !('tl_content' === $ptable
             && ($pid = (int) $action->getNewPid()) > 0
             && !$this->canNestInParent($pid, $type));
+    }
+
+    /**
+     * Returns the ID of the element and all its parent elements, including the
+     * top-level element that is placed in e.g. an article.
+     *
+     * @return list<int>
+     */
+    private function getParentIds(int $pid): array
+    {
+        return $this->parentIds[$pid] ??= array_column(
+            $this->dcaHierarchy->getParentRows($pid, 'tl_content', new ParentTraversalOptions()->withBoundaryRow()),
+            'id',
+        );
     }
 
     private function canNestInParent(int $pid, string $type): bool

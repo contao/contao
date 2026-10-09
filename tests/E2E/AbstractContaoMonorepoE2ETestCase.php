@@ -13,14 +13,11 @@ declare(strict_types=1);
 namespace Contao\E2eTests;
 
 use Contao\E2eTesting\Composer\MonorepoProject;
-use Contao\E2eTesting\ManagedEdition\ManagedEditionTestTrait;
+use Contao\E2eTesting\ManagedEdition\AbstractManagedEditionTestCase;
 use Contao\InstallationRecipe\Composer\ComposerConfig;
-use PHPUnit\Framework\TestCase;
 
-abstract class AbstractContaoMonorepoE2ETestCase extends TestCase
+abstract class AbstractContaoMonorepoE2ETestCase extends AbstractManagedEditionTestCase
 {
-    use ManagedEditionTestTrait;
-
     protected static function projectDirectory(): string
     {
         return \dirname(__DIR__, 2);

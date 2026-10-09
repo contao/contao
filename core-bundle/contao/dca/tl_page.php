@@ -743,19 +743,23 @@ class tl_page extends Backend
 	 */
 	public function adjustDca()
 	{
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return;
 		}
 
+		$user = $security->getUser();
+		$userId = $user instanceof BackendUser ? $user->id : 0;
+		$group = $user instanceof BackendUser ? (int) ($user->groups[0] ?? 0) : 0;
+
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) ($user->groups[0] ?? 0);
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $userId;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: $group;
 
 		// Restrict the page tree
-		if (empty($user->pagemounts) || !is_array($user->pagemounts))
+		if (!$user instanceof BackendUser || empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
 			$root = array(0);
 		}

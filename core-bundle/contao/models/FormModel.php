@@ -127,6 +127,6 @@ class FormModel extends Model
 			return $objResult->maxlength;
 		}
 
-		return Config::get('maxFileSize');
+		return System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 	}
 }

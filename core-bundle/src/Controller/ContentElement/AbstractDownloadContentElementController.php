@@ -66,7 +66,13 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     {
         trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Leave this to the new FileStreamController.', __METHOD__);
 
-        $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
+        $fileDownloadHelper = $this->container->get('contao.filesystem.file_download_helper');
+
+        if (!$fileDownloadHelper->isDownloadRequest($request)) {
+            return;
+        }
+
+        $response = $fileDownloadHelper->handle(
             $request,
             $this->getVirtualFilesystem(),
             function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
@@ -84,7 +90,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             },
         );
 
-        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {
+        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse || !$response->isSuccessful()) {
             throw new ResponseException($response);
         }
     }

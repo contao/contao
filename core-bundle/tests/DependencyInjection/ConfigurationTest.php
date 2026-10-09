@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\Config as LegacyConfig;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
@@ -185,6 +186,37 @@ class ConfigurationTest extends TestCase
         yield ['var'];
         yield ['vendor'];
         yield ['web'];
+    }
+
+    public function testConfiguresTheMaximumFileSize(): void
+    {
+        $configuration = new Processor()->processConfiguration($this->configuration, []);
+
+        $this->assertSame(2048000, $configuration['max_file_upload_size']);
+
+        $configuration = new Processor()->processConfiguration($this->configuration, [['max_file_upload_size' => 1234]]);
+
+        $this->assertSame(1234, $configuration['max_file_upload_size']);
+    }
+
+    public function testMapsTheLegacyMaximumFileSizeConfiguration(): void
+    {
+        $this->assertSame('contao.max_file_upload_size', LegacyConfig::getNewKey('maxFileSize'));
+        $this->assertSame('6.1', LegacyConfig::getDeprecatedSince('maxFileSize'));
+    }
+
+    public function testMapsTheLegacyMaximumPaginationLinksConfiguration(): void
+    {
+        $this->assertSame('contao.pagination.default_range', LegacyConfig::getNewKey('maxPaginationLinks'));
+        $this->assertSame('6.0', LegacyConfig::getDeprecatedSince('maxPaginationLinks'));
+    }
+
+    public function testFailsToGetTheDeprecationVersionOfAnUnknownConfiguration(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('No deprecation version is configured for the "unknown" configuration key.');
+
+        LegacyConfig::getDeprecatedSince('unknown');
     }
 
     public function testFailsIfAPredefinedImageSizeNameContainsOnlyDigits(): void

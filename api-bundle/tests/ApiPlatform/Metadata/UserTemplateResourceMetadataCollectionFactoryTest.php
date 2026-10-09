@@ -19,8 +19,6 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory;
-use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider;
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
@@ -101,7 +99,7 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $this->assertInstanceOf(Get::class, $operations['contao_api_user_template_read']);
         $this->assertSame('/user_templates', $operations['contao_api_user_template_discover']->getUriTemplate());
         $this->assertSame('/user_templates/{name}', $operations['contao_api_user_template_read']->getUriTemplate());
-        $this->assertSame(UserTemplateStateProvider::class, $operations['contao_api_user_template_read']->getProvider());
+        $this->assertSame('contao_api.api_platform.user_template_state_provider', $operations['contao_api_user_template_read']->getProvider());
         $this->assertNotEmpty($operations['contao_api_user_template_discover']->getDescription());
         $this->assertNotEmpty($operations['contao_api_user_template_read']->getDescription());
 
@@ -110,7 +108,7 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
             $this->assertInstanceOf(Post::class, $operation);
             $this->assertSame('/user_template_operations/'.$name, $operation->getUriTemplate());
             $this->assertSame("is_granted('ROLE_ADMIN')", $operation->getSecurity());
-            $this->assertSame(UserTemplateStateProcessor::class, $operation->getProcessor());
+            $this->assertSame('contao_api.api_platform.user_template_state_processor', $operation->getProcessor());
             $this->assertSame($name, $operation->getExtraProperties()['template_studio_operation']);
             $this->assertFalse($operation->canRead());
             $this->assertNotEmpty($operation->getDescription());

@@ -376,6 +376,12 @@ services:
         arguments:
             - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
+    contao.file.upload_size_provider:
+        class: Contao\CoreBundle\File\UploadSizeProvider
+        public: true
+        arguments:
+            - '%contao.max_file_upload_size%'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -597,6 +603,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@translator'
+            - '@security.helper'
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
@@ -881,15 +888,23 @@ services:
         arguments:
             - '%contao.console_path%'
 
+    contao.rate_limit.form_captcha_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.form_captcha, policy: fixed_window, limit: 1, interval: 30 minutes }
+            - '@contao.rate_limit.storage'
+            - '@?lock_factory'
+
     contao.rate_limit.member_password_factory:
         class: Symfony\Component\RateLimiter\RateLimiterFactory
         public: true
         arguments:
             - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
-            - '@contao.rate_limit.member_password_storage'
+            - '@contao.rate_limit.storage'
             - '@?lock_factory'
 
-    contao.rate_limit.member_password_storage:
+    contao.rate_limit.storage:
         class: Symfony\Component\RateLimiter\Storage\CacheStorage
         arguments:
             - '@cache.rate_limiter'
@@ -935,10 +950,16 @@ services:
             - '%contao.resources_paths%'
 
     contao.routing.backend_api_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\BackendApiMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - backend
+            - true
 
     contao.routing.backend_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\BackendMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - backend
+            - false
 
     contao.routing.content.article_resolver:
         class: Contao\CoreBundle\Routing\Content\ArticleResolver
@@ -967,8 +988,17 @@ services:
             - '@doctrine.orm.entity_manager'
             - !tagged_iterator contao.content_url_resolver
 
+    contao.routing.frontend_api_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - frontend
+            - true
+
     contao.routing.frontend_matcher:
-        class: Contao\CoreBundle\Routing\Matcher\FrontendMatcher
+        class: Contao\CoreBundle\Routing\Matcher\RequestMatcher
+        arguments:
+            - frontend
+            - false
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
@@ -1124,6 +1154,7 @@ services:
             - '@contao.routing.backend_matcher'
             - '@contao.routing.backend_api_matcher'
             - '@contao.routing.frontend_matcher'
+            - '@contao.routing.frontend_api_matcher'
             - '@request_stack'
 
     contao.routing.url_matcher:
@@ -1201,6 +1232,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.fragment.compositor'
+            - '@contao.data_container.dca_hierarchy'
 
     contao.security.data_container.content_element_type_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementTypeVoter
@@ -1270,6 +1302,9 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao.security.data_container.root_page_dependent_elements_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\RootPageDependentElementsVoter
 
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
@@ -1677,7 +1712,9 @@ services:
     Contao\CoreBundle\DataContainer\VirtualFieldsHandler: '@contao.data_container.virtual_fields_handler'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
+    Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
+    Contao\CoreBundle\Fragment\FragmentCompositor: '@contao.fragment.compositor'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'

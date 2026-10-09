@@ -27,11 +27,11 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TableDataContainerProviderTest extends AbstractProviderTestCase
@@ -53,7 +53,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createContaoFrameworkStub(),
             $this->createStub(ResourceFinder::class),
             $this->createStub(Connection::class),
-            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(Security::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
@@ -166,7 +166,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(Security::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),

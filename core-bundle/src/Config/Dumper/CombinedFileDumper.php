@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -110,9 +111,15 @@ class CombinedFileDumper implements DumperInterface
     private function getRelative(string $file, string $cacheDirectory): string
     {
         if (Path::isAbsolute($file)) {
-            $file = Path::makeRelative($file, $cacheDirectory);
+            try {
+                $file = Path::makeRelative($file, $cacheDirectory);
+            } catch (InvalidArgumentException) {
+                // noop
+            }
         }
 
-        return str_replace(['../', "\r", "\n", '*/'], ['', '\\r', '\\n', '* /'], $file);
+        $file = Path::canonicalize($file);
+
+        return str_replace(["\r", "\n", '*/'], ['\\r', '\\n', '* /'], $file);
     }
 }

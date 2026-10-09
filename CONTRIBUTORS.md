@@ -76,6 +76,7 @@
  * Christian Barkowsky ([christianbarkowsky](https://github.com/christianbarkowsky))
  * Christian Romeni ([christianromeni](https://github.com/christianromeni))
  * Defcon0 ([Defcon0](https://github.com/Defcon0))
+ * Jillur Rahman ([developerjillur](https://github.com/developerjillur))
  * Joe Ray Gregory ([may17](https://github.com/may17))
  * Leopold Seckendorff ([poddus](https://github.com/poddus))
  * Patrick Landolt ([scuben](https://github.com/scuben))

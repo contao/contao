@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\BackendTemplate;
-use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\NotFoundException;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
@@ -49,6 +49,7 @@ class CsvImportController extends AbstractController
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
+        private readonly UploadSizeProvider $uploadSizeProvider,
         private readonly string $projectDir,
     ) {
     }
@@ -147,11 +148,9 @@ class CsvImportController extends AbstractController
     private function prepareTemplate(Request $request, FileUpload $uploader, bool $allowLinebreak = false): BackendTemplate
     {
         $template = new BackendTemplate('be_csv_import');
-        $config = $this->framework->getAdapter(Config::class);
-
         $template->formId = $this->getFormId($request);
         $template->backUrl = $this->getBackUrl($request);
-        $template->fileMaxSize = $config->get('maxFileSize');
+        $template->fileMaxSize = $this->uploadSizeProvider->getMaximumUploadSize();
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
         $template->messages = Message::generate();
