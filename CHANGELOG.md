@@ -2,6 +2,45 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.52] (2026-10-09)
+
+**Fixed issues:**
+
+- [#10427] Require `enshrined/svg-sanitize` in version `^1.0` ([zoglo])
+- [#10406] Ensure file extensions are checked in lowercase when searching for files ([qzminski])
+- [#10408] Fix division by zero in the pagination menu if no limit is set ([zoglo])
+- [#10368] Rollback all changes if an undo operation fails ([lukasbableck])
+- [#10372] Also use a file content hash in the combiner ([fritzmg])
+- [#10390] Keep an explicit link title on a figure with a lightbox ([developerjillur])
+- [#10385] CAPTCHA replay protection can be bypassed ([leofeyer])
+- [#10373] Correctly prepend the assets URL ([lukasbableck])
+- [#10336] Do not swallow the error responses of download requests ([bytehead])
+- [#10337] Fix a warning in the indexer when multiple types are specified in JSON-LD ([lukasbableck])
+- [#10327] Prevent forms from being submitted multiple times by sending the POST request again ([lukasbableck])
+- [#10352] Handle predefined image sizes without densities in the preview factory ([developerjillur])
+- [#10332] Remove the parameters of previous download URLs when generating new ones ([bytehead])
+- [#10350] Fix the `CrawlCommandTest` when console window is narrow ([fritzmg])
+- [#10320] Fix the regex boundary check ([ausi])
+- [#10323] Remove an obsolete `$user->save()` call ([aschempp])
+- [#10290] Fix `LocaleUtil` for older ICU versions ([ausi])
+- [#10288] Check for pcre.jit in PCRE backtrack limit test ([ausi])
+- [#10268] Preserve stripped query parameters in redirects ([Toflar])
+- [#10264] Fix incorrectly removed tags in labels ([lukasbableck])
+- [#10284] Validate the table name in `getCurrentRecord()` ([ausi])
+- [#10259] Add a table alias in the listing count query ([shoaib0300])
+- [#10255] Remove known limitation for moving content elements into different parent types ([zoglo])
+- [#10228] Do not unset the `$_FILES` array in the `FormUpload` class ([leofeyer])
+- [#10198] Do not cast column values for aliases to binary ([lukasbableck])
+- [#10191] Suppress warnings from failed DNS lookups ([Toflar])
+- [#10188] Add additional type checks in the `PickerConfig` class ([bytehead])
+- [#10189] Ignore the LinkedIn click identifier in the HTTP cache ([eki89])
+- [#10183] Backport the HTML5-to-Twig template override order ([ausi])
+- [#10185] Do not return from `finally` blocks ([ausi])
+- [#10181] Prevent saving inherited backend user permissions ([Toflar])
+- [#10179] Remove the deprecated `xss_protection` option ([leofeyer])
+- [#10172] Ignore dates that cannot be converted when loading a widget ([aschempp])
+- [#10176] Exclude `+intl-icu` from being a Contao translation domain ([bytehead])
+
 ## [5.3.51] (2026-08-31)
 
 **Fixed issues:**
@@ -24,10 +63,10 @@ This project adheres to [Semantic Versioning].
 - [GHSA-9ff2-p842-45wq]: Cross-site request forgery in custom backend actions
 - [GHSA-mrvp-7wmx-5m4h]: Path traversal in the images controller
 - [GHSA-628f-v4f6-p37r]: Cross-site scripting in the comments bundle
-- [GHSA-h57j-5f5m-789v]: Cross-site scripting in the frontend search results
-- [GHSA-r9qp-pqx5-8369]: Non-admin users can self-grant permissions that implicitly make them administrators
-- [GHSA-23w9-4pg3-xwm3]: Improper access control in the CSV import wizard
-- [GHSA-3r9g-pfhv-3228]: Improper access control in the newsletter module
+- [CVE-2026-104884]: Cross-site scripting in the frontend search results
+- [CVE-2026-104883]: Non-admin users can self-grant permissions that implicitly make them administrators
+- [CVE-2026-104882]: Improper access control in the CSV import wizard
+- [CVE-2026-104881]: Improper access control in the newsletter module
 
 ## [5.3.49] (2026-08-06)
 
@@ -1005,6 +1044,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.52]: https://github.com/contao/contao/releases/tag/5.3.52
 [5.3.51]: https://github.com/contao/contao/releases/tag/5.3.51
 [5.3.50]: https://github.com/contao/contao/releases/tag/5.3.50
 [5.3.49]: https://github.com/contao/contao/releases/tag/5.3.49
@@ -1066,10 +1106,10 @@ This project adheres to [Semantic Versioning].
 [GHSA-9ff2-p842-45wq]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
 [GHSA-mrvp-7wmx-5m4h]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
 [GHSA-628f-v4f6-p37r]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
-[GHSA-h57j-5f5m-789v]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
-[GHSA-r9qp-pqx5-8369]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
-[GHSA-23w9-4pg3-xwm3]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
-[GHSA-3r9g-pfhv-3228]: https://github.com/contao/contao/security/advisories/GHSA-3r9g-pfhv-3228
+[CVE-2026-104884]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
+[CVE-2026-104883]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
+[CVE-2026-104882]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
+[CVE-2026-104881]: https://github.com/contao/contao/security/advisories/GHSA-3r9g-pfhv-3228
 [CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
@@ -1095,7 +1135,9 @@ This project adheres to [Semantic Versioning].
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [dennisbohn]: https://github.com/dennisbohn
+[developerjillur]: https://github.com/developerjillur
 [dmolineus]: https://github.com/dmolineus
+[eki89]: https://github.com/eki89
 [falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
 [kllmanu]: https://github.com/kllmanu
@@ -1114,6 +1156,7 @@ This project adheres to [Semantic Versioning].
 [ReneLuecking]: https://github.com/ReneLuecking
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
+[shoaib0300]: https://github.com/shoaib0300
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
@@ -1788,3 +1831,37 @@ This project adheres to [Semantic Versioning].
 [#10138]: https://github.com/contao/contao/pull/10138
 [#10157]: https://github.com/contao/contao/pull/10157
 [#10158]: https://github.com/contao/contao/pull/10158
+[#10172]: https://github.com/contao/contao/pull/10172
+[#10176]: https://github.com/contao/contao/pull/10176
+[#10179]: https://github.com/contao/contao/pull/10179
+[#10181]: https://github.com/contao/contao/pull/10181
+[#10183]: https://github.com/contao/contao/pull/10183
+[#10185]: https://github.com/contao/contao/pull/10185
+[#10188]: https://github.com/contao/contao/pull/10188
+[#10189]: https://github.com/contao/contao/pull/10189
+[#10191]: https://github.com/contao/contao/pull/10191
+[#10198]: https://github.com/contao/contao/pull/10198
+[#10228]: https://github.com/contao/contao/pull/10228
+[#10255]: https://github.com/contao/contao/pull/10255
+[#10259]: https://github.com/contao/contao/pull/10259
+[#10264]: https://github.com/contao/contao/pull/10264
+[#10268]: https://github.com/contao/contao/pull/10268
+[#10284]: https://github.com/contao/contao/pull/10284
+[#10288]: https://github.com/contao/contao/pull/10288
+[#10290]: https://github.com/contao/contao/pull/10290
+[#10320]: https://github.com/contao/contao/pull/10320
+[#10323]: https://github.com/contao/contao/pull/10323
+[#10327]: https://github.com/contao/contao/pull/10327
+[#10332]: https://github.com/contao/contao/pull/10332
+[#10336]: https://github.com/contao/contao/pull/10336
+[#10337]: https://github.com/contao/contao/pull/10337
+[#10350]: https://github.com/contao/contao/pull/10350
+[#10352]: https://github.com/contao/contao/pull/10352
+[#10368]: https://github.com/contao/contao/pull/10368
+[#10372]: https://github.com/contao/contao/pull/10372
+[#10373]: https://github.com/contao/contao/pull/10373
+[#10385]: https://github.com/contao/contao/pull/10385
+[#10390]: https://github.com/contao/contao/pull/10390
+[#10406]: https://github.com/contao/contao/pull/10406
+[#10408]: https://github.com/contao/contao/pull/10408
+[#10427]: https://github.com/contao/contao/pull/10427

@@ -362,6 +362,9 @@ Tento záznam už existuje!</target>
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
         <target>Verzia %d nemohla byť obnovená, pretože už nie je kompatibilná s aktuálnou štruktúrou databázy. Prosím, obnovte údaje manuálne.</target>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Čas ukončenia musí byť neskorší ako čas začiatku.</target>
