@@ -20,6 +20,8 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\Stub;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\OfflineTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -124,6 +126,28 @@ class TableAccessVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote($this->token, new ReadAction('tl_allowed', ['id' => 2]), [ContaoCorePermissions::DC_PREFIX.'tl_allowed']),
         );
+    }
+
+    public function testCachesModuleAccessWithNonSerializableToken(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
+        $token = new class() extends AbstractToken implements OfflineTokenInterface {};
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->expects($this->once())
+            ->method('decide')
+            ->with($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
+            ->willReturn(true)
+        ;
+
+        $voter = new TableAccessVoter($accessDecisionManager);
+        $attributes = [ContaoCorePermissions::DC_PREFIX.'tl_foobar'];
+        $subject = new ReadAction('tl_foobar', ['id' => 1]);
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, $subject, $attributes));
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, $subject, $attributes));
     }
 
     public function testAbstainsIfTableIsAllowedInSecondaryModule(): void

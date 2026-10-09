@@ -19,6 +19,8 @@ use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
@@ -32,6 +34,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TableDataContainerProviderTest extends AbstractProviderTestCase
@@ -62,6 +65,40 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
         $this->assertFalse($provider->supportsType('foobar'));
+    }
+
+    public function testIsDocumentGrantedPassesSinglePermissionAttribute(): void
+    {
+        $user = $this->createStub(UserInterface::class);
+
+        $document = (new Document('1', TableDataContainerProvider::TYPE_PREFIX.'tl_content', ''))
+            ->withMetadata(['table' => 'tl_content', 'row' => ['id' => 1]])
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGrantedForUser')
+            ->with(
+                $user,
+                ContaoCorePermissions::DC_PREFIX.'tl_content',
+                $this->equalTo(new ReadAction('tl_content', ['id' => 1])),
+            )
+            ->willReturn(true)
+        ;
+
+        $provider = new TableDataContainerProvider(
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(Connection::class),
+            $security,
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(VirtualFieldsHandler::class),
+        );
+
+        $this->assertTrue($provider->isDocumentGranted($user, $document));
     }
 
     public function testUpdateIndex(): void
