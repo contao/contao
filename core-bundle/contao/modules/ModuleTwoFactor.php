@@ -38,13 +38,12 @@ class ModuleTwoFactor extends BackendModule
 	{
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$user = $security->getUser();
 
-		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		if (!$user instanceof BackendUser || !$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			throw new AccessDeniedException('User is not fully authenticated');
 		}
-
-		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
 		if (!$user->useTwoFactor && !Input::get('act') && $container->getParameter('contao.security.two_factor.enforce_backend'))

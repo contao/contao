@@ -22,6 +22,7 @@ use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
@@ -429,7 +430,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $schemas = $factory->createOperationSchemas('tl_content');
 
         $this->assertSame(['id', 'pid', 'ptable', 'sorting', 'title'], array_keys($schemas['read']['properties']));
-        $this->assertSame(['title', 'secret'], array_keys($schemas['create']['properties']));
+        $this->assertSame(['pid', 'title', 'secret'], array_keys($schemas['create']['properties']));
         $this->assertSame(['title', 'secret'], array_keys($schemas['update']['properties']));
         $this->assertArrayNotHasKey('required', $schemas['create']);
         $this->assertArrayNotHasKey('required', $schemas['read']);
@@ -466,6 +467,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $metadataFactory,
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 

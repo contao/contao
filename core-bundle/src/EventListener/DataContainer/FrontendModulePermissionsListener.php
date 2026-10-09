@@ -35,7 +35,7 @@ class FrontendModulePermissionsListener
             return;
         }
 
-        if ($user->isAdmin || empty($user->frontendModules)) {
+        if ($this->security->isGranted('ROLE_ADMIN') || empty($user->frontendModules)) {
             return;
         }
 

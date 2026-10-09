@@ -65,5 +65,8 @@
   <extensions>
     <bootstrap class="Contao\TestCase\ClearCachePhpunitExtension"/>
     <bootstrap class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
+    <bootstrap class="Contao\E2eTesting\PhpUnit\DockerWarmUpExtension">
+      <parameter name="testsuites" value="e2e"/>
+    </bootstrap>
   </extensions>
 </phpunit>

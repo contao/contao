@@ -139,9 +139,9 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
+			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
-			'backendSearch' 		  => false,
+			'backendSearch'           => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
@@ -250,19 +250,23 @@ class tl_article extends Backend
 	 */
 	public function adjustDca()
 	{
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return;
 		}
 
+		$user = $security->getUser();
+		$userId = $user instanceof BackendUser ? $user->id : 0;
+		$group = $user instanceof BackendUser ? (int) ($user->groups[0] ?? 0) : 0;
+
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) ($user->groups[0] ?? 0);
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $userId;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: $group;
 
 		// Restrict the page tree
-		if (empty($user->pagemounts) || !is_array($user->pagemounts))
+		if (!$user instanceof BackendUser || empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
 			$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array(0);
 		}
