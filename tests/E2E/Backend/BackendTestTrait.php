@@ -88,8 +88,7 @@ trait BackendTestTrait
     private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
     {
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->visit('/contao/login');
-        $backend->submitLogin($username, $password);
+        $backend->loginOrReuseSessionAs($username, $password);
         $backend->waitFor('h1');
 
         return $backend;

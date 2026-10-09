@@ -190,12 +190,13 @@ abstract class Backend extends Controller
 
 		unset($arrGroup);
 
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
+		$security = System::getContainer()->get('security.helper');
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
 		{
-			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . BackendUser::getInstance()->username . '".');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $security->getUser()?->getUserIdentifier() . '".');
 		}
 
 		// The module does not exist
@@ -560,7 +561,6 @@ abstract class Backend extends Controller
 
 		$image = Controller::getPageStatusIcon((object) $row);
 		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0))) . '"');
-		$objUser = BackendUser::getInstance();
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -674,7 +674,6 @@ abstract class Backend extends Controller
 			return;
 		}
 
-		$objUser  = BackendUser::getInstance();
 		$strPath  = System::getContainer()->getParameter('contao.upload_path');
 		$security = System::getContainer()->get('security.helper');
 		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
