@@ -28,8 +28,6 @@ use ApiPlatform\Metadata\Resource\ResourceNameCollection;
 use ApiPlatform\Symfony\Routing\ApiLoader;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Config;
@@ -291,8 +289,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $this->assertSame(DataContainerRecord::class, $resource->getClass());
         $this->assertSame($expectedShortName, $resource->getShortName());
-        $this->assertSame(DataContainerStateProvider::class, $resource->getProvider());
-        $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
+        $this->assertSame('contao_api.api_platform.data_container_state_provider', $resource->getProvider());
+        $this->assertSame('contao_api.api_platform.data_container_state_processor', $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
         $this->assertTrue($resource->getStateless());
@@ -312,8 +310,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         foreach ($operations as $name => $operation) {
             $this->assertSame($name, $operation->getName());
             $this->assertSame($expectedTable, $operation->getExtraProperties()['contao']['table']);
-            $this->assertSame(DataContainerStateProvider::class, $operation->getProvider());
-            $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
+            $this->assertSame('contao_api.api_platform.data_container_state_provider', $operation->getProvider());
+            $this->assertSame('contao_api.api_platform.data_container_state_processor', $operation->getProcessor());
         }
 
         $this->assertOperation($operations['contao_api_dc_'.$operationPrefix.'_get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);

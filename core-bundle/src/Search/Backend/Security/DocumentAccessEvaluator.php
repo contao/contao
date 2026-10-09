@@ -12,39 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend\Security;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
-use Contao\CoreBundle\Security\Authentication\ContaoStrategyContext;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class DocumentAccessEvaluator
 {
     /**
-     * @var array<int, TokenInterface>
+     * @var array<int, BackendUser>
      */
-    private array $tokensByGroupId = [];
+    private array $usersByGroupId = [];
 
-    public function __construct(
-        private readonly VirtualBackendUserFactory $virtualBackendUserFactory,
-        private readonly ContaoStrategyContext $strategyContext,
-    ) {
+    public function __construct(private readonly VirtualBackendUserFactory $virtualBackendUserFactory)
+    {
     }
 
     public function isGrantedForGroup(ProviderInterface $provider, Document $document, int $groupId): bool
     {
-        $token = $this->tokensByGroupId[$groupId] ??= $this->createTokenForGroup($groupId);
+        $user = $this->usersByGroupId[$groupId] ??= $this->virtualBackendUserFactory->createForGroupId($groupId);
 
-        return $this->strategyContext->runInContext(
-            ContaoStrategyContext::CONTEXT_BACKEND,
-            static fn (): bool => $provider->isDocumentGranted($token, $document),
-        );
-    }
-
-    private function createTokenForGroup(int $groupId): TokenInterface
-    {
-        $user = $this->virtualBackendUserFactory->createForGroupId($groupId);
-
-        return new UsernamePasswordToken($user, 'contao_backend', $user->getRoles());
+        return $provider->isDocumentGranted($user, $document);
     }
 }
