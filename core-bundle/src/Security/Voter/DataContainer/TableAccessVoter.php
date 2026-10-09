@@ -30,6 +30,7 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 {
+    /** @var \WeakMap<TokenInterface, array{access: array<string, bool>, read: array<string, bool>}> */
     private \WeakMap $moduleAccessCache;
 
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
