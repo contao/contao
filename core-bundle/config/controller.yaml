@@ -25,6 +25,18 @@ services:
         arguments:
             - '@contao.altcha'
 
+    Contao\CoreBundle\Controller\WebhookController:
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.receiver_registry'
+            - '@contao.webhook.secret_encryption'
+            - '@messenger.bus.default'
+            - '@contao.webhook.rate_limiter_factory'
+            - '@?monolog.logger.contao.webhook'
+            - '%contao.webhook.request_body_limit%'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\Backend\BackendController: ~
 
     Contao\CoreBundle\Controller\Backend\CsvImportController:

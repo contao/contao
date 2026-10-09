@@ -1,0 +1,195 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\Webhook;
+
+use Contao\CoreBundle\DependencyInjection\Compiler\WebhookRegistryPass;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookEvent;
+use Contao\CoreBundle\Webhook\Attribute\AsWebhookReceiver;
+use Contao\CoreBundle\Webhook\WebhookEventInterface;
+use Contao\CoreBundle\Webhook\WebhookEventRegistry;
+use Contao\CoreBundle\Webhook\WebhookReceiverRegistry;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RemoteEvent\Consumer\ConsumerInterface;
+use Symfony\Component\RemoteEvent\RemoteEvent;
+use Symfony\Component\Webhook\Client\RequestParserInterface;
+
+class WebhookRegistryTest extends TestCase
+{
+    public function testBuildsEventAndReceiverRegistries(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class, [[], new Reference('service_container')]));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class, [[]]));
+        $container->setDefinition(TestWebhookReceiver::class, new Definition(TestWebhookReceiver::class)->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class]));
+        $container->setDefinition(TestWebhookEvent::class, new Definition(TestWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
+
+        $pass = new WebhookRegistryPass();
+        $pass->process($container);
+
+        $this->assertSame(['parser' => TestWebhookParser::class], $container->getDefinition('contao.webhook.receiver_registry')->getArgument(0)['vendor.example']);
+        $eventMetadata = $container->getDefinition('contao.webhook.event_registry')->getArgument(0)[TestWebhookEvent::class];
+        $this->assertSame('test.event', $eventMetadata['name']);
+        $this->assertSame('id', $eventMetadata['properties'][0]['name']);
+    }
+
+    public function testRejectsReceiverWithoutRemoteEventConsumer(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class));
+        $container->setDefinition(TestWebhookReceiver::class, new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class]));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must have exactly one remote event consumer');
+
+        new WebhookRegistryPass()->process($container);
+    }
+
+    public function testAllowsDuplicateConsumerTagsOnTheSameService(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class));
+        $container->setDefinition(TestWebhookReceiver::class, new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class])->addTag('remote_event.consumer', ['consumer' => 'vendor.example'])->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class));
+
+        new WebhookRegistryPass()->process($container);
+
+        $this->assertSame(['vendor.example' => ['parser' => TestWebhookParser::class]], $container->getDefinition('contao.webhook.receiver_registry')->getArgument(0));
+    }
+
+    public function testRejectsDuplicateRemoteEventConsumers(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class));
+        $container->setDefinition('consumer.one', new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class])->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+        $container->setDefinition('consumer.two', new Definition(TestWebhookReceiver::class)->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must have exactly one remote event consumer');
+
+        new WebhookRegistryPass()->process($container);
+    }
+
+    public function testRejectsInvalidRemoteEventConsumer(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class])->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must implement '.ConsumerInterface::class);
+
+        new WebhookRegistryPass()->process($container);
+    }
+
+    public function testRejectsDuplicateReceiverNames(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class, [[], new Reference('service_container')]));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class, [[]]));
+        $container->setDefinition('receiver.one', new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class])->addTag('remote_event.consumer', ['consumer' => 'vendor.example']));
+        $container->setDefinition('receiver.two', new Definition(TestWebhookReceiver::class)->addTag('contao.webhook_receiver', ['name' => 'vendor.example', 'parser' => TestWebhookParser::class]));
+        $container->setDefinition(TestWebhookParser::class, new Definition(TestWebhookParser::class));
+
+        $this->expectException(InvalidArgumentException::class);
+
+        new WebhookRegistryPass()->process($container);
+    }
+
+    public function testRejectsDuplicateEventNames(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('contao.webhook.receiver_registry', new Definition(WebhookReceiverRegistry::class, [[], new Reference('service_container')]));
+        $container->setDefinition('contao.webhook.event_registry', new Definition(WebhookEventRegistry::class, [[]]));
+        $container->setDefinition(TestWebhookEvent::class, new Definition(TestWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
+        $container->setDefinition(TestDuplicateWebhookEvent::class, new Definition(TestDuplicateWebhookEvent::class)->addTag('contao.webhook_event', ['name' => 'test.event']));
+
+        $this->expectException(InvalidArgumentException::class);
+
+        new WebhookRegistryPass()->process($container);
+    }
+}
+
+#[AsWebhookReceiver('vendor.example', TestWebhookParser::class)]
+final class TestWebhookReceiver implements ConsumerInterface
+{
+    public function consume(RemoteEvent $event): void
+    {
+    }
+}
+
+final class TestWebhookParser implements RequestParserInterface
+{
+    public function parse(Request $request, #[\SensitiveParameter] string $secret): RemoteEvent|array|null
+    {
+        return null;
+    }
+
+    public function createSuccessfulResponse(Request|null $request = null): Response
+    {
+        return new Response();
+    }
+
+    public function createRejectedResponse(string $reason, Request|null $request = null): Response
+    {
+        return new Response($reason, 400);
+    }
+}
+
+#[AsWebhookEvent('test.event')]
+final readonly class TestWebhookEvent implements WebhookEventInterface
+{
+    public function __construct(public string $id)
+    {
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getPayload(): array
+    {
+        return ['id' => $this->id];
+    }
+}
+
+#[AsWebhookEvent('test.event')]
+final readonly class TestDuplicateWebhookEvent implements WebhookEventInterface
+{
+    public function __construct(public string $id)
+    {
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getPayload(): array
+    {
+        return ['id' => $this->id];
+    }
+}
