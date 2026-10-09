@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.3] (2026-10-09)
+
 ## [6.0.2] (2026-09-29)
 
 **Fixed issues:**
@@ -165,6 +167,7 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.3]: https://github.com/contao/contao/releases/tag/6.0.3
 [6.0.2]: https://github.com/contao/contao/releases/tag/6.0.2
 [6.0.1]: https://github.com/contao/contao/releases/tag/6.0.1
 [6.0.0]: https://github.com/contao/contao/releases/tag/6.0.0

@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
         <source>For more information about HugeRTE, see &lt;a href=&quot;https://hugerte.org/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://hugerte.org/&lt;/a&gt;.</source>
+        <target>さらに詳しいHugeRTEの情報については、&lt;a href=&quot;https://hugerte.org/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://hugerte.org/&lt;/a&gt;を参照してください。</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
