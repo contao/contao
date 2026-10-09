@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.15] (2026-10-09)
+
+**Fixed issues:**
+
+- [#10430] Fix the backend search permission checks ([lukasbableck])
+- [#10432] Fix the array check in the `DefaultLabelListener` ([aschempp])
+
 ## [5.7.14] (2026-10-09)
 
 **Fixed issues:**
@@ -652,6 +659,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.15]: https://github.com/contao/contao/releases/tag/5.7.15
 [5.7.14]: https://github.com/contao/contao/releases/tag/5.7.14
 [5.7.13]: https://github.com/contao/contao/releases/tag/5.7.13
 [5.7.12]: https://github.com/contao/contao/releases/tag/5.7.12
@@ -1234,3 +1242,5 @@ This project adheres to [Semantic Versioning].
 [#10388]: https://github.com/contao/contao/pull/10388
 [#10399]: https://github.com/contao/contao/pull/10399
 [#10403]: https://github.com/contao/contao/pull/10403
+[#10430]: https://github.com/contao/contao/pull/10430
+[#10432]: https://github.com/contao/contao/pull/10432
