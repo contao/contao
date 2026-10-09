@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
+			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),

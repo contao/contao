@@ -46,6 +46,8 @@ return RectorConfig::configure()
         __DIR__.'/news-bundle/tests',
         __DIR__.'/newsletter-bundle/src',
         __DIR__.'/newsletter-bundle/tests',
+        __DIR__.'/oauth-server-bundle/src',
+        __DIR__.'/oauth-server-bundle/tests',
         __DIR__.'/test-case/src',
         __DIR__.'/tests/E2E',
         __DIR__.'/vendor-bin/ecs/config',

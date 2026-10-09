@@ -28,6 +28,7 @@ use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CheckBox;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -383,6 +384,24 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame(['jumpTo' => '42'], $mapper->toFormValues('tl_news', ['jumpTo' => ['id' => 42, 'iri' => '/contao/api/dc/page/42']]));
     }
 
+    public function testResolvesTheParentReferenceOfANewRecord(): void
+    {
+        $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+
+        $this->assertSame(42, $mapper->toParentIdentifier('tl_article', ['iri' => '/contao/api/dc/page/42']));
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+
+        $mapper->toParentIdentifier('tl_article', ['iri' => '']);
+    }
+
     public function testResolvesRelationsProvidedByAWidgetConverter(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['destination'] = [
@@ -621,7 +640,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->willReturn(['_route' => 'page_get', 'id' => '42'])
         ;
 
-        return new DataContainerRelationResolver($connection, new ForeignKeyParser($connection), $converters, $metadataFactory, $router);
+        return new DataContainerRelationResolver($connection, new ForeignKeyParser($connection), $converters, $metadataFactory, $router, $this->createStub(DcaHierarchy::class));
     }
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface

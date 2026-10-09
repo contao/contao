@@ -15,8 +15,9 @@ namespace Contao\CoreBundle\Image;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
-use Contao\StringUtil;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -34,6 +35,7 @@ class ImageSizes implements ResetInterface
         private readonly Connection $connection,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TranslatorInterface $translator,
+        private readonly Security $security,
     ) {
     }
 
@@ -66,20 +68,15 @@ class ImageSizes implements ResetInterface
      *
      * @return array<string, array<string>>
      */
-    public function getOptionsForUser(BackendUser $user): array
+    public function getOptionsForUser(BackendUser|null $user = null): array
     {
+        if ($user) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Passing the user object to %s is deprecated in Contao 6.1 and will be removed in Contao 7.', __METHOD__);
+        }
+
         $this->loadOptions();
 
-        if ($user->isAdmin) {
-            $event = new ImageSizesEvent($this->options, $user);
-        } else {
-            $options = array_map(
-                static fn ($val) => is_numeric($val) ? (int) $val : $val,
-                StringUtil::deserialize($user->imageSizes, true),
-            );
-
-            $event = new ImageSizesEvent($this->filterOptions($options), $user);
-        }
+        $event = new ImageSizesEvent($this->filterOptions($user), $user);
 
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_USER);
 
@@ -152,38 +149,42 @@ class ImageSizes implements ResetInterface
      *
      * @return array<string, array<string>>
      */
-    private function filterOptions(array $allowedSizes): array
+    private function filterOptions(BackendUser|null $user): array
     {
-        if (!$allowedSizes) {
-            return [];
-        }
-
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
             if ('custom' === $group || 'relative' === $group || 'exact' === $group) {
-                $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
+                $this->filterResizeModes($sizes, $user, $filteredSizes, $group);
             } else {
-                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
+                $this->filterImageSizes($sizes, $user, $filteredSizes, $group);
             }
         }
 
         return $filteredSizes;
     }
 
-    private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
+    private function filterImageSizes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
-            if (\in_array($key, $allowedSizes, true)) {
+            if (
+                !$user
+                    ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)
+                    : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $key)
+            ) {
                 $filteredSizes[$group][$key] = $size;
             }
         }
     }
 
-    private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
+    private function filterResizeModes(array $sizes, BackendUser|null $user, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {
-            if (\in_array($size, $allowedSizes, true)) {
+            if (
+                !$user
+                    ? $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)
+                    : $this->security->isGrantedForUser($user, ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZE, $size)
+            ) {
                 $filteredSizes[$group][] = $size;
             }
         }

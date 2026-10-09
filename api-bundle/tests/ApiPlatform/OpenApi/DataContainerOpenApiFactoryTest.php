@@ -33,14 +33,13 @@ use ApiPlatform\OpenApi\Model\Tag;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
@@ -328,8 +327,8 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->withClass(DataContainerRecord::class)
             ->withShortName('Content')
             ->withRoutePrefix('/dc/content')
-            ->withProvider(DataContainerStateProvider::class)
-            ->withProcessor(DataContainerStateProcessor::class)
+            ->withProvider('contao_api.api_platform.data_container_state_provider')
+            ->withProcessor('contao_api.api_platform.data_container_state_processor')
             ->withExtraProperties([
                 'contao' => [
                     'table' => 'tl_content',
@@ -373,6 +372,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $metadataFactory,
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 
