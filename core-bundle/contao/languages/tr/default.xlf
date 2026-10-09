@@ -361,6 +361,10 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
         <target>Artık geçerli veri tabanı yapısıyla uyumlu olmadığından %d sürümü geri yüklenemedi. Lütfen verileri el ile geri yükleyin.</target>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+        <target>Silinmiş kayıtlar geri yüklenemedi. Herhangi bir değişiklik yapılmadı.</target>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Bitiş zamanı başlangıç zamanından sonra olmalıdır.</target>
@@ -1723,7 +1727,7 @@
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
-        <target>%s hakkında ayrıntılı bilgi alın</target>
+        <target>%s ile ilgili ayrıntılı bilgi alın</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
