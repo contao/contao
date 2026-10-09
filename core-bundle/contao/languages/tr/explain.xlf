@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
         <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
-        <target>TinyMCE hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt; adresine bakabilirsiniz.</target>
+        <target>TinyMCE ile ilgili ayrıntılı bilgi almak için &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
         <source>For more information about insert tags, see the &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Eklenebilecek kod imleri hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
+        <target>Eklenebilecek kod imleri ile ilgili ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
         <source>For more information about Ace, see &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
-        <target>Ace hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt; adresine bakabilirsiniz.</target>
+        <target>Ace ile ilgili ayrıntılı bilgi almak için &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.0">
         <source>Markdown</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
         <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Markdown hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
+        <target>Markdown ile ilgili ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberi&lt;/a&gt; bölümüne bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
-        <target>Sizes özniteliği tanımlanmamışsa, bu ayar basitçe desteklemek istediğiniz piksel yoğunluklarını belirler. Görsellerin boyutları otomatik olarak ayarlanır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Sizes özniteliği tanımlanmışsa, aynı görsel boyutları oluşturulur ancak srcset özniteliği için genişlik tanımlayıcıları kullanılır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; yoğunluklarına sahip 200 piksel genişliğinde bir görsel şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;srcset özniteliği hakkında ayrıntılı bilgi almak için &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; adresine bakabilirsiniz.</target>
+        <target>Sizes özniteliği tanımlanmamışsa, bu ayar basitçe desteklemek istediğiniz piksel yoğunluklarını belirler. Görsellerin boyutları otomatik olarak ayarlanır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Sizes özniteliği tanımlanmışsa, aynı görsel boyutları oluşturulur ancak srcset özniteliği için genişlik tanımlayıcıları kullanılır. Örneğin, &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; yoğunluklarına sahip 200 piksel genişliğinde bir görsel şu HTML kodunu oluşturur: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;srcset özniteliği ile ilgili ayrıntılı bilgi almak için &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="XPL.autocomplete.0.0">
         <source>Autocomplete attributes</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="XPL.autocomplete.0.1">
         <source>For more information about autocomplete attributes, see &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</source>
-        <target>Otomatik tamamlama öznitelikleri hakkında ayrıntılı bilgi almak için  &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt; adresine bakabilirsiniz.</target>
+        <target>Otomatik tamamlama öznitelikleri ile ilgili ayrıntılı bilgi almak için  &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt; adresine bakabilirsiniz.</target>
       </trans-unit>
     </body>
   </file>
