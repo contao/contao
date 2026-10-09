@@ -181,12 +181,14 @@ class LintServiceIdsCommand
             ->name('*.yaml')
             ->name('*.yml')
             ->in([
+                $this->projectDir.'/api-bundle/config',
                 $this->projectDir.'/calendar-bundle/config',
                 $this->projectDir.'/comments-bundle/config',
                 $this->projectDir.'/core-bundle/config',
                 $this->projectDir.'/faq-bundle/config',
                 $this->projectDir.'/maker-bundle/config',
                 $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/mcp-bundle/config',
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
                 $this->projectDir.'/oauth-server-bundle/config',

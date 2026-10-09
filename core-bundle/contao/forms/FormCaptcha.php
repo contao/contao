@@ -131,8 +131,8 @@ class FormCaptcha extends Widget
 		if (
 			Input::post($this->strCaptchaKey) === null
 			|| (Input::post($this->strCaptchaKey . '_name') !== null && Input::post($this->strCaptchaKey . '_name'))
-			|| !\in_array($parts[0] ?? null, $this->generateHashes($sum), true)
 			|| !isset($parts[1])
+			|| !\in_array($parts[0], $this->generateHashes($sum, $parts[1]), true)
 			|| !System::getContainer()->get('contao.rate_limit.form_captcha_factory')->create($parts[1])->consume()->isAccepted()
 		) {
 			$this->class = 'error';
@@ -152,6 +152,7 @@ class FormCaptcha extends Widget
 
 		$int1 = random_int(1, 9);
 		$int2 = random_int(1, 9);
+		$proof = bin2hex(random_bytes(16));
 
 		$this->arrCaptcha = array
 		(
@@ -159,26 +160,27 @@ class FormCaptcha extends Widget
 			'int2' => $int2,
 			'sum' => $int1 + $int2,
 			'key' => $this->strCaptchaKey,
-			'hashes' => $this->generateHashes($int1 + $int2),
-			'proof' => bin2hex(random_bytes(16)),
+			'hashes' => $this->generateHashes($int1 + $int2, $proof),
+			'proof' => $proof,
 		);
 	}
 
 	/**
-	 * Generate hashes for the current time and the specified sum
+	 * Generate hashes for the current time and the specified sum and proof
 	 *
 	 * @param integer $sum
+	 * @param string  $proof
 	 *
 	 * @return array
 	 */
-	protected function generateHashes($sum)
+	protected function generateHashes($sum, $proof)
 	{
 		// Round the time to 30 minutes
 		$time = (int) round(time() / 60 / 30);
 
 		return array_map(
-			static function ($hashTime) use ($sum) {
-				return hash_hmac('sha256', $sum . "\0" . $hashTime, System::getContainer()->getParameter('kernel.secret'));
+			static function ($hashTime) use ($sum, $proof) {
+				return hash_hmac('sha256', $sum . "\0" . $hashTime . "\0" . $proof, System::getContainer()->getParameter('kernel.secret'));
 			},
 			array($time, $time - 1)
 		);

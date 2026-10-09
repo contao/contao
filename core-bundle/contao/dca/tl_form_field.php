@@ -422,21 +422,24 @@ class tl_form_field extends Backend
 	 */
 	public function filterFormFields()
 	{
-		$user = BackendUser::getInstance();
+		$security = System::getContainer()->get('security.helper');
 
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			return;
 		}
 
-		if (empty($user->fields))
+		$user = $security->getUser();
+		$fields = $user instanceof BackendUser ? $user->fields : array();
+
+		if (empty($fields))
 		{
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
 		}
-		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'] ?? null, $user->fields))
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'] ?? null, $fields))
 		{
-			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $user->fields[0];
+			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $fields[0];
 		}
 	}
 

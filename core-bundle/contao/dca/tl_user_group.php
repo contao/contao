@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\Database;
 use Contao\DataContainer;
@@ -406,7 +405,7 @@ class tl_user_group extends Backend
 		}
 
 		$arrReturn = array();
-		$user = BackendUser::getInstance();
+		$isAdmin = System::getContainer()->get('security.helper')->isGranted('ROLE_ADMIN');
 
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
@@ -416,7 +415,7 @@ class tl_user_group extends Backend
 				foreach ($v['fields'] as $kk=>$vv)
 				{
 					// Hide the "admin" field if the user is not an admin (see #184)
-					if ($k == 'tl_user' && $kk == 'admin' && !$user->isAdmin)
+					if ($k == 'tl_user' && $kk == 'admin' && !$isAdmin)
 					{
 						continue;
 					}

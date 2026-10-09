@@ -24,7 +24,13 @@ trait BackendTestTrait
 {
     private const string DUMMY_IMAGE = 'files/images/dummy.jpg';
 
-    protected static function createManagedEditionConfig(): ManagedEditionConfig
+    private const string FIXTURE_USERS = 'users.yaml';
+
+    private const string FIXTURE_DEFAULT = 'default.yaml';
+
+    private const string DCA_CONTENT = 'tl_content.php';
+
+    protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
             'calendar-bundle',
@@ -37,19 +43,26 @@ trait BackendTestTrait
         $dummyImage = self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg';
 
         $recipe = InstallationRecipe::create($composer)
-            ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
-            ->withFixtureFile(self::fixtureDirectory().'/default.yaml')
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
             ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
             ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
         ;
 
-        return ManagedEditionConfig::create($recipe, self::projectDirectory());
+        return ManagedEditionConfig::create($recipe, self::projectDirectory())
+            ->withDcaFile(self::customDcaDirectory().'/'.self::DCA_CONTENT)
+        ;
     }
 
     private static function fixtureDirectory(): string
     {
         return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
+    }
+
+    private static function customDcaDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Dca';
     }
 
     /**
@@ -75,8 +88,7 @@ trait BackendTestTrait
     private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
     {
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->visit('/contao/login');
-        $backend->submitLogin($username, $password);
+        $backend->loginOrReuseSessionAs($username, $password);
         $backend->waitFor('h1');
 
         return $backend;
@@ -90,14 +102,13 @@ trait BackendTestTrait
     private function openArticle(): array
     {
         $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::fixtureDirectory().'/users.yaml',
-            self::fixtureDirectory().'/default.yaml',
-            self::fixtureDirectory().'/article.yaml',
+            self::fixtureDirectory().'/'.self::FIXTURE_USERS,
+            self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT,
         ]));
 
         $backend = $this->login();
 
-        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article}');
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article_main_home}');
         $backend->visit($articleUrl);
 
         return [$backend, $articleUrl];

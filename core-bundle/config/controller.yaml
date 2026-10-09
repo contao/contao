@@ -160,6 +160,8 @@ services:
         arguments:
             - '@contao.filesystem.virtual.files'
 
+    Contao\CoreBundle\Controller\ContentElement\RootPageDependentElementsController: ~
+
     Contao\CoreBundle\Controller\ContentElement\SwiperController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TableController: ~

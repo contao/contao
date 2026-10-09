@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
@@ -632,13 +631,6 @@ class tl_module extends Backend
 	 */
 	public function getForms()
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->forms))
-		{
-			return array();
-		}
-
 		$arrForms = array();
 		$objForms = Database::getInstance()->execute("SELECT id, title FROM tl_form ORDER BY title");
 		$security = System::getContainer()->get('security.helper');

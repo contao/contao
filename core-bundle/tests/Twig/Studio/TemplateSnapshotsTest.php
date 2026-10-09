@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
@@ -105,7 +106,8 @@ class TemplateSnapshotsTest extends TestCase
         $this->assertFileExists($this->directory.'/.git');
     }
 
-    public function testCacheRemovalResetsHistory(): void
+    #[DataProvider('getCacheRemovalOperations')]
+    public function testCacheRemovalResetsHistory(bool $createDiff): void
     {
         $snapshots = $this->createSnapshots();
 
@@ -114,12 +116,26 @@ class TemplateSnapshotsTest extends TestCase
         }
 
         $snapshots->snapshot();
-        new Filesystem()->remove($this->directory.'/var/cache/test');
+
+        $filesystem = new Filesystem();
+
+        if ($createDiff) {
+            $filesystem->dumpFile($this->directory.'/templates/page.twig', 'added');
+            $snapshots->diff();
+        }
+
+        $filesystem->remove($this->directory.'/var/cache/test');
 
         $this->assertSame([], $snapshots->listSnapshots());
         $this->assertNull($snapshots->latestSnapshot());
         $snapshots->snapshot();
         $this->assertCount(1, $snapshots->listSnapshots());
+    }
+
+    public static function getCacheRemovalOperations(): iterable
+    {
+        yield 'snapshot' => [false];
+        yield 'diff' => [true];
     }
 
     private function createSnapshots(): TemplateSnapshots

@@ -60,6 +60,7 @@ class FormCaptchaTest extends TestCase
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([Input::class, System::class, Config::class]);
 
         parent::tearDown();
@@ -78,10 +79,40 @@ class FormCaptchaTest extends TestCase
         $this->assertTrue($captcha->hasErrors());
     }
 
+    public function testCaptchaProofCannotBeChanged(): void
+    {
+        $captcha = new FormCaptcha(['id' => 'test']);
+        $captcha->validate();
+
+        $this->assertFalse($captcha->hasErrors());
+
+        $hash = Input::post('captcha_test_hash101');
+        Input::setPost('captcha_test_hash101', explode(':', $hash, 2)[0].':changed-proof');
+
+        $captcha = new FormCaptcha(['id' => 'test']);
+        $captcha->validate();
+
+        $this->assertTrue($captcha->hasErrors());
+    }
+
+    public function testGeneratedCaptchaCanBeValidated(): void
+    {
+        $captcha = new FormCaptcha(['id' => 'test']);
+        $sum = $captcha->sum;
+
+        Input::setPost('captcha_test', (string) $sum);
+        Input::setPost('captcha_test_hash'.($sum ** 2 + 1), $captcha->hash);
+
+        $captcha = new FormCaptcha(['id' => 'test']);
+        $captcha->validate();
+
+        $this->assertFalse($captcha->hasErrors());
+    }
+
     private function getHash(int $sum, string $proof): string
     {
         $time = (int) round(time() / 60 / 30);
 
-        return hash_hmac('sha256', $sum."\0".$time, 'secret').':'.$proof;
+        return hash_hmac('sha256', $sum."\0".$time."\0".$proof, 'secret').':'.$proof;
     }
 }

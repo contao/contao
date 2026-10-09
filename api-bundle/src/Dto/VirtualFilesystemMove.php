@@ -12,10 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Dto;
 
+use ApiPlatform\Metadata\ApiProperty;
+
 final readonly class VirtualFilesystemMove
 {
     public function __construct(
+        #[ApiProperty(description: 'The source path or UUID.')]
         public string $source,
+        #[ApiProperty(description: 'The destination path or UUID.')]
         public string $destination,
     ) {
     }

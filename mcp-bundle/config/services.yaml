@@ -2,60 +2,68 @@ services:
     _defaults:
         autoconfigure: true
 
-    contao.mcp_bundle.controller.serialized_mcp_controller:
-        class: Contao\McpBundle\Controller\SerializedMcpController
-        decorates: mcp.server.contao_backend.controller
+    contao_mcp.api.binary_payload_handler:
+        class: Contao\McpBundle\Api\BinaryPayloadHandler
         arguments:
-            - '@.inner'
-            - '@lock.factory'
+            - '@contao.file.upload_size_provider'
+            - '%contao.mcp.max_binary_payload_size%'
 
-    Contao\McpBundle\Response\ApiResponseConverter: ~
-
-    Contao\McpBundle\Resource\TemplateGuidance: ~
-
-    Contao\McpBundle\Api\ApiOperationRegistry:
+    contao_mcp.api.operation_registry:
+        class: Contao\McpBundle\Api\ApiOperationRegistry
         arguments:
             - '@api_platform.metadata.resource.name_collection_factory'
             - '@api_platform.metadata.resource.metadata_collection_factory'
             - '@api_platform.openapi.factory'
             - '@serializer'
 
-    Contao\McpBundle\Api\BinaryPayloadHandler:
+    contao_mcp.controller.serialized_mcp:
+        class: Contao\McpBundle\Controller\SerializedMcpController
+        decorates: mcp.server.contao_backend.controller
         arguments:
-            - '@Contao\CoreBundle\File\UploadSizeProvider'
-            - '%contao.mcp.max_binary_payload_size%'
+            - '@.inner'
+            - '@lock.factory'
 
-    Contao\McpBundle\Tool\ApiTools:
+    contao_mcp.resource.template_guidance:
+        class: Contao\McpBundle\Resource\TemplateGuidance
+
+    contao_mcp.response.api_converter:
+        class: Contao\McpBundle\Response\ApiResponseConverter
+
+    contao_mcp.routing.mcp_request_matcher:
+        class: Contao\McpBundle\Routing\McpRequestMatcher
+
+    contao_mcp.tool.api_tools:
+        class: Contao\McpBundle\Tool\ApiTools
         autoconfigure: true
         arguments:
-            - '@Contao\McpBundle\Api\ApiOperationRegistry'
+            - '@contao_mcp.api.operation_registry'
             - '@http_kernel'
-            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@contao_api.http.api_request_factory'
             - '@request_stack'
-            - '@Contao\McpBundle\Response\ApiResponseConverter'
-            - '@Contao\McpBundle\Api\BinaryPayloadHandler'
+            - '@contao_mcp.response.api_converter'
+            - '@contao_mcp.api.binary_payload_handler'
 
-    Contao\McpBundle\Tool\UserTemplateTools:
+    contao_mcp.tool.user_template_tools:
+        class: Contao\McpBundle\Tool\UserTemplateTools
         autoconfigure: true
         arguments:
             - '@api_platform.metadata.resource.metadata_collection_factory'
             - '@http_kernel'
-            - '@Contao\ApiBundle\Http\ApiRequestFactory'
+            - '@contao_api.http.api_request_factory'
             - '@request_stack'
-            - '@Contao\McpBundle\Response\ApiResponseConverter'
-            - '@Contao\McpBundle\UserTemplate\UserTemplateValidator'
-            - '@Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer'
+            - '@contao_mcp.response.api_converter'
+            - '@contao_mcp.user_template.validator'
+            - '@contao_mcp.user_template.impact_analyzer'
             - '@security.helper'
 
-    Contao\McpBundle\UserTemplate\UserTemplateValidator:
-        arguments:
-            - '@twig'
-            - '@contao.twig.filesystem_loader'
-
-    Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer:
+    contao_mcp.user_template.impact_analyzer:
+        class: Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.inspector'
 
-    contao.mcp_bundle.routing.mcp_request_matcher:
-        class: Contao\McpBundle\Routing\McpRequestMatcher
+    contao_mcp.user_template.validator:
+        class: Contao\McpBundle\UserTemplate\UserTemplateValidator
+        arguments:
+            - '@twig'
+            - '@contao.twig.filesystem_loader'

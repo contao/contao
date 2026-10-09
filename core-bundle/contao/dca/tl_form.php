@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
@@ -292,7 +291,7 @@ class tl_form extends Backend
 
 		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span class="tl_red">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
 
-		if (!BackendUser::getInstance()->isAdmin)
+		if (!System::getContainer()->get('security.helper')->isGranted('ROLE_ADMIN'))
 		{
 			return array();
 		}

@@ -87,7 +87,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
             foreach ($config['firewalls'] as $name => $firewall) {
                 if ($before === $name) {
                     $firewalls['contao_mcp'] = [
-                        'request_matcher' => 'contao.mcp_bundle.routing.mcp_request_matcher',
+                        'request_matcher' => 'contao_mcp.routing.mcp_request_matcher',
                         'stateless' => true,
                         'provider' => 'contao.security.backend_user_provider',
                         'user_checker' => 'contao.security.user_checker',

@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
@@ -128,13 +127,6 @@ class tl_module_news extends Backend
 	 */
 	public function getNewsArchives()
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->news))
-		{
-			return array();
-		}
-
 		$arrArchives = array();
 		$objArchives = Database::getInstance()->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
