@@ -5754,7 +5754,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$lp = (int) Input::get('lp') - 1;
 
-			if ($lp >= 0 && $lp < ceil($this->total / $limit))
+			if ($limit > 0 && $lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
 				$objSessionBag->replace($session);
