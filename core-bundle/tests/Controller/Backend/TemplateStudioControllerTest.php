@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
@@ -33,7 +34,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -122,12 +126,74 @@ class TemplateStudioControllerTest extends TestCase
         $this->assertSame('Given identifier does not exist.', $data['errorMessage']);
     }
 
+    #[DataProvider('provideOperationContexts')]
+    public function testReturnsAnApiErrorOnlyWhenNoOperationCanExecute(bool $api, bool $canExecute): void
+    {
+        $request = new Request();
+        $request->attributes->set('_contao_api', $api);
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
+
+        $bag = new ArrayAttributeBag();
+        $bag->setName('contao_backend');
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->registerBag($bag);
+
+        $request->setSession($session);
+
+        $twig = null;
+
+        if (!$api) {
+            $twig = $this->createMock(Environment::class);
+            $twig
+                ->expects($this->once())
+                ->method('render')
+                ->with('@Contao/backend/template_studio/operation/default_result.stream.html.twig', $this->anything())
+                ->willReturn('Default stream')
+            ;
+        }
+
+        $controller = $this->getBackendTemplatedStudioController($twig, $request, $canExecute);
+        $response = $controller->operation($request, 'foo', 'foo_operation');
+
+        if (!$api) {
+            $this->assertSame(200, $response->getStatusCode());
+            $this->assertSame('Default stream', $response->getContent());
+
+            return;
+        }
+
+        $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame($canExecute ? 200 : 400, $response->getStatusCode());
+
+        if ($canExecute) {
+            $this->assertArrayNotHasKey('errorClass', $data);
+            $this->assertSame('foo_operation', $data['operation']);
+        } else {
+            $this->assertSame(UnprocessableEntityHttpException::class, $data['errorClass']);
+            $this->assertSame('The operation is not available for this template.', $data['errorMessage']);
+        }
+    }
+
+    public static function provideOperationContexts(): iterable
+    {
+        yield 'unavailable API operation' => [true, false];
+        yield 'API operation with default result' => [true, true];
+        yield 'unavailable backend operation' => [false, false];
+        yield 'backend operation with default result' => [false, true];
+    }
+
     /**
      * @param (Environment&MockObject)|null $twig
      */
-    private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null): TemplateStudioController
+    private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null, bool $canExecute = false): TemplateStudioController
     {
         $loader = $this->createStub(ContaoFilesystemLoader::class);
+        $loader
+            ->method('getFirst')
+            ->willReturn('@Contao/foo.html.twig')
+        ;
+
         $loader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -172,15 +238,23 @@ class TemplateStudioControllerTest extends TestCase
             )
         ;
 
-        $fooOperation = new class() extends AbstractOperation {
+        $fooOperation = new class($canExecute) extends AbstractOperation {
+            public function __construct(private readonly bool $canExecute)
+            {
+            }
+
             public function canExecute(OperationContext $context): bool
             {
-                return false;
+                return $this->canExecute;
             }
 
             public function execute(Request $request, OperationContext $context): Response|null
             {
-                throw new \RuntimeException('not implemented');
+                if (!$this->canExecute) {
+                    throw new \RuntimeException('Unavailable operation must not execute.');
+                }
+
+                return null;
             }
 
             public function getName(): string
