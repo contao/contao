@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Tests\DataContainer;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Validator\Exception\ValidationException;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
@@ -122,6 +123,84 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $result = $this->createRecords($dc)->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
 
         $this->assertSame(['title' => 'After'], $result->data);
+    }
+
+    #[DataProvider('provideValidationRedirects')]
+    public function testReportsWidgetErrorsAndRestoresPreviousErrors(bool $redirect): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function () use ($redirect): void {
+                    $attributes = $this->requestStack->getMainRequest()->attributes;
+                    $this->assertFalse($attributes->has('_contao_widget_error'));
+                    $this->assertFalse($attributes->has('_contao_widget_errors'));
+                    $attributes->set('_contao_widget_error', true);
+                    $attributes->set('_contao_widget_errors', ['title' => ['First error', 'Second error'], 'alias' => ['Invalid alias']]);
+
+                    if ($redirect) {
+                        throw new ResponseException(new RedirectResponse('/contao'));
+                    }
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $attributes = $this->requestStack->getMainRequest()->attributes;
+        $attributes->set('_contao_widget_error', true);
+        $attributes->set('_contao_widget_errors', ['previous' => ['Previous error']]);
+
+        try {
+            $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+            $this->fail('Expected widget validation errors.');
+        } catch (ValidationException $exception) {
+            $violations = $exception->getConstraintViolationList();
+            $this->assertCount(3, $violations);
+            $this->assertSame('title', $violations[0]->getPropertyPath());
+            $this->assertSame('First error', $violations[0]->getMessage());
+            $this->assertSame('title', $violations[1]->getPropertyPath());
+            $this->assertSame('Second error', $violations[1]->getMessage());
+            $this->assertSame('alias', $violations[2]->getPropertyPath());
+            $this->assertSame('Invalid alias', $violations[2]->getMessage());
+        }
+
+        $this->assertTrue($attributes->get('_contao_widget_error'));
+        $this->assertSame(['previous' => ['Previous error']], $attributes->get('_contao_widget_errors'));
+        $this->assertSame([], $this->requestStack->getCurrentRequest()->request->all());
+    }
+
+    public static function provideValidationRedirects(): iterable
+    {
+        yield 'form rendered with errors' => [false];
+        yield 'redirect with errors' => [true];
+    }
+
+    public function testKeepsGenericRejectionWhenNoWidgetMessagesAreAvailable(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturn(null)
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionMessage('The data container rejected the submitted fields.');
+
+        $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
     }
 
     public static function providePreviousTitles(): iterable
