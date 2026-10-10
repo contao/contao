@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class ContaoCalendarBundle extends Bundle
+class ContaoCalendarBundle extends AbstractBundle
 {
-    public function getPath(): string
+    public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        return \dirname(__DIR__);
+        $configurator->import('../config/services.yaml');
     }
 }

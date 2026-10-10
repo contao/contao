@@ -347,7 +347,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode == self::PASTE_INTO)
+			if ($mode == self::PASTE_INTO || $mode == self::PASTE_INTO_APPEND)
 			{
 				return $pid;
 			}
@@ -5754,7 +5754,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$lp = (int) Input::get('lp') - 1;
 
-			if ($lp >= 0 && $lp < ceil($this->total / $limit))
+			if ($limit > 0 && $lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
 				$objSessionBag->replace($session);

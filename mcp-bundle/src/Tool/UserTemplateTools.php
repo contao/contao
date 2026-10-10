@@ -107,8 +107,8 @@ final class UserTemplateTools
         return $this->execute('contao_api_user_template_operation_delete', array_filter(['name' => $name, 'theme' => $theme], static fn ($value): bool => null !== $value));
     }
 
-    #[McpTool(name: 'contao_template_execute_operation', description: 'Execute a create_* or rename_* operation advertised by contao_template_read. Read contao://template-guidance and create a recovery point first. Call once with empty parameters to obtain suggested values and the allowed pattern without mutation, then call again with a valid identifier_fragment.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function executeOperation(string $operation, string $name, #[Schema(type: 'object', description: 'Use {} first for operation guidance; to execute, pass the returned valid identifier_fragment.', additionalProperties: true)] array $parameters = [], string|null $theme = null): CallToolResult
+    #[McpTool(name: 'contao_template_execute_operation', description: 'Execute a create_* or rename_* operation advertised by contao_template_read. Read contao://template-guidance and create a recovery point first. Call once without parameters to obtain operation guidance without mutation, then call again with the required parameters.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
+    public function executeOperation(string $operation, string $name, #[Schema(definition: ['description' => 'Omit for operation guidance; to execute, pass the parameters described by the operation.', 'anyOf' => [['type' => 'object', 'additionalProperties' => true], ['type' => 'array', 'maxItems' => 0]]])] array $parameters = [], string|null $theme = null): CallToolResult
     {
         $this->assertAdmin();
 
