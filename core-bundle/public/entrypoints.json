@@ -2,10 +2,10 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/contaocore/backend.e6838f31.css"
+        "/bundles/contaocore/backend.c3adb9cf.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.b4c59fa1.js"
+        "/bundles/contaocore/backend.e82f09ef.js"
       ]
     },
     "navigation": {
@@ -28,7 +28,7 @@
     },
     "login": {
       "css": [
-        "/bundles/contaocore/login.999fe166.css"
+        "/bundles/contaocore/login.c0a8664b.css"
       ]
     },
     "hugerte": {
