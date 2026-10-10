@@ -23,6 +23,7 @@ class BackendSearchTest extends AbstractContaoMonorepoE2ETestCase
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig('calendar-bundle', 'core-bundle', 'faq-bundle', 'loupe-bridge', 'news-bundle', 'newsletter-bundle');
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
@@ -39,10 +40,18 @@ class BackendSearchTest extends AbstractContaoMonorepoE2ETestCase
         self::managedEdition()->runConsole(['messenger:consume', 'contao_prio_normal', '--time-limit=1']);
 
         $backend = $this->login();
-        $backend->page()->locator('#backend-search')->fill('Main website home');
-        $result = $backend->page()->locator('#backend-search--results .tl_search_hit:has(.hit_edit[href*="do=page"])')
+        $backend
+            ->page()
+            ->locator('#backend-search')
+            ->fill('Main website home')
+        ;
+
+        $result = $backend
+            ->page()
+            ->locator('#backend-search--results .tl_search_hit:has(.hit_edit[href*="do=page"])')
             ->filter(['hasText' => 'Main website home'])
         ;
+
         $result->waitFor(['state' => 'visible']);
 
         $this->assertSame(1, $result->count());
