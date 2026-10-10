@@ -289,7 +289,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
 
         $routes = $this->createApiLoader($factory)->load(null);
 
-        $this->assertSame($creatable, null !== $routes->get('contao_api_dc_preview_link_post'));
+        $this->assertSame($creatable, \array_key_exists('contao_api_dc_preview_link_post', $routes->all()));
         $this->assertNotNull($routes->get('contao_api_dc_preview_link_get_collection'));
         $this->assertNotNull($routes->get('contao_api_dc_preview_link_get'));
         $this->assertNotNull($routes->get('contao_api_dc_preview_link_patch'));
