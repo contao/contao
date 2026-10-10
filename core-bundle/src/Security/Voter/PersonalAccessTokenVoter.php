@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter;
 
+use Contao\BackendUser;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\User;
+use Contao\FrontendUser;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
@@ -42,12 +44,20 @@ class PersonalAccessTokenVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, Vote|null $vote = null): bool
     {
-        $user = $token->getUser();
-
-        if (!$user instanceof User || $token instanceof TwoFactorTokenInterface) {
+        if ($token instanceof TwoFactorTokenInterface) {
             return false;
         }
 
-        return $subject->getUserId() === (int) $user->id;
+        $user = $token->getUser();
+
+        if ($user instanceof BackendUser) {
+            return ContaoCoreBundle::SCOPE_BACKEND === $subject->getScope() && $subject->getUserId() === (int) $user->id;
+        }
+
+        if ($user instanceof FrontendUser) {
+            return ContaoCoreBundle::SCOPE_FRONTEND === $subject->getScope() && $subject->getUserId() === (int) $user->id;
+        }
+
+        return false;
     }
 }

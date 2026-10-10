@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\Authentication;
+namespace Contao\CoreBundle\Security\AccessToken;
 
 use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,19 +18,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
-class AccessTokenSuccessHandler implements AuthenticationSuccessHandlerInterface
+/**
+ * @internal
+ */
+class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
-    /**
-     * @internal
-     */
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-    ) {
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): null
     {
-        $personalAccessToken = $token->getAttribute('access_token');
+        if (!$token->hasAttribute('access_token_id')) {
+            return null;
+        }
+
+        $id = $token->getAttribute('access_token_id');
+
+        $personalAccessToken = $this->entityManager->getRepository(PersonalAccessToken::class)->find($id);
 
         if (!$personalAccessToken instanceof PersonalAccessToken) {
             return null;

@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Entity\PersonalAccessToken;
-use Contao\CoreBundle\Security\Authentication\AccessTokenHandler;
-use Contao\CoreBundle\Security\Authentication\AccessTokenManager;
+use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
+use Contao\CoreBundle\Security\AccessToken\TokenHandler;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -34,7 +34,7 @@ class AccessTokenHandlerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $accessTokenHandler = new AccessTokenHandler($accessTokenManager, $this->createStub(ContaoUserProvider::class));
+        $accessTokenHandler = new TokenHandler($accessTokenManager, $this->createStub(ContaoUserProvider::class));
 
         $this->expectException(BadCredentialsException::class);
 
@@ -75,7 +75,7 @@ class AccessTokenHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $accessTokenHandler = new AccessTokenHandler(
+        $accessTokenHandler = new TokenHandler(
             $accessTokenManager,
             $backendUserProvider,
         );

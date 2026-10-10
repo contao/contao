@@ -1,6 +1,7 @@
 security:
     password_hashers:
         Contao\User: auto
+        Contao\CoreBundle\Entity\PersonalAccessToken: auto
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
     providers:
@@ -18,7 +19,7 @@ security:
             stateless: true
             login_throttling: ~
             access_token:
-                token_handler: contao.security.access_token_handler
+                token_handler: contao.security.backend_access_token_handler
                 success_handler: contao.security.access_token_success_handler
 
         contao_backend:
@@ -53,7 +54,8 @@ security:
             stateless: true
             login_throttling: ~
             access_token:
-                token_handler: contao.security.access_token_handler
+                token_handler: contao.security.frontend_access_token_handler
+                success_handler: contao.security.access_token_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher

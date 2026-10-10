@@ -1176,22 +1176,16 @@ services:
             - '@contao.routing.page_registry'
             - '@http_kernel'
 
-    contao.security.access_token_handler:
-        class: Contao\CoreBundle\Security\Authentication\AccessTokenHandler
+    contao.security.access_token.authentication_success_handler:
+        class: Contao\CoreBundle\Security\AccessToken\AuthenticationSuccessHandler
         arguments:
-            - '@contao.security.access_token_manager'
-            - '@contao.security.backend_user_provider'
+            - '@doctrine.orm.entity_manager'
 
-    contao.security.access_token_manager:
-        class: Contao\CoreBundle\Security\Authentication\AccessTokenManager
+    contao.security.access_token.manager:
+        class: Contao\CoreBundle\Security\AccessToken\AccessTokenManager
         public: true
         arguments:
             - '@security.password_hasher_factory'
-            - '@doctrine.orm.entity_manager'
-
-    contao.security.access_token_success_handler:
-        class: Contao\CoreBundle\Security\Authentication\AccessTokenSuccessHandler
-        arguments:
             - '@doctrine.orm.entity_manager'
 
     contao.security.authentication_failure_handler:
@@ -1211,6 +1205,14 @@ services:
             - '@uri_signer'
             - '@security.token_storage'
             - '@?logger'
+
+    contao.security.backend_access_token_handler:
+        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
+        arguments:
+            - '@contao.security.access_token.manager'
+            - '@database_connection'
+            - '@security.password_hasher_factory'
+            - 'backend'
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
@@ -1354,6 +1356,14 @@ services:
             - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
+
+    contao.security.frontend_access_token_handler:
+        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
+        arguments:
+            - '@contao.security.access_token.manager'
+            - '@database_connection'
+            - '@security.password_hasher_factory'
+            - 'frontend'
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator

@@ -17,41 +17,41 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Index;
-use Doctrine\ORM\Mapping\Table;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-#[Table(name: 'tl_personal_access_token')]
 #[Entity(PersonalAccessTokenRepository::class)]
-#[Index('id_expires', ['id', 'expiresAt'])]
 class PersonalAccessToken
 {
     #[Id]
     #[Column(type: UuidType::NAME, unique: true)]
     private readonly Uuid $id;
 
+    #[Column(type: Types::STRING, length: 16)]
+    protected readonly string $scope;
+
     #[Column(type: Types::INTEGER, options: ['unsigned' => true])]
-    protected int $userId;
+    protected readonly int $userId;
 
     #[Column(type: Types::DATETIME_IMMUTABLE)]
-    protected \DateTimeImmutable $createdAt;
+    protected readonly \DateTimeImmutable $createdAt;
 
     #[Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    protected \DateTimeImmutable|null $expiresAt;
+    protected readonly \DateTimeImmutable|null $expiresAt;
 
     #[Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     protected \DateTimeImmutable|null $lastUsed = null;
 
     #[Column(type: Types::STRING)]
-    protected string $name;
+    protected readonly string $name;
 
     #[Column(type: Types::STRING)]
-    protected string $secret;
+    protected readonly string $secret;
 
-    public function __construct(int $userId, string $name, #[\SensitiveParameter] string $secret, \DateTimeInterface|null $expiresAt = null)
+    public function __construct(string $scope, int $userId, string $name, #[\SensitiveParameter] string $secret, \DateTimeInterface|null $expiresAt = null)
     {
         $this->id = Uuid::v7();
+        $this->scope = $scope;
         $this->userId = $userId;
         $this->createdAt = new \DateTimeImmutable();
         $this->name = $name;
@@ -93,6 +93,11 @@ class PersonalAccessToken
         $this->lastUsed = $lastUsed;
 
         return $this;
+    }
+
+    public function getScope(): string
+    {
+        return $this->scope;
     }
 
     public function getUserId(): int

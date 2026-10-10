@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
-use Contao\CoreBundle\Security\Authentication\AccessTokenManager;
+use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -207,7 +207,7 @@ class ModuleTwoFactor extends BackendModule
 						$expiresAt = (new \DateTimeImmutable())->modify(\sprintf('+%d days', $expiresWidget->value));
 					}
 
-					$plainToken = $accessTokenManager->createToken($user, $nameWidget->value, $expiresAt);
+					$plainToken = $accessTokenManager->createBackendToken($user, $nameWidget->value, $expiresAt);
 
 					$session->set('_created_pat_token', $plainToken);
 
