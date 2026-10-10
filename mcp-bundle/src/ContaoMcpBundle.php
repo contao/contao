@@ -36,8 +36,6 @@ class ContaoMcpBundle extends AbstractBundle
 
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $container->addCompilerPass(new RemoveUnavailableToolsPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 20);
     }
 
