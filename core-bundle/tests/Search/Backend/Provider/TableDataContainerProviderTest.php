@@ -71,7 +71,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
     {
         $user = $this->createStub(UserInterface::class);
 
-        $document = (new Document('1', TableDataContainerProvider::TYPE_PREFIX.'tl_content', ''))
+        $document = new Document('1', TableDataContainerProvider::TYPE_PREFIX.'tl_content', '')
             ->withMetadata(['table' => 'tl_content', 'row' => ['id' => 1]])
         ;
 
