@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
@@ -448,10 +449,12 @@ class TemplateStudioController extends AbstractBackendController
         $operationContext = $this->getOperationContext($identifier);
 
         $result = null;
+        $executed = false;
 
         foreach ($candidates as $candidate) {
             if ($candidate->canExecute($operationContext)) {
                 $result = $candidate->execute($request, $operationContext);
+                $executed = true;
 
                 break;
             }
@@ -461,10 +464,14 @@ class TemplateStudioController extends AbstractBackendController
         // nothing at all - in which case we stream a default result.
         $request->setRequestFormat('turbo_stream');
 
-        return $result ?? $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
-            'operation' => $operationName,
-            'context' => $operationContext,
-        ]);
+        return $result ?? $this->render(
+            '@Contao/backend/template_studio/operation/default_result.stream.html.twig',
+            [
+                'operation' => $operationName,
+                'context' => $operationContext,
+            ],
+            apiError: $executed ? null : new UnprocessableEntityHttpException('The operation is not available for this template.'),
+        );
     }
 
     #[Route(
