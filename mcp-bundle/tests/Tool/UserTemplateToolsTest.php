@@ -204,6 +204,7 @@ final class UserTemplateToolsTest extends TestCase
         ;
 
         $payloads = [];
+
         $kernel = $this->createMock(HttpKernelInterface::class);
         $kernel
             ->expects($this->exactly(2))
