@@ -326,9 +326,11 @@
                 const userField = form.querySelector('input[name="user"]');
                 const timeField = form.querySelector('input[name="previewTime"]');
 
-                form.querySelector('#ctrl_preview_time_reset')?.addEventListener('click', function () {
+                form.querySelector('#ctrl_preview_time_clear')?.addEventListener('click', function () {
                     timeField.value = '';
-                    form.requestSubmit();
+
+                    // Safari needs a second assignment to clear the date validation state
+                    timeField.value = '';
                 });
 
                 form.addEventListener('submit', function (e) {
