@@ -51,9 +51,9 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class ContaoCoreBundle extends Bundle
+class ContaoCoreBundle extends AbstractBundle
 {
     final public const SCOPE_BACKEND = 'backend';
 
@@ -71,8 +71,6 @@ class ContaoCoreBundle extends Bundle
 
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $extension = $container->getExtension('security');
         $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
@@ -145,10 +143,5 @@ class ContaoCoreBundle extends Bundle
         }
 
         return $version;
-    }
-
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
     }
 }
