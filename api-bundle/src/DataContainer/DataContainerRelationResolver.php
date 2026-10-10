@@ -53,7 +53,7 @@ final class DataContainerRelationResolver
     {
         $relation = $this->getConfiguredRelation($field->config) ?? $this->getImplicitRelation($field, $row);
 
-        return $relation && [] !== ($this->getReadOperations()[$relation->table] ?? []) ? $relation : null;
+        return $relation instanceof DataContainerRelationDefinition && [] !== ($this->getReadOperations()[$relation->table] ?? []) ? $relation : null;
     }
 
     public function resolveToReference(mixed $value, DataContainerFieldContext $field, array $row = []): mixed
@@ -283,7 +283,7 @@ final class DataContainerRelationResolver
         return $this->readOperations;
     }
 
-    private function getConfiguredRelation(array $config): DataContainerRelationDefinition|null
+    private function getConfiguredRelation(array $config): object|null
     {
         $converter = $this->converters->get($config);
 

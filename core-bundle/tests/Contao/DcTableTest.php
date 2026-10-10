@@ -47,6 +47,43 @@ class DcTableTest extends TestCase
         parent::tearDown();
     }
 
+    #[DataProvider('provideInsertPositions')]
+    public function testDeterminesTheParentForInsertPositions(string $action, int $mode, int $expected): void
+    {
+        $stack = new RequestStack();
+        $stack->push(Request::create('/contao?act='.$action.'&pid=252&mode='.$mode));
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', $stack);
+        System::setContainer($container);
+
+        $dc = $this->getMockBuilder(DC_Table::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getCurrentRecord'])
+            ->getMock()
+        ;
+
+        $dc
+            ->expects(DataContainer::PASTE_AFTER === $mode ? $this->once() : $this->never())
+            ->method('getCurrentRecord')
+            ->with(252)
+            ->willReturn(['id' => 252, 'pid' => 5, 'ptable' => 'tl_article'])
+        ;
+
+        new \ReflectionProperty($dc, 'ptable')->setValue($dc, 'tl_content');
+
+        $this->assertSame($expected, new \ReflectionMethod(DC_Table::class, 'findCurrentPid')->invoke($dc));
+    }
+
+    public static function provideInsertPositions(): iterable
+    {
+        foreach (['create', 'cut', 'copy', 'cutAll', 'copyAll'] as $action) {
+            yield $action.' into first' => [$action, DataContainer::PASTE_INTO, 252];
+            yield $action.' into last' => [$action, DataContainer::PASTE_INTO_APPEND, 252];
+            yield $action.' after sibling' => [$action, DataContainer::PASTE_AFTER, 5];
+        }
+    }
+
     #[DataProvider('getPalette')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
