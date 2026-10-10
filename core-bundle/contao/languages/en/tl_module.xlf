@@ -380,6 +380,12 @@
       <trans-unit id="tl_module.reg_text.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any input field (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
+      <trans-unit id="tl_module.reg_preventEnumeration.0">
+        <source>Do not disclose registered e-mail addresses</source>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_preventEnumeration.1">
+        <source>Respond the same way regardless of whether the e-mail address has been registered.</source>
+      </trans-unit>
       <trans-unit id="tl_module.reg_password.0">
         <source>Password message</source>
       </trans-unit>
