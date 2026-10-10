@@ -13,10 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\User;
+use Doctrine\DBAL\Connection;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
+    public function __construct(private readonly Connection $connection)
+    {
+    }
+
     public function isBackupCode(object $user, string $code): bool
     {
         if (!$user instanceof User) {
@@ -75,8 +80,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
 
         unset($backupCodes[$key]);
 
-        $user->backupCodes = json_encode(array_values($backupCodes), JSON_THROW_ON_ERROR);
-        $user->save();
+        $this->saveUser($user, $backupCodes);
     }
 
     public function generateBackupCodes(User $user): array
@@ -87,15 +91,12 @@ class BackupCodeManager implements BackupCodeManagerInterface
             $backupCodes[] = $this->generateCode();
         }
 
-        $user->backupCodes = json_encode(
-            array_map(
-                static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
-                $backupCodes,
-            ),
-            JSON_THROW_ON_ERROR,
-        );
-
-        $user->save();
+        // Only run password_hash when saving to the database, the method needs to return
+        // the raw values.
+        $this->saveUser($user, array_map(
+            static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
+            $backupCodes,
+        ));
 
         return $backupCodes;
     }
@@ -103,5 +104,14 @@ class BackupCodeManager implements BackupCodeManagerInterface
     private function generateCode(): string
     {
         return bin2hex(random_bytes(3)).'-'.bin2hex(random_bytes(3));
+    }
+
+    private function saveUser(User $user, array $backupCodes): void
+    {
+        $this->connection->update(
+            $user->getTable(),
+            ['backupCodes' => json_encode(array_values($backupCodes), JSON_THROW_ON_ERROR)],
+            ['id' => $user->id],
+        );
     }
 }

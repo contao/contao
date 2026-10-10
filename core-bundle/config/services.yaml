@@ -703,7 +703,7 @@ services:
         class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
         arguments:
             - '@contao.framework'
-            - '@contao.security.token_checker'
+            - '@security.helper'
             - '@contao.routing.content_url_generator'
 
     contao.insert_tag.resolver.translation:
@@ -1195,6 +1195,7 @@ services:
             - '@contao.routing.content_url_generator'
             - '@uri_signer'
             - '@security.token_storage'
+            - '@database_connection'
             - '@?logger'
 
     contao.security.backend_access_voter:
@@ -1203,11 +1204,21 @@ services:
             - '@contao.framework'
             - '@contao.data_container.dca_hierarchy'
 
-    contao.security.backend_user_provider:
-        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+    contao.security.backend_user_factory:
+        class: Contao\CoreBundle\Security\User\BackendUserFactory
+        public: true
         arguments:
             - '@contao.framework'
-            - Contao\BackendUser
+            - '@database_connection'
+
+    contao.security.backend_user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.security.backend_user_factory'
+            - '@contao.data_container.virtual_fields_handler'
 
     contao.security.data_container.article_content_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
@@ -1351,11 +1362,21 @@ services:
             - '@contao.security.frontend_user_provider'
             - '@?logger'
 
+    contao.security.frontend_user_factory:
+        class: Contao\CoreBundle\Security\User\FrontendUserFactory
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.security.token_checker'
+
     contao.security.frontend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
-            - Contao\FrontendUser
+            - '@database_connection'
+            - '@contao.security.frontend_user_factory'
+            - '@contao.data_container.virtual_fields_handler'
 
     contao.security.legacy_backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\LegacyBackendAccessVoter
@@ -1402,6 +1423,8 @@ services:
     contao.security.two_factor.backup_code_manager:
         class: Contao\CoreBundle\Security\TwoFactor\BackupCodeManager
         public: true
+        arguments:
+            - '@database_connection'
 
     contao.security.two_factor.provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider
@@ -1417,6 +1440,7 @@ services:
             - '@request_stack'
             - '@scheb_two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
+            - '@database_connection'
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker

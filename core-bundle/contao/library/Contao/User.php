@@ -16,13 +16,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Authenticates and initializes user objects
- *
- * The class supports user authentication, login and logout, persisting the
- * session data and initializing the user object from a database row. It
- * functions as abstract parent class for the "BackendUser" and "FrontendUser"
- * classes of the core.
- *
  * @property integer           $id
  * @property integer           $tstamp
  * @property string|null       $username
@@ -377,18 +370,19 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'password' => $this->password,
 			'disable' => $this->disable,
 			'start' => $this->start,
-			'stop' => $this->stop
+			'stop' => $this->stop,
+			'roles' => $this->roles
 		);
 	}
 
 	public function __unserialize(array $data): void
 	{
-		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop', 'roles'))
 		{
 			return;
 		}
 
-		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop, $this->roles) = array_values($data);
 	}
 
 	/**

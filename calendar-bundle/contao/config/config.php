@@ -11,6 +11,7 @@
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Controller\Backend\CsvImportController;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\ModuleCalendar;
 use Contao\ModuleEventlist;
 use Contao\ModuleEventMenu;
@@ -42,7 +43,7 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 }
 
 // Add permissions
-$GLOBALS['TL_PERMISSIONS'][] = 'calendars';
+BackendUserFactory::registerPermissionField('calendars');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;

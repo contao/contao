@@ -25,6 +25,8 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
@@ -174,6 +176,7 @@ class TwoFactorControllerTest extends TestCase
     public function testRedirectsAfterTwoFactorHasBeenDisabled(): void
     {
         $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user->id = 1;
         $user->secret = '';
         $user->useTwoFactor = true;
 
@@ -183,6 +186,15 @@ class TwoFactorControllerTest extends TestCase
             $user,
             true,
         );
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with('tl_member', ['secret' => null, 'useTwoFactor' => false, 'backupCodes' => null], ['id' => 1], ['useTwoFactor' => Types::BOOLEAN])
+        ;
+
+        $container->set('database_connection', $connection);
 
         $trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
         $trustedDeviceManager
@@ -214,8 +226,6 @@ class TwoFactorControllerTest extends TestCase
 
         $response = $controller($request, $module, 'main');
 
-        $this->assertNull($user->backupCodes);
-        $this->assertFalse($user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
@@ -332,14 +342,10 @@ class TwoFactorControllerTest extends TestCase
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
     {
-        $user = $this->createClassWithPropertiesMock(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user->id = 1;
         $user->secret = '';
         $user->useTwoFactor = false;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, true),
@@ -347,6 +353,15 @@ class TwoFactorControllerTest extends TestCase
             $user,
             true,
         );
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with('tl_member', ['useTwoFactor' => true], ['id' => 1], ['useTwoFactor' => Types::BOOLEAN])
+        ;
+
+        $container->set('database_connection', $connection);
 
         $page = $this->mockPageModel();
 
@@ -452,6 +467,7 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('contao.security.two_factor.trusted_device_manager', $services);
         $this->assertArrayHasKey('security.authentication_utils', $services);
         $this->assertArrayHasKey('translator', $services);
+        $this->assertArrayHasKey('database_connection', $services);
     }
 
     private function mockAuthenticator(FrontendUser|null $user = null, bool|null $return = null): Authenticator&Stub
@@ -534,6 +550,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.token_storage', $tokenStorage);
         $container->set('contao.security.two_factor.backup_code_manager', $this->createStub(BackupCodeManager::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('database_connection', $this->createStub(Connection::class));
 
         System::setContainer($container);
 

@@ -12,13 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\Security\User\BackendUser;
 use Contao\Database;
 use Contao\Environment;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Connection;
 
 class BackendUserTest extends ContaoTestCase
 {
@@ -40,11 +39,10 @@ class BackendUserTest extends ContaoTestCase
     public function testCreatesUserFromData(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $this->createStub(Connection::class));
 
         System::setContainer($container);
 
-        $user = BackendUser::createFromData([
+        $user = new BackendUser([
             'id' => 0,
             'username' => 'virtual-user',
             'admin' => false,
@@ -55,7 +53,6 @@ class BackendUserTest extends ContaoTestCase
             'useCE' => false,
             'doNotCollapse' => false,
             'thumbnails' => true,
-            'backendTheme' => 'flexible',
         ]);
 
         $this->assertSame('virtual-user', $user->getUserIdentifier());

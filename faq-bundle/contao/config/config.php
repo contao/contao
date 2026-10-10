@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\ModuleFaqList;
@@ -37,7 +38,7 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 }
 
 // Add permissions
-$GLOBALS['TL_PERMISSIONS'][] = 'faqs';
+BackendUserFactory::registerPermissionField('faqs');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_faq_category'] = FaqCategoryModel::class;

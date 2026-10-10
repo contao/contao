@@ -23,6 +23,8 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,6 +56,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
+        $services['database_connection'] = Connection::class;
 
         return $services;
     }
@@ -137,8 +140,12 @@ class TwoFactorController extends AbstractFrontendModuleController
         if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
             if ($authenticator->validateCode($user, $request->request->get('verify'))) {
                 // Enable 2FA
-                $user->useTwoFactor = true;
-                $user->save();
+                $this->container->get('database_connection')->update(
+                    'tl_member',
+                    ['useTwoFactor' => true],
+                    ['id' => $user->id],
+                    ['useTwoFactor' => Types::BOOLEAN],
+                );
 
                 return new RedirectResponse($return);
             }
@@ -148,8 +155,11 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         // Generate the secret
         if (!$user->secret) {
-            $user->secret = random_bytes(128);
-            $user->save();
+            $this->container->get('database_connection')->update(
+                'tl_member',
+                ['secret' => random_bytes(128)],
+                ['id' => $user->id],
+            );
         }
 
         $template->set('enable', true);
@@ -166,10 +176,12 @@ class TwoFactorController extends AbstractFrontendModuleController
             return null;
         }
 
-        $user->secret = null;
-        $user->useTwoFactor = false;
-        $user->backupCodes = null;
-        $user->save();
+        $this->container->get('database_connection')->update(
+            'tl_member',
+            ['secret' => null, 'useTwoFactor' => false, 'backupCodes' => null],
+            ['id' => $user->id],
+            ['useTwoFactor' => Types::BOOLEAN],
+        );
 
         // Clear all trusted devices
         $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
