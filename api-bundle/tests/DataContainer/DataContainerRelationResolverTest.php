@@ -155,6 +155,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('match')
         ;
+
         $resolver = $this->createResolver($router, new WidgetConverterRegistry([$converter]));
         $field = new DataContainerFieldContext(['inputType' => 'custom']);
 
