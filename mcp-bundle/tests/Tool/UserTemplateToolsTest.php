@@ -17,10 +17,14 @@ use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollection
 use Contao\ApiBundle\Http\ApiRequestFactory;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\McpBundle\Response\ApiResponseConverter;
 use Contao\McpBundle\Tool\UserTemplateTools;
 use Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer;
 use Contao\McpBundle\UserTemplate\UserTemplateValidator;
+use Mcp\Capability\Discovery\DocBlockParser;
+use Mcp\Capability\Discovery\SchemaGenerator;
+use Mcp\Capability\Discovery\SchemaValidator;
 use Mcp\Exception\ToolCallException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -159,6 +163,86 @@ final class UserTemplateToolsTest extends TestCase
         );
 
         $tools->executeOperation('save', 'content_element/text');
+    }
+
+    public function testExecuteOperationAcceptsGenericObjectParameters(): void
+    {
+        $schema = new SchemaGenerator(new DocBlockParser())->generate(new \ReflectionMethod(UserTemplateTools::class, 'executeOperation'));
+        $parametersSchema = $schema['properties']['parameters'];
+
+        $this->assertSame([], $parametersSchema['default']);
+        $this->assertSame(
+            [
+                ['type' => 'object', 'additionalProperties' => true],
+                ['type' => 'array', 'maxItems' => 0],
+            ],
+            $parametersSchema['anyOf'],
+        );
+        $this->assertSame(['operation', 'name'], $schema['required']);
+
+        $validator = new SchemaValidator();
+
+        $this->assertSame([], $validator->validateAgainstJsonSchema(['operation' => 'create_variant', 'name' => 'content_element/text', 'parameters' => []], $schema));
+        $this->assertSame([], $validator->validateAgainstJsonSchema(['operation' => 'create_variant', 'name' => 'content_element/text', 'parameters' => ['custom_parameter' => 'value']], $schema));
+        $this->assertNotSame([], $validator->validateAgainstJsonSchema(['operation' => 'create_variant', 'name' => 'content_element/text', 'parameters' => ['value']], $schema));
+    }
+
+    public function testForwardsOperationParameters(): void
+    {
+        $operation = $this->createStub(AbstractOperation::class);
+        $operation
+            ->method('getName')
+            ->willReturn('create_variant')
+        ;
+
+        $router = $this->createMock(UrlGeneratorInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->with('contao_api_user_template_operation_create_variant', ['theme' => 'demo'])
+            ->willReturn('/contao/api/user_template_operations/create_variant')
+        ;
+
+        $payloads = [];
+
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel
+            ->expects($this->exactly(2))
+            ->method('handle')
+            ->willReturnCallback(
+                function (Request $request, int $type) use (&$payloads): Response {
+                    $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
+                    $payloads[] = json_decode($request->getContent(), true, flags: JSON_THROW_ON_ERROR);
+
+                    return new Response('{}', 200);
+                },
+            )
+        ;
+
+        $stack = new RequestStack();
+        $stack->push(Request::create('https://example.org/contao/mcp'));
+
+        $tools = new UserTemplateTools(
+            new UserTemplateResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class), [$operation]),
+            $kernel,
+            new ApiRequestFactory($router),
+            $stack,
+            new ApiResponseConverter(),
+            new UserTemplateValidator(new Environment(new ArrayLoader()), $this->createStub(ContaoFilesystemLoader::class)),
+            new UserTemplateImpactAnalyzer($this->createStub(ContaoFilesystemLoader::class), $this->createStub(Inspector::class)),
+            $this->createAdminSecurity(),
+        );
+
+        $tools->executeOperation('create_variant', 'content_element/text', theme: 'demo');
+        $tools->executeOperation('create_variant', 'content_element/text', ['identifier_fragment' => 'compact', 'custom_parameter' => 'value'], 'demo');
+
+        $this->assertSame(
+            [
+                ['name' => 'content_element/text', 'parameters' => []],
+                ['name' => 'content_element/text', 'parameters' => ['identifier_fragment' => 'compact', 'custom_parameter' => 'value']],
+            ],
+            $payloads,
+        );
     }
 
     private function createAdminSecurity(): Security
