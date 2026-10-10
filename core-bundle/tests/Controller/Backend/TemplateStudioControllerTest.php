@@ -135,8 +135,10 @@ class TemplateStudioControllerTest extends TestCase
 
         $bag = new ArrayAttributeBag();
         $bag->setName('contao_backend');
+
         $session = new Session(new MockArraySessionStorage());
         $session->registerBag($bag);
+
         $request->setSession($session);
 
         $twig = null;
