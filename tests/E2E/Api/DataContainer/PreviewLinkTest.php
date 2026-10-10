@@ -41,7 +41,8 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertArrayHasKey('/contao/api/dc/preview_link', $data['paths']);
         $this->assertArrayHasKey('get', $data['paths']['/contao/api/dc/preview_link']);
 
-        // Preview links are marked as notCreatable in the DCA, so the API documentation must omit POST.
+        // Preview links are marked as notCreatable in the DCA, so the API documentation
+        // must omit POST.
         $this->assertArrayNotHasKey('post', $data['paths']['/contao/api/dc/preview_link']);
         $this->assertArrayHasKey('post', $data['paths']['/contao/api/dc/page']);
     }
