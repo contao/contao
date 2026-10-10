@@ -347,7 +347,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode == self::PASTE_INTO)
+			if ($mode == self::PASTE_INTO || $mode == self::PASTE_INTO_APPEND)
 			{
 				return $pid;
 			}
