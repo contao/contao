@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Provide methods to modify the database.
@@ -3179,7 +3181,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->noReload = true;
 						Message::addError($e->getMessage());
 						$request = System::getContainer()->get('request_stack')?->getMainRequest();
-						$request?->attributes->set('_contao_widget_error', $request->attributes->get('_contao_widget_error') ?: true);
+
+						if ($request !== null)
+						{
+							$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+							$errors->add(new ConstraintViolation($e->getMessage(), $e->getMessage(), array(), null, '', $arrValues));
+							$request->attributes->set('_contao_widget_errors', $errors);
+						}
 
 						break;
 					}

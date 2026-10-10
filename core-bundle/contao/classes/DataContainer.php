@@ -572,15 +572,6 @@ abstract class DataContainer extends Backend
 					$objWidget->addError($e->getMessage());
 				}
 			}
-
-			if ($objWidget->hasErrors())
-			{
-				$request = System::getContainer()->get('request_stack')->getMainRequest();
-				$errors = $request->attributes->get('_contao_widget_error');
-				$errors = \is_array($errors) ? $errors : array();
-				$errors[$this->strField] = $objWidget->getErrors();
-				$request->attributes->set('_contao_widget_error', $errors);
-			}
 		}
 
 		$wizard = '';

@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\Database\Result;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Generates and validates form fields
@@ -481,7 +483,13 @@ abstract class Widget extends Controller
 		$this->arrErrors[] = $strError;
 
 		$request = System::getContainer()->get('request_stack')?->getMainRequest();
-		$request?->attributes->set('_contao_widget_error', $request->attributes->get('_contao_widget_error') ?: true);
+
+		if ($request !== null)
+		{
+			$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+			$errors->add(new ConstraintViolation($strError, $strError, array(), null, $this->strField ?: ($this->strName ?? ''), $this->varValue));
+			$request->attributes->set('_contao_widget_errors', $errors);
+		}
 	}
 
 	/**

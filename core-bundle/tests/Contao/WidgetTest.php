@@ -23,6 +23,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class WidgetTest extends TestCase
 {
@@ -46,9 +48,12 @@ class WidgetTest extends TestCase
         parent::tearDown();
     }
 
-    public function testAddingAnErrorPreservesCollectedFieldErrors(): void
+    #[DataProvider('provideErrorPropertyPaths')]
+    public function testAddingAnErrorCollectsViolations(string|null $field, string|null $name, string $path): void
     {
-        $request = new Request(attributes: ['_contao_widget_error' => ['alias' => ['Invalid alias']]]);
+        $previous = new ConstraintViolation('Invalid alias', 'Invalid alias', [], null, 'alias', '123');
+        $errors = new ConstraintViolationList([$previous]);
+        $request = new Request(attributes: ['_contao_widget_errors' => $errors]);
         System::getContainer()->get('request_stack')->push($request);
 
         $widget = new class() extends Widget {
@@ -56,10 +61,25 @@ class WidgetTest extends TestCase
             {
             }
         };
+        $widget->strField = $field;
+        $widget->name = $name;
+        $widget->value = 'Invalid value';
         $widget->addError('Another error');
 
-        $this->assertSame(['alias' => ['Invalid alias']], $request->attributes->get('_contao_widget_error'));
+        $this->assertSame($errors, $request->attributes->get('_contao_widget_errors'));
+        $this->assertCount(2, $errors);
+        $this->assertSame($previous, $errors[0]);
+        $this->assertSame('Another error', $errors[1]->getMessage());
+        $this->assertSame($path, $errors[1]->getPropertyPath());
+        $this->assertSame('Invalid value', $errors[1]->getInvalidValue());
         $this->assertSame(['Another error'], $widget->getErrors());
+    }
+
+    public static function provideErrorPropertyPaths(): iterable
+    {
+        yield 'DCA field' => ['title', 'title_17', 'title'];
+        yield 'form field' => [null, 'email', 'email'];
+        yield 'unnamed widget' => [null, null, ''];
     }
 
     /**

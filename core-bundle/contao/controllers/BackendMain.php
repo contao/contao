@@ -153,7 +153,7 @@ class BackendMain extends Backend
 		// Turbo can handle form errors.
 		$response = $this->output();
 
-		if (200 === $response->getStatusCode() && System::getContainer()->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error'))
+		if (200 === $response->getStatusCode() && \count(System::getContainer()->get('request_stack')->getMainRequest()->attributes->get('_contao_widget_errors', array())) > 0)
 		{
 			$response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
 		}

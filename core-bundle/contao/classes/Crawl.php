@@ -14,6 +14,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Maintenance module "crawl".
@@ -76,7 +78,14 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 					$template->invalidUser = true;
 					$objAuthenticator->removeFrontendAuthentication();
 					$request = System::getContainer()->get('request_stack')?->getMainRequest();
-					$request?->attributes->set('_contao_widget_error', $request->attributes->get('_contao_widget_error') ?: true);
+
+					if ($request !== null)
+					{
+						$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+						$message = \sprintf($GLOBALS['TL_LANG']['ERR']['previewSwitchInvalidUsername'], $user);
+						$errors->add(new ConstraintViolation($message, $message, array(), null, 'crawl_member', $user));
+						$request->attributes->set('_contao_widget_errors', $errors);
+					}
 
 					return $template->parse();
 				}
