@@ -31,7 +31,7 @@ class AccessTokenManager
 
     /**
      * Creates a personal access token, persists it to the database and returns the
-     * plain token..
+     * plain token.
      */
     public function createToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): string
     {
