@@ -32,6 +32,8 @@ tl_page:
         type: root
         language: en
         published: 1
+        includeLayout: 1
+        layout: '@layout_editorial'
         includeChmod: 1
         cgroup: '@group_pages_microsite_structure'
         chmod:

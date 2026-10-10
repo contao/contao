@@ -12,12 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ListingBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class ContaoListingBundle extends Bundle
+class ContaoListingBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

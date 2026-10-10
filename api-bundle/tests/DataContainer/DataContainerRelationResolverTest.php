@@ -199,6 +199,38 @@ final class DataContainerRelationResolverTest extends TestCase
         $this->assertEquals(new DataContainerRelationReference(12, '/contao/api/dc/page/12'), $resolver->resolveToReference(12, $field));
     }
 
+    public function testLeavesUnsupportedRelationDefinitionsUnchanged(): void
+    {
+        $converter = $this->createStub(RelationAwareWidgetConverterInterface::class);
+        $converter
+            ->method('supports')
+            ->willReturn(true)
+        ;
+
+        $converter
+            ->method('getRelation')
+            ->willReturn(new \stdClass())
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $router
+            ->expects($this->never())
+            ->method('match')
+        ;
+
+        $resolver = $this->createResolver($router, new WidgetConverterRegistry([$converter]));
+        $field = new DataContainerFieldContext(['inputType' => 'custom']);
+
+        $this->assertFalse($resolver->supports($field));
+        $this->assertSame(12, $resolver->resolveToReference(12, $field));
+        $this->assertSame('/custom/12', $resolver->resolveToIdentifier('/custom/12', $field));
+    }
+
     public function testInfersPidRelationsFromTheDca(): void
     {
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
