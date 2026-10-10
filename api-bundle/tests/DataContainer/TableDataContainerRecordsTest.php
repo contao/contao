@@ -52,6 +52,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 final class TableDataContainerRecordsTest extends ContaoTestCase
 {
@@ -128,6 +130,12 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     #[DataProvider('provideValidationRedirects')]
     public function testReportsWidgetErrorsAndRestoresPreviousErrors(bool $redirect): void
     {
+        $errors = new ConstraintViolationList([
+            new ConstraintViolation('First error', 'First error', [], null, 'title', 'After'),
+            new ConstraintViolation('Second error', 'Second error', [], null, 'title', 'After'),
+            new ConstraintViolation('Invalid alias', 'Invalid alias', [], null, 'alias', '123'),
+        ]);
+
         $dc = $this->createEditingDataContainer();
         $dc
             ->method('getCurrentRecord')
@@ -137,10 +145,11 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->expects($this->once())
             ->method('edit')
             ->willReturnCallback(
-                function () use ($redirect): void {
+                function () use ($redirect, $errors): void {
                     $attributes = $this->requestStack->getMainRequest()->attributes;
-                    $this->assertFalse($attributes->has('_contao_widget_error'));
-                    $attributes->set('_contao_widget_error', ['title' => ['First error', 'Second error'], 'alias' => ['Invalid alias']]);
+                    $this->assertInstanceOf(ConstraintViolationList::class, $attributes->get('_contao_widget_errors'));
+                    $this->assertCount(0, $attributes->get('_contao_widget_errors'));
+                    $attributes->get('_contao_widget_errors')->addAll($errors);
 
                     if ($redirect) {
                         throw new ResponseException(new RedirectResponse('/contao'));
@@ -151,7 +160,8 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $records = $this->createRecords($dc);
         $attributes = $this->requestStack->getMainRequest()->attributes;
-        $attributes->set('_contao_widget_error', ['previous' => ['Previous error']]);
+        $previousErrors = new ConstraintViolationList([new ConstraintViolation('Previous error', 'Previous error', [], null, 'previous', null)]);
+        $attributes->set('_contao_widget_errors', $previousErrors);
 
         try {
             $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
@@ -165,9 +175,12 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             $this->assertSame('Second error', $violations[1]->getMessage());
             $this->assertSame('alias', $violations[2]->getPropertyPath());
             $this->assertSame('Invalid alias', $violations[2]->getMessage());
+            $this->assertSame($errors[0], $violations[0]);
+            $this->assertSame($errors[1], $violations[1]);
+            $this->assertSame($errors[2], $violations[2]);
         }
 
-        $this->assertSame(['previous' => ['Previous error']], $attributes->get('_contao_widget_error'));
+        $this->assertSame($previousErrors, $attributes->get('_contao_widget_errors'));
         $this->assertSame([], $this->requestStack->getCurrentRequest()->request->all());
     }
 
@@ -188,13 +201,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc
             ->expects($this->once())
             ->method('edit')
-            ->willReturnCallback(
-                function (): void {
-                    $this->requestStack->getMainRequest()->attributes->set('_contao_widget_error', true);
-
-                    throw new ResponseException(new RedirectResponse('/contao'));
-                },
-            )
+            ->willReturn('')
         ;
 
         $records = $this->createRecords($dc);

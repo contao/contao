@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 class TableDataContainerRecords
@@ -264,8 +263,8 @@ class TableDataContainerRecords
         $request = $this->requestStack->getCurrentRequest();
         $main = $this->requestStack->getMainRequest();
         $previous = $request->request->all();
-        $error = $main->attributes->get('_contao_widget_error');
-        $main->attributes->remove('_contao_widget_error');
+        $errors = $main->attributes->get('_contao_widget_errors');
+        $main->attributes->set('_contao_widget_errors', new ConstraintViolationList());
 
         $request->request->replace(['FORM_SUBMIT' => $dc->table] + $values);
 
@@ -281,10 +280,10 @@ class TableDataContainerRecords
             $this->submitFormValues($dc, $values, $defaults);
         } finally {
             $request->request->replace($previous);
-            $main->attributes->remove('_contao_widget_error');
+            $main->attributes->remove('_contao_widget_errors');
 
-            if (null !== $error) {
-                $main->attributes->set('_contao_widget_error', $error);
+            if (null !== $errors) {
+                $main->attributes->set('_contao_widget_errors', $errors);
             }
         }
     }
@@ -299,7 +298,7 @@ class TableDataContainerRecords
         $this->requestStack->getCurrentRequest()->request->add($defaults);
         $this->runBackendAction($dc->edit(...));
 
-        if ($this->requestStack->getMainRequest()->attributes->get('_contao_widget_error')) {
+        if (\count($this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors', new ConstraintViolationList())) > 0) {
             $this->throwValidationError();
         }
     }
@@ -385,14 +384,7 @@ class TableDataContainerRecords
 
     private function throwValidationError(): never
     {
-        $violations = new ConstraintViolationList();
-        $errors = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_error');
-
-        foreach (\is_array($errors) ? $errors : [] as $field => $messages) {
-            foreach ($messages as $message) {
-                $violations->add(new ConstraintViolation($message, $message, [], null, $field, null));
-            }
-        }
+        $violations = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors', new ConstraintViolationList());
 
         if (\count($violations) > 0) {
             throw new ValidationException($violations);
