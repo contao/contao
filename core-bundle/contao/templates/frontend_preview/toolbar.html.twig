@@ -35,8 +35,12 @@
                     {% endif %}
                     <div>
                         <label for="ctrl_preview_time">{{ 'MSC.previewTime'|trans }}:</label>
-                        <input type="datetime-local" name="previewTime" id="ctrl_preview_time" class="tl_text" value="{{ previewTime }}">
-                        <button type="button" id="ctrl_preview_time_reset" class="tl_submit">{{ 'MSC.reset'|trans }}</button>
+                        <span class="cto-toolbar__time">
+                            <input type="datetime-local" name="previewTime" id="ctrl_preview_time" class="tl_text" value="{{ previewTime }}">
+                            <button type="button" id="ctrl_preview_time_clear" class="cto-toolbar__clear-time" title="{{ 'MSC.clearPreviewTime'|trans }}" aria-label="{{ 'MSC.clearPreviewTime'|trans }}">
+                                {{ backend_icon('close', attributes: attrs().set('width', 14).set('height', 14).set('aria-hidden')) }}
+                            </button>
+                        </span>
                     </div>
                     <div>
                         <label for="ctrl_unpublished">{{ 'MSC.hiddenElements'|trans }}:</label>
