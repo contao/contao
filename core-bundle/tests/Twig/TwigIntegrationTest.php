@@ -108,7 +108,8 @@ class TwigIntegrationTest extends TestCase
         $textField->addError('bar');
 
         $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
-        $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
+        $this->assertCount(1, $request->attributes->get('_contao_widget_errors'));
+        $this->assertSame('bar', $request->attributes->get('_contao_widget_errors')[0]->getMessage());
     }
 
     public function testRendersAttributes(): void

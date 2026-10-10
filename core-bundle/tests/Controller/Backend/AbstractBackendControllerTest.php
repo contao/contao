@@ -38,6 +38,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
@@ -208,8 +210,17 @@ class AbstractBackendControllerTest extends TestCase
             $customContext,
         ];
 
-        yield 'request with widget error' => [
-            new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+        yield 'request with empty widget errors' => [
+            new Request(attributes: ['_contao_widget_errors' => new ConstraintViolationList()], server: ['HTTP_HOST' => 'localhost']),
+            'custom_be.html.twig',
+            false,
+            $customContext,
+        ];
+
+        $errors = new ConstraintViolationList([new ConstraintViolation('Invalid title', 'Invalid title', [], null, 'title', null)]);
+
+        yield 'request with widget errors' => [
+            new Request(attributes: ['_contao_widget_errors' => $errors], server: ['HTTP_HOST' => 'localhost']),
             'custom_be.html.twig',
             false,
             $customContext,
@@ -218,7 +229,7 @@ class AbstractBackendControllerTest extends TestCase
         ];
 
         yield 'request with widget error and 500 response' => [
-            new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            new Request(attributes: ['_contao_widget_errors' => $errors], server: ['HTTP_HOST' => 'localhost']),
             'custom_be.html.twig',
             false,
             $customContext,
