@@ -44,6 +44,15 @@ final class TemplateGuidance
             - A `component/*` change can affect unrelated template families; a concrete template is narrower.
             - Use the reported resolution chain and transitive consumers to account for user, theme, application and bundle overrides.
 
+            ## Discovering the Twig environment
+
+            - Use `contao_twig_environment_discover` to discover registered filters, functions, tests, tags and globals, not templates. Discover names rather than guessing availability.
+            - Use `contao_twig_environment_inspect` with a returned kind and exact name before using unfamiliar constructs. Prefer non-deprecated alternatives.
+            - Signatures are best-effort reflection metadata, not usage documentation or a guarantee of Twig named-argument behavior. Tag metadata does not describe tag grammar.
+            - Globals describe declared APIs, not current frontend or request values. Template-local variables are outside this inventory. Obtaining globals may initialize extension-provided services, but inspection does not invoke their members or disclose their values.
+            - Continue validating proposed template code with `contao_template_validate`; environment discovery does not replace compilation checks.
+            - Consult `contao://twig/html-attributes` for `attrs()` usage.
+
             ## Extending templates and components
 
             - Prefer extending/importing a template and changing a block over copying its complete source.

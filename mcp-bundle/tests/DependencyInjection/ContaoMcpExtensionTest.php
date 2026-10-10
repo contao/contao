@@ -82,6 +82,8 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_api_discover',
                 'contao_api_describe',
                 'contao_api_execute',
+                'contao_twig_environment_discover',
+                'contao_twig_environment_inspect',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -173,7 +175,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(17, $tools);
+        $this->assertCount(19, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
