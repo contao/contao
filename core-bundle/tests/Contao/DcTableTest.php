@@ -64,7 +64,7 @@ class DcTableTest extends TestCase
         ;
 
         $dc
-            ->expects($mode === DataContainer::PASTE_AFTER ? $this->once() : $this->never())
+            ->expects(DataContainer::PASTE_AFTER === $mode ? $this->once() : $this->never())
             ->method('getCurrentRecord')
             ->with(252)
             ->willReturn(['id' => 252, 'pid' => 5, 'ptable' => 'tl_article'])
