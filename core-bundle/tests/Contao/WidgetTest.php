@@ -46,6 +46,22 @@ class WidgetTest extends TestCase
         parent::tearDown();
     }
 
+    public function testAddingAnErrorPreservesCollectedFieldErrors(): void
+    {
+        $request = new Request(attributes: ['_contao_widget_error' => ['alias' => ['Invalid alias']]]);
+        System::getContainer()->get('request_stack')->push($request);
+
+        $widget = new class() extends Widget {
+            public function __construct()
+            {
+            }
+        };
+        $widget->addError('Another error');
+
+        $this->assertSame(['alias' => ['Invalid alias']], $request->attributes->get('_contao_widget_error'));
+        $this->assertSame(['Another error'], $widget->getErrors());
+    }
+
     /**
      * @param array<string|array>|string $value
      */

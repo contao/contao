@@ -265,9 +265,7 @@ class TableDataContainerRecords
         $main = $this->requestStack->getMainRequest();
         $previous = $request->request->all();
         $error = $main->attributes->get('_contao_widget_error');
-        $errors = $main->attributes->get('_contao_widget_errors');
         $main->attributes->remove('_contao_widget_error');
-        $main->attributes->remove('_contao_widget_errors');
 
         $request->request->replace(['FORM_SUBMIT' => $dc->table] + $values);
 
@@ -284,14 +282,9 @@ class TableDataContainerRecords
         } finally {
             $request->request->replace($previous);
             $main->attributes->remove('_contao_widget_error');
-            $main->attributes->remove('_contao_widget_errors');
 
             if (null !== $error) {
                 $main->attributes->set('_contao_widget_error', $error);
-            }
-
-            if (null !== $errors) {
-                $main->attributes->set('_contao_widget_errors', $errors);
             }
         }
     }
@@ -393,8 +386,9 @@ class TableDataContainerRecords
     private function throwValidationError(): never
     {
         $violations = new ConstraintViolationList();
+        $errors = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_error');
 
-        foreach ($this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors', []) as $field => $messages) {
+        foreach (\is_array($errors) ? $errors : [] as $field => $messages) {
             foreach ($messages as $message) {
                 $violations->add(new ConstraintViolation($message, $message, [], null, $field, null));
             }

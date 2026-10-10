@@ -140,9 +140,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
                 function () use ($redirect): void {
                     $attributes = $this->requestStack->getMainRequest()->attributes;
                     $this->assertFalse($attributes->has('_contao_widget_error'));
-                    $this->assertFalse($attributes->has('_contao_widget_errors'));
-                    $attributes->set('_contao_widget_error', true);
-                    $attributes->set('_contao_widget_errors', ['title' => ['First error', 'Second error'], 'alias' => ['Invalid alias']]);
+                    $attributes->set('_contao_widget_error', ['title' => ['First error', 'Second error'], 'alias' => ['Invalid alias']]);
 
                     if ($redirect) {
                         throw new ResponseException(new RedirectResponse('/contao'));
@@ -153,8 +151,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $records = $this->createRecords($dc);
         $attributes = $this->requestStack->getMainRequest()->attributes;
-        $attributes->set('_contao_widget_error', true);
-        $attributes->set('_contao_widget_errors', ['previous' => ['Previous error']]);
+        $attributes->set('_contao_widget_error', ['previous' => ['Previous error']]);
 
         try {
             $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
@@ -170,8 +167,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             $this->assertSame('Invalid alias', $violations[2]->getMessage());
         }
 
-        $this->assertTrue($attributes->get('_contao_widget_error'));
-        $this->assertSame(['previous' => ['Previous error']], $attributes->get('_contao_widget_errors'));
+        $this->assertSame(['previous' => ['Previous error']], $attributes->get('_contao_widget_error'));
         $this->assertSame([], $this->requestStack->getCurrentRequest()->request->all());
     }
 
@@ -192,7 +188,13 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $dc
             ->expects($this->once())
             ->method('edit')
-            ->willReturn(null)
+            ->willReturnCallback(
+                function (): void {
+                    $this->requestStack->getMainRequest()->attributes->set('_contao_widget_error', true);
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
         ;
 
         $records = $this->createRecords($dc);
