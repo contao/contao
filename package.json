@@ -36,6 +36,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
+        "test:turbo": "node --test patches/turbo-prefetch.test.cjs",
         "lint:js": "biome check --write --unsafe core-bundle/assets",
         "lint:css": "stylelint --fix lax core-bundle/assets/styles core-bundle/contao/themes/flexible/styles",
         "lint": "run-s lint:js lint:css"

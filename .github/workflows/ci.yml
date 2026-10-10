@@ -176,6 +176,9 @@ jobs:
             - name: Install the Node packages
               run: npm install
 
+            - name: Test the Turbo patch
+              run: npm run test:turbo
+
             - name: Run Biome
               run: npx biome ci core-bundle/assets
 

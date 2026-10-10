@@ -56,7 +56,23 @@ index 086945c..b7710be 100644
    #cancelRequestIfObsolete = (event) => {
      if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
    }
-@@ -4737,7 +4758,13 @@ class LinkPrefetchObserver {
+@@ -4707,9 +4728,14 @@ class LinkPrefetchObserver {
+     if (event.target.tagName !== "FORM" && event.detail.fetchOptions.method === "GET") {
+       const cached = prefetchCache.get(event.detail.url);
+
+-      if (cached) {
++      if (cached && !cached.abortSignal.aborted) {
+         // User clicked link, use cache response
+         event.detail.fetchRequest = cached;
++
++        // The visit owns this request now; prefetch cancellation must leave it alone.
++        for (const [url, request] of this.#pendingFetchRequests) {
++          if (request === cached) this.#pendingFetchRequests.delete(url);
++        }
+       }
+
+       prefetchCache.clear();
+@@ -4737,7 +4763,13 @@ class LinkPrefetchObserver {
 
    requestErrored(fetchRequest) {}
 
@@ -129,7 +145,23 @@ index 120ed11..1260129 100644
      #cancelRequestIfObsolete = (event) => {
        if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
      }
-@@ -4743,7 +4764,13 @@ Copyright © 2026 37signals LLC
+@@ -4713,9 +4734,14 @@ Copyright © 2026 37signals LLC
+       if (event.target.tagName !== "FORM" && event.detail.fetchOptions.method === "GET") {
+         const cached = prefetchCache.get(event.detail.url);
+
+-        if (cached) {
++        if (cached && !cached.abortSignal.aborted) {
+           // User clicked link, use cache response
+           event.detail.fetchRequest = cached;
++
++          // The visit owns this request now; prefetch cancellation must leave it alone.
++          for (const [url, request] of this.#pendingFetchRequests) {
++            if (request === cached) this.#pendingFetchRequests.delete(url);
++          }
+         }
+
+         prefetchCache.clear();
+@@ -4743,7 +4769,13 @@ Copyright © 2026 37signals LLC
 
      requestErrored(fetchRequest) {}
 
