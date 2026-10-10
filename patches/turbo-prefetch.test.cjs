@@ -12,13 +12,14 @@ function createObserver(bundle) {
     const requests = [];
     const listeners = new Map();
     const cache = new Map();
+    const cacheKey = (url) => url.href.split('#')[0];
     let scheduled;
     const prefetchCache = {
         putLater(url, request) {
             scheduled = { url, request };
         },
         get(url) {
-            return cache.get(url.href);
+            return cache.get(cacheKey(url));
         },
         clear() {
             cache.clear();
@@ -77,7 +78,7 @@ function createObserver(bundle) {
             assert.ok(scheduled, 'A hover must schedule a prefetch');
             const { url, request } = scheduled;
             scheduled = undefined;
-            cache.set(url.href, request);
+            cache.set(cacheKey(url), request);
             return request;
         },
     };
@@ -175,6 +176,37 @@ for (const bundle of ['turbo.es2017-esm.js', 'turbo.es2017-umd.js']) {
 
         assert.equal(replacement.abortSignal.aborted, true);
         assert.equal(fixture.requests[2].abortSignal.aborted, false);
+    });
+
+    test(`${bundle}: fragment aliases release the same adopted request`, () => {
+        const fixture = createObserver(bundle);
+        const target = link('slow#first');
+        fixture.emit('mouseenter', target);
+        const adopted = fixture.flushPrefetch();
+        assert.equal(usePrefetch(fixture, link('slow#second')).fetchRequest, adopted);
+
+        fixture.emit('mouseleave', target);
+        fixture.emit('mouseenter', target);
+
+        assert.equal(adopted.abortSignal.aborted, false);
+    });
+
+    test(`${bundle}: a rewritten request URL cannot leave an adopted request tracked`, () => {
+        const fixture = createObserver(bundle);
+        const target = link('slow');
+        fixture.emit('mouseenter', target);
+        const adopted = fixture.flushPrefetch();
+        adopted.url = new URL('https://example.test/rewritten');
+        assert.equal(usePrefetch(fixture, target).fetchRequest, adopted);
+
+        fixture.emit('mouseleave', target);
+        fixture.emit('mouseenter', target);
+        const replacement = fixture.flushPrefetch();
+        fixture.observer.requestFinished(adopted);
+        fixture.emit('turbo:before-visit', link('other'), { url: link('other').href });
+
+        assert.equal(adopted.abortSignal.aborted, false);
+        assert.equal(replacement.abortSignal.aborted, true);
     });
 
     test(`${bundle}: form and non-GET requests leave cached prefetches untouched`, () => {
