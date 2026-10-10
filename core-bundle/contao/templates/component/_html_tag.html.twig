@@ -1,0 +1,27 @@
+{# Raw string tags are trusted markup. HtmlTag content is escaped unless explicitly marked as raw. #}
+{%- if tag.name is defined -%}
+    {%- set attributes = tag.attributes -%}
+
+    {%- if tag.isInlineScript() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('script-src')) -%}
+    {%- elseif tag.isInlineStyle() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('style-src')) -%}
+    {%- endif -%}
+
+    {%- set void_elements = [
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+        'link', 'meta', 'source', 'track', 'wbr',
+    ] -%}
+
+    <{{ tag.name }}{{ attributes }}>
+    {%- if tag.name not in void_elements -%}
+        {%- if tag.escapesContent() -%}
+            {{- tag.content -}}
+        {%- else -%}
+            {{- tag.content|raw -}}
+        {%- endif -%}
+        </{{ tag.name }}>
+    {%- endif -%}
+{%- else -%}
+    {{- tag|raw -}}
+{%- endif -%}
