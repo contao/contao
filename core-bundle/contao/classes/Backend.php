@@ -37,11 +37,11 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return the TinyMCE language
+	 * Return the HugeRTE language
 	 *
 	 * @return string
 	 */
-	public static function getTinyMceLanguage()
+	public static function getHugeRteLanguage()
 	{
 		$lang = LocaleUtil::formatAsLocale((string) $GLOBALS['TL_LANGUAGE']);
 
@@ -53,7 +53,7 @@ abstract class Backend extends Controller
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
-		if (file_exists($projectDir . '/assets/tinymce/js/langs/' . $lang . '.js'))
+		if (file_exists($projectDir . '/assets/hugerte/js/langs/' . $lang . '.js'))
 		{
 			return $lang;
 		}
@@ -61,7 +61,7 @@ abstract class Backend extends Controller
 		if (($short = substr($GLOBALS['TL_LANGUAGE'], 0, 2)) != $lang)
 		{
 			// Try the short tag, e.g. "de" instead of "de_CH"
-			if (file_exists($projectDir . '/assets/tinymce/js/langs/' . $short . '.js'))
+			if (file_exists($projectDir . '/assets/hugerte/js/langs/' . $short . '.js'))
 			{
 				return $short;
 			}
@@ -69,7 +69,7 @@ abstract class Backend extends Controller
 		elseif (($long = $short . '_' . strtoupper($short)) != $lang)
 		{
 			// Try the long tag, e.g. "fr_FR" instead of "fr" (see #6952)
-			if (file_exists($projectDir . '/assets/tinymce/js/langs/' . $long . '.js'))
+			if (file_exists($projectDir . '/assets/hugerte/js/langs/' . $long . '.js'))
 			{
 				return $long;
 			}
@@ -190,12 +190,13 @@ abstract class Backend extends Controller
 
 		unset($arrGroup);
 
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
+		$security = System::getContainer()->get('security.helper');
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
 		{
-			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . BackendUser::getInstance()->username . '".');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $security->getUser()?->getUserIdentifier() . '".');
 		}
 
 		// The module does not exist
@@ -560,7 +561,6 @@ abstract class Backend extends Controller
 
 		$image = Controller::getPageStatusIcon((object) $row);
 		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0))) . '"');
-		$objUser = BackendUser::getInstance();
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -575,7 +575,7 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link if you have access to that page
-		if ($objUser->hasAccess($row['id'], 'pagemounts'))
+		if (System::getContainer()->get('security.authorization_checker')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $row['id']))
 		{
 			$label = '<a href="' . StringUtil::ampersand(self::addToUrl('pn=' . $row['id'])) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
@@ -674,7 +674,6 @@ abstract class Backend extends Controller
 			return;
 		}
 
-		$objUser  = BackendUser::getInstance();
 		$strPath  = System::getContainer()->getParameter('contao.upload_path');
 		$security = System::getContainer()->get('security.helper');
 		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
@@ -689,7 +688,7 @@ abstract class Backend extends Controller
 			$strPath .= '/' . $strFolder;
 
 			// Do not show pages which are not mounted
-			if (!$objUser->hasAccess($strPath, 'filemounts'))
+			if (!System::getContainer()->get('security.authorization_checker')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strPath))
 			{
 				continue;
 			}

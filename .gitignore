@@ -15,6 +15,7 @@
 /cypress/
 
 # PhpUnit
+/.contao-e2e/
 /.phpunit.cache/
 /phpunit.xml
 

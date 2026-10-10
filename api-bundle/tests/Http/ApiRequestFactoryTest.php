@@ -50,7 +50,7 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testKeepsSessionAndLocaleWithoutLeakingTransportHeaders(): void
     {
-        $parent = Request::create('https://example.org/_mcp/backend', 'POST', cookies: ['session' => 'value'], server: [
+        $parent = Request::create('https://example.org/contao/mcp', 'POST', cookies: ['session' => 'value'], server: [
             'HTTP_MCP_SESSION_ID' => 'mcp-session',
             'HTTP_IF_NONE_MATCH' => 'etag',
             'HTTP_AUTHORIZATION' => 'Bearer token',
@@ -84,7 +84,7 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testGeneratesRoutesWithCustomPrefixAndBaseUrl(): void
     {
-        $parent = Request::create('https://example.org/app/index.php/_mcp/backend', server: [
+        $parent = Request::create('https://example.org/app/index.php/contao/mcp', server: [
             'SCRIPT_FILENAME' => '/var/www/app/index.php',
             'SCRIPT_NAME' => '/app/index.php',
         ]);
@@ -102,7 +102,7 @@ final class ApiRequestFactoryTest extends TestCase
     public function testDoesNotChangeTheGlobalLocaleWhenCreatingARequest(): void
     {
         $locale = \ini_get('intl.default_locale');
-        $request = $this->createFactory()->create(Request::create('/_mcp/backend'), new Get(name: 'records'));
+        $request = $this->createFactory()->create(Request::create('/contao/mcp'), new Get(name: 'records'));
 
         $this->assertSame('en', $request->attributes->get('_locale'));
         $this->assertSame($locale, \ini_get('intl.default_locale'));
@@ -111,18 +111,36 @@ final class ApiRequestFactoryTest extends TestCase
     public function testUsesOperationFormatsAndMergePatchPayload(): void
     {
         $operation = new Patch(name: 'records', inputFormats: ['json' => ['application/merge-patch+json']], outputFormats: ['json' => ['application/json']]);
-        $request = $this->createFactory()->create(Request::create('/_mcp/backend'), $operation, ['id' => 42], ['title' => null]);
+        $request = $this->createFactory()->create(Request::create('/contao/mcp'), $operation, ['id' => 42], ['title' => null]);
 
         $this->assertSame('application/merge-patch+json', $request->headers->get('Content-Type'));
         $this->assertSame('application/json', $request->headers->get('Accept'));
         $this->assertSame('{"title":null}', $request->getContent());
     }
 
+    public function testUsesNonJsonInputFormatsForStringPayloads(): void
+    {
+        $operation = new Post(name: 'records', inputFormats: ['binary' => ['application/octet-stream']]);
+        $request = $this->createFactory()->create(Request::create('/contao/mcp'), $operation, payload: 'contents');
+
+        $this->assertSame('application/octet-stream', $request->headers->get('Content-Type'));
+        $this->assertSame('contents', $request->getContent());
+    }
+
+    public function testRejectsStructuredPayloadsForNonJsonInputFormats(): void
+    {
+        $this->expectException(UnsupportedFormatException::class);
+        $this->expectExceptionMessage('requires a string payload');
+
+        $operation = new Post(name: 'records', inputFormats: ['binary' => ['application/octet-stream']]);
+        $this->createFactory()->create(Request::create('/contao/mcp'), $operation, payload: ['contents']);
+    }
+
     public function testRejectsOperationsWithoutJsonOutput(): void
     {
         $this->expectException(UnsupportedFormatException::class);
 
-        $this->createFactory()->create(Request::create('/_mcp/backend'), new Get(name: 'records', outputFormats: ['html' => ['text/html']]));
+        $this->createFactory()->create(Request::create('/contao/mcp'), new Get(name: 'records', outputFormats: ['html' => ['text/html']]));
     }
 
     private function createFactory(RequestContext|null $context = null): ApiRequestFactory

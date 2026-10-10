@@ -23,22 +23,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * functions as abstract parent class for the "BackendUser" and "FrontendUser"
  * classes of the core.
  *
- * Usage:
- *
- *     $user = BackendUser::getInstance();
- *
- *     if ($user->findBy('username', 'leo'))
- *     {
- *         echo $user->name;
- *     }
- *
  * @property integer           $id
  * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
  * @property string            $language
- * @property string            $backendTheme
  * @property integer           $backendWidth
  * @property string            $uploader
  * @property boolean           $showHelp
@@ -110,13 +100,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * @var integer
 	 */
 	protected $intId;
-
-	/**
-	 * IP address
-	 * @var string
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
-	 */
-	protected $strIp;
 
 	/**
 	 * Table

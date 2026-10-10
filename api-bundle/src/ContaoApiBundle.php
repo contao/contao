@@ -13,23 +13,17 @@ declare(strict_types=1);
 namespace Contao\ApiBundle;
 
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
-use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ContaoApiBundle extends AbstractBundle
 {
-    public function configure(DefinitionConfigurator $definition): void
+    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        $definition->rootNode()
-            ->children()
-                ->scalarNode('data_container_api_prefix')
-                    ->defaultValue('/backend/dc')
-                    ->info('The DC specific subprefix at which Contao shall expose the API.')
-                ->end()
-            ->end()
-        ;
+        $container->prependExtensionConfig('twig', [
+            'paths' => [__DIR__.'/../templates' => 'ApiPlatform'],
+        ]);
     }
 
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
@@ -37,9 +31,5 @@ class ContaoApiBundle extends AbstractBundle
         $configurator->import('../config/services.yaml');
 
         $container->registerForAutoconfiguration(WidgetConverterInterface::class)->addTag('contao.api.widget_converter');
-
-        $configurator->parameters()
-            ->set('contao_api.data_container_api_prefix', $config['data_container_api_prefix'])
-        ;
     }
 }

@@ -423,8 +423,10 @@ class tl_user extends Backend
 			return;
 		}
 
+		$user = System::getContainer()->get('security.helper')->getUser();
+
 		// Should not happen because of the redirect but better safe than sorry
-		if (Input::get('act') != 'edit' || BackendUser::getInstance()->id != Input::get('id'))
+		if (Input::get('act') != 'edit' || !$user instanceof BackendUser || $user->id != Input::get('id'))
 		{
 			throw new AccessDeniedException('Not allowed to edit this page.');
 		}
@@ -452,6 +454,11 @@ class tl_user extends Backend
 	 */
 	public function addTemplateWarning()
 	{
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->getBoolean('_stateless'))
+		{
+			return;
+		}
+
 		if (Input::get('act') && Input::get('act') != 'select')
 		{
 			return;
@@ -684,9 +691,9 @@ class tl_user extends Backend
 	 */
 	public function updateCurrentUser(DataContainer $dc)
 	{
-		$user = BackendUser::getInstance();
+		$user = System::getContainer()->get('security.helper')->getUser();
 
-		if ($user->id == $dc->id)
+		if ($user instanceof BackendUser && $user->id == $dc->id)
 		{
 			$user->findBy('id', $user->id);
 		}

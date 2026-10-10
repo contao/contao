@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
@@ -97,17 +96,10 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->newsletters))
-		{
-			return array();
-		}
-
 		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
 
 		// Show only channels with a redirect page in the web modules
-		if (in_array($dc->activeRecord->type, array('newsletterlist', 'newsletterreader')))
+		if (in_array($dc->activeRecord?->type, array('newsletterlist', 'newsletterreader')))
 		{
 			$strQuery .= " WHERE jumpTo>0";
 		}

@@ -1,0 +1,33 @@
+{% extends '@!ApiPlatform/SwaggerUi/index.html.twig' %}
+
+{% block header %}
+    <header class="contao-api-header">
+        <a class="contao-api-brand" href="{{ path('contao_backend') }}">
+            {{ backend_icon('logo.svg') }}
+            <span class="contao-api-brand-text">
+                <span>Contao</span>
+                <span class="contao-api-subtitle">API Documentation</span>
+            </span>
+        </a>
+        <button type="button" class="contao-api-color-scheme" id="color-scheme-toggle" hidden>Toggle color scheme</button>
+    </header>
+{% endblock %}
+
+{% block javascript %}
+    {% if (reDocEnabled and not swaggerUiEnabled) or (reDocEnabled and 're_doc' == active_ui) %}
+        <script src="{{ asset('bundles/apiplatform/redoc/redoc.standalone.js', assetPackage) }}"{{ csp_nonce_attr|raw }}></script>
+        <script src="{{ asset('bundles/contaoapi/api-docs.js') }}"{{ csp_nonce_attr|raw }}></script>
+        <script src="{{ asset('bundles/apiplatform/init-common-ui.js', assetPackage) }}" defer{{ csp_nonce_attr|raw }}></script>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    <title>{{ title }} – Contao</title>
+{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/contaoapi/api-docs.css') }}">
+{% endblock %}

@@ -576,6 +576,7 @@ class DataContainerCallbackPassTest extends TestCase
     {
         $container = $this->createMock(ContainerBuilder::class);
         $container
+            ->expects($this->once())
             ->method('hasDefinition')
             ->with('contao.listener.data_container_callback')
             ->willReturn(false)

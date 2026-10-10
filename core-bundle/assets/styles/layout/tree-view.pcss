@@ -34,6 +34,10 @@
     padding: 1px 0;
     background: none;
     border: none;
+
+    img {
+        -webkit-user-drag: none;
+    }
 }
 
 .tl_listing .tl_left {
@@ -72,6 +76,7 @@
 }
 
 .tl_listing .tl_left.tl_left_dragging .preview-image,
+.tl_listing .tl_left.tl_left_dragging .preview-important,
 .tl_listing .tl_left.tl_left_dragging a img {
     display: none;
 }

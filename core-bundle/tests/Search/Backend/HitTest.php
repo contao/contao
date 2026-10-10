@@ -27,6 +27,7 @@ class HitTest extends TestCase
             ->withContext('context')
             ->withImageFigureBuilder($figureBuilder)
             ->withEditUrl('https://example.com?edit=true')
+            ->withBreadcrumbs([['label' => 'Website']])
             ->withMetadata(['foo' => 'bar'])
         ;
 
@@ -38,7 +39,40 @@ class HitTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
         $this->assertSame('type', $hit->getVisibleType());
 
+        $this->assertSame(
+            [
+                'id' => '42',
+                'type' => 'type',
+                'visibleType' => 'type',
+                'title' => 'title',
+                'viewUrl' => 'https://example.com',
+                'editUrl' => 'https://example.com?edit=true',
+                'breadcrumbs' => [['label' => 'Website']],
+                'context' => 'context',
+                'metadata' => ['foo' => 'bar'],
+            ],
+            $hit->toArray(),
+        );
+
         $hit = $hit->withVisibleType('visible-type');
         $this->assertSame('visible-type', $hit->getVisibleType());
+    }
+
+    public function testTitleAndViewUrlCanBeReplacedWithoutChangingTheOriginalHit(): void
+    {
+        $document = new Document('42', 'type', 'searchable');
+        $hit = new Hit($document, 'title', 'https://example.com');
+
+        $updatedHit = $hit
+            ->withTitle('new title')
+            ->withViewUrl('https://example.com/new')
+        ;
+
+        $this->assertSame($document, $hit->getDocument());
+        $this->assertSame('title', $hit->getTitle());
+        $this->assertSame('https://example.com', $hit->getViewUrl());
+        $this->assertSame($document, $updatedHit->getDocument());
+        $this->assertSame('new title', $updatedHit->getTitle());
+        $this->assertSame('https://example.com/new', $updatedHit->getViewUrl());
     }
 }

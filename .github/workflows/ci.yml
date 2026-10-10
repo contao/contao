@@ -292,6 +292,58 @@ jobs:
               env:
                   DATABASE_URL: mysqli://root:root@127.0.0.1:3306/contao_test
 
+    e2e:
+        name: E2E tests
+        runs-on: ubuntu-latest
+        env:
+            PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.contao-e2e/cache/playwright
+        steps:
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, opcache, pcre, pdo_mysql, zlib
+                  ini-values: opcache.enable_cli=1
+                  coverage: none
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 20
+
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  show-progress: false
+                  persist-credentials: false
+
+            - name: Install the dependencies
+              uses: ramsey/composer-install@v4
+
+            - name: Prepare Playwright Node dependencies
+              run: vendor/bin/playwright-install
+
+            - name: Calculate E2E cache metadata
+              run: vendor/bin/contao-e2e cache:metadata
+
+            - name: Restore Playwright browsers
+              uses: actions/cache@v5
+              with:
+                  path: .contao-e2e/cache/playwright
+                  key: playwright-${{ hashFiles('.contao-e2e/cache-keys/playwright') }}
+
+            - name: Restore E2E setup cache
+              uses: actions/cache@v5
+              with:
+                  path: .contao-e2e/cache/e2e
+                  key: contao-e2e-${{ hashFiles('.contao-e2e/cache-keys/e2e') }}
+
+            - name: Install and verify Playwright browsers
+              run: vendor/bin/playwright-install --browsers
+
+            - name: Run the E2E tests
+              run: vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit
+
     reverse:
         name: Reverse order
         runs-on: ubuntu-latest
@@ -410,7 +462,7 @@ jobs:
 
             - name: Test the single bundles
               run: |
-                  bundles=(api-bundle calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle mcp-bundle news-bundle newsletter-bundle)
+                  bundles=(api-bundle calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle mcp-bundle news-bundle newsletter-bundle oauth-server-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
                       php -r '
@@ -430,6 +482,10 @@ jobs:
                           if ("contao/api-bundle" !== $data["name"]) {
                               $data["repositories"][3]["type"] = "path";
                               $data["repositories"][3]["url"] = "../api-bundle";
+                          }
+                          if ("contao/oauth-server-bundle" !== $data["name"]) {
+                              $data["repositories"][4]["type"] = "path";
+                              $data["repositories"][4]["url"] = "../oauth-server-bundle";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '

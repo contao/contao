@@ -1,0 +1,14 @@
+{# Show a message #}
+{% embed '@Contao/backend/component/message/add_message.stream.html.twig' with {success: true} %}
+    {% trans_default_domain 'contao_template_studio' %}
+
+    {% block content %}
+        {% set snapshot_token -%}
+            <span class="token">{{ snapshot_hash|slice(0, 10) }}</span>
+        {%- endset %}
+        {{ 'template_studio.snapshots.created'|trans([snapshot_token])|raw }}
+    {% endblock %}
+{% endembed %}
+
+{# Update panel #}
+{{ render(path('_contao_template_studio_snapshot_panel.stream')) }}

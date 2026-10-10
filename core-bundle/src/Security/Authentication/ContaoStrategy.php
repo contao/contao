@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\OfflineTokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
@@ -28,6 +31,7 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
     public function __construct(
         private readonly AccessDecisionStrategyInterface $defaultStrategy,
         private readonly AccessDecisionStrategyInterface $contaoStrategy,
+        private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly FirewallMapInterface $firewallMap,
     ) {
@@ -55,6 +59,14 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
 
     private function isContaoContext(): bool
     {
+        $token = $this->security->getToken();
+
+        // On command line, or when isGrantedForUser is called, we cannot rely on the
+        // current firewall
+        if ($token instanceof OfflineTokenInterface && $token->getUser() instanceof User) {
+            return true;
+        }
+
         // Use the main request here because sub-requests cannot have their own firewall
         // in Symfony
         $request = $this->requestStack->getMainRequest();
@@ -82,8 +94,8 @@ class ContaoStrategy implements AccessDecisionStrategyInterface, \Stringable
             return false;
         }
 
-        $context = $config->getContext();
+        $context = $config->getContext() ?? $config->getName();
 
-        return $this->contaoContext = 'contao_frontend' === $context || 'contao_backend' === $context;
+        return $this->contaoContext = str_starts_with($context, 'contao_');
     }
 }
