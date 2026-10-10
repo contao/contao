@@ -347,7 +347,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode == self::PASTE_INTO)
+			if ($mode == self::PASTE_INTO || $mode == self::PASTE_INTO_APPEND)
 			{
 				return $pid;
 			}
@@ -409,7 +409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'pid' => $this->intCurrentPid,
 			'sorting_mode' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0),
 			'display_grid' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false),
-			'limit_height' => BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
+			'limit_height' => Config::get('doNotCollapse') ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
 			'is_upload_form' => $this->blnUploadable,
 			'form_onsubmit' => $this->onsubmit,
 			'error' => $this->noReload,
@@ -1873,9 +1873,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		$user = System::getContainer()->get('security.helper')->getUser();
+
 		$objUndoStmt = $db
 			->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-			->execute(BackendUser::getInstance()->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+			->execute($user instanceof BackendUser ? $user->id : 0, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -2036,74 +2038,86 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		$error = false;
 		$query = $currentRecord['query'] ?? null;
 		$data = StringUtil::deserialize($currentRecord['data'] ?? null);
 
 		if (!\is_array($data))
 		{
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
 			$this->redirect($this->getReferer());
 		}
 
-		$db = Database::getInstance();
 		$arrFields = array();
 
-		// Restore the data
-		foreach ($data as $table=>$fields)
+		$db = Database::getInstance();
+		$db->beginTransaction();
+
+		try
 		{
-			$this->loadDataContainer($table);
-
-			// Get the currently available fields
-			if (!isset($arrFields[$table]))
+			// Restore the data
+			foreach ($data as $table=>$fields)
 			{
-				$arrFields[$table] = array_flip($db->getFieldNames($table));
-			}
+				$this->loadDataContainer($table);
 
-			foreach ($fields as $row)
-			{
-				// Unset fields that no longer exist in the database
-				$row = array_intersect_key($row, $arrFields[$table]);
-
-				// Re-insert the data
-				$objInsertStmt = $db
-					->prepare("INSERT INTO " . $table . " %s")
-					->set($row)
-					->execute();
-
-				// Do not delete record from tl_undo if there is an error
-				if ($objInsertStmt->affectedRows < 1)
+				// Get the currently available fields
+				if (!isset($arrFields[$table]))
 				{
-					$error = true;
+					$arrFields[$table] = array_flip($db->getFieldNames($table));
 				}
 
-				// Trigger the undo_callback
-				if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+				foreach ($fields as $row)
 				{
-					foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
+					// Unset fields that no longer exist in the database
+					$row = array_intersect_key($row, $arrFields[$table]);
+
+					// Re-insert the data
+					$objInsertStmt = $db
+						->prepare("INSERT INTO " . $table . " %s")
+						->set($row)
+						->execute();
+
+					if ($objInsertStmt->affectedRows < 1)
 					{
-						if (\is_array($callback))
+						throw new \RuntimeException('Could not restore record "' . $table . '.id=' . ($row['id'] ?? '') . '".');
+					}
+
+					// Trigger the undo_callback
+					if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+					{
+						foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
 						{
-							System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($table, $row, $this);
+							if (\is_array($callback))
+							{
+								System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
+							}
+							elseif (\is_callable($callback))
+							{
+								$callback($table, $row, $this);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// Add log entry and delete record from tl_undo if there was no error
-		if (!$error)
-		{
-			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
-
+			// Delete the undo entry only if all records have been restored
 			$db
 				->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 				->limit(1)
 				->execute($this->intId);
+
+			$db->commitTransaction();
 		}
+		catch (\Throwable $e)
+		{
+			$db->rollbackTransaction();
+
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not undo ' . $query . ': ' . $e->getMessage());
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
+
+			$this->redirect($this->getReferer());
+		}
+
+		System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 		$this->invalidateCacheTags();
 
@@ -2465,7 +2479,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2693,7 +2706,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
@@ -2824,7 +2837,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2974,7 +2986,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
@@ -5742,7 +5754,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$lp = (int) Input::get('lp') - 1;
 
-			if ($lp >= 0 && $lp < ceil($this->total / $limit))
+			if ($limit > 0 && $lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
 				$objSessionBag->replace($session);

@@ -23,15 +23,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * functions as abstract parent class for the "BackendUser" and "FrontendUser"
  * classes of the core.
  *
- * Usage:
- *
- *     $user = BackendUser::getInstance();
- *
- *     if ($user->findBy('username', 'leo'))
- *     {
- *         echo $user->name;
- *     }
- *
  * @property integer           $id
  * @property integer           $tstamp
  * @property string|null       $username

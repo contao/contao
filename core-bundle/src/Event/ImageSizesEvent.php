@@ -36,7 +36,7 @@ class ImageSizesEvent extends Event
         $this->imageSizes = $imageSizes;
     }
 
-    public function getUser(): BackendUser
+    public function getUser(): BackendUser|null
     {
         return $this->user;
     }

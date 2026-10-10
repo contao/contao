@@ -603,6 +603,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@translator'
+            - '@security.helper'
 
     contao.image.studio:
         class: Contao\CoreBundle\Image\Studio\Studio
@@ -887,15 +888,23 @@ services:
         arguments:
             - '%contao.console_path%'
 
+    contao.rate_limit.form_captcha_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.form_captcha, policy: fixed_window, limit: 1, interval: 30 minutes }
+            - '@contao.rate_limit.storage'
+            - '@?lock_factory'
+
     contao.rate_limit.member_password_factory:
         class: Symfony\Component\RateLimiter\RateLimiterFactory
         public: true
         arguments:
             - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
-            - '@contao.rate_limit.member_password_storage'
+            - '@contao.rate_limit.storage'
             - '@?lock_factory'
 
-    contao.rate_limit.member_password_storage:
+    contao.rate_limit.storage:
         class: Symfony\Component\RateLimiter\Storage\CacheStorage
         arguments:
             - '@cache.rate_limiter'
@@ -1309,6 +1318,9 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.root_page_dependent_elements_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\RootPageDependentElementsVoter
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
@@ -1720,6 +1732,7 @@ services:
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
     Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
+    Contao\CoreBundle\Fragment\FragmentCompositor: '@contao.fragment.compositor'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'

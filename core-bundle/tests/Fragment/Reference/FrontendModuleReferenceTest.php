@@ -39,4 +39,17 @@ class FrontendModuleReferenceTest extends TestCase
         $reference = new FrontendModuleReference($model, 'footer');
         $this->assertSame('footer', $reference->attributes['section']);
     }
+
+    public function testGetsModelAndSectionFromReference(): void
+    {
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['id' => 42]);
+
+        $reference = new FrontendModuleReference($model, 'header');
+        $this->assertSame(42, $reference->getModuleModel());
+        $this->assertSame('header', $reference->getSection());
+
+        $reference = new FrontendModuleReference($model, 'footer', inline: true);
+        $this->assertSame($model, $reference->getModuleModel());
+        $this->assertSame('footer', $reference->getSection());
+    }
 }

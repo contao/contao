@@ -130,7 +130,7 @@ final class PluginTest extends TestCase
 
         $this->assertSame(
             [
-                'request_matcher' => 'contao.mcp_bundle.routing.mcp_request_matcher',
+                'request_matcher' => 'contao_mcp.routing.mcp_request_matcher',
                 'stateless' => true,
                 'provider' => 'contao.security.backend_user_provider',
                 'user_checker' => 'contao.security.user_checker',

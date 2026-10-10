@@ -32,4 +32,14 @@ class FrontendModuleReference extends FragmentReference
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
     }
+
+    public function getModuleModel(): ModuleModel|int
+    {
+        return $this->attributes['moduleModel'];
+    }
+
+    public function getSection(): string
+    {
+        return $this->attributes['section'];
+    }
 }
