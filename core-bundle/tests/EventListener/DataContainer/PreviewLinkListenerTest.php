@@ -101,7 +101,7 @@ class PreviewLinkListenerTest extends TestCase
     }
 
     #[DataProvider('defaultDcaValueProvider')]
-    public function testSetsTheDefaultValueForDcaFields(string $url, bool $showUnpublished, int $userId): void
+    public function testSetsTheDefaultValueForDcaFields(string $url, bool $showUnpublished, string $previewTime, int $userId): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
@@ -109,13 +109,14 @@ class PreviewLinkListenerTest extends TestCase
             'fields' => [
                 'url' => ['default' => ''],
                 'showUnpublished' => ['default' => false],
+                'previewTime' => ['default' => ''],
                 'createdAt' => ['default' => 0],
                 'expiresAt' => ['default' => 0],
                 'createdBy' => ['default' => 0],
             ],
         ];
 
-        $request = Request::create("/contao?do=preview_link&act=edit&url=$url&showUnpublished=$showUnpublished");
+        $request = Request::create("/contao?do=preview_link&act=edit&url=$url&showUnpublished=$showUnpublished&previewTime=$previewTime");
         $clock = new MockClock();
 
         $listener = new PreviewLinkListener(
@@ -135,6 +136,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
         $this->assertSame($showUnpublished, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
+        $this->assertSame($previewTime, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['previewTime']['default']);
         $this->assertSame($clock->now()->getTimestamp(), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
         $this->assertSame(strtotime('+1 day', $clock->now()->getTimestamp()), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
@@ -145,12 +147,14 @@ class PreviewLinkListenerTest extends TestCase
         yield [
             '/preview.php/foo/bar',
             true,
+            '',
             1,
         ];
 
         yield [
             '/preview.php/foo/baz',
             false,
+            '637974000',
             2,
         ];
     }

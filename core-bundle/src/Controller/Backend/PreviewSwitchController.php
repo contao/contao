@@ -85,6 +85,7 @@ class PreviewSwitchController
         $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
+        $previewTime = $this->tokenChecker->getPreviewTime();
         $shareLink = '';
 
         if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link')) {
@@ -92,6 +93,7 @@ class PreviewSwitchController
                 'do' => 'preview_link',
                 'act' => 'create',
                 'showUnpublished' => $showUnpublished,
+                'previewTime' => $previewTime?->getTimestamp(),
                 'rt' => $this->tokenManager->getDefaultTokenValue(),
                 'nb' => '1', // Do not show the "Save & Close" button
             ]);
@@ -114,6 +116,7 @@ class PreviewSwitchController
                 'canSwitchUser' => $canSwitchUser,
                 'user' => $frontendUsername,
                 'show' => $showUnpublished,
+                'previewTime' => $previewTime?->format('Y-m-d\TH:i'),
                 'attributes' => $attributes,
                 'badgeTitle' => $this->backendBadgeTitle,
                 'share' => $shareLink,
@@ -139,6 +142,13 @@ class PreviewSwitchController
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
+        $previewTime = null;
+
+        // Only set previewTime if we are not showing unpublished
+        if (!$showUnpublished && $input = $request->request->get('previewTime')) {
+            $previewTime = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $input) ?: null;
+        }
+
         if ($frontendUsername) {
             if (!$this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished)) {
                 $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
@@ -148,6 +158,9 @@ class PreviewSwitchController
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
+
+        // Authentication replaces the session payload so we set previewTime afterward
+        $this->previewAuthenticator->setPreviewTime($previewTime);
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }

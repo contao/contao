@@ -2435,6 +2435,12 @@
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
       </trans-unit>
+      <trans-unit id="MSC.previewTime">
+        <source>Time</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearPreviewTime">
+        <source>Clear preview time</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

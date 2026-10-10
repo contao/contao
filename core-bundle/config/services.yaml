@@ -883,6 +883,13 @@ services:
             - '@database_connection'
             - '@contao.data_container.dca_hierarchy'
 
+    contao.preview.clock:
+        class: Contao\CoreBundle\Preview\PreviewClock
+        public: true
+        arguments:
+            - '@contao.security.token_checker'
+            - '@clock'
+
     contao.process_util:
         class: Contao\CoreBundle\Util\ProcessUtil
         arguments:
