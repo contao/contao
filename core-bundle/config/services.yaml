@@ -382,6 +382,14 @@ services:
         arguments:
             - '%contao.max_file_upload_size%'
 
+    contao.file.upload_validator:
+        class: Contao\CoreBundle\File\UploadValidator
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '%contao.image.reject_large_uploads%'
+            - '@contao.image.imagine'
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
@@ -1713,6 +1721,7 @@ services:
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Doctrine\DBAL\Hierarchy: '@contao.doctrine.dbal.hierarchy'
     Contao\CoreBundle\File\UploadSizeProvider: '@contao.file.upload_size_provider'
+    Contao\CoreBundle\File\UploadValidator: '@contao.file.upload_validator'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Fragment\FragmentCompositor: '@contao.fragment.compositor'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'

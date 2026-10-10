@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-use enshrined\svgSanitize\Sanitizer;
+use Contao\CoreBundle\File\ImageTooLargeException;
+use Contao\CoreBundle\File\InvalidImageException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -91,6 +92,7 @@ class FileUpload extends Backend
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
 
+		$validator = System::getContainer()->get('contao.file.upload_validator');
 		$maxlength_kb = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 		$arrUploaded = array();
@@ -112,7 +114,7 @@ class FileUpload extends Backend
 			}
 
 			// Invalid file name
-			if (!Validator::isValidFileName($file['name']))
+			if (!$validator->isValidFilename($file['name']))
 			{
 				Message::addError($GLOBALS['TL_LANG']['ERR']['filename']);
 				$this->blnHasError = true;
@@ -149,21 +151,15 @@ class FileUpload extends Backend
 				$strExtension = Path::getExtension($file['name'], true);
 
 				// Image is too big
-				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && Config::get('imageWidth') && Config::get('imageHeight') && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
+				if ($validator->requiresImageValidation($file['name']))
 				{
-					$arrImageSize = getimagesize($file['tmp_name']);
-
-					if (false === $arrImageSize)
+					try
 					{
-						Message::addError($GLOBALS['TL_LANG']['ERR']['general']);
-						$this->blnHasError = true;
-
-						continue;
+						$validator->validateImage($file['tmp_name']);
 					}
-
-					if ($arrImageSize[0] > Config::get('imageWidth') || $arrImageSize[1] > Config::get('imageHeight'))
+					catch (ImageTooLargeException|InvalidImageException $e)
 					{
-						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')));
+						Message::addError($e instanceof ImageTooLargeException ? \sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')) : $GLOBALS['TL_LANG']['ERR']['general']);
 						$this->blnHasError = true;
 
 						continue;
@@ -180,7 +176,7 @@ class FileUpload extends Backend
 				}
 
 				// File type not allowed
-				if (!\in_array($strExtension, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))))
+				if (!$validator->isAllowedFilename($file['name']))
 				{
 					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
 					$this->blnHasError = true;
@@ -369,30 +365,11 @@ class FileUpload extends Backend
 			return false;
 		}
 
-		$blnGzip = false;
+		$strData = System::getContainer()->get('contao.file.upload_validator')->sanitizeSvg($strData);
 
-		if (0 === strncmp($strData, hex2bin('1F8B'), 2))
-		{
-			$strData = gzdecode($strData);
-			$blnGzip = true;
-		}
-
-		if (!$strData)
+		if ($strData === null)
 		{
 			return false;
-		}
-
-		$sanitizer = new Sanitizer();
-		$strData = $sanitizer->sanitize($strData);
-
-		if (!$strData)
-		{
-			return false;
-		}
-
-		if ($blnGzip)
-		{
-			$strData = gzencode($strData);
 		}
 
 		(new Filesystem())->dumpFile($strPath, $strData);
