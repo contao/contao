@@ -277,6 +277,7 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     {
         $browser = self::managedEdition()->createHttpBrowser(HttpBrowserOptions::create()->withSimulatedOrigin('https://localhost'));
         $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
+
         $crawler = $browser->request('GET', '/microsite-home');
 
         $this->assertSame(200, $browser->getInternalResponse()->getStatusCode(), $browser->getInternalResponse()->getContent());
