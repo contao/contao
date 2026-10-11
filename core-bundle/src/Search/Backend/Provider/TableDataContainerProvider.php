@@ -144,7 +144,7 @@ class TableDataContainerProvider implements ProviderInterface
 
         return $this->security->isGrantedForUser(
             $user,
-            [ContaoCorePermissions::DC_PREFIX.$table],
+            ContaoCorePermissions::DC_PREFIX.$table,
             new ReadAction($table, $row),
         );
     }

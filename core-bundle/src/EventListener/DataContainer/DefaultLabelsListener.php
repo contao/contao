@@ -57,7 +57,7 @@ class DefaultLabelsListener
         // Fields
         if (isset($GLOBALS['TL_DCA'][$table]['fields'])) {
             foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $k => &$v) {
-                if (\array_key_exists('label', $v)) {
+                if (\is_array($v) && \array_key_exists('label', $v)) {
                     continue;
                 }
 

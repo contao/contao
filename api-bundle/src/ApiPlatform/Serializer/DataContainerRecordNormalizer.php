@@ -109,11 +109,21 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     }
 
     /**
-     * @param array{operation?: Operation, contao_table?: string} $context
+     * @param array{
+     *     operation?: Operation,
+     *     contao_table?: string,
+     *     input?: array{class?: class-string|null},
+     * } $context
      */
     public function supportsDenormalization(mixed $data, string $type, string|null $format = null, array $context = []): bool
     {
-        return is_a($type, DataContainerRecord::class, true);
+        if (!is_a($type, DataContainerRecord::class, true)) {
+            return false;
+        }
+
+        $inputClass = $context['input']['class'] ?? null;
+
+        return null === $inputClass || is_a($inputClass, DataContainerRecord::class, true);
     }
 
     /**
