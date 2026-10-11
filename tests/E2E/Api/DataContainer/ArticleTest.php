@@ -15,17 +15,13 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testCreatesArticleOnPage(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
+        $fixtures = self::managedEdition()->database()->fixtures();
 
         $pageId = (int) $fixtures->value('page_main_home');
 
@@ -63,6 +59,43 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertContains($data['@id'], array_column($collection['member'] ?? [], '@id'));
     }
 
+    public function testMovesAnArticleIntoAnotherPage(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}');
+        $parent = (int) $fixtures->value('page_microsite_home');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer e2e',
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'target' => $parent,
+                'position' => 'last',
+                'ptable' => 'tl_page',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($parent, $data['pid']['id']);
+
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
+            'Authorization' => 'Bearer e2e',
+            'Accept' => 'application/ld+json',
+        ]));
+
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($parent, $data['pid']['id']);
+    }
+
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
@@ -74,6 +107,11 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
             'newsletter-bundle',
         );
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory());
     }
 }

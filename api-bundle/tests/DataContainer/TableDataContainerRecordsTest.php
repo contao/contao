@@ -484,6 +484,40 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->assertSame(17, $result->id);
     }
 
+    public function testMovesIntoTheParentTableOfTheDca(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_page';
+        $modules = $GLOBALS['BE_MOD'] ?? null;
+        $GLOBALS['BE_MOD'] = [];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Moved'])
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_INTO)
+        ;
+
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+
+        try {
+            $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'first', 'tl_page'));
+        } finally {
+            if (null === $modules) {
+                unset($GLOBALS['BE_MOD']);
+            } else {
+                $GLOBALS['BE_MOD'] = $modules;
+            }
+        }
+    }
+
     public function testRejectsAMissingMoveDestinationBeforeCutting(): void
     {
         $dc = $this->createMock(DC_Table::class);

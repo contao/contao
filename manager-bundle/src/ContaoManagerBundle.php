@@ -13,20 +13,36 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle;
 
 use Contao\ManagerBundle\DependencyInjection\Compiler\ContaoManagerPass;
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class ContaoManagerBundle extends Bundle
+class ContaoManagerBundle extends AbstractBundle
 {
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $container->addCompilerPass(new ContaoManagerPass());
     }
 
-    public function getPath(): string
+    public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        return \dirname(__DIR__);
+        $configurator->import('../config/controller.yaml');
+        $configurator->import('../config/services.yaml');
+
+        $container->setParameter('contao_manager.manager_path', $config['manager_path']);
+    }
+
+    public function configure(DefinitionConfigurator $definition): void
+    {
+        $definition
+            ->rootNode()
+                ->children()
+                    ->scalarNode('manager_path')
+                    ->defaultNull()
+                    ->info('The path to the Contao manager relative to the Contao web directory.')
+                ->end()
+            ->end()
+        ;
     }
 }

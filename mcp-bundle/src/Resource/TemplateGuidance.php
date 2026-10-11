@@ -86,7 +86,7 @@ final class TemplateGuidance
             - Create a snapshot before the first mutation in a task and keep its hash until the work is accepted.
             - If `can_edit` is false and `create` is available, create the override before saving. Creation writes generated default content, which must then be replaced with the intended complete source.
             - Validation compiles the complete proposed source in context but does not render it with runtime data. Treat a successful result as a syntax and compilation check, not proof of correct output.
-            - For an advertised `create_*` or `rename_*` operation, first call `contao_template_execute_operation` with empty `parameters`. This returns suggested values and the allowed identifier pattern without creating or renaming a file. Then call it again with a valid `identifier_fragment`.
+            - For an advertised `create_*` or `rename_*` operation, first call `contao_template_execute_operation` without `parameters`. This returns operation guidance without creating or renaming a file. Then call it again with the required parameters, such as a valid `identifier_fragment`.
             - Re-read and re-analyze the result after creating, renaming or changing an override. Use the new identifier returned by a rename operation.
             - Dynamic template references and references created in PHP may require human review.
 
