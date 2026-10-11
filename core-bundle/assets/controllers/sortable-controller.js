@@ -192,7 +192,9 @@ export default class extends Controller {
         el.sortableOrigin = { parent: el.parentNode, next: el.nextSibling };
     }
 
-    #restoreOrigin(el, { parent, next }) {
+    #restoreOrigin(el, origin) {
+        const { parent, next } = origin;
+
         parent.insertBefore(el, next);
         this.#updateLevel(el);
         this.#updateWrapperLevel();
