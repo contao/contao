@@ -23,7 +23,7 @@ class ListWizard extends Widget
 	 */
 	protected $blnSubmitInput = true;
 
-	private bool $allowNesting;
+	private bool $allowNesting = false;
 
 	/**
 	 * Template
