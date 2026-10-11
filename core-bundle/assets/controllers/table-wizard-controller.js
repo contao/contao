@@ -147,6 +147,11 @@ export default class extends Controller {
     }
 
     highlight({ currentTarget }) {
+        // Keep the highlight of the open menu
+        if (null !== this.#menu) {
+            return;
+        }
+
         this.#setActive(this.#getAxis(currentTarget), this.#index(currentTarget, this.#getAxis(currentTarget)));
     }
 
