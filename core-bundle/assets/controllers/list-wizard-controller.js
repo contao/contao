@@ -43,8 +43,29 @@ export default class extends Controller {
     navigate(event) {
         const input = event.target;
         const row = this.#getRow(event);
-        const rows = this.rowTargets;
 
+        if ('Enter' === event.key) {
+            // Do not add an item when Enter only confirms a word typed with an input method
+            if (!event.isComposing) {
+                this.#addRow(row, true);
+                event.preventDefault();
+            }
+
+            return;
+        }
+
+        // Leave selections and shortcuts to the browser
+        if (
+            event.shiftKey ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey ||
+            input.selectionStart !== input.selectionEnd
+        ) {
+            return;
+        }
+
+        const rows = this.rowTargets;
         const i = rows.indexOf(row);
         const atStart = 0 === input.selectionStart;
         const atEnd = input.value.length === input.selectionStart;
@@ -59,9 +80,6 @@ export default class extends Controller {
             this.#focus(rows[i - 1]);
         } else if ('ArrowDown' === event.key && atEnd) {
             this.#focus(rows[i + 1]);
-        } else if ('Enter' === event.key) {
-            this.#addRow(row, true);
-            event.preventDefault();
         }
     }
 
