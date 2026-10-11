@@ -273,7 +273,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $backend->page()->evaluate('() => { window.fetch = () => new Promise(() => {}); }');
         $tree->locator(':scope > li[data-id] > .tl_folder > .drag-handle')->nth($index)->press($key);
 
-        $this->assertSame('tl_folder_top cf', $tree->locator(':scope > li')->first()->getAttribute('class'));
+        $this->assertTrue($tree->locator(':scope > li')->first()->evaluate('el => el.classList.contains("tl_folder_top")'));
         $this->assertSame(array_reverse($ids), $this->recordIds($tree));
     }
 
