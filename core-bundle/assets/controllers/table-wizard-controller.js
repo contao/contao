@@ -12,7 +12,7 @@ function positionAt(element, anchor, placement) {
 export default class extends Controller {
     #menu = null;
     #dragging = false;
-    #stopDrag = null;
+    #dragAbortController = null;
     #syncing = false;
     #observer;
     #flags = { head: false, foot: false, left: false };
@@ -72,7 +72,7 @@ export default class extends Controller {
 
     disconnect() {
         this.closeMenu(false);
-        this.#stopDrag?.();
+        this.#stopDrag();
         this.#dragging = false;
         this.rowSortable?.destroy();
         this.columnSortable?.destroy();
@@ -179,9 +179,11 @@ export default class extends Controller {
             return;
         }
 
-        this.#stopDrag?.();
+        this.#stopDrag();
         this.#dragging = false;
+        this.#dragAbortController = new AbortController();
 
+        const { signal } = this.#dragAbortController;
         const axes = this.#addAxes(event.currentTarget);
         const rect = this.#getCells(this.rowTargets[0])[0].getBoundingClientRect();
         const step = { row: rect.height || 40, column: rect.width || 40 };
@@ -208,23 +210,16 @@ export default class extends Controller {
         };
 
         const onPointerUp = () => {
-            this.#stopDrag?.();
+            this.#stopDrag();
             // Use rAF so addCell doesn't trigger
             requestAnimationFrame(() => {
                 this.#dragging = false;
             });
         };
 
-        this.#stopDrag = () => {
-            window.removeEventListener('pointermove', onPointerMove);
-            window.removeEventListener('pointerup', onPointerUp);
-            window.removeEventListener('pointercancel', onPointerUp);
-            this.#stopDrag = null;
-        };
-
-        window.addEventListener('pointermove', onPointerMove);
-        window.addEventListener('pointerup', onPointerUp);
-        window.addEventListener('pointercancel', onPointerUp);
+        window.addEventListener('pointermove', onPointerMove, { signal });
+        window.addEventListener('pointerup', onPointerUp, { signal });
+        window.addEventListener('pointercancel', onPointerUp, { signal });
     }
 
     // Keyboard navigation
@@ -250,6 +245,11 @@ export default class extends Controller {
         if (move[caret.key]?.()) {
             event.preventDefault();
         }
+    }
+
+    #stopDrag() {
+        this.#dragAbortController?.abort();
+        this.#dragAbortController = null;
     }
 
     #getCaretPosition({ target, key }) {
