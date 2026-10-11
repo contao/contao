@@ -14,7 +14,7 @@ export default class extends Controller {
     #dragging = false;
     #dragAbortController = null;
     #syncing = false;
-    #observer;
+    #observer = null;
     #flags = { head: false, foot: false, left: false };
 
     static targets = ['body', 'row', 'columnHandle', 'columnHandleRow', 'input', 'menuTemplate'];
@@ -77,7 +77,9 @@ export default class extends Controller {
         this.rowSortable?.destroy();
         this.columnSortable?.destroy();
         this.#observer?.disconnect();
-        this.#observer = undefined;
+
+        // Target callbacks run before connect() and must not reactivate the old observer
+        this.#observer = null;
     }
 
     inputTargetConnected(textarea) {
@@ -165,7 +167,7 @@ export default class extends Controller {
             this.#insert(axis, this.#count(axis));
         }
 
-        // Wait until Stimulus has registered the focus actions of the new cells.
+        // Wait until Stimulus has registered the actions of the new cells
         queueMicrotask(() => {
             this.#focusCell(
                 axes.includes('row') ? this.#count('row') - 1 : 0,
