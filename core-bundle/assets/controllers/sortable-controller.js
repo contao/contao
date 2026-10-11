@@ -12,6 +12,10 @@ export default class extends Controller {
         handle: String,
         draggable: String,
         group: String,
+        swapThreshold: {
+            type: Number,
+            default: 0.65,
+        },
         confirmUrl: String,
         errorMessage: String,
     };
@@ -26,7 +30,7 @@ export default class extends Controller {
 
         const options = {
             animation: 100,
-            swapThreshold: 0.65,
+            swapThreshold: this.swapThresholdValue,
             onSort: (event) => {
                 this.#onSorted(event.item, event);
             },
