@@ -66,8 +66,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        // Don't disconnect sortables target whilst it is still connected to the dom when dragging it
-        if (this.element.isConnected) {
+        // Preserve the instance when dragging moves its element within the DOM
+        if (this.element.isConnected && this.element.matches(`[data-controller~="${this.identifier}"]`)) {
             return;
         }
 
@@ -76,33 +76,41 @@ export default class extends Controller {
     }
 
     move(event) {
+        const up = event.code === 'ArrowUp' || event.keyCode === 38;
+        const down = event.code === 'ArrowDown' || event.keyCode === 40;
+
+        if (!up && !down) {
+            return;
+        }
+
+        event.preventDefault();
+
         const item = this.#getItem(event.target);
+        const items = Array.from(this.element.children).filter((el) => this.sortable.closest(el) === el);
+        const index = items.indexOf(item);
+
+        if (index === -1 || items.length < 2) {
+            return;
+        }
 
         this.#rememberOrigin(item);
 
-        if (event.code === 'ArrowUp' || event.keyCode === 38) {
-            event.preventDefault();
-
-            if (item.previousElementSibling) {
-                item.previousElementSibling.before(item);
+        if (up) {
+            if (items[index - 1]) {
+                items[index - 1].before(item);
             } else {
-                this.element.append(item);
+                items.at(-1).after(item);
             }
-
-            this.#onSorted(item);
-            event.target.focus();
-        } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
-            event.preventDefault();
-
-            if (item.nextElementSibling) {
-                item.nextElementSibling.after(item);
+        } else {
+            if (items[index + 1]) {
+                items[index + 1].after(item);
             } else {
-                this.element.prepend(item);
+                items[0].before(item);
             }
-
-            this.#onSorted(item);
-            event.target.focus();
         }
+
+        this.#onSorted(item);
+        event.target.focus();
     }
 
     #updateWrapperLevel() {
@@ -139,6 +147,8 @@ export default class extends Controller {
     }
 
     #updateParentSorting(el) {
+        const origin = el.sortableOrigin;
+
         this.#updateLevel(el);
 
         // Do not treat top nodes as siblings (e.g. page tree top node)
@@ -174,7 +184,7 @@ export default class extends Controller {
                     throw new Error(response.statusText);
                 }
             })
-            .catch(() => this.#restoreOrigin(el));
+            .catch(() => this.#restoreOrigin(el, origin));
     }
 
     // Stored on the element, because the drop target can be a different controller instance
@@ -182,9 +192,7 @@ export default class extends Controller {
         el.sortableOrigin = { parent: el.parentNode, next: el.nextSibling };
     }
 
-    #restoreOrigin(el) {
-        const { parent, next } = el.sortableOrigin;
-
+    #restoreOrigin(el, { parent, next }) {
         parent.insertBefore(el, next);
         this.#updateLevel(el);
         this.#updateWrapperLevel();
