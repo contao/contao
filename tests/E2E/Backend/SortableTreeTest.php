@@ -372,7 +372,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     }
 
     /**
-     * Sets up the testing and expands the tree
+     * Sets up the testing and expands the tree.
      */
     private function openExpandedTree(string $module = 'page'): BackendBrowser
     {
