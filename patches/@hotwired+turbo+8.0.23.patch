@@ -1,49 +1,82 @@
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-index 086945c..b7710be 100644
+index 086945c..b3fa981 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-@@ -4620,6 +4620,7 @@ class History {
+@@ -714,6 +714,7 @@ const FetchEnctype = {
+ class FetchRequest {
+   abortController = new AbortController()
+   #resolveRequestPromise = (_value) => {}
++  #adoptedRequest = null
+ 
+   constructor(delegate, method, location, requestBody = new URLSearchParams(), target = null, enctype = FetchEnctype.urlEncoded) {
+     const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype);
+@@ -784,6 +785,7 @@ class FetchRequest {
+ 
+   cancel() {
+     this.abortController.abort();
++    this.#adoptedRequest?.cancel();
+   }
+ 
+   async perform() {
+@@ -794,12 +796,15 @@ class FetchRequest {
+       this.delegate.requestStarted(this);
+ 
+       if (event.detail.fetchRequest) {
+-        this.response = event.detail.fetchRequest.response;
++        this.#adoptedRequest = event.detail.fetchRequest;
++        if (this.abortSignal.aborted) this.#adoptedRequest.cancel();
++        this.response = this.#adoptedRequest.response;
+       } else {
+         this.response = fetchWithTurboHeaders(this.url.href, fetchOptions);
+       }
+ 
+       const response = await this.response;
++      if (this.#adoptedRequest && this.abortSignal.aborted) return
+       return await this.receive(response)
+     } catch (error) {
+       if (error.name !== "AbortError") {
+@@ -4620,6 +4625,7 @@ class History {
  class LinkPrefetchObserver {
    started = false
    #prefetchedLink = null
 +  #pendingFetchRequests = new Map()
-
+ 
    constructor(delegate, eventTarget) {
      this.delegate = delegate;
-@@ -4649,6 +4650,7 @@ class LinkPrefetchObserver {
+@@ -4649,6 +4655,7 @@ class LinkPrefetchObserver {
      });
-
+ 
      this.eventTarget.removeEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
 +    this.eventTarget.removeEventListener("turbo:before-visit", this.#cancelPendingFetchRequests, true);
      this.started = false;
    }
-
-@@ -4663,6 +4665,7 @@ class LinkPrefetchObserver {
+ 
+@@ -4663,6 +4670,7 @@ class LinkPrefetchObserver {
      });
-
+ 
      this.eventTarget.addEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
 +    this.eventTarget.addEventListener("turbo:before-visit", this.#cancelPendingFetchRequests, true);
      this.started = true;
    }
-
-@@ -4689,11 +4692,29 @@ class LinkPrefetchObserver {
-
+ 
+@@ -4689,11 +4697,29 @@ class LinkPrefetchObserver {
+ 
          fetchRequest.fetchOptions.priority = "low";
-
+ 
 +        // Memorize fetch request and cancel previous one to the same URL
 +        const url = location.href;
 +        const lastFetchRequest = this.#pendingFetchRequests.get(url);
 +
-+        if (lastFetchRequest) lastFetchRequest.cancel();
++        if(lastFetchRequest) lastFetchRequest.cancel();
 +        this.#pendingFetchRequests.set(url, fetchRequest);
 +
          prefetchCache.putLater(location, fetchRequest, this.#cacheTtl);
        }
      }
    }
-
+ 
 +  #cancelPendingFetchRequests = (event) => {
-+    if (event.detail.fetchRequest) return;
++    if (event.detail.fetchRequest) return
 +
 +    for (const [url, fetchRequest] of this.#pendingFetchRequests.entries()) {
 +      if (url !== event.detail.url) {
@@ -56,83 +89,129 @@ index 086945c..b7710be 100644
    #cancelRequestIfObsolete = (event) => {
      if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
    }
-@@ -4707,9 +4728,14 @@ class LinkPrefetchObserver {
+@@ -4705,14 +4731,26 @@ class LinkPrefetchObserver {
+ 
+   #tryToUsePrefetchedRequest = (event) => {
      if (event.target.tagName !== "FORM" && event.detail.fetchOptions.method === "GET") {
-       const cached = prefetchCache.get(event.detail.url);
-
--      if (cached) {
-+      if (cached && !cached.abortSignal.aborted) {
-         // User clicked link, use cache response
-         event.detail.fetchRequest = cached;
-+
-+        // The visit owns this request now; prefetch cancellation must leave it alone.
-+        for (const [url, request] of this.#pendingFetchRequests) {
-+          if (request === cached) this.#pendingFetchRequests.delete(url);
-+        }
-       }
-
-       prefetchCache.clear();
-@@ -4737,7 +4763,13 @@ class LinkPrefetchObserver {
-
-   requestErrored(fetchRequest) {}
-
--  requestFinished(fetchRequest) {}
-+  requestFinished(fetchRequest) {
-+    const url = fetchRequest.url.href;
-+
-+    if (this.#pendingFetchRequests.get(url) === fetchRequest) {
-+      this.#pendingFetchRequests.delete(url);
+-      const cached = prefetchCache.get(event.detail.url);
++      this.#usePrefetchedRequest(event.detail);
++      prefetchCache.clear();
 +    }
 +  }
-
+ 
+-      if (cached) {
+-        // User clicked link, use cache response
+-        event.detail.fetchRequest = cached;
+-      }
++  #usePrefetchedRequest(detail) {
++    const cached = prefetchCache.get(detail.url);
+ 
+-      prefetchCache.clear();
++    if (cached && !cached.abortSignal.aborted) {
++      // The navigation now owns this request, so prefetching must not cancel it.
++      this.#removePendingFetchRequest(cached);
++      detail.fetchRequest = cached;
++    }
++  }
++
++  #removePendingFetchRequest(fetchRequest) {
++    for (const [url, pendingFetchRequest] of this.#pendingFetchRequests) {
++      if (pendingFetchRequest === fetchRequest) {
++        this.#pendingFetchRequests.delete(url);
++      }
+     }
+   }
+ 
+@@ -4737,7 +4775,9 @@ class LinkPrefetchObserver {
+ 
+   requestErrored(fetchRequest) {}
+ 
+-  requestFinished(fetchRequest) {}
++  requestFinished(fetchRequest) {
++    this.#removePendingFetchRequest(fetchRequest);
++  }
+ 
    requestPreventedHandlingResponse(fetchRequest, fetchResponse) {}
-
+ 
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-index 120ed11..1260129 100644
+index 120ed11..d9c9853 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-@@ -4626,6 +4626,7 @@ Copyright © 2026 37signals LLC
+@@ -720,6 +720,7 @@ Copyright © 2026 37signals LLC
+   class FetchRequest {
+     abortController = new AbortController()
+     #resolveRequestPromise = (_value) => {}
++    #adoptedRequest = null
+ 
+     constructor(delegate, method, location, requestBody = new URLSearchParams(), target = null, enctype = FetchEnctype.urlEncoded) {
+       const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype);
+@@ -790,6 +791,7 @@ Copyright © 2026 37signals LLC
+ 
+     cancel() {
+       this.abortController.abort();
++      this.#adoptedRequest?.cancel();
+     }
+ 
+     async perform() {
+@@ -800,12 +802,15 @@ Copyright © 2026 37signals LLC
+         this.delegate.requestStarted(this);
+ 
+         if (event.detail.fetchRequest) {
+-          this.response = event.detail.fetchRequest.response;
++          this.#adoptedRequest = event.detail.fetchRequest;
++          if (this.abortSignal.aborted) this.#adoptedRequest.cancel();
++          this.response = this.#adoptedRequest.response;
+         } else {
+           this.response = fetchWithTurboHeaders(this.url.href, fetchOptions);
+         }
+ 
+         const response = await this.response;
++        if (this.#adoptedRequest && this.abortSignal.aborted) return
+         return await this.receive(response)
+       } catch (error) {
+         if (error.name !== "AbortError") {
+@@ -4626,6 +4631,7 @@ Copyright © 2026 37signals LLC
    class LinkPrefetchObserver {
      started = false
      #prefetchedLink = null
 +    #pendingFetchRequests = new Map()
-
+ 
      constructor(delegate, eventTarget) {
        this.delegate = delegate;
-@@ -4655,6 +4656,7 @@ Copyright © 2026 37signals LLC
+@@ -4655,6 +4661,7 @@ Copyright © 2026 37signals LLC
        });
-
+ 
        this.eventTarget.removeEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
 +      this.eventTarget.removeEventListener("turbo:before-visit", this.#cancelPendingFetchRequests, true);
        this.started = false;
      }
-
-@@ -4669,6 +4671,7 @@ Copyright © 2026 37signals LLC
+ 
+@@ -4669,6 +4676,7 @@ Copyright © 2026 37signals LLC
        });
-
+ 
        this.eventTarget.addEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
 +      this.eventTarget.addEventListener("turbo:before-visit", this.#cancelPendingFetchRequests, true);
        this.started = true;
      }
-
-@@ -4695,11 +4698,29 @@ Copyright © 2026 37signals LLC
-
+ 
+@@ -4695,11 +4703,29 @@ Copyright © 2026 37signals LLC
+ 
            fetchRequest.fetchOptions.priority = "low";
-
+ 
 +          // Memorize fetch request and cancel previous one to the same URL
 +          const url = location.href;
 +          const lastFetchRequest = this.#pendingFetchRequests.get(url);
 +
-+          if (lastFetchRequest) lastFetchRequest.cancel();
++          if(lastFetchRequest) lastFetchRequest.cancel();
 +          this.#pendingFetchRequests.set(url, fetchRequest);
 +
            prefetchCache.putLater(location, fetchRequest, this.#cacheTtl);
          }
        }
      }
-
+ 
 +    #cancelPendingFetchRequests = (event) => {
-+      if (event.detail.fetchRequest) return;
++      if (event.detail.fetchRequest) return
 +
 +      for (const [url, fetchRequest] of this.#pendingFetchRequests.entries()) {
 +        if (url !== event.detail.url) {
@@ -145,34 +224,47 @@ index 120ed11..1260129 100644
      #cancelRequestIfObsolete = (event) => {
        if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
      }
-@@ -4713,9 +4734,14 @@ Copyright © 2026 37signals LLC
+@@ -4711,14 +4737,26 @@ Copyright © 2026 37signals LLC
+ 
+     #tryToUsePrefetchedRequest = (event) => {
        if (event.target.tagName !== "FORM" && event.detail.fetchOptions.method === "GET") {
-         const cached = prefetchCache.get(event.detail.url);
-
--        if (cached) {
-+        if (cached && !cached.abortSignal.aborted) {
-           // User clicked link, use cache response
-           event.detail.fetchRequest = cached;
-+
-+          // The visit owns this request now; prefetch cancellation must leave it alone.
-+          for (const [url, request] of this.#pendingFetchRequests) {
-+            if (request === cached) this.#pendingFetchRequests.delete(url);
-+          }
-         }
-
-         prefetchCache.clear();
-@@ -4743,7 +4769,13 @@ Copyright © 2026 37signals LLC
-
-     requestErrored(fetchRequest) {}
-
--    requestFinished(fetchRequest) {}
-+    requestFinished(fetchRequest) {
-+      const url = fetchRequest.url.href;
-+
-+      if (this.#pendingFetchRequests.get(url) === fetchRequest) {
-+        this.#pendingFetchRequests.delete(url);
+-        const cached = prefetchCache.get(event.detail.url);
++        this.#usePrefetchedRequest(event.detail);
++        prefetchCache.clear();
 +      }
 +    }
-
+ 
+-        if (cached) {
+-          // User clicked link, use cache response
+-          event.detail.fetchRequest = cached;
+-        }
++    #usePrefetchedRequest(detail) {
++      const cached = prefetchCache.get(detail.url);
+ 
+-        prefetchCache.clear();
++      if (cached && !cached.abortSignal.aborted) {
++        // The navigation now owns this request, so prefetching must not cancel it.
++        this.#removePendingFetchRequest(cached);
++        detail.fetchRequest = cached;
++      }
++    }
++
++    #removePendingFetchRequest(fetchRequest) {
++      for (const [url, pendingFetchRequest] of this.#pendingFetchRequests) {
++        if (pendingFetchRequest === fetchRequest) {
++          this.#pendingFetchRequests.delete(url);
++        }
+       }
+     }
+ 
+@@ -4743,7 +4781,9 @@ Copyright © 2026 37signals LLC
+ 
+     requestErrored(fetchRequest) {}
+ 
+-    requestFinished(fetchRequest) {}
++    requestFinished(fetchRequest) {
++      this.#removePendingFetchRequest(fetchRequest);
++    }
+ 
      requestPreventedHandlingResponse(fetchRequest, fetchResponse) {}
-
+ 
