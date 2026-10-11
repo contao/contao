@@ -231,12 +231,15 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     public function testHandlesHighlightTheirRowOrColumn(): void
     {
         $backend = $this->openTableElement();
-        $summary = $backend->page()->locator('input[name="summary"]');
+
+        // Move the pointer to the empty part of the toolbar, so the page does not scroll
+        // and the pointer does not cross another handle
+        $outside = $this->wizard($backend)->locator('.table-wizard-toolbar');
 
         $this->handle($backend, 'row', 1)->hover();
         $this->assertSame([[1, 0], [1, 1], [1, 2]], $this->activeCells($backend));
 
-        $summary->hover();
+        $outside->hover(['position' => ['x' => 300, 'y' => 12]]);
         $this->assertSame([], $this->activeCells($backend));
 
         $this->handle($backend, 'column', 2)->focus();
@@ -244,7 +247,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         // The highlight stays while the menu is open
         $this->handle($backend, 'column', 2)->click();
-        $summary->hover();
+        $outside->hover(['position' => ['x' => 300, 'y' => 12]]);
         $this->assertSame([[0, 2], [1, 2], [2, 2]], $this->activeCells($backend));
 
         $backend->page()->keyboard()->press('Escape');
@@ -580,6 +583,9 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->login();
         $backend->visit(self::managedEdition()->database()->fixtures()->interpolate('/contao?do=article&table=tl_content&id={content_table}&act=edit'));
         $backend->waitFor('.table-wizard:has(#ctrl_'.self::RTE.')');
+
+        // Show the table wizards when watching the tests
+        $backend->page()->locator('#pal_table_legend')->evaluate('el => el.scrollIntoView({block: "start"})');
 
         return $backend;
     }
