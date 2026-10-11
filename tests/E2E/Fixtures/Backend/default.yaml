@@ -61,6 +61,30 @@ tl_article:
         alias: main-website-home
         inColumn: main
         published: 1
+    article_microsite_home:
+        pid: '@page_microsite_home'
+        sorting: 128
+        tstamp: 1704067200
+        title: Microsite home
+        alias: microsite-home
+        inColumn: main
+        published: 1
+
+tl_content:
+    content_list:
+        pid: '@article_microsite_home'
+        ptable: tl_article
+        sorting: 256
+        tstamp: 1704067200
+        type: list
+        listtype: unordered
+        listitems:
+            - item: Foo
+              list:
+                  - item: Bar
+                  - item: Baz
+            - item: Qux
+            - item: Quux
 
 tl_files:
     files_media:
