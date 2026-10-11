@@ -140,6 +140,11 @@ export default class extends Controller {
 
     #remove(el) {
         const editor = this.#editors.get(el);
+
+        if (editor) {
+            this.#commit(editor);
+        }
+
         this.#editors.delete(el);
         this.#initializations.delete(el);
         editor?.remove();
@@ -147,6 +152,7 @@ export default class extends Controller {
 
     #setup(editor) {
         editor.on('focus', () => window.dispatchEvent(new Event('store-scroll-offset')));
+        editor.on('SaveContent', ({ content }) => this.#commit(editor, content));
 
         // Hide instead of removing as reinit during focus event crashes HugeRTE
         editor.on('blur', () => {
@@ -180,14 +186,19 @@ export default class extends Controller {
         return { atStart: '' === before.toString().trim(), atEnd: '' === after.toString().trim() };
     }
 
-    #commit(editor) {
+    #commit(editor, content = null) {
         // Only edited cells are written back to make sure HugeRTE does not rewrite unedited cells
         if (!editor.isDirty()) {
             return;
         }
 
         const textarea = editor.targetElm.previousElementSibling;
-        textarea.value = editor.getContent();
+
+        if (!textarea) {
+            return;
+        }
+
+        textarea.value = content ?? editor.getContent();
         textarea.dispatchEvent(new Event('input', { bubbles: true }));
         editor.setDirty(false);
     }
