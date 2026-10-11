@@ -327,8 +327,9 @@ export default class extends Controller {
         positionAt(menu, handle, 'row' === axis ? 'right-start' : 'bottom-start');
         handle.setAttribute('aria-expanded', 'true');
         this.#setActive(axis, index);
-        menu.querySelector('.table-wizard-menu-item')?.focus({ preventScroll: true });
+        // Set the menu first, so blur of the handle does not clear the highlight
         this.#menu = { element: menu, handle, axis, index };
+        menu.querySelector('.table-wizard-menu-item')?.focus({ preventScroll: true });
     }
 
     #navigateMenu(event) {
