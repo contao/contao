@@ -108,6 +108,19 @@ class TableWizard extends Widget
 			$tableRows[] = array('cells' => $tableCells);
 		}
 
+		$appearance = $this->arrAppearance;
+
+		if (Input::get('act') === 'editAll' && $this->objDca)
+		{
+			foreach ($appearance as $name => $field)
+			{
+				if ($field)
+				{
+					$appearance[$name] = $field . '_' . $this->objDca->id;
+				}
+			}
+		}
+
 		return System::getContainer()->get('twig')->render('@Contao/backend/widget/table_wizard.html.twig', array(
 			'id' => $this->strId,
 			'class' => $this->strClass,
@@ -117,7 +130,7 @@ class TableWizard extends Widget
 			'textarea_rows' => $this->intRows,
 			'textarea_cols' => $this->intCols,
 			'cell_attributes' => $this->arrAttributes,
-			'appearance' => $this->arrAppearance,
+			'appearance' => $appearance,
 			'import_url' => Backend::addToUrl('key=table'),
 			'rte' => $this->hasInlineRte(),
 		));

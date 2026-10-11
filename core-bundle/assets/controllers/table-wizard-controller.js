@@ -12,6 +12,7 @@ function positionAt(element, anchor, placement) {
 export default class extends Controller {
     #menu = null;
     #dragging = false;
+    #stopDrag = null;
     #syncing = false;
     #observer;
     #flags = { head: false, foot: false, left: false };
@@ -71,9 +72,12 @@ export default class extends Controller {
 
     disconnect() {
         this.closeMenu(false);
+        this.#stopDrag?.();
+        this.#dragging = false;
         this.rowSortable?.destroy();
         this.columnSortable?.destroy();
         this.#observer?.disconnect();
+        this.#observer = undefined;
     }
 
     inputTargetConnected(textarea) {
@@ -161,10 +165,13 @@ export default class extends Controller {
             this.#insert(axis, this.#count(axis));
         }
 
-        this.#focusCell(
-            axes.includes('row') ? this.#count('row') - 1 : 0,
-            axes.includes('column') ? this.#count('column') - 1 : 0,
-        );
+        // Wait until Stimulus has registered the focus actions of the new cells.
+        queueMicrotask(() => {
+            this.#focusCell(
+                axes.includes('row') ? this.#count('row') - 1 : 0,
+                axes.includes('column') ? this.#count('column') - 1 : 0,
+            );
+        });
     }
 
     startDrag(event) {
@@ -172,6 +179,7 @@ export default class extends Controller {
             return;
         }
 
+        this.#stopDrag?.();
         this.#dragging = false;
 
         const axes = this.#addAxes(event.currentTarget);
@@ -200,16 +208,23 @@ export default class extends Controller {
         };
 
         const onPointerUp = () => {
-            window.removeEventListener('pointermove', onPointerMove);
-            window.removeEventListener('pointerup', onPointerUp);
+            this.#stopDrag?.();
             // Use rAF so addCell doesn't trigger
             requestAnimationFrame(() => {
                 this.#dragging = false;
             });
         };
 
+        this.#stopDrag = () => {
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointercancel', onPointerUp);
+            this.#stopDrag = null;
+        };
+
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
     }
 
     // Keyboard navigation
