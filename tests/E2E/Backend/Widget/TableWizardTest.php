@@ -245,8 +245,11 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->handle($backend, 'column', 2)->focus();
         $this->assertSame([[0, 2], [1, 2], [2, 2]], $this->activeCells($backend));
 
-        // The highlight stays while the menu is open
+        // The highlight stays while the menu is open, even when hovering another handle
         $this->handle($backend, 'column', 2)->click();
+        $this->handle($backend, 'column', 1)->hover();
+        $this->assertSame([[0, 2], [1, 2], [2, 2]], $this->activeCells($backend));
+
         $outside->hover(['position' => ['x' => 300, 'y' => 12]]);
         $this->assertSame([[0, 2], [1, 2], [2, 2]], $this->activeCells($backend));
 
