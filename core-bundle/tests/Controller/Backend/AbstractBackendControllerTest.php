@@ -210,13 +210,6 @@ class AbstractBackendControllerTest extends TestCase
             $customContext,
         ];
 
-        yield 'request with empty widget errors' => [
-            new Request(attributes: ['_contao_widget_errors' => new ConstraintViolationList()], server: ['HTTP_HOST' => 'localhost']),
-            'custom_be.html.twig',
-            false,
-            $customContext,
-        ];
-
         $errors = new ConstraintViolationList([new ConstraintViolation('Invalid title', 'Invalid title', [], null, 'title', null)]);
 
         yield 'request with widget errors' => [

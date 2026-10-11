@@ -3185,7 +3185,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if ($request !== null)
 						{
 							$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
-							$errors->add(new ConstraintViolation($e->getMessage(), $e->getMessage(), array(), null, '', $arrValues));
+							$errors->add(new ConstraintViolation($e->getMessage(), $e->getMessage(), array(), null, '', null));
 							$request->attributes->set('_contao_widget_errors', $errors);
 						}
 

@@ -147,9 +147,8 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->willReturnCallback(
                 function () use ($redirect, $errors): void {
                     $attributes = $this->requestStack->getMainRequest()->attributes;
-                    $this->assertInstanceOf(ConstraintViolationList::class, $attributes->get('_contao_widget_errors'));
-                    $this->assertCount(0, $attributes->get('_contao_widget_errors'));
-                    $attributes->get('_contao_widget_errors')->addAll($errors);
+                    $this->assertFalse($attributes->has('_contao_widget_errors'));
+                    $attributes->set('_contao_widget_errors', $errors);
 
                     if ($redirect) {
                         throw new ResponseException(new RedirectResponse('/contao'));

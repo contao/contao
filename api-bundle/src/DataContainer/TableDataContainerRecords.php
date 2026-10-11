@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
 
 class TableDataContainerRecords
 {
@@ -264,8 +263,7 @@ class TableDataContainerRecords
         $main = $this->requestStack->getMainRequest();
         $previous = $request->request->all();
         $errors = $main->attributes->get('_contao_widget_errors');
-        $main->attributes->set('_contao_widget_errors', new ConstraintViolationList());
-
+        $main->attributes->remove('_contao_widget_errors');
         $request->request->replace(['FORM_SUBMIT' => $dc->table] + $values);
 
         try {
@@ -298,7 +296,7 @@ class TableDataContainerRecords
         $this->requestStack->getCurrentRequest()->request->add($defaults);
         $this->runBackendAction($dc->edit(...));
 
-        if (\count($this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors', new ConstraintViolationList())) > 0) {
+        if ($this->requestStack->getMainRequest()->attributes->has('_contao_widget_errors')) {
             $this->throwValidationError();
         }
     }
@@ -384,9 +382,7 @@ class TableDataContainerRecords
 
     private function throwValidationError(): never
     {
-        $violations = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors', new ConstraintViolationList());
-
-        if (\count($violations) > 0) {
+        if ($violations = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors')) {
             throw new ValidationException($violations);
         }
 
