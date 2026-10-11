@@ -1,0 +1,43 @@
+tl_page:
+    page_tree_child:
+        pid: '@page_main_home'
+        sorting: 128
+        tstamp: 1704067200
+        title: Nested page
+        alias: nested-page
+        type: regular
+        published: 1
+    page_tree_empty:
+        pid: '@page_main_website'
+        sorting: 256
+        tstamp: 1704067200
+        title: Empty destination
+        alias: empty-destination
+        type: regular
+        published: 1
+    page_tree_second_child:
+        pid: '@page_main_home'
+        sorting: 256
+        tstamp: 1704067200
+        title: Second nested page
+        alias: second-nested-page
+        type: regular
+        published: 1
+    page_tree_error:
+        pid: '@page_main_website'
+        sorting: 384
+        tstamp: 1704067200
+        title: Page not found
+        alias: page-not-found
+        type: error_404
+        published: 1
+
+tl_article:
+    article_tree_second:
+        pid: '@page_main_home'
+        sorting: 256
+        tstamp: 1704067200
+        title: Second article
+        alias: second-article
+        inColumn: main
+        published: 1

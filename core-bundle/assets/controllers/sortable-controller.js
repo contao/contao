@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import Sortable from 'sortablejs';
+import * as Message from '../modules/message';
 
 export default class extends Controller {
     static values = {
@@ -10,16 +11,28 @@ export default class extends Controller {
         requestToken: String,
         handle: String,
         draggable: String,
+        group: String,
+        confirmUrl: String,
+        errorMessage: String,
     };
 
     static targets = ['primaryHandle', 'fallbackHandle'];
 
     connect() {
+        // Avoid duplicate if instance still exists (see disconnect())
+        if (this.sortable) {
+            return;
+        }
+
         const options = {
             animation: 100,
+            swapThreshold: 0.65,
             onSort: (event) => {
-                this.#onSorted(event.item);
+                this.#onSorted(event.item, event);
             },
+            onStart: (event) => this.#rememberOrigin(event.item),
+            onMove: (event) => this.#onMove(event),
+            onEnd: () => this.#highlight(),
         };
 
         if (this.hasHandleValue) {
@@ -28,6 +41,10 @@ export default class extends Controller {
 
         if (this.hasDraggableValue) {
             options.draggable = this.draggableValue;
+        }
+
+        if (this.hasGroupValue) {
+            options.group = this.groupValue;
         }
 
         this.sortable = new Sortable(this.element, options);
@@ -49,36 +66,51 @@ export default class extends Controller {
     }
 
     disconnect() {
+        // Preserve the instance when dragging moves its element within the DOM
+        if (this.element.isConnected && this.element.matches(`[data-controller~="${this.identifier}"]`)) {
+            return;
+        }
+
         this.sortable?.destroy();
         this.sortable = undefined;
     }
 
     move(event) {
-        const item = this.#getItem(event.target);
+        const up = event.code === 'ArrowUp' || event.keyCode === 38;
+        const down = event.code === 'ArrowDown' || event.keyCode === 40;
 
-        if (event.code === 'ArrowUp' || event.keyCode === 38) {
-            event.preventDefault();
-
-            if (item.previousElementSibling) {
-                item.previousElementSibling.before(item);
-            } else {
-                this.element.append(item);
-            }
-
-            this.#onSorted(item);
-            event.target.focus();
-        } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
-            event.preventDefault();
-
-            if (item.nextElementSibling) {
-                item.nextElementSibling.after(item);
-            } else {
-                this.element.prepend(item);
-            }
-
-            this.#onSorted(item);
-            event.target.focus();
+        if (!up && !down) {
+            return;
         }
+
+        event.preventDefault();
+
+        const item = this.#getItem(event.target);
+        const items = Array.from(this.element.children).filter((el) => this.sortable.closest(el) === el);
+        const index = items.indexOf(item);
+
+        if (index === -1 || items.length < 2) {
+            return;
+        }
+
+        this.#rememberOrigin(item);
+
+        if (up) {
+            if (items[index - 1]) {
+                items[index - 1].before(item);
+            } else {
+                items.at(-1).after(item);
+            }
+        } else {
+            if (items[index + 1]) {
+                items[index + 1].after(item);
+            } else {
+                items[0].before(item);
+            }
+        }
+
+        this.#onSorted(item);
+        event.target.focus();
     }
 
     #updateWrapperLevel() {
@@ -115,23 +147,120 @@ export default class extends Controller {
     }
 
     #updateParentSorting(el) {
+        const origin = el.sortableOrigin;
+
+        this.#updateLevel(el);
+
+        // Do not treat top nodes as siblings (e.g. page tree top node)
+        const previous = el.previousElementSibling?.dataset.id ? el.previousElementSibling : null;
+
         const url = new URL(window.location.href);
 
         url.searchParams.set('rt', this.requestTokenValue);
         url.searchParams.set('act', 'cut');
         url.searchParams.set('id', el.dataset.id);
 
-        if (el.previousElementSibling) {
-            url.searchParams.set('pid', el.previousElementSibling.dataset.id);
+        if (previous) {
+            url.searchParams.set('pid', previous.dataset.id);
             url.searchParams.set('mode', 1);
         } else {
-            url.searchParams.set('pid', this.element.dataset.id);
+            // Record dropped into another list
+            url.searchParams.set('pid', el.parentNode.dataset.id);
             url.searchParams.set('mode', 2);
         }
 
         fetch(url, {
-            redirect: 'manual',
-        });
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then((response) => {
+                const redirect = response.headers.get('X-Ajax-Location');
+
+                // A successful cut redirects back, an invalid request token to the confirm page
+                if (
+                    !redirect ||
+                    new URL(redirect, window.location.href).pathname ===
+                        new URL(this.confirmUrlValue, window.location.href).pathname
+                ) {
+                    throw new Error(response.statusText);
+                }
+            })
+            .catch(() => this.#restoreOrigin(el, origin));
+    }
+
+    // Stored on the element, because the drop target can be a different controller instance
+    #rememberOrigin(el) {
+        el.sortableOrigin = { parent: el.parentNode, next: el.nextSibling };
+    }
+
+    #restoreOrigin(el, origin) {
+        const { parent, next } = origin;
+
+        parent.insertBefore(el, next);
+        this.#updateLevel(el);
+        this.#updateWrapperLevel();
+
+        Message.error(this.errorMessageValue);
+    }
+
+    #getLevel(el) {
+        let level = 0;
+
+        for (let list = el.parentNode; list; list = list.parentElement?.closest('ul[data-id]')) {
+            level++;
+        }
+
+        return level;
+    }
+
+    #previewLevel(el) {
+        const label = el.querySelector(':scope > .tl_folder > .tl_left, :scope > .tl_file > .tl_left');
+
+        label?.style.setProperty('--level', String(this.#getLevel(el) - (label.querySelector('a.foldable') ? 1 : 0)));
+    }
+
+    #updateLevel(el) {
+        this.#previewLevel(el);
+
+        for (const child of el.querySelectorAll('li[data-id]')) {
+            this.#previewLevel(child);
+        }
+    }
+
+    #onMove(event) {
+        // Prevent dragging into the subtree
+        if (event.dragged.contains(event.to)) {
+            return false;
+        }
+
+        const draggingRootPage = this.#isRootPage(event.dragged);
+
+        // Do not sort root items into subtrees
+        if (draggingRootPage && event.to.dataset.id !== '0') {
+            return false;
+        }
+
+        // Do not sort normal items into the root (only root items allowed)
+        if (!draggingRootPage && event.to.dataset.id === '0') {
+            return false;
+        }
+
+        const targetOwner = event.to.closest('li[data-id]');
+
+        // Do not allow leaf records (MODE_TREE_EXTENDED) to be sorted into root pages
+        if (event.dragged.hasAttribute('data-leaf-record') && targetOwner?.hasAttribute('data-root-page')) {
+            return false;
+        }
+
+        this.#previewLevel(event.dragged);
+
+        this.#highlight(targetOwner);
+
+        return true;
+    }
+
+    #highlight(el = null) {
+        document.querySelector('.tl_folder_dropping')?.classList.remove('tl_folder_dropping');
+        el?.querySelector(':scope > .tl_folder, :scope > .tl_file')?.classList.add('tl_folder_dropping');
     }
 
     #getItem(el) {
@@ -142,12 +271,21 @@ export default class extends Controller {
         return this.#getItem(el.parentNode);
     }
 
-    #onSorted(item) {
+    #onSorted(item, event) {
+        // Only dispatch sorting update on the target
+        if (event && event.to !== this.element) {
+            return;
+        }
+
         this.dispatch('update', { target: item });
 
         if (this.parentModeValue) {
             this.#updateWrapperLevel(item);
             this.#updateParentSorting(item);
         }
+    }
+
+    #isRootPage(el) {
+        return el.hasAttribute('data-root-page');
     }
 }
