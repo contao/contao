@@ -45,23 +45,28 @@ class BackendMain extends Backend
 		parent::__construct();
 
 		$container = System::getContainer();
-		$authorizationChecker = $container->get('security.authorization_checker');
+		$security = $container->get('security.helper');
 
-		if (!$authorizationChecker->isGranted('ROLE_USER'))
+		if (!$security->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		$user = BackendUser::getInstance();
+		$user = $security->getUser();
+
+		if (!$user instanceof BackendUser)
+		{
+			throw new AccessDeniedException('Access denied');
+		}
 
 		// Password change required
-		if ($user->pwChange && !$authorizationChecker->isGranted('IS_IMPERSONATOR'))
+		if ($user->pwChange && !$security->isGranted('IS_IMPERSONATOR'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required
-		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security' && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security' && !$security->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
@@ -169,17 +174,18 @@ class BackendMain extends Backend
 		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();
 		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
-		$user = BackendUser::getInstance();
+		$user = System::getContainer()->get('security.helper')->getUser();
+		$lastLogin = $user instanceof BackendUser ? $user->lastLogin : 0;
 
 		// Add the login message
-		if ($user->lastLogin > 0)
+		if ($lastLogin > 0)
 		{
 			$formatter = new DateTimeFormatter(System::getContainer()->get('translator'));
-			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $user->lastLogin)), new \DateTime());
+			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $lastLogin)), new \DateTime());
 
 			$objTemplate->loginMsg = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time title="' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $user->lastLogin)) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($diff) . '</time>'
+				'<time title="' . StringUtil::specialchars(Date::parse(Config::get('datimFormat'), $lastLogin)) . '" data-contao--tooltips-target="tooltip">' . StringUtil::specialchars($diff) . '</time>'
 			);
 		}
 
@@ -231,6 +237,7 @@ class BackendMain extends Backend
 		}
 
 		$container = System::getContainer();
+		$user = $container->get('security.helper')->getUser();
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$renderMainOnly  = $request->query->has('popup') || 'contao-main' === $request->headers->get('turbo-frame');
 
@@ -242,7 +249,7 @@ class BackendMain extends Backend
 		$data['isPopup'] = $request->query->get('popup');
 		$data['renderMainOnly'] = $renderMainOnly;
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
-		$data['backendWidth'] = BackendUser::getInstance()->backendWidth;
+		$data['backendWidth'] = $user instanceof BackendUser ? $user->backendWidth : '';
 
 		$twig = $container->get('twig');
 		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();

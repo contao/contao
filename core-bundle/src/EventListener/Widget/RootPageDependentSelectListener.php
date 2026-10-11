@@ -34,6 +34,7 @@ class RootPageDependentSelectListener
     ) {
     }
 
+    #[AsCallback(table: 'tl_content', target: 'fields.rootPageDependentElements.options')]
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.options')]
     public function optionsCallback(DataContainer $dc): array
     {
@@ -50,7 +51,7 @@ class RootPageDependentSelectListener
         $moduleGroup = $this->translator->trans('MSC.mw_modules', [], 'contao_default');
 
         $elements = $this->connection->executeQuery(
-            "SELECT * FROM tl_content WHERE ptable = 'tl_theme' AND pid = ?",
+            "SELECT * FROM tl_content WHERE ptable = 'tl_theme' AND pid = ? AND type != 'root_page_dependent_elements'",
             [$pid],
         );
 
@@ -74,6 +75,7 @@ class RootPageDependentSelectListener
         return $options;
     }
 
+    #[AsCallback(table: 'tl_content', target: 'fields.rootPageDependentElements.wizard')]
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.wizard')]
     public function wizardCallback(DataContainer $dc): string
     {

@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
 use Contao\Database;
@@ -159,13 +158,6 @@ class tl_module_calendar extends Backend
 	 */
 	public function getCalendars()
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->calendars))
-		{
-			return array();
-		}
-
 		$arrCalendars = array();
 		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
 		$security = System::getContainer()->get('security.helper');

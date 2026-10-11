@@ -1,0 +1,173 @@
+:root {
+    --text: light-dark(#222, #ddd);
+    --header-bg: light-dark(#fff, #121416);
+    --body-bg: light-dark(#f6f6f8, #1b1d21);
+    --content-bg: light-dark(#fff, #121416);
+    --content-border: light-dark(#e0e0e2, #393b3f);
+    --gray: light-dark(#747476, #89898b);
+    --blue: light-dark(#006494, #0092d6);
+    --nav-current: light-dark(#eaeaec, #272a30);
+    --code-bg: light-dark(#f3f3f5, #30343b);
+    --code-text: light-dark(#c7241f, #f15050);
+    --constraint-text: light-dark(#006494, #62bbff);
+
+    color-scheme: light dark;
+}
+
+html {
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;;
+
+    &[data-color-scheme="dark"] {
+        color-scheme: dark;
+    }
+
+    &[data-color-scheme="light"] {
+        color-scheme: light;
+    }
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    background: var(--body-bg);
+}
+
+:where(button, input, select, textarea) {
+    font-family: inherit;
+}
+
+:where(code, pre, kbd, samp) {
+    font-family: monospace;
+}
+
+.contao-api-header {
+    display: flex;
+    align-items: center;
+    min-height: 45px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--content-border);
+    background: var(--header-bg);
+
+    &::before {
+        display: none;
+    }
+}
+
+.contao-api-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 17px;
+    text-decoration: none;
+
+    img {
+        width: 24px;
+        height: auto;
+    }
+}
+
+.contao-api-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.contao-api-subtitle {
+    color: var(--gray);
+    font-size: 0.75rem;
+}
+
+.contao-api-color-scheme {
+    margin-inline-start: auto;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 20px;
+    color: var(--text);
+    background: transparent;
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--nav-current);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+    }
+}
+
+#swagger-ui {
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;;
+
+    .api-content {
+        background: var(--content-bg);
+
+        /* Copy link icon. */
+        :is(h1, h2) > a[href^="#"] {
+            &::before {
+                background: var(--gray);
+                mask: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cg fill="none" stroke="black" stroke-width="2" stroke-linecap="round"%3E%3Cpath d="M10 14l4-4M8 16l-1 1a4 4 0 01-6-6l4-4a4 4 0 016 0M16 8l1-1a4 4 0 016 6l-4 4a4 4 0 01-6 0"/%3E%3C/g%3E%3C/svg%3E') center / contain no-repeat;
+                opacity: 1;
+            }
+
+            &:focus-visible::before {
+                visibility: visible;
+            }
+        }
+
+        /* ReDoc 2 hardcodes the colors of its underlined parameter headings. */
+        h5 {
+            color: var(--gray);
+            border-bottom-color: var(--content-border);
+
+            > span,
+            svg {
+                color: var(--text);
+            }
+        }
+
+        :has(> .dropdown-select) {
+            color: var(--text);
+            background: var(--content-bg);
+            border-color: var(--content-border);
+        }
+
+        [data-section-id]::after {
+            border-bottom-color: var(--content-border);
+        }
+    }
+
+    .dropdown-select option {
+        color: var(--text);
+        background: var(--content-bg);
+    }
+
+    .react-tabs__tab--selected {
+        color: #ddd;
+        background: #30343b;
+        border-color: #89898b;
+    }
+
+    a[href="https://redocly.com/redoc/"] {
+        display: none;
+    }
+}
+
+#formats {
+    padding: 18px;
+    border-top: 1px solid var(--content-border);
+    color: var(--text);
+    background: var(--body-bg);
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+    .info {
+        margin: 0;
+    }
+
+    a {
+        color: var(--blue);
+    }
+}

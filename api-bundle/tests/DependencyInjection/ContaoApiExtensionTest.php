@@ -19,6 +19,7 @@ use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Api\Widget\RowWizardConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -235,6 +236,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
             new WidgetConverterRegistry([]),
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
         );
     }
 

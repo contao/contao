@@ -740,8 +740,15 @@ class Theme extends Backend
 
 	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
 	{
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		if (!$user instanceof BackendUser)
+		{
+			throw new AccessDeniedException('Cannot import themes without a backend user.');
+		}
+
 		$connection = System::getContainer()->get('database_connection');
-		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array(BackendUser::getInstance()->id));
+		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array($user->id));
 
 		if (!$preserveData && $insertOnly)
 		{

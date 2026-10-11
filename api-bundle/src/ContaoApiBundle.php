@@ -19,6 +19,13 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ContaoApiBundle extends AbstractBundle
 {
+    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('twig', [
+            'paths' => [__DIR__.'/../templates' => 'ApiPlatform'],
+        ]);
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import('../config/services.yaml');

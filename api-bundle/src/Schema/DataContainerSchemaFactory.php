@@ -145,7 +145,7 @@ final class DataContainerSchemaFactory
         foreach ($schema['properties'] as $field => $property) {
             $excluded = 'read' === $operation
                 ? ($property['writeOnly'] ?? false)
-                : ($property['readOnly'] ?? false) || \in_array($field, ['pid', 'ptable', 'sorting'], true);
+                : ($property['readOnly'] ?? false) || \in_array($field, 'create' === $operation ? ['ptable', 'sorting'] : ['pid', 'ptable', 'sorting'], true);
 
             if ($excluded) {
                 unset($schema['properties'][$field]);
