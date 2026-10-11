@@ -254,7 +254,12 @@ export default class extends Controller {
         this.#dragAbortController = null;
     }
 
-    #getCaretPosition({ target, key }) {
+    #getCaretPosition({ target, key, shiftKey, altKey, ctrlKey, metaKey }) {
+        // Leave selections and shortcuts to the browser
+        if (shiftKey || altKey || ctrlKey || metaKey) {
+            return null;
+        }
+
         if (!(target instanceof HTMLTextAreaElement) || target.selectionStart !== target.selectionEnd) {
             return null;
         }

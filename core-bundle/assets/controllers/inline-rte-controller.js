@@ -61,7 +61,8 @@ export default class extends Controller {
             return;
         }
 
-        if (!event.key.startsWith('Arrow')) {
+        // Leave selections and shortcuts to the browser
+        if (!event.key.startsWith('Arrow') || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
             return;
         }
 
