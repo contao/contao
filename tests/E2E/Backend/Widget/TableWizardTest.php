@@ -537,6 +537,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         // Leave enough room below the button to drag within the viewport
         $button->evaluate('el => el.scrollIntoView({block: "start"})');
+
         $box = $button->boundingBox();
         $mouse = $backend->page()->mouse();
 
@@ -705,6 +706,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         // Leave enough room around the button to drag within the viewport
         $button->evaluate('el => el.scrollIntoView({block: "center", inline: "center"})');
+
         $box = $button->boundingBox();
         $x = $box['x'] + $box['width'] / 2;
         $y = $box['y'] + $box['height'] / 2;
