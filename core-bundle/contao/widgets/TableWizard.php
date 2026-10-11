@@ -110,15 +110,11 @@ class TableWizard extends Widget
 
 		$appearance = $this->arrAppearance;
 
-		if (Input::get('act') === 'editAll' && $this->objDca)
+		// Editing multiple records appends the record ID to the input names (e.g. "thead_42")
+		if ($this->strField && str_starts_with($this->strName, $this->strField . '_'))
 		{
-			foreach ($appearance as $name => $field)
-			{
-				if ($field)
-				{
-					$appearance[$name] = $field . '_' . $this->objDca->id;
-				}
-			}
+			$suffix = substr($this->strName, \strlen($this->strField));
+			$appearance = array_map(static fn ($name) => $name ? $name . $suffix : $name, $appearance);
 		}
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/widget/table_wizard.html.twig', array(
