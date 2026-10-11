@@ -62,6 +62,10 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Will be removed once the ModuleTwoFactor back end module is rewritten to a
+     * modern backend controller.
+     */
     public function remove(PersonalAccessToken $personalAccessToken): void
     {
         $this->getEntityManager()->remove($personalAccessToken);

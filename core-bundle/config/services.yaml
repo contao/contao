@@ -1181,6 +1181,22 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
 
+    contao.security.access_token.backend_token_handler:
+        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
+        arguments:
+            - '@contao.security.access_token.manager'
+            - '@database_connection'
+            - '@security.password_hasher_factory'
+            - 'backend'
+
+    contao.security.access_token.frontend_token_handler:
+        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
+        arguments:
+            - '@contao.security.access_token.manager'
+            - '@database_connection'
+            - '@security.password_hasher_factory'
+            - 'frontend'
+
     contao.security.access_token.manager:
         class: Contao\CoreBundle\Security\AccessToken\AccessTokenManager
         public: true
@@ -1205,14 +1221,6 @@ services:
             - '@uri_signer'
             - '@security.token_storage'
             - '@?logger'
-
-    contao.security.backend_access_token_handler:
-        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
-        arguments:
-            - '@contao.security.access_token.manager'
-            - '@database_connection'
-            - '@security.password_hasher_factory'
-            - 'backend'
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
@@ -1356,14 +1364,6 @@ services:
             - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
-
-    contao.security.frontend_access_token_handler:
-        class: Contao\CoreBundle\Security\AccessToken\TokenHandler
-        arguments:
-            - '@contao.security.access_token.manager'
-            - '@database_connection'
-            - '@security.password_hasher_factory'
-            - 'frontend'
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
