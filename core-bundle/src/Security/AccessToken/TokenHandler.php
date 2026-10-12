@@ -13,11 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\AccessToken;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -28,7 +26,6 @@ class TokenHandler implements AccessTokenHandlerInterface
     public function __construct(
         private readonly AccessTokenManager $accessTokenManager,
         private readonly Connection $connection,
-        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly string $scope,
     ) {
     }
@@ -62,9 +59,7 @@ class TokenHandler implements AccessTokenHandlerInterface
             throw new BadCredentialsException('Access token is expired.');
         }
 
-        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PersonalAccessToken::class);
-
-        if (!$passwordHasher->verify($record['secret'], $parsedToken['secret'])) {
+        if (!$this->accessTokenManager->verifySecret($record['secret'], $parsedToken['secret'])) {
             throw new BadCredentialsException('Invalid credentials.');
         }
 

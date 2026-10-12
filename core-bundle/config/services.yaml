@@ -1186,7 +1186,6 @@ services:
         arguments:
             - '@contao.security.access_token.manager'
             - '@database_connection'
-            - '@security.password_hasher_factory'
             - 'backend'
 
     contao.security.access_token.frontend_token_handler:
@@ -1194,7 +1193,6 @@ services:
         arguments:
             - '@contao.security.access_token.manager'
             - '@database_connection'
-            - '@security.password_hasher_factory'
             - 'frontend'
 
     contao.security.access_token.manager:

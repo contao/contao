@@ -59,6 +59,13 @@ class AccessTokenManager
         ];
     }
 
+    public function verifySecret(string $hashedSecret, #[\SensitiveParameter] string $plainSecret): bool
+    {
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PersonalAccessToken::class);
+
+        return $passwordHasher->verify($hashedSecret, $plainSecret);
+    }
+
     private function createToken(string $scope, int $userId, string $name, \DateTimeImmutable|null $expiresAt = null): string
     {
         $plainSecret = StringUtil::encodeBase32(random_bytes(16));

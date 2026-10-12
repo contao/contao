@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Authentication;
+namespace Contao\CoreBundle\Tests\Security\AccessToken;
 
 use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Contao\CoreBundle\Security\AccessToken\AuthenticationSuccessHandler;
@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class AccessTokenSuccessHandlerTest extends TestCase
+class AuthenticationSuccessHandlerTest extends TestCase
 {
     public function testUpdatesLastUsedAndPersistsPersonalAccessToken(): void
     {
