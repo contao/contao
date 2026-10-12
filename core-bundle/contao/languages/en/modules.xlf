@@ -221,12 +221,6 @@
       <trans-unit id="FMD.login.1">
         <source>Generates a login form</source>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
       </trans-unit>
