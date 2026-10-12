@@ -353,7 +353,8 @@
             "contao/mcp-bundle": "Contao\\McpBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
-            "contao/oauth-server-bundle": "Contao\\OAuthServerBundle\\ContaoManager\\Plugin"
+            "contao/oauth-server-bundle": "Contao\\OAuthServerBundle\\ContaoManager\\Plugin",
+            "contao/webhooks-bundle": "Contao\\WebhooksBundle\\ContaoManager\\Plugin"
         }
     },
     "scripts": {

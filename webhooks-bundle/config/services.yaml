@@ -1,0 +1,96 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    contao.http_client.webhook:
+        class: Symfony\Component\HttpClient\NoPrivateNetworkHttpClient
+        arguments:
+            - '@http_client'
+            - null
+
+    contao.webhook.dispatcher:
+        class: Contao\WebhooksBundle\Webhook\WebhookDispatcher
+        arguments:
+            - '@contao.webhook.event_registry'
+            - '@contao.webhook.repository'
+            - '@messenger.bus.default'
+
+    contao.webhook.event_registry:
+        class: Contao\WebhooksBundle\Webhook\WebhookEventRegistry
+
+    contao.webhook.message_handler.consume_handler:
+        class: Contao\WebhooksBundle\Webhook\MessageHandler\ConsumeWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - !service { class: Symfony\Component\RemoteEvent\Messenger\ConsumeRemoteEventHandler, arguments: [!tagged_locator { tag: remote_event.consumer, index_by: consumer }] }
+
+    contao.webhook.message_handler.deliver_handler:
+        class: Contao\WebhooksBundle\Webhook\MessageHandler\DeliverWebhookHandler
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.secret_encryption'
+            - '@contao.http_client.webhook'
+            - '@?monolog.logger.contao.webhook'
+            - '%contao.webhook.connect_timeout%'
+            - '%contao.webhook.total_timeout%'
+            - '%contao.webhook.max_redirects%'
+
+    contao.webhook.rate_limiter_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            - { id: contao.webhook.incoming, policy: fixed_window, limit: '%contao.webhook.rate_limit%', interval: 1 minute }
+            - '@contao.webhook.rate_limiter_storage'
+            - '@?lock_factory'
+
+    contao.webhook.rate_limiter_storage:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments:
+            - '@cache.rate_limiter'
+
+    contao.webhook.receiver_registry:
+        class: Contao\WebhooksBundle\Webhook\WebhookReceiverRegistry
+        arguments:
+            - []
+            - !service_locator { }
+
+    contao.webhook.repository:
+        class: Contao\WebhooksBundle\Webhook\WebhookRepository
+        arguments:
+            - '@database_connection'
+            - '@doctrine.orm.default_entity_manager'
+
+    contao.webhook.secret_encryption:
+        class: Contao\WebhooksBundle\Webhook\SecretEncryption
+        arguments:
+            - '%kernel.secret%'
+
+    Contao\WebhooksBundle\Webhook\WebhookDispatcher: '@contao.webhook.dispatcher'
+
+    Contao\WebhooksBundle\Controller\WebhookController:
+        arguments:
+            - '@contao.webhook.repository'
+            - '@contao.webhook.receiver_registry'
+            - '@contao.webhook.secret_encryption'
+            - '@messenger.bus.default'
+            - '@contao.webhook.rate_limiter_factory'
+            - '@?monolog.logger.contao.webhook'
+            - '%contao.webhook.request_body_limit%'
+        tags:
+            - controller.service_arguments
+
+    contao.listener.data_container.webhook_field:
+        class: Contao\WebhooksBundle\EventListener\DataContainer\WebhookFieldListener
+        arguments:
+            - '@router'
+            - '@contao.webhook.repository'
+            - '@contao.webhook.secret_encryption'
+            - '@request_stack'
+            - '@translator'
+
+    contao.listener.data_container.webhook_options:
+        class: Contao\WebhooksBundle\EventListener\DataContainer\WebhookOptionsListener
+        arguments:
+            - '@contao.webhook.receiver_registry'
+            - '@contao.webhook.event_registry'
+            - '@translator'
