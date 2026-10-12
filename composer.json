@@ -43,6 +43,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-session": "*",
+        "ext-sodium": "*",
         "ext-zlib": "*",
         "composer-runtime-api": "^2.0.14",
         "api-platform/core": "^5.0",
@@ -163,6 +164,7 @@
         "symfony/property-access": "^7.4 || ^8.0",
         "symfony/psr-http-message-bridge": "^7.4 || ^8.0",
         "symfony/rate-limiter": "^7.4 || ^8.0",
+        "symfony/remote-event": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0",
         "symfony/security-bundle": "^7.4 || ^8.0",
         "symfony/security-core": "^7.4 || ^8.0",
@@ -180,6 +182,7 @@
         "symfony/validator": "^7.4 || ^8.0",
         "symfony/var-dumper": "^7.4 || ^8.0",
         "symfony/web-profiler-bundle": "^7.4 || ^8.0",
+        "symfony/webhook": "^7.4 || ^8.0",
         "symfony/yaml": "^7.4 || ^8.0",
         "terminal42/escargot": "^1.6.3",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
@@ -223,7 +226,8 @@
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version",
         "contao/oauth-server-bundle": "self.version",
-        "contao/test-case": "self.version"
+        "contao/test-case": "self.version",
+        "contao/webhooks-bundle": "self.version"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
@@ -254,7 +258,8 @@
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
             "Contao\\OAuthServerBundle\\": "oauth-server-bundle/src/",
-            "Contao\\TestCase\\": "test-case/src/"
+            "Contao\\TestCase\\": "test-case/src/",
+            "Contao\\WebhooksBundle\\": "webhooks-bundle/src/"
         },
         "classmap": [
             "calendar-bundle/contao/",
@@ -310,7 +315,8 @@
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
             "Contao\\OAuthServerBundle\\Tests\\": "oauth-server-bundle/tests/",
-            "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
+            "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/",
+            "Contao\\WebhooksBundle\\Tests\\": "webhooks-bundle/tests/"
         }
     },
     "bin": [
