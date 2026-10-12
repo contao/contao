@@ -30,7 +30,7 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get('/contao/api/user_templates/unknown_template')
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                     'Accept' => 'application/ld+json',
                 ]),
         );
