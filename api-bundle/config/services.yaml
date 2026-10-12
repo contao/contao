@@ -108,12 +108,12 @@ services:
             $decorated: '@.inner'
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
             $uploadSizeProvider: '@contao.file.upload_size_provider'
+            $filesystems: '@contao.filesystem.virtual_registry'
 
     contao_api.api_platform.virtual_filesystem_state_processor:
         class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor
         arguments:
-            $filesStorage: '@contao.filesystem.virtual.files'
-            $security: '@security.helper'
+            $filesystems: '@contao.filesystem.virtual_registry'
             $requestStack: '@request_stack'
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
             $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
@@ -122,8 +122,7 @@ services:
     contao_api.api_platform.virtual_filesystem_state_provider:
         class: Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider
         arguments:
-            $filesStorage: '@contao.filesystem.virtual.files'
-            $security: '@security.helper'
+            $filesystems: '@contao.filesystem.virtual_registry'
             $itemFactory: '@contao_api.dto.virtual_filesystem_item_factory'
 
     contao_api.data_container.record_mapper:
@@ -165,6 +164,24 @@ services:
         arguments:
             $objectNormalizer: '@contao_api.serializer.schema_aware_object_normalizer'
 
+    contao_api.filesystem.files:
+        autoconfigure: false
+        class: Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem
+        arguments:
+            $virtualFilesystem: '@contao.filesystem.virtual.files'
+            $security: '@security.helper'
+        tags:
+            - contao.virtual_filesystem:
+                  name: api_files
+                  api_exposure: true
+                  api_path: /files
+                  # Resolve relations targeting the files VFS through this exposed VFS.
+                  api_relation_filesystem: files
+                  api_operation_attributes:
+                      metadata:
+                          # Editing file metadata requires the backend permission to edit, copy or move files.
+                          security: is_granted('contao_user.fop.f2')
+
     contao_api.http.api_request_factory:
         class: Contao\ApiBundle\Http\ApiRequestFactory
         arguments:
@@ -180,6 +197,13 @@ services:
             $resolvers: !tagged_iterator contao.api.relation_resolver
 
     Contao\ApiBundle\Relation\RelationResolverInterface: '@contao_api.relation.resolver'
+
+    contao_api.relation.virtual_filesystem_resolver:
+        class: Contao\ApiBundle\Relation\VirtualFilesystemRelationResolver
+        arguments:
+            $metadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+            $router: '@router'
+            $filesystems: '@contao.filesystem.virtual_registry'
 
     contao_api.schema.data_container_factory:
         class: Contao\ApiBundle\Schema\DataContainerSchemaFactory
