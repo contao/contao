@@ -1184,18 +1184,18 @@ services:
     contao.security.access_token.backend_token_handler:
         class: Contao\CoreBundle\Security\AccessToken\TokenHandler
         arguments:
-            - '@contao.security.access_token.manager'
+            - '@contao.security.access_token_manager'
             - '@database_connection'
-            - 'backend'
+            - backend
 
     contao.security.access_token.frontend_token_handler:
         class: Contao\CoreBundle\Security\AccessToken\TokenHandler
         arguments:
-            - '@contao.security.access_token.manager'
+            - '@contao.security.access_token_manager'
             - '@database_connection'
-            - 'frontend'
+            - frontend
 
-    contao.security.access_token.manager:
+    contao.security.access_token_manager:
         class: Contao\CoreBundle\Security\AccessToken\AccessTokenManager
         public: true
         arguments:
