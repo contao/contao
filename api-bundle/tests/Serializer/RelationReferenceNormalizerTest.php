@@ -15,13 +15,20 @@ namespace Contao\ApiBundle\Tests\Serializer;
 use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
 use Contao\ApiBundle\Relation\RelationReference;
 use Contao\ApiBundle\Serializer\RelationReferenceNormalizer;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-final class RelationReferenceNormalizerTest extends TestCase
+final class RelationReferenceNormalizerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([ObjectNormalizer::class]);
+
+        parent::tearDown();
+    }
+
     #[DataProvider('provideFormats')]
     public function testNormalizesReferencesInOtherResources(string $format, array $expected): void
     {
