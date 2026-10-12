@@ -15,6 +15,7 @@ namespace Contao\Tools\ServiceLinter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
@@ -97,6 +98,7 @@ class LintServiceIdsCommand
     private static array $generalServiceClasses = [
         ResourceFinder::class,
         MemoryTokenStorage::class,
+        PermissionCheckingVirtualFilesystem::class,
     ];
 
     /**

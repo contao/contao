@@ -38,7 +38,10 @@ use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Api\Widget\RowWizardConverter;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterVirtualFilesystemsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Password;
 use Contao\RowWizard;
@@ -142,6 +145,29 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $this->assertInstanceOf(ApiVersionOpenApiFactory::class, $container->get('api_platform.openapi.factory'));
         $this->assertSame([], $container->findTaggedServiceIds('api_platform.state_provider'));
         $this->assertSame([], $container->findTaggedServiceIds('api_platform.state_processor'));
+    }
+
+    public function testRegistersThePermissionCheckingFilesApiInTheRegistry(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+        $container->register('contao.filesystem.virtual_registry', VirtualFilesystemRegistry::class);
+        new RegisterVirtualFilesystemsPass()->process($container);
+
+        $definition = $container->getDefinition('contao_api.filesystem.files');
+        $this->assertSame(PermissionCheckingVirtualFilesystem::class, $definition->getClass());
+        $this->assertSame('contao.filesystem.virtual.files', (string) $definition->getArgument('$virtualFilesystem'));
+        $this->assertSame('security.helper', (string) $definition->getArgument('$security'));
+        $tags = $container->getDefinition('contao.filesystem.virtual_registry')->getArgument(1);
+        $this->assertTrue($tags['api_files']['api_exposure']);
+        $this->assertSame('/files', $tags['api_files']['api_path']);
+        $this->assertSame('files', $tags['api_files']['api_relation_filesystem']);
+
+        foreach (['provider', 'processor'] as $type) {
+            $this->assertSame('contao.filesystem.virtual_registry', (string) $container->getDefinition('contao_api.api_platform.virtual_filesystem_state_'.$type)->getArgument('$filesystems'));
+        }
     }
 
     public function testRegistersRelationResolversWithoutIncludingTheDispatcher(): void
