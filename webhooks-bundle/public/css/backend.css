@@ -1,0 +1,11 @@
+:root {
+    --icon-webhook: url("../icons/webhook.svg");
+}
+
+html[data-color-scheme="dark"] {
+    --icon-webhook: url("../icons/webhook--dark.svg");
+}
+
+#tl_navigation .group-webhooks {
+    background: var(--icon-webhook) 3px 2px no-repeat;
+}
