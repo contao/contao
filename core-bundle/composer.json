@@ -150,7 +150,7 @@
         "symfony/uid": "^6.4",
         "symfony/var-dumper": "^6.4",
         "symfony/yaml": "^6.4",
-        "terminal42/escargot": "^1.6",
+        "terminal42/escargot": "^1.6 || ^2.0",
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
