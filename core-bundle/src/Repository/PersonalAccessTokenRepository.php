@@ -46,7 +46,7 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOneValidById(Uuid|string $id): PersonalAccessToken|null
+    public function findValidByIdAndScope(Uuid|string $id, string $scope): PersonalAccessToken|null
     {
         if (!$id instanceof Uuid) {
             $id = Uuid::fromString($id);
@@ -54,8 +54,10 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('t')
             ->where('t.id = :id')
+            ->andWhere('t.scope = :scope')
             ->andWhere('t.expiresAt > :now OR t.expiresAt IS NULL')
             ->setParameter('id', $id, UuidType::NAME)
+            ->setParameter('scope', $scope)
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getOneOrNullResult()

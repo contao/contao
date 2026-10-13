@@ -38,6 +38,29 @@ class AccessTokenManager
         return $this->createToken(ContaoCoreBundle::SCOPE_BACKEND, (int) $user->id, $name, $expiresAt);
     }
 
+    public function parseAndValidateToken(string $accessToken, string $scope): PersonalAccessToken|null
+    {
+        $parsedToken = $this->parseToken($accessToken);
+
+        if (!$parsedToken) {
+            return null;
+        }
+
+        $token = $this->entityManager->getRepository(PersonalAccessToken::class)->findValidByIdAndScope($parsedToken['id'], $scope);
+
+        if (!$token) {
+            return null;
+        }
+
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PersonalAccessToken::class);
+
+        if (!$passwordHasher->verify($token->getSecret(), $parsedToken['secret'])) {
+            return null;
+        }
+
+        return $token;
+    }
+
     /**
      * Parses a plain authorization token and extracts the token ID and token secret.
      */
@@ -57,13 +80,6 @@ class AccessTokenManager
             'id' => $parts[2],
             'secret' => $parts[3],
         ];
-    }
-
-    public function verifySecret(string $hashedSecret, #[\SensitiveParameter] string $plainSecret): bool
-    {
-        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PersonalAccessToken::class);
-
-        return $passwordHasher->verify($hashedSecret, $plainSecret);
     }
 
     private function createToken(string $scope, int $userId, string $name, \DateTimeImmutable|null $expiresAt = null): string

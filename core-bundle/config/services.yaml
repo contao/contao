@@ -1185,14 +1185,16 @@ services:
         class: Contao\CoreBundle\Security\AccessToken\TokenHandler
         arguments:
             - '@contao.security.access_token_manager'
-            - '@database_connection'
+            - '@contao.security.backend_user_provider'
+            - '@request_stack'
             - backend
 
     contao.security.access_token.frontend_token_handler:
         class: Contao\CoreBundle\Security\AccessToken\TokenHandler
         arguments:
             - '@contao.security.access_token_manager'
-            - '@database_connection'
+            - '@contao.security.frontend_user_provider'
+            - '@request_stack'
             - frontend
 
     contao.security.access_token_manager:

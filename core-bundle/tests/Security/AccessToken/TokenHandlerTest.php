@@ -12,259 +12,81 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\AccessToken;
 
+use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
 use Contao\CoreBundle\Security\AccessToken\TokenHandler;
+use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\StringUtil;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types;
-use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Uid\Uuid;
 
 class TokenHandlerTest extends TestCase
 {
-    public function testThrowsBadCredentialsExceptionWithInvalidToken(): void
+    public function testGetUserBadge(): void
     {
-        $token = 'cto_pat_123_456';
+        $accessToken = 'ct_pat_foo_bar';
+        $personalAccessToken = new PersonalAccessToken('backend', 42, 'foobar', 'hashed-secret');
 
         $accessTokenManager = $this->createMock(AccessTokenManager::class);
         $accessTokenManager
             ->expects($this->once())
-            ->method('parseToken')
-            ->with($token)
+            ->method('parseAndValidateToken')
+            ->with($accessToken)
+            ->willReturn($personalAccessToken)
+        ;
+
+        $attributes = $this->createMock(ParameterBag::class);
+        $attributes
+            ->expects($this->once())
+            ->method('set')
+            ->with('_access_token', $personalAccessToken)
+        ;
+
+        $request = new Request();
+        $request->attributes = $attributes;
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->expects($this->once())
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
+
+        $handler = new TokenHandler(
+            $accessTokenManager,
+            $this->createStub(ContaoUserProvider::class),
+            $requestStack,
+            'backend',
+        );
+
+        $userBadge = $handler->getUserBadgeFrom($accessToken);
+
+        $this->assertSame(AccessTokenManager::TOKEN_PREFIX.$personalAccessToken->getId()->toBase32(), $userBadge->getUserIdentifier());
+    }
+
+    public function testThrowsExceptionIfTokenCannotIsInvalid(): void
+    {
+        $this->expectException(BadCredentialsException::class);
+
+        $accessToken = 'ct_pat_foo_bar';
+
+        $accessTokenManager = $this->createMock(AccessTokenManager::class);
+        $accessTokenManager
+            ->expects($this->once())
+            ->method('parseAndValidateToken')
+            ->with($accessToken)
             ->willReturn(null)
         ;
 
-        $accessTokenHandler = new TokenHandler($accessTokenManager, $this->createStub(Connection::class), 'backend');
-
-        $this->expectException(BadCredentialsException::class);
-
-        $accessTokenHandler->getUserBadgeFrom($token);
-    }
-
-    #[DataProvider('scopeProvider')]
-    public function testAuthenticatesToken(string $scope, string|null $table): void
-    {
-        if (null === $table) {
-            $this->expectException(\RuntimeException::class);
-        }
-
-        $uuid = Uuid::v4()->toBase32();
-        $secret = StringUtil::encodeBase32(random_bytes(16));
-        $token = AccessTokenManager::TOKEN_PREFIX.$uuid.'_'.$secret;
-
-        $accessTokenManager = $this->createMock(AccessTokenManager::class);
-        $accessTokenManager
-            ->expects($this->once())
-            ->method('parseToken')
-            ->with($token)
-            ->willReturn([
-                'id' => $uuid,
-                'secret' => $secret,
-            ])
-        ;
-
-        $accessTokenManager
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('verifySecret')
-            ->with('1234', $secret)
-            ->willReturn(true)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('fetchAssociative')
-            ->with(
-                "SELECT t.*, u.username FROM PersonalAccessToken t INNER JOIN $table u ON t.userId=u.id WHERE t.scope=? AND t.id=?",
-                $this->callback(static fn ($args) => $scope === $args[0] && $args[1] instanceof Uuid && $args[1]->toBase32() === $uuid),
-                [Types::STRING, UuidType::NAME],
-            )
-            ->willReturn([
-                'username' => 'k.jones',
-                'expiresAt' => new \DateTimeImmutable('+1 month')->format('c'),
-                'secret' => '1234',
-            ])
-        ;
-
-        $accessTokenHandler = new TokenHandler(
+        $handler = new TokenHandler(
             $accessTokenManager,
-            $connection,
-            $scope,
+            $this->createStub(ContaoUserProvider::class),
+            $this->createStub(RequestStack::class),
+            'backend',
         );
 
-        $badge = $accessTokenHandler->getUserBadgeFrom($token);
-
-        $this->assertSame('k.jones', $badge->getUserIdentifier());
-    }
-
-    #[DataProvider('scopeProvider')]
-    public function testThrowsExceptionIfTokenIsNotFoundInDatabase(string $scope, string|null $table): void
-    {
-        if (null === $table) {
-            $this->expectException(\RuntimeException::class);
-        } else {
-            $this->expectException(BadCredentialsException::class);
-            $this->expectExceptionMessageIs('Invalid access token.');
-        }
-
-        $uuid = Uuid::v4()->toBase32();
-        $secret = StringUtil::encodeBase32(random_bytes(16));
-        $token = AccessTokenManager::TOKEN_PREFIX.$uuid.'_'.$secret;
-
-        $accessTokenManager = $this->createMock(AccessTokenManager::class);
-        $accessTokenManager
-            ->expects($this->once())
-            ->method('parseToken')
-            ->with($token)
-            ->willReturn([
-                'id' => $uuid,
-                'secret' => $secret,
-            ])
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('fetchAssociative')
-            ->with(
-                "SELECT t.*, u.username FROM PersonalAccessToken t INNER JOIN $table u ON t.userId=u.id WHERE t.scope=? AND t.id=?",
-                $this->callback(static fn ($args) => $scope === $args[0] && $args[1] instanceof Uuid && $args[1]->toBase32() === $uuid),
-                [Types::STRING, UuidType::NAME],
-            )
-            ->willReturn(false)
-        ;
-
-        $accessTokenHandler = new TokenHandler(
-            $accessTokenManager,
-            $connection,
-            $scope,
-        );
-
-        $badge = $accessTokenHandler->getUserBadgeFrom($token);
-
-        $this->assertSame('k.jones', $badge->getUserIdentifier());
-    }
-
-    #[DataProvider('scopeProvider')]
-    public function testThrowsExceptionIfTokenIsExpired(string $scope, string|null $table): void
-    {
-        if (null === $table) {
-            $this->expectException(\RuntimeException::class);
-        } else {
-            $this->expectException(BadCredentialsException::class);
-            $this->expectExceptionMessageIs('Access token is expired.');
-        }
-
-        $uuid = Uuid::v4()->toBase32();
-        $secret = StringUtil::encodeBase32(random_bytes(16));
-        $token = AccessTokenManager::TOKEN_PREFIX.$uuid.'_'.$secret;
-
-        $accessTokenManager = $this->createMock(AccessTokenManager::class);
-        $accessTokenManager
-            ->expects($this->once())
-            ->method('parseToken')
-            ->with($token)
-            ->willReturn([
-                'id' => $uuid,
-                'secret' => $secret,
-            ])
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('fetchAssociative')
-            ->with(
-                "SELECT t.*, u.username FROM PersonalAccessToken t INNER JOIN $table u ON t.userId=u.id WHERE t.scope=? AND t.id=?",
-                $this->callback(static fn ($args) => $scope === $args[0] && $args[1] instanceof Uuid && $args[1]->toBase32() === $uuid),
-                [Types::STRING, UuidType::NAME],
-            )
-            ->willReturn([
-                'username' => 'k.jones',
-                'expiresAt' => new \DateTimeImmutable('-1 month')->format('c'),
-                'secret' => '1234',
-            ])
-        ;
-
-        $accessTokenHandler = new TokenHandler(
-            $accessTokenManager,
-            $connection,
-            $scope,
-        );
-
-        $badge = $accessTokenHandler->getUserBadgeFrom($token);
-
-        $this->assertSame('k.jones', $badge->getUserIdentifier());
-    }
-
-    #[DataProvider('scopeProvider')]
-    public function testThrowsExceptionIfTokenVerificationFails(string $scope, string|null $table): void
-    {
-        if (null === $table) {
-            $this->expectException(\RuntimeException::class);
-        } else {
-            $this->expectException(BadCredentialsException::class);
-            $this->expectExceptionMessageIs('Invalid credentials.');
-        }
-
-        $uuid = Uuid::v4()->toBase32();
-        $secret = StringUtil::encodeBase32(random_bytes(16));
-        $token = AccessTokenManager::TOKEN_PREFIX.$uuid.'_'.$secret;
-
-        $accessTokenManager = $this->createMock(AccessTokenManager::class);
-        $accessTokenManager
-            ->expects($this->once())
-            ->method('parseToken')
-            ->with($token)
-            ->willReturn([
-                'id' => $uuid,
-                'secret' => $secret,
-            ])
-        ;
-
-        $accessTokenManager
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('verifySecret')
-            ->with('1234', $secret)
-            ->willReturn(false)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects(null === $table ? $this->never() : $this->once())
-            ->method('fetchAssociative')
-            ->with(
-                "SELECT t.*, u.username FROM PersonalAccessToken t INNER JOIN $table u ON t.userId=u.id WHERE t.scope=? AND t.id=?",
-                $this->callback(static fn ($args) => $scope === $args[0] && $args[1] instanceof Uuid && $args[1]->toBase32() === $uuid),
-                [Types::STRING, UuidType::NAME],
-            )
-            ->willReturn([
-                'username' => 'k.jones',
-                'expiresAt' => new \DateTimeImmutable('+1 month')->format('c'),
-                'secret' => '1234',
-            ])
-        ;
-
-        $accessTokenHandler = new TokenHandler(
-            $accessTokenManager,
-            $connection,
-            $scope,
-        );
-
-        $badge = $accessTokenHandler->getUserBadgeFrom($token);
-
-        $this->assertSame('k.jones', $badge->getUserIdentifier());
-    }
-
-    public static function scopeProvider(): iterable
-    {
-        yield ['backend', 'tl_user'];
-
-        yield ['frontend', 'tl_member'];
-
-        yield ['foobar', null];
+        $handler->getUserBadgeFrom($accessToken);
     }
 }

@@ -29,15 +29,14 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): null
     {
-        if (!$token->hasAttribute('access_token_id')) {
+        $personalAccessToken = $request->attributes->get('_access_token');
+
+        if (!$personalAccessToken instanceof PersonalAccessToken) {
             return null;
         }
 
-        $id = $token->getAttribute('access_token_id');
-
-        $personalAccessToken = $this->entityManager->getRepository(PersonalAccessToken::class)->find($id);
-
-        if (!$personalAccessToken instanceof PersonalAccessToken) {
+        // Do not update the database on every request
+        if ($personalAccessToken->getLastUsed() >= new \DateTimeImmutable('-1 minute')) {
             return null;
         }
 
