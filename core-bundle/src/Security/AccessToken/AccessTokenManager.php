@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\AccessToken;
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Entity\PersonalAccessToken;
+use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\StringUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -46,7 +47,9 @@ class AccessTokenManager
             return null;
         }
 
-        $token = $this->entityManager->getRepository(PersonalAccessToken::class)->findValidByIdAndScope($parsedToken['id'], $scope);
+        /** @var PersonalAccessTokenRepository $repository */
+        $repository = $this->entityManager->getRepository(PersonalAccessToken::class);
+        $token = $repository->findValidByIdAndScope($parsedToken['id'], $scope);
 
         if (!$token) {
             return null;
