@@ -43,6 +43,9 @@ class CrawlQueue
     #[Column(name: 'found_on', type: 'text', nullable: true)]
     public string|null $foundOn = null;
 
+    #[Column(name: 'redirected_to', type: 'text', nullable: true)]
+    public string|null $redirectedTo = null;
+
     #[Column(type: 'smallint')]
     public int $level;
 
