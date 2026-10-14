@@ -32,9 +32,7 @@ class OutputEncodingMigration extends AbstractMigration
             return false;
         }
 
-        $count = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM prepare_for_output_encoding WHERE performed_migration = 0');
-
-        return $count > 0;
+        return $this->getTargets()->valid();
     }
 
     public function run(): MigrationResult
@@ -74,16 +72,19 @@ class OutputEncodingMigration extends AbstractMigration
         return $this->createResult(true, "{$this->getName()} executed successfully: ".implode(', ', $converted));
     }
 
-    private function getTargets(): array
+    private function getTargets(): \Generator
     {
-        return array_map(
-            static function ($row) {
-                $row[3] = json_decode($row[3], true, flags: JSON_THROW_ON_ERROR);
+        $schemaManager = $this->connection->createSchemaManager();
 
-                return $row;
-            },
-            $this->connection->fetchAllNumeric('SELECT table_name, column_name, virtual_target_name, encoding_options FROM prepare_for_output_encoding WHERE performed_migration = 0'),
-        );
+        foreach ($this->connection->fetchAllNumeric('SELECT table_name, column_name, virtual_target_name, encoding_options FROM prepare_for_output_encoding WHERE performed_migration = 0') as $row) {
+            if (!$schemaManager->tablesExist([$row[0]]) || !$schemaManager->introspectTableByUnquotedName($row[0])->hasColumn($row[2] ?? $row[1])) {
+                continue;
+            }
+
+            $row[3] = json_decode($row[3], true, flags: JSON_THROW_ON_ERROR);
+
+            yield $row;
+        }
     }
 
     private function migrateColumn(string $table, string $column, string|null $virtualTarget, \Closure $convert): array
