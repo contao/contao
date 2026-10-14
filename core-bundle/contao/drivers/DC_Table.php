@@ -1873,6 +1873,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		// Resolve the parent URL while the current record still exists (see #10460)
+		$referer = $blnDoNotRedirect ? null : $this->getReferer();
+
 		$user = System::getContainer()->get('security.helper')->getUser();
 
 		$objUndoStmt = $db
@@ -1926,7 +1929,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$blnDoNotRedirect)
 		{
-			$this->redirect($this->getReferer());
+			$this->redirect($referer);
 		}
 	}
 
