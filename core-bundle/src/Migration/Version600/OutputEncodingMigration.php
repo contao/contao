@@ -72,6 +72,9 @@ class OutputEncodingMigration extends AbstractMigration
         return $this->createResult(true, "{$this->getName()} executed successfully: ".implode(', ', $converted));
     }
 
+    /**
+     * @return \Generator<int, array<int, mixed>>
+     */
     private function getTargets(): \Generator
     {
         $schemaManager = $this->connection->createSchemaManager();
