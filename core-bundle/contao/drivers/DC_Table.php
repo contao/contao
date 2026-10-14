@@ -4150,21 +4150,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				array_unshift($arrValues, $id);
 
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute(...$arrValues);
 			}
 			else
 			{
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 			}
 
 			if ($objChildren->numRows)
 			{
-				$ids = $objChildren->fetchEach('id');
+				$ids = array();
 
-				static::preloadCurrentRecords($ids, $this->strTable);
+				while ($objChildren->next())
+				{
+					static::setCurrentRecordCache($objChildren->id, $this->strTable, $objChildren->row());
+					$ids[] = $objChildren->id;
+				}
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
