@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tool;
 
-use Contao\McpBundle\Twig\TwigEnvironmentInspector;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 use Mcp\Exception\ToolCallException;
@@ -22,7 +22,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class TwigEnvironmentTools
 {
     public function __construct(
-        private readonly TwigEnvironmentInspector $inspector,
+        private readonly EnvironmentInformation $environmentInformation,
         private readonly Security $security,
     ) {
     }
@@ -33,7 +33,7 @@ final class TwigEnvironmentTools
         $this->assertAdmin();
 
         try {
-            return $this->inspector->discover($kind, $query);
+            return $this->environmentInformation->discover($kind, $query);
         } catch (\InvalidArgumentException $exception) {
             throw new ToolCallException($exception->getMessage(), previous: $exception);
         }
@@ -45,7 +45,7 @@ final class TwigEnvironmentTools
         $this->assertAdmin();
 
         try {
-            return $this->inspector->inspect($kind, $name);
+            return $this->environmentInformation->inspect($kind, $name);
         } catch (\InvalidArgumentException|\OutOfBoundsException $exception) {
             throw new ToolCallException($exception->getMessage(), previous: $exception);
         }

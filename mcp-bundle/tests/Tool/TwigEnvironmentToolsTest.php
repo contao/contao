@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tests\Tool;
 
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\McpBundle\Tool\TwigEnvironmentTools;
-use Contao\McpBundle\Twig\TwigEnvironmentInspector;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 use Mcp\Exception\ToolCallException;
@@ -43,7 +43,7 @@ final class TwigEnvironmentToolsTest extends TestCase
             ->with('ROLE_ADMIN')
             ->willReturn(false)
         ;
-        $tools = new TwigEnvironmentTools(new TwigEnvironmentInspector($twig), $security);
+        $tools = new TwigEnvironmentTools(new EnvironmentInformation($twig), $security);
 
         foreach (['discover' => [], 'inspect' => ['global', 'app']] as $method => $arguments) {
             try {
@@ -55,9 +55,9 @@ final class TwigEnvironmentToolsTest extends TestCase
         }
     }
 
-    public function testReturnsInspectorResultsForAdministrators(): void
+    public function testReturnsEnvironmentInformationForAdministrators(): void
     {
-        $inspector = new TwigEnvironmentInspector(new Environment(new ArrayLoader()));
+        $inspector = new EnvironmentInformation(new Environment(new ArrayLoader()));
         $tools = new TwigEnvironmentTools($inspector, $this->createAdminSecurity());
 
         $this->assertSame($inspector->discover('function', 'range'), $tools->discover('function', 'range'));
@@ -67,7 +67,7 @@ final class TwigEnvironmentToolsTest extends TestCase
     #[DataProvider('invalidCalls')]
     public function testConvertsExpectedErrorsToToolCallExceptions(string $method, array $arguments, string $message): void
     {
-        $tools = new TwigEnvironmentTools(new TwigEnvironmentInspector(new Environment(new ArrayLoader())), $this->createAdminSecurity());
+        $tools = new TwigEnvironmentTools(new EnvironmentInformation(new Environment(new ArrayLoader())), $this->createAdminSecurity());
 
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage($message);
@@ -78,7 +78,7 @@ final class TwigEnvironmentToolsTest extends TestCase
     {
         yield 'invalid discovery kind' => ['discover', ['template'], 'Invalid Twig entry kind'];
         yield 'invalid inspection kind' => ['inspect', ['template', 'example'], 'Invalid Twig entry kind'];
-        yield 'unknown entry' => ['inspect', ['function', 'missing_function'], 'Use contao_twig_environment_discover first.'];
+        yield 'unknown entry' => ['inspect', ['function', 'missing_function'], 'Use discover() first.'];
     }
 
     public function testPreservesUnexpectedApplicationErrors(): void
@@ -89,7 +89,7 @@ final class TwigEnvironmentToolsTest extends TestCase
             ->method('getFunctions')
             ->willThrowException(new \LogicException('Broken extension.'))
         ;
-        $tools = new TwigEnvironmentTools(new TwigEnvironmentInspector($twig), $this->createAdminSecurity());
+        $tools = new TwigEnvironmentTools(new EnvironmentInformation($twig), $this->createAdminSecurity());
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Broken extension.');

@@ -20,6 +20,7 @@ use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
 use Contao\McpBundle\Controller\SerializedMcpController;
@@ -230,6 +231,7 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'contao.twig.studio.environment_information' => EnvironmentInformation::class,
             'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);

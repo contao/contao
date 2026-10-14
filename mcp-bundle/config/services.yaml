@@ -46,7 +46,7 @@ services:
     contao_mcp.tool.twig_environment_tools:
         class: Contao\McpBundle\Tool\TwigEnvironmentTools
         arguments:
-            - '@contao_mcp.twig.environment_inspector'
+            - '@contao.twig.studio.environment_information'
             - '@security.helper'
 
     contao_mcp.tool.user_template_tools:
@@ -61,11 +61,6 @@ services:
             - '@contao_mcp.user_template.validator'
             - '@contao_mcp.user_template.impact_analyzer'
             - '@security.helper'
-
-    contao_mcp.twig.environment_inspector:
-        class: Contao\McpBundle\Twig\TwigEnvironmentInspector
-        arguments:
-            - '@twig'
 
     contao_mcp.user_template.impact_analyzer:
         class: Contao\McpBundle\UserTemplate\UserTemplateImpactAnalyzer

@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\McpBundle\Tests\Twig;
+namespace Contao\CoreBundle\Tests\Twig\Studio;
 
-use Contao\McpBundle\Twig\TwigEnvironmentInspector;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-final class TwigEnvironmentInspectorTest extends TestCase
+final class EnvironmentInformationInspectionTest extends TestCase
 {
     public function testDiscoversEveryCategoryFromTheActiveEnvironment(): void
     {
@@ -79,7 +79,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             ['kind' => 'global', 'name' => 'inspection_global'],
             ['kind' => 'tag', 'name' => 'inspection_tag'],
             ['kind' => 'test', 'name' => 'inspection_test', 'deprecated' => false],
-        ]], new TwigEnvironmentInspector($twig)->discover(query: 'INSPECTION'));
+        ]], new EnvironmentInformation($twig)->discover(query: 'INSPECTION'));
     }
 
     public function testFiltersAndSortsNames(): void
@@ -89,7 +89,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig->addFunction(new TwigFunction('inspection_a', null));
         $twig->addFilter(new TwigFilter('inspection_filter', null));
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         $this->assertSame(['items' => [
             ['kind' => 'function', 'name' => 'inspection_a', 'deprecated' => false],
@@ -103,7 +103,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig = new Environment(new ArrayLoader());
         $twig->addFunction(new TwigFunction('inspection_old', 'strlen', ['deprecation_info' => new DeprecatedCallableInfo('test/package', '1.0', 'inspection_new')]));
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         $this->assertSame(['items' => [['kind' => 'function', 'name' => 'inspection_old', 'deprecated' => true]]], $inspector->discover('function', 'inspection_old'));
         $data = $inspector->inspect('function', 'inspection_old');
@@ -121,7 +121,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
         });
         $twig->addFunction(new TwigFunction('inspection_override', 'strtoupper'));
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('function', 'inspection_override');
+        $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_override');
         $this->assertSame('strtoupper', $data['implementation']);
     }
 
@@ -136,7 +136,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             ['needs_charset' => true, 'needs_environment' => true, 'needs_context' => true, 'is_variadic' => true],
         ));
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('filter', 'inspection_filter');
+        $data = new EnvironmentInformation($twig)->inspect('filter', 'inspection_filter');
         $this->assertSame(
             [
                 'status' => 'best_effort',
@@ -174,7 +174,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             ['needs_is_sandboxed' => true],
         ));
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('function', 'inspection_sandbox');
+        $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_sandbox');
 
         $this->assertTrue($data['requirements']['needs_is_sandboxed']);
         $this->assertSame(
@@ -207,7 +207,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             'test' => $twig->addTest(new TwigTest('inspection_variadic', $callable, $options)),
         };
 
-        $data = new TwigEnvironmentInspector($twig)->inspect($kind, 'inspection_variadic');
+        $data = new EnvironmentInformation($twig)->inspect($kind, 'inspection_variadic');
 
         $this->assertSame(
             [
@@ -236,7 +236,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             },
         ));
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('test', 'inspection_test');
+        $data = new EnvironmentInformation($twig)->inspect('test', 'inspection_test');
         $this->assertSame(['name' => 'value', 'type' => null, 'optional' => false, 'variadic' => false], $data['signature']['input']);
         $this->assertSame([['name' => 'expected', 'type' => null, 'optional' => true, 'variadic' => false]], $data['signature']['parameters']);
         $this->assertNull($data['signature']['return_type']);
@@ -266,7 +266,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             $twig->addFunction(new TwigFunction($name, $callable));
         }
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         foreach (['inspection_array', 'inspection_object', 'inspection_string'] as $name) {
             $data = $inspector->inspect('function', $name);
@@ -287,7 +287,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             }
         }));
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('function', 'inspection_invoke');
+        $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_invoke');
         $this->assertSame('class@anonymous::__invoke', $data['implementation']);
         $this->assertSame('best_effort', $data['signature']['status']);
         $this->assertSame([['name' => 'value', 'type' => 'string', 'optional' => false, 'variadic' => false]], $data['signature']['parameters']);
@@ -306,7 +306,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
             'preserves_safety' => ['html'],
         ]));
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         $data = $inspector->inspect('function', 'inspection_static_safe');
         $this->assertArrayNotHasKey('escaping', $data);
@@ -323,7 +323,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig->addFunction(new TwigFunction('inspection_missing', [Environment::class, 'missingImplementation']));
         $twig->addFunction(new TwigFunction('inspection_null', null));
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         foreach (['inspection_*', 'inspection_node', 'inspection_missing', 'inspection_null'] as $name) {
             $data = $inspector->inspect('function', $name);
@@ -335,7 +335,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
 
     public function testReportsTagParserWithoutGuessingItsGrammar(): void
     {
-        $data = new TwigEnvironmentInspector(new Environment(new ArrayLoader()))->inspect('tag', 'do');
+        $data = new EnvironmentInformation(new Environment(new ArrayLoader()))->inspect('tag', 'do');
 
         $this->assertSame(['kind' => 'tag', 'name' => 'do', 'parser_class' => DoTokenParser::class], $data);
     }
@@ -382,7 +382,7 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig->addGlobal('inspection_empty_object', new \stdClass());
         $twig->addGlobal('inspection_callable', new TwigFunction('not_a_registered_function', 'strlen'));
 
-        $inspector = new TwigEnvironmentInspector($twig);
+        $inspector = new EnvironmentInformation($twig);
 
         $data = $inspector->inspect('global', 'inspection_object');
         $this->assertSame('class@anonymous', $data['type']);
@@ -433,14 +433,14 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig = new Environment(new ArrayLoader());
         $twig->addGlobal('inspection_lazy', $global);
 
-        $data = new TwigEnvironmentInspector($twig)->inspect('global', 'inspection_lazy');
+        $data = new EnvironmentInformation($twig)->inspect('global', 'inspection_lazy');
         $this->assertSame([['name' => 'secret', 'type' => 'string']], $data['properties']);
         $this->assertTrue($class->isUninitializedLazyObject($global));
     }
 
     public function testRejectsInvalidKinds(): void
     {
-        $inspector = new TwigEnvironmentInspector(new Environment(new ArrayLoader()));
+        $inspector = new EnvironmentInformation(new Environment(new ArrayLoader()));
 
         foreach (['discover' => ['template'], 'inspect' => ['template', 'inspection']] as $method => $arguments) {
             try {
@@ -464,8 +464,8 @@ final class TwigEnvironmentInspectorTest extends TestCase
         $twig->addFunction(new TwigFunction('inspection_*', 'strlen'));
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('Use contao_twig_environment_discover first.');
-        new TwigEnvironmentInspector($twig)->inspect($kind, $name);
+        $this->expectExceptionMessage('Use discover() first.');
+        new EnvironmentInformation($twig)->inspect($kind, $name);
     }
 
     public static function unknownEntries(): iterable

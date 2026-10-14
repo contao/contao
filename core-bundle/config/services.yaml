@@ -1676,6 +1676,11 @@ services:
             - '@contao.framework'
             - '@contao.string.html_decoder'
 
+    contao.twig.studio.environment_information:
+        class: Contao\CoreBundle\Twig\Studio\EnvironmentInformation
+        arguments:
+            - '@twig'
+
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
