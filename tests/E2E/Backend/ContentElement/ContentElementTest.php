@@ -22,24 +22,22 @@ class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeletingContentElementReturnsToParentArticle(): void
     {
-        [$backend, $articleUrl] = $this->openArticle();
+        [$backend] = $this->openArticle();
         $this->createTextElement($backend);
 
-        $record = '[data-contao--operations-menu-record-id-value]:has-text("Lorem ipsum")';
-        $this->assertSame(1, $backend->page()->locator($record)->count());
+        $contentElement = '[data-contao--operations-menu-record-id-value]:has-text("Lorem ipsum")';
+        $this->assertSame(1, $backend->page()->locator($contentElement)->count());
 
         $backend->page()->events()->onDialog(static fn (DialogInterface $dialog) => $dialog->accept());
-        $backend->clickButton($record.' [data-contao--operations-menu-target="controller"]');
+        $backend->clickButton($contentElement.' [data-contao--operations-menu-target="controller"]');
         $backend->waitFor('.operations-menu.show');
         $backend->waitForNavigation(static fn () => $backend->clickButton('.operations-menu.show button[title^="Delete content element"]'));
 
-        parse_str((string) parse_url($backend->page()->url(), PHP_URL_QUERY), $query);
-        parse_str((string) parse_url($articleUrl, PHP_URL_QUERY), $expectedQuery);
+        $expectedUrl = self::managedEdition()->database()->fixtures()->interpolate(
+            '/contao?do=article&id={article_main_home}&table=tl_content',
+        );
 
-        $this->assertSame('/contao', parse_url($backend->page()->url(), PHP_URL_PATH));
-        $this->assertSame('article', $query['do'] ?? null);
-        $this->assertSame($expectedQuery['id'], $query['id'] ?? null, $backend->page()->url());
-        $this->assertSame('tl_content', $query['table'] ?? null);
-        $this->assertSame(0, $backend->page()->locator($record)->count());
+        $this->assertStringEndsWith($expectedUrl, $backend->page()->url());
+        $this->assertSame(0, $backend->page()->locator($contentElement)->count());
     }
 }
