@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -125,6 +127,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @var array<string, array<<int, array<int>>
 	 */
 	private $parentPagesCache = array();
+
+	/**
+	 * @var array<string, array<int, list<int>>>
+	 */
+	private array $childrenPagesCache = array();
 
 	/**
 	 * Initialize the object
@@ -3916,14 +3923,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$objChildren = $db
-					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-					->execute($id);
-
-				if ($objChildren->numRows)
-				{
-					$children = array_values(array_intersect($objChildren->fetchEach('id'), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
-				}
+				$children = array_values(array_intersect($this->getTreeChildIds($table, (int) $id, $blnHasSorting), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
 			}
 		}
 
@@ -5932,8 +5932,45 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return array_keys($allParents);
 	}
 
+	/**
+	 * @return list<int>
+	 */
+	private function getTreeChildIds(string $table, int $id, bool $hasSorting): array
+	{
+		$key = $table . ':' . (int) $hasSorting;
+
+		if (!isset($this->childrenPagesCache[$key][$id]))
+		{
+			// Fetch children for all visible nodes, including root trails and leaves
+			$parentIds = array_values(array_unique(array_map('\intval', array_merge($this->visibleRootTrails, $this->root, $this->rootChildren, array($id)))));
+			$options = (new ChildTraversalOptions())->withMaxDepth(1);
+
+			if ($hasSorting)
+			{
+				$options = $options->withOrderBy('sorting');
+			}
+
+			// Keep the unscoped lookup used by tree rendering
+			$rows = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildRows(
+				$parentIds,
+				new HierarchyDefinition($table, 'id', 'pid'),
+				$options,
+			);
+
+			$this->childrenPagesCache[$key] = array_fill_keys($parentIds, array());
+
+			foreach ($rows as $row)
+			{
+				$this->childrenPagesCache[$key][(int) $row['pid']][] = (int) $row['id'];
+			}
+		}
+
+		return $this->childrenPagesCache[$key][$id];
+	}
+
 	protected function updateRoot(array $root, bool $isSearch = false)
 	{
+		$this->childrenPagesCache = array();
 		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 
