@@ -238,7 +238,7 @@ class tl_theme extends Backend
 		{
 			if (is_dir($projectDir . '/' . $path . '/' . $file))
 			{
-				$return[$path . '/' . $file] = str_repeat(' &nbsp; &nbsp; ', $level) . $file;
+				$return[$path . '/' . $file] = str_repeat('     ', $level) . $file;
 				$return = array_merge($return, $this->doGetTemplateFolders($path . '/' . $file, $level+1));
 			}
 		}
