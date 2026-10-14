@@ -23,6 +23,7 @@ use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 return new Configuration()
+    ->addPathToExclude(__DIR__.'/tests/E2E')
     ->ignoreUnknownClasses([
         AppBundle::class,
         FooEntity::class,
@@ -101,6 +102,9 @@ return new Configuration()
 
     // The rate limiter is required for the functional tests.
     ->ignoreErrorsOnPackage('symfony/rate-limiter', [ErrorType::UNUSED_DEPENDENCY])
+
+    // Runtime generates the autoload_runtime.php bootstrap through its Composer plugin.
+    ->ignoreErrorsOnPackage('symfony/runtime', [ErrorType::UNUSED_DEPENDENCY])
 
     // The web profiler uses the stopwatch component if it is installed.
     ->ignoreErrorsOnPackage('symfony/stopwatch', [ErrorType::UNUSED_DEPENDENCY])

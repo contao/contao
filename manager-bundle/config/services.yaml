@@ -57,6 +57,9 @@ services:
             - '@?contao_manager.jwt_manager'
             - '@contao.csrf.token_manager'
 
+    contao_manager.listener.preview_response:
+        class: Contao\ManagerBundle\EventListener\PreviewResponseListener
+
     contao_manager.monolog.request_processor:
         class: Contao\ManagerBundle\Monolog\RequestProcessor
 

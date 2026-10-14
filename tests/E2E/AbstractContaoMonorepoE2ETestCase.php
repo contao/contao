@@ -27,7 +27,14 @@ abstract class AbstractContaoMonorepoE2ETestCase extends AbstractManagedEditionT
     {
         $projectDirectory = self::projectDirectory();
         $monorepo = MonorepoProject::discover($projectDirectory);
-        $composer = ComposerConfig::managedEdition($monorepo->version);
+        $composer = ComposerConfig::managedEdition($monorepo->version)->withOverrides([
+            'require' => ['contao/manager-plugin' => 'dev-feature/runtime-defaults as 2.14.0'],
+            'repositories' => [[
+                'type' => 'vcs',
+                'url' => 'https://github.com/Toflar/manager-plugin.git',
+            ]],
+            'config' => ['allow-plugins' => ['symfony/runtime' => true]],
+        ]);
 
         return $monorepo->configureComposer($composer, 'manager-bundle', ...$bundles);
     }
