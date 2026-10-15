@@ -102,12 +102,10 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
     protected function compareRoutes(Route $a, Route $b, array|null $languages = null): int
     {
-        if ('' !== $a->getHost() && '' === $b->getHost()) {
-            return -1;
-        }
-
-        if ('' === $a->getHost() && '' !== $b->getHost()) {
-            return 1;
+        // Group routes by host so language priorities on other domains cannot affect
+        // their order. Sort empty hosts last as they are fallbacks.
+        if ($a->getHost() !== $b->getHost()) {
+            return strcmp($b->getHost(), $a->getHost());
         }
 
         /** @var PageModel|null $pageA */
