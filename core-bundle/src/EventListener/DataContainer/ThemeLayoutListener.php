@@ -112,7 +112,8 @@ class ThemeLayoutListener implements ResetInterface
 
         $current = $dc->getCurrentRecord();
 
-        if ($current['type'] !== $values['type']) {
+        // Auto-submit still contains the template selected for the previous layout type.
+        if ($current['type'] !== $values['type'] && (!isset($values['template']) || 'auto' === $this->requestStack->getCurrentRequest()?->request->get('SUBMIT_TYPE'))) {
             $values['template'] = '';
         }
 
@@ -126,7 +127,14 @@ class ThemeLayoutListener implements ResetInterface
 
     private function isLegacy(DataContainer $dc): bool
     {
-        if ('default' === $this->requestStack->getCurrentRequest()?->request->get('type')) {
+        $request = $this->requestStack->getCurrentRequest();
+        $type = $request?->request->get('type');
+
+        if (null !== $type && 'auto' !== $request?->request->get('SUBMIT_TYPE')) {
+            return 'default' === $type;
+        }
+
+        if ('default' === $type) {
             return true;
         }
 

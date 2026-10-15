@@ -108,6 +108,20 @@ class PagePermissionVoterTest extends TestCase
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
     }
 
+    public function testAllowsCreatingPageWithStringPageMount(): void
+    {
+        $this->testVoter(
+            new CreateAction('tl_page'),
+            [
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+            ],
+            true,
+            ['1'],
+        );
+    }
+
     public static function voterProvider(): iterable
     {
         // NEW BUTTON
