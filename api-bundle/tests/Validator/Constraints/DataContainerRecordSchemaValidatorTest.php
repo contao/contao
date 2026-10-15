@@ -15,6 +15,7 @@ namespace Contao\ApiBundle\Tests\Validator\Constraints;
 use ApiPlatform\JsonLd\AnonymousContextBuilderInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -45,6 +46,8 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -158,7 +161,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()), new JsonSchemaValidator());
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]))), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
@@ -249,7 +252,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher());
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
     }
@@ -257,12 +260,11 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -285,5 +287,10 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }

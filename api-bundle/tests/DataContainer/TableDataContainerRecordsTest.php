@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
@@ -54,6 +55,8 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 final class TableDataContainerRecordsTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     private RequestStack $requestStack;
 
     private WidgetConverterRegistry $converters;
@@ -631,7 +634,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $relationResolver = $this->createRelationResolver();
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher), $this->converters, $relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         if (!$connection) {
             $connection = $this->createStub(Connection::class);
@@ -662,12 +665,11 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -682,5 +684,10 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }

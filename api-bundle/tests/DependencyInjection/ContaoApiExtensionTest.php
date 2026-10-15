@@ -14,7 +14,10 @@ namespace Contao\ApiBundle\Tests\DependencyInjection;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\ContaoApiBundle;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\Relation\RelationResolver;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
@@ -67,6 +70,46 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $this->assertTrue($container->hasDefinition('contao_api.schema.data_container_factory'));
         $this->assertTrue($container->hasDefinition('contao_api.widget.converter_registry'));
+    }
+
+    public function testRegistersRelationResolversWithoutIncludingTheDispatcher(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+
+        $this->assertArrayHasKey('contao.api.relation_resolver', $container->getAutoconfiguredInstanceof()[RelationResolverInterface::class]->getTags());
+        $this->assertFalse($container->getDefinition('contao_api.relation.resolver')->isAutoconfigured());
+        $this->assertSame('contao_api.relation.resolver', (string) $container->getAlias(RelationResolverInterface::class));
+        $this->assertSame('contao_api.relation.resolver', (string) $container->getDefinition('contao_api.api_platform.serializer.data_container_record_normalizer')->getArgument('$relationResolver'));
+    }
+
+    public function testDispatchesToAnAutoconfiguredExtensionResolver(): void
+    {
+        $relation = new \stdClass();
+
+        $extension = $this->createMock(RelationResolverInterface::class);
+        $extension
+            ->expects($this->once())
+            ->method('supports')
+            ->with($relation)
+            ->willReturn(true)
+        ;
+
+        $extension
+            ->expects($this->once())
+            ->method('resolveToReference')
+            ->with(12, $relation)
+            ->willReturn(null)
+        ;
+
+        $container = $this->createRelationResolverContainer($extension);
+        $resolver = $container->get('contao_api.relation.resolver');
+
+        $this->assertInstanceOf(RelationResolver::class, $resolver);
+        $this->assertNull($resolver->resolveToReference(12, $relation));
     }
 
     public function testResolvesTemplateMetadataFactoryArguments(): void
@@ -187,6 +230,32 @@ class ContaoApiExtensionTest extends ContaoTestCase
         }
     }
 
+    private function createRelationResolverContainer(RelationResolverInterface $resolver): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+
+        foreach (array_keys($container->getDefinitions()) as $id) {
+            if (!\in_array($id, ['service_container', 'contao_api.relation.resolver'], true)) {
+                $container->removeDefinition($id);
+            }
+        }
+
+        foreach (array_keys($container->getAliases()) as $id) {
+            $container->removeAlias($id);
+        }
+
+        $container->getDefinition('contao_api.relation.resolver')->setPublic(true);
+        $container->register('extension.resolver', $resolver::class)->setAutoconfigured(true)->setSynthetic(true)->setPublic(true);
+        $container->compile();
+        $container->set('extension.resolver', $resolver);
+
+        return $container;
+    }
+
     private function createConverterContainer(): ContainerBuilder
     {
         $container = new ContainerBuilder();
@@ -216,8 +285,10 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $container->register('contao.framework', ContaoFramework::class)->setSynthetic(true)->setPublic(true);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
-        $container->register('contao_api.data_container.relation_resolver', DataContainerRelationResolver::class)->setSynthetic(true);
-        $container->set('contao_api.data_container.relation_resolver', $this->createRelationResolver());
+        $container->register('contao_api.relation.resolver', DataContainerRelationResolver::class)->setSynthetic(true);
+        $container->set('contao_api.relation.resolver', $this->createRelationResolver());
+        $container->register('contao_api.data_container.relation_definition_factory', DataContainerRelationDefinitionFactory::class)->setSynthetic(true);
+        $container->set('contao_api.data_container.relation_definition_factory', new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), new WidgetConverterRegistry([]), $this->createStub(ResourceMetadataCollectionFactoryInterface::class)));
         $container->register('translation.locale_switcher', LocaleSwitcher::class)->setSynthetic(true);
         $container->set('translation.locale_switcher', $this->createLocaleSwitcher());
 
@@ -232,8 +303,6 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
             $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),

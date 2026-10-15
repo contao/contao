@@ -16,18 +16,17 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Dto\DataContainerRecord;
-use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
-use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\ApiBundle\Relation\AbstractRelationResolver;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
-use Contao\DataContainer as ContaoDataContainer;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-final class DataContainerRelationResolver
+/**
+ * @extends AbstractRelationResolver<DataContainerRelationDefinition>
+ */
+final class DataContainerRelationResolver extends AbstractRelationResolver
 {
     /**
      * @var array<string, list<HttpOperation>>|null
@@ -36,57 +35,15 @@ final class DataContainerRelationResolver
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly ForeignKeyParser $foreignKeyParser,
-        private readonly WidgetConverterRegistry $converters,
         private readonly ResourceMetadataCollectionFactoryInterface $metadataFactory,
         private readonly RouterInterface $router,
         private readonly DcaHierarchy $dcaHierarchy,
     ) {
     }
 
-    public function supports(DataContainerFieldContext $field): bool
+    public function supports(object $relation): bool
     {
-        return ($this->isDynamicParentRelation($field) && [] !== $this->getReadOperations()) || $this->getRelation($field);
-    }
-
-    private function getRelation(DataContainerFieldContext $field, array $row = []): DataContainerRelationDefinition|null
-    {
-        $relation = $this->getConfiguredRelation($field->config) ?? $this->getImplicitRelation($field, $row);
-
-        return $relation instanceof DataContainerRelationDefinition && [] !== ($this->getReadOperations()[$relation->table] ?? []) ? $relation : null;
-    }
-
-    public function resolveToReference(mixed $value, DataContainerFieldContext $field, array $row = []): mixed
-    {
-        $relation = $this->getRelation($field, $row);
-
-        if (!$relation) {
-            return $value;
-        }
-
-        return $this->mapValue(
-            $value,
-            function (mixed $identifier) use ($relation): DataContainerRelationReference|null {
-                if (!\is_int($identifier) && !\is_string($identifier)) {
-                    return null;
-                }
-
-                $iri = $this->createIri($relation, $identifier);
-
-                return null === $iri ? null : new DataContainerRelationReference($identifier, $iri);
-            },
-        );
-    }
-
-    public function resolveToIdentifier(mixed $value, DataContainerFieldContext $field): mixed
-    {
-        $relation = $this->getRelation($field);
-
-        if (!$relation) {
-            return $value;
-        }
-
-        return $this->mapValue($value, fn (mixed $reference): mixed => $this->getIdentifier($relation, $this->getReferenceIri($reference)));
+        return $relation instanceof DataContainerRelationDefinition && [] !== ($this->getReadOperations()[$relation->table] ?? []);
     }
 
     public function resolveRecordToIri(DataContainerRecord $record): string|null
@@ -94,39 +51,15 @@ final class DataContainerRelationResolver
         return null === $record->id ? null : $this->createIri(new DataContainerRelationDefinition($record->table), $record->id);
     }
 
-    private function mapValue(mixed $value, callable $callback): mixed
+    protected function isEmptyValue(mixed $value): bool
     {
-        if (\is_array($value) && !$this->isReference($value)) {
-            return array_map(fn (mixed $item): mixed => $this->mapValue($item, $callback), $value);
-        }
-
-        if (null === $value || '' === $value || 0 === $value || '0' === $value) {
-            return null;
-        }
-
-        return $callback($value);
+        return null === $value || '' === $value || 0 === $value || '0' === $value;
     }
 
-    private function isReference(array $value): bool
-    {
-        return \array_key_exists('iri', $value) || \array_key_exists('@id', $value);
-    }
-
-    private function getReferenceIri(mixed $value): mixed
-    {
-        if ($value instanceof DataContainerRelationReference) {
-            return $value->iri;
-        }
-
-        if (\is_array($value)) {
-            return $value['iri'] ?? $value['@id'] ?? null;
-        }
-
-        // Also accept JSON-LD's compact IRI representation
-        return $value;
-    }
-
-    private function createIri(DataContainerRelationDefinition $relation, mixed $identifier): string|null
+    /**
+     * @param DataContainerRelationDefinition $relation
+     */
+    protected function createIri(object $relation, mixed $identifier): string|null
     {
         $operations = $this->getReadOperations()[$relation->table] ?? [];
 
@@ -153,24 +86,12 @@ final class DataContainerRelationResolver
         return null;
     }
 
-    private function getIdentifier(DataContainerRelationDefinition $relation, mixed $iri): mixed
+    /**
+     * @param DataContainerRelationDefinition $relation
+     */
+    protected function getIdentifier(object $relation, mixed $iri): mixed
     {
-        if (!\is_string($iri) || '' === $iri || false === ($path = parse_url($iri, PHP_URL_PATH))) {
-            throw new UnprocessableEntityHttpException('Relation values must be valid IRIs.');
-        }
-
-        // An IRI identifies the resource to read, regardless of the current request method
-        $context = $this->router->getContext();
-        $method = $context->getMethod();
-        $context->setMethod('GET');
-
-        try {
-            $parameters = $this->router->match($path);
-        } catch (RoutingExceptionInterface) {
-            throw new UnprocessableEntityHttpException('The relation IRI does not match an API resource.');
-        } finally {
-            $context->setMethod($method);
-        }
+        $parameters = $this->matchIri($iri, $this->router);
 
         foreach ($this->getReadOperations()[$relation->table] ?? [] as $operation) {
             if (($operation->getRouteName() ?? $operation->getName()) !== ($parameters['_route'] ?? null)) {
@@ -281,63 +202,5 @@ final class DataContainerRelationResolver
         }
 
         return $this->readOperations;
-    }
-
-    private function getConfiguredRelation(array $config): object|null
-    {
-        $converter = $this->converters->get($config);
-
-        if ($converter instanceof RelationAwareWidgetConverterInterface && $relation = $converter->getRelation($config)) {
-            return $relation;
-        }
-
-        if (!\is_array($config['relation'] ?? null)) {
-            return null;
-        }
-
-        $table = $config['relation']['table'] ?? null;
-
-        if (!\is_string($table) && \is_string($config['foreignKey'] ?? null)) {
-            $table = $this->foreignKeyParser->parse($config['foreignKey'])->getTableName();
-        }
-
-        if (!\is_string($table) || '' === $table) {
-            return null;
-        }
-
-        $field = $config['relation']['field'] ?? 'id';
-
-        return \is_string($field) && '' !== $field ? new DataContainerRelationDefinition($table, $field) : null;
-    }
-
-    private function getImplicitRelation(DataContainerFieldContext $field, array $row): DataContainerRelationDefinition|null
-    {
-        if (null === $field->table) {
-            return null;
-        }
-
-        if ('pid' !== $field->name) {
-            return null;
-        }
-
-        $dca = $GLOBALS['TL_DCA'][$field->table] ?? [];
-        $parentTable = $dca['config']['dynamicPtable'] ?? false ? ($row['ptable'] ?? null) : ($dca['config']['ptable'] ?? null);
-
-        if (\is_string($parentTable) && '' !== $parentTable) {
-            return new DataContainerRelationDefinition($parentTable);
-        }
-
-        if (ContaoDataContainer::MODE_TREE === ($dca['list']['sorting']['mode'] ?? null)) {
-            return new DataContainerRelationDefinition($field->table);
-        }
-
-        return null;
-    }
-
-    private function isDynamicParentRelation(DataContainerFieldContext $field): bool
-    {
-        return 'pid' === $field->name
-            && null !== $field->table
-            && true === ($GLOBALS['TL_DCA'][$field->table]['config']['dynamicPtable'] ?? false);
     }
 }
