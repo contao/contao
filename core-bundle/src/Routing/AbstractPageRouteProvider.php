@@ -105,7 +105,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         // Group routes by host so language priorities on other domains cannot affect
         // their order. Sort empty hosts last as they are fallbacks.
         if ($a->getHost() !== $b->getHost()) {
-            return strcmp($b->getHost(), $a->getHost());
+            return strcmp($b->getHost(), $a->getHost()) <=> 0;
         }
 
         /** @var PageModel|null $pageA */
