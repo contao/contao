@@ -663,6 +663,19 @@ class RoutingTest extends FunctionalTestCase
 
     public static function getRootAliases(): iterable
     {
+        foreach (['a', 'b', 'c'] as $domain) {
+            foreach (['en,de', 'nl', 'zh', ''] as $languages) {
+                yield 'Renders the index on domain '.$domain.' with languages "'.$languages.'"' => [
+                    ['theme', 'multidomain-index'],
+                    '/',
+                    200,
+                    'Index '.strtoupper($domain).' - Domain '.strtoupper($domain),
+                    $languages,
+                    $domain.'.example.com',
+                ];
+            }
+        }
+
         yield 'Renders the root page if one of the accept languages matches' => [
             ['theme', 'root-with-index'],
             '/',
