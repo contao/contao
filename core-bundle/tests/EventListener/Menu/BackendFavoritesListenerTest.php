@@ -81,7 +81,7 @@ class BackendFavoritesListenerTest extends TestCase
             ->method('getChildRows')
             ->with(
                 [0],
-                new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScope('user', 2),
+                new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScopes(['user' => 2]),
                 new ChildTraversalOptions()->withColumns('title', 'url')->withOrderBy('sorting')->withWhere('tstamp > 0'),
             )
             ->willReturn([
