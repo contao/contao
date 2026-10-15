@@ -5573,6 +5573,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$rootIds = $this->root;
+
+		// Also add the child records of the table (see #1811)
+		if ($rootIds && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
+		{
+			$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
+		}
+
 		// Add sorting options
 		$filters = array();
 
@@ -5640,19 +5649,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
-
 			// Limit the options if there are root records
 			if ($this->root)
 			{
-				$rootIds = $this->root;
-
-				// Also add the child records of the table (see #1811)
-				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
-				{
-					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
-				}
-
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 				{
 					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
