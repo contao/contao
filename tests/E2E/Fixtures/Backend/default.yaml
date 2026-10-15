@@ -1,4 +1,49 @@
 tl_page:
+    page_string_mount:
+        # A fixed ID lets the user's serialized mount retain its string type.
+        id: 1001
+        pid: 0
+        sorting: 384
+        title: Page mount website
+        alias: page-mount-website
+        type: root
+        language: en
+        published: 1
+        includeLayout: 1
+        layout: '@layout_editorial'
+        includeChmod: 1
+        cgroup: '@group_pages_main_content'
+        chmod:
+            - g1
+            - g4
+    page_string_mount_home:
+        pid: '@page_string_mount'
+        sorting: 128
+        title: Page mount home
+        alias: page-mount-home
+        type: regular
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_page_mount_structure'
+        chmod:
+            - w1
+            - w4
+            - g2
+            - g5
+    page_string_mount_destination:
+        pid: '@page_string_mount'
+        sorting: 256
+        title: Page mount destination
+        alias: page-mount-destination
+        type: regular
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_page_mount_structure'
+        chmod:
+            - w1
+            - w4
+            - g2
+            - g5
     page_main_website:
         pid: 0
         sorting: 128
@@ -53,6 +98,13 @@ tl_page:
         published: 1
 
 tl_article:
+    article_string_mount_home:
+        pid: '@page_string_mount_home'
+        sorting: 128
+        title: Page mount article
+        alias: page-mount-article
+        inColumn: main
+        published: 1
     article_main_home:
         pid: '@page_main_home'
         sorting: 128
@@ -171,6 +223,13 @@ tl_newsletter_channel:
         jumpTo: '@page_main_home'
 
 tl_user_group:
+    group_page_mount_structure:
+        name: Page mount | Manage structure
+    group_fields_page_mount:
+        name: Fields | Page mount editor
+        alexf:
+            - tl_page::title
+            - tl_article::title
     group_pages_main_content:
         tstamp: 1704067200
         name: Pages | Main website | Edit content
@@ -332,6 +391,34 @@ tl_user_group:
         disable: 0
 
 tl_user:
+    user_page_mount_manager:
+        username: page-mount-manager
+        name: Page mount manager
+        email: page-mount-manager@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_fields_page_mount'
+            - '@group_page_mount_structure'
+            - '@group_pages_microsite_structure'
+        inherit: extend
+        pagemounts:
+            - '1001'
+        disable: 0
+    user_page_mount_editor:
+        username: page-mount-editor
+        name: Page mount editor
+        email: page-mount-editor@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_fields_page_mount'
+        inherit: extend
+        pagemounts:
+            - '1001'
+        disable: 0
     user_administrator:
         tstamp: 1704067200
         username: administrator
@@ -487,3 +574,14 @@ tl_user:
             - '@page_main_website'
         disable: 0
         dateAdded: 1704067200
+
+tl_preview_link:
+    preview_link:
+        tstamp: 1704067200
+        url: https://example.test/preview
+        showUnpublished: 0
+        restrictToUrl: 1
+        createdAt: 1704067200
+        expiresAt: 1893456000
+        published: 0
+        createdBy: '@kevin_jones'
