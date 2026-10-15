@@ -103,6 +103,7 @@ class HierarchyTest extends TestCase
         ;
 
         $definition = new HierarchyDefinition('categories', 'id', 'pid')->withScopes(['tree_type' => 'category', 'tenant_id' => 7]);
+
         $options = new ChildTraversalOptions()->withWhere(
             'title = ? AND status IN (?) AND published = ?',
             ["O'Reilly", [2, 3], 1],
