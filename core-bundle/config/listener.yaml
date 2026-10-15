@@ -470,7 +470,7 @@ services:
             - '@security.helper'
             - '@router'
             - '@request_stack'
-            - '@database_connection'
+            - '@contao.doctrine.dbal.hierarchy'
             - '@translator'
             - '@contao.csrf.token_manager'
 
