@@ -109,6 +109,7 @@ class BackendFavoritesListener
             new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScope('user', $user),
             $options,
         );
+
         $items = [];
 
         foreach ($nodes as $node) {
