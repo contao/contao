@@ -345,6 +345,22 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
+    public function testOnTransportExceptionWithoutResponse(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::ERROR, 'Broken link! Could not request properly: Connection failed.')
+        ;
+
+        $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
+        $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), new TransportException('Connection failed'), null);
+
+        $this->assertSame(['ok' => 0, 'error' => 1], $subscriber->getResult()->getInfo('stats'));
+    }
+
     public function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
@@ -367,7 +383,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&MockObject
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): MockObject&ResponseInterface
     {
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -399,7 +415,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         return $response;
     }
 
-    private function mockTranslator(): TranslatorInterface&MockObject
+    private function mockTranslator(): MockObject&TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
