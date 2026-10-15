@@ -115,12 +115,12 @@ tl_user:
         disable: 0
         dateAdded: 1259754527
 
-# Token: ct_pat_0000000000E008000000000042_kevinjones
-PersonalAccessToken:
-    kevin_jones_token:
-        id: !!binary AAAAAAAAcACAAAAAAAAAgg==
-        scope: backend
-        userId: '@kevin_jones'
-        createdAt: '2026-10-12 12:00:00'
-        name: E2E
-        secret: $2y$04$.88DSWyWq1kREktbdDLvseFQ64iqBoMBR9a5nnqGyTXRaD2lE3bdG
+## Token: ct_pat_0000000000E008000000000042_kevinjones
+#PersonalAccessToken:
+#    kevin_jones_token:
+#        id: !!binary AAAAAAAAcACAAAAAAAAAgg==
+#        scope: backend
+#        userId: '@kevin_jones'
+#        createdAt: '2026-10-12 12:00:00'
+#        name: E2E
+#        secret: $2y$04$.88DSWyWq1kREktbdDLvseFQ64iqBoMBR9a5nnqGyTXRaD2lE3bdG
