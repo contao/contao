@@ -35,11 +35,13 @@ class PersonalAccessTokenRepository extends ServiceEntityRepository
     /**
      * @return list<PersonalAccessToken>
      */
-    public function getAllForUser(int $userId): array
+    public function getAllForUser(int $userId, string $scope): array
     {
         return $this->createQueryBuilder('t')
             ->where('t.userId = :userId')
-            ->setParameter(':userId', $userId)
+            ->andWhere('t.scope = :scope')
+            ->setParameter('userId', $userId)
+            ->setParameter('scope', $scope)
             ->orderBy('t.createdAt', 'desc')
             ->getQuery()
             ->execute()

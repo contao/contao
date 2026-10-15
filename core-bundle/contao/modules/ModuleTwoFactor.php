@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Entity\PersonalAccessToken;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -228,7 +229,7 @@ class ModuleTwoFactor extends BackendModule
 			$this->Template->created_pat_token = $token;
 		}
 
-		$this->Template->personal_access_tokens = $patRepo->getAllForUser((int) $user->id);
+		$this->Template->personal_access_tokens = $patRepo->getAllForUser((int) $user->id, ContaoCoreBundle::SCOPE_BACKEND);
 
 		$session->remove('_created_pat_token');
 	}
