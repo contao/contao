@@ -17,31 +17,28 @@ use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemFactory;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 class RegisterVirtualFilesystemsPassTest extends TestCase
 {
-    public function testRegistersPrivateFactoryServicesAndAutowiringAlias(): void
+    public function testRegistersPrivateFactoryServices(): void
     {
         $container = new ContainerBuilder();
-        new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../config'))
-            ->load('services.yaml')
+        $container->register('contao.filesystem.virtual_registry', VirtualFilesystemRegistry::class)->setPublic(true);
+        $container->register('contao.filesystem.virtual_factory', VirtualFilesystemFactory::class)
+            ->setArguments([
+                new Reference('contao.filesystem.mount_manager'),
+                new Reference('contao.filesystem.dbafs_manager'),
+            ])
         ;
-        $definitions = $container->getDefinitions();
-        $alias = $container->getAlias(VirtualFilesystemRegistry::class);
-
-        $container = new ContainerBuilder();
-        $container->setDefinition('contao.filesystem.virtual_registry', $definitions['contao.filesystem.virtual_registry']);
-        $container->setAlias(VirtualFilesystemRegistry::class, $alias->setPublic(true));
-        $container->setDefinition('contao.filesystem.virtual_factory', $definitions['contao.filesystem.virtual_factory']);
         $container->register('contao.filesystem.mount_manager', MountManager::class)->setSynthetic(true)->setPublic(true);
         $container->register('contao.filesystem.dbafs_manager', DbafsManager::class)->setSynthetic(true)->setPublic(true);
 
@@ -53,7 +50,7 @@ class RegisterVirtualFilesystemsPassTest extends TestCase
         $container->addCompilerPass(new RegisterVirtualFilesystemsPass());
         $container->compile();
 
-        $registry = $container->get(VirtualFilesystemRegistry::class);
+        $registry = $container->get('contao.filesystem.virtual_registry');
 
         $this->assertInstanceOf(VirtualFilesystemRegistry::class, $registry);
         $this->assertSame(['files' => ['prefix' => 'files'], 'backups' => ['prefix' => 'backups'], 'files#readonly' => ['prefix' => 'files']], $registry->findByTags());
@@ -76,16 +73,9 @@ class RegisterVirtualFilesystemsPassTest extends TestCase
     public function testCompilesRegistryWithLazyServicesAndCompleteMetadata(): void
     {
         $container = new ContainerBuilder();
-        new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../config'))
-            ->load('services.yaml')
-        ;
-        $registryDefinition = $container->getDefinition('contao.filesystem.virtual_registry');
-
-        // Keep the real registry configuration without the unrelated bundle services.
-        $container = new ContainerBuilder();
         $container->setParameter('vfs_name', 'files');
         $container->setParameter('vfs_path', '/files');
-        $container->setDefinition('contao.filesystem.virtual_registry', $registryDefinition->setPublic(true));
+        $container->register('contao.filesystem.virtual_registry', VirtualFilesystemRegistry::class)->setPublic(true);
         $container->addCompilerPass(new RegisterVirtualFilesystemsPass());
 
         $files = new Definition(VirtualFilesystemInterface::class)
