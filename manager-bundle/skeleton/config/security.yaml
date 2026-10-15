@@ -1,7 +1,9 @@
 security:
     password_hashers:
         Contao\User: auto
-        Contao\CoreBundle\Entity\PersonalAccessToken: auto
+        Contao\CoreBundle\Entity\PersonalAccessToken:
+            algorithm: 'sha256'
+            iterations: 1
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
     providers:
