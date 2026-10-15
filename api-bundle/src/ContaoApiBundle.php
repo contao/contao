@@ -32,7 +32,6 @@ class ContaoApiBundle extends AbstractBundle
         $configurator->import('../config/services.yaml');
 
         $container->registerForAutoconfiguration(RelationResolverInterface::class)->addTag('contao.api.relation_resolver');
-
         $container->registerForAutoconfiguration(WidgetConverterInterface::class)->addTag('contao.api.widget_converter');
     }
 }

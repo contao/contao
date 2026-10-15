@@ -89,6 +89,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
     public function testDispatchesToAnAutoconfiguredExtensionResolver(): void
     {
         $relation = new \stdClass();
+
         $extension = $this->createMock(RelationResolverInterface::class);
         $extension
             ->expects($this->once())
@@ -103,6 +104,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
             ->with(12, $relation)
             ->willReturn(null)
         ;
+
         $container = $this->createRelationResolverContainer($extension);
         $resolver = $container->get('contao_api.relation.resolver');
 
@@ -233,6 +235,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
         foreach (array_keys($container->getDefinitions()) as $id) {

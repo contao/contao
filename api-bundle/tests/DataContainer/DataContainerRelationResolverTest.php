@@ -89,6 +89,7 @@ final class DataContainerRelationResolverTest extends TestCase
     public function testRestoresTheRequestMethodWhenRouteMatchingFails(): void
     {
         $context = new RequestContext(method: 'POST');
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('getContext')
@@ -125,6 +126,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('match')
             ->willReturn(['_route' => 'page_get', 'id' => '12'])
         ;
+
         $relation = new DataContainerRelationDefinition('tl_page', 'alias');
         $resolver = $this->createResolver($router);
         $reference = new RelationReference('home', '/pages/12');

@@ -37,23 +37,25 @@ final class AbstractRelationResolverTest extends TestCase
      */
     private function createResolver(): AbstractRelationResolver
     {
-        return new /**
-         * @extends AbstractRelationResolver<\stdClass>
-         */ class() extends AbstractRelationResolver {
-            public function supports(object $relation): bool
-            {
-                return $relation instanceof \stdClass;
-            }
+        return new
+            /**
+             * @extends AbstractRelationResolver<\stdClass>
+             */
+            class() extends AbstractRelationResolver {
+                public function supports(object $relation): bool
+                {
+                    return $relation instanceof \stdClass;
+                }
 
-            protected function createIri(object $relation, mixed $identifier): string
-            {
-                return '/items/'.$identifier;
-            }
+                protected function createIri(object $relation, mixed $identifier): string
+                {
+                    return '/items/'.$identifier;
+                }
 
-            protected function getIdentifier(object $relation, mixed $iri): string
-            {
-                return substr($iri, \strlen('/items/'));
-            }
-        };
+                protected function getIdentifier(object $relation, mixed $iri): string
+                {
+                    return substr($iri, \strlen('/items/'));
+                }
+            };
     }
 }

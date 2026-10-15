@@ -22,6 +22,7 @@ final class RelationResolverTest extends TestCase
     public function testDelegatesToTheFirstSupportingResolver(): void
     {
         $relation = new \stdClass();
+
         $first = $this->createMock(RelationResolverInterface::class);
         $first
             ->expects($this->exactly(2))
@@ -43,11 +44,13 @@ final class RelationResolverTest extends TestCase
             ->with(['iri' => '/custom/id'], $relation)
             ->willReturn('id')
         ;
+
         $second = $this->createMock(RelationResolverInterface::class);
         $second
             ->expects($this->never())
             ->method('supports')
         ;
+
         $resolver = new RelationResolver([$first, $second]);
 
         $this->assertNull($resolver->resolveToReference('id', $relation));
@@ -57,11 +60,13 @@ final class RelationResolverTest extends TestCase
     public function testSupportsRepeatedLookupWithAGenerator(): void
     {
         $relation = new \stdClass();
+
         $unsupported = $this->createStub(RelationResolverInterface::class);
         $unsupported
             ->method('supports')
             ->willReturn(false)
         ;
+
         $supported = $this->createStub(RelationResolverInterface::class);
         $supported
             ->method('supports')
@@ -77,12 +82,14 @@ final class RelationResolverTest extends TestCase
             ->method('resolveToIdentifier')
             ->willReturn(12)
         ;
+
         $resolvers = (
             static function () use ($unsupported, $supported): \Generator {
                 yield $unsupported;
                 yield $supported;
             }
         )();
+
         $resolver = new RelationResolver($resolvers);
 
         $this->assertTrue($resolver->supports($relation));
@@ -93,11 +100,13 @@ final class RelationResolverTest extends TestCase
     public function testKeepsTaggedServicesLazy(): void
     {
         $relation = new \stdClass();
+
         $first = $this->createStub(RelationResolverInterface::class);
         $first
             ->method('supports')
             ->willReturn(true)
         ;
+
         $initialized = new class() {
             /**
              * @var list<string>
@@ -117,6 +126,7 @@ final class RelationResolverTest extends TestCase
                 return $this->names;
             }
         };
+
         $services = $this->createTaggedServices($first, $initialized->record(...));
         $resolver = new RelationResolver($services);
 
@@ -139,6 +149,7 @@ final class RelationResolverTest extends TestCase
     public function testSkipsUnsupportedResolvers(): void
     {
         $relation = new \stdClass();
+
         $unsupported = $this->createMock(RelationResolverInterface::class);
         $unsupported
             ->expects($this->once())
@@ -151,6 +162,7 @@ final class RelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('resolveToReference')
         ;
+
         $supported = $this->createMock(RelationResolverInterface::class);
         $supported
             ->expects($this->once())

@@ -37,6 +37,7 @@ final class DataContainerRelationDefinitionFactoryTest extends TestCase
     public function testUsesTheDefinitionProvidedByAWidget(): void
     {
         $relation = new \stdClass();
+
         $converter = $this->createStub(RelationAwareWidgetConverterInterface::class);
         $converter
             ->method('supports')
@@ -47,6 +48,7 @@ final class DataContainerRelationDefinitionFactoryTest extends TestCase
             ->method('getRelation')
             ->willReturn($relation)
         ;
+
         $factory = $this->createFactory(new WidgetConverterRegistry([$converter]));
 
         $this->assertSame($relation, $factory->create(new DataContainerFieldContext(['inputType' => 'custom'])));

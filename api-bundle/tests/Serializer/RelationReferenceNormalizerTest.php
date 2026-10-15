@@ -33,11 +33,13 @@ final class RelationReferenceNormalizerTest extends ContaoTestCase
     public function testNormalizesReferencesInOtherResources(string $format, array $expected): void
     {
         $reference = new RelationReference('file-id', '/api/files/file-id');
+
         $resource = new class($reference) {
             public function __construct(public RelationReference $file)
             {
             }
         };
+
         $serializer = new Serializer([new RelationReferenceNormalizer(), new ObjectNormalizer()]);
 
         $this->assertSame(['file' => $expected], $serializer->normalize($resource, $format));

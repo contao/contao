@@ -368,6 +368,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                 ),
             ]))
         ;
+
         $this->relationMetadataFactory = $metadataFactory;
 
         return new DataContainerRelationResolver(

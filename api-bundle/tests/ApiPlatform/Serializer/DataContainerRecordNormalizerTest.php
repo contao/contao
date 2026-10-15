@@ -104,6 +104,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testNormalizesNestedReferencesThroughTheSerializer(): void
     {
         $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
+
         $record = new DataContainerRecord(
             'tl_content',
             [
@@ -139,7 +140,9 @@ final class DataContainerRecordNormalizerTest extends TestCase
                 return ['native-array' => true];
             }
         };
+
         $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer(), $collections]);
+
         $record = new DataContainerRecord(
             'tl_content',
             [
@@ -147,6 +150,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
             ],
             17,
         );
+
         $normalized = $serializer->normalize($record, 'jsonld');
 
         $this->assertSame([['file' => ['@id' => '/files/file-id', 'id' => 'file-id'], 'empty' => null]], $normalized['rows']);
@@ -313,6 +317,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
             ),
             $contextBuilder,
         );
+
         $normalizer->setNormalizer(new Serializer([new RelationReferenceNormalizer()]));
 
         return $normalizer;
