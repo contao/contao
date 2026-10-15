@@ -1102,6 +1102,11 @@ class tl_content extends Backend
 		}
 		catch (AccessDeniedException)
 		{
+			$module = null;
+		}
+
+		if ($module === null)
+		{
 			return '';
 		}
 
