@@ -27,7 +27,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/page')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -52,7 +52,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/page')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -81,7 +81,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get($path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -102,7 +102,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('PATCH', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/merge-patch+json',
             ])
@@ -116,7 +116,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Updated API page', $data['title']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
             'Accept' => 'application/ld+json',
         ]));
 
@@ -134,7 +134,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::create('DELETE', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -144,7 +144,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(204, $response->getStatusCode(), $response->getContent(false));
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
             'Accept' => 'application/ld+json',
         ]));
 
@@ -163,7 +163,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -180,7 +180,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($parent, $data['pid']['id']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
             'Accept' => 'application/ld+json',
         ]));
 
