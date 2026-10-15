@@ -106,7 +106,7 @@ class BackendFavoritesListener
 
         $nodes = $this->hierarchy->getChildRows(
             [0],
-            new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScope('user', $user),
+            new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScopes(['user' => $user]),
             $options,
         );
 
