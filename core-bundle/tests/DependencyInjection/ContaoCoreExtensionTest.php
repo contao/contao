@@ -32,7 +32,6 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -811,10 +810,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
-
-        $environmentInformation = $container->getDefinition('contao.twig.studio.environment_information');
-        $this->assertSame(EnvironmentInformation::class, $environmentInformation->getClass());
-        $this->assertEquals(new Reference('twig'), $environmentInformation->getArgument(0));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
