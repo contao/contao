@@ -43,8 +43,11 @@ class DebugPluginsCommand extends Command
 {
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private readonly ContaoKernel $kernel)
-    {
+    public function __construct(
+        private readonly ContaoKernel $kernel,
+        private readonly array $bundles,
+        private readonly array $bundlesMeta,
+    ) {
         parent::__construct();
     }
 
@@ -113,23 +116,9 @@ class DebugPluginsCommand extends Command
         $title = 'Registered Bundles in Loading Order';
         $headers = ['Bundle Name', 'Contao Resources Path'];
         $rows = [];
-        $bundles = $this->kernel->getBundles();
 
-        foreach ($bundles as $name => $bundle) {
-            $path = '';
-            $class = $bundle::class;
-
-            if (ContaoModuleBundle::class === $class) {
-                $path = Path::join('system/modules', $name);
-            } else {
-                $reflection = new \ReflectionClass($class);
-
-                if (is_dir($dir = Path::join($reflection->getFileName(), '../Resources/contao'))) {
-                    $path = Path::makeRelative($dir, $this->kernel->getProjectDir());
-                }
-            }
-
-            $rows[] = [$bundle->getName(), $path];
+        foreach ($this->bundles as $name => $class) {
+            $rows[] = [$name, $this->getBundlePath($name, $class)];
         }
 
         $this->io->title($title);
@@ -236,5 +225,25 @@ class DebugPluginsCommand extends Command
         $parser->addParser(new IniParser(Path::join($this->kernel->getProjectDir(), 'system/modules')));
 
         return $parser;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function getBundlePath(string $name, string $class): string
+    {
+        if (ContaoModuleBundle::class === $class) {
+            return $this->bundlesMeta[$name]['path'];
+        }
+
+        if (is_dir($path = Path::join($this->bundlesMeta[$name]['path'], 'Resources/contao'))) {
+            return $path;
+        }
+
+        if (is_dir($path = Path::join($this->bundlesMeta[$name]['path'], 'contao'))) {
+            return $path;
+        }
+
+        return '';
     }
 }
