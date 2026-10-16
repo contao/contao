@@ -1,0 +1,20 @@
+{# Raw string tags are trusted markup. HtmlTag content is escaped unless explicitly marked as raw. #}
+{%- if tag.name is defined -%}
+    {# The getter returns a clone. Keep it so nonce changes survive until rendering without modifying the tag. #}
+    {%- set attributes = tag.attributes -%}
+
+    {# Preserve explicit nonces. setIfExists() adds the CSP nonce only when one is available. #}
+    {%- if tag.isInlineScript() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('script-src')) -%}
+    {%- elseif tag.isInlineStyle() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('style-src')) -%}
+    {%- endif -%}
+
+    <{{ tag.name }}{{ attributes }}>
+    {%- if not tag.isVoid() -%}
+        {{- tag.escapesContent() ? tag.content|e : tag.content|raw -}}
+        </{{ tag.name }}>
+    {%- endif -%}
+{%- else -%}
+    {{- tag|raw -}}
+{%- endif -%}
