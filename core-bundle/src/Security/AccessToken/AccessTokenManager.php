@@ -19,6 +19,7 @@ use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\StringUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Uid\Uuid;
 
 class AccessTokenManager
 {
@@ -75,7 +76,7 @@ class AccessTokenManager
 
         $parts = explode('_', $token);
 
-        if (4 !== \count($parts)) {
+        if (4 !== \count($parts) || '' === $parts[3] || !Uuid::isValid($parts[2], Uuid::FORMAT_BASE_32)) {
             return null;
         }
 
