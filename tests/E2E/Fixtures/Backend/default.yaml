@@ -113,6 +113,27 @@ tl_article:
         alias: main-website-home
         inColumn: main
         published: 1
+    article_microsite_home:
+        pid: '@page_microsite_home'
+        sorting: 128
+        tstamp: 1704067200
+        title: Microsite home
+        alias: microsite-home
+        inColumn: main
+        published: 1
+
+tl_content:
+    content_table:
+        pid: '@article_microsite_home'
+        ptable: tl_article
+        sorting: 128
+        tstamp: 1704067200
+        type: table
+        thead: 1
+        tableitems:
+            - [Name, Value, Link]
+            - [Lorem, Ipsum, <a href="https://contao.org">Contao</a>]
+            - [Dolor, Sit, Amet]
 
 tl_files:
     files_media:
