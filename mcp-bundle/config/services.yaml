@@ -25,6 +25,8 @@ services:
 
     contao_mcp.resource.template_guidance:
         class: Contao\McpBundle\Resource\TemplateGuidance
+        arguments:
+            - '%contao.template_studio.enabled%'
 
     contao_mcp.response.api_converter:
         class: Contao\McpBundle\Response\ApiResponseConverter

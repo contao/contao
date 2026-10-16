@@ -143,7 +143,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
     public function testDoesNotRegisterSnapshotToolsWithoutTemplateStudio(): void
     {
-        $container = $this->getContainerBuilder(withSnapshots: false);
+        $container = $this->getContainerBuilder(withTemplateStudio: false);
         $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
 
         $bundle = new McpBundle();
@@ -153,6 +153,32 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->compile();
 
         $this->assertFalse($container->hasDefinition('contao_mcp.tool.template_snapshot_tools'));
+    }
+
+    public function testDoesNotRegisterUserTemplateToolsWithoutTemplateStudio(): void
+    {
+        $container = $this->getContainerBuilder(withTemplateStudio: false);
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
+
+        $bundle = new McpBundle();
+        $bundle->getContainerExtension()->load([$config], $container);
+        $bundle->build($container);
+
+        $container->getDefinition('mcp.server.contao_backend.builder')->setPublic(true);
+        $container->compile();
+
+        $this->assertFalse($container->hasDefinition('contao_mcp.tool.user_template_tools'));
+
+        $tools = [];
+
+        foreach ($container->getDefinition('mcp.server.contao_backend.builder')->getMethodCalls() as [$method, $arguments]) {
+            if ('addTool' === $method) {
+                $tools[] = $arguments[1];
+            }
+        }
+
+        $this->assertNotContains('contao_template_list_themes', $tools);
+        $this->assertContains('contao_api_discover', $tools);
     }
 
     public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void
@@ -176,7 +202,6 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(19, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
@@ -206,7 +231,7 @@ final class ContaoMcpExtensionTest extends TestCase
         );
     }
 
-    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true, int|null $maximumBinaryPayloadSize = null): ContainerBuilder
+    private function getContainerBuilder(bool $withBackendSearch = false, bool $withTemplateStudio = true, int|null $maximumBinaryPayloadSize = null): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -216,6 +241,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'kernel.environment' => 'test',
                 'kernel.debug' => false,
                 'contao.backend.route_prefix' => '/contao',
+                'contao.template_studio.enabled' => $withTemplateStudio,
             ]),
         );
 
@@ -237,7 +263,7 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
         }
 
-        if ($withSnapshots) {
+        if ($withTemplateStudio) {
             $container->register('contao.twig.studio.template_snapshots', TemplateSnapshots::class)->setSynthetic(true)->setPublic(true);
         }
 

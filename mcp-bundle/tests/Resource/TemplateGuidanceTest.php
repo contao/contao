@@ -20,7 +20,7 @@ final class TemplateGuidanceTest extends TestCase
 {
     public function testProvidesVersionSpecificTemplateGuidance(): void
     {
-        $guidance = new TemplateGuidance()->templateGuidance();
+        $guidance = new TemplateGuidance(true)->templateGuidance();
 
         $this->assertStringContainsString(ContaoCoreBundle::getVersion(), $guidance);
         $this->assertStringContainsString('Analyze impact', $guidance);
@@ -40,7 +40,8 @@ final class TemplateGuidanceTest extends TestCase
 
     public function testProvidesHtmlAttributesGuidanceForAvailableMethods(): void
     {
-        $guidance = new TemplateGuidance()->htmlAttributes();
+        // The html-attributes guidance is independent of Template Studio.
+        $guidance = new TemplateGuidance(false)->htmlAttributes();
 
         $this->assertStringContainsString('mergeWith', $guidance);
         $this->assertStringContainsString('addClass', $guidance);
@@ -49,5 +50,13 @@ final class TemplateGuidanceTest extends TestCase
         $this->assertStringContainsString('.mergeWith(figure.options.attr|default)', $guidance);
         $this->assertStringContainsString('The order matters', $guidance);
         $this->assertStringContainsString('<img{{ image_attributes }}>', $guidance);
+    }
+
+    public function testExplainsThatTemplateStudioIsDisabled(): void
+    {
+        $guidance = new TemplateGuidance(false)->templateGuidance();
+
+        $this->assertStringContainsString('Template Studio is disabled', $guidance);
+        $this->assertStringNotContainsString('contao_template_list_themes', $guidance);
     }
 }
