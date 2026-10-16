@@ -18,6 +18,11 @@ use Contao\InstallationRecipe\Composer\ComposerConfig;
 
 abstract class AbstractContaoMonorepoE2ETestCase extends AbstractManagedEditionTestCase
 {
+    /**
+     * Personal access token of the k.jones fixture user.
+     */
+    protected const string BACKEND_ACCESS_TOKEN = 'ct_pat_0000000000E008000000000042_kevinjones';
+
     protected static function projectDirectory(): string
     {
         return \dirname(__DIR__, 2);

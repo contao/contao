@@ -33,6 +33,7 @@ use ApiPlatform\OpenApi\Model\Tag;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\State\Pagination\Pagination;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -55,6 +56,8 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerOpenApiFactoryTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -112,7 +115,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher());
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
 
         $resourceMetadataCollectionFactory = new class($this->createResourceMetadataCollection()) implements ResourceMetadataCollectionFactoryInterface {
             public function __construct(private readonly ResourceMetadataCollection $collection)
@@ -261,7 +264,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()), new Pagination(), '/contao/api');
+        $factory = new DataContainerOpenApiFactory($decorated, $metadata, new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]))), new Pagination(), '/contao/api');
         $openApi = $factory();
 
         $this->assertNull($openApi->getPaths()->getPath('/contao/api/dc/content/{id}')->getGet()->getResponses()['200']->getLinks());
@@ -283,7 +286,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                     return new ResourceMetadataCollection(DataContainerRecord::class, []);
                 }
             },
-            new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher()),
+            new DataContainerSchemaFactory($this->createContaoFrameworkStub(), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]))),
             new Pagination(),
             '/contao/api',
         );
@@ -366,11 +369,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ]))
         ;
 
+        $this->relationMetadataFactory = $metadataFactory;
+
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $metadataFactory,
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -385,5 +388,10 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }

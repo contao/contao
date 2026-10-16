@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\DataContainer;
 
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -27,7 +28,8 @@ final class DataContainerRecordMapper
     public function __construct(
         private readonly DataContainerSchemaFactory $schemaFactory,
         private readonly WidgetConverterRegistry $converters,
-        private readonly DataContainerRelationResolver $relationResolver,
+        private readonly RelationResolverInterface $relationResolver,
+        private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
     ) {
     }
 
@@ -57,7 +59,8 @@ final class DataContainerRecordMapper
                 continue;
             }
 
-            $data[$field] = $this->relationResolver->resolveToReference($value, $fieldContext, $row);
+            $relation = $this->relationDefinitionFactory->create($fieldContext, $row);
+            $data[$field] = $relation ? $this->relationResolver->resolveToReference($value, $relation) : $value;
         }
 
         return new DataContainerRecord($table, $data, $row['id']);
@@ -82,7 +85,8 @@ final class DataContainerRecordMapper
                 throw new UnprocessableEntityHttpException('Field "'.$field.'" has no API-capable widget.');
             }
 
-            $value = $this->relationResolver->resolveToIdentifier($value, new DataContainerFieldContext($config, $table, (string) $field));
+            $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($config, $table, (string) $field));
+            $value = $relation ? $this->relationResolver->resolveToIdentifier($value, $relation) : $value;
             $form[$field] = $converter->convertToFormValue($value, $config, $schema);
         }
 
@@ -95,7 +99,8 @@ final class DataContainerRecordMapper
     public function toParentIdentifier(string $table, mixed $value): int
     {
         $config = $GLOBALS['TL_DCA'][$table]['fields']['pid'] ?? [];
-        $value = $this->relationResolver->resolveToIdentifier($value, new DataContainerFieldContext($config, $table, 'pid'));
+        $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($config, $table, 'pid'));
+        $value = $relation ? $this->relationResolver->resolveToIdentifier($value, $relation) : $value;
 
         if (\is_array($value)) {
             $value = $value['id'] ?? null;

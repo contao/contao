@@ -236,8 +236,7 @@ class DcaHierarchyTest extends ContaoTestCase
             static fn (HierarchyDefinition $definition): bool => $table === $definition->table()
                 && 'id' === $definition->idColumn()
                 && 'pid' === $definition->parentColumn()
-                && ($dynamicPtable ? 'ptable' === $definition->scopeColumn() : null === $definition->scopeColumn())
-                && ($dynamicPtable ? $table === $definition->scopeValue() : null === $definition->scopeValue()),
+                && ($dynamicPtable ? ['ptable' => $table] : []) === $definition->scopes(),
         );
     }
 

@@ -128,7 +128,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testIncludesTheFirstParentRowOutsideTheScope(): void
     {
-        $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScope('ptable', 'tl_content');
+        $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScopes(['ptable' => 'tl_content']);
         $options = new ParentTraversalOptions()->withColumns('ptable')->withBoundaryRow();
 
         $this->assertSame(

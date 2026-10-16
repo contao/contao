@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +47,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
-            $this->createStub(Connection::class),
+            $this->createStub(Hierarchy::class),
         );
 
         $listener($event);
@@ -73,30 +75,32 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(3))
-            ->method('fetchAllAssociative')
-            ->willReturnOnConsecutiveCalls(
-                [
-                    [
-                        'id' => 7,
-                        'pid' => 0,
-                        'tstamp' => 1671538397,
-                        'title' => 'Edit page 3',
-                        'url' => '/contao?do=pages&act=edit&id=3',
-                    ],
-                    [
-                        'id' => 8,
-                        'pid' => 7,
-                        'tstamp' => 1671538402,
-                        'title' => 'Edit "fe_page"',
-                        'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
-                    ],
-                ],
-                [],
-                [],
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getChildRows')
+            ->with(
+                [0],
+                new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScopes(['user' => 2]),
+                new ChildTraversalOptions()->withColumns('title', 'url')->withOrderBy('sorting')->withWhere('tstamp > 0'),
             )
+            ->willReturn([
+                [
+                    'id' => 7,
+                    'pid' => 0,
+                    'tstamp' => 1671538397,
+                    'title' => 'Edit page 3',
+                    'url' => '/contao?act=edit&do=pages&id=3',
+                ],
+                [
+                    'id' => 8,
+                    'pid' => 7,
+                    'tstamp' => 1671538402,
+                    'title' => 'Edit "fe_page"',
+                    'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
+                ],
+                ['id' => 9, 'pid' => 0, 'tstamp' => 1, 'title' => 'Second root', 'url' => '/contao?do=article'],
+            ])
         ;
 
         $factory = new MenuFactory();
@@ -110,7 +114,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $router,
             $requestStack,
-            $connection,
+            $hierarchy,
         );
 
         $listener($event);
@@ -131,17 +135,25 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertCount(2, $grandChildren);
         $this->assertSame('favorite_7', $grandChildren[0]->getName());
         $this->assertSame('Edit page 3', $grandChildren[0]->getLabel());
-        $this->assertSame('/contao?do=pages&act=edit&id=3', $grandChildren[0]->getUri());
+        $this->assertSame('/contao?act=edit&do=pages&id=3', $grandChildren[0]->getUri());
 
         $this->assertSame([], $grandChildren[0]->getLinkAttributes());
         $this->assertSame(['translation_domain' => false], $grandChildren[0]->getExtras());
 
-        $this->assertSame('favorite_8', $grandChildren[1]->getName());
-        $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
-        $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $grandChildren[1]->getUri());
+        $this->assertTrue($grandChildren[0]->isCurrent());
+        $this->assertSame('favorite_9', $grandChildren[1]->getName());
+        $this->assertSame('Second root', $grandChildren[1]->getLabel());
 
-        $this->assertSame([], $grandChildren[1]->getLinkAttributes());
-        $this->assertSame(['translation_domain' => false], $grandChildren[1]->getExtras());
+        $nestedChildren = array_values($grandChildren[0]->getChildren());
+
+        $this->assertCount(1, $nestedChildren);
+        $this->assertSame('favorite_8', $nestedChildren[0]->getName());
+        $this->assertSame('Edit "fe_page"', $nestedChildren[0]->getLabel());
+        $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $nestedChildren[0]->getUri());
+        $this->assertFalse($nestedChildren[0]->isCurrent());
+
+        $this->assertSame([], $nestedChildren[0]->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $nestedChildren[0]->getExtras());
 
         $this->assertSame('content', $children[1]->getName());
     }
@@ -175,7 +187,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
-            $this->createStub(Connection::class),
+            $this->createStub(Hierarchy::class),
         );
 
         $listener($event);
@@ -206,10 +218,10 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
             ->expects($this->once())
-            ->method('fetchAllAssociative')
+            ->method('getChildRows')
             ->willReturn([])
         ;
 
@@ -224,7 +236,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $router,
             $requestStack,
-            $connection,
+            $hierarchy,
         );
 
         $listener($event);

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
@@ -36,6 +37,8 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 class RowWizardConverterTest extends TestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     private array|null $widgets;
 
     protected function setUp(): void
@@ -196,7 +199,7 @@ class RowWizardConverterTest extends TestCase
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
         $registry = new WidgetConverterRegistry($converters);
 
-        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $this->createRelationResolver(), $this->createLocaleSwitcher()));
+        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory($registry)));
         $converters[] = $converter;
 
         return $converter;
@@ -205,12 +208,11 @@ class RowWizardConverterTest extends TestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -225,5 +227,10 @@ class RowWizardConverterTest extends TestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\DataContainer;
 
+use ApiPlatform\Validator\Exception\ValidationException;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
@@ -254,21 +255,35 @@ class TableDataContainerRecords
             throw new NotFoundHttpException('The record no longer exists.');
         }
 
-        // Completing an existing backend draft requires the same validation as creation
-        $create = $create || 0 === (int) ($row['tstamp'] ?? 1);
-        $previousFields = $create ? [] : $this->getPaletteFields($dc);
+        $draft = 0 === (int) ($row['tstamp'] ?? 1);
+        $previousFields = $create || $draft ? [] : $this->getPaletteFields($dc);
         $values = $this->mapper->toFormValues($record->table, $record->data);
         $request = $this->requestStack->getCurrentRequest();
         $main = $this->requestStack->getMainRequest();
         $previous = $request->request->all();
-        $error = $main->attributes->get('_contao_widget_error');
-        $main->attributes->remove('_contao_widget_error');
-        $request->request->replace(['FORM_SUBMIT' => $dc->table] + $values);
+        $errors = $main->attributes->get('_contao_widget_errors');
+        $main->attributes->remove('_contao_widget_errors');
 
         try {
+            if (!$create) {
+                $submitOnChangeValues = array_filter(
+                    $values,
+                    static fn (string $field): bool => true === ($GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['submitOnChange'] ?? false),
+                    ARRAY_FILTER_USE_KEY,
+                );
+
+                if ($submitOnChangeValues) {
+                    // These fields can change the palette and field options, so persist them before
+                    // submitting the complete request data against the updated DCA state
+                    $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
+                    $this->submitFormValues($dc, $submitOnChangeValues, []);
+                }
+            }
+
+            $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$values]);
             $fields = array_diff($this->getPaletteFields($dc), $previousFields, array_keys($values));
 
-            if (!$create) {
+            if (!$create && !$draft) {
                 // Only newly active mandatory fields need defaults during a partial update
                 $fields = array_filter($fields, static fn ($field) => $GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['mandatory'] ?? false);
             }
@@ -277,10 +292,10 @@ class TableDataContainerRecords
             $this->submitFormValues($dc, $values, $defaults);
         } finally {
             $request->request->replace($previous);
-            $main->attributes->remove('_contao_widget_error');
+            $main->attributes->remove('_contao_widget_errors');
 
-            if (null !== $error) {
-                $main->attributes->set('_contao_widget_error', $error);
+            if (null !== $errors) {
+                $main->attributes->set('_contao_widget_errors', $errors);
             }
         }
     }
@@ -295,8 +310,8 @@ class TableDataContainerRecords
         $this->requestStack->getCurrentRequest()->request->add($defaults);
         $this->runBackendAction($dc->edit(...));
 
-        if ($this->requestStack->getMainRequest()->attributes->get('_contao_widget_error')) {
-            throw new UnprocessableEntityHttpException('The data container rejected the submitted fields.');
+        if ($this->requestStack->getMainRequest()->attributes->has('_contao_widget_errors')) {
+            $this->throwValidationError();
         }
     }
 
@@ -374,6 +389,15 @@ class TableDataContainerRecords
             }
 
             return $exception->getResponse();
+        }
+
+        $this->throwValidationError();
+    }
+
+    private function throwValidationError(): never
+    {
+        if ($violations = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors')) {
+            throw new ValidationException($violations);
         }
 
         throw new UnprocessableEntityHttpException('The data container rejected the submitted fields.');

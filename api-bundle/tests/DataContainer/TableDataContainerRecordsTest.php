@@ -14,8 +14,10 @@ namespace Contao\ApiBundle\Tests\DataContainer;
 
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Validator\Exception\ValidationException;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
@@ -51,9 +53,13 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 final class TableDataContainerRecordsTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     private RequestStack $requestStack;
 
     private WidgetConverterRegistry $converters;
@@ -124,10 +130,146 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->assertSame(['title' => 'After'], $result->data);
     }
 
+    #[DataProvider('provideValidationRedirects')]
+    public function testReportsWidgetErrorsAndRestoresPreviousErrors(bool $redirect): void
+    {
+        $errors = new ConstraintViolationList([
+            new ConstraintViolation('First error', 'First error', [], null, 'title', 'After'),
+            new ConstraintViolation('Second error', 'Second error', [], null, 'title', 'After'),
+            new ConstraintViolation('Invalid alias', 'Invalid alias', [], null, 'alias', '123'),
+        ]);
+
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function () use ($redirect, $errors): void {
+                    $attributes = $this->requestStack->getMainRequest()->attributes;
+                    $this->assertFalse($attributes->has('_contao_widget_errors'));
+                    $attributes->set('_contao_widget_errors', $errors);
+
+                    if ($redirect) {
+                        throw new ResponseException(new RedirectResponse('/contao'));
+                    }
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $attributes = $this->requestStack->getMainRequest()->attributes;
+        $previousErrors = new ConstraintViolationList([new ConstraintViolation('Previous error', 'Previous error', [], null, 'previous', null)]);
+        $attributes->set('_contao_widget_errors', $previousErrors);
+
+        try {
+            $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+            $this->fail('Expected widget validation errors.');
+        } catch (ValidationException $exception) {
+            $violations = $exception->getConstraintViolationList();
+            $this->assertCount(3, $violations);
+            $this->assertSame('title', $violations[0]->getPropertyPath());
+            $this->assertSame('First error', $violations[0]->getMessage());
+            $this->assertSame('title', $violations[1]->getPropertyPath());
+            $this->assertSame('Second error', $violations[1]->getMessage());
+            $this->assertSame('alias', $violations[2]->getPropertyPath());
+            $this->assertSame('Invalid alias', $violations[2]->getMessage());
+            $this->assertSame($errors[0], $violations[0]);
+            $this->assertSame($errors[1], $violations[1]);
+            $this->assertSame($errors[2], $violations[2]);
+        }
+
+        $this->assertSame($previousErrors, $attributes->get('_contao_widget_errors'));
+        $this->assertSame([], $this->requestStack->getCurrentRequest()->request->all());
+    }
+
+    public static function provideValidationRedirects(): iterable
+    {
+        yield 'form rendered with errors' => [false];
+        yield 'redirect with errors' => [true];
+    }
+
+    public function testKeepsGenericRejectionWhenNoWidgetMessagesAreAvailable(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturn('')
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionMessage('The data container rejected the submitted fields.');
+
+        $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+    }
+
     public static function providePreviousTitles(): iterable
     {
         yield 'changed value' => ['Before'];
         yield 'unchanged value still reaches validation' => ['After'];
+    }
+
+    #[DataProvider('provideUpdateTimestamps')]
+    public function testStoresSubmitOnChangeFieldsBeforeTheCompleteUpdate(int $tstamp): void
+    {
+        $dc = $this->createEditingDataContainer('{type_legend},type;{template_legend},customTpl;');
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'html', 'customTpl' => 'ce_html'],
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'text', 'customTpl' => 'ce_text'],
+            )
+        ;
+
+        $submitted = [];
+        $dc
+            ->expects($this->exactly(2))
+            ->method('edit')
+            ->willReturnCallback(
+                function () use (&$submitted): void {
+                    $submitted[] = $this->requestStack->getCurrentRequest()->request->all();
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'type' => ['inputType' => 'text', 'eval' => ['submitOnChange' => true], 'sql' => ['type' => 'string']],
+            'customTpl' => ['inputType' => 'text', 'sql' => ['type' => 'string']],
+        ];
+
+        $result = $records->update(new DataContainerRecord('tl_content', ['type' => 'text', 'customTpl' => 'ce_text'], 17));
+
+        $this->assertSame(
+            [
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text'],
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text', 'customTpl' => 'ce_text'],
+            ],
+            $submitted,
+        );
+
+        $this->assertSame(['type' => 'text', 'customTpl' => 'ce_text'], $result->data);
+    }
+
+    public static function provideUpdateTimestamps(): iterable
+    {
+        yield 'existing record' => [123];
+        yield 'draft' => [0];
     }
 
     #[DataProvider('provideCreationValues')]
@@ -579,7 +721,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $relationResolver = $this->createRelationResolver();
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher), $this->converters, $relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         if (!$connection) {
             $connection = $this->createStub(Connection::class);
@@ -610,12 +752,11 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     private function createRelationResolver(): DataContainerRelationResolver
     {
         $connection = $this->createStub(Connection::class);
+        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -630,5 +771,10 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }
