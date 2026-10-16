@@ -300,8 +300,15 @@ class ContentCompositionBuilder
 
     private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
     {
+        if (!$responseContext->has(HtmlHeadBag::class)) {
+            $responseContext->add(new HtmlHeadBag());
+        }
+
+        $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+        $htmlHeadBag->setCanonicalEnabled((bool) ($this->page->enableCanonical ?? false));
+
         $responseContextData = [
-            'head' => $responseContext->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class) : null,
+            'head' => fn () => $this->finalizePageTitle($htmlHeadBag),
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
@@ -379,6 +386,18 @@ class ContentCompositionBuilder
                 }
             }
         });
+    }
+
+    private function finalizePageTitle(HtmlHeadBag $htmlHeadBag): HtmlHeadBag
+    {
+        $title = $htmlHeadBag->getTitle();
+        $rootPageTitle = (string) ($this->page->rootPageTitle ?? '');
+
+        if ($title && $rootPageTitle) {
+            $title .= ' - ';
+        }
+
+        return $htmlHeadBag->setTitle($title.$rootPageTitle);
     }
 
     private function addCompositedContentToTemplate(LayoutTemplate $template, array $elementReferencesBySlot): void
