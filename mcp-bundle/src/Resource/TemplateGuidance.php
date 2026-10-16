@@ -18,6 +18,10 @@ use Mcp\Capability\Attribute\McpResource;
 
 final class TemplateGuidance
 {
+    public function __construct(private readonly bool $templateStudioEnabled)
+    {
+    }
+
     #[McpResource(
         uri: 'contao://template-guidance',
         name: 'contao_template_guidance',
@@ -27,6 +31,16 @@ final class TemplateGuidance
     )]
     public function templateGuidance(): string
     {
+        if (!$this->templateStudioEnabled) {
+            return <<<'MARKDOWN'
+                # Contao template editing guidance
+
+                Template Studio is disabled in this Contao installation, so the `contao_template_*` tools and this guidance are unavailable.
+
+                Enable Template Studio (`contao.template_studio.enabled: true`) to discover, read, edit and snapshot templates through the MCP server.
+                MARKDOWN;
+        }
+
         return str_replace('__CONTAO_VERSION__', ContaoCoreBundle::getVersion(), <<<'MARKDOWN'
             # Contao template editing guidance
 
