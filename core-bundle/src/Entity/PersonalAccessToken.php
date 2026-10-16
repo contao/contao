@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[Table('personal_access_token')]
-#[Entity(repositoryClass: PersonalAccessTokenRepository::class)]
+#[Entity(PersonalAccessTokenRepository::class)]
 #[Index(columns: ['userId', 'scope'])]
 class PersonalAccessToken
 {
