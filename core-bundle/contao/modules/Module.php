@@ -78,6 +78,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $reg_activate
  * @property integer $reg_jumpTo
  * @property string  $reg_text
+ * @property boolean $reg_preventEnumeration
  * @property string  $reg_password
  * @property boolean $protected
  * @property string  $groups

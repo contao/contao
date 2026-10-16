@@ -77,6 +77,22 @@ class ModuleLostPassword extends Module
 			return;
 		}
 
+		$session = System::getContainer()->get('request_stack')->getSession();
+
+		// Confirmation message
+		if ($session->isStarted() && $session->getFlashBag()->has('mod_lostPassword_confirm'))
+		{
+			$arrMessages = $session->getFlashBag()->get('mod_lostPassword_confirm');
+
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'confirm';
+			$this->Template->message = $arrMessages[0];
+
+			return;
+		}
+
 		// Username widget
 		if (!$this->reg_skipName)
 		{
@@ -152,6 +168,19 @@ class ModuleLostPassword extends Module
 
 			if ($objMember === null)
 			{
+				// Respond as if the password link was sent if the account does not exist
+				if ($this->reg_preventEnumeration)
+				{
+					// Check whether there is a jumpTo page
+					if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
+					{
+						$this->jumpToOrReload($objJumpTo->row());
+					}
+
+					$session->getFlashBag()->set('mod_lostPassword_confirm', $GLOBALS['TL_LANG']['MSC']['passwordRequested']);
+					$this->reload();
+				}
+
 				$this->Template->error = $GLOBALS['TL_LANG']['MSC']['accountNotFound'];
 			}
 			else
@@ -306,6 +335,19 @@ class ModuleLostPassword extends Module
 
 		if (!$limiter->consume()->isAccepted())
 		{
+			// The rate limit only applies to existing accounts, so the error message would disclose the account
+			if ($this->reg_preventEnumeration)
+			{
+				// Check whether there is a jumpTo page
+				if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
+				{
+					$this->jumpToOrReload($objJumpTo->row());
+				}
+
+				System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('mod_lostPassword_confirm', $GLOBALS['TL_LANG']['MSC']['passwordRequested']);
+				$this->reload();
+			}
+
 			$this->strTemplate = 'mod_message';
 
 			$this->Template = new FrontendTemplate($this->strTemplate);
@@ -336,6 +378,12 @@ class ModuleLostPassword extends Module
 		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
+		}
+
+		// Show the same message as if the account did not exist
+		if ($this->reg_preventEnumeration)
+		{
+			System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('mod_lostPassword_confirm', $GLOBALS['TL_LANG']['MSC']['passwordRequested']);
 		}
 
 		$this->reload();
