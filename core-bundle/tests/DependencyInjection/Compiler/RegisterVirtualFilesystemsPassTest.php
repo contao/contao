@@ -83,6 +83,7 @@ class RegisterVirtualFilesystemsPassTest extends TestCase
             ->setPublic(true)
             ->addTag('contao.virtual_filesystem', ['name' => '%vfs_name%', 'prefix' => 'files', 'api_exposure' => true, 'api_path' => '%vfs_path%', 'label' => '%%files%%'])
         ;
+
         $container->setDefinition('files', $files);
         $container->setDefinition('backups', new Definition(VirtualFilesystemInterface::class)->setSynthetic(true)->setPublic(true)->addTag('contao.virtual_filesystem', ['name' => 'backups']));
         $container->compile();

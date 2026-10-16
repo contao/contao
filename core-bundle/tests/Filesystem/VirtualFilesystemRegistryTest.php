@@ -24,6 +24,7 @@ class VirtualFilesystemRegistryTest extends TestCase
     public function testLoadsFilesystemsOnlyWhenRequested(): void
     {
         $filesystem = $this->createStub(VirtualFilesystemInterface::class);
+
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
@@ -31,6 +32,7 @@ class VirtualFilesystemRegistryTest extends TestCase
             ->with('files')
             ->willReturn($filesystem)
         ;
+
         $filesystems = ['files' => ['prefix' => 'files', 'api_exposure' => true, 'api_path' => '/files']];
         $registry = new VirtualFilesystemRegistry($locator, $filesystems);
 
@@ -59,6 +61,7 @@ class VirtualFilesystemRegistryTest extends TestCase
             'other' => ['api_exposure' => 1],
             'untagged' => [],
         ];
+
         $registry = new VirtualFilesystemRegistry(new ServiceLocator([]), $filesystems);
 
         $this->assertSame(array_intersect_key($filesystems, array_flip($expected)), $registry->findByTags($criteria));
