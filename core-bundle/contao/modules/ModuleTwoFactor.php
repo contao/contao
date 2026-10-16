@@ -44,6 +44,7 @@ class ModuleTwoFactor extends BackendModule
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
 		$user = $security->getUser();
+		$enforceTwoFactor = !$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend');
 
 		if (!$user instanceof BackendUser || !$security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
@@ -51,9 +52,10 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		// Inform the user if 2FA is enforced
-		if (!$user->useTwoFactor && !Input::get('act') && $container->getParameter('contao.security.two_factor.enforce_backend'))
+		if ($enforceTwoFactor && !Input::get('act'))
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
+			$enforceTwoFactor = true;
 		}
 
 		$request = $container->get('request_stack')->getCurrentRequest();
@@ -135,6 +137,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->webauthnCreationSuccessRedirectUri = $passkeyReturn;
 		$this->Template->credentials = $credentialRepo->getAllForUser($user);
 		$this->Template->editPassKeyId = (string) Input::get('edit_passkey');
+		$this->Template->enforce_two_factor = $enforceTwoFactor;
 
 		if (Input::get('edit_new_passkey') && $uriSigner->checkRequest($request))
 		{
