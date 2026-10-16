@@ -163,7 +163,7 @@ class EnvironmentInformation
                 'needs_environment' => $entry->needsEnvironment(),
                 'needs_context' => $entry->needsContext(),
                 'needs_charset' => $entry->needsCharset(),
-                'needs_is_sandboxed' => version_compare(Environment::VERSION, '3.25.0', '>=') && $entry->needsIsSandboxed(),
+                'needs_is_sandboxed' => $entry->needsIsSandboxed(),
                 'is_variadic' => $entry->isVariadic(),
             ],
         ];

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig\Studio;
 
 use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
@@ -162,7 +161,6 @@ final class EnvironmentInformationInspectionTest extends TestCase
         $this->assertSame('Closure', $data['implementation']);
     }
 
-    #[RequiresMethod(TwigFunction::class, 'needsIsSandboxed')]
     public function testRemovesHiddenSandboxArgument(): void
     {
         $twig = new Environment(new ArrayLoader());
