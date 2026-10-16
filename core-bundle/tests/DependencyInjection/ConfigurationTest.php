@@ -188,6 +188,41 @@ class ConfigurationTest extends TestCase
         yield ['web'];
     }
 
+    public function testConfiguresRetentionPeriods(): void
+    {
+        $configuration = new Processor()->processConfiguration($this->configuration, []);
+
+        $this->assertSame(['undo' => 2592000, 'versions' => 7776000, 'logs' => 604800], $configuration['retention']);
+
+        $periods = ['undo' => 0, 'versions' => 1234, 'logs' => 5678];
+        $configuration = new Processor()->processConfiguration($this->configuration, [['retention' => $periods]]);
+
+        $this->assertSame($periods, $configuration['retention']);
+    }
+
+    #[DataProvider('retentionPeriodsProvider')]
+    public function testRejectsNegativeRetentionPeriods(string $key, string $legacyKey): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('contao.retention.'.$key);
+
+        new Processor()->processConfiguration($this->configuration, [['retention' => [$key => -1]]]);
+    }
+
+    #[DataProvider('retentionPeriodsProvider')]
+    public function testMapsLegacyRetentionPeriods(string $key, string $legacyKey): void
+    {
+        $this->assertSame('contao.retention.'.$key, LegacyConfig::getNewKey($legacyKey));
+        $this->assertSame('6.1', LegacyConfig::getDeprecatedSince($legacyKey));
+    }
+
+    public static function retentionPeriodsProvider(): iterable
+    {
+        yield ['undo', 'undoPeriod'];
+        yield ['versions', 'versionPeriod'];
+        yield ['logs', 'logPeriod'];
+    }
+
     public function testConfiguresTheMaximumFileSize(): void
     {
         $configuration = new Processor()->processConfiguration($this->configuration, []);

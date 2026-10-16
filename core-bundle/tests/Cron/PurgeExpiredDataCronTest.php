@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cron;
 
-use Contao\Config;
 use Contao\CoreBundle\Cron\PurgeExpiredDataCron;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -27,42 +26,11 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
     {
         $mockedTime = 1142164800;
 
-        $expectedStatements = [];
-
-        if ($undoPeriod > 0) {
-            $expectedStatements[] = [
-                'DELETE FROM tl_undo WHERE tstamp < :tstamp',
-                ['tstamp' => $mockedTime - $undoPeriod],
-                ['tstamp' => Types::INTEGER],
-            ];
-        }
-
-        if ($logPeriod > 0) {
-            $expectedStatements[] = [
-                'DELETE FROM tl_log WHERE tstamp < :tstamp',
-                ['tstamp' => $mockedTime - $logPeriod],
-                ['tstamp' => Types::INTEGER],
-            ];
-        }
-
-        if ($versionPeriod > 0) {
-            $expectedStatements[] = [
-                'DELETE FROM tl_version WHERE tstamp < :tstamp',
-                ['tstamp' => $mockedTime - $versionPeriod],
-                ['tstamp' => Types::INTEGER],
-            ];
-        }
-
-        $config = $this->createAdapterMock(['get']);
-        $config
-            ->expects($this->exactly(3))
-            ->method('get')
-            ->willReturnMap([
-                ['undoPeriod', $undoPeriod],
-                ['logPeriod', $logPeriod],
-                ['versionPeriod', $versionPeriod],
-            ])
-        ;
+        $expectedStatements = $this->getExpectedStatements($mockedTime, [
+            'tl_undo' => $undoPeriod,
+            'tl_log' => $logPeriod,
+            'tl_version' => $versionPeriod,
+        ]);
 
         $connection = $this->createMock(Connection::class);
         $matcher = $this->exactly(\count($expectedStatements));
@@ -74,9 +42,14 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ))
         ;
 
-        $framework = $this->createContaoFrameworkStub([Config::class => $config]);
-
-        $cron = new PurgeExpiredDataCron($framework, $connection, new MockClock('@'.$mockedTime));
+        $cron = new PurgeExpiredDataCron(
+            $this->createContaoFrameworkStub(),
+            $connection,
+            new MockClock('@'.$mockedTime),
+            $undoPeriod,
+            $versionPeriod,
+            $logPeriod,
+        );
         $cron->onHourly();
     }
 
@@ -100,10 +73,33 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             0,
         ];
 
-        yield 'Query for all periods' => [
-            100,
-            100,
+        yield 'Query for the version period only' => [
+            0,
+            0,
             100,
         ];
+
+        yield 'Query for all periods' => [
+            100,
+            200,
+            300,
+        ];
+    }
+
+    private function getExpectedStatements(int $timestamp, array $periods): array
+    {
+        $statements = [];
+
+        foreach ($periods as $table => $period) {
+            if ($period > 0) {
+                $statements[] = [
+                    "DELETE FROM $table WHERE tstamp < :tstamp",
+                    ['tstamp' => $timestamp - $period],
+                    ['tstamp' => Types::INTEGER],
+                ];
+            }
+        }
+
+        return $statements;
     }
 }
