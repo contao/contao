@@ -25,7 +25,6 @@ use Symfony\Component\Uid\Uuid;
 #[Table('personal_access_token')]
 #[Entity(repositoryClass: PersonalAccessTokenRepository::class)]
 #[Index(columns: ['userId', 'scope'])]
-#[Index(columns: ['id', 'scope', 'expiresAt'])]
 class PersonalAccessToken
 {
     #[Id]

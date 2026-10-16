@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\Uid\Uuid;
 
 class AccessTokenManagerTest extends TestCase
 {
@@ -97,8 +98,9 @@ class AccessTokenManagerTest extends TestCase
             $this->createStub(EntityManagerInterface::class),
         );
 
-        $parsedToken = $accessTokenManager->parseToken(AccessTokenManager::TOKEN_PREFIX.'foo_bar');
+        $id = Uuid::v7()->toBase32();
+        $parsedToken = $accessTokenManager->parseToken(AccessTokenManager::TOKEN_PREFIX.$id.'_bar');
 
-        $this->assertSame(['id' => 'foo', 'secret' => 'bar'], $parsedToken);
+        $this->assertSame(['id' => $id, 'secret' => 'bar'], $parsedToken);
     }
 }
