@@ -19,10 +19,10 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\FrontendUser;
+use Contao\CoreBundle\Security\User\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -30,7 +30,7 @@ class LinkInsertTag
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly TokenChecker $tokenChecker,
+        private readonly Security $security,
         private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
@@ -62,11 +62,13 @@ class LinkInsertTag
         else {
             // User login page
             if ('login' === $urlParam) {
-                if (!$this->tokenChecker->hasFrontendUser()) {
+                $user = $this->security->getUser();
+
+                if (!$user instanceof FrontendUser) {
                     return new InsertTagResult('');
                 }
 
-                $urlParam = $this->framework->createInstance(FrontendUser::class)->loginPage;
+                $urlParam = $user->getLoginPage();
             }
 
             $objNextPage = $this->framework->getAdapter(PageModel::class)->findByIdOrAlias($urlParam);

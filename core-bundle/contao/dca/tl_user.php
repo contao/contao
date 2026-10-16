@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\RecordLabel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -224,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'inherit' => array
 		(
 			'inputType'               => 'radio',
-			'options'                 => array('group', 'extend', 'custom'),
+			'options'                 => array(BackendUserFactory::INHERIT_GROUP, BackendUserFactory::INHERIT_EXTEND, BackendUserFactory::INHERIT_CUSTOM),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'group')
@@ -691,11 +692,16 @@ class tl_user extends Backend
 	 */
 	public function updateCurrentUser(DataContainer $dc)
 	{
-		$user = System::getContainer()->get('security.helper')->getUser();
+		$container = System::getContainer();
+		$token = $container->get('security.helper')->getToken();
+		$user = $token?->getUser();
 
-		if ($user instanceof BackendUser && $user->id == $dc->id)
+		if (!$user instanceof BackendUser || (int) $user->id !== (int) $dc->id)
 		{
-			$user->findBy('id', $user->id);
+			return;
 		}
+
+		$refreshedUser = $container->get('contao.security.backend_user_provider')->loadUserById((int) $dc->id);
+		$token->setUser($refreshedUser);
 	}
 }

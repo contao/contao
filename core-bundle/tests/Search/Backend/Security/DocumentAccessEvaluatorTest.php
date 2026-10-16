@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend\Security;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator;
-use Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory;
+use Contao\CoreBundle\Security\User\BackendUser;
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use PHPUnit\Framework\TestCase;
 
 class DocumentAccessEvaluatorTest extends TestCase
@@ -26,11 +26,18 @@ class DocumentAccessEvaluatorTest extends TestCase
         $user = $this->createStub(BackendUser::class);
         $document = new Document('5', 'type', 'content');
 
-        $factory = $this->createMock(VirtualBackendUserFactory::class);
+        $factory = $this->createMock(BackendUserFactory::class);
         $factory
             ->expects($this->once())
-            ->method('createForGroupId')
-            ->with(42)
+            ->method('createWithDefaults')
+            ->with([
+                'id' => 0,
+                'username' => '__contao_backend_search_group_42',
+                'name' => '__contao_backend_search_group_42',
+                'admin' => false,
+                'inherit' => 'group',
+                'groups' => [42],
+            ])
             ->willReturn($user)
         ;
 
