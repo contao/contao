@@ -17,10 +17,15 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
+use Doctrine\ORM\Mapping\Table;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-#[Entity(PersonalAccessTokenRepository::class)]
+#[Table('personal_access_token')]
+#[Entity(repositoryClass: PersonalAccessTokenRepository::class)]
+#[Index(columns: ['userId', 'scope'])]
+#[Index(columns: ['id', 'scope', 'expiresAt'])]
 class PersonalAccessToken
 {
     #[Id]
