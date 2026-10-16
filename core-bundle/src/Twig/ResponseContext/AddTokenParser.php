@@ -22,10 +22,6 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class AddTokenParser extends AbstractTokenParser
 {
-    public function __construct(private readonly string $extensionName)
-    {
-    }
-
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -57,7 +53,7 @@ final class AddTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse($this->decideAddEnd(...), true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new AddNode($this->extensionName, $body, $identifier, $location, $token->getLine());
+        return new AddNode($body, ['identifier' => $identifier, 'location' => $location], $token->getLine());
     }
 
     /**
