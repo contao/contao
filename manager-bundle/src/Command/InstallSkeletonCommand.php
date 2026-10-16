@@ -51,6 +51,7 @@ class InstallSkeletonCommand extends Command
         $webDir = $input->getArgument('web-dir') ?? 'public';
 
         $this->addConsole();
+        $this->addBootstrap();
         $this->addHtaccess($webDir);
         $this->addFiles($webDir);
         $this->purgeOldFiles($webDir);
@@ -68,6 +69,12 @@ class InstallSkeletonCommand extends Command
 
         $this->fs->copy($sourcePath, $targetPath, true);
         $this->io->writeln('Added the <comment>bin/console</comment> file.');
+    }
+
+    private function addBootstrap(): void
+    {
+        $this->fs->copy(__DIR__.'/../../skeleton/contao-bootstrap.php', $this->projectDir.'/contao-bootstrap.php', true);
+        $this->io->writeln('Added the <comment>contao-bootstrap.php</comment> file.');
     }
 
     /**
