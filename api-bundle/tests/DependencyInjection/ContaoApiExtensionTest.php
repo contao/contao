@@ -13,11 +13,25 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Tests\DependencyInjection;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model\Info;
+use ApiPlatform\OpenApi\Model\Paths;
+use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\Serializer\SerializerContextBuilder;
+use ApiPlatform\State\CallableProcessor;
+use ApiPlatform\State\CallableProvider;
+use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\State\ProviderInterface;
+use Contao\ApiBundle\ApiPlatform\OpenApi\ApiVersionOpenApiFactory;
+use Contao\ApiBundle\ApiPlatform\Serializer\ApiVersionContextBuilder;
+use Contao\ApiBundle\ApiPlatform\State\ApiVersionStateProcessor;
+use Contao\ApiBundle\ApiPlatform\State\ApiVersionStateProvider;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Relation\RelationResolver;
 use Contao\ApiBundle\Relation\RelationResolverInterface;
+use Contao\ApiBundle\Version\ApiVersionProvider;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
@@ -36,6 +50,7 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveNamedArgumentsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
 
@@ -70,6 +85,60 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $this->assertTrue($container->hasDefinition('contao_api.schema.data_container_factory'));
         $this->assertTrue($container->hasDefinition('contao_api.widget.converter_registry'));
+    }
+
+    public function testCompilesTheApiVersionDecorators(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+        new ContaoApiBundle()->getContainerExtension()->load([], $container);
+
+        $services = [
+            'service_container',
+            'contao_api.api_platform.api_version_open_api_factory',
+            'contao_api.api_platform.api_version_state_processor',
+            'contao_api.api_platform.api_version_state_provider',
+            'contao_api.api_platform.serializer.api_version_context_builder',
+            'contao_api.version.api_provider',
+        ];
+
+        foreach (array_keys($container->getDefinitions()) as $id) {
+            if (!\in_array($id, $services, true)) {
+                $container->removeDefinition($id);
+            }
+        }
+
+        foreach (array_keys($container->getAliases()) as $id) {
+            if (ApiVersionProvider::class !== $id) {
+                $container->removeAlias($id);
+            }
+        }
+
+        $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('api_platform.state_provider');
+        $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('api_platform.state_processor');
+        $container->register('api_platform.state_provider.locator', CallableProvider::class)->setPublic(true);
+        $container->register('api_platform.state_processor.locator', CallableProcessor::class)->setPublic(true);
+        $container->register('api_platform.serializer.context_builder', SerializerContextBuilder::class)->setPublic(true);
+        $factory = new class() implements OpenApiFactoryInterface {
+            public function __invoke(array $context = []): OpenApi
+            {
+                return new OpenApi(new Info('API', '1.0'), [], new Paths());
+            }
+        };
+        $container->register('api_platform.openapi.factory', $factory::class)->setPublic(true);
+        $container->register('request_stack', RequestStack::class);
+        $container->getAlias(ApiVersionProvider::class)->setPublic(true);
+        $container->compile();
+
+        $this->assertInstanceOf(ApiVersionStateProvider::class, $container->get('api_platform.state_provider.locator'));
+        $this->assertInstanceOf(ApiVersionStateProcessor::class, $container->get('api_platform.state_processor.locator'));
+        $this->assertInstanceOf(ApiVersionContextBuilder::class, $container->get('api_platform.serializer.context_builder'));
+        $this->assertInstanceOf(ApiVersionProvider::class, $container->get(ApiVersionProvider::class));
+
+        $this->assertInstanceOf(ApiVersionOpenApiFactory::class, $container->get('api_platform.openapi.factory'));
+        $this->assertSame([], $container->findTaggedServiceIds('api_platform.state_provider'));
+        $this->assertSame([], $container->findTaggedServiceIds('api_platform.state_processor'));
     }
 
     public function testRegistersRelationResolversWithoutIncludingTheDispatcher(): void
