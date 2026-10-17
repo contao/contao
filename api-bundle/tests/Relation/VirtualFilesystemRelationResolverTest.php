@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Tests\Relation;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
@@ -56,24 +57,25 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with('test_files_get', ['pathOrUuid' => $uuid])
+            ->with('test_files_get_by_uuid', ['uuid' => $uuid])
             ->willReturn('/api/test-files/'.$uuid)
         ;
 
         $router
             ->method('match')
-            ->willReturn(['_route' => 'test_files_get', 'pathOrUuid' => 'archive.zip'])
+            ->willReturn(['_route' => 'test_files_get_by_path', 'path' => 'archive.zip'])
         ;
         $resources = [$this->resource('files', $onResource), $this->resource('test_files', $onResource)];
         $resolver = $this->createResolver($resources, $testFilesystem, $router);
-        $relation = new VirtualFilesystemRelationDefinition('test_files');
+        $relation = VirtualFilesystemRelationDefinition::forUuid('test_files');
 
         $this->assertTrue($resolver->supports($relation));
         $this->assertEquals(new RelationReference($uuid, '/api/test-files/'.$uuid), $resolver->resolveToReference($uuid, $relation));
         $this->assertSame($uuid, $resolver->resolveToIdentifier(['iri' => '/api/test-files/archive.zip'], $relation));
     }
 
-    public function testResolvesRelationsThroughTheExposedPermissionCheckingFilesystem(): void
+    #[DataProvider('provideIdentifierTypes')]
+    public function testResolvesRelationsThroughTheExposedPermissionCheckingFilesystem(VirtualFilesystemRelationDefinition $relation): void
     {
         $filesystem = $this->createMock(VirtualFilesystem::class);
         $filesystem
@@ -83,14 +85,14 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
-            ->willReturn(['_route' => 'files_get', 'pathOrUuid' => 'private.txt'])
+            ->willReturn(['_route' => 'files_get_by_path', 'path' => 'private.txt'])
         ;
         $resource = new ApiResource(operations: [new Get(
-            name: 'files_get',
+            name: 'files_get_by_path',
+            uriVariables: [$relation->identifier => new Link(identifiers: [$relation->identifier])],
             extraProperties: ['contao' => ['filesystem' => 'test_files', 'relation_filesystem' => 'files']],
         )]);
         $resolver = $this->createResolver([$resource], new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class)), $router);
-        $relation = new VirtualFilesystemRelationDefinition('files');
 
         $this->assertTrue($resolver->supports($relation));
         $this->expectException(AccessDeniedException::class);
@@ -107,12 +109,12 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
-            ->willReturn(['_route' => 'files_get', 'pathOrUuid' => 'archive.zip'])
+            ->willReturn(['_route' => 'files_get_by_path', 'path' => 'archive.zip'])
         ;
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
         $this->expectException(UnprocessableEntityHttpException::class);
-        $resolver->resolveToIdentifier(['iri' => '/api/files/archive.zip'], new VirtualFilesystemRelationDefinition('test_files'));
+        $resolver->resolveToIdentifier(['iri' => '/api/files/archive.zip'], VirtualFilesystemRelationDefinition::forUuid('test_files'));
     }
 
     public function testRejectsAnUnregisteredFile(): void
@@ -127,14 +129,119 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
-            ->willReturn(['_route' => 'test_files_get', 'pathOrUuid' => 'missing.jpg'])
+            ->willReturn(['_route' => 'test_files_get_by_path', 'path' => 'missing.jpg'])
         ;
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
         $this->expectException(UnprocessableEntityHttpException::class);
-        $this->expectExceptionMessage('does not identify a registered file or directory');
+        $this->expectExceptionMessage('does not identify a file or directory with a uuid');
 
-        $resolver->resolveToIdentifier(['iri' => '/api/test-files/missing.jpg'], new VirtualFilesystemRelationDefinition('test_files'));
+        $resolver->resolveToIdentifier(['iri' => '/api/test-files/missing.jpg'], VirtualFilesystemRelationDefinition::forUuid('test_files'));
+    }
+
+    #[DataProvider('providePaths')]
+    public function testCreatesReferencesForLiteralPaths(string $path): void
+    {
+        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('get')
+        ;
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('test_files_get_by_path', ['path' => $path])
+            ->willReturn('/api/test-files/by-path/'.$path)
+        ;
+        $resolver = $this->createResolver([$this->resource('test_files', false)], $filesystem, $router);
+
+        $reference = $resolver->resolveToReference($path, VirtualFilesystemRelationDefinition::forPath('test_files'));
+
+        $this->assertEquals(new RelationReference($path, '/api/test-files/by-path/'.$path), $reference);
+    }
+
+    #[DataProvider('provideInputLocations')]
+    public function testResolvesEitherIriTypeToThePathRequiredByTheSource(array $parameters, Uuid|string $location): void
+    {
+        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('get')
+            ->with($location)
+            ->willReturn(new FilesystemItem(true, 'archive.zip'))
+        ;
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('match')
+            ->willReturn($parameters)
+        ;
+        $resolver = $this->createResolver([$this->resource('test_files', false)], $filesystem, $router);
+
+        $this->assertSame('archive.zip', $resolver->resolveToIdentifier('/api/test-files/item', VirtualFilesystemRelationDefinition::forPath('test_files')));
+    }
+
+    public function testSupportsAPathOnlyExposureWithoutRegisteredUuids(): void
+    {
+        $metadata = ['contao' => ['filesystem' => 'test_files']];
+        $resource = new ApiResource(operations: [new Get(name: 'test_files_get_by_path', uriVariables: ['path' => new Link(identifiers: ['path'])], extraProperties: $metadata)]);
+        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('get')
+            ->with('archive.zip')
+            ->willReturn(new FilesystemItem(true, 'archive.zip'))
+        ;
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('match')
+            ->willReturn(['_route' => 'test_files_get_by_path', 'path' => 'archive.zip'])
+        ;
+        $resolver = $this->createResolver([$resource], $filesystem, $router);
+        $relation = VirtualFilesystemRelationDefinition::forPath('test_files');
+
+        $this->assertTrue($resolver->supports($relation));
+        $this->assertFalse($resolver->supports(VirtualFilesystemRelationDefinition::forUuid('test_files')));
+        $this->assertSame('archive.zip', $resolver->resolveToIdentifier('/api/test-files/by-path/archive.zip', $relation));
+    }
+
+    public function testUuidRelationsStillRequireARegisteredUuid(): void
+    {
+        $filesystem = $this->createStub(VirtualFilesystemInterface::class);
+        $filesystem
+            ->method('get')
+            ->willReturn(new FilesystemItem(true, 'archive.zip'))
+        ;
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('match')
+            ->willReturn(['_route' => 'test_files_get_by_path', 'path' => 'archive.zip'])
+        ;
+        $resolver = $this->createResolver([$this->resource('test_files', false)], $filesystem, $router);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $resolver->resolveToIdentifier('/api/test-files/by-path/archive.zip', VirtualFilesystemRelationDefinition::forUuid('test_files'));
+    }
+
+    public static function provideIdentifierTypes(): iterable
+    {
+        yield 'UUID source' => [VirtualFilesystemRelationDefinition::forUuid('files')];
+        yield 'path source' => [VirtualFilesystemRelationDefinition::forPath('files')];
+    }
+
+    public static function providePaths(): iterable
+    {
+        yield 'ordinary path' => ['documents/archive.zip'];
+        yield 'UUID-shaped path' => ['12345678-1234-1234-8234-123456789abc'];
+    }
+
+    public static function provideInputLocations(): iterable
+    {
+        $uuid = Uuid::fromString('12345678-1234-1234-8234-123456789abc');
+
+        yield 'path IRI' => [['_route' => 'test_files_get_by_path', 'path' => 'archive.zip'], 'archive.zip'];
+        yield 'UUID-shaped path IRI' => [['_route' => 'test_files_get_by_path', 'path' => $uuid->toRfc4122()], $uuid->toRfc4122()];
+        yield 'UUID IRI' => [['_route' => 'test_files_get_by_uuid', 'uuid' => $uuid->toRfc4122()], $uuid];
     }
 
     public function testRequiresAnExposedReadOperation(): void
@@ -145,7 +252,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->method('get')
         ;
         $resolver = $this->createResolver([$this->resource('files', false)], $testFilesystem, $this->createStub(RouterInterface::class));
-        $relation = new VirtualFilesystemRelationDefinition('test_files');
+        $relation = VirtualFilesystemRelationDefinition::forUuid('test_files');
 
         $this->assertFalse($resolver->supports($relation));
         $this->assertSame('archive.zip', $resolver->resolveToReference('archive.zip', $relation));
@@ -159,7 +266,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->method('get')
         ;
         $resolver = $this->createResolver([$this->resource('files', false), $this->resource('test_files', false)], $filesystem, $this->createStub(RouterInterface::class));
-        $relation = new VirtualFilesystemRelationDefinition('files');
+        $relation = VirtualFilesystemRelationDefinition::forUuid('files');
 
         $this->assertFalse($resolver->supports($relation));
         $this->assertSame('archive.zip', $resolver->resolveToReference('archive.zip', $relation));
@@ -176,7 +283,10 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $metadata = ['contao' => ['filesystem' => $filesystem]];
 
         return new ApiResource(
-            operations: [new Get(name: $filesystem.'_get', extraProperties: $onResource ? [] : $metadata)],
+            operations: [
+                new Get(name: $filesystem.'_get_by_path', uriVariables: ['path' => new Link(identifiers: ['path'])], extraProperties: $onResource ? [] : $metadata),
+                new Get(name: $filesystem.'_get_by_uuid', uriVariables: ['uuid' => new Link(identifiers: ['metadata[uuid]'])], extraProperties: $onResource ? [] : $metadata),
+            ],
             extraProperties: $onResource ? $metadata : [],
         );
     }

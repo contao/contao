@@ -15,8 +15,10 @@ namespace Contao\ApiBundle\Relation;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Uid\Uuid;
@@ -27,7 +29,7 @@ use Symfony\Component\Uid\Uuid;
 final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
 {
     /**
-     * @var array<string, Get>|null
+     * @var array<string, array<string, Get>>|null
      */
     private array|null $readOperations = null;
 
@@ -41,7 +43,7 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
     public function supports(object $relation): bool
     {
         return $relation instanceof VirtualFilesystemRelationDefinition
-            && ($operation = $this->getReadOperation($relation->filesystem))
+            && ($operation = $this->getReadOperation($relation))
             && $this->filesystems->has($operation->getExtraProperties()['contao']['filesystem']);
     }
 
@@ -50,11 +52,21 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
      */
     protected function createIri(object $relation, mixed $identifier): string|null
     {
-        $operation = $this->getReadOperation($relation->filesystem);
+        $operation = $this->getReadOperation($relation);
 
-        return $operation && \is_string($identifier) && Uuid::isValid($identifier)
-            ? $this->router->generate($operation->getRouteName() ?? $operation->getName(), ['pathOrUuid' => $identifier])
-            : null;
+        if (!$operation || !\is_string($identifier) || '' === $identifier) {
+            return null;
+        }
+
+        if (VirtualFilesystemRelationDefinition::UUID === $relation->identifier) {
+            if (!Uuid::isValid($identifier)) {
+                return null;
+            }
+
+            $identifier = Uuid::fromString($identifier)->toRfc4122();
+        }
+
+        return $this->router->generate($operation->getRouteName() ?? $operation->getName(), [$relation->identifier => $identifier]);
     }
 
     /**
@@ -63,32 +75,46 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
     protected function getIdentifier(object $relation, mixed $iri): string
     {
         $parameters = $this->matchIri($iri, $this->router);
-        $operation = $this->getReadOperation($relation->filesystem);
+        $operation = $this->getReadOperations($relation->filesystem)[$parameters['_route'] ?? ''] ?? null;
 
-        if (!$operation || ($operation->getRouteName() ?? $operation->getName()) !== ($parameters['_route'] ?? null)) {
+        if (!$operation) {
             throw new UnprocessableEntityHttpException('The relation IRI points to an unexpected API resource.');
         }
 
-        $path = $parameters['pathOrUuid'] ?? $parameters['path'] ?? null;
-
         try {
-            $location = \is_string($path) && Uuid::isValid($path) ? Uuid::fromString($path) : $path;
-            $uuid = \is_string($location) || $location instanceof Uuid ? $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem'])->get($location)?->getUuid() : null;
-        } catch (UnableToResolveUuidException $exception) {
-            throw new UnprocessableEntityHttpException('The relation IRI does not identify a registered file or directory.', $exception);
+            $location = VirtualFilesystemLocation::fromArray(array_intersect_key($parameters, ['path' => true, 'uuid' => true]))->toLocation();
+            $item = $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem'])->get($location);
+        } catch (BadRequestHttpException|UnableToResolveUuidException $exception) {
+            throw new UnprocessableEntityHttpException('The relation IRI does not identify an existing file or directory.', $exception);
         }
 
-        if (!$uuid) {
-            throw new UnprocessableEntityHttpException('The relation IRI does not identify a registered file or directory.');
+        $identifier = VirtualFilesystemRelationDefinition::PATH === $relation->identifier ? $item?->getPath() : $item?->getUuid()?->toRfc4122();
+
+        if (null === $identifier) {
+            throw new UnprocessableEntityHttpException(\sprintf('The relation IRI does not identify a file or directory with a %s.', $relation->identifier));
         }
 
-        return $uuid->toRfc4122();
+        return $identifier;
     }
 
-    private function getReadOperation(string $filesystem): Get|null
+    private function getReadOperation(VirtualFilesystemRelationDefinition $relation): Get|null
+    {
+        foreach ($this->getReadOperations($relation->filesystem) as $operation) {
+            if (\array_key_exists($relation->identifier, $operation->getUriVariables() ?? [])) {
+                return $operation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, Get>
+     */
+    private function getReadOperations(string $filesystem): array
     {
         if (null !== $this->readOperations) {
-            return $this->readOperations[$filesystem] ?? null;
+            return $this->readOperations[$filesystem] ?? [];
         }
 
         $this->readOperations = [];
@@ -99,11 +125,11 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
                 $name = $metadata['relation_filesystem'] ?? $metadata['filesystem'] ?? null;
 
                 if ($operation instanceof Get && \is_string($name)) {
-                    $this->readOperations[$name] ??= $operation->withExtraProperties(['contao' => $metadata] + $operation->getExtraProperties());
+                    $this->readOperations[$name][$operation->getRouteName() ?? $operation->getName()] = $operation->withExtraProperties(['contao' => $metadata] + $operation->getExtraProperties());
                 }
             }
         }
 
-        return $this->readOperations[$filesystem] ?? null;
+        return $this->readOperations[$filesystem] ?? [];
     }
 }

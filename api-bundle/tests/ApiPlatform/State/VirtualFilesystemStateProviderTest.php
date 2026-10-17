@@ -62,8 +62,8 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             'test_files' => static fn () => $testFilesystem,
         ]), ['files' => [], 'test_files' => []]), $this->createItemFactory());
 
-        $this->assertSame(4, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt'])->fileSize);
-        $this->assertSame(7, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'test_files']]), ['pathOrUuid' => 'example.txt'])->fileSize);
+        $this->assertSame(4, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'example.txt'])->fileSize);
+        $this->assertSame(7, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'test_files']]), ['path' => 'example.txt'])->fileSize);
     }
 
     public function testChecksPermissionsBeforeReadingTheFilesystem(): void
@@ -76,7 +76,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $provider = new VirtualFilesystemStateProvider($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), $this->createItemFactory());
 
         $this->expectException(AccessDeniedException::class);
-        $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt']);
+        $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'example.txt']);
     }
 
     public function testProvidesFileMetadataIncludingDbafsData(): void
@@ -108,7 +108,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'images/example.jpg']);
+        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'images/example.jpg']);
 
         $this->assertSame('images/example.jpg', $result->path);
         $this->assertSame(456, $result->fileSize);
@@ -151,6 +151,27 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $this->assertSame('documents/notes.txt', $result[1]->path);
     }
 
+    public function testTreatsAUuidShapedPathAsALiteralPath(): void
+    {
+        $path = '171bb68d-0094-4f6c-88f5-9b83c0d01521';
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->never())
+            ->method('resolveUuid')
+        ;
+
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with($path)
+            ->willReturn(new FilesystemItem(true, $path, 123, 7, 'text/plain'))
+        ;
+
+        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => $path]);
+
+        $this->assertSame($path, $result->path);
+    }
+
     public function testProvidesAnItemByUuid(): void
     {
         $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
@@ -171,7 +192,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => $uuid->toRfc4122()]);
+        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()]);
 
         $this->assertSame('images/example.jpg', $result->path);
     }
@@ -198,7 +219,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
 
         $result = $this->createProvider($storage)->provide(
             new GetCollection(extraProperties: ['contao' => ['filesystem' => 'files']]),
-            context: ['filters' => ['path' => $uuid->toRfc4122()]],
+            context: ['filters' => ['uuid' => $uuid->toRfc4122()]],
         );
 
         $this->assertSame('documents/example.txt', $result[0]->path);
@@ -218,7 +239,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => $uuid->toRfc4122()]);
+        $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()]);
     }
 
     public function testReturnsNotFoundForAMissingItem(): void

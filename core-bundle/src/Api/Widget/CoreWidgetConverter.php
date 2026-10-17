@@ -84,7 +84,7 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
 
     public function getRelation(array $config): VirtualFilesystemRelationDefinition|null
     {
-        return FileTree::class === $this->getWidgetType($config) ? new VirtualFilesystemRelationDefinition('files') : null;
+        return FileTree::class === $this->getWidgetType($config) ? VirtualFilesystemRelationDefinition::forUuid('files') : null;
     }
 
     public function getSchema(array $config, array $schema): array
