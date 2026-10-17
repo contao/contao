@@ -24,7 +24,7 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get('/contao/api/user_templates/unknown_template')
                 ->withHeaders([
-                    'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                 ]),
         );
@@ -38,7 +38,7 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
     public function testRejectsDeletingABundleTemplate(): void
     {
         $path = '/contao/api/user_templates/content_element/text';
-        $headers = ['Authorization' => 'Bearer e2e', 'Accept' => 'application/ld+json'];
+        $headers = ['Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'), 'Accept' => 'application/ld+json'];
         $read = HttpRequest::get($path)->withHeaders($headers);
 
         $response = self::managedEdition()->send($read);
@@ -66,7 +66,7 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
     public function testRejectsSavingABundleTemplate(): void
     {
         $path = '/contao/api/user_templates/content_element/text';
-        $headers = ['Authorization' => 'Bearer e2e', 'Accept' => 'application/ld+json'];
+        $headers = ['Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'), 'Accept' => 'application/ld+json'];
         $read = HttpRequest::get($path)->withHeaders($headers);
 
         $response = self::managedEdition()->send($read);
@@ -98,7 +98,7 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
     public function testRejectsRenamingABundleTemplate(): void
     {
         $path = '/contao/api/user_templates/content_element/text';
-        $headers = ['Authorization' => 'Bearer e2e', 'Accept' => 'application/ld+json'];
+        $headers = ['Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'), 'Accept' => 'application/ld+json'];
         $read = HttpRequest::get($path)->withHeaders($headers);
 
         $response = self::managedEdition()->send($read);

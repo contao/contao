@@ -12,16 +12,30 @@ declare(strict_types=1);
 
 namespace Contao\E2eTests;
 
+use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
 use Contao\E2eTesting\Composer\MonorepoProject;
 use Contao\E2eTesting\ManagedEdition\AbstractManagedEditionTestCase;
 use Contao\InstallationRecipe\Composer\ComposerConfig;
+use Symfony\Component\Uid\Uuid;
 
 abstract class AbstractContaoMonorepoE2ETestCase extends AbstractManagedEditionTestCase
 {
-    /**
-     * Personal access token of the k.jones fixture user.
-     */
-    protected const string BACKEND_ACCESS_TOKEN = 'ct_pat_0000000000E008000000000042_kevinjones';
+    protected static function backendPassword(string $userFixture): string
+    {
+        $hash = self::managedEdition()->database()->fixtures()->value($userFixture, 'password');
+        self::assertTrue(password_verify('backend', $hash), 'The backend fixture password must be "backend".');
+
+        return 'backend';
+    }
+
+    protected static function backendAccessToken(string $userFixture): string
+    {
+        $id = self::managedEdition()->database()->fixtures()->value($userFixture.'_token', 'id');
+
+        // Fixture tokens share the test-only secret "e2e". Their identities come from
+        // the loaded fixtures.
+        return AccessTokenManager::TOKEN_PREFIX.Uuid::fromBinary($id)->toBase32().'_e2e';
+    }
 
     protected static function projectDirectory(): string
     {

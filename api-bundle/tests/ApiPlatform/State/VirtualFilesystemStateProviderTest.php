@@ -18,6 +18,7 @@ use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\TextTrack;
@@ -26,16 +27,58 @@ use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\Image\ImportantPart;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Uuid;
 
 final class VirtualFilesystemStateProviderTest extends TestCase
 {
+    public function testUsesTheFilesystemSelectedByTheOperation(): void
+    {
+        $files = $this->createMock(VirtualFilesystem::class);
+        $files
+            ->expects($this->once())
+            ->method('get')
+            ->with('example.txt')
+            ->willReturn(new FilesystemItem(true, 'example.txt', 1, 4, 'text/plain'))
+        ;
+        $testFilesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $testFilesystem
+            ->expects($this->once())
+            ->method('get')
+            ->with('example.txt')
+            ->willReturn(new FilesystemItem(true, 'example.txt', 1, 7, 'text/plain'))
+        ;
+        $provider = new VirtualFilesystemStateProvider(new VirtualFilesystemRegistry(new ServiceLocator([
+            'files' => fn () => new PermissionCheckingVirtualFilesystem($files, $this->createSecurityStub()),
+            'test_files' => static fn () => $testFilesystem,
+        ]), ['files' => [], 'test_files' => []]), $this->createItemFactory());
+
+        $this->assertSame(4, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt'])->fileSize);
+        $this->assertSame(7, $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'test_files']]), ['pathOrUuid' => 'example.txt'])->fileSize);
+    }
+
+    public function testChecksPermissionsBeforeReadingTheFilesystem(): void
+    {
+        $filesystem = $this->createMock(VirtualFilesystem::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('get')
+        ;
+        $provider = new VirtualFilesystemStateProvider($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), $this->createItemFactory());
+
+        $this->expectException(AccessDeniedException::class);
+        $provider->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt']);
+    }
+
     public function testProvidesFileMetadataIncludingDbafsData(): void
     {
         $uuid = Uuid::fromString('171bb68d-0094-4f6c-88f5-9b83c0d01521');
@@ -65,7 +108,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['pathOrUuid' => 'images/example.jpg']);
+        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'images/example.jpg']);
 
         $this->assertSame('images/example.jpg', $result->path);
         $this->assertSame(456, $result->fileSize);
@@ -97,8 +140,8 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($items)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(
-            new GetCollection(),
+        $result = $this->createProvider($storage)->provide(
+            new GetCollection(extraProperties: ['contao' => ['filesystem' => 'files']]),
             context: ['filters' => ['path' => 'documents', 'deep' => true]],
         );
 
@@ -128,7 +171,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($item)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['pathOrUuid' => $uuid->toRfc4122()]);
+        $result = $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => $uuid->toRfc4122()]);
 
         $this->assertSame('images/example.jpg', $result->path);
     }
@@ -153,8 +196,8 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willReturn($items)
         ;
 
-        $result = new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(
-            new GetCollection(),
+        $result = $this->createProvider($storage)->provide(
+            new GetCollection(extraProperties: ['contao' => ['filesystem' => 'files']]),
             context: ['filters' => ['path' => $uuid->toRfc4122()]],
         );
 
@@ -175,7 +218,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => $uuid->toRfc4122()]);
+        $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => $uuid->toRfc4122()]);
     }
 
     public function testReturnsNotFoundForAMissingItem(): void
@@ -183,7 +226,17 @@ final class VirtualFilesystemStateProviderTest extends TestCase
         $storage = $this->createStub(VirtualFilesystem::class);
 
         $this->expectException(NotFoundHttpException::class);
-        new VirtualFilesystemStateProvider($storage, $this->createSecurityStub(), $this->createItemFactory())->provide(new Get(), ['path' => 'missing.txt']);
+        $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'missing.txt']);
+    }
+
+    private function createProvider(VirtualFilesystem $storage): VirtualFilesystemStateProvider
+    {
+        return new VirtualFilesystemStateProvider($this->createRegistry(new PermissionCheckingVirtualFilesystem($storage, $this->createSecurityStub())), $this->createItemFactory());
+    }
+
+    private function createRegistry(VirtualFilesystemInterface $filesystem): VirtualFilesystemRegistry
+    {
+        return new VirtualFilesystemRegistry(new ServiceLocator(['files' => static fn () => $filesystem]), ['files' => []]);
     }
 
     private function createSecurityStub(): Security

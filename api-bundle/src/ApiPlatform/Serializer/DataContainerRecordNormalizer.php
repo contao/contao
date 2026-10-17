@@ -154,6 +154,10 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
 
     private function normalizeFieldValue(mixed $value, string|null $format, array $context): mixed
     {
+        if ($value instanceof \stdClass) {
+            return (object) array_map(fn (mixed $item): mixed => $this->normalizeFieldValue($item, $format, $context), get_object_vars($value));
+        }
+
         // Field arrays keep their structure instead of becoming API resource collections
         if (\is_array($value)) {
             return array_map(fn (mixed $item): mixed => $this->normalizeFieldValue($item, $format, $context), $value);
