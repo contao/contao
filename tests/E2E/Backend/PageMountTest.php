@@ -21,7 +21,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testRendersPageTreeWithStringPageMounts(): void
     {
-        $backend = $this->login('page-mount-editor', 'backend');
+        $backend = $this->login('user_page_mount_editor');
         $backend->visit('/contao?do=page&ptg=all&state=1');
 
         $this->assertSame(1, $backend->page()->locator('#tl_listing')->count(), $backend->page()->locator('body')->innerText());
@@ -32,7 +32,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testRendersArticleTreeWithStringPageMounts(): void
     {
-        $backend = $this->login('page-mount-editor', 'backend');
+        $backend = $this->login('user_page_mount_editor');
         $backend->visit('/contao?do=article&ptg=all&state=1');
 
         $this->assertSame(1, $backend->page()->locator('#tl_listing')->count(), $backend->page()->locator('body')->innerText());
@@ -43,7 +43,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testHidesPagesOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $backend->visit('/contao?do=page&ptg=all&state=1');
 
         $this->assertSelectorTextContains('#tl_listing', 'Page mount home');
@@ -53,7 +53,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testHidesArticlesOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $backend->visit('/contao?do=article&ptg=all&state=1');
 
         $this->assertSelectorTextContains('#tl_listing', 'Page mount article');
@@ -62,7 +62,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeniesDirectPageAccessOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $backend->visit(self::managedEdition()->database()->fixtures()->interpolate('/contao?do=page&act=edit&id={page_microsite_home}'));
 
         $this->assertSelectorTextContains('h1', 'Forbidden');
@@ -71,7 +71,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeniesDirectArticleAccessOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $backend->visit(self::managedEdition()->database()->fixtures()->interpolate('/contao?do=article&act=edit&id={article_main_home}'));
 
         $this->assertSelectorTextContains('h1', 'Forbidden');
@@ -80,7 +80,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testMovesPageWithinMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=page&ptg=all&state=1');
         $this->cutRecord($backend, 'page_string_mount_home', 'Move page');
@@ -93,7 +93,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testMovesArticleWithinMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=article&ptg=all&state=1');
         $this->cutRecord($backend, 'article_string_mount_home', 'Move article');
@@ -106,7 +106,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeniesPageMoveOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=page&ptg=all&state=1');
         $original = $this->treePositions($backend);
@@ -123,7 +123,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeniesArticleMoveOutsideMount(): void
     {
-        $backend = $this->login('page-mount-manager', 'backend');
+        $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=article&ptg=all&state=1');
         $original = $this->treePositions($backend);

@@ -44,7 +44,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testAuthenticatesAConfiguredRole(): void
     {
-        $this->login('content-editor', 'backend');
+        $this->login('user_content_editor');
 
         $this->assertSelectorTextContains('h1', 'Dashboard');
         $this->assertSelectorTextContains('#tmenu', 'content-editor');

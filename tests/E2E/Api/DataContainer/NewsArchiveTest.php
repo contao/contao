@@ -31,7 +31,7 @@ class NewsArchiveTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/news_archive')
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
