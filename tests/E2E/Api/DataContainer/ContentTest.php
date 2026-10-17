@@ -32,7 +32,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -48,7 +48,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Nest another group using the first group's returned IRI
         $request = HttpRequest::json('POST', $group['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -65,7 +65,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Add content in the second element group and check the parent reference.
         $request = HttpRequest::json('POST', $innerGroup['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -85,7 +85,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Read the content through the returned IRI to verify the full nested route
         $request = HttpRequest::get($data['@id'])
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -111,7 +111,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Add text first so the group ID differs from the article ID.
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -126,7 +126,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -142,7 +142,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $group['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -158,7 +158,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get($data['@id'])
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -183,7 +183,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN,
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])

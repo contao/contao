@@ -14,14 +14,18 @@ namespace Contao\ApiBundle\Tests\DataContainer;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
-use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Relation\RelationReference;
+use Contao\ApiBundle\Relation\RelationResolver;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
@@ -31,6 +35,9 @@ use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -49,9 +56,11 @@ use Doctrine\DBAL\DriverManager;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Uid\Uuid;
 
 final class DataContainerRecordMapperTest extends ContaoTestCase
 {
@@ -59,7 +68,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     private WidgetConverterRegistry $converters;
 
-    private DataContainerRelationResolver $relationResolver;
+    private RelationResolverInterface $relationResolver;
 
     private LocaleSwitcher $localeSwitcher;
 
@@ -213,6 +222,38 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             $record = $mapper->fromRow('tl_content', ['id' => 17, 'singleSRC' => $uuid]);
             $this->assertNull($record->data['singleSRC']);
         }
+    }
+
+    public function testMapsFileRelationsAndPreservesWidgetDefaults(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'single' => ['inputType' => 'fileTree', 'sql' => ['type' => 'binary', 'length' => 16]],
+            'multiple' => ['inputType' => 'fileTree', 'eval' => ['multiple' => true]],
+            'textual' => ['inputType' => 'fileTree', 'eval' => ['binary' => false]],
+        ];
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+        $resolver = $this->createRelationResolver(true);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $resolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $resolver, $this->createRelationDefinitionFactory($this->converters));
+        $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+        $binary = hex2bin(str_replace('-', '', $uuid));
+        $row = ['id' => 17, 'single' => $binary, 'multiple' => serialize([$binary, $binary]), 'textual' => $uuid];
+        $record = $mapper->fromRow('tl_content', $row);
+
+        foreach (['single', 'textual'] as $field) {
+            $this->assertEquals(new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid), $record->data[$field]);
+        }
+
+        $this->assertEquals([new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid), new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid)], $record->data['multiple']);
+        $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+        $this->assertTrue(new JsonSchemaValidator()->validate((object) $record->data, $schema)->isValid());
+        $expected = ['single' => $uuid, 'multiple' => $uuid.','.$uuid, 'textual' => $uuid];
+        $this->assertSame($expected, $mapper->toFormValues('tl_content', json_decode(json_encode($record->data, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR)));
+        $this->assertSame($expected, $mapper->toFormDefaults('tl_content', $row, ['single', 'multiple', 'textual']));
+        $this->assertSame(['single' => '', 'multiple' => ''], $mapper->toFormValues('tl_content', ['single' => null, 'multiple' => []]));
     }
 
     #[DataProvider('provideEmptyValues')]
@@ -620,7 +661,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $mapper->toFormValues('tl_content', ['pid' => 42]);
     }
 
-    private function createRelationResolver(): DataContainerRelationResolver
+    private function createRelationResolver(bool $files = false): RelationResolverInterface
     {
         $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
         $connection->executeStatement('CREATE TABLE tl_page (id INTEGER PRIMARY KEY, tstamp INTEGER NOT NULL, title VARCHAR(255))');
@@ -640,22 +681,25 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')
-            ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, [$resource]))
+            ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, VirtualFilesystemItem::class === $class ? ($files ? [new ApiResource(operations: [new Get(name: 'files_get_by_uuid', uriVariables: ['uuid' => new Link(identifiers: ['metadata[uuid]'])], extraProperties: ['contao' => ['filesystem' => 'files']])])] : []) : [$resource]))
         ;
 
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
-            ->willReturn('/contao/api/dc/page/42')
+            ->willReturnCallback(static fn (string $route, array $parameters): string => 'files_get_by_uuid' === $route ? '/contao/api/files/by-uuid/'.$parameters['uuid'] : '/contao/api/dc/page/42')
         ;
 
         $router
             ->method('match')
-            ->willReturn(['_route' => 'page_get', 'id' => '42'])
+            ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/by-uuid/') ? ['_route' => 'files_get_by_uuid', 'uuid' => substr($path, \strlen('/contao/api/files/by-uuid/'))] : ['_route' => 'page_get', 'id' => '42'])
         ;
         $this->relationMetadataFactory = $metadataFactory;
 
-        return new DataContainerRelationResolver($connection, $this->relationMetadataFactory, $router, $this->createStub(DcaHierarchy::class));
+        return new RelationResolver([
+            new DataContainerRelationResolver($connection, $metadataFactory, $router, $this->createStub(DcaHierarchy::class)),
+            new VirtualFilesystemRelationResolver($metadataFactory, $router, new VirtualFilesystemRegistry(new ServiceLocator(['files' => $this->createFilesStorage(...)]), ['files' => []])),
+        ]);
     }
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface
@@ -699,6 +743,22 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createFilesStorage(): VirtualFilesystemInterface
+    {
+        $item = $this->createStub(FilesystemItem::class);
+        $item
+            ->method('getUuid')
+            ->willReturn(Uuid::fromString('f47ac10b-58cc-4372-a567-0e02b2c3d479'))
+        ;
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
+        $storage
+            ->method('get')
+            ->willReturn($item)
+        ;
+
+        return $storage;
     }
 
     private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory

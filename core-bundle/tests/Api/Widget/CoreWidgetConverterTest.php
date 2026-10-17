@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationDefinition;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
@@ -135,6 +136,18 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame([$uuid, $uuid], $converter->convertToApiValue(serialize([$binary, $binary]), $config, $arraySchema));
         $this->assertSame($uuid.','.$uuid, $converter->convertToFormValue([$uuid, $uuid], $config, $arraySchema));
         $this->assertSame($uuid, $converter->convertToFormValue($uuid, $config, $schema));
+    }
+
+    public function testProvidesFileRelationMetadata(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $relation = $converter->getRelation(['inputType' => 'fileTree']);
+
+        $this->assertNotNull($relation);
+        $this->assertSame('files', $relation->filesystem);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $relation->identifier);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $converter->getRelation(['inputType' => 'fileTree', 'eval' => ['binary' => false]])?->identifier);
+        $this->assertNull($converter->getRelation(['inputType' => 'text']));
     }
 
     public function testPreparesFormInputInsteadOfSerializedStorage(): void
