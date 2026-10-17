@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Tests\DataContainer;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
@@ -245,10 +246,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $record = $mapper->fromRow('tl_content', $row);
 
         foreach (['single', 'textual'] as $field) {
-            $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $record->data[$field]);
+            $this->assertEquals(new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid), $record->data[$field]);
         }
 
-        $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $record->data['multiple']);
+        $this->assertEquals([new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid), new RelationReference($uuid, '/contao/api/files/by-uuid/'.$uuid)], $record->data['multiple']);
 
         $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue(new JsonSchemaValidator()->validate((object) $record->data, $schema)->isValid());
@@ -692,18 +693,18 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')
-            ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, VirtualFilesystemItem::class === $class ? ($files ? [new ApiResource(operations: [new Get(name: 'files_get', extraProperties: ['contao' => ['filesystem' => 'files']])])] : []) : [$resource]))
+            ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, VirtualFilesystemItem::class === $class ? ($files ? [new ApiResource(operations: [new Get(name: 'files_get_by_uuid', uriVariables: ['uuid' => new Link(identifiers: ['metadata[uuid]'])], extraProperties: ['contao' => ['filesystem' => 'files']])])] : []) : [$resource]))
         ;
 
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
-            ->willReturnCallback(static fn (string $route, array $parameters): string => 'files_get' === $route ? '/contao/api/files/'.$parameters['pathOrUuid'] : '/contao/api/dc/page/42')
+            ->willReturnCallback(static fn (string $route, array $parameters): string => 'files_get_by_uuid' === $route ? '/contao/api/files/by-uuid/'.$parameters['uuid'] : '/contao/api/dc/page/42')
         ;
 
         $router
             ->method('match')
-            ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/') ? ['_route' => 'files_get', 'pathOrUuid' => substr($path, \strlen('/contao/api/files/'))] : ['_route' => 'page_get', 'id' => '42'])
+            ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/by-uuid/') ? ['_route' => 'files_get_by_uuid', 'uuid' => substr($path, \strlen('/contao/api/files/by-uuid/'))] : ['_route' => 'page_get', 'id' => '42'])
         ;
 
         $this->relationMetadataFactory = $metadataFactory;
