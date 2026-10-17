@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\UserTemplate;
 
+use Contao\ApiBundle\Exception\TemplateStudioException;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -104,7 +104,7 @@ class TemplateStudioClient
         $response = $this->kernel->handle($request, HttpKernelInterface::SUB_REQUEST);
 
         if (!$response instanceof JsonResponse) {
-            throw new UnprocessableEntityHttpException(\sprintf('Template Studio returned a non-JSON response (HTTP %d).', $response->getStatusCode()));
+            throw new TemplateStudioException(\sprintf('Template Studio returned a non-JSON response (HTTP %d).', $response->getStatusCode()));
         }
 
         if (JsonResponse::HTTP_OK !== $response->getStatusCode()) {

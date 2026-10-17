@@ -18,11 +18,11 @@ use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @implements ProviderInterface<VirtualFilesystemItem>
@@ -47,12 +47,12 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
             $location = VirtualFilesystemLocation::fromArray($uriVariables)->toLocation();
 
             if (!$item = $filesystem->get($location)) {
-                throw new NotFoundHttpException('The requested file or directory does not exist.');
+                throw new ResourceNotFoundException('The requested file or directory does not exist.');
             }
 
             return $this->itemFactory->create($item);
         } catch (UnableToResolveUuidException $exception) {
-            throw new NotFoundHttpException('The requested file or directory does not exist.', $exception);
+            throw new ResourceNotFoundException('The requested file or directory does not exist.', previous: $exception);
         }
     }
 

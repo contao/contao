@@ -16,11 +16,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\ApiBundle\Relation\AbstractRelationResolver;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -107,7 +107,7 @@ final class DataContainerRelationResolver extends AbstractRelationResolver
             return $this->findRow($relation->table, 'id', $id)[$relation->field] ?? null;
         }
 
-        throw new UnprocessableEntityHttpException('The relation IRI points to an unexpected API resource.');
+        throw new InvalidInputException('The relation IRI points to an unexpected API resource.');
     }
 
     /**

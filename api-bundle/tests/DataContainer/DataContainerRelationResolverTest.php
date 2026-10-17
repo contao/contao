@@ -19,13 +19,13 @@ use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\ApiBundle\Relation\RelationReference;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
@@ -72,7 +72,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('match')
         ;
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('valid IRIs');
 
         $this->createResolver($router)->resolveToIdentifier(['iri' => $iri], $this->getPageRelation());
@@ -99,7 +99,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->willThrowException(new ResourceNotFoundException())
         ;
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         try {
             $this->createResolver($router)->resolveToIdentifier('/missing/12', $this->getPageRelation());
@@ -250,7 +250,7 @@ final class DataContainerRelationResolverTest extends TestCase
             ->willReturn(['_route' => 'article_get', 'id' => '7'])
         ;
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('unexpected API resource');
 
         $this->createResolver($router)->resolveToIdentifier('/contao/api/dc/page/12/article/7', $this->getPageRelation());

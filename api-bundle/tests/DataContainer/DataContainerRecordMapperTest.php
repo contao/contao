@@ -22,6 +22,7 @@ use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\ApiBundle\Relation\RelationReference;
 use Contao\ApiBundle\Relation\RelationResolver;
 use Contao\ApiBundle\Relation\RelationResolverInterface;
@@ -57,7 +58,6 @@ use Opis\JsonSchema\Validator as JsonSchemaValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Component\Uid\Uuid;
@@ -464,7 +464,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $this->assertSame(42, $mapper->toParentIdentifier('tl_article', ['iri' => '/contao/api/dc/page/42']));
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         $mapper->toParentIdentifier('tl_article', ['iri' => '']);
     }
@@ -607,7 +607,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         );
 
         $this->assertSame([], $mapper->fromRow('tl_content', ['id' => 17, 'payload' => 'private'])->data);
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('Field "payload" is not writable');
 
         $mapper->toFormValues('tl_content', ['payload' => 'changed']);
@@ -659,7 +659,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         $mapper->toFormValues('tl_content', ['locked' => 'Changed']);
     }
@@ -677,7 +677,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('Field "pid" is not writable through the update operation.');
 
         $mapper->toFormValues('tl_content', ['pid' => 42]);

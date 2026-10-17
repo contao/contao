@@ -18,6 +18,7 @@ use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
@@ -30,7 +31,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Uid\Uuid;
 
@@ -67,7 +67,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
 
             return $this->upload($location, $request, $filesystem);
         } catch (UnableToResolveUuidException $exception) {
-            throw new NotFoundHttpException('The requested file or directory does not exist.', $exception);
+            throw new ResourceNotFoundException('The requested file or directory does not exist.', previous: $exception);
         }
     }
 
@@ -88,7 +88,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         $item = $filesystem->get($location);
 
         if (!$item || !$item->isFile()) {
-            throw new NotFoundHttpException('The requested file does not exist.');
+            throw new ResourceNotFoundException('The requested file does not exist.');
         }
 
         $metadata = $item->getExtraMetadata();

@@ -22,6 +22,8 @@ use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
@@ -48,8 +50,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
@@ -208,7 +208,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $records = $this->createRecords($dc);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('The data container rejected the submitted fields.');
 
         $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
@@ -399,7 +399,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
     {
         $records = $this->createRecords($this->createStub(DC_Table::class));
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage(\sprintf('The page must not exceed %d for a page size of 30.', intdiv(PHP_INT_MAX, 30) + 1));
 
         $records->list('tl_content', PHP_INT_MAX);
@@ -573,7 +573,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $context = DataContainerContext::fromOperation($operation, ['page_id' => 7, 'content_id' => 9]);
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('does not belong to the requested parent');
 
         $this->createRecords($dc)->list('tl_content', context: $context);
@@ -593,7 +593,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('The parent record is given by the route');
 
         $this->createRecords($dc)->create(new DataContainerRecord('tl_content', ['pid' => ['iri' => '/contao/api/dc/page/8'], 'headline' => 'Example']), $context);
@@ -670,7 +670,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('cut')
         ;
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(999, 'after'));
     }

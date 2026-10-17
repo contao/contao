@@ -18,6 +18,7 @@ use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -39,7 +40,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Uuid;
 
 final class VirtualFilesystemStateProcessorTest extends TestCase
@@ -256,7 +256,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         $processor = $this->createProcessor($storage);
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
     }
@@ -418,7 +418,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         $processor = $this->createProcessor($storage);
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $processor->process(
             null,

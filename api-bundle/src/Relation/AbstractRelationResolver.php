@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Relation;
 
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -95,7 +95,7 @@ abstract class AbstractRelationResolver implements RelationResolverInterface
     protected function matchIri(mixed $iri, RouterInterface $router): array
     {
         if (!\is_string($iri) || !\is_string($path = parse_url($iri, PHP_URL_PATH)) || '' === $path) {
-            throw new UnprocessableEntityHttpException('Relation values must be valid IRIs.');
+            throw new InvalidInputException('Relation values must be valid IRIs.');
         }
 
         // An IRI identifies the resource to read, regardless of the current request method
@@ -107,7 +107,7 @@ abstract class AbstractRelationResolver implements RelationResolverInterface
         try {
             $parameters = $router->match($path);
         } catch (RoutingExceptionInterface) {
-            throw new UnprocessableEntityHttpException('The relation IRI does not match an API resource.');
+            throw new InvalidInputException('The relation IRI does not match an API resource.');
         } finally {
             $context->setMethod($method);
         }

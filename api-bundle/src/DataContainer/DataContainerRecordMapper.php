@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\DataContainer;
 
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
  * Each mapping method builds the schema first, which initializes the framework
@@ -75,14 +75,14 @@ final class DataContainerRecordMapper
             $schema = $properties[$field] ?? null;
 
             if (!$schema || ($schema['readOnly'] ?? false)) {
-                throw new UnprocessableEntityHttpException('Field "'.$field.'" is not writable through the update operation. Check the resource description for supported operations.');
+                throw new InvalidInputException('Field "'.$field.'" is not writable through the update operation. Check the resource description for supported operations.');
             }
 
             $config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? [];
             $converter = $this->converters->get($config);
 
             if (!$converter) {
-                throw new UnprocessableEntityHttpException('Field "'.$field.'" has no API-capable widget.');
+                throw new InvalidInputException('Field "'.$field.'" has no API-capable widget.');
             }
 
             $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($config, $table, (string) $field));
@@ -109,7 +109,7 @@ final class DataContainerRecordMapper
         $id = filter_var($value, FILTER_VALIDATE_INT);
 
         if (false === $id || $id < 0) {
-            throw new UnprocessableEntityHttpException('Field "pid" must reference an existing parent record.');
+            throw new InvalidInputException('Field "pid" must reference an existing parent record.');
         }
 
         return $id;
@@ -130,7 +130,7 @@ final class DataContainerRecordMapper
             }
 
             if (!$converter && ($config['eval']['mandatory'] ?? false)) {
-                throw new UnprocessableEntityHttpException('Required field "'.$field.'" has no API-capable widget.');
+                throw new InvalidInputException('Required field "'.$field.'" has no API-capable widget.');
             }
 
             if (null === $schema || !$converter) {
