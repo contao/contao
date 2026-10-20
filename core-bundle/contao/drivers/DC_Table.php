@@ -2337,8 +2337,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->generateEditButtons(
 				$this->strTable,
 				(bool) $this->ptable,
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->treeView ? array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1) : $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('sorting' => null)))),
 				$this
 			)
 		;
