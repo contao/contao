@@ -155,6 +155,20 @@ final class ContaoMcpExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao_mcp.tool.template_snapshot_tools'));
     }
 
+    public function testDoesNotRegisterTwigEnvironmentToolsWithoutTemplateStudio(): void
+    {
+        $container = $this->getContainerBuilder(withTemplateStudio: false);
+        $config = Yaml::parseFile(\dirname(__DIR__, 2).'/config/mcp.yaml')['mcp'];
+
+        $bundle = new McpBundle();
+        $bundle->getContainerExtension()->load([$config], $container);
+        $bundle->build($container);
+
+        $container->compile();
+
+        $this->assertFalse($container->hasDefinition('contao_mcp.tool.twig_environment_tools'));
+    }
+
     public function testDoesNotRegisterUserTemplateToolsWithoutTemplateStudio(): void
     {
         $container = $this->getContainerBuilder(withTemplateStudio: false);

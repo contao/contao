@@ -20,8 +20,9 @@ final class RemoveUnavailableToolsPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         if (!$container->getParameter('contao.template_studio.enabled')) {
-            $container->removeDefinition('contao_mcp.tool.user_template_tools');
             $container->removeDefinition('contao_mcp.tool.template_snapshot_tools');
+            $container->removeDefinition('contao_mcp.tool.twig_environment_tools');
+            $container->removeDefinition('contao_mcp.tool.user_template_tools');
         }
 
         if (!$container->has('contao.search.backend')) {
