@@ -15,15 +15,17 @@ namespace Contao\E2eTests\Api\Documentation;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
+use Contao\E2eTests\Backend\BackendTestTrait;
 use Contao\InstallationRecipe\File\FileMapping;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
 {
+    use BackendTestTrait;
+
     public function testSelectorChangesTheDocumentedSchemaAndTheApiContract(): void
     {
-        $backend = self::managedEdition()->createBackendBrowser();
-        $backend->loginOrReuseSessionAs();
+        $backend = $this->login();
         $backend->visit('/contao/api/docs');
         $backend->page()->locator('#api-version-form')->waitFor(['state' => 'visible']);
 
@@ -34,7 +36,7 @@ class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
             $backend->page()->getByRole('heading', ['name' => 'Contao API ('.$date.')', 'exact' => true])->waitFor(['state' => 'visible']);
             $backend->page()->locator('#swagger-ui')->getByText('"'.$property.'"', ['exact' => true])->first()->waitFor(['state' => 'visible']);
 
-            $headers = ['Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN, 'Contao-Api-Version' => $date];
+            $headers = ['Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'), 'Contao-Api-Version' => $date];
 
             $response = $backend->browser()->context()->request()->get(
                 $backend->browser()->uri('/contao/api/docs.jsonopenapi'),
@@ -67,7 +69,6 @@ class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
 
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile($fixtures.'/Backend/users.yaml')
-            ->withFixtureFile($fixtures.'/ApiVersion/tokens.yaml')
             ->withConfigFile($fixtures.'/ApiVersion/config.yaml')
             ->withFileMapping(new FileMapping($fixtures.'/ApiVersion/VersionedExample.php', 'src/Api/VersionedExample.php'))
             ->withFileMapping(new FileMapping($fixtures.'/ApiVersion/VersionedExampleProvider.php', 'src/Api/VersionedExampleProvider.php'))
