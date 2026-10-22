@@ -1,0 +1,27 @@
+tl_user:
+    passkey_user:
+        id: 42
+        tstamp: 1709063739
+        username: p.kee
+        name: Pascal Kee
+        email: p.kee@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        admin: 1
+        disable: 0
+        dateAdded: 1257428510
+
+webauthn_credentials:
+    passkey_user_credential:
+        id: 01JAE2E0000000000000000000
+        name: Old passkey
+        createdAt: '2026-10-12 12:00:00'
+        publicKeyCredentialId: ZTJlLXBhc3NrZXk
+        type: public-key
+        transports: '[]'
+        attestationType: none
+        trustPath: '[]'
+        aaguid: 00000000-0000-0000-0000-000000000000
+        credentialPublicKey: ZTJlLXBhc3NrZXk
+        userHandle: backend.42
+        counter: 0
