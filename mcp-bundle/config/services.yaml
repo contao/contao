@@ -43,6 +43,12 @@ services:
             - '@contao_mcp.response.api_converter'
             - '@contao_mcp.api.binary_payload_handler'
 
+    contao_mcp.tool.twig_environment_tools:
+        class: Contao\McpBundle\Tool\TwigEnvironmentTools
+        arguments:
+            - '@contao.twig.studio.environment_information'
+            - '@security.helper'
+
     contao_mcp.tool.user_template_tools:
         class: Contao\McpBundle\Tool\UserTemplateTools
         autoconfigure: true

@@ -25,7 +25,7 @@ class LayoutTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $fixtures->interpolate('/contao/api/dc/theme/{theme_editorial}/layout'))
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -45,7 +45,7 @@ class LayoutTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('page/layout', $data['template']);
 
         $response = self::managedEdition()->send(HttpRequest::get($data['@id'])->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 

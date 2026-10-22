@@ -144,7 +144,7 @@
                                         {{ credential.name|default(credential.id) }}
                                     {% endif %}
                                 </td>
-                                <td class="created">{{ credential.createdAt.format('j. F Y, H:i') }}</td>
+                                <td class="created">{{ credential.createdAt.format(contao.datim_format) }}</td>
                                 <td class="actions">
                                     <form method="post">
                                         <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
@@ -217,7 +217,7 @@
                                     </td>
                                     <td class="last-used">
                                         {% if access_token.lastUsed|default %}
-                                            {{ access_token.lastUsed.format('j. F Y, H:i') }}
+                                            {{ access_token.lastUsed.format(contao.datim_format) }}
                                         {% else %}
                                             –
                                         {% endif %}
@@ -225,9 +225,9 @@
                                     <td class="expires">
                                         {% if access_token.expiresAt|default %}
                                             {% if access_token.expiresAt < date() %}
-                                                <span class="expired">{{ access_token.expiresAt.format('j. F Y, H:i') }}</span>
+                                                <span class="expired">{{ access_token.expiresAt.format(contao.datim_format) }}</span>
                                             {% else %}
-                                                {{ access_token.expiresAt.format('j. F Y, H:i') }}
+                                                {{ access_token.expiresAt.format(contao.datim_format) }}
                                             {% endif %}
                                         {% else %}
                                             –
