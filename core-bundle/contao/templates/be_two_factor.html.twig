@@ -119,7 +119,7 @@
     <div class="two-factor passkeys">
         <h2 class="sub_headline">{{ 'MSC.passkeys'|trans }}</h2>
         <p>{{ 'MSC.passkeysDescription'|trans }}</p>
-        <turbo-frame id="passkeys" data-turbo-action="advance">
+        <turbo-frame id="passkeys">
             {% if credentials|default %}
                 <table class="tl_listing showColumns with-border with-padding credential-table" data-controller="contao--passkeys">
                     <thead>
@@ -182,7 +182,7 @@
     <div class="two-factor personal-access-tokens">
         <h2 class="sub_headline">{{ 'MSC.personalAccessTokens'|trans }}</h2>
         <p>{{ 'MSC.personalAccessTokensDescription'|trans }}</p>
-        <turbo-frame id="personal-access-tokens" data-turbo-action="advance">
+        <turbo-frame id="personal-access-tokens">
             {% if personal_access_tokens|default %}
                 <table class="tl_listing showColumns with-border with-padding pat-table">
                     <thead>
@@ -247,7 +247,7 @@
                 </table>
             {% endif %}
             {% if create_pat|default %}
-                <form class="tl_create_pat" method="post" novalidate data-turbo-temporary>
+                <form action="{{ path('contao_backend', {do: 'security', act: 'create_pat'}) }}" class="tl_create_pat" method="post" novalidate data-turbo-temporary>
                     <input type="hidden" name="FORM_SUBMIT" value="tl_pat_create">
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                     <div class="formbody">
