@@ -9,6 +9,12 @@
                 <span class="contao-api-subtitle">API Documentation</span>
             </span>
         </a>
+        <form class="contao-api-version" id="api-version-form" data-spec-url="{{ path('api_doc', {_format: 'jsonopenapi'}) }}" hidden>
+            <label for="api-version">API version</label>
+            <input type="date" id="api-version" max="{{ 'now'|date('Y-m-d', 'UTC') }}" required>
+            <button type="submit">Apply</button>
+            <span id="api-version-status" role="status" aria-live="polite"></span>
+        </form>
         <button type="button" class="contao-api-color-scheme" id="color-scheme-toggle" hidden>Toggle color scheme</button>
     </header>
 {% endblock %}

@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\Http\ApiRequestFactory;
+use Contao\ApiBundle\Version\ApiVersion;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -116,6 +117,29 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('application/merge-patch+json', $request->headers->get('Content-Type'));
         $this->assertSame('application/json', $request->headers->get('Accept'));
         $this->assertSame('{"title":null}', $request->getContent());
+    }
+
+    public function testForwardsTheApiVersionWithoutSharingRequestAttributes(): void
+    {
+        $parent = Request::create('/contao/api/example');
+        $parent->headers->set(ApiVersion::HEADER, '2024-02-29');
+        $parent->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion('2024-02-29'));
+
+        $request = $this->createFactory()->create($parent, new Get(name: 'records'));
+
+        $this->assertSame('2024-02-29', $request->headers->get(ApiVersion::HEADER));
+        $this->assertFalse($request->attributes->has(ApiVersion::CONTEXT_KEY));
+    }
+
+    public function testForwardsTheResolvedVersionWhenTheHeaderWasOmitted(): void
+    {
+        $parent = Request::create('/contao/api/example');
+        $parent->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion('2024-02-29'));
+
+        $request = $this->createFactory()->create($parent, new Get(name: 'records'));
+
+        $this->assertSame('2024-02-29', $request->headers->get(ApiVersion::HEADER));
+        $this->assertFalse($parent->headers->has(ApiVersion::HEADER));
     }
 
     public function testUsesNonJsonInputFormatsForStringPayloads(): void

@@ -3,6 +3,82 @@
 const colorPreference = window.matchMedia('(prefers-color-scheme: dark)');
 const colorSchemeToggle = document.getElementById('color-scheme-toggle');
 const data = JSON.parse(document.getElementById('swagger-data').textContent);
+const versionForm = document.getElementById('api-version-form');
+const versionInput = document.getElementById('api-version');
+const versionStatus = document.getElementById('api-version-status');
+let loadingVersion = false;
+
+const selectedVersion = () => data.spec.info.version;
+
+const requestDocumentation = async (url, version) => {
+    const response = await fetch(url, {
+        credentials: 'same-origin',
+        headers: { 'Contao-Api-Version': version },
+    });
+
+    if (!response.ok) {
+        const problem = await response.json().catch(() => ({}));
+        throw new Error(problem.detail || problem.description || problem.title || 'Unable to load the documentation.');
+    }
+
+    return response;
+};
+
+const loadVersion = async event => {
+    event.preventDefault();
+
+    if (loadingVersion || !versionForm.reportValidity()) {
+        return;
+    }
+
+    loadingVersion = true;
+    versionForm.setAttribute('aria-busy', 'true');
+    versionForm.querySelector('button').disabled = true;
+    versionStatus.textContent = 'Loading documentation…';
+
+    try {
+        const url = new URL(versionForm.dataset.specUrl, window.location.href);
+        url.search = window.location.search;
+        const response = await requestDocumentation(url, versionInput.value);
+        const spec = await response.json();
+
+        if (!spec.openapi || !spec.info?.version) {
+            throw new Error('The server did not return an API specification.');
+        }
+
+        data.spec = spec;
+        versionInput.value = selectedVersion();
+        renderDocumentation();
+        versionStatus.textContent = '';
+    } catch (error) {
+        versionStatus.textContent = `${error.message} Still showing API version ${selectedVersion()}.`;
+    } finally {
+        loadingVersion = false;
+        versionForm.removeAttribute('aria-busy');
+        versionForm.querySelector('button').disabled = false;
+    }
+};
+
+const downloadDocumentation = async event => {
+    event.preventDefault();
+    const url = new URL(event.currentTarget.href);
+    url.search = window.location.search;
+    const version = selectedVersion();
+
+    try {
+        const response = await requestDocumentation(url, version);
+        const blobUrl = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `contao-api-${version}.${/yaml/.test(url.pathname) ? 'yaml' : 'json'}`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch (error) {
+        versionStatus.textContent = `${error.message} The documentation could not be downloaded.`;
+    }
+};
 
 const initColorMode = () => {
     let prefersDark = localStorage.getItem('contao--prefers-dark');
@@ -97,3 +173,13 @@ colorSchemeToggle.addEventListener('click', () => {
 initColorMode();
 renderDocumentation();
 colorPreference.addEventListener('change', updateColorMode);
+
+versionForm.hidden = false;
+versionInput.value = selectedVersion();
+versionForm.addEventListener('submit', loadVersion);
+
+for (const link of document.querySelectorAll('#formats a')) {
+    if (/\.(json|jsonopenapi|yaml|yamlopenapi)$/.test(new URL(link.href).pathname)) {
+        link.addEventListener('click', downloadDocumentation);
+    }
+}

@@ -7,6 +7,32 @@ services:
             tags:
                 - contao.api.schema_aware_normalization_handler
 
+    contao_api.api_platform.api_version_open_api_factory:
+        class: Contao\ApiBundle\ApiPlatform\OpenApi\ApiVersionOpenApiFactory
+        decorates: api_platform.openapi.factory
+        decoration_priority: -100
+        arguments:
+            $decorated: '@.inner'
+            $versionProvider: '@contao_api.version.api_provider'
+
+    # Decorate the dispatchers without registering them as resource providers or
+    # processors so both callable and service-based operations receive the version.
+    contao_api.api_platform.api_version_state_processor:
+        class: Contao\ApiBundle\ApiPlatform\State\ApiVersionStateProcessor
+        autoconfigure: false
+        decorates: api_platform.state_processor.locator
+        arguments:
+            $decorated: '@.inner'
+            $versionProvider: '@contao_api.version.api_provider'
+
+    contao_api.api_platform.api_version_state_provider:
+        class: Contao\ApiBundle\ApiPlatform\State\ApiVersionStateProvider
+        autoconfigure: false
+        decorates: api_platform.state_provider.locator
+        arguments:
+            $decorated: '@.inner'
+            $versionProvider: '@contao_api.version.api_provider'
+
     # Generate OpenAPI schemas from the metadata produced for DataContainerRecord
     # and add them as shared components so they only exist once in the spec.
     contao_api.api_platform.data_container_open_api_factory:
@@ -60,6 +86,13 @@ services:
         decorates: api_platform.metadata.resource.name_collection_factory
         arguments:
             $decorated: '@.inner'
+
+    contao_api.api_platform.serializer.api_version_context_builder:
+        class: Contao\ApiBundle\ApiPlatform\Serializer\ApiVersionContextBuilder
+        decorates: api_platform.serializer.context_builder
+        arguments:
+            $decorated: '@.inner'
+            $versionProvider: '@contao_api.version.api_provider'
 
     # Serialize DataContainerRecord payloads and handle reads/writes through
     # API Platform's serializer and state layers. The metadata factory points
@@ -173,6 +206,11 @@ services:
     contao_api.json_schema_validator:
         class: Opis\JsonSchema\Validator
 
+    contao_api.listener.api_version:
+        class: Contao\ApiBundle\EventListener\ApiVersionListener
+        arguments:
+            $requestStack: '@request_stack'
+
     contao_api.relation.resolver:
         class: Contao\ApiBundle\Relation\RelationResolver
         autoconfigure: false
@@ -220,6 +258,13 @@ services:
             $validator: '@contao_api.json_schema_validator'
         tags:
             - { name: validator.constraint_validator }
+
+    contao_api.version.api_provider:
+        class: Contao\ApiBundle\Version\ApiVersionProvider
+        arguments:
+            $requestStack: '@request_stack'
+
+    Contao\ApiBundle\Version\ApiVersionProvider: '@contao_api.version.api_provider'
 
     contao_api.widget.converter_registry:
         class: Contao\ApiBundle\Widget\WidgetConverterRegistry
