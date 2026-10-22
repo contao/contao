@@ -35,14 +35,17 @@ class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
             $backend->page()->locator('#swagger-ui')->getByText('"'.$property.'"', ['exact' => true])->first()->waitFor(['state' => 'visible']);
 
             $headers = ['Authorization' => 'Bearer '.self::BACKEND_ACCESS_TOKEN, 'Contao-Api-Version' => $date];
+
             $response = $backend->browser()->context()->request()->get(
                 $backend->browser()->uri('/contao/api/docs.jsonopenapi'),
                 ['headers' => ['Contao-Api-Version' => $date]],
             );
+
             $spec = $response->json();
 
             $this->assertSame(200, $response->status(), json_encode($spec, JSON_PRETTY_PRINT));
             $this->assertSame($date, $spec['info']['version']);
+
             $schema = $spec['paths']['/contao/api/versioned-example']['get']['responses']['200']['content']['application/json']['schema'];
             $this->assertSame([$property => ['type' => 'string']], $schema['properties']);
 
@@ -59,7 +62,9 @@ class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
         $composer = self::createMonorepoComposerConfig('api-bundle', 'core-bundle')
             ->withOverrides(['autoload' => ['psr-4' => ['App\\' => 'src/']]])
         ;
+
         $fixtures = self::projectDirectory().'/tests/E2E/Fixtures';
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile($fixtures.'/Backend/users.yaml')
             ->withFixtureFile($fixtures.'/ApiVersion/tokens.yaml')

@@ -38,6 +38,7 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
             {
                 $version = $context[ApiVersion::CONTEXT_KEY];
                 $property = $version->isBefore('2024-03-01') ? 'name' : 'displayName';
+
                 $schema = new Schema();
                 $schema['type'] = 'object';
                 $schema['properties'] = [$property => ['type' => 'string']];
@@ -54,26 +55,30 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
             $request = new Request();
             $request->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion($date));
             $requests->push($request);
+
             $spec = $factory(['request' => $request]);
 
             $this->assertSame([$property => ['type' => 'string']], $spec->getComponents()->getSchemas()['Example']['properties']);
             $this->assertSame($date, $spec->getInfo()->getVersion());
             $this->assertArrayNotHasKey('x-contao-api-version', $spec->getExtensionProperties());
             $this->assertSame($date, $spec->getComponents()->getParameters()['ContaoApiVersion']->getExample());
+
             $requests->pop();
         }
     }
 
     public function testDocumentsOneSharedHeaderForAllPathsWithoutMutatingTheOriginal(): void
     {
-        $paths = new Paths();
         $existing = new Parameter('id', 'path', required: true);
+
+        $paths = new Paths();
         $paths->addPath('/dc/example/{id}', new PathItem(get: new Operation(), patch: new Operation(), parameters: [$existing]));
         $paths->addPath('/custom', new PathItem(post: new Operation()));
 
         $components = new Components(parameters: new \ArrayObject(['Existing' => $existing]));
         $original = new OpenApi(new Info('API', '1.0'), [], $paths, $components);
         $version = ApiVersion::today();
+
         $decorated = $this->createMock(OpenApiFactoryInterface::class);
         $decorated
             ->expects($this->once())
@@ -85,9 +90,11 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
         $result = new ApiVersionOpenApiFactory($decorated, new ApiVersionProvider(new RequestStack()))(['example' => true, ApiVersion::CONTEXT_KEY => $version]);
         $this->assertSame((string) $version, $result->getInfo()->getVersion());
         $this->assertSame('1.0', $original->getInfo()->getVersion());
+
         $header = $result->getComponents()->getParameters()['ContaoApiVersion'];
         $this->assertSame(ApiVersion::HEADER, $header->getName());
         $this->assertSame('header', $header->getIn());
+
         $today = new \DateTimeImmutable('today', new \DateTimeZone('UTC'))->format('Y-m-d');
         $this->assertSame($today, $header->getExample());
         $this->assertStringContainsString("today's date", $header->getDescription());
@@ -109,6 +116,7 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
             ->method('__invoke')
             ->willReturn($result)
         ;
+
         $this->assertCount(2, new ApiVersionOpenApiFactory($again, new ApiVersionProvider(new RequestStack()))()->getPaths()->getPath('/dc/example/{id}')->getParameters());
     }
 }

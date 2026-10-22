@@ -30,11 +30,14 @@ final class ApiVersionContextTest extends TestCase
 {
     public function testProvidersReceiveVersionAndKeepExistingContext(): void
     {
-        $request = new Request();
         $version = new ApiVersion('2024-02-29');
+
+        $request = new Request();
         $request->attributes->set(ApiVersion::CONTEXT_KEY, $version);
+
         $operation = new Get();
         $data = new \stdClass();
+
         $decorated = $this->createMock(ProviderInterface::class);
         $decorated
             ->expects($this->once())
@@ -50,14 +53,17 @@ final class ApiVersionContextTest extends TestCase
 
     public function testProcessorsReceiveTheCurrentRequestVersion(): void
     {
-        $request = new Request();
         $version = new ApiVersion('2024-02-29');
+
+        $request = new Request();
         $request->attributes->set(ApiVersion::CONTEXT_KEY, $version);
-        $requests = new RequestStack();
-        $requests->push($request);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
         $operation = new Post();
         $data = new \stdClass();
+
         $decorated = $this->createMock(ProcessorInterface::class);
         $decorated
             ->expects($this->once())
@@ -66,16 +72,18 @@ final class ApiVersionContextTest extends TestCase
             ->willReturn($data)
         ;
 
-        $processor = new ApiVersionStateProcessor($decorated, new ApiVersionProvider($requests));
+        $processor = new ApiVersionStateProcessor($decorated, new ApiVersionProvider($requestStack));
 
         $this->assertSame($data, $processor->process($data, $operation, context: ['previous_data' => null]));
     }
 
     public function testBothSerializerContextsReceiveTheSameVersion(): void
     {
-        $request = new Request();
         $version = new ApiVersion('2024-02-29');
+
+        $request = new Request();
         $request->attributes->set(ApiVersion::CONTEXT_KEY, $version);
+
         $decorated = $this->createMock(SerializerContextBuilderInterface::class);
         $decorated
             ->expects($this->exactly(2))
@@ -83,6 +91,7 @@ final class ApiVersionContextTest extends TestCase
             ->with($request, $this->anything(), ['resource_class' => \stdClass::class])
             ->willReturn(['groups' => ['example']])
         ;
+
         $builder = new ApiVersionContextBuilder($decorated, new ApiVersionProvider(new RequestStack()));
 
         foreach ([true, false] as $normalization) {
@@ -100,6 +109,7 @@ final class ApiVersionContextTest extends TestCase
         $parentVersion = new ApiVersion('2024-02-28');
         $parent->attributes->set(ApiVersion::CONTEXT_KEY, $parentVersion);
         $requests->push($parent);
+
         $child = new Request();
         $childVersion = new ApiVersion('2024-02-29');
         $child->attributes->set(ApiVersion::CONTEXT_KEY, $childVersion);

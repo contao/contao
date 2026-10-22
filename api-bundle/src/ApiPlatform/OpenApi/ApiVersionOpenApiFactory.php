@@ -35,6 +35,7 @@ final readonly class ApiVersionOpenApiFactory implements OpenApiFactoryInterface
         $version = $context[ApiVersion::CONTEXT_KEY];
         $openApi = ($this->decorated)($context);
         $today = (string) ApiVersion::today();
+
         $parameters = clone ($openApi->getComponents()->getParameters() ?? new \ArrayObject());
         $parameters[self::PARAMETER] = new Parameter(
             name: ApiVersion::HEADER,
@@ -43,6 +44,7 @@ final readonly class ApiVersionOpenApiFactory implements OpenApiFactoryInterface
             schema: ['type' => 'string', 'format' => 'date'],
             example: (string) $version,
         );
+
         $paths = clone $openApi->getPaths();
         $reference = new Reference('#/components/parameters/'.self::PARAMETER);
 

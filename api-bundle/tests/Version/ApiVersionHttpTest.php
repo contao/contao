@@ -62,6 +62,7 @@ final class ApiVersionHttpTest extends ContaoTestCase
         $requests = new RequestStack();
         $versions = new ApiVersionProvider($requests);
         $contexts = [];
+
         $operation = new Post(
             class: \stdClass::class,
             read: true,
@@ -80,7 +81,9 @@ final class ApiVersionHttpTest extends ContaoTestCase
                 return $data;
             },
         );
+
         $contextBuilder = new ApiVersionContextBuilder(new SerializerContextBuilder(), $versions);
+
         $serializer = $this->createMock(SerializerInterface::class);
         $serializer
             ->expects($this->once())
@@ -104,11 +107,13 @@ final class ApiVersionHttpTest extends ContaoTestCase
                 },
             )
         ;
+
         $provider = new DeserializeProvider(new ReadProvider(new ApiVersionStateProvider(new CallableProvider(), $versions), $contextBuilder), $serializer, $contextBuilder);
         $processor = new WriteProcessor(new SerializeProcessor(new RespondProcessor(), $serializer, $contextBuilder), new ApiVersionStateProcessor(new CallableProcessor(), $versions));
         $controller = new MainController($this->createStub(ResourceMetadataCollectionFactoryInterface::class), $provider, $processor);
-        $kernel = $this->createKernel($controller, $operation, $requests);
         $request = Request::create('/api/example', 'POST', server: ['CONTENT_TYPE' => 'application/json', 'HTTP_CONTAO_API_VERSION' => '2024-02-29'], content: '{"title":"example"}');
+
+        $kernel = $this->createKernel($controller, $operation, $requests);
         $response = $kernel->handle($request);
 
         $this->assertSame(201, $response->getStatusCode());
@@ -127,8 +132,10 @@ final class ApiVersionHttpTest extends ContaoTestCase
         $controller = static function (): never {
             throw new \LogicException('The controller must not run.');
         };
-        $kernel = $this->createKernel($controller, new Post(), new RequestStack());
+
         $request = Request::create('/api/example', 'POST', server: ['HTTP_CONTAO_API_VERSION' => 'invalid']);
+
+        $kernel = $this->createKernel($controller, new Post(), new RequestStack());
         $response = $kernel->handle($request);
 
         $this->assertSame(400, $response->getStatusCode());
@@ -145,12 +152,15 @@ final class ApiVersionHttpTest extends ContaoTestCase
             '_format' => 'json',
             'input_format' => 'json',
         ]));
+
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber(new RouterListener(new UrlMatcher($routes, new RequestContext()), $requests));
 
         $listener = new ApiVersionListener($requests);
+
         $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...), 28);
         $dispatcher->addListener(KernelEvents::RESPONSE, $listener->onKernelResponse(...), -128);
+
         $dispatcher->addListener(
             KernelEvents::EXCEPTION,
             static function (ExceptionEvent $event): void {

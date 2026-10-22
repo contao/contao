@@ -28,8 +28,10 @@ final readonly class VersionedExampleOpenApiFactory implements OpenApiFactoryInt
     {
         $openApi = ($this->decorated)($context);
         $property = $context[ApiVersion::CONTEXT_KEY]->isBefore('2026-03-01') ? 'legacyName' : 'displayName';
+
         $paths = clone $openApi->getPaths();
         $path = $paths->getPath('/contao/api/versioned-example');
+
         $response = new Response('A versioned example.', new \ArrayObject([
             'application/json' => new MediaType(new \ArrayObject([
                 'type' => 'object',
@@ -38,6 +40,7 @@ final readonly class VersionedExampleOpenApiFactory implements OpenApiFactoryInt
                 'additionalProperties' => false,
             ])),
         ]));
+
         $operation = $path->getGet()->withResponses(['200' => $response]);
         $paths->addPath('/contao/api/versioned-example', $path->withGet($operation));
 

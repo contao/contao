@@ -92,6 +92,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
+
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
 
         $services = [
@@ -120,12 +121,14 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container->register('api_platform.state_provider.locator', CallableProvider::class)->setPublic(true);
         $container->register('api_platform.state_processor.locator', CallableProcessor::class)->setPublic(true);
         $container->register('api_platform.serializer.context_builder', SerializerContextBuilder::class)->setPublic(true);
+
         $factory = new class() implements OpenApiFactoryInterface {
             public function __invoke(array $context = []): OpenApi
             {
                 return new OpenApi(new Info('API', '1.0'), [], new Paths());
             }
         };
+
         $container->register('api_platform.openapi.factory', $factory::class)->setPublic(true);
         $container->register('request_stack', RequestStack::class);
         $container->getAlias(ApiVersionProvider::class)->setPublic(true);

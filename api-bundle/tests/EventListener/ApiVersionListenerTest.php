@@ -30,9 +30,11 @@ final class ApiVersionListenerTest extends TestCase
     public function testResolvesVersionAndPreservesVary(string|null $header): void
     {
         $request = $this->createRequest($header);
-        $listener = new ApiVersionListener(new RequestStack());
         $kernel = $this->createStub(HttpKernelInterface::class);
+
+        $listener = new ApiVersionListener(new RequestStack());
         $listener->onKernelRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+
         $version = $request->attributes->get(ApiVersion::CONTEXT_KEY);
 
         $this->assertInstanceOf(ApiVersion::class, $version);
@@ -79,6 +81,7 @@ final class ApiVersionListenerTest extends TestCase
         $request->headers->set(ApiVersion::HEADER, 'invalid');
 
         $kernel = $this->createStub(HttpKernelInterface::class);
+
         $listener = new ApiVersionListener(new RequestStack());
         $listener->onKernelRequest(new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST));
 
@@ -93,9 +96,11 @@ final class ApiVersionListenerTest extends TestCase
     public function testHandlesSubrequestsAndDoesNotReparseHeadersDuringErrorHandling(): void
     {
         $kernel = $this->createStub(HttpKernelInterface::class);
-        $listener = new ApiVersionListener(new RequestStack());
         $request = $this->createRequest('2024-02-29');
+
+        $listener = new ApiVersionListener(new RequestStack());
         $listener->onKernelRequest(new RequestEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST));
+
         $version = $request->attributes->get(ApiVersion::CONTEXT_KEY);
         $this->assertInstanceOf(ApiVersion::class, $version);
 
@@ -111,6 +116,7 @@ final class ApiVersionListenerTest extends TestCase
     {
         $request = $this->createRequest('invalid');
         $response = new Response(status: 400);
+
         new ApiVersionListener(new RequestStack())->onKernelResponse(new ResponseEvent($this->createStub(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response));
 
         $this->assertSame([ApiVersion::HEADER], $response->getVary());
@@ -119,10 +125,13 @@ final class ApiVersionListenerTest extends TestCase
 
     public function testErrorSubrequestsInheritTheResolvedParentVersion(): void
     {
-        $parent = $this->createRequest('2024-02-29');
         $version = new ApiVersion('2024-02-29');
+
+        $parent = $this->createRequest('2024-02-29');
         $parent->attributes->set(ApiVersion::CONTEXT_KEY, $version);
+
         $error = $parent->duplicate(attributes: ['exception' => new \RuntimeException(), '_api_respond' => true]);
+
         $requests = new RequestStack();
         $requests->push($parent);
         $requests->push($error);
