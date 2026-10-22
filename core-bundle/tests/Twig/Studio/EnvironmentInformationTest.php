@@ -86,6 +86,7 @@ class EnvironmentInformationTest extends TestCase
             ],
             $information->getData(),
         );
+
         $this->assertSame(
             ['items' => [['kind' => 'tag', 'name' => 'if'], ['kind' => 'tag', 'name' => 'region']]],
             $information->discover('tag'),

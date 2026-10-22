@@ -43,6 +43,7 @@ final class TwigEnvironmentToolsTest extends TestCase
             ->with('ROLE_ADMIN')
             ->willReturn(false)
         ;
+
         $tools = new TwigEnvironmentTools(new EnvironmentInformation($twig), $security);
 
         foreach (['discover' => [], 'inspect' => ['global', 'app']] as $method => $arguments) {
@@ -89,6 +90,7 @@ final class TwigEnvironmentToolsTest extends TestCase
             ->method('getFunctions')
             ->willThrowException(new \LogicException('Broken extension.'))
         ;
+
         $tools = new TwigEnvironmentTools(new EnvironmentInformation($twig), $this->createAdminSecurity());
 
         $this->expectException(\LogicException::class);
@@ -100,10 +102,12 @@ final class TwigEnvironmentToolsTest extends TestCase
     {
         foreach (['discover', 'inspect'] as $method) {
             $reflection = new \ReflectionMethod(TwigEnvironmentTools::class, $method);
+
             $tool = $reflection->getAttributes(McpTool::class)[0]->newInstance();
             $this->assertSame('contao_twig_environment_'.$method, $tool->name);
             $this->assertTrue($tool->annotations->readOnlyHint);
             $this->assertFalse($tool->annotations->openWorldHint);
+
             $schema = $reflection->getParameters()[0]->getAttributes(Schema::class)[0]->newInstance();
             $this->assertSame(['filter', 'function', 'test', 'tag', 'global'], 'discover' === $method ? $schema->definition['anyOf'][0]['enum'] : $schema->definition['enum']);
         }

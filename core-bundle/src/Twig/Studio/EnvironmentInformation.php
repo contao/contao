@@ -153,6 +153,7 @@ class EnvironmentInformation
     private function inspectCallable(TwigFilter|TwigFunction|TwigTest $entry): array
     {
         $reflector = $this->reflectCallable($entry->getCallable());
+
         $data = [
             'kind' => $entry->getType(),
             'name' => $entry->getName(),

@@ -94,6 +94,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ['kind' => 'function', 'name' => 'inspection_a', 'deprecated' => false],
             ['kind' => 'function', 'name' => 'inspection_z', 'deprecated' => false],
         ]], $inspector->discover('function', 'INSPECTION'));
+
         $this->assertSame(['items' => []], $inspector->discover(query: 'unregistered_inspection_entry'));
     }
 
@@ -136,6 +137,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         ));
 
         $data = new EnvironmentInformation($twig)->inspect('filter', 'inspection_filter');
+
         $this->assertSame(
             [
                 'status' => 'best_effort',
@@ -148,6 +150,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ],
             $data['signature'],
         );
+
         $this->assertSame(
             [
                 'needs_environment' => true,
@@ -158,6 +161,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ],
             $data['requirements'],
         );
+
         $this->assertSame('Closure', $data['implementation']);
     }
 
@@ -193,6 +197,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testDoesNotReportArrayVariadicCollectorsAsOrdinaryParameters(string $kind): void
     {
         $twig = new Environment(new ArrayLoader());
+
         $callable = static function (mixed $value, array $arguments = []): never {
             throw new \LogicException('Inspection must not execute the callable.');
         };
@@ -214,6 +219,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ],
             $data['signature'],
         );
+
         $this->assertTrue($data['requirements']['is_variadic']);
     }
 
@@ -384,6 +390,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
         $data = $inspector->inspect('global', 'inspection_object');
         $this->assertSame('class@anonymous', $data['type']);
+
         $this->assertSame(
             [
                 ['name' => 'secret', 'type' => 'string'],
@@ -391,6 +398,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ],
             $data['properties'],
         );
+
         $this->assertSame(
             [
                 ['name' => 'accept', 'parameters' => [['name' => 'value', 'type' => 'int', 'optional' => true, 'variadic' => false]], 'return_type' => 'never'],
@@ -409,6 +417,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
             ['kind' => 'global', 'name' => 'inspection_empty_object', 'type' => \stdClass::class, 'properties' => [], 'methods' => []],
             $inspector->inspect('global', 'inspection_empty_object'),
         );
+
         $this->assertSame(['items' => [['kind' => 'global', 'name' => 'inspection_callable']]], $inspector->discover('global', 'inspection_callable'));
     }
 
@@ -422,12 +431,15 @@ final class EnvironmentInformationInspectionTest extends TestCase
                 throw new \LogicException('Inspection must not invoke getters.');
             }
         };
+
         $class = new \ReflectionClass($object);
+
         $global = $class->newLazyGhost(
             static function (): void {
                 throw new \LogicException('Inspection must not initialize lazy objects.');
             },
         );
+
         $twig = new Environment(new ArrayLoader());
         $twig->addGlobal('inspection_lazy', $global);
 
@@ -453,10 +465,11 @@ final class EnvironmentInformationInspectionTest extends TestCase
     #[DataProvider('unknownEntries')]
     public function testRejectsUnknownNamesWithoutResolvingUndefinedCallbacks(string $kind, string $name): void
     {
-        $twig = new Environment(new ArrayLoader());
         $callback = static function (): never {
             throw new \LogicException('Inspection must not resolve guessed names.');
         };
+
+        $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedFunctionCallback($callback);
         $twig->registerUndefinedFilterCallback($callback);
         $twig->addFunction(new TwigFunction('inspection_*', 'strlen'));
