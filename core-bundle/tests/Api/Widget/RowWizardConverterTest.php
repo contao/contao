@@ -210,11 +210,13 @@ class RowWizardConverterTest extends TestCase
         $converter = $this->createConverter(files: true);
         $single = ['inputType' => 'file'];
         $multiple = ['inputType' => 'file', 'eval' => ['multiple' => true, 'binary' => false]];
+
         $config = ['inputType' => 'rows', 'fields' => [
             'single' => $single,
             'multiple' => $multiple,
             'nested' => ['inputType' => 'rows', 'fields' => ['file' => $single]],
         ]];
+
         $uuid = '12345678-1234-1234-8234-123456789abc';
         $schema = $converter->getSchema($config, []);
 
@@ -227,10 +229,12 @@ class RowWizardConverterTest extends TestCase
             'multiple' => [$uuid, $uuid],
             'nested' => [['file' => StringUtil::uuidToBin($uuid)]],
         ]]), $config, $schema);
+
         $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $rows[0]->single);
         $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $rows[0]->multiple);
         $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $rows[0]->nested[0]->file);
         $this->assertTrue(new Validator()->validate($rows, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
+
         $this->assertSame(
             [
                 '_rows' => ['1'],
@@ -262,7 +266,9 @@ class RowWizardConverterTest extends TestCase
             ->method('create')
             ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, $files && VirtualFilesystemItem::class === $class ? [new ApiResource(operations: [new Get(name: 'files_get', extraProperties: ['contao' => ['filesystem' => 'files']])])] : []))
         ;
+
         $this->relationMetadataFactory = $metadataFactory;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
@@ -287,6 +293,7 @@ class RowWizardConverterTest extends TestCase
             ->method('getUuid')
             ->willReturn(Uuid::fromString('12345678-1234-1234-8234-123456789abc'))
         ;
+
         $storage = $this->createStub(VirtualFilesystemInterface::class);
         $storage
             ->method('get')

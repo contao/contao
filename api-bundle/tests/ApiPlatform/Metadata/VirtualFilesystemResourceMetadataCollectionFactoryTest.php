@@ -88,6 +88,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
         $this->assertCount(2, $factory->create(VirtualFilesystemItem::class));
         $this->assertSame('files', $resources[0]->getExtraProperties()['contao']['relation_filesystem']);
         $this->assertSame('test_files', $resources[1]->getExtraProperties()['contao']['relation_filesystem']);
+
         $operations = iterator_to_array($resources[1]->getOperations());
         $this->assertSame('/fixtures/test-files/{pathOrUuid}', $operations['contao_api_test_files_get']->getUriTemplate());
 
@@ -96,6 +97,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             $expected = "is_granted('ROLE_ADMIN')";
             $this->assertSame($expected, $operation->getSecurity());
         }
+
         $this->assertSame('contao_api.api_platform.virtual_filesystem_state_provider', $operations['contao_api_test_files_get']->getProvider());
         $this->assertSame('contao_api.api_platform.virtual_filesystem_state_processor', $operations['contao_api_test_files_upload']->getProcessor());
 
@@ -140,6 +142,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ],
             'label' => 'Assets',
         ]]);
+
         $operations = iterator_to_array($factory->create(VirtualFilesystemItem::class)[1]->getOperations());
         $get = $operations['contao_api_assets_get'];
         $collection = $operations['contao_api_assets_get_collection'];
@@ -305,6 +308,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             $operation = $operations[$name];
             $this->assertSame('/files/{pathOrUuid}', $operation->getUriTemplate());
             $this->assertSame(['pathOrUuid' => '.+'], $operation->getRequirements());
+
             $link = $operation->getUriVariables()['pathOrUuid'];
             $this->assertSame(['path'], $link->getIdentifiers());
             $this->assertSame(VirtualFilesystemItem::class, $link->getFromClass());
@@ -359,16 +363,19 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->method('create')
             ->willReturn(new ApiProperty(identifier: true))
         ;
+
         $names = $this->createStub(PropertyNameCollectionFactoryInterface::class);
         $names
             ->method('create')
             ->willReturn(new PropertyNameCollection(['path']))
         ;
+
         $classes = $this->createStub(ResourceClassResolverInterface::class);
         $classes
             ->method('isResourceClass')
             ->willReturn(true)
         ;
+
         $links = new LinkFactory($names, $properties, $classes);
 
         return new UriTemplateResourceMetadataCollectionFactory($links, new UnderscorePathSegmentNameGenerator(), $this->createTestFilesystemFactory());
@@ -381,6 +388,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->method('create')
             ->willReturn(new ResourceNameCollection([VirtualFilesystemItem::class]))
         ;
+
         $classes = $this->createStub(ResourceClassResolverInterface::class);
         $classes
             ->method('isResourceClass')
@@ -391,12 +399,15 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->method('getResourceClass')
             ->willReturn(VirtualFilesystemItem::class)
         ;
+
         $identifiers = $this->createStub(IdentifiersExtractorInterface::class);
         $identifiers
             ->method('getIdentifiersFromItem')
             ->willReturnCallback(static fn (VirtualFilesystemItem $item): array => ['pathOrUuid' => $item->path])
         ;
+
         $generator = new UrlGenerator($this->createApiLoader($factory)->load(null), new RequestContext());
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')

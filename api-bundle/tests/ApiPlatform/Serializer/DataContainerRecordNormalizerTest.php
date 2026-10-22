@@ -159,11 +159,12 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
     public function testNormalizesReferencesInsideObjectRows(): void
     {
-        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
         $record = new DataContainerRecord('tl_content', ['rows' => [
             (object) ['file' => new RelationReference('file-id', '/files/file-id')],
             new \stdClass(),
         ]], 17);
+
+        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
         $normalized = $serializer->normalize($record, 'jsonld');
 
         $this->assertSame(['file' => ['@id' => '/files/file-id', 'id' => 'file-id']], get_object_vars($normalized['rows'][0]));

@@ -153,6 +153,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container->setParameter('kernel.environment', 'test');
         $container->setParameter('kernel.build_dir', sys_get_temp_dir());
         new ContaoApiBundle()->getContainerExtension()->load([], $container);
+
         $container->register('contao.filesystem.virtual_registry', VirtualFilesystemRegistry::class);
         new RegisterVirtualFilesystemsPass()->process($container);
 
@@ -160,6 +161,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $this->assertSame(PermissionCheckingVirtualFilesystem::class, $definition->getClass());
         $this->assertSame('contao.filesystem.virtual.files', (string) $definition->getArgument('$virtualFilesystem'));
         $this->assertSame('security.helper', (string) $definition->getArgument('$security'));
+
         $tags = $container->getDefinition('contao.filesystem.virtual_registry')->getArgument(1);
         $this->assertTrue($tags['api_files']['api_exposure']);
         $this->assertSame('/files', $tags['api_files']['api_path']);

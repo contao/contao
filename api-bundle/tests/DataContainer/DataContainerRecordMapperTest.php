@@ -230,10 +230,12 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             'multiple' => ['inputType' => 'fileTree', 'eval' => ['multiple' => true]],
             'textual' => ['inputType' => 'fileTree', 'eval' => ['binary' => false]],
         ];
+
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $this->createAdapterStub(['loadDataContainer']),
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
+
         $resolver = $this->createRelationResolver(true);
         $factory = new DataContainerSchemaFactory($framework, $this->converters, $resolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
         $mapper = new DataContainerRecordMapper($factory, $this->converters, $resolver, $this->createRelationDefinitionFactory($this->converters));
@@ -247,8 +249,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         }
 
         $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $record->data['multiple']);
+
         $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue(new JsonSchemaValidator()->validate((object) $record->data, $schema)->isValid());
+
         $expected = ['single' => $uuid, 'multiple' => $uuid.','.$uuid, 'textual' => $uuid];
         $this->assertSame($expected, $mapper->toFormValues('tl_content', json_decode(json_encode($record->data, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR)));
         $this->assertSame($expected, $mapper->toFormDefaults('tl_content', $row, ['single', 'multiple', 'textual']));
@@ -323,10 +327,17 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
-            Controller::class => $controller,
-            System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+
+        $factory = new DataContainerSchemaFactory(
+            $this->createContaoFrameworkStub([
+                Controller::class => $controller,
+                System::class => $this->createAdapterStub(['loadLanguageFile']),
+            ]),
+            $this->converters,
+            $this->relationResolver,
+            $this->localeSwitcher,
+            $this->createRelationDefinitionFactory($this->converters),
+        );
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'json' => '["one","two"]', 'csv' => 'one|two', 'serialized' => serialize(['one', 'two'])]);
@@ -384,6 +395,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
@@ -693,6 +705,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('match')
             ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/') ? ['_route' => 'files_get', 'pathOrUuid' => substr($path, \strlen('/contao/api/files/'))] : ['_route' => 'page_get', 'id' => '42'])
         ;
+
         $this->relationMetadataFactory = $metadataFactory;
 
         return new RelationResolver([
@@ -751,6 +764,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('getUuid')
             ->willReturn(Uuid::fromString('f47ac10b-58cc-4372-a567-0e02b2c3d479'))
         ;
+
         $storage = $this->createStub(VirtualFilesystemInterface::class);
         $storage
             ->method('get')

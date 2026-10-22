@@ -50,6 +50,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->with('example.txt')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 4, 'text/plain'))
         ;
+
         $testFilesystem = $this->createMock(VirtualFilesystemInterface::class);
         $testFilesystem
             ->expects($this->once())
@@ -57,6 +58,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->with('example.txt')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 7, 'text/plain'))
         ;
+
         $provider = new VirtualFilesystemStateProvider(new VirtualFilesystemRegistry(new ServiceLocator([
             'files' => fn () => new PermissionCheckingVirtualFilesystem($files, $this->createSecurityStub()),
             'test_files' => static fn () => $testFilesystem,
@@ -73,6 +75,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->expects($this->never())
             ->method('get')
         ;
+
         $provider = new VirtualFilesystemStateProvider($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), $this->createItemFactory());
 
         $this->expectException(AccessDeniedException::class);

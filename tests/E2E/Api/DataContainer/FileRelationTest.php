@@ -85,6 +85,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $path = $this->createContentWithFiles('image', 'singleSRC');
         $files = $this->uploadFiles();
         $this->readResource($path, $userFixture);
+
         $response = $this->patchResource($path, ['singleSRC' => $files[$allowed]], $userFixture);
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
         $this->assertRelatedFile($this->readResource($path)['singleSRC'], self::FILES[$allowed]);
@@ -100,11 +101,13 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $path = $this->createContentWithFiles('gallery', 'multiSRC');
         $files = $this->uploadFiles();
         $this->readResource($path, $userFixture);
+
         $response = $this->patchResource($path, ['multiSRC' => [$files[$allowed]]], $userFixture);
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
 
         $response = $this->patchResource($path, ['multiSRC' => [$files[$allowed], $files[$denied]]], $userFixture);
         $this->assertSame(403, $response->getStatusCode(), $response->getContent(false));
+
         $references = $this->readResource($path)['multiSRC'];
         $this->assertCount(1, $references);
         $this->assertRelatedFile($references[0], self::FILES[$allowed]);
@@ -116,6 +119,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $path = $this->createContentWithFiles('text', 'file_rows');
         $files = $this->uploadFiles();
         $this->readResource($path, $userFixture);
+
         $row = ['single' => $files[$allowed], 'multiple' => [$files[$allowed]]];
         $response = $this->patchResource($path, ['file_rows' => [$row]], $userFixture);
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
@@ -123,6 +127,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $row['multiple'][] = $files[$denied];
         $response = $this->patchResource($path, ['file_rows' => [$row]], $userFixture);
         $this->assertSame(403, $response->getStatusCode(), $response->getContent(false));
+
         $rows = $this->readResource($path)['file_rows'];
         $this->assertCount(1, $rows);
         $this->assertRelatedFile($rows[0]['single'], self::FILES[$allowed]);
@@ -138,11 +143,14 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
 
     private function patchResource(string $path, array $data, string $userFixture): ResponseInterface
     {
-        return self::managedEdition()->send(HttpRequest::json('PATCH', $path)->withHeaders([
-            'Authorization' => 'Bearer '.self::backendAccessToken($userFixture),
-            'Accept' => 'application/ld+json',
-            'Content-Type' => 'application/merge-patch+json',
-        ])->withJson($data));
+        return self::managedEdition()->send(HttpRequest::json('PATCH', $path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken($userFixture),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
+            ])
+            ->withJson($data),
+        );
     }
 
     private function assertRelatedFile(array $reference, string $path): void
@@ -159,12 +167,14 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     private function createContentWithFiles(string $type, string $field): string
     {
         $files = $this->uploadFiles();
+
         $value = match ($field) {
             'singleSRC' => $files[0],
             'multiSRC' => $files,
             'file_rows' => [['single' => $files[0], 'multiple' => $files]],
             default => throw new \InvalidArgumentException('Unknown file field: '.$field),
         };
+
         $path = self::managedEdition()->database()->fixtures()->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
         $response = self::managedEdition()->send(HttpRequest::json('POST', $path)->withHeaders([
@@ -176,6 +186,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
             $field => $value,
             ...('text' === $type ? ['text' => '<p>Related files</p>'] : []),
         ]));
+
         $this->assertSame(201, $response->getStatusCode(), $response->getContent(false));
         $data = $response->toArray(false);
 
@@ -185,7 +196,6 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     private function uploadFiles(): array
     {
         $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
-
         $this->assertIsString($contents);
 
         $files = [];
@@ -196,6 +206,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/octet-stream',
             ])->withBody($contents));
+
             $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
             $data = $response->toArray(false);
 
@@ -211,6 +222,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
             'Authorization' => 'Bearer '.self::backendAccessToken($userFixture),
             'Accept' => 'application/ld+json',
         ]));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
 
         return $response->toArray(false);
@@ -219,6 +231,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig('api-bundle', 'calendar-bundle', 'core-bundle', 'faq-bundle', 'news-bundle', 'newsletter-bundle');
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')

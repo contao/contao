@@ -40,11 +40,13 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
     public function testSelectsTheOperationAndStorageForTheDeclaredFilesystem(bool $onResource): void
     {
         $uuid = '12345678-1234-1234-8234-123456789abc';
+
         $item = $this->createStub(FilesystemItem::class);
         $item
             ->method('getUuid')
             ->willReturn(Uuid::fromString($uuid))
         ;
+
         $testFilesystem = $this->createMock(VirtualFilesystemInterface::class);
         $testFilesystem
             ->expects($this->once())
@@ -52,6 +54,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->with('archive.zip')
             ->willReturn($item)
         ;
+
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->once())
@@ -64,6 +67,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->method('match')
             ->willReturn(['_route' => 'test_files_get', 'pathOrUuid' => 'archive.zip'])
         ;
+
         $resources = [$this->resource('files', $onResource), $this->resource('test_files', $onResource)];
         $resolver = $this->createResolver($resources, $testFilesystem, $router);
         $relation = new VirtualFilesystemRelationDefinition('test_files');
@@ -80,15 +84,18 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('get')
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
             ->willReturn(['_route' => 'files_get', 'pathOrUuid' => 'private.txt'])
         ;
+
         $resource = new ApiResource(operations: [new Get(
             name: 'files_get',
             extraProperties: ['contao' => ['filesystem' => 'test_files', 'relation_filesystem' => 'files']],
         )]);
+
         $resolver = $this->createResolver([$resource], new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class)), $router);
         $relation = new VirtualFilesystemRelationDefinition('files');
 
@@ -104,11 +111,13 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('get')
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
             ->willReturn(['_route' => 'files_get', 'pathOrUuid' => 'archive.zip'])
         ;
+
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
         $this->expectException(UnprocessableEntityHttpException::class);
@@ -124,11 +133,13 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->with('missing.jpg')
             ->willReturn(null)
         ;
+
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('match')
             ->willReturn(['_route' => 'test_files_get', 'pathOrUuid' => 'missing.jpg'])
         ;
+
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
         $this->expectException(UnprocessableEntityHttpException::class);
@@ -144,6 +155,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('get')
         ;
+
         $resolver = $this->createResolver([$this->resource('files', false)], $testFilesystem, $this->createStub(RouterInterface::class));
         $relation = new VirtualFilesystemRelationDefinition('test_files');
 
@@ -158,6 +170,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('get')
         ;
+
         $resolver = $this->createResolver([$this->resource('files', false), $this->resource('test_files', false)], $filesystem, $this->createStub(RouterInterface::class));
         $relation = new VirtualFilesystemRelationDefinition('files');
 

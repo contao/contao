@@ -65,6 +65,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
         }
 
         $prefix = 'contao_api_'.$name;
+
         $operations = [
             $prefix.'_get_collection' => $this->createCollectionOperation($path),
             $prefix.'_move' => $this->createMoveOperation($path),
@@ -72,12 +73,14 @@ final class VirtualFilesystemResourceMetadataCollectionFactory implements Resour
             $prefix.'_upload' => $this->createUploadOperation($path),
             $prefix.'_metadata' => $this->createMetadataOperation($path),
         ];
+
         $metadata = ['filesystem' => $name, 'relation_filesystem' => $tags['api_relation_filesystem'] ?? $name];
 
         foreach ($operations as $key => $operation) {
             $operation = $operation->withExtraProperties([
                 'contao' => $metadata + ($operation->getExtraProperties()['contao'] ?? []),
             ]);
+
             $operations[$key] = $this->configureOperation($operation, substr($key, \strlen($prefix) + 1), $tags['api_operation_attributes'] ?? []);
         }
 

@@ -56,6 +56,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('get')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 4, 'text/plain'))
         ;
+
         $testFilesystem = $this->createMock(VirtualFilesystemInterface::class);
         $testFilesystem
             ->expects($this->once())
@@ -67,11 +68,14 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('get')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 7, 'text/plain'))
         ;
+
         $normalizer = $this->createObjectNormalizer();
+
         $registry = new VirtualFilesystemRegistry(new ServiceLocator([
             'files' => fn () => new PermissionCheckingVirtualFilesystem($files, $this->createSecurityStub()),
             'test_files' => static fn () => $testFilesystem,
         ]), ['files' => [], 'test_files' => []]);
+
         $processor = new VirtualFilesystemStateProcessor($registry, new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
         $request = Request::create('/', 'PUT', content: 'test');
 
@@ -86,6 +90,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->expects($this->never())
             ->method('writeStream')
         ;
+
         $normalizer = $this->createObjectNormalizer();
         $processor = new VirtualFilesystemStateProcessor($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
 

@@ -56,11 +56,14 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
             $files[$denied]['iri'] => 403,
             $files[$denied]['uuidIri'] => 403,
         ] as $path => $expectedStatus) {
-            $response = self::managedEdition()->send(HttpRequest::create('PUT', $path)->withHeaders([
-                'Authorization' => 'Bearer '.self::backendAccessToken($userFixture),
-                'Accept' => 'application/ld+json',
-                'Content-Type' => 'application/octet-stream',
-            ])->withBody($contents));
+            $response = self::managedEdition()->send(HttpRequest::create('PUT', $path)
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken($userFixture),
+                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/octet-stream',
+                ])
+                ->withBody($contents),
+            );
 
             $this->assertSame($expectedStatus, $response->getStatusCode(), $response->getContent(false));
         }
@@ -71,9 +74,10 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     {
         $this->uploadFiles();
         $before = $this->readResource('/contao/api/files/'.self::FILES[$file], $userFixture);
-        $response = $this->updateMetadata(self::FILES[$file], $userFixture);
 
+        $response = $this->updateMetadata(self::FILES[$file], $userFixture);
         $this->assertSame(403, $response->getStatusCode(), $response->getContent(false));
+
         $data = $this->readResource('/contao/api/files/'.self::FILES[$file], $userFixture);
         $this->assertSame($before['metadata'], $data['metadata']);
     }
@@ -82,9 +86,10 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     public function testFileManagerCanEditMetadataInsideItsMount(string $userFixture, int $file): void
     {
         $this->uploadFiles();
-        $response = $this->updateMetadata(self::FILES[$file], $userFixture);
 
+        $response = $this->updateMetadata(self::FILES[$file], $userFixture);
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
         $data = $this->readResource('/contao/api/files/'.self::FILES[$file], $userFixture);
         $this->assertSame('Updated title', $data['metadata']['localized']['en']['title']);
     }
@@ -127,11 +132,14 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
         $files = [];
 
         foreach (self::FILES as $path) {
-            $response = self::managedEdition()->send(HttpRequest::create('PUT', '/contao/api/files/'.$path)->withHeaders([
-                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
-                'Accept' => 'application/ld+json',
-                'Content-Type' => 'application/octet-stream',
-            ])->withBody($contents));
+            $response = self::managedEdition()->send(HttpRequest::create('PUT', '/contao/api/files/'.$path)
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/octet-stream',
+                ])
+                ->withBody($contents),
+            );
 
             $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
             $file = $response->toArray(false);
