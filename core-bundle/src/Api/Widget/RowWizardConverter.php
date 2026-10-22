@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Api\Widget;
 
+use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
@@ -23,6 +26,8 @@ final class RowWizardConverter implements WidgetConverterInterface
     public function __construct(
         private readonly WidgetConverterRegistry $converters,
         private readonly DataContainerSchemaFactory $schemaFactory,
+        private readonly RelationResolverInterface $relationResolver,
+        private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
     ) {
     }
 
@@ -87,7 +92,9 @@ final class RowWizardConverter implements WidgetConverterInterface
                         continue;
                     }
 
-                    $converted[$name] = $this->converters->get($field)?->convertToApiValue($row[$name] ?? null, $field, $property);
+                    $value = $this->converters->get($field)?->convertToApiValue($row[$name] ?? null, $field, $property);
+                    $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($field));
+                    $converted[$name] = $relation ? $this->relationResolver->resolveToReference($value, $relation) : $value;
                 }
 
                 if ($this->hasEnableAction($config)) {
@@ -118,7 +125,11 @@ final class RowWizardConverter implements WidgetConverterInterface
                     continue;
                 }
 
-                $converted[$index][$name] = $this->converters->get($field)?->convertToFormValue($row[$name] ?? null, $field, $property);
+                $value = $row[$name] ?? null;
+                $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($field));
+                $value = $relation ? $this->relationResolver->resolveToIdentifier($value, $relation) : $value;
+
+                $converted[$index][$name] = $this->converters->get($field)?->convertToFormValue($value, $field, $property);
             }
 
             if ($this->hasEnableAction($config)) {

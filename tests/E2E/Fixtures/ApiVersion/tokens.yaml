@@ -1,8 +1,0 @@
-personal_access_token:
-    version_test_token:
-        id: !!binary AAAAAAAAcACAAAAAAAAAgg==
-        scope: backend
-        userId: '@kevin_jones'
-        createdAt: '2026-01-01 00:00:00'
-        name: API version test
-        secret: ikJ6e8IZo8Fhrk6+qchnC3u3Nb77xcdOkUYQSGzEcMs=

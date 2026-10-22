@@ -12,9 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Relation\RelationReference;
+use Contao\ApiBundle\Relation\RelationResolver;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
@@ -22,6 +30,9 @@ use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Api\Widget\RowWizardConverter;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Widget\DateValueFormatter;
 use Contao\FileTree;
@@ -32,8 +43,10 @@ use Contao\TextField;
 use Doctrine\DBAL\Connection;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Uid\Uuid;
 
 class RowWizardConverterTest extends TestCase
 {
@@ -192,30 +205,102 @@ class RowWizardConverterTest extends TestCase
         $this->assertSame(['_rows' => ['1'], ['title' => 'Disabled', 'enable' => '']], $converter->convertToFormValue($rows, $config, $schema));
     }
 
-    private function createConverter(WidgetConverterInterface|null $custom = null): RowWizardConverter
+    public function testConvertsFileRelationsInSingleMultipleAndNestedCells(): void
+    {
+        $converter = $this->createConverter(files: true);
+        $single = ['inputType' => 'file'];
+        $multiple = ['inputType' => 'file', 'eval' => ['multiple' => true, 'binary' => false]];
+
+        $config = ['inputType' => 'rows', 'fields' => [
+            'single' => $single,
+            'multiple' => $multiple,
+            'nested' => ['inputType' => 'rows', 'fields' => ['file' => $single]],
+        ]];
+
+        $uuid = '12345678-1234-1234-8234-123456789abc';
+        $schema = $converter->getSchema($config, []);
+
+        $this->assertSame(['object', 'null'], $schema['items']['properties']['single']['type']);
+        $this->assertArrayNotHasKey('format', $schema['items']['properties']['single']);
+        $this->assertSame(['object', 'null'], $schema['items']['properties']['multiple']['items']['type']);
+
+        $rows = $converter->convertToApiValue(serialize([[
+            'single' => StringUtil::uuidToBin($uuid),
+            'multiple' => [$uuid, $uuid],
+            'nested' => [['file' => StringUtil::uuidToBin($uuid)]],
+        ]]), $config, $schema);
+
+        $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $rows[0]->single);
+        $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $rows[0]->multiple);
+        $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $rows[0]->nested[0]->file);
+        $this->assertTrue(new Validator()->validate($rows, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
+
+        $this->assertSame(
+            [
+                '_rows' => ['1'],
+                ['single' => $uuid, 'multiple' => $uuid.','.$uuid, 'nested' => ['_rows' => ['1'], ['file' => $uuid]]],
+            ],
+            $converter->convertToFormValue(json_decode(json_encode($rows, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR), $config, $schema),
+        );
+    }
+
+    private function createConverter(WidgetConverterInterface|null $custom = null, bool $files = false): RowWizardConverter
     {
         $framework = $this->createStub(ContaoFramework::class);
         $converters = new \ArrayObject($custom ? [$custom] : []);
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
         $registry = new WidgetConverterRegistry($converters);
 
-        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory($registry)));
+        $resolver = $this->createRelationResolver($files);
+        $definitions = $this->createRelationDefinitionFactory($registry);
+        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $resolver, $this->createLocaleSwitcher(), $definitions), $resolver, $definitions);
         $converters[] = $converter;
 
         return $converter;
     }
 
-    private function createRelationResolver(): DataContainerRelationResolver
+    private function createRelationResolver(bool $files): RelationResolverInterface
     {
-        $connection = $this->createStub(Connection::class);
-        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
+        $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
+        $metadataFactory
+            ->method('create')
+            ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, $files && VirtualFilesystemItem::class === $class ? [new ApiResource(operations: [new Get(name: 'files_get', extraProperties: ['contao' => ['filesystem' => 'files']])])] : []))
+        ;
 
-        return new DataContainerRelationResolver(
-            $connection,
-            $this->relationMetadataFactory,
-            $this->createStub(RouterInterface::class),
-            $this->createStub(DcaHierarchy::class),
-        );
+        $this->relationMetadataFactory = $metadataFactory;
+
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('generate')
+            ->willReturnCallback(static fn (string $route, array $parameters): string => '/contao/api/files/'.$parameters['pathOrUuid'])
+        ;
+
+        $router
+            ->method('match')
+            ->willReturnCallback(static fn (string $path): array => ['_route' => 'files_get', 'pathOrUuid' => substr($path, \strlen('/contao/api/files/'))])
+        ;
+
+        return new RelationResolver([
+            new DataContainerRelationResolver($this->createStub(Connection::class), $metadataFactory, $router, $this->createStub(DcaHierarchy::class)),
+            new VirtualFilesystemRelationResolver($metadataFactory, $router, new VirtualFilesystemRegistry(new ServiceLocator(['files' => $this->createFilesStorage(...)]), ['files' => []])),
+        ]);
+    }
+
+    private function createFilesStorage(): VirtualFilesystemInterface
+    {
+        $item = $this->createStub(FilesystemItem::class);
+        $item
+            ->method('getUuid')
+            ->willReturn(Uuid::fromString('12345678-1234-1234-8234-123456789abc'))
+        ;
+
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
+        $storage
+            ->method('get')
+            ->willReturn($item)
+        ;
+
+        return $storage;
     }
 
     private function createLocaleSwitcher(): LocaleSwitcher

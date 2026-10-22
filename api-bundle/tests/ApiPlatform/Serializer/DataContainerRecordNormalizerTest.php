@@ -157,6 +157,21 @@ final class DataContainerRecordNormalizerTest extends TestCase
         $this->assertSame(['@id' => '/contao/api/dc/content/17', 'id' => 17], $normalized['id']);
     }
 
+    public function testNormalizesReferencesInsideObjectRows(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['rows' => [
+            (object) ['file' => new RelationReference('file-id', '/files/file-id')],
+            new \stdClass(),
+        ]], 17);
+
+        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
+        $normalized = $serializer->normalize($record, 'jsonld');
+
+        $this->assertSame(['file' => ['@id' => '/files/file-id', 'id' => 'file-id']], get_object_vars($normalized['rows'][0]));
+        $this->assertInstanceOf(\stdClass::class, $normalized['rows'][1]);
+        $this->assertSame([], get_object_vars($normalized['rows'][1]));
+    }
+
     public function testNormalizesTheRecordData(): void
     {
         $normalizer = $this->createNormalizer();
