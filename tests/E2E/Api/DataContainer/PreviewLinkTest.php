@@ -30,7 +30,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get('/contao/api/docs.jsonopenapi')
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/vnd.openapi+json',
                 ]),
         );
@@ -58,7 +58,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get($path)
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                 ]),
         );
@@ -82,7 +82,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::json('PATCH', $path)
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                     'Content-Type' => 'application/merge-patch+json',
                 ])
@@ -97,7 +97,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get($data['@id'])
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                 ]),
         );
@@ -119,7 +119,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::create('DELETE', $path)
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                 ]),
         );
@@ -129,7 +129,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         $response = self::managedEdition()->send(
             HttpRequest::get($path)
                 ->withHeaders([
-                    'Authorization' => 'Bearer e2e',
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                     'Accept' => 'application/ld+json',
                 ]),
         );
