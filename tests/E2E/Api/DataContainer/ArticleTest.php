@@ -27,7 +27,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/article')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -47,7 +47,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get('/contao/api/dc/article')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -68,7 +68,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -86,7 +86,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($parent, $data['pid']['id']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 

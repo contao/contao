@@ -27,7 +27,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/page')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -52,7 +52,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', '/contao/api/dc/page')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -81,7 +81,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get($path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -102,7 +102,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('PATCH', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/merge-patch+json',
             ])
@@ -116,7 +116,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Updated API page', $data['title']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 
@@ -124,6 +124,40 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
         $this->assertSame('Updated API page', $data['title']);
+    }
+
+    public function testReportsAliasValidationErrors(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/page/{page_main_home}');
+
+        $request = HttpRequest::json('PATCH', $path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
+            ])
+            ->withJson(['alias' => '123'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $error = $response->toArray(false);
+
+        $this->assertSame(422, $response->getStatusCode(), json_encode($error, JSON_PRETTY_PRINT));
+
+        $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+            'Accept' => 'application/ld+json',
+        ]));
+
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($fixtures->value('page_main_home', 'alias'), $data['alias']);
+        $this->assertArrayHasKey('violations', $error, json_encode($error, JSON_PRETTY_PRINT));
+        $this->assertCount(1, $error['violations']);
+        $this->assertSame('alias', $error['violations'][0]['propertyPath']);
+        $this->assertSame('Numeric aliases are not supported!', $error['violations'][0]['message']);
     }
 
     public function testDeletesPage(): void
@@ -134,7 +168,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::create('DELETE', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -144,7 +178,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(204, $response->getStatusCode(), $response->getContent(false));
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 
@@ -163,7 +197,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -180,7 +214,7 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($parent, $data['pid']['id']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 

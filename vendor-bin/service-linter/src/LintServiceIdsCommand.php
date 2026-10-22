@@ -15,6 +15,7 @@ namespace Contao\Tools\ServiceLinter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
@@ -97,6 +98,7 @@ class LintServiceIdsCommand
     private static array $generalServiceClasses = [
         ResourceFinder::class,
         MemoryTokenStorage::class,
+        PermissionCheckingVirtualFilesystem::class,
     ];
 
     /**
@@ -245,8 +247,9 @@ class LintServiceIdsCommand
                     && !isset($config['alias'])
                     && str_contains($serviceId, '\\')
                     && !str_ends_with($serviceId, 'Controller')
+                    && !str_ends_with($serviceId, 'Repository')
                 ) {
-                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.', $serviceId, $fileName);
+                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers and repositories.', $serviceId, $fileName);
                 }
 
                 if (!isset($config['class'])) {

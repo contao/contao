@@ -137,6 +137,16 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame($uuid, $converter->convertToFormValue($uuid, $config, $schema));
     }
 
+    public function testProvidesFileRelationMetadata(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $relation = $converter->getRelation(['inputType' => 'fileTree']);
+
+        $this->assertNotNull($relation);
+        $this->assertSame('files', $relation->filesystem);
+        $this->assertNull($converter->getRelation(['inputType' => 'text']));
+    }
+
     public function testPreparesFormInputInsteadOfSerializedStorage(): void
     {
         $schema = ['type' => 'array', 'items' => ['type' => 'integer']];
