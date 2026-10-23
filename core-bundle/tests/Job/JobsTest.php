@@ -171,7 +171,7 @@ class JobsTest extends AbstractJobsTestCase
 
     public function testDispatchJob(): void
     {
-        $message = new class() implements JobIdAwareMessageInterface {
+        $message = new class implements JobIdAwareMessageInterface {
             use JobIdAwareMessageTrait;
         };
 
