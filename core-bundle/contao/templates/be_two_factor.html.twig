@@ -134,7 +134,7 @@
                             <tr class="hover-row">
                                 <td class="name">
                                     {% if editPassKeyId == credential.id %}
-                                        <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ credential.id }}" data-turbo-temporary>
+                                        <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ credential.id }}" data-turbo-action="advance" data-turbo-temporary>
                                             <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                                             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                             <input type="hidden" name="credential_id" value="{{ credential.id }}">
@@ -247,7 +247,7 @@
                 </table>
             {% endif %}
             {% if create_pat|default %}
-                <form action="{{ path('contao_backend', {do: 'security', act: 'create_pat'}) }}" class="tl_create_pat" method="post" novalidate data-turbo-temporary>
+                <form action="{{ path('contao_backend', {do: 'security', act: 'create_pat'}) }}" class="tl_create_pat" method="post" novalidate data-turbo-frame="_top" data-turbo-temporary>
                     <input type="hidden" name="FORM_SUBMIT" value="tl_pat_create">
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                     <div class="formbody">

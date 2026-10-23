@@ -30,7 +30,7 @@ class UserSecuritySettingsTest extends AbstractContaoMonorepoE2ETestCase
         $backend->page()->locator('[name="pat_name"]')->fill('Created token');
         $backend->page()->locator('[name="pat_expires"]')->selectOption('7');
 
-        $this->waitForTurboFrameLoad($backend, static fn () => $backend->page()->getByRole('button', ['name' => 'Generate token', 'exact' => true])->click());
+        $backend->waitForNavigation(static fn () => $backend->page()->getByRole('button', ['name' => 'Generate token', 'exact' => true])->click());
 
         $token = $backend->page()->locator('#personal-access-tokens button[data-controller="contao--clipboard"] code');
 
@@ -55,7 +55,7 @@ class UserSecuritySettingsTest extends AbstractContaoMonorepoE2ETestCase
         $backend->page()->locator('[name="pat_name"]')->fill('Created token');
         $backend->page()->locator('[name="pat_expires"]')->selectOption('7');
 
-        $this->waitForTurboFrameLoad($backend, static fn () => $backend->page()->getByRole('button', ['name' => 'Generate token', 'exact' => true])->click());
+        $backend->waitForNavigation(static fn () => $backend->page()->getByRole('button', ['name' => 'Generate token', 'exact' => true])->click());
 
         $this->assertSame(1, $backend->page()->locator('#personal-access-tokens button[data-controller="contao--clipboard"] code')->count());
 
