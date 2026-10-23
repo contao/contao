@@ -80,14 +80,18 @@ class ArrayAttributeBagTest extends TestCase
         $bag->set('foo', 'bar');
         $bag->set('bar', ['baz' => 'foo']);
 
-        $foo = $bag['foo']; // @phpstan-ignore variable.unused
-        $foo = ''; // @phpstan-ignore variable.unused
+        $foo = $bag['foo'];
+        $foo .= 'x';
 
-        $baz = $bag['bar']['baz']; // @phpstan-ignore variable.unused
-        $baz = ''; // @phpstan-ignore variable.unused
+        $baz = $bag['bar']['baz'];
+        $baz .= 'x';
 
-        $bar = $bag['bar']; // @phpstan-ignore variable.unused
-        $bar = []; // @phpstan-ignore variable.unused
+        $bar = $bag['bar'];
+        $bar[] = 'x';
+
+        $this->assertSame('barx', $foo);
+        $this->assertSame('foox', $baz);
+        $this->assertSame(['baz' => 'foo', 0 => 'x'], $bar);
 
         $this->assertSame('bar', $bag['foo']);
         $this->assertSame(['baz' => 'foo'], $bag['bar']);
