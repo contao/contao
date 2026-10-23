@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_webhook_ingoing.php" source-language="en">
+    <body>
+      <trans-unit id="tl_webhook_ingoing.name.0">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.name.1">
+        <source>Please enter a name for the ingoing webhook.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.receiver.0">
+        <source>Receiver</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.receiver.1">
+        <source>Please select the ingoing webhook receiver.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.webhookUrl.0">
+        <source>Webhook URL</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.webhookUrl.1">
+        <source>The URL that receives ingoing webhook events.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.secret.0">
+        <source>Secret</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.secret.1">
+        <source>The secret used to verify ingoing webhook events.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.enabled.0">
+        <source>Enabled</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_ingoing.enabled.1">
+        <source>Enable this ingoing webhook.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
