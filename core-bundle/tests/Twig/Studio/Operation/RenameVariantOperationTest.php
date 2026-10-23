@@ -266,7 +266,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
 
     private function getRenameVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, Connection|null $connection = null, CacheInvalidator|null $cacheInvalidator = null): AbstractRenameVariantOperation
     {
-        $operation = new class() extends AbstractRenameVariantOperation {
+        $operation = new class extends AbstractRenameVariantOperation {
             protected function getPrefix(): string
             {
                 return 'prefix';

@@ -31,7 +31,7 @@ export default class TabsController extends Controller {
                 const button = document.createElement('button');
                 button.id = controlReference;
                 button.className = 'select';
-                button.innerText = panel.dataset.label;
+                button.textContent = panel.dataset.label;
                 button.setAttribute('type', 'button');
                 button.setAttribute('role', 'tab');
                 button.setAttribute('aria-controls', panelReference);

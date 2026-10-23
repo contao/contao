@@ -142,10 +142,10 @@ export default class extends Controller {
             }
 
             if (expanded ^ (event ? event.altKey : false)) {
-                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.textContent = this.collapseAllValue;
                 operationTarget.title = this.collapseAllTitleValue;
             } else {
-                operationTarget.innerText = this.expandAllValue;
+                operationTarget.textContent = this.expandAllValue;
                 operationTarget.title = this.expandAllTitleValue;
             }
         }

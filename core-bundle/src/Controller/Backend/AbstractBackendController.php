@@ -45,7 +45,7 @@ abstract class AbstractBackendController extends AbstractController
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
         $getBackendContext = function (Request $request) {
-            $templateClosure = new class() extends BackendMain {
+            $templateClosure = new class extends BackendMain {
                 public function __invoke(Request $request): BackendTemplate
                 {
                     // Create an empty template, so that the template engine's parse() method won't
