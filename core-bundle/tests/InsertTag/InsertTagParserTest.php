@@ -211,7 +211,7 @@ class InsertTagParserTest extends TestCase
         $parser = $this->getInsertTagParser();
         $parser->addSubscription(
             new InsertTagSubscription(
-                new class() implements InsertTagResolverNestedResolvedInterface {
+                new class implements InsertTagResolverNestedResolvedInterface {
                     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
                     {
                         return new InsertTagResult($insertTag->getParameters()->get(1), OutputType::{$insertTag->getParameters()->get(0)});

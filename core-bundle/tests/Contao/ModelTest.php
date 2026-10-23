@@ -114,7 +114,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testConvertToPhpValue(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -128,7 +128,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDefaultValues')]
     public function testDefaultValues(string $key, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -171,7 +171,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testMagicSetterTypes(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()

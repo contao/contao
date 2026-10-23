@@ -51,7 +51,7 @@ export default class extends Controller {
         clearTimeout(this.#timer);
 
         if ('0' === el.dataset.jobs) {
-            this.countTarget.innerText = '';
+            this.countTarget.textContent = '';
 
             if (this.#runningJobs) {
                 // ALl pending jobs have been processed
@@ -62,7 +62,7 @@ export default class extends Controller {
             // Continuously increase interval if there are no results
             this.#pollInterval = Math.min(this.maximumIntervalValue, this.#pollInterval * 2);
         } else {
-            this.countTarget.innerText = el.dataset.jobs;
+            this.countTarget.textContent = el.dataset.jobs;
             this.#runningJobs = true;
 
             this.#pollInterval = this.defaultIntervalValue;

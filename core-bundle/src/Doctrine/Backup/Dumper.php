@@ -230,7 +230,7 @@ class Dumper implements DumperInterface
 
     private function getCompatibleKeywords(): KeywordList
     {
-        return new class() extends KeywordList {
+        return new class extends KeywordList {
             public function isKeyword(mixed $word): bool
             {
                 return true;

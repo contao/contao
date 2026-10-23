@@ -200,7 +200,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
 
     private function getCreateVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null): AbstractCreateVariantOperation
     {
-        $operation = new class() extends AbstractCreateVariantOperation {
+        $operation = new class extends AbstractCreateVariantOperation {
             protected function getPrefix(): string
             {
                 return 'prefix';
