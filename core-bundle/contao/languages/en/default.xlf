@@ -300,7 +300,7 @@
         <source>Lazy loading must be enabled if the sizes attribute is set to "auto".</source>
       </trans-unit>
       <trans-unit id="ERR.fragmentResponseException">
-        <source>The fragment reacted with a new response.</source>
+        <source>This element cannot be previewed.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
