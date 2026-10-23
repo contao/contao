@@ -71,6 +71,33 @@ class UserSecuritySettingsTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSelectorTextContains('#passkeys', 'New passkey');
     }
 
+    public function testDoesNotEditNewPasskeyAgainAfterReload(): void
+    {
+        self::managedEdition()->resetDatabase(new FixtureSet([
+            self::fixtureDirectory().'/'.self::FIXTURE_USERS,
+            self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT,
+            self::fixtureDirectory().'/passkeys.yaml',
+        ]));
+
+        $backend = $this->login('passkey_user');
+        $backend->visit('/contao?do=security');
+
+        $backend->visit($backend->page()->locator('[data-contao--webauthn-registration-success-redirect-uri-value]')->getAttribute('data-contao--webauthn-registration-success-redirect-uri-value'));
+
+        $name = $backend->page()->locator('#passkeys [name="passkey_name"]');
+
+        $this->assertSame(1, $name->count(), $backend->page()->locator('#passkeys')->innerText());
+
+        $name->fill('New passkey');
+
+        $this->waitForTurboFrameLoad($backend, static fn () => $backend->clickButton('#passkeys button[name="save_passkey"]'));
+
+        $backend->waitForNavigation(static fn () => $backend->page()->reload());
+
+        $this->assertSame(0, $backend->page()->locator('#passkeys [name="passkey_name"]')->count(), $backend->page()->url());
+        $this->assertSelectorTextContains('#passkeys', 'New passkey');
+    }
+
     private function waitForTurboFrameLoad(BackendBrowser $backend, callable $action): void
     {
         $backend->page()->evaluate('() => { window.turboFrameLoaded = false; document.addEventListener("turbo:frame-load", () => requestAnimationFrame(() => setTimeout(() => window.turboFrameLoaded = true)), { once: true }); }');
