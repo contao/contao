@@ -14,12 +14,43 @@ namespace Contao\CoreBundle\Tests\Doctrine\DBAL;
 
 use Contao\CoreBundle\Doctrine\DBAL\AbstractTraversalOptions;
 use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Doctrine\DBAL\ParentTraversalOptions;
+use Doctrine\DBAL\ParameterType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class TraversalOptionsTest extends TestCase
 {
+    public function testReplacesScopesImmutably(): void
+    {
+        $definition = new HierarchyDefinition('categories', 'id', 'pid');
+        $scoped = $definition->withScopes(['tree_type' => 'category', 'tenant_id' => 7]);
+
+        $this->assertSame([], $definition->scopes());
+        $this->assertSame(['tree_type' => 'category', 'tenant_id' => 7], $scoped->scopes());
+        $this->assertSame(['tenant_id' => 8], $scoped->withScopes(['tenant_id' => 8])->scopes());
+        $this->assertSame([], $scoped->withScopes([])->scopes());
+        $this->assertSame(['tree_type' => 'category', 'tenant_id' => 7], $scoped->scopes());
+    }
+
+    public function testReplacesWhereBindingsImmutably(): void
+    {
+        $options = new ChildTraversalOptions();
+        $filtered = $options->withWhere('published = ?', [true], [ParameterType::BOOLEAN]);
+        $replaced = $filtered->withWhere('tstamp > 0');
+
+        $this->assertSame('', $options->where());
+        $this->assertSame([], $options->whereParameters());
+        $this->assertSame([], $options->whereTypes());
+        $this->assertSame('published = ?', $filtered->where());
+        $this->assertSame([true], $filtered->whereParameters());
+        $this->assertSame([ParameterType::BOOLEAN], $filtered->whereTypes());
+        $this->assertSame('tstamp > 0', $replaced->where());
+        $this->assertSame([], $replaced->whereParameters());
+        $this->assertSame([], $replaced->whereTypes());
+    }
+
     #[DataProvider('optionsProvider')]
     public function testConfiguresSharedOptionsImmutably(AbstractTraversalOptions $options): void
     {

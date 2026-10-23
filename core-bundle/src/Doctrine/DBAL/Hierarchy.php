@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Doctrine\DBAL;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 
@@ -171,7 +172,14 @@ class Hierarchy
             SELECT DISTINCT node_id, parent_id, order_value$fieldNames FROM contao_tree
             SQL;
 
-        return $this->connection->fetchAllAssociative($sql, [$parentIds], [$this->getArrayParameterType($parentIds)]);
+        $parameters = [...array_values($definition->scopes()), ...$options->whereParameters()];
+        $types = [...$this->getScopeTypes($definition), ...$options->whereTypes()];
+
+        return $this->connection->fetchAllAssociative(
+            $sql,
+            [$parentIds, ...$parameters, ...$parameters],
+            [$this->getArrayParameterType($parentIds), ...$types, ...$types],
+        );
     }
 
     /**
@@ -195,8 +203,8 @@ class Hierarchy
         while ([] !== $pendingIds && (null === $options->maxDepth() || $depth <= $options->maxDepth())) {
             $result = $this->connection->fetchAllAssociative(
                 "SELECT $idColumn AS node_id, $parentColumn AS parent_id, $orderBy$fields FROM $quotedTable WHERE $parentColumn IN (?)$scopeCondition$where",
-                [$pendingIds],
-                [$this->getArrayParameterType($pendingIds)],
+                [$pendingIds, ...array_values($definition->scopes()), ...$options->whereParameters()],
+                [$this->getArrayParameterType($pendingIds), ...$this->getScopeTypes($definition), ...$options->whereTypes()],
             );
 
             $pendingIds = [];
@@ -257,9 +265,29 @@ class Hierarchy
             $select
             SQL;
 
-        return 1 === \count($ids)
-            ? $this->connection->fetchAllAssociative($sql, $ids)
-            : $this->connection->fetchAllAssociative($sql, [$ids], [$this->getArrayParameterType($ids)]);
+        [$parameters, $types] = $this->getParentBindings($ids, $definition, $options);
+
+        return $this->connection->fetchAllAssociative($sql, $parameters, $types);
+    }
+
+    /**
+     * @param non-empty-list<int|string> $ids
+     *
+     * @return array{list<mixed>, list<ParameterType|ArrayParameterType>}
+     */
+    private function getParentBindings(array $ids, HierarchyDefinition $definition, ParentTraversalOptions $options): array
+    {
+        $scope = array_values($definition->scopes());
+        $scopeTypes = $this->getScopeTypes($definition);
+        $condition = $options->includesBoundaryRow() ? [] : $scope;
+        $conditionTypes = $options->includesBoundaryRow() ? [] : $scopeTypes;
+        $anchor = 1 === \count($ids) ? $ids : [$ids];
+        $anchorType = 1 === \count($ids) ? ParameterType::STRING : $this->getArrayParameterType($ids);
+
+        return [
+            [...$scope, ...$anchor, ...$condition, ...$scope, ...$condition],
+            [...$scopeTypes, $anchorType, ...$conditionTypes, ...$scopeTypes, ...$conditionTypes],
+        ];
     }
 
     /**
@@ -295,7 +323,13 @@ class Hierarchy
             $batchSize = $this->getParentBatchSize($options, $fetched);
             $select = $this->getParentUnionSelect($definition, $options, true);
             $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $options, false), $batchSize - 1);
-            $batch = $this->connection->fetchAllAssociative($querySql, [$currentId]);
+            $scope = array_values($definition->scopes());
+            $scopeTypes = $this->getScopeTypes($definition);
+            $condition = $options->includesBoundaryRow() ? [] : $scope;
+            $conditionTypes = $options->includesBoundaryRow() ? [] : $scopeTypes;
+            $parameters = array_merge([...$scope, $currentId, ...$condition], ...array_fill(0, $batchSize - 1, [...$scope, ...$condition]));
+            $types = array_merge([...$scopeTypes, ParameterType::STRING, ...$conditionTypes], ...array_fill(0, $batchSize - 1, [...$scopeTypes, ...$conditionTypes]));
+            $batch = $this->connection->fetchAllAssociative($querySql, $parameters, $types);
 
             foreach ($batch as $row) {
                 $rows[$this->getIdKey($this->getRowId($row, 'node_id'))] = $row;
@@ -594,15 +628,14 @@ class Hierarchy
 
     private function getScopeCondition(HierarchyDefinition $definition, string|null $alias = null): string
     {
-        if (null === $definition->scopeColumn()) {
-            return '';
+        $condition = '';
+
+        foreach (array_keys($definition->scopes()) as $column) {
+            $column = (null === $alias ? '' : $alias.'.').$this->connection->quoteIdentifier($column);
+            $condition .= " AND $column = ?";
         }
 
-        $column = (null === $alias ? '' : $alias.'.').$this->connection->quoteIdentifier($definition->scopeColumn());
-        $value = $definition->scopeValue();
-        $value = \is_int($value) ? (string) $value : $this->connection->getDatabasePlatform()->quoteStringLiteral($value);
-
-        return " AND $column = $value";
+        return $condition;
     }
 
     private function getScopeExpression(HierarchyDefinition $definition, string|null $alias = null): string
@@ -610,6 +643,17 @@ class Hierarchy
         $condition = $this->getScopeCondition($definition, $alias);
 
         return '' === $condition ? '1' : substr($condition, 5);
+    }
+
+    /**
+     * @return list<ParameterType>
+     */
+    private function getScopeTypes(HierarchyDefinition $definition): array
+    {
+        return array_map(
+            static fn (int|string $value): ParameterType => \is_int($value) ? ParameterType::INTEGER : ParameterType::STRING,
+            array_values($definition->scopes()),
+        );
     }
 
     private function getWhereCondition(ChildTraversalOptions $options): string

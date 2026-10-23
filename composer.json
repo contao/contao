@@ -188,7 +188,7 @@
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.21",
+        "twig/twig": "^3.25",
         "ua-parser/uap-php": "^3.9",
         "vstelmakh/url-highlight": "^4.0",
         "web-auth/webauthn-lib": "^5.3",

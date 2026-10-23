@@ -14,19 +14,24 @@ namespace Contao\ApiBundle\ApiPlatform\Serializer;
 
 use ApiPlatform\JsonLd\AnonymousContextBuilderInterface;
 use ApiPlatform\Metadata\Operation;
-use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
-use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Relation\RelationReference;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class DataContainerRecordNormalizer implements NormalizerInterface, DenormalizerInterface
+final class DataContainerRecordNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface
 {
+    use NormalizerAwareTrait;
+
     public function __construct(
-        private readonly DataContainerRelationResolver $relationResolver,
+        private readonly RelationResolverInterface $relationResolver,
         private readonly AnonymousContextBuilderInterface $contextBuilder,
     ) {
     }
@@ -37,11 +42,12 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {
         \assert($data instanceof DataContainerRecord);
-        $normalized = $this->normalizeRelationReferences($data->toArray(), $format);
-        $iri = $this->relationResolver->resolveRecordToIri($data);
+        $normalized = array_map(fn (mixed $value): mixed => $this->normalizeFieldValue($value, $format, $context), $data->toArray());
+        $reference = $this->relationResolver->resolveToReference($data->id, new DataContainerRelationDefinition($data->table));
+        $iri = $reference instanceof RelationReference ? $reference->iri : null;
 
         if (null !== $data->id && null !== $iri) {
-            $normalized['id'] = $this->normalizeRelationReferences(new DataContainerRelationReference($data->id, $iri), $format);
+            $normalized['id'] = $this->normalizer->normalize(new RelationReference($data->id, $iri), $format, $context);
         }
 
         if ('jsonld' !== $format || null === $iri) {
@@ -146,19 +152,18 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
         throw new LogicException(\sprintf('Cannot denormalize "%s" from "%s".', DataContainerRecord::class, get_debug_type($data)));
     }
 
-    private function normalizeRelationReferences(mixed $value, string|null $format): mixed
+    private function normalizeFieldValue(mixed $value, string|null $format, array $context): mixed
     {
-        if ($value instanceof DataContainerRelationReference) {
-            return 'jsonld' === $format
-                ? ['@id' => $value->iri, 'id' => $value->id]
-                : ['id' => $value->id, 'iri' => $value->iri];
+        if ($value instanceof \stdClass) {
+            return (object) array_map(fn (mixed $item): mixed => $this->normalizeFieldValue($item, $format, $context), get_object_vars($value));
         }
 
-        if (!\is_array($value)) {
-            return $value;
+        // Field arrays keep their structure instead of becoming API resource collections
+        if (\is_array($value)) {
+            return array_map(fn (mixed $item): mixed => $this->normalizeFieldValue($item, $format, $context), $value);
         }
 
-        return array_map(fn (mixed $item): mixed => $this->normalizeRelationReferences($item, $format), $value);
+        return $value instanceof RelationReference ? $this->normalizer->normalize($value, $format, $context) : $value;
     }
 
     private function normalizeInputReferences(mixed $value): mixed

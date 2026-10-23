@@ -77,6 +77,23 @@ class FilesystemConfigurationTest extends TestCase
         $config->addVirtualFilesystem('foo', 'bar');
     }
 
+    #[DataProvider('provideInvalidVirtualFilesystemNames')]
+    public function testRejectsInvalidVirtualFilesystemNames(string $name): void
+    {
+        $config = new FilesystemConfiguration($this->getContainerBuilder());
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('must be non-empty and must not contain "/"');
+
+        $config->addVirtualFilesystem($name, 'files');
+    }
+
+    public static function provideInvalidVirtualFilesystemNames(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'slash' => ['files/images'];
+    }
+
     public function testMountNativeAdapter(): void
     {
         $container = $this->getContainerBuilder();

@@ -85,12 +85,13 @@ trait BackendTestTrait
         return Uuid::fromBinary($uuid);
     }
 
-    private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
+    private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
     {
+        $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
         $backend->loginOrReuseSessionAs(
             $username,
-            $password,
+            self::backendPassword($userFixture),
             fn (BackendBrowser $browser) => $this->assertBackendLogin($browser, $username),
         );
 

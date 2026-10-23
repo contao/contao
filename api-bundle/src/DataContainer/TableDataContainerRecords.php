@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\DataContainer;
 
+use ApiPlatform\Validator\Exception\ValidationException;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Controller;
@@ -260,8 +261,8 @@ class TableDataContainerRecords
         $request = $this->requestStack->getCurrentRequest();
         $main = $this->requestStack->getMainRequest();
         $previous = $request->request->all();
-        $error = $main->attributes->get('_contao_widget_error');
-        $main->attributes->remove('_contao_widget_error');
+        $errors = $main->attributes->get('_contao_widget_errors');
+        $main->attributes->remove('_contao_widget_errors');
 
         try {
             if (!$create) {
@@ -291,10 +292,10 @@ class TableDataContainerRecords
             $this->submitFormValues($dc, $values, $defaults);
         } finally {
             $request->request->replace($previous);
-            $main->attributes->remove('_contao_widget_error');
+            $main->attributes->remove('_contao_widget_errors');
 
-            if (null !== $error) {
-                $main->attributes->set('_contao_widget_error', $error);
+            if (null !== $errors) {
+                $main->attributes->set('_contao_widget_errors', $errors);
             }
         }
     }
@@ -309,8 +310,8 @@ class TableDataContainerRecords
         $this->requestStack->getCurrentRequest()->request->add($defaults);
         $this->runBackendAction($dc->edit(...));
 
-        if ($this->requestStack->getMainRequest()->attributes->get('_contao_widget_error')) {
-            throw new UnprocessableEntityHttpException('The data container rejected the submitted fields.');
+        if ($this->requestStack->getMainRequest()->attributes->has('_contao_widget_errors')) {
+            $this->throwValidationError();
         }
     }
 
@@ -388,6 +389,15 @@ class TableDataContainerRecords
             }
 
             return $exception->getResponse();
+        }
+
+        $this->throwValidationError();
+    }
+
+    private function throwValidationError(): never
+    {
+        if ($violations = $this->requestStack->getMainRequest()->attributes->get('_contao_widget_errors')) {
+            throw new ValidationException($violations);
         }
 
         throw new UnprocessableEntityHttpException('The data container rejected the submitted fields.');

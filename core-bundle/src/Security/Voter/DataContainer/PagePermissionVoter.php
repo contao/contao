@@ -204,7 +204,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
         $children = $this->hierarchy->getChildIds($user->pagemounts, 'tl_page');
 
-        return $this->pagemountsCache[$user->id] = [...$children, ...$user->pagemounts];
+        return $this->pagemountsCache[$user->id] = array_map(\intval(...), [...$children, ...$user->pagemounts]);
     }
 
     private function getPagemountTrail(TokenInterface $token): array

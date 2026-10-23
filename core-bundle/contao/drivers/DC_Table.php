@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -32,6 +34,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Provide methods to modify the database.
@@ -125,6 +129,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @var array<string, array<<int, array<int>>
 	 */
 	private $parentPagesCache = array();
+
+	/**
+	 * @var array<string, array<int, list<int>>>
+	 */
+	private array $childrenPagesCache = array();
 
 	/**
 	 * Initialize the object
@@ -3181,7 +3190,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$this->noReload = true;
 						Message::addError($e->getMessage());
-						System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
+						$request = System::getContainer()->get('request_stack')?->getMainRequest();
+
+						if ($request !== null)
+						{
+							$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+							$errors->add(new ConstraintViolation($e->getMessage(), $e->getMessage(), array(), null, '', null));
+							$request->attributes->set('_contao_widget_errors', $errors);
+						}
 
 						break;
 					}
@@ -3919,14 +3935,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$objChildren = $db
-					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-					->execute($id);
-
-				if ($objChildren->numRows)
-				{
-					$children = array_values(array_intersect($objChildren->fetchEach('id'), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
-				}
+				$children = array_values(array_intersect($this->getTreeChildIds($table, (int) $id, $blnHasSorting), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
 			}
 		}
 
@@ -4153,21 +4162,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				array_unshift($arrValues, $id);
 
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute(...$arrValues);
 			}
 			else
 			{
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 			}
 
 			if ($objChildren->numRows)
 			{
-				$ids = $objChildren->fetchEach('id');
+				$ids = array();
 
-				static::preloadCurrentRecords($ids, $this->strTable);
+				while ($objChildren->next())
+				{
+					static::setCurrentRecordCache($objChildren->id, $this->strTable, $objChildren->row());
+					$ids[] = $objChildren->id;
+				}
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
@@ -5573,6 +5586,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$rootIds = $this->root;
+
+		// Also add the child records of the table (see #1811)
+		if ($rootIds && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
+		{
+			$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
+		}
+
 		// Add sorting options
 		$filters = array();
 
@@ -5640,19 +5662,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
-
 			// Limit the options if there are root records
 			if ($this->root)
 			{
-				$rootIds = $this->root;
-
-				// Also add the child records of the table (see #1811)
-				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
-				{
-					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
-				}
-
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 				{
 					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
@@ -5935,8 +5947,45 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return array_keys($allParents);
 	}
 
+	/**
+	 * @return list<int>
+	 */
+	private function getTreeChildIds(string $table, int $id, bool $hasSorting): array
+	{
+		$key = $table . ':' . (int) $hasSorting;
+
+		if (!isset($this->childrenPagesCache[$key][$id]))
+		{
+			// Fetch children for all visible nodes, including root trails and leaves
+			$parentIds = array_values(array_unique(array_map('\intval', array_merge($this->visibleRootTrails, $this->root, $this->rootChildren, array($id)))));
+			$options = (new ChildTraversalOptions())->withMaxDepth(1);
+
+			if ($hasSorting)
+			{
+				$options = $options->withOrderBy('sorting');
+			}
+
+			// Keep the unscoped lookup used by tree rendering
+			$rows = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildRows(
+				$parentIds,
+				new HierarchyDefinition($table, 'id', 'pid'),
+				$options,
+			);
+
+			$this->childrenPagesCache[$key] = array_fill_keys($parentIds, array());
+
+			foreach ($rows as $row)
+			{
+				$this->childrenPagesCache[$key][(int) $row['pid']][] = (int) $row['id'];
+			}
+		}
+
+		return $this->childrenPagesCache[$key][$id];
+	}
+
 	protected function updateRoot(array $root, bool $isSearch = false)
 	{
+		$this->childrenPagesCache = array();
 		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 

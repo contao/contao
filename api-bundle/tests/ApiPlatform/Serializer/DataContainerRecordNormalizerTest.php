@@ -21,15 +21,17 @@ use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
 use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
-use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\ApiBundle\Relation\RelationReference;
+use Contao\ApiBundle\Serializer\RelationReferenceNormalizer;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
-use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
 
 final class DataContainerRecordNormalizerTest extends TestCase
 {
@@ -99,6 +101,77 @@ final class DataContainerRecordNormalizerTest extends TestCase
         );
     }
 
+    public function testNormalizesNestedReferencesThroughTheSerializer(): void
+    {
+        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
+
+        $record = new DataContainerRecord(
+            'tl_content',
+            [
+                'rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]],
+            ],
+            17,
+        );
+
+        $this->assertSame(
+            [
+                'id' => ['id' => 17, 'iri' => '/contao/api/dc/content/17'],
+                'rows' => [['file' => ['id' => 'file-id', 'iri' => '/files/file-id'], 'empty' => null]],
+            ],
+            $serializer->normalize($record),
+        );
+    }
+
+    public function testKeepsFieldArraysOutOfJsonLdCollectionNormalizers(): void
+    {
+        $collections = new class() implements NormalizerInterface {
+            public function normalize(mixed $data, string|null $format = null, array $context = []): array
+            {
+                throw new \LogicException('Record field arrays must not be normalized as resource collections.');
+            }
+
+            public function supportsNormalization(mixed $data, string|null $format = null, array $context = []): bool
+            {
+                return \is_array($data);
+            }
+
+            public function getSupportedTypes(string|null $format): array
+            {
+                return ['native-array' => true];
+            }
+        };
+
+        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer(), $collections]);
+
+        $record = new DataContainerRecord(
+            'tl_content',
+            [
+                'rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]],
+            ],
+            17,
+        );
+
+        $normalized = $serializer->normalize($record, 'jsonld');
+
+        $this->assertSame([['file' => ['@id' => '/files/file-id', 'id' => 'file-id'], 'empty' => null]], $normalized['rows']);
+        $this->assertSame(['@id' => '/contao/api/dc/content/17', 'id' => 17], $normalized['id']);
+    }
+
+    public function testNormalizesReferencesInsideObjectRows(): void
+    {
+        $record = new DataContainerRecord('tl_content', ['rows' => [
+            (object) ['file' => new RelationReference('file-id', '/files/file-id')],
+            new \stdClass(),
+        ]], 17);
+
+        $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
+        $normalized = $serializer->normalize($record, 'jsonld');
+
+        $this->assertSame(['file' => ['@id' => '/files/file-id', 'id' => 'file-id']], get_object_vars($normalized['rows'][0]));
+        $this->assertInstanceOf(\stdClass::class, $normalized['rows'][1]);
+        $this->assertSame([], get_object_vars($normalized['rows'][1]));
+    }
+
     public function testNormalizesTheRecordData(): void
     {
         $normalizer = $this->createNormalizer();
@@ -107,7 +180,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
             'tl_content',
             [
                 'headline' => 'Example',
-                'jumpTo' => new DataContainerRelationReference(42, '/contao/api/dc/content/42'),
+                'jumpTo' => new RelationReference(42, '/contao/api/dc/content/42'),
             ],
             17,
         );
@@ -250,16 +323,18 @@ final class DataContainerRecordNormalizerTest extends TestCase
             ])
         ;
 
-        return new DataContainerRecordNormalizer(
+        $normalizer = new DataContainerRecordNormalizer(
             new DataContainerRelationResolver(
                 $connection,
-                new ForeignKeyParser($connection),
-                new WidgetConverterRegistry([]),
                 $metadataFactory,
                 $router,
                 $this->createStub(DcaHierarchy::class),
             ),
             $contextBuilder,
         );
+
+        $normalizer->setNormalizer(new Serializer([new RelationReferenceNormalizer()]));
+
+        return $normalizer;
     }
 }

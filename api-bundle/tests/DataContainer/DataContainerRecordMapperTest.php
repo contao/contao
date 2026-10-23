@@ -18,9 +18,13 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinition;
-use Contao\ApiBundle\DataContainer\DataContainerRelationReference;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
-use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Relation\RelationReference;
+use Contao\ApiBundle\Relation\RelationResolver;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationResolver;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
@@ -30,6 +34,9 @@ use Contao\Controller;
 use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\DataContainer\DcaHierarchy;
 use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -43,19 +50,24 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Contao\Widget;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Opis\JsonSchema\Validator as JsonSchemaValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Uid\Uuid;
 
 final class DataContainerRecordMapperTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     private WidgetConverterRegistry $converters;
 
-    private DataContainerRelationResolver $relationResolver;
+    private RelationResolverInterface $relationResolver;
 
     private LocaleSwitcher $localeSwitcher;
 
@@ -78,7 +90,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($framework))]);
-        $this->relationResolver = $this->createRelationResolver($this->converters);
+        $this->relationResolver = $this->createRelationResolver();
         $this->localeSwitcher = $this->createLocaleSwitcher();
 
         $GLOBALS['BE_FFL'] = [
@@ -128,7 +140,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'title' => 'Example', 'published' => '1', 'count' => '42', 'tags' => serialize(['one', 'two']), 'password' => 'hash', 'unknown' => 'private']);
 
         $this->assertSame(17, $record->id);
@@ -159,9 +171,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 $this->converters,
                 $this->relationResolver,
                 $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
             ),
             $this->converters,
             $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
         );
 
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'tstamp' => '123', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128', 'internal' => 'hidden']);
@@ -170,7 +184,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertEquals(
             [
                 'tstamp' => date(\DateTimeInterface::ATOM, 123),
-                'pid' => new DataContainerRelationReference(42, '/contao/api/dc/page/42'),
+                'pid' => new RelationReference(42, '/contao/api/dc/page/42'),
                 'ptable' => 'tl_article',
                 'sorting' => 128,
             ],
@@ -193,10 +207,10 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
-        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'singleSRC' => hex2bin(str_replace('-', '', $uuid))]);
 
         $this->assertSame($uuid, $record->data['singleSRC']);
@@ -209,6 +223,42 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         }
     }
 
+    public function testMapsFileRelationsAndPreservesWidgetDefaults(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'single' => ['inputType' => 'fileTree', 'sql' => ['type' => 'binary', 'length' => 16]],
+            'multiple' => ['inputType' => 'fileTree', 'eval' => ['multiple' => true]],
+            'textual' => ['inputType' => 'fileTree', 'eval' => ['binary' => false]],
+        ];
+
+        $framework = $this->createContaoFrameworkStub([
+            Controller::class => $this->createAdapterStub(['loadDataContainer']),
+            System::class => $this->createAdapterStub(['loadLanguageFile']),
+        ]);
+
+        $resolver = $this->createRelationResolver(true);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $resolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $resolver, $this->createRelationDefinitionFactory($this->converters));
+        $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+        $binary = hex2bin(str_replace('-', '', $uuid));
+        $row = ['id' => 17, 'single' => $binary, 'multiple' => serialize([$binary, $binary]), 'textual' => $uuid];
+        $record = $mapper->fromRow('tl_content', $row);
+
+        foreach (['single', 'textual'] as $field) {
+            $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $record->data[$field]);
+        }
+
+        $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $record->data['multiple']);
+
+        $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+        $this->assertTrue(new JsonSchemaValidator()->validate((object) $record->data, $schema)->isValid());
+
+        $expected = ['single' => $uuid, 'multiple' => $uuid.','.$uuid, 'textual' => $uuid];
+        $this->assertSame($expected, $mapper->toFormValues('tl_content', json_decode(json_encode($record->data, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR)));
+        $this->assertSame($expected, $mapper->toFormDefaults('tl_content', $row, ['single', 'multiple', 'textual']));
+        $this->assertSame(['single' => '', 'multiple' => ''], $mapper->toFormValues('tl_content', ['single' => null, 'multiple' => []]));
+    }
+
     #[DataProvider('provideEmptyValues')]
     public function testEmptyValuesMatchTheWidgetSchema(array $config, mixed $stored, mixed $expected): void
     {
@@ -219,9 +269,9 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters, $this->relationResolver, $this->localeSwitcher);
+        ]), $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
 
-        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'value' => $stored]);
 
         $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), null, 512, JSON_THROW_ON_ERROR);
@@ -257,7 +307,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ]);
 
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $record = $mapper->fromRow('tl_content', [
             'id' => 17,
@@ -277,12 +327,19 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
-        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
-            Controller::class => $controller,
-            System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters, $this->relationResolver, $this->localeSwitcher);
 
-        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
+        $factory = new DataContainerSchemaFactory(
+            $this->createContaoFrameworkStub([
+                Controller::class => $controller,
+                System::class => $this->createAdapterStub(['loadLanguageFile']),
+            ]),
+            $this->converters,
+            $this->relationResolver,
+            $this->localeSwitcher,
+            $this->createRelationDefinitionFactory($this->converters),
+        );
+
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'json' => '["one","two"]', 'csv' => 'one|two', 'serialized' => serialize(['one', 'two'])]);
 
         $this->assertSame(['json' => ['one', 'two'], 'csv' => ['one', 'two'], 'serialized' => ['one', 'two']], $record->data);
@@ -317,9 +374,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 $this->converters,
                 $this->relationResolver,
                 $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
             ),
             $this->converters,
             $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
         );
 
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'files' => serialize([hex2bin(str_replace('-', '', $uuid))]), 'textual' => '1234567890123456']);
@@ -336,12 +395,13 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
+
         $framework = $this->createContaoFrameworkStub([
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $this->assertSame(['pages' => '1,2'], $mapper->toFormValues('tl_content', ['pages' => [1, 2]]));
     }
@@ -361,8 +421,8 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher);
-        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $schema = json_decode(json_encode($factory->create('tl_news'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(
@@ -380,7 +440,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $this->assertTrue(new JsonSchemaValidator()->validate((object) ['jumpTo' => (object) ['iri' => '/contao/api/dc/page/42']], $schema)->isValid());
         $this->assertFalse(new JsonSchemaValidator()->validate((object) ['jumpTo' => 42], $schema)->isValid());
-        $this->assertEquals(new DataContainerRelationReference(42, '/contao/api/dc/page/42'), $mapper->fromRow('tl_news', ['id' => 1, 'jumpTo' => 42])->data['jumpTo']);
+        $this->assertEquals(new RelationReference(42, '/contao/api/dc/page/42'), $mapper->fromRow('tl_news', ['id' => 1, 'jumpTo' => 42])->data['jumpTo']);
         $this->assertSame(['jumpTo' => '42'], $mapper->toFormValues('tl_news', ['jumpTo' => ['id' => 42, 'iri' => '/contao/api/dc/page/42']]));
     }
 
@@ -393,7 +453,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $this->assertSame(42, $mapper->toParentIdentifier('tl_article', ['iri' => '/contao/api/dc/page/42']));
 
@@ -410,7 +470,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ];
 
         $converters = new WidgetConverterRegistry([$this->createRelationAwareConverter()]);
-        $resolver = $this->createRelationResolver($converters);
+        $resolver = $this->createRelationResolver();
         $controller = $this->createAdapterStub(['loadDataContainer']);
 
         $framework = $this->createContaoFrameworkStub([
@@ -418,11 +478,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $converters, $resolver, $this->localeSwitcher);
-        $mapper = new DataContainerRecordMapper($factory, $converters, $resolver);
+        $factory = new DataContainerSchemaFactory($framework, $converters, $resolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($converters));
+        $mapper = new DataContainerRecordMapper($factory, $converters, $resolver, $this->createRelationDefinitionFactory($converters));
 
         $this->assertSame('iri-reference', $factory->create('tl_content')['properties']['destination']['properties']['iri']['format']);
-        $this->assertEquals(new DataContainerRelationReference(42, '/contao/api/dc/page/42'), $mapper->fromRow('tl_content', ['id' => 1, 'destination' => 42])->data['destination']);
+        $this->assertEquals(new RelationReference(42, '/contao/api/dc/page/42'), $mapper->fromRow('tl_content', ['id' => 1, 'destination' => 42])->data['destination']);
         $this->assertSame(['destination' => '42'], $mapper->toFormValues('tl_content', ['destination' => ['@id' => '/contao/api/dc/page/42', 'id' => 42]]));
     }
 
@@ -439,8 +499,8 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher);
-        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver);
+        $factory = new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+        $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $timestamp = mktime(14, 35, 0, 9, 17, 2026);
 
         foreach (['date' => ['d.m.Y', '17.09.2026'], 'time' => ['H:i', '14:35'], 'datim' => ['d.m.Y H:i', '17.09.2026 14:35']] as $rgxp => [$format, $expected]) {
@@ -498,9 +558,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 $this->converters,
                 $this->relationResolver,
                 $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
             ),
             $this->converters,
             $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
         );
 
         $this->assertSame(['rows' => [1, 2]], $mapper->fromRow('tl_content', ['id' => 17, 'rows' => '1|2'])->data);
@@ -529,9 +591,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 $this->converters,
                 $this->relationResolver,
                 $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
             ),
             $this->converters,
             $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
         );
 
         $this->assertSame([], $mapper->fromRow('tl_content', ['id' => 17, 'payload' => 'private'])->data);
@@ -561,9 +625,11 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
                 $this->converters,
                 $this->relationResolver,
                 $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
             ),
             $this->converters,
             $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
         );
 
         $row = ['alias' => '', 'password' => 'stored-hash', 'locked' => 'fixed', 'outside' => 'hidden'];
@@ -582,7 +648,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $mapper->toFormValues('tl_content', ['locked' => 'Changed']);
@@ -599,14 +665,14 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher), $this->converters, $this->relationResolver);
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $this->expectExceptionMessage('Field "pid" is not writable through the update operation.');
         $mapper->toFormValues('tl_content', ['pid' => 42]);
     }
 
-    private function createRelationResolver(WidgetConverterRegistry $converters): DataContainerRelationResolver
+    private function createRelationResolver(bool $files = false): RelationResolverInterface
     {
         $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
         $connection->executeStatement('CREATE TABLE tl_page (id INTEGER PRIMARY KEY, tstamp INTEGER NOT NULL, title VARCHAR(255))');
@@ -626,21 +692,26 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $metadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadataFactory
             ->method('create')
-            ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, [$resource]))
+            ->willReturnCallback(static fn (string $class): ResourceMetadataCollection => new ResourceMetadataCollection($class, VirtualFilesystemItem::class === $class ? ($files ? [new ApiResource(operations: [new Get(name: 'files_get', extraProperties: ['contao' => ['filesystem' => 'files']])])] : []) : [$resource]))
         ;
 
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
-            ->willReturn('/contao/api/dc/page/42')
+            ->willReturnCallback(static fn (string $route, array $parameters): string => 'files_get' === $route ? '/contao/api/files/'.$parameters['pathOrUuid'] : '/contao/api/dc/page/42')
         ;
 
         $router
             ->method('match')
-            ->willReturn(['_route' => 'page_get', 'id' => '42'])
+            ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/') ? ['_route' => 'files_get', 'pathOrUuid' => substr($path, \strlen('/contao/api/files/'))] : ['_route' => 'page_get', 'id' => '42'])
         ;
 
-        return new DataContainerRelationResolver($connection, new ForeignKeyParser($connection), $converters, $metadataFactory, $router, $this->createStub(DcaHierarchy::class));
+        $this->relationMetadataFactory = $metadataFactory;
+
+        return new RelationResolver([
+            new DataContainerRelationResolver($connection, $metadataFactory, $router, $this->createStub(DcaHierarchy::class)),
+            new VirtualFilesystemRelationResolver($metadataFactory, $router, new VirtualFilesystemRegistry(new ServiceLocator(['files' => $this->createFilesStorage(...)]), ['files' => []])),
+        ]);
     }
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface
@@ -684,5 +755,27 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createFilesStorage(): VirtualFilesystemInterface
+    {
+        $item = $this->createStub(FilesystemItem::class);
+        $item
+            ->method('getUuid')
+            ->willReturn(Uuid::fromString('f47ac10b-58cc-4372-a567-0e02b2c3d479'))
+        ;
+
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
+        $storage
+            ->method('get')
+            ->willReturn($item)
+        ;
+
+        return $storage;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }
