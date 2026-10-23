@@ -274,13 +274,13 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     public function testDoesNotDoublePrefixAlreadyPrefixedPaths(): void
     {
         $factory = new DataContainerOpenApiFactory(
-            new class() implements OpenApiFactoryInterface {
+            new class implements OpenApiFactoryInterface {
                 public function __invoke(array $context = []): OpenApi
                 {
                     return new OpenApi(new Info('Contao API', '1.0.0'), [], new Paths());
                 }
             },
-            new class() implements ResourceMetadataCollectionFactoryInterface {
+            new class implements ResourceMetadataCollectionFactoryInterface {
                 public function create(string $resourceClass): ResourceMetadataCollection
                 {
                     return new ResourceMetadataCollection(DataContainerRecord::class, []);

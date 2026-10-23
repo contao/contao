@@ -35,7 +35,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testDiscoversEveryCategoryFromTheActiveEnvironment(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addExtension(new class() extends AbstractExtension implements GlobalsInterface {
+        $twig->addExtension(new class extends AbstractExtension implements GlobalsInterface {
             public function getFilters(): array
             {
                 return [new TwigFilter('inspection_filter', 'strtoupper')];
@@ -53,7 +53,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
             public function getTokenParsers(): array
             {
-                return [new class() extends AbstractTokenParser {
+                return [new class extends AbstractTokenParser {
                     public function parse(Token $token): Node
                     {
                         throw new \LogicException('Inspection must not parse tags.');
@@ -113,7 +113,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testInspectsEffectiveOverrides(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addExtension(new class() extends AbstractExtension {
+        $twig->addExtension(new class extends AbstractExtension {
             public function getFunctions(): array
             {
                 return [new TwigFunction('inspection_override', 'strlen')];
@@ -249,7 +249,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testReflectsRuntimeMethodsWithoutResolvingTheRuntime(): void
     {
-        $runtime = new class() {
+        $runtime = new class {
             public function build(\Countable&\Stringable $value): \Countable&\Stringable
             {
                 throw new \LogicException('Inspection must not execute the runtime.');
@@ -257,7 +257,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         };
 
         $twig = new Environment(new ArrayLoader());
-        $twig->addRuntimeLoader(new class() implements RuntimeLoaderInterface {
+        $twig->addRuntimeLoader(new class implements RuntimeLoaderInterface {
             public function load(string $class): object|null
             {
                 throw new \LogicException('Inspection must not resolve runtimes.');
@@ -284,7 +284,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testReflectsInvokableObjectsWithoutCallingThem(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addFunction(new TwigFunction('inspection_invoke', new class() {
+        $twig->addFunction(new TwigFunction('inspection_invoke', new class {
             public function __invoke(string $value): string
             {
                 throw new \LogicException('Inspection must not invoke the object.');
@@ -346,7 +346,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testReflectsGlobalApisWithoutReadingValuesOrInvokingMembers(): void
     {
-        $global = new class() {
+        $global = new class {
             public string|null $uninitialized;
             public string $secret = 'inspection-secret-value';
             public static string $staticSecret = 'inspection-static-secret-value';
@@ -423,7 +423,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testDoesNotInitializeLazyGlobalObjects(): void
     {
-        $object = new class() {
+        $object = new class {
             public string $secret;
 
             public function getSecret(): string

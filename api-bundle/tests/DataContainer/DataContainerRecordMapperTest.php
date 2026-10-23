@@ -349,7 +349,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testInheritsWidgetConversionIndependentlyOfSchema(): void
     {
-        $widget = new class() extends FileTree {
+        $widget = new class extends FileTree {
             public function __construct()
             {
             }
@@ -521,7 +521,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testDelegatesCompleteValuesToTheWidget(): void
     {
-        $converter = new class() implements WidgetConverterInterface {
+        $converter = new class implements WidgetConverterInterface {
             public function supports(array $config): bool
             {
                 return 'customRows' === ($config['inputType'] ?? null);
@@ -571,7 +571,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testOmitsUnsupportedWidgetsAndRejectsTheirInput(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
@@ -716,7 +716,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface
     {
-        return new class() implements RelationAwareWidgetConverterInterface {
+        return new class implements RelationAwareWidgetConverterInterface {
             public function supports(array $config): bool
             {
                 return 'customRelation' === ($config['inputType'] ?? null);

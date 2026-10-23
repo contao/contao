@@ -124,7 +124,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
     public function testKeepsFieldArraysOutOfJsonLdCollectionNormalizers(): void
     {
-        $collections = new class() implements NormalizerInterface {
+        $collections = new class implements NormalizerInterface {
             public function normalize(mixed $data, string|null $format = null, array $context = []): array
             {
                 throw new \LogicException('Record field arrays must not be normalized as resource collections.');

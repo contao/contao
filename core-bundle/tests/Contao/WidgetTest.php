@@ -56,7 +56,7 @@ class WidgetTest extends TestCase
         $request = new Request(attributes: ['_contao_widget_errors' => $errors]);
         System::getContainer()->get('request_stack')->push($request);
 
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }

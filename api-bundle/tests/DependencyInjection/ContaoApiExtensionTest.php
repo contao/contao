@@ -125,7 +125,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container->register('api_platform.state_processor.locator', CallableProcessor::class)->setPublic(true);
         $container->register('api_platform.serializer.context_builder', SerializerContextBuilder::class)->setPublic(true);
 
-        $factory = new class() implements OpenApiFactoryInterface {
+        $factory = new class implements OpenApiFactoryInterface {
             public function __invoke(array $context = []): OpenApi
             {
                 return new OpenApi(new Info('API', '1.0'), [], new Paths());

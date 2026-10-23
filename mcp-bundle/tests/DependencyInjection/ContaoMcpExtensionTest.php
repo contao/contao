@@ -245,7 +245,7 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register('contao.search.backend', BackendSearch::class)->setSynthetic(true)->setPublic(true);
         }
 
-        $otherTool = new class() {
+        $otherTool = new class {
             #[McpTool(name: 'frontend_example')]
             public function __invoke(): string
             {

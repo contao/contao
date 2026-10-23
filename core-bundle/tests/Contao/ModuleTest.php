@@ -104,7 +104,7 @@ class ModuleTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $moduleInstance = new class() extends Module {
+        $moduleInstance = new class extends Module {
             public function __construct()
             {
             }

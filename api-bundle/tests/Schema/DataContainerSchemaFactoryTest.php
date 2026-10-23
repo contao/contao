@@ -158,7 +158,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testRequiresExplicitWidgetSupportEvenWithSchemaOverrides(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
@@ -274,7 +274,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testInheritsWidgetSchemaForEveryFieldUsingThatWidget(): void
     {
-        $widget = new class() extends FileTree {
+        $widget = new class extends FileTree {
             public function __construct()
             {
             }
@@ -298,7 +298,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testConvertersCanSupportUnmodifiedThirdPartyWidgets(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
