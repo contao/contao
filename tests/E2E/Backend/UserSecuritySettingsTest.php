@@ -45,6 +45,26 @@ class UserSecuritySettingsTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(0, $backend->page()->locator('#personal-access-tokens code')->count());
     }
 
+    public function testDoesNotShowCreateFormAgainAfterReload(): void
+    {
+        $backend = $this->login();
+
+        // Opening the link in a new tab loads the create form without the frame
+        $backend->visit('/contao?do=security&act=create_pat');
+
+        $backend->page()->locator('[name="pat_name"]')->fill('Created token');
+        $backend->page()->locator('[name="pat_expires"]')->selectOption('7');
+
+        $this->waitForTurboFrameLoad($backend, static fn () => $backend->page()->getByRole('button', ['name' => 'Generate token', 'exact' => true])->click());
+
+        $this->assertSame(1, $backend->page()->locator('#personal-access-tokens button[data-controller="contao--clipboard"] code')->count());
+
+        $backend->waitForNavigation(static fn () => $backend->page()->reload());
+
+        $this->assertSame(0, $backend->page()->locator('#personal-access-tokens [name="pat_name"]')->count(), $backend->page()->url());
+        $this->assertSame(0, $backend->page()->locator('#personal-access-tokens code')->count());
+    }
+
     public function testRenamesPasskey(): void
     {
         self::managedEdition()->resetDatabase(new FixtureSet([
