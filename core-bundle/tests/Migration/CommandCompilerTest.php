@@ -25,7 +25,7 @@ class CommandCompilerTest extends TestCase
 {
     public function testRunsAllCompiledCommands(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $executedCommands = [];
 
             public function __construct()
@@ -50,7 +50,7 @@ class CommandCompilerTest extends TestCase
 
     public function testRetriesFailedCommandsAfterAnotherCommandSucceeds(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $attemptedCommands = [];
 
             private bool $columnExists = false;
@@ -83,7 +83,7 @@ class CommandCompilerTest extends TestCase
 
     public function testCompilesAgainAfterExecutingCommands(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $executedCommands = [];
 
             public function __construct()

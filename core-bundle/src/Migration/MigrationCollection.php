@@ -60,6 +60,7 @@ class MigrationCollection
             $executedMigrations = false;
 
             try {
+                // @phpstan-ignore foreach.unusedValue
                 foreach ($this->run([...$this->getPendingNames()]) as $ignored) {
                     $executedMigrations = true;
                 }

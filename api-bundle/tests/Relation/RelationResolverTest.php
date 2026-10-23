@@ -107,7 +107,7 @@ final class RelationResolverTest extends TestCase
             ->willReturn(true)
         ;
 
-        $initialized = new class() {
+        $initialized = new class {
             /**
              * @var list<string>
              */

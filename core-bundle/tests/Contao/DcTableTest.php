@@ -250,7 +250,7 @@ class DcTableTest extends TestCase
             }
         }];
 
-        $driver = new class() extends DC_Table {
+        $driver = new class extends DC_Table {
             public function __construct()
             {
                 $this->strTable = 'tl_undo';
@@ -485,7 +485,7 @@ class DcTableTest extends TestCase
             'fields' => ['title' => ['sorting' => true, 'flag' => DataContainer::SORT_BOTH]],
         ];
 
-        return new class() extends DC_Table {
+        return new class extends DC_Table {
             public function __construct()
             {
                 $this->strTable = 'tl_test';

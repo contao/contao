@@ -20,7 +20,7 @@ class AbstractMigrationTest extends TestCase
 {
     public function testGetNameUsesClassName(): void
     {
-        $migration = new class() extends AbstractMigration {
+        $migration = new class extends AbstractMigration {
             public function shouldRun(): bool
             {
                 return true;
@@ -37,7 +37,7 @@ class AbstractMigrationTest extends TestCase
 
     public function testCreateResultDefault(): void
     {
-        $migration = new class() extends AbstractMigration {
+        $migration = new class extends AbstractMigration {
             public function getName(): string
             {
                 return 'Test Migration';
@@ -61,7 +61,7 @@ class AbstractMigrationTest extends TestCase
 
     public function testCreateResultFailed(): void
     {
-        $migration = new class() extends AbstractMigration {
+        $migration = new class extends AbstractMigration {
             public function getName(): string
             {
                 return 'Test Migration';
@@ -85,7 +85,7 @@ class AbstractMigrationTest extends TestCase
 
     public function testCreateResultCustomMessage(): void
     {
-        $migration = new class() extends AbstractMigration {
+        $migration = new class extends AbstractMigration {
             public function getName(): string
             {
                 return 'Test Migration';

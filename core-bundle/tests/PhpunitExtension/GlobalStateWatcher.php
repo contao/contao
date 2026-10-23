@@ -196,7 +196,7 @@ final class GlobalStateWatcher implements Extension
                 'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
                 'DASPRiD\Enum\AbstractEnum',
-                'Doctrine\Deprecations\\Deprecation',
+                'Doctrine\Deprecations\Deprecation',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',

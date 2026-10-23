@@ -61,7 +61,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
-        $extendedDcTableClass = new class() extends DC_Table {
+        $extendedDcTableClass = new class extends DC_Table {
             public function __construct()
             {
             }

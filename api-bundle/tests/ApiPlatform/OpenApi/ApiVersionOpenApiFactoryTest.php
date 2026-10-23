@@ -33,7 +33,7 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
 {
     public function testGeneratesDifferentSchemasForSuccessiveRequestVersions(): void
     {
-        $decorated = new class() implements OpenApiFactoryInterface {
+        $decorated = new class implements OpenApiFactoryInterface {
             public function __invoke(array $context = []): OpenApi
             {
                 $version = $context[ApiVersion::CONTEXT_KEY];

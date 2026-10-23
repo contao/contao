@@ -384,8 +384,6 @@ class Document
         foreach ($data as $key => $value) {
             foreach ($contexts as $context) {
                 if ('@type' === $key) {
-                    $newData[$key] = $value;
-
                     $newData[$key] = array_map(
                         static fn (string $type): string => str_starts_with($type, $context)
                             ? substr($type, \strlen((string) $context))

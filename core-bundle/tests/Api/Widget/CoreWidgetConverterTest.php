@@ -85,7 +85,7 @@ class CoreWidgetConverterTest extends TestCase
             $this->assertTrue($converter->supports(['inputType' => $inputType]));
         }
 
-        $widget = new class() extends TextField {
+        $widget = new class extends TextField {
             public function __construct()
             {
             }
