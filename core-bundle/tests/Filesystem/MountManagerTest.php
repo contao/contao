@@ -281,7 +281,7 @@ class MountManagerTest extends TestCase
     {
         [$delegateMethod] = $expectedDelegateCall;
 
-        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
+        $flysystemException = new class extends \RuntimeException implements FilesystemException {
         };
 
         $adapter = $this->createMock(FilesystemAdapter::class);
