@@ -979,9 +979,8 @@ class tl_content extends Backend
 
 			if ($exception instanceof ResponseException)
 			{
-				$translator = System::getContainer()->get('translator');
 				$messageClass = 'tl_info';
-				$message = $translator->trans('ERR.fragmentResponseException', array(), 'contao_default');
+				$message = System::getContainer()->get('translator')->trans('ERR.fragmentResponseException', array(), 'contao_default');
 			}
 
 			$preview = $template->render(array('class' => $messageClass, 'message' => $message));
