@@ -1,5 +1,4 @@
 includes:
-    - vendor-bin/phpstan/config/config.php
     - vendor-bin/phpstan/vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor-bin/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
@@ -69,6 +68,7 @@ parameters:
 
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false
+    tmpDir: %env.TMPDIR%/phpstan/contao
 
 services:
     - class: Contao\Tools\PHPStan\HelperReturnTypeExtension
