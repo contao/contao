@@ -35,7 +35,7 @@ use Doctrine\DBAL\ArrayParameterType;
  * @property string         $inputName
  * @property string         $palette
  * @property array          $rootIds
- * @property int            $currentPid
+ * @property int|null       $currentPid
  */
 abstract class DataContainer extends Backend
 {
