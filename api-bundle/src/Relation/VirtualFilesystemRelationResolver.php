@@ -71,9 +71,13 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
 
         $path = $parameters['pathOrUuid'] ?? $parameters['path'] ?? null;
 
+        if (!\is_string($path)) {
+            throw new UnprocessableEntityHttpException('The relation IRI does not identify a registered file or directory.');
+        }
+
         try {
-            $location = \is_string($path) && Uuid::isValid($path) ? Uuid::fromString($path) : $path;
-            $uuid = \is_string($location) || $location instanceof Uuid ? $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem'])->get($location)?->getUuid() : null;
+            $location = Uuid::isValid($path) ? Uuid::fromString($path) : $path;
+            $uuid = $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem'])->get($location)?->getUuid();
         } catch (UnableToResolveUuidException $exception) {
             throw new UnprocessableEntityHttpException('The relation IRI does not identify a registered file or directory.', $exception);
         }
