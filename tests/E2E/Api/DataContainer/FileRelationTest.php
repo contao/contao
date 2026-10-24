@@ -61,14 +61,20 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertRelatedFile($row['multiple'][0], self::FILES[0]);
         $this->assertRelatedFile($row['multiple'][1], self::FILES[1]);
 
-        $response = self::managedEdition()->send(HttpRequest::json('PATCH', $path)->withHeaders([
-            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
-            'Accept' => 'application/ld+json',
-            'Content-Type' => 'application/merge-patch+json',
-        ])->withJson(['file_rows' => [[
-            'single' => $row['multiple'][1],
-            'multiple' => [$row['multiple'][1], $row['single']],
-        ]]]));
+        $response = self::managedEdition()->send(
+            HttpRequest::json('PATCH', $path)
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/merge-patch+json',
+                ])
+                ->withJson([
+                    'file_rows' => [[
+                        'single' => $row['multiple'][1],
+                        'multiple' => [$row['multiple'][1], $row['single']],
+                    ]],
+                ]),
+        );
 
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
 
