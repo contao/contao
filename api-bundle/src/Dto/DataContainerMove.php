@@ -40,12 +40,15 @@ final class DataContainerMove
 
     public function getParameters(): array
     {
-        $parameters = ['pid' => $this->target, 'mode' => match ($this->position) {
-            'first' => DataContainer::PASTE_INTO,
-            'last' => DataContainer::PASTE_INTO_APPEND,
-            'after' => DataContainer::PASTE_AFTER,
-            default => throw new UnprocessableEntityHttpException('Invalid move position.'),
-        }];
+        $parameters = [
+            'pid' => $this->target,
+            'mode' => match ($this->position) {
+                'first' => DataContainer::PASTE_INTO,
+                'last' => DataContainer::PASTE_INTO_APPEND,
+                'after' => DataContainer::PASTE_AFTER,
+                default => throw new UnprocessableEntityHttpException('Invalid move position.'),
+            },
+        ];
 
         if (null !== $this->ptable) {
             $parameters['ptable'] = $this->ptable;

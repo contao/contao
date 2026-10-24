@@ -77,6 +77,7 @@ class MakeEventListener extends AbstractMaker
     {
         $event = $input->getArgument('event');
         $name = $input->getArgument('event-class');
+
         $events = $this->getAvailableEvents();
 
         if (!\array_key_exists($event, $events)) {

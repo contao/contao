@@ -286,6 +286,7 @@ class StringUtilTest extends TestCase
     public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request(['value' => $source]));
 
         $inputEncoded = Input::get('value');

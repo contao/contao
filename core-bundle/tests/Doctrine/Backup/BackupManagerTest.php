@@ -135,6 +135,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $manager = $this->getBackupManager($connection, $dumper);
         $config = $manager->createCreateConfig();
+
         $manager->create($config);
 
         // Assert it's gzipped
@@ -161,6 +162,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $manager = $this->getBackupManager($connection, $dumper);
         $config = $manager->createCreateConfig();
+
         $manager->create($config);
 
         $this->assertFalse($this->vfs->fileExists($config->getBackup()->getFilename()));
@@ -196,6 +198,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
+
         $manager->create($config);
 
         $this->assertCount(1, $manager->listBackups());
@@ -250,8 +253,8 @@ class BackupManagerTest extends ContaoTestCase
     public function testUnsuccessfulRestoreIfFileWasRemoved(): void
     {
         $backup = Backup::createNew();
-        // Do not write it to vfs === backup does not exist
 
+        // Do not write it to vfs === backup does not exist
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage(\sprintf('Dump "%s" does not exist.', $backup->getFilename()));
 

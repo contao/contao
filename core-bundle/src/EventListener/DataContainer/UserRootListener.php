@@ -78,6 +78,7 @@ class UserRootListener implements ResetInterface
         }
 
         $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
+
         $root = $user->{$rootField};
         $root = array_filter((array) $root, is_numeric(...));
 
@@ -141,6 +142,7 @@ class UserRootListener implements ResetInterface
     {
         $root = (array) StringUtil::deserialize($record[$rootField], true);
         $root[] = $insertId;
+
         $new = [$rootField => serialize($root)];
 
         $this->connection->update($table, $new, ['id' => $record['id']]);

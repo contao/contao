@@ -94,7 +94,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('isXmlHttpRequest')
             ->willReturn(true)
         ;
-
         $request
             ->method('isMethod')
             ->willReturnMap([['GET', true]])
@@ -153,7 +152,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('isXmlHttpRequest')
             ->willReturn(true)
         ;
-
         $request
             ->method('isMethod')
             ->willReturnMap([['GET', true]])
@@ -244,7 +242,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('executeQuery')
             ->willReturn($resultStatement)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())
@@ -343,7 +340,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('getFrontendUsername')
             ->willReturn($frontendUsername)
         ;
-
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn(true)
@@ -429,7 +425,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('authenticateFrontendUser')
             ->willReturnCallback(static fn (string $user): bool => 'member' === $user)
         ;
-
         $authenticator
             ->method('authenticateFrontendGuest')
             ->willReturn(true)

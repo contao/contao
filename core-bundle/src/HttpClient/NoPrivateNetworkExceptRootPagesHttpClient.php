@@ -79,6 +79,7 @@ final class NoPrivateNetworkExceptRootPagesHttpClient implements HttpClientInter
 
             if (!empty($info['primary_ip']) && $info['primary_ip']."\0".$info['url'] !== $lastPrimaryIpUrl) {
                 $this->ipCheck($info['primary_ip'], null, $info['url']);
+
                 $lastPrimaryIpUrl = $info['primary_ip']."\0".$info['url'];
             }
 
@@ -130,6 +131,7 @@ final class NoPrivateNetworkExceptRootPagesHttpClient implements HttpClientInter
                     if (isset($options['normalized_headers']['content-length']) || isset($options['normalized_headers']['content-type']) || isset($options['normalized_headers']['transfer-encoding'])) {
                         $filterContentHeaders = static fn ($h) => 0 !== stripos($h, 'Content-Length:') && 0 !== stripos($h, 'Content-Type:') && 0 !== stripos($h, 'Transfer-Encoding:');
                         $options['headers'] = array_filter($options['headers'], $filterContentHeaders);
+
                         $redirectHeaders['no_auth'] = array_filter($redirectHeaders['no_auth'], $filterContentHeaders);
                         $redirectHeaders['with_auth'] = array_filter($redirectHeaders['with_auth'], $filterContentHeaders);
                     }

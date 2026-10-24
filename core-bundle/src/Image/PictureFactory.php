@@ -263,6 +263,7 @@ class PictureFactory implements PictureFactoryInterface
 
                 $config->setSize($this->createConfigItem($imageSizes));
                 $config->setFormats($imageSizes['formats'] ?? []);
+
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
 
                 $options->setPreserveCopyrightMetadata([

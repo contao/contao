@@ -336,9 +336,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass->process($container);
 
         $this->assertSame(
-            [
-                'tl_content' => $expected,
-            ],
+            ['tl_content' => $expected],
             $this->getCallbacksFromDefinition($container)[0],
         );
     }
@@ -581,7 +579,6 @@ class DataContainerCallbackPassTest extends TestCase
             ->with('contao.listener.data_container_callback')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('findTaggedServiceIds')

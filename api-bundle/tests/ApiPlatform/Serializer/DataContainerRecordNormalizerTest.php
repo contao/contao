@@ -38,6 +38,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testKeepsOnlyExplicitlySubmittedFieldsForTheUpdate(): void
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example', 'published' => false, 'tags' => ['old', 'other']], 17);
+
         $normalizer = $this->createNormalizer();
 
         $result = $normalizer->denormalize(
@@ -54,6 +55,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
     public function testPreservesExplicitNullValuesForValidation(): void
     {
         $record = new DataContainerRecord('tl_content', ['title' => 'Example'], 17);
+
         $normalizer = $this->createNormalizer();
 
         $result = $normalizer->denormalize(
@@ -107,9 +109,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
         $record = new DataContainerRecord(
             'tl_content',
-            [
-                'rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]],
-            ],
+            ['rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]]],
             17,
         );
 
@@ -145,9 +145,7 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
         $record = new DataContainerRecord(
             'tl_content',
-            [
-                'rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]],
-            ],
+            ['rows' => [['file' => new RelationReference('file-id', '/files/file-id'), 'empty' => null]]],
             17,
         );
 
@@ -159,10 +157,16 @@ final class DataContainerRecordNormalizerTest extends TestCase
 
     public function testNormalizesReferencesInsideObjectRows(): void
     {
-        $record = new DataContainerRecord('tl_content', ['rows' => [
-            (object) ['file' => new RelationReference('file-id', '/files/file-id')],
-            new \stdClass(),
-        ]], 17);
+        $record = new DataContainerRecord(
+            'tl_content',
+            [
+                'rows' => [
+                    (object) ['file' => new RelationReference('file-id', '/files/file-id')],
+                    new \stdClass(),
+                ],
+            ],
+            17,
+        );
 
         $serializer = new Serializer([$this->createNormalizer(), new RelationReferenceNormalizer()]);
         $normalized = $serializer->normalize($record, 'jsonld');

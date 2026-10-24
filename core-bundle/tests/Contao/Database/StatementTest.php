@@ -103,12 +103,10 @@ class StatementTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn($this->createStub(AbstractPlatform::class))

@@ -256,6 +256,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->setHookListeners($listeners);
 
         $reflection = new \ReflectionObject($framework);
+
         $reflectionMethod = $reflection->getMethod('registerHookListeners');
         $reflectionMethod->invoke($framework);
 
@@ -386,6 +387,7 @@ class ContaoFrameworkTest extends TestCase
         ];
 
         $ref = new \ReflectionObject($framework);
+
         $adapterCache = $ref->getProperty('adapterCache');
         $adapterCache->setValue($framework, $adapters);
 
@@ -405,12 +407,10 @@ class ContaoFrameworkTest extends TestCase
             ->method('isComplete')
             ->willReturn(true)
         ;
-
         $config
             ->method('getInstance')
             ->willReturn($config)
         ;
-
         $config
             ->method('get')
             ->willReturnMap([['timeZone', \ini_get('date.timezone')]])

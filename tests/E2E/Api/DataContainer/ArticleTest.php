@@ -22,7 +22,6 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
     public function testCreatesArticleOnPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $pageId = (int) $fixtures->value('page_main_home');
 
         $request = HttpRequest::json('POST', '/contao/api/dc/article')
@@ -62,7 +61,6 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
     public function testMovesAnArticleIntoAnotherPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}');
         $parent = (int) $fixtures->value('page_microsite_home');
 

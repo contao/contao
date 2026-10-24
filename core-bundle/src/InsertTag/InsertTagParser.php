@@ -226,6 +226,7 @@ class InsertTagParser implements ResetInterface
                 $tag = $this->parseTag($input);
             } catch (\InvalidArgumentException $exception) {
                 trigger_deprecation('contao/core-bundle', '5.0', $exception->getMessage().'. This will no longer work in Contao 7.');
+
                 $tag = null;
             }
         }
@@ -310,6 +311,7 @@ class InsertTagParser implements ResetInterface
 
         if (strtolower($name) !== $name) {
             trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 7.', $name);
+
             $name = strtolower($name);
         }
 
@@ -335,6 +337,7 @@ class InsertTagParser implements ResetInterface
     public function reset(): void
     {
         $this->recursionTrace = [];
+
         InsertTags::reset();
     }
 
@@ -553,6 +556,7 @@ class InsertTagParser implements ResetInterface
             ++$esiTagsCount;
 
             $options = [];
+
             preg_match_all('/(src|onerror|alt)="([^"]*?)"/', $chunks[$i], $matches, PREG_SET_ORDER);
 
             foreach ($matches as $set) {

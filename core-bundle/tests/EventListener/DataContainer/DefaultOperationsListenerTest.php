@@ -57,6 +57,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
@@ -85,6 +86,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'children', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
@@ -114,6 +116,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
@@ -140,6 +143,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
@@ -176,6 +180,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
@@ -211,6 +216,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
@@ -247,6 +253,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
@@ -280,6 +287,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations));
@@ -304,6 +312,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['delete', 'edit', 'show'], array_keys($operations));
@@ -329,6 +338,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions', 'foo'], array_keys($operations));
@@ -357,6 +367,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'foo', 'show', 'delete'], array_keys($operations));
@@ -387,6 +398,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['foo', 'delete'], array_keys($operations));
@@ -414,6 +426,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['foo'], array_keys($operations));
@@ -442,6 +455,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertArrayHasKey('edit', $operations);
@@ -470,6 +484,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['copy', 'delete', 'show'], array_keys($operations));
@@ -493,6 +508,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
@@ -516,6 +532,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
@@ -540,6 +557,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
@@ -586,6 +604,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['edit', 'copy', 'show', 'versions'], array_keys($operations));
@@ -615,6 +634,7 @@ class DefaultOperationsListenerTest extends TestCase
         ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
         $this->assertSame(['children', 'show'], array_keys($operations));

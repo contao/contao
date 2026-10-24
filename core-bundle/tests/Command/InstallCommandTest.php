@@ -40,6 +40,7 @@ class InstallCommandTest extends TestCase
     public function testCreatesTheContaoFolders(): void
     {
         $command = new InstallCommand($this->getTempDir(), 'files');
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();

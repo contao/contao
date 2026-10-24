@@ -90,7 +90,6 @@ final class AccessTokenValidatorTest extends TestCase
             ->method('getIssuer')
             ->willReturn('https://example.com')
         ;
-
         $context
             ->method('getResource')
             ->willReturn('https://example.com/contao/mcp')

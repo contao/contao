@@ -30,14 +30,12 @@ final class RelationResolverTest extends TestCase
             ->with($relation)
             ->willReturn(true)
         ;
-
         $first
             ->expects($this->once())
             ->method('resolveToReference')
             ->with('id', $relation)
             ->willReturn(null)
         ;
-
         $first
             ->expects($this->once())
             ->method('resolveToIdentifier')
@@ -72,12 +70,10 @@ final class RelationResolverTest extends TestCase
             ->method('supports')
             ->willReturn(true)
         ;
-
         $supported
             ->method('resolveToReference')
             ->willReturn(['iri' => '/custom/12'])
         ;
-
         $supported
             ->method('resolveToIdentifier')
             ->willReturn(12)
@@ -157,7 +153,6 @@ final class RelationResolverTest extends TestCase
             ->with($relation)
             ->willReturn(false)
         ;
-
         $unsupported
             ->expects($this->never())
             ->method('resolveToReference')
@@ -170,7 +165,6 @@ final class RelationResolverTest extends TestCase
             ->with($relation)
             ->willReturn(true)
         ;
-
         $supported
             ->expects($this->once())
             ->method('resolveToReference')

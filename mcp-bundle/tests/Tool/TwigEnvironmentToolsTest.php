@@ -49,6 +49,7 @@ final class TwigEnvironmentToolsTest extends TestCase
         foreach (['discover' => [], 'inspect' => ['global', 'app']] as $method => $arguments) {
             try {
                 $tools->$method(...$arguments);
+
                 $this->fail('Both tools must require administrator privileges.');
             } catch (ToolCallException $exception) {
                 $this->assertSame('Twig environment tools require administrator privileges.', $exception->getMessage());
@@ -72,6 +73,7 @@ final class TwigEnvironmentToolsTest extends TestCase
 
         $this->expectException(ToolCallException::class);
         $this->expectExceptionMessage($message);
+
         $tools->$method(...$arguments);
     }
 
@@ -95,6 +97,7 @@ final class TwigEnvironmentToolsTest extends TestCase
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Broken extension.');
+
         $tools->discover('function');
     }
 
@@ -102,8 +105,8 @@ final class TwigEnvironmentToolsTest extends TestCase
     {
         foreach (['discover', 'inspect'] as $method) {
             $reflection = new \ReflectionMethod(TwigEnvironmentTools::class, $method);
-
             $tool = $reflection->getAttributes(McpTool::class)[0]->newInstance();
+
             $this->assertSame('contao_twig_environment_'.$method, $tool->name);
             $this->assertTrue($tool->annotations->readOnlyHint);
             $this->assertFalse($tool->annotations->openWorldHint);

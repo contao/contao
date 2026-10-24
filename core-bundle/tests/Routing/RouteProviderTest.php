@@ -67,7 +67,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -139,7 +138,6 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->willReturnMap([[$page1, new PageRoute($page1)], [$page2, new PageRoute($page2)]])
         ;
-
         $pageRegistry
             ->expects($this->exactly(2))
             ->method('isRoutable')
@@ -181,7 +179,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -223,7 +220,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -305,7 +301,6 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->willReturnMap(array_map(static fn ($page) => [$page, new PageRoute($page)], $pages))
         ;
-
         $pageRegistry
             ->expects($this->exactly(\count($pages)))
             ->method('isRoutable')
@@ -318,6 +313,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(\count($pages), $collection);
 
         $i = 0;
+
         ksort($pages);
 
         foreach ($collection as $name => $route) {
@@ -524,6 +520,7 @@ class RouteProviderTest extends TestCase
 
         $i = 0;
         $c = \count($pages);
+
         ksort($pages);
 
         foreach ($collection as $name => $route) {
@@ -602,6 +599,7 @@ class RouteProviderTest extends TestCase
 
         $i = 0;
         $c = \count($pages);
+
         ksort($pages);
 
         foreach ($collection as $name => $route) {
@@ -663,7 +661,6 @@ class RouteProviderTest extends TestCase
             ->with($pageModel)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -715,7 +712,6 @@ class RouteProviderTest extends TestCase
             ->with($routablePage)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->exactly(2))
             ->method('isRoutable')
@@ -804,12 +800,10 @@ class RouteProviderTest extends TestCase
             ->method('getPathInfo')
             ->willReturn($path)
         ;
-
         $request
             ->method('getLanguages')
             ->willReturn($languages)
         ;
-
         $request
             ->method('getHttpHost')
             ->willReturn('example.com')

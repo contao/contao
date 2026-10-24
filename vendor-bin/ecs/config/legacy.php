@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
+use Contao\EasyCodingStandard\Fixer\MultilineCallArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
+use Contao\EasyCodingStandard\Fixer\StatementGroupingFixer;
 use Contao\EasyCodingStandard\Set\SetList;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
@@ -81,6 +83,7 @@ return ECSConfig::configure()
         MethodChainingIndentationFixer::class,
         ModernizeStrposFixer::class,
         ModifierKeywordsFixer::class,
+        MultilineCallArgumentsFixer::class,
         MultiLineLambdaFunctionArgumentsFixer::class,
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
@@ -93,6 +96,7 @@ return ECSConfig::configure()
         PsrAutoloadingFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
+        StatementGroupingFixer::class,
         StatementIndentationFixer::class => [
             'core-bundle/contao/library/Contao/Config.php',
             'core-bundle/contao/library/Contao/Image.php',

@@ -57,7 +57,6 @@ class PageModelTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
@@ -346,7 +345,6 @@ class PageModelTest extends TestCase
             ->expects($this->never())
             ->method('execute')
         ;
-
         $database
             ->expects($this->never())
             ->method('execute')
@@ -358,7 +356,6 @@ class PageModelTest extends TestCase
             'id' => 1,
             'alias' => '',
         ]);
-
         $sourcePage
             ->expects($this->never())
             ->method('loadDetails')
@@ -398,6 +395,7 @@ class PageModelTest extends TestCase
         ;
 
         $this->mockDatabase($database);
+
         $page->loadDetails();
 
         $this->assertSame($expectedLayout, $page->layout);
@@ -451,6 +449,7 @@ class PageModelTest extends TestCase
         }
 
         $currentPage = array_shift($databaseResultData);
+
         $hierarchy = $this->createMock(DcaHierarchy::class);
         $hierarchy
             ->expects($this->once())

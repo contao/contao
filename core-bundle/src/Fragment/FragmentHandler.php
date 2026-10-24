@@ -63,6 +63,7 @@ class FragmentHandler extends BaseFragmentHandler
 
         if (!isset($this->initialized[$renderer]) && $this->renderers->has($renderer)) {
             $this->addRenderer($this->renderers->get($renderer));
+
             $this->initialized[$renderer] = true;
         }
 

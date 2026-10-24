@@ -123,12 +123,14 @@ class HierarchyTest extends TestCase
             ->willReturnCallback(
                 function (string $sql, array $parameters) use ($platform): array {
                     $this->assertStringContainsString('WHERE `id` = ? AND `tree_type` = ? AND `tenant_id` = ?', $sql);
+
                     $this->assertStringContainsString(
                         $platform instanceof MySQL80Platform
                             ? 'WHERE 1 = 1 AND parent.`tree_type` = ? AND parent.`tenant_id` = ?'
                             : 'WHERE `id` = @parent_id AND `tree_type` = ? AND `tenant_id` = ?',
                         $sql,
                     );
+
                     $this->assertSame(
                         $platform instanceof MySQL80Platform
                             ? ['category', 7, 4, 'category', 7, 'category', 7, 'category', 7]
@@ -158,6 +160,7 @@ class HierarchyTest extends TestCase
                     $this->assertStringContainsString('`tree_type` = ? AND `tenant_id` = ?', $sql);
                     $this->assertStringContainsString('WHERE `id` = ?', $sql);
                     $this->assertStringNotContainsString('WHERE `id` = ? AND', $sql);
+
                     $this->assertSame(
                         $platform instanceof MySQL80Platform
                             ? ['category', 7, 4, 'category', 7]
@@ -332,9 +335,7 @@ class HierarchyTest extends TestCase
                     ['node_id' => 4, 'parent_id' => 1, 'order_value' => 10],
                     ['node_id' => 7, 'parent_id' => 4, 'order_value' => 10],
                 ],
-                [
-                    ['node_id' => 5, 'parent_id' => 3, 'order_value' => 10],
-                ],
+                [['node_id' => 5, 'parent_id' => 3, 'order_value' => 10]],
                 [],
             )
         ;
@@ -613,7 +614,6 @@ class HierarchyTest extends TestCase
             ->method('getDatabasePlatform')
             ->willReturn($platform ?? new MySQLPlatform())
         ;
-
         $connection
             ->method('quoteIdentifier')
             ->willReturnCallback(static fn (string $identifier): string => "`$identifier`")

@@ -264,6 +264,7 @@ class EnvironmentInformation
         }
 
         $reflector = new \ReflectionClass($global);
+
         $data['type'] = $this->getClassName($reflector);
         $data['properties'] = [];
         $data['methods'] = [];

@@ -61,6 +61,7 @@ class WidgetTest extends TestCase
             {
             }
         };
+
         $widget->strField = $field;
         $widget->name = $name;
         $widget->value = 'Invalid value';
@@ -98,12 +99,14 @@ class WidgetTest extends TestCase
         $method = $class->getMethod('getPost');
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request([], [$input => $value]));
 
         $this->assertSame($expected, $method->invoke($widget, $key));
 
         // Restore the error reporting level
         error_reporting($errorReporting);
+
         $_POST = [];
     }
 
@@ -176,6 +179,7 @@ class WidgetTest extends TestCase
     public function testValidatesThePostData(): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request());
 
         $widget = $this
@@ -184,14 +188,12 @@ class WidgetTest extends TestCase
             ->onlyMethods(['validator'])
             ->getMock()
         ;
-
         $widget
             ->expects($this->exactly(3))
             ->method('validator')
             ->withAnyParameters()
             ->willReturnArgument(0)
         ;
-
         $widget
             ->setInputCallback(static fn (): string => 'foobar')
             ->validate()
@@ -224,6 +226,7 @@ class WidgetTest extends TestCase
         if (isset($parameters[2])) {
             $widget = new \ReflectionClass(TextField::class)->newInstanceWithoutConstructor();
             $widget->addAttributes($attrs);
+
             $this->assertSame($parameters[2], $widget->value);
         }
     }

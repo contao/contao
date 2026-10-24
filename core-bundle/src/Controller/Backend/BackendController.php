@@ -180,7 +180,6 @@ class BackendController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
         $services['uri_signer'] = UriSigner::class;
 

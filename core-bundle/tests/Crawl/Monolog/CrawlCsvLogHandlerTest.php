@@ -37,6 +37,7 @@ class CrawlCsvLogHandlerTest extends TestCase
         $handler->handle($record);
 
         rewind($stream);
+
         $content = stream_get_contents($stream);
 
         $this->assertSame($expectedContent, $content);
@@ -57,11 +58,13 @@ class CrawlCsvLogHandlerTest extends TestCase
         );
 
         $stream = fopen('php://memory', 'r+');
+
         $handler = new CrawlCsvLogHandler($stream);
         $handler->setFilterSource('foobar');
         $handler->handle($record);
 
         rewind($stream);
+
         $content = stream_get_contents($stream);
         $this->assertSame('', $content);
 
@@ -70,6 +73,7 @@ class CrawlCsvLogHandlerTest extends TestCase
         $handler->handle($record);
 
         rewind($stream);
+
         $content = stream_get_contents($stream);
 
         $this->assertSame('Time,Source,URI,"Found on URI","Found on level",Tags,Message'."\n".$formattedDt.',source,https://contao.org/,,0,,foobar'."\n", $content);

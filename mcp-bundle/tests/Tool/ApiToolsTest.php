@@ -110,6 +110,7 @@ final class ApiToolsTest extends TestCase
         $stack->push(Request::create('https://example.org/contao/mcp'));
 
         $handler = $this->createBinaryPayloadHandler(100);
+
         $tools = new ApiTools($this->createRegistry(), $kernel, new ApiRequestFactory($router), $stack, new ApiResponseConverter(), $handler);
         $result = $tools->execute('contao_api_files_upload', data: base64_encode('binary content'));
 
@@ -125,6 +126,7 @@ final class ApiToolsTest extends TestCase
         $stack->push(Request::create('/contao/mcp'));
 
         $handler = $this->createBinaryPayloadHandler();
+
         $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory($this->createStub(UrlGeneratorInterface::class)), $stack, new ApiResponseConverter(), $handler);
         $tools->execute('unknown');
     }
@@ -135,6 +137,7 @@ final class ApiToolsTest extends TestCase
         $this->expectExceptionMessage('require an HTTP request');
 
         $handler = $this->createBinaryPayloadHandler();
+
         $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory($this->createStub(UrlGeneratorInterface::class)), new RequestStack(), new ApiResponseConverter(), $handler);
         $tools->execute('contao_api_files_move');
     }
@@ -142,6 +145,7 @@ final class ApiToolsTest extends TestCase
     public function testAddsMcpTransportInformationToBinaryApiDescriptions(): void
     {
         $handler = $this->createBinaryPayloadHandler(750, 500);
+
         $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory($this->createStub(UrlGeneratorInterface::class)), new RequestStack(), new ApiResponseConverter(), $handler);
         $description = $tools->describe('contao_api_files_upload');
 
@@ -194,19 +198,24 @@ final class ApiToolsTest extends TestCase
         $metadata = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
         $metadata
             ->method('create')
-            ->willReturn(new ResourceMetadataCollection('File', [new ApiResource(shortName: 'File', operations: [
-                'contao_api_files_move' => new Post(name: 'contao_api_files_move'),
-                'contao_api_files_upload' => new Put(
-                    name: 'contao_api_files_upload',
-                    inputFormats: ['binary' => ['application/octet-stream']],
-                    outputFormats: ['json' => ['application/json']],
-                    openapi: new OpenApiOperation(
-                        requestBody: new RequestBody(content: new \ArrayObject([
-                            'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary', 'maxLength' => 1000])),
-                        ])),
-                    ),
+            ->willReturn(new ResourceMetadataCollection('File', [
+                new ApiResource(
+                    shortName: 'File',
+                    operations: [
+                        'contao_api_files_move' => new Post(name: 'contao_api_files_move'),
+                        'contao_api_files_upload' => new Put(
+                            name: 'contao_api_files_upload',
+                            inputFormats: ['binary' => ['application/octet-stream']],
+                            outputFormats: ['json' => ['application/json']],
+                            openapi: new OpenApiOperation(
+                                requestBody: new RequestBody(content: new \ArrayObject([
+                                    'application/octet-stream' => new MediaType(new \ArrayObject(['type' => 'string', 'format' => 'binary', 'maxLength' => 1000])),
+                                ])),
+                            ),
+                        ),
+                    ],
                 ),
-            ])]))
+            ]))
         ;
 
         return new ApiOperationRegistry($names, $metadata, $this->createOpenApiFactory(), $this->createNormalizer());

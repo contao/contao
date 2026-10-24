@@ -89,7 +89,6 @@ class TwigIntegrationTest extends TestCase
             ->method('exists')
             ->willReturnMap([['@Contao/form_text.html.twig', true]])
         ;
-
         $filesystemLoader
             ->method('getFirst')
             ->willReturnMap([['form_text', '/path/to/form_text.html.twig']])
@@ -230,7 +229,6 @@ class TwigIntegrationTest extends TestCase
                 },
             )
         ;
-
         $parser
             ->method('replaceInline')
             ->willReturnCallback(

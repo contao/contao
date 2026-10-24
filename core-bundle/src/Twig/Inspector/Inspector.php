@@ -127,6 +127,7 @@ class Inspector
 
                     if ($importedName === $blockName) {
                         $blockImportedViaUse = true;
+
                         $addBlock($currentTemplate, $name, $properties);
                     }
                 }
@@ -165,7 +166,8 @@ class Inspector
                             $hierarchy[$i]->getTemplateName(),
                             $hierarchy[$i]->getBlockName(),
                             BlockType::origin,
-                            $hierarchy[$i]->isPrototype()),
+                            $hierarchy[$i]->isPrototype(),
+                        ),
                     ],
                 );
 

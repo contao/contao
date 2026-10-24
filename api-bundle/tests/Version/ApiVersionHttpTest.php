@@ -145,13 +145,16 @@ final class ApiVersionHttpTest extends ContaoTestCase
     private function createKernel(callable $controller, Operation $operation, RequestStack $requests): HttpKernel
     {
         $routes = new RouteCollection();
-        $routes->add('example', new Route('/api/example', [
-            '_controller' => $controller,
-            '_api_operation' => $operation,
-            '_api_resource_class' => \stdClass::class,
-            '_format' => 'json',
-            'input_format' => 'json',
-        ]));
+        $routes->add(
+            'example',
+            new Route('/api/example', [
+                '_controller' => $controller,
+                '_api_operation' => $operation,
+                '_api_resource_class' => \stdClass::class,
+                '_format' => 'json',
+                'input_format' => 'json',
+            ]),
+        );
 
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber(new RouterListener(new UrlMatcher($routes, new RequestContext()), $requests));

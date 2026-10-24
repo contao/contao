@@ -254,7 +254,6 @@ class RegisterHookListenersPassTest extends TestCase
             ->with('contao.framework')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('findTaggedServiceIds')

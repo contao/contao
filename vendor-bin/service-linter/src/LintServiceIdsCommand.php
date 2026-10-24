@@ -297,12 +297,14 @@ class LintServiceIdsCommand
 
             $sortedIds = $serviceIds;
             usort($sortedIds, strnatcasecmp(...));
+
             $sortedIds = array_values($sortedIds);
 
             if ($serviceIds !== $sortedIds) {
                 $this->hasError = true;
 
                 $this->error('The services in the %s file are not sorted correctly.', $fileName);
+
                 $this->io->writeln(new \Diff($serviceIds, $sortedIds)->render(new \Diff_Renderer_Text_Unified()));
             }
         }

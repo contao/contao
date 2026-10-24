@@ -80,7 +80,6 @@ class MigrationCollectionTest extends TestCase
                 static fn (): bool => !$state->firstRun,
             )
         ;
-
         $firstMigration
             ->expects($this->once())
             ->method('run')
@@ -100,7 +99,6 @@ class MigrationCollectionTest extends TestCase
                 static fn (): bool => $state->firstRun && !$state->secondRun,
             )
         ;
-
         $secondMigration
             ->expects($this->once())
             ->method('run')

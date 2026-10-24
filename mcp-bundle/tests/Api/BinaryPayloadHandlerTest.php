@@ -29,6 +29,7 @@ final class BinaryPayloadHandlerTest extends TestCase
         $operation = $this->createOperation(10);
 
         $this->assertSame('four', $handler->decode($operation, base64_encode('four')));
+
         $this->assertSame(
             [
                 'contentType' => 'application/octet-stream',

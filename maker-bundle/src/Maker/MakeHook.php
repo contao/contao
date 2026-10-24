@@ -79,6 +79,7 @@ class MakeHook extends AbstractMaker
     {
         $hook = $input->getArgument('hook');
         $name = $input->getArgument('hook-class');
+
         $hooks = $this->getAvailableHooks();
 
         if (!\array_key_exists($hook, $hooks)) {

@@ -44,6 +44,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation implemen
     public function execute(Request $request, OperationContext $context): Response|null
     {
         preg_match('%^('.preg_quote($this->getPrefix(), '%').'/.+)/(.+)$%', $context->getIdentifier(), $matches);
+
         [, $baseIdentifier, $oldFragment] = $matches;
 
         // Show a confirmation dialog
@@ -82,7 +83,6 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation implemen
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['database_connection'] = Connection::class;
 
         return $services;

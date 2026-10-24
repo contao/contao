@@ -30,6 +30,7 @@ class TriggerReindexOnTableDataContainerInvalidationListenerTest extends TestCas
         ;
 
         $listener = new TriggerReindexOnTableDataContainerInvalidationListener($backendSearch);
+
         $event = new InvalidateCacheTagsEvent([
             'contao.db.my_table.42',
             'contao.db.my_table.43',

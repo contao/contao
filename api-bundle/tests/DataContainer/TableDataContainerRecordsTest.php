@@ -112,7 +112,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturnOnConsecutiveCalls(['id' => 17, 'title' => $previous], ['id' => 17, 'title' => 'After'])
         ;
-
         $dc
             ->expects($this->once())
             ->method('edit')
@@ -151,6 +150,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
                 function () use ($redirect, $errors): void {
                     $attributes = $this->requestStack->getMainRequest()->attributes;
                     $this->assertFalse($attributes->has('_contao_widget_errors'));
+
                     $attributes->set('_contao_widget_errors', $errors);
 
                     if ($redirect) {
@@ -167,6 +167,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
 
         try {
             $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+
             $this->fail('Expected widget validation errors.');
         } catch (ValidationException $exception) {
             $violations = $exception->getConstraintViolationList();
@@ -199,7 +200,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
         ;
-
         $dc
             ->expects($this->once())
             ->method('edit')
@@ -234,6 +234,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $submitted = [];
+
         $dc
             ->expects($this->exactly(2))
             ->method('edit')
@@ -281,7 +282,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('create')
             ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
         ;
-
         $dc
             ->expects($this->once())
             ->method('edit')
@@ -293,7 +293,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
-
         $dc
             ->expects($this->exactly(2))
             ->method('getCurrentRecord')
@@ -328,7 +327,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'tstamp' => $tstamp, 'title' => 'Before', 'alias' => ''])
         ;
-
         $dc
             ->expects($this->once())
             ->method('edit')
@@ -371,7 +369,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17])
         ;
-
         $dc
             ->expects($this->once())
             ->method('delete')
@@ -387,8 +384,10 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $records = $this->createRecords($dc);
+
         $session = new Session(new MockArraySessionStorage());
         $session->set('marker', 'saved backend state');
+
         $this->requestStack->getCurrentRequest()->setSession($session);
 
         $records->delete(new DataContainerRecord('tl_content', [], 17));
@@ -415,13 +414,13 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('setLimit')
             ->with(2 * $size)
         ;
-
         $dc
             ->expects($this->once())
             ->method('showAll')
             ->willReturnCallback(
                 function (): array {
                     $this->assertTrue($this->requestStack->getCurrentRequest()->hasSession());
+
                     $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
                     $this->assertSame(['sorting' => ['tl_content' => 'title DESC']], $bag->all());
@@ -431,7 +430,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
                 },
             )
         ;
-
         $dc
             ->method('getCurrentRecord')
             ->willReturnCallback(static fn ($id) => ['id' => $id, 'title' => 'Record '.$id])
@@ -442,7 +440,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->expects($this->never())
             ->method('executeQuery')
         ;
-
         $connection
             ->expects($this->never())
             ->method('iterateColumn')
@@ -492,8 +489,10 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $records = $this->createRecords($dc);
+
         $session = new Session(new MockArraySessionStorage());
         $session->set('marker', 'saved backend state');
+
         $this->requestStack->getCurrentRequest()->setSession($session);
 
         $records->list('tl_content');
@@ -509,7 +508,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('setLimit')
             ->with(PHP_INT_MAX)
         ;
-
         $dc
             ->expects($this->once())
             ->method('showAll')
@@ -530,7 +528,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 7])
         ;
-
         $dc
             ->expects($this->once())
             ->method('showAll')
@@ -565,10 +562,14 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->willReturnOnConsecutiveCalls(['id' => 7], ['id' => 9, 'pid' => 8])
         ;
 
-        $operation = new Get(extraProperties: ['contao' => ['parents' => [
-            ['table' => 'tl_page', 'parameter' => 'page_id'],
-            ['table' => 'tl_content', 'parameter' => 'content_id'],
-        ]]]);
+        $operation = new Get(extraProperties: [
+            'contao' => [
+                'parents' => [
+                    ['table' => 'tl_page', 'parameter' => 'page_id'],
+                    ['table' => 'tl_content', 'parameter' => 'content_id'],
+                ],
+            ],
+        ]);
 
         $context = DataContainerContext::fromOperation($operation, ['page_id' => 7, 'content_id' => 9]);
 
@@ -585,7 +586,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 7])
         ;
-
         $dc
             ->expects($this->never())
             ->method('create')
@@ -614,7 +614,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'title' => 'Moved'])
         ;
-
         $dc
             ->expects($this->once())
             ->method('cut')
@@ -637,13 +636,11 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturn(['id' => 17, 'title' => 'Moved'])
         ;
-
         $dc
             ->expects($this->once())
             ->method('cut')
             ->with(true, 42, DataContainer::PASTE_INTO)
         ;
-
         $dc
             ->method('__get')
             ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
@@ -668,13 +665,13 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('getCurrentRecord')
             ->willReturnOnConsecutiveCalls(['id' => 17], null)
         ;
-
         $dc
             ->expects($this->never())
             ->method('cut')
         ;
 
         $this->expectException(NotFoundHttpException::class);
+
         $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(999, 'after'));
     }
 
@@ -685,7 +682,6 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
             ->method('__get')
             ->willReturnMap([['table', 'tl_content']])
         ;
-
         $dc
             ->method('getPalette')
             ->willReturnCallback($palette instanceof \Closure ? $palette : static fn () => $palette)
