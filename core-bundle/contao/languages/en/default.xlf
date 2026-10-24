@@ -1814,6 +1814,9 @@
       <trans-unit id="MSC.accountNotFound">
         <source>No matching account found</source>
       </trans-unit>
+      <trans-unit id="MSC.passwordRequested">
+        <source>If a matching account exists, you will receive an e-mail with instructions on how to reset your password.</source>
+      </trans-unit>
       <trans-unit id="MSC.oldPassword">
         <source>Old password</source>
       </trans-unit>

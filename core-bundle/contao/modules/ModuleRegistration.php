@@ -151,9 +151,10 @@ class ModuleRegistration extends Module
 		}
 
 		$objMember = null;
+		$preventEnumeration = $this->reg_activate && $this->reg_preventEnumeration;
 
 		// Check for a follow-up registration (see #7992)
-		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId && $this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
+		if (!$doNotSubmit && !$preventEnumeration && Input::post('FORM_SUBMIT') == $strFormId && $this->reg_activate && Input::post('email', true) && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
@@ -196,6 +197,12 @@ class ModuleRegistration extends Module
 
 			// Unset the unique field check upon follow-up registrations
 			if ($objMember !== null && ($arrData['eval']['unique'] ?? null) && Input::post($field) == $objMember->$field)
+			{
+				$arrData['eval']['unique'] = false;
+			}
+
+			// Do not disclose whether the e-mail address has already been registered
+			if ($preventEnumeration && $field == 'email')
 			{
 				$arrData['eval']['unique'] = false;
 			}
@@ -326,6 +333,24 @@ class ModuleRegistration extends Module
 		// Create new user if there are no errors
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
+			// Respond as if the registration was successful if the e-mail address has already been registered
+			if ($preventEnumeration && (string) ($arrUser['email'] ?? '') !== '' && !$db->isUniqueValue('tl_member', 'email', $arrUser['email']))
+			{
+				// Re-send the activation mail upon follow-up registrations (see #7992)
+				if (($objMember = MemberModel::findUnactivatedByEmail($arrUser['email'])) !== null)
+				{
+					$this->resendActivationMail($objMember);
+				}
+
+				// Check whether there is a jumpTo page
+				if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
+				{
+					$this->jumpToOrReload($objJumpTo->row());
+				}
+
+				$this->reload();
+			}
+
 			$this->createNewUser($arrUser);
 		}
 
