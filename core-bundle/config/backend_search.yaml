@@ -62,7 +62,7 @@ services:
     contao.search.backend.security.document_access_evaluator:
         class: Contao\CoreBundle\Search\Backend\Security\DocumentAccessEvaluator
         arguments:
-            - '@contao.search.security.virtual_backend_user_factory'
+            - '@contao.security.backend_user_factory'
 
     contao.search.backend.security.document_allowed_groups_resolver:
         class: Contao\CoreBundle\Search\Backend\Security\DocumentAllowedGroupsResolver
@@ -92,11 +92,6 @@ services:
         class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
         arguments:
             - '@contao.search.backend'
-
-    contao.search.security.virtual_backend_user_factory:
-        class: Contao\CoreBundle\Search\Backend\Security\VirtualBackendUserFactory
-        arguments:
-            - '@contao.framework'
 
     contao.search_backend.adapter:
         class: CmsIg\Seal\Adapter\AdapterInterface

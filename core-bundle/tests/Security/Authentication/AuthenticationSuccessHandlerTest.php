@@ -19,6 +19,8 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
@@ -52,14 +54,21 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user = $this->mockBackendUser();
+        $user->id = 1;
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
 
-        $user
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('save')
+            ->method('update')
+            ->with(
+                'tl_user',
+                $this->callback(static fn (array $data): bool => isset($data['lastLogin'], $data['currentLogin']) && $data['lastLogin'] === $user->currentLogin),
+                ['id' => 1],
+            )
         ;
 
         $token = $this->createMock(TokenInterface::class);
@@ -69,7 +78,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->getHandler(null, $logger);
+        $handler = $this->getHandler(null, $logger, false, null, $connection);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -83,15 +92,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user = $this->mockBackendUser();
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -150,15 +154,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/page')
         ;
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user = $this->mockFrontendUser();
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
         $user->groups = [2, 3];
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $token = $this->createStub(TokenInterface::class);
         $token
@@ -191,15 +190,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user = $this->mockFrontendUser();
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
         $user->groups = [2, 3];
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $token = $this->createStub(TokenInterface::class);
         $token
@@ -230,15 +224,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user = $this->mockFrontendUser();
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
         $user->groups = [2, 3];
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $token = $this->createStub(TokenInterface::class);
         $token
@@ -263,15 +252,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $request = new Request(['_target_path' => base64_encode('http://localhost/target')]);
 
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user = $this->mockBackendUser();
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
         $user->groups = [2, 3];
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
 
         $token = $this->createStub(TokenInterface::class);
         $token
@@ -312,11 +296,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->query->set(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, '1');
         $request->query->set('_target_path', base64_encode('http://localhost/target/path'));
 
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
+        $user = $this->mockBackendUser();
 
         $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
         $authenticatedToken
@@ -409,11 +389,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request = new Request([], ['_target_path' => base64_encode('/')]);
         $request->setSession($session);
 
+        $user = $this->mockBackendUser();
+
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createStub(BackendUser::class))
+            ->willReturn($user)
         ;
 
         $token
@@ -425,7 +407,29 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->getHandler()->onAuthenticationSuccess($request, $token);
     }
 
-    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false, ContentUrlGenerator|null $urlGenerator = null): AuthenticationSuccessHandler
+    private function mockBackendUser(): BackendUser&Stub
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user
+            ->method('getTable')
+            ->willReturn('tl_user')
+        ;
+
+        return $user;
+    }
+
+    private function mockFrontendUser(): FrontendUser&Stub
+    {
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user
+            ->method('getTable')
+            ->willReturn('tl_member')
+        ;
+
+        return $user;
+    }
+
+    private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false, ContentUrlGenerator|null $urlGenerator = null, Connection|null $connection = null): AuthenticationSuccessHandler
     {
         $framework ??= $this->createContaoFrameworkStub();
         $trustedDeviceManager = $this->createStub(TrustedDeviceManagerInterface::class);
@@ -433,6 +437,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $urlGenerator ??= $this->createStub(ContentUrlGenerator::class);
         $logger ??= $this->createStub(LoggerInterface::class);
+        $connection ??= $this->createStub(Connection::class);
 
         $uriSigner = $this->createStub(UriSigner::class);
         $uriSigner
@@ -440,6 +445,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($checkRequest)
         ;
 
-        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $urlGenerator, $uriSigner, $tokenStorage, $logger);
+        return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $urlGenerator, $uriSigner, $tokenStorage, $connection, $logger);
     }
 }

@@ -19,6 +19,7 @@ use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\User;
+use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
@@ -49,6 +50,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly UriSigner $uriSigner,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly Connection $connection,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -84,9 +86,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             }
         }
 
-        $user->lastLogin = $user->currentLogin;
-        $user->currentLogin = time();
-        $user->save();
+        $this->connection->update(
+            $user->getTable(),
+            ['lastLogin' => $user->currentLogin, 'currentLogin' => time()],
+            ['id' => $user->id],
+        );
 
         if ($request->request->has('trusted')) {
             $firewallConfig = $this->firewallMap->getFirewallConfig($request);

@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\Security\User\BackendUserFactory;
 use Contao\ModuleNewsletterList;
 use Contao\ModuleNewsletterReader;
 use Contao\ModuleSubscribe;
@@ -43,7 +44,7 @@ $GLOBALS['TL_HOOKS']['activateAccount'][] = array(Newsletter::class, 'activateAc
 $GLOBALS['TL_HOOKS']['closeAccount'][] = array(Newsletter::class, 'removeSubscriptions');
 
 // Add permissions
-$GLOBALS['TL_PERMISSIONS'][] = 'newsletters';
+BackendUserFactory::registerPermissionField('newsletters');
 
 // Models
 $GLOBALS['TL_MODELS']['tl_newsletter_channel'] = NewsletterChannelModel::class;

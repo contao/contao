@@ -21,6 +21,8 @@ use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,6 +40,7 @@ class TwoFactorController extends AbstractContentElementController
         private readonly TrustedDeviceManager $trustedDeviceManager,
         private readonly Authenticator $authenticator,
         private readonly AuthenticationUtils $authenticationUtils,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -126,16 +129,22 @@ class TwoFactorController extends AbstractContentElementController
 
     private function enable2FA(FrontendUser $user): void
     {
-        $user->useTwoFactor = true;
-        $user->save();
+        $this->connection->update(
+            'tl_member',
+            ['useTwoFactor' => true],
+            ['id' => $user->id],
+            ['useTwoFactor' => Types::BOOLEAN],
+        );
     }
 
     private function disable2FA(FrontendUser $user): void
     {
-        $user->secret = null;
-        $user->useTwoFactor = false;
-        $user->backupCodes = null;
-        $user->save();
+        $this->connection->update(
+            'tl_member',
+            ['secret' => null, 'useTwoFactor' => false, 'backupCodes' => null],
+            ['id' => $user->id],
+            ['useTwoFactor' => Types::BOOLEAN],
+        );
 
         // Clear all trusted devices
         $this->trustedDeviceManager->clearTrustedDevices($user);
@@ -144,8 +153,11 @@ class TwoFactorController extends AbstractContentElementController
     private function ensureHasSecret(FrontendUser $user): void
     {
         if (!$user->secret) {
-            $user->secret = random_bytes(128);
-            $user->save();
+            $this->connection->update(
+                'tl_member',
+                ['secret' => random_bytes(128)],
+                ['id' => $user->id],
+            );
         }
     }
 

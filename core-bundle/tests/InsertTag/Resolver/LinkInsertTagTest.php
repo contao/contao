@@ -19,14 +19,14 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\User\FrontendUser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FrontendUser;
 use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -47,7 +47,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $this->createStub(ContaoFramework::class),
-            $this->createStub(TokenChecker::class),
+            $this->createStub(Security::class),
             $this->createStub(ContentUrlGenerator::class),
         );
 
@@ -118,7 +118,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $contaoFramework,
-            $this->createStub(TokenChecker::class),
+            $this->createStub(Security::class),
             $contentUrlGenerator,
         );
 
@@ -170,16 +170,16 @@ class LinkInsertTagTest extends TestCase
 
     public function testReturnsEmptyForLoginPageIfUserIsNotLoggedIn(): void
     {
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(false)
+            ->method('getUser')
+            ->willReturn(null)
         ;
 
         $listener = new LinkInsertTag(
             $this->createStub(ContaoFramework::class),
-            $tokenChecker,
+            $security,
             $this->createStub(ContentUrlGenerator::class),
         );
 
@@ -193,11 +193,18 @@ class LinkInsertTagTest extends TestCase
 
     public function testReturnsLoginPageIfUserIsLoggedIn(): void
     {
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
+        $user = $this->createMock(FrontendUser::class);
+        $user
             ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(true)
+            ->method('getLoginPage')
+            ->willReturn(1701)
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
         ;
 
         $loginPage = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
@@ -208,14 +215,11 @@ class LinkInsertTagTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findByIdOrAlias')
-            ->with('1701')
+            ->with(1701)
             ->willReturn($loginPage)
         ;
 
-        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class, ['loginPage']);
-        $frontendUser->loginPage = '1701';
-
-        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
+        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
         $contentUrlGenerator
@@ -227,7 +231,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $contaoFramework,
-            $tokenChecker,
+            $security,
             $contentUrlGenerator,
         );
 

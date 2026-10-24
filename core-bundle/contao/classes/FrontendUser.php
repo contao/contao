@@ -10,13 +10,16 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\User\ContaoUser;
+use Contao\CoreBundle\Security\User\FrontendUserFactory;
+
 /**
  * Provide methods to manage front end users.
  *
  * @property array  $allGroups
  * @property string $loginPage
  */
-class FrontendUser extends User
+class FrontendUser extends ContaoUser
 {
 	/**
 	 * Current object instance (do not remove)
@@ -132,9 +135,14 @@ class FrontendUser extends User
 	 * @param mixed  $varValue
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             use the FrontendUserFactory instead.
 	 */
 	public function findBy($strColumn, $varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using %s is deprecated in Contao 6.1 and will be removed in Contao 7. Use the %s instead.', __METHOD__, FrontendUserFactory::class);
+
 		if (parent::findBy($strColumn, $varValue) === false)
 		{
 			return false;
@@ -147,9 +155,13 @@ class FrontendUser extends User
 
 	/**
 	 * Restore the original group membership
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
 	 */
 	public function save()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Saving the BackendUser object is deprecated in Contao 6.1 and will be removed in Contao 7. Update the database directly instead.');
+
 		$groups = $this->groups;
 		$this->arrData['groups'] = $this->arrGroups;
 		parent::save();
@@ -158,42 +170,18 @@ class FrontendUser extends User
 
 	/**
 	 * Set all user properties from a database record
+	 *
+	 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7;
+	 *             use the FrontendUserFactory instead.
 	 */
 	protected function setUserFromDb()
 	{
-		$this->intId = $this->id;
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using %s is deprecated in Contao 6.1 and will be removed in Contao 7. Use the %s instead.', __METHOD__, FrontendUserFactory::class);
 
-		// Unserialize values
-		foreach ($this->arrData as $k=>$v)
-		{
-			if (!is_numeric($v))
-			{
-				$this->arrData[$k] = StringUtil::deserialize($v);
-			}
-		}
-
-		// Make sure that groups is an array
-		if (!\is_array($this->groups))
-		{
-			$this->groups = $this->groups ? array($this->groups) : array();
-		}
-
-		// Skip inactive groups
-		if (($objGroups = MemberGroupModel::findAllActive()) !== null)
-		{
-			$this->groups = array_intersect($this->groups, $objGroups->fetchEach('id'));
-		}
-
-		// Get the group login page
-		if (($this->groups[0] ?? 0) > 0)
-		{
-			$objGroup = MemberGroupModel::findPublishedById($this->groups[0]);
-
-			if ($objGroup !== null && $objGroup->redirect && $objGroup->jumpTo)
-			{
-				$this->strLoginPage = $objGroup->jumpTo;
-			}
-		}
+		$user = System::getContainer()->get('contao.security.frontend_user_factory')->create($this->arrData);
+		$this->arrData = $user->arrData;
+		$this->strLoginPage = $user->strLoginPage;
+		$this->arrGroups = $user->arrGroups;
 	}
 
 	/**

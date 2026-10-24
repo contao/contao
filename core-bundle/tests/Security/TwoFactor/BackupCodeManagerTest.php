@@ -16,13 +16,14 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackupCodeManagerTest extends TestCase
 {
     public function testDoesNotHandleNonContaoUsers(): void
     {
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager($this->createStub(Connection::class));
         $user = $this->createStub(UserInterface::class);
 
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
@@ -38,7 +39,7 @@ class BackupCodeManagerTest extends TestCase
         $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = null;
 
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager($this->createStub(Connection::class));
 
         $this->assertFalse($backupCodeManager->isBackupCode($frontendUser, '123456'));
         $this->assertFalse($backupCodeManager->isBackupCode($backendUser, '234567'));
@@ -52,7 +53,7 @@ class BackupCodeManagerTest extends TestCase
         $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = 'foobar';
 
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager($this->createStub(Connection::class));
 
         $this->assertFalse($backupCodeManager->isBackupCode($frontendUser, '123456'));
         $this->assertFalse($backupCodeManager->isBackupCode($backendUser, '234567'));
@@ -74,7 +75,7 @@ class BackupCodeManagerTest extends TestCase
         $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = $backupCodes;
 
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager($this->createStub(Connection::class));
 
         $this->assertTrue($backupCodeManager->isBackupCode($frontendUser, '123456'));
         $this->assertTrue($backupCodeManager->isBackupCode($backendUser, '234567'));
@@ -90,35 +91,65 @@ class BackupCodeManagerTest extends TestCase
             JSON_THROW_ON_ERROR,
         );
 
-        $user = $this->createClassWithPropertiesMock(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user
+            ->method('getTable')
+            ->willReturn('tl_user')
+        ;
+        $user->id = 1;
         $user->backupCodes = $backupCodes;
 
-        $user
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('save')
+            ->method('update')
+            ->with(
+                'tl_user',
+                $this->callback(
+                    static function (array $data): bool {
+                        $codes = json_decode($data['backupCodes'], true);
+
+                        return 1 === \count($codes) && '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy' === $codes[0];
+                    },
+                ),
+                ['id' => 1],
+            )
         ;
 
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager($connection);
         $backupCodeManager->invalidateBackupCode($user, '4ead45-4ea70a');
-
-        $this->assertFalse($backupCodeManager->isBackupCode($user, '4ead45-4ea70a'));
-        $this->assertTrue($backupCodeManager->isBackupCode($user, '0082ec-b95f03'));
     }
 
     public function testGenerateBackupCodes(): void
     {
-        $backupCodeManager = new BackupCodeManager();
-
-        $user = $this->createClassWithPropertiesMock(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user
+            ->method('getTable')
+            ->willReturn('tl_user')
+        ;
+        $user->id = 1;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->expects($this->once())
-            ->method('save')
+            ->method('update')
+            ->with(
+                'tl_user',
+                $this->callback(
+                    static function (array $data): bool {
+                        $codes = json_decode($data['backupCodes'], true);
+
+                        return 10 === \count($codes);
+                    },
+                ),
+                ['id' => 1],
+            )
         ;
 
+        $backupCodeManager = new BackupCodeManager($connection);
         $backupCodes = $backupCodeManager->generateBackupCodes($user);
 
         $this->assertCount(10, $backupCodes);
-        $this->assertCount(10, json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
         $this->assertMatchesRegularExpression('/[a-f0-9]{6}-[a-f0-9]{6}/', $backupCodes[0]);
     }
 }

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Doctrine\DBAL\Types\Types;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -261,8 +262,12 @@ class ModuleTwoFactor extends BackendModule
 			if ($authenticator->validateCode($user, Input::post('verify')))
 			{
 				// Enable 2FA
-				$user->useTwoFactor = true;
-				$user->save();
+				$container->get('database_connection')->update(
+					'tl_user',
+					array('useTwoFactor' => true),
+					array('id' => $user->id),
+					array('useTwoFactor' => Types::BOOLEAN),
+				);
 
 				throw new RedirectResponseException($return);
 			}
@@ -274,8 +279,11 @@ class ModuleTwoFactor extends BackendModule
 		// Generate the secret
 		if (!$user->secret)
 		{
-			$user->secret = random_bytes(128);
-			$user->save();
+			$container->get('database_connection')->update(
+				'tl_user',
+				array('secret' => random_bytes(128)),
+				array('id' => $user->id),
+			);
 		}
 
 		$request = $container->get('request_stack')->getCurrentRequest();
@@ -300,10 +308,12 @@ class ModuleTwoFactor extends BackendModule
 			return;
 		}
 
-		$user->secret = null;
-		$user->useTwoFactor = false;
-		$user->backupCodes = null;
-		$user->save();
+		System::getContainer()->get('database_connection')->update(
+			'tl_user',
+			array('secret' => null, 'useTwoFactor' => false, 'backupCodes' => null),
+			array('id' => $user->id),
+			array('useTwoFactor' => Types::BOOLEAN),
+		);
 
 		// Clear all trusted devices
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
