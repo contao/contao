@@ -60,7 +60,7 @@ $ruleset->addRule(new ForbiddenFunctionRule([
 $config = new Config();
 $config->allowNonFixableRules();
 $config->addTokenParser(new DeferTokenParser());
-$config->addTokenParser(new AddTokenParser(''));
+$config->addTokenParser(new AddTokenParser());
 $config->addTokenParser(new SlotTokenParser());
 $config->setRuleset($ruleset);
 $config->setFinder(new Finder()->in(__DIR__ . '/*-bundle/contao/templates/*'));

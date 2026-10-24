@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\ResponseContext;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\ResponseContext\AddNode;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Twig\Compiler;
@@ -26,10 +25,13 @@ class AddNodeTest extends TestCase
     public function testCompilesAddNode(): void
     {
         $addNode = new AddNode(
-            ContaoExtension::class,
             new PrintNode(new ConstantExpression('foobar', 42), 42),
-            'identifier',
-            DocumentLocation::endOfBody,
+            [
+                'identifier' => 'identifier',
+                'location' => DocumentLocation::endOfBody,
+                'position' => 'after',
+                'reference' => 'vendor',
+            ],
             1,
         );
 
@@ -49,8 +51,8 @@ class AddNodeTest extends TestCase
                     ob_clean();
                 }
             } finally { ob_end_clean(); }
-            $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->addDocumentContent(
-                "identifier", $__contao_document_content, \Contao\CoreBundle\Twig\ResponseContext\DocumentLocation::endOfBody
+            $this->env->getRuntime("Contao\\CoreBundle\\Twig\\Runtime\\HtmlDocumentRuntime")->add(
+                $__contao_document_content, \Contao\CoreBundle\Twig\ResponseContext\DocumentLocation::endOfBody, ["identifier" => "identifier", "after" => "vendor"]
             );
 
             SOURCE;

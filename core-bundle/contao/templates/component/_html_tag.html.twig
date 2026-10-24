@@ -1,0 +1,45 @@
+{# Raw string tags are trusted markup; HtmlTag content is escaped unless explicitly marked as raw. #}
+{%- if tag.name is defined -%}
+    {%- set attributes = tag.attributes -%}
+
+    {%- if debug|default(false) and identifier is not null -%}
+        {%- do attributes.set('data-contao-tag', identifier) -%}
+    {%- endif -%}
+
+    {%- if tag.isInlineScript() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('script-src')) -%}
+    {%- elseif tag.isInlineStyle() and attributes.nonce is not defined -%}
+        {%- do attributes.setIfExists('nonce', csp_nonce('style-src')) -%}
+    {%- endif -%}
+
+    {%- set void_elements = [
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+        'link', 'meta', 'source', 'track', 'wbr',
+    ] -%}
+
+    <{{ tag.name }}{{ attributes }}>
+    {%- if tag.name not in void_elements -%}
+        {%- if tag.escapesContent() -%}
+            {{- tag.content -}}
+        {%- else -%}
+            {{- tag.content|raw -}}
+        {%- endif -%}
+        </{{ tag.name }}>
+    {%- endif -%}
+{%- else -%}
+    {%- if debug|default(false) and identifier is not null -%}
+        {%- set debug_identifier = identifier -%}
+
+        {%- for prefix in ['contao.twig.head.', 'contao.twig.stylesheets.'] -%}
+            {%- if debug_identifier starts with prefix -%}
+                {%- set debug_identifier = debug_identifier|slice(prefix|length) -%}
+            {%- endif -%}
+        {%- endfor -%}
+
+        {# Hyphens are URL-encoded explicitly because url_encode() considers them URL-safe, while "--" is invalid in HTML comments. #}
+        {%- set debug_identifier = debug_identifier|url_encode|replace({'-': '%2D'}) -%}
+        <!-- contao-tag (URL-encoded): {{ debug_identifier }} -->
+    {%- endif -%}
+
+    {{- tag|raw -}}
+{%- endif -%}

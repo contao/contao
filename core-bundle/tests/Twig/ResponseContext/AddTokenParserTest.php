@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlBodyBag;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -19,6 +23,8 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\HtmlDocumentRuntime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -26,13 +32,21 @@ use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Parser;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\Source;
 
 class AddTokenParserTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
+
+        parent::tearDown();
+    }
+
     public function testGetTag(): void
     {
-        $tokenParser = new AddTokenParser(ContaoExtension::class);
+        $tokenParser = new AddTokenParser();
 
         $this->assertSame('add', $tokenParser->getTag());
     }
@@ -45,25 +59,39 @@ class AddTokenParserTest extends TestCase
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedStyleSheetContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createStub(LoaderInterface::class));
+        $responseContext = new ResponseContext()
+            ->add($body = new HtmlBodyBag())
+            ->add($head = new HtmlHeadBag())
+        ;
+        $accessor = $this->createStub(ResponseContextAccessor::class);
+        $accessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+        $environment->addRuntimeLoader(new FactoryRuntimeLoader([
+            HtmlDocumentRuntime::class => static fn () => new HtmlDocumentRuntime($accessor),
+        ]));
 
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
-            ),
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
 
-        $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
+        $environment->addExtension($extension);
+
+        $environment->addTokenParser(new AddTokenParser());
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
         $this->assertSame('', $environment->render('template.html.twig'));
 
-        $this->assertSame($expectedHeadContent, $GLOBALS['TL_HEAD'] ?? []);
-        $this->assertSame($expectedStyleSheetContent, $GLOBALS['TL_STYLE_SHEETS'] ?? []);
-        $this->assertSame($expectedBodyContent, $GLOBALS['TL_BODY'] ?? []);
+        $this->assertSame($expectedHeadContent, $this->getAddedHeadContent($head, DocumentLocation::head));
+        $this->assertSame($expectedStyleSheetContent, $this->getAddedHeadContent($head, DocumentLocation::stylesheets));
+        $this->assertSame($expectedBodyContent, $body->all());
 
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
+        $this->assertArrayNotHasKey('TL_HEAD', $GLOBALS);
+        $this->assertArrayNotHasKey('TL_STYLE_SHEETS', $GLOBALS);
+        $this->assertArrayNotHasKey('TL_BODY', $GLOBALS);
     }
 
     public static function provideSources(): iterable
@@ -144,13 +172,53 @@ class AddTokenParserTest extends TestCase
             [],
             ['foo bar'],
         ];
+
+        yield 'add after to head' => [
+            "{% add 'second' to head after 'first' %}second{% endadd %}\n".
+            "{% add 'first' to head %}first{% endadd %}",
+            ['first' => 'first', 'second' => 'second'],
+            [],
+            [],
+        ];
+
+        yield 'add before to stylesheets' => [
+            "{% add 'second' to stylesheets %}second{% endadd %}\n".
+            "{% add 'first' to stylesheets before 'second' %}first{% endadd %}",
+            [],
+            ['first' => 'first', 'second' => 'second'],
+            [],
+        ];
+
+        yield 'add after to body' => [
+            "{% add 'second' to body after 'first' %}second{% endadd %}\n".
+            "{% add 'first' to body %}first{% endadd %}",
+            [],
+            [],
+            ['first' => 'first', 'second' => 'second'],
+        ];
+    }
+
+    public function testFallsBackToLegacyGlobalsWithoutAResponseContext(): void
+    {
+        $environment = new Environment(new ArrayLoader([
+            'template.html.twig' => '{% add "legacy" to head %}<meta data-legacy>{% endadd %}',
+        ]));
+        $environment->addRuntimeLoader(new FactoryRuntimeLoader([
+            HtmlDocumentRuntime::class => fn () => new HtmlDocumentRuntime($this->createStub(ResponseContextAccessor::class)),
+        ]));
+        $environment->addTokenParser(new AddTokenParser());
+
+        $this->expectUserDeprecationMessageMatches('/Using the Twig "add" tag without the corresponding response context bag is deprecated/');
+
+        $this->assertSame('', $environment->render('template.html.twig'));
+        $this->assertSame(['legacy' => '<meta data-legacy>'], $GLOBALS['TL_HEAD']);
     }
 
     #[DataProvider('provideInvalidSources')]
     public function testValidatesSource(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createStub(LoaderInterface::class));
-        $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
+        $environment->addTokenParser(new AddTokenParser());
 
         $parser = new Parser($environment);
         $source = new Source($code, 'template.html.twig');
@@ -183,5 +251,35 @@ class AddTokenParserTest extends TestCase
             '{% add to body "foo" %}bar{% endadd %}',
             'Unexpected token "string" of value "foo" ("end of statement block" expected) in "template.html.twig"',
         ];
+
+        yield 'ordering without an identifier' => [
+            "{% add to body after 'foo' %}bar{% endadd %}",
+            'An identifier is required when ordering content with the "add" tag in "template.html.twig"',
+        ];
+
+        yield 'ordering without a reference' => [
+            "{% add 'foo' to body after %}bar{% endadd %}",
+            'Unexpected token "end of statement block" ("string" expected) in "template.html.twig"',
+        ];
+    }
+
+    /**
+     * @return array<array-key, string>
+     */
+    private function getAddedHeadContent(HtmlHeadBag $head, DocumentLocation $location): array
+    {
+        $prefix = "contao.twig.{$location->value}.";
+        $content = [];
+        $hasNamedContent = false;
+
+        foreach ($head->all() as $identifier => $tag) {
+            if (\is_string($tag) && str_starts_with($identifier, $prefix)) {
+                $key = substr($identifier, \strlen($prefix));
+                $hasNamedContent = $hasNamedContent || !ctype_digit($key);
+                $content[$key] = $tag;
+            }
+        }
+
+        return $hasNamedContent ? $content : array_values($content);
     }
 }
