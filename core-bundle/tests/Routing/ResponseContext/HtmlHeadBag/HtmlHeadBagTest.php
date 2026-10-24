@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext\HtmlHeadBag;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,5 +97,37 @@ class HtmlHeadBagTest extends TestCase
         $manager->setMetaTags([]);
 
         $this->assertSame([], $manager->getMetaTags());
+    }
+
+    public function testCollectsAllHeadTags(): void
+    {
+        $manager = new HtmlHeadBag();
+        $manager
+            ->setTitle('Page title - Root title')
+            ->setMetaDescription('Description')
+            ->setCanonicalEnabled(true)
+            ->addMetaTag(new HtmlAttributes(['property' => 'og:title', 'content' => 'Open Graph title']))
+            ->addLinkTag(new HtmlAttributes(['rel' => 'alternate', 'href' => '/feed.xml']))
+            ->add(HtmlTag::script('/app.js'))
+        ;
+
+        $tags = $manager->all(Request::create('https://example.com/page'));
+
+        $this->assertSame(
+            [
+                HtmlHeadBag::TAG_TITLE,
+                HtmlHeadBag::TAG_ROBOTS,
+                HtmlHeadBag::TAG_DESCRIPTION,
+                'contao.meta.additional.0',
+                HtmlHeadBag::TAG_CANONICAL,
+                'contao.link.additional.0',
+                0,
+            ],
+            array_keys($tags),
+        );
+
+        $this->assertSame('Page title - Root title', $tags[HtmlHeadBag::TAG_TITLE]->getContent());
+        $this->assertSame('https://example.com/page', $tags[HtmlHeadBag::TAG_CANONICAL]->getAttributes()['href']);
+        $this->assertSame('/app.js', $tags[0]->getAttributes()['src']);
     }
 }
