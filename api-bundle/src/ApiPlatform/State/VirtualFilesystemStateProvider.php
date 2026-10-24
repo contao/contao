@@ -17,12 +17,12 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @implements ProviderInterface<VirtualFilesystemItem>
@@ -44,9 +44,9 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
                 return $this->provideCollection($context, $filesystem);
             }
 
-            $path = $uriVariables['pathOrUuid'] ?? $uriVariables['path'] ?? null;
+            $location = VirtualFilesystemLocation::fromArray($uriVariables)->toLocation();
 
-            if (!\is_string($path) || !$item = $filesystem->get($this->toLocation($path))) {
+            if (!$item = $filesystem->get($location)) {
                 throw new NotFoundHttpException('The requested file or directory does not exist.');
             }
 
@@ -62,7 +62,8 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
     private function provideCollection(array $context, VirtualFilesystemInterface $filesystem): array
     {
         $filters = $this->getFilters($context);
-        $path = \is_string($filters['path'] ?? null) ? $this->toLocation($filters['path']) : '';
+        $selector = array_intersect_key($filters, ['path' => true, 'uuid' => true]);
+        $path = $selector ? VirtualFilesystemLocation::fromArray($selector)->toLocation() : '';
         $deep = filter_var($filters['deep'] ?? false, FILTER_VALIDATE_BOOL);
         $items = $filesystem->listContents($path, $deep);
 
@@ -79,10 +80,5 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
         }
 
         return \is_array($filters) ? $filters : [];
-    }
-
-    private function toLocation(string $location): Uuid|string
-    {
-        return Uuid::isValid($location) ? Uuid::fromString($location) : $location;
     }
 }

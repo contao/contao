@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProcessor;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
@@ -79,8 +80,8 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = new VirtualFilesystemStateProcessor($registry, new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
         $request = Request::create('/', 'PUT', content: 'test');
 
-        $this->assertSame(4, $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt'], ['request' => $request])->fileSize);
-        $this->assertSame(7, $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'test_files']]), ['pathOrUuid' => 'example.txt'], ['request' => $request])->fileSize);
+        $this->assertSame(4, $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'example.txt'], ['request' => $request])->fileSize);
+        $this->assertSame(7, $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'test_files']]), ['path' => 'example.txt'], ['request' => $request])->fileSize);
     }
 
     public function testChecksPermissionsBeforeWritingTheFilesystem(): void
@@ -95,7 +96,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = new VirtualFilesystemStateProcessor($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
 
         $this->expectException(AccessDeniedException::class);
-        $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt'], ['request' => Request::create('/', 'PUT', content: 'test')]);
+        $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'example.txt'], ['request' => Request::create('/', 'PUT', content: 'test')]);
     }
 
     public function testUploadsTheRequestBody(): void
@@ -120,7 +121,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
+        $result = $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'documents/example.txt'], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
     }
@@ -179,7 +180,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
+        $result = $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
 
         $this->assertSame('documents/example.txt', $result->path);
     }
@@ -203,7 +204,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(new VirtualFilesystemMove('documents/example.txt', 'archive/example.txt'), new Post(extraProperties: ['contao' => ['filesystem' => 'files']]));
+        $result = $processor->process(new VirtualFilesystemMove(new VirtualFilesystemLocation(path: 'documents/example.txt'), new VirtualFilesystemLocation(path: 'archive/example.txt')), new Post(extraProperties: ['contao' => ['filesystem' => 'files']]));
 
         $this->assertSame('archive/example.txt', $result->path);
     }
@@ -239,7 +240,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         ;
 
         $processor = $this->createProcessor($storage);
-        $result = $processor->process(new VirtualFilesystemMove($sourceUuid->toRfc4122(), $destinationUuid->toRfc4122()), new Post(extraProperties: ['contao' => ['filesystem' => 'files']]));
+        $result = $processor->process(new VirtualFilesystemMove(new VirtualFilesystemLocation(uuid: $sourceUuid->toRfc4122()), new VirtualFilesystemLocation(uuid: $destinationUuid->toRfc4122())), new Post(extraProperties: ['contao' => ['filesystem' => 'files']]));
 
         $this->assertSame('archive/example.txt', $result->path);
     }
@@ -260,7 +261,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
+        $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()], ['request' => Request::create('/', 'PUT', content: 'content')]);
     }
 
     public function testUpdatesLocalizedMetadataWithoutLosingOtherMetadata(): void
@@ -329,7 +330,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $result = $processor->process(
             null,
             $this->createMetadataOperation(),
-            context: ['request' => Request::create('/', 'POST', content: \sprintf('{"path":"%s","data":{"custom":"value"}}', $uuid->toRfc4122()))],
+            context: ['request' => Request::create('/', 'POST', content: \sprintf('{"uuid":"%s","data":{"custom":"value"}}', $uuid->toRfc4122()))],
         );
 
         $this->assertSame('value', $result->metadata['custom']);
