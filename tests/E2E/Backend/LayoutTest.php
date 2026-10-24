@@ -22,6 +22,7 @@ class LayoutTest extends AbstractContaoMonorepoE2ETestCase
     {
         $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao?do=themes&table=tl_layout&act=edit&id={layout_editorial}');
+
         $backend = $this->login();
         $backend->visit($path);
         $backend->page()->locator('fieldset.collapsed:has(select[name="template"]) legend button')->click();

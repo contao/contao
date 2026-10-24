@@ -53,6 +53,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         System::setContainer($container);
+
         $this->relationResolver = $this->createRelationResolver();
 
         $GLOBALS['BE_FFL'] = [
@@ -139,7 +140,6 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         ];
 
         $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
-
         $schema = $factory->create('tl_content');
 
         $this->assertSame('object', $schema['type']);
@@ -317,7 +317,6 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ->method('supports')
             ->willReturnCallback(static fn (array $config): bool => 'customText' === ($config['inputType'] ?? null))
         ;
-
         $converter
             ->expects($this->exactly(3))
             ->method('getSchema')
@@ -464,6 +463,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ->method('create')
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, []))
         ;
+
         $this->relationMetadataFactory = $metadataFactory;
 
         return new DataContainerRelationResolver(
@@ -485,7 +485,6 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
                 },
             )
         ;
-
         $localeSwitcher
             ->method('runWithLocale')
             ->willReturnCallback(

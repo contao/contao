@@ -47,7 +47,6 @@ class ModuleTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

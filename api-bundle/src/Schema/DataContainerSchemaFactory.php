@@ -72,6 +72,7 @@ final class DataContainerSchemaFactory
         $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
+
         $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
         $dc->strTable = $table;
 

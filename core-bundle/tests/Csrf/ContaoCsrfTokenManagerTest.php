@@ -100,7 +100,6 @@ class ContaoCsrfTokenManagerTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
-
         $foreignSession
             ->expects($this->once())
             ->method('all')

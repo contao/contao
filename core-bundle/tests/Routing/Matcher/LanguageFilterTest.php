@@ -26,6 +26,7 @@ class LanguageFilterTest extends TestCase
     public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, array|null $pageModelData, string $acceptLanguage, bool $expectRemoval): void
     {
         $page = null === $pageModelData ? null : $this->createClassWithPropertiesStub(PageModel::class, $pageModelData);
+
         $route = $this->createMock(Route::class);
         $route
             ->expects($this->once())
@@ -40,7 +41,6 @@ class LanguageFilterTest extends TestCase
             ->method('all')
             ->willReturn([$name => $route])
         ;
-
         $collection
             ->expects($expectRemoval ? $this->once() : $this->never())
             ->method('remove')

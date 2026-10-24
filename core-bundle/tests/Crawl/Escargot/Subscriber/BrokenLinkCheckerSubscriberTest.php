@@ -72,6 +72,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         }
 
         $queue = new InMemoryQueue();
+
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), $queue);
         $escargot = $escargot->withLogger($logger);
 
@@ -366,7 +367,6 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             ->method('getStatusCode')
             ->willReturn($statusCode)
         ;
-
         $response
             ->method('getInfo')
             ->willReturnCallback(

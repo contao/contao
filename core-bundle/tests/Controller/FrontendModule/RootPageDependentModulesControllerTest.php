@@ -193,11 +193,16 @@ class RootPageDependentModulesControllerTest extends TestCase
         ;
 
         $nestedReference = new ContentElementReference($this->createStub(ContentModel::class));
-        $container = $this->mockContainer(new RequestStack([$request]), $selectedModel, function (ContentElementReference $reference) use ($nestedReference): string {
-            $this->assertSame([$nestedReference], $reference->attributes['nestedFragments']);
 
-            return '<p>nested content</p>';
-        });
+        $container = $this->mockContainer(
+            new RequestStack([$request]),
+            $selectedModel,
+            function (ContentElementReference $reference) use ($nestedReference): string {
+                $this->assertSame([$nestedReference], $reference->attributes['nestedFragments']);
+
+                return '<p>nested content</p>';
+            },
+        );
 
         $compositor = $this->createMock(FragmentCompositor::class);
         $compositor

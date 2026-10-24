@@ -228,12 +228,15 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             ->withOperationId($shortName.'getCollection')
             ->withSummary('Collection of '.$shortName.' records')
             ->withParameters($parameters)
-            ->withResponse(200, new Response(
-                description: 'A collection of '.$shortName.' records.',
-                content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createCollectionSchema($schemaRef)),
-                ]),
-            ))
+            ->withResponse(
+                200,
+                new Response(
+                    description: 'A collection of '.$shortName.' records.',
+                    content: new \ArrayObject([
+                        'application/json' => new MediaType($this->createCollectionSchema($schemaRef)),
+                    ]),
+                ),
+            )
         ;
     }
 
@@ -297,12 +300,15 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return new Operation()
             ->withOperationId($shortName.'get')
             ->withSummary('Fetch a '.$shortName.' record')
-            ->withResponse(200, new Response(
-                description: 'A '.$shortName.' record.',
-                content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
-                ]),
-            ))
+            ->withResponse(
+                200,
+                new Response(
+                    description: 'A '.$shortName.' record.',
+                    content: new \ArrayObject([
+                        'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
+                    ]),
+                ),
+            )
         ;
     }
 
@@ -311,12 +317,15 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return new Operation()
             ->withOperationId($shortName.'post')
             ->withSummary('Create a '.$shortName.' record')
-            ->withResponse(201, new Response(
-                description: 'The created '.$shortName.' record.',
-                content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
-                ]),
-            ))
+            ->withResponse(
+                201,
+                new Response(
+                    description: 'The created '.$shortName.' record.',
+                    content: new \ArrayObject([
+                        'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
+                    ]),
+                ),
+            )
             ->withRequestBody(new RequestBody(
                 description: 'The '.$shortName.' payload.',
                 content: new \ArrayObject([
@@ -332,12 +341,15 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
         return new Operation()
             ->withOperationId($shortName.'patch')
             ->withSummary('Update a '.$shortName.' record')
-            ->withResponse(200, new Response(
-                description: 'The updated '.$shortName.' record.',
-                content: new \ArrayObject([
-                    'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
-                ]),
-            ))
+            ->withResponse(
+                200,
+                new Response(
+                    description: 'The updated '.$shortName.' record.',
+                    content: new \ArrayObject([
+                        'application/json' => new MediaType($this->createObjectSchema($schemaRef)),
+                    ]),
+                ),
+            )
             ->withRequestBody(new RequestBody(
                 description: 'The '.$shortName.' payload.',
                 content: new \ArrayObject([
@@ -354,10 +366,12 @@ final class DataContainerOpenApiFactory implements OpenApiFactoryInterface
             ->withOperationId($shortName.'move')
             ->withSummary('Move or reorder a '.$shortName.' record')
             ->withParameters([new Parameter(name: 'id', in: 'path', required: true, schema: ['type' => 'integer'])])
-            ->withResponses(['200' => new Response(
-                description: 'The moved record.',
-                content: new \ArrayObject(['application/json' => new MediaType($this->createObjectSchema($schemaRef))]),
-            )])
+            ->withResponses([
+                '200' => new Response(
+                    description: 'The moved record.',
+                    content: new \ArrayObject(['application/json' => new MediaType($this->createObjectSchema($schemaRef))]),
+                ),
+            ])
             ->withRequestBody(new RequestBody(
                 content: new \ArrayObject(['application/json' => new MediaType($this->createObjectSchema($schemaRef.'_move'))]),
                 required: true,

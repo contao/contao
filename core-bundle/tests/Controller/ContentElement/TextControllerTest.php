@@ -57,6 +57,7 @@ class TextControllerTest extends ContentElementTestCase
         );
 
         $afterText = '';
+
         $beforeText = <<<'HTML'
             <figure>
                 <img src="files/image1.jpg" alt>

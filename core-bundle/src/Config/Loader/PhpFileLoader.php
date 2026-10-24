@@ -155,9 +155,7 @@ class PhpFileLoader extends Loader
                                 ],
                             ),
                         ),
-                        [
-                            'stmts' => [$node],
-                        ],
+                        ['stmts' => [$node]],
                     );
                 }
 

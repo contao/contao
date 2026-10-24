@@ -197,7 +197,6 @@ class ContaoApiExtensionTest extends ContaoTestCase
             ->with($relation)
             ->willReturn(true)
         ;
-
         $extension
             ->expects($this->once())
             ->method('resolveToReference')
@@ -245,6 +244,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $registry = $container->get('contao_api.widget.converter_registry');
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL']['custom'] = TextField::class;
         $GLOBALS['BE_FFL']['password'] = Password::class;
 
@@ -267,6 +267,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $container->compile();
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
+
         $GLOBALS['BE_FFL']['rows'] = RowWizard::class;
         $GLOBALS['BE_FFL']['text'] = TextField::class;
 
@@ -295,13 +296,17 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $widgets = $GLOBALS['BE_FFL'] ?? null;
         $dca = $GLOBALS['TL_DCA'] ?? null;
+
         $GLOBALS['BE_FFL']['rows'] = RowWizard::class;
         $GLOBALS['BE_FFL']['text'] = TextField::class;
 
-        $unsupported = ['inputType' => 'rows', 'fields' => [
-            'title' => ['inputType' => 'text'],
-            'unknown' => ['inputType' => 'unknown'],
-        ]];
+        $unsupported = [
+            'inputType' => 'rows',
+            'fields' => [
+                'title' => ['inputType' => 'text'],
+                'unknown' => ['inputType' => 'unknown'],
+            ],
+        ];
 
         $GLOBALS['TL_DCA']['tl_test']['fields'] = [
             'title' => ['inputType' => 'text'],
@@ -311,6 +316,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         try {
             $this->assertNull($container->get('contao_api.widget.converter_registry')->get($unsupported));
+
             $factory = $container->get('contao_api.schema.data_container_factory');
             $this->assertSame(['title'], array_keys($factory->create('tl_test')['properties']));
 

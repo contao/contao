@@ -336,6 +336,7 @@ class ControllerTest extends TestCase
         $container->setParameter('kernel.debug', false);
         $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
         $container->set('fragment.handler', $handler);
+
         System::setContainer($container);
 
         $this->assertSame('<p>module</p>', Controller::getFrontendModule($reference));

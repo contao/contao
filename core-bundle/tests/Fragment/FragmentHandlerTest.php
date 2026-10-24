@@ -297,7 +297,6 @@ class FragmentHandlerTest extends TestCase
             ->with($name)
             ->willReturn(true)
         ;
-
         $serviceLocator
             ->expects($this->once())
             ->method('get')

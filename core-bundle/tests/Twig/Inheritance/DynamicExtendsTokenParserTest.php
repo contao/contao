@@ -88,17 +88,20 @@ class DynamicExtendsTokenParserTest extends TestCase
 
         yield 'conditional extend' => [
             "{% extends x == 1 ? '@Foo/bar.html.twig' : '@Foo/baz.html.twig' %}",
-            '@Foo/bar.html.twig', '@Foo/baz.html.twig',
+            '@Foo/bar.html.twig',
+            '@Foo/baz.html.twig',
         ];
 
         yield 'conditional Contao extend' => [
             "{% extends x == 1 ? '@Contao/foo.html.twig' : '@Contao/bar.html.twig' %}",
-            '<foo-parent>', '<bar-parent>',
+            '<foo-parent>',
+            '<bar-parent>',
         ];
 
         yield 'optional extend' => [
             "{% extends ['a.html.twig', 'b.html.twig'] %}",
-            'a.html.twig', 'b.html.twig',
+            'a.html.twig',
+            'b.html.twig',
         ];
 
         yield 'optional Contao extend' => [

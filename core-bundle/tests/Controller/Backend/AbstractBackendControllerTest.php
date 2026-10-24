@@ -114,6 +114,7 @@ class AbstractBackendControllerTest extends TestCase
         $container = $this->getContainerWithDefaultConfiguration($expectedContext);
 
         System::setContainer($container);
+
         $controller->setContainer($container);
 
         $this->assertSame('<result>', $controller->fooAction()->getContent());
@@ -152,6 +153,7 @@ class AbstractBackendControllerTest extends TestCase
         $container = $this->getContainerWithDefaultConfiguration($expectedContext, $request);
 
         System::setContainer($container);
+
         $controller->setContainer($container);
         $response = $controller->fooAction($view, $includeChromeContext, $response);
 
@@ -278,6 +280,7 @@ class AbstractBackendControllerTest extends TestCase
         $controller->setContainer($container);
 
         $this->expectException(\LogicException::class);
+
         $controller->fooAction('update.stream.html.twig', null, null);
     }
 
@@ -320,7 +323,6 @@ class AbstractBackendControllerTest extends TestCase
             ->method('isGranted')
             ->willReturnMap([['ROLE_USER', true]])
         ;
-
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -362,7 +364,6 @@ class AbstractBackendControllerTest extends TestCase
             ->method('exists')
             ->willReturn(true)
         ;
-
         $filesystemLoader
             ->method('getFirst')
             ->willReturnCallback(

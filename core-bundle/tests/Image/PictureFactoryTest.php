@@ -447,10 +447,12 @@ class PictureFactoryTest extends TestCase
                 $this->callback(
                     function (PictureConfiguration $config): bool {
                         $this->assertSame([], $config->getSizeItems());
+
                         $this->assertSame(
                             ResizeConfiguration::MODE_CROP,
                             $config->getSize()->getResizeConfig()->getMode(),
                         );
+
                         $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
                         $this->assertSame(200, $config->getSize()->getResizeConfig()->getHeight());
 
@@ -475,7 +477,6 @@ class PictureFactoryTest extends TestCase
             ))
             ->willReturn($imageMock)
         ;
-
         $imageFactory
             ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')

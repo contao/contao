@@ -42,6 +42,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {
         \assert($data instanceof DataContainerRecord);
+
         $normalized = array_map(fn (mixed $value): mixed => $this->normalizeFieldValue($value, $format, $context), $data->toArray());
         $reference = $this->relationResolver->resolveToReference($data->id, new DataContainerRelationDefinition($data->table));
         $iri = $reference instanceof RelationReference ? $reference->iri : null;
@@ -89,6 +90,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
 
         $data = $this->toArray($data);
         unset($data['@context'], $data['@id'], $data['@type']);
+
         $data = $this->normalizeInputReferences($data);
         $table = $this->getTable($context);
         $id = $this->getRecordIdentifier($data['id'] ?? null);

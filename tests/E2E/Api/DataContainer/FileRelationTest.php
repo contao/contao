@@ -90,6 +90,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     {
         $path = $this->createContentWithFiles('image', 'singleSRC');
         $files = $this->uploadFiles();
+
         $this->readResource($path, $userFixture);
 
         $response = $this->patchResource($path, ['singleSRC' => $files[$allowed]], $userFixture);
@@ -106,6 +107,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     {
         $path = $this->createContentWithFiles('gallery', 'multiSRC');
         $files = $this->uploadFiles();
+
         $this->readResource($path, $userFixture);
 
         $response = $this->patchResource($path, ['multiSRC' => [$files[$allowed]]], $userFixture);
@@ -124,6 +126,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
     {
         $path = $this->createContentWithFiles('text', 'file_rows');
         $files = $this->uploadFiles();
+
         $this->readResource($path, $userFixture);
 
         $row = ['single' => $files[$allowed], 'multiple' => [$files[$allowed]]];
@@ -194,6 +197,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         ]));
 
         $this->assertSame(201, $response->getStatusCode(), $response->getContent(false));
+
         $data = $response->toArray(false);
 
         return $data['@id'];
@@ -214,6 +218,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
             ])->withBody($contents));
 
             $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
             $data = $response->toArray(false);
 
             $files[] = ['iri' => $data['@id']];

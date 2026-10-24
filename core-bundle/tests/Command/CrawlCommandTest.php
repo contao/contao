@@ -108,7 +108,6 @@ class CrawlCommandTest extends TestCase
             ->method('getCrawlUriCollection')
             ->willReturn($this->getBaseUriCollection())
         ;
-
         $escargotFactory
             ->expects($this->once())
             ->method('create')
@@ -121,13 +120,11 @@ class CrawlCommandTest extends TestCase
                 },
             )
         ;
-
         $escargotFactory
             ->expects($this->exactly(2))
             ->method('createLazyQueue')
             ->willReturn(new LazyQueue(new InMemoryQueue(), $queue))
         ;
-
         $escargotFactory
             ->expects($this->once())
             ->method('createFromJobId')
@@ -193,7 +190,6 @@ class CrawlCommandTest extends TestCase
             ->method('create')
             ->willReturn($escargot)
         ;
-
         $escargotFactory
             ->expects($this->never())
             ->method('createFromJobId')
@@ -212,12 +208,10 @@ class CrawlCommandTest extends TestCase
                 ->method('createFromJobId')
                 ->willThrowException($exception)
             ;
-
             $escargotFactory
                 ->expects($this->never())
                 ->method('create')
             ;
-
             $escargotFactory
                 ->expects($this->never())
                 ->method('createLazyQueue')
@@ -231,7 +225,6 @@ class CrawlCommandTest extends TestCase
             ->method('create')
             ->willThrowException($exception)
         ;
-
         $escargotFactory
             ->expects($this->never())
             ->method('createFromJobId')

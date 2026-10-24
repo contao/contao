@@ -71,10 +71,14 @@ class RowWizardConverterTest extends TestCase
 
     public function testConvertsCellsAndPreparesRowMarkers(): void
     {
-        $config = ['inputType' => 'rows', 'eval' => ['actions' => ['enable']], 'fields' => [
-            'id' => ['inputType' => 'text', 'eval' => ['maxlength' => 20]],
-            'file' => ['inputType' => 'file'],
-        ]];
+        $config = [
+            'inputType' => 'rows',
+            'eval' => ['actions' => ['enable']],
+            'fields' => [
+                'id' => ['inputType' => 'text', 'eval' => ['maxlength' => 20]],
+                'file' => ['inputType' => 'file'],
+            ],
+        ];
 
         $converter = $this->createConverter();
         $schema = $converter->getSchema($config, ['type' => 'string']);
@@ -108,21 +112,18 @@ class RowWizardConverterTest extends TestCase
             ->method('supports')
             ->willReturnCallback(static fn (array $config): bool => 'custom' === ($config['inputType'] ?? null))
         ;
-
         $child
             ->expects($this->once())
             ->method('getSchema')
             ->with($field, ['type' => 'string'])
             ->willReturn(['type' => 'integer'])
         ;
-
         $child
             ->expects($this->once())
             ->method('convertToApiValue')
             ->with('stored', $field, ['type' => 'integer'])
             ->willReturn(42)
         ;
-
         $child
             ->expects($this->once())
             ->method('convertToFormValue')
@@ -162,10 +163,13 @@ class RowWizardConverterTest extends TestCase
 
     public function testRespectsChildAccessAndSchemaOverrides(): void
     {
-        $config = ['inputType' => 'rows', 'fields' => [
-            'secret' => ['inputType' => 'password'],
-            'locked' => ['inputType' => 'text', 'eval' => ['readonly' => true], 'api' => ['schema' => ['enum' => ['test']]]],
-        ]];
+        $config = [
+            'inputType' => 'rows',
+            'fields' => [
+                'secret' => ['inputType' => 'password'],
+                'locked' => ['inputType' => 'text', 'eval' => ['readonly' => true], 'api' => ['schema' => ['enum' => ['test']]]],
+            ],
+        ];
 
         $converter = $this->createConverter();
         $schema = $converter->getSchema($config, []);
@@ -211,11 +215,14 @@ class RowWizardConverterTest extends TestCase
         $single = ['inputType' => 'file'];
         $multiple = ['inputType' => 'file', 'eval' => ['multiple' => true, 'binary' => false]];
 
-        $config = ['inputType' => 'rows', 'fields' => [
-            'single' => $single,
-            'multiple' => $multiple,
-            'nested' => ['inputType' => 'rows', 'fields' => ['file' => $single]],
-        ]];
+        $config = [
+            'inputType' => 'rows',
+            'fields' => [
+                'single' => $single,
+                'multiple' => $multiple,
+                'nested' => ['inputType' => 'rows', 'fields' => ['file' => $single]],
+            ],
+        ];
 
         $uuid = '12345678-1234-1234-8234-123456789abc';
         $schema = $converter->getSchema($config, []);
@@ -224,11 +231,15 @@ class RowWizardConverterTest extends TestCase
         $this->assertArrayNotHasKey('format', $schema['items']['properties']['single']);
         $this->assertSame(['object', 'null'], $schema['items']['properties']['multiple']['items']['type']);
 
-        $rows = $converter->convertToApiValue(serialize([[
-            'single' => StringUtil::uuidToBin($uuid),
-            'multiple' => [$uuid, $uuid],
-            'nested' => [['file' => StringUtil::uuidToBin($uuid)]],
-        ]]), $config, $schema);
+        $rows = $converter->convertToApiValue(
+            serialize([[
+                'single' => StringUtil::uuidToBin($uuid),
+                'multiple' => [$uuid, $uuid],
+                'nested' => [['file' => StringUtil::uuidToBin($uuid)]],
+            ]]),
+            $config,
+            $schema,
+        );
 
         $this->assertEquals(new RelationReference($uuid, '/contao/api/files/'.$uuid), $rows[0]->single);
         $this->assertEquals([new RelationReference($uuid, '/contao/api/files/'.$uuid), new RelationReference($uuid, '/contao/api/files/'.$uuid)], $rows[0]->multiple);
@@ -247,8 +258,10 @@ class RowWizardConverterTest extends TestCase
     private function createConverter(WidgetConverterInterface|null $custom = null, bool $files = false): RowWizardConverter
     {
         $framework = $this->createStub(ContaoFramework::class);
+
         $converters = new \ArrayObject($custom ? [$custom] : []);
         $converters[] = new CoreWidgetConverter(new DateValueFormatter($framework));
+
         $registry = new WidgetConverterRegistry($converters);
 
         $resolver = $this->createRelationResolver($files);
@@ -274,7 +287,6 @@ class RowWizardConverterTest extends TestCase
             ->method('generate')
             ->willReturnCallback(static fn (string $route, array $parameters): string => '/contao/api/files/'.$parameters['pathOrUuid'])
         ;
-
         $router
             ->method('match')
             ->willReturnCallback(static fn (string $path): array => ['_route' => 'files_get', 'pathOrUuid' => substr($path, \strlen('/contao/api/files/'))])

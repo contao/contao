@@ -37,6 +37,7 @@ class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
     public function testRegularExternalRequest(): void
     {
         $response = new MockResponse('response');
+
         $client = $this->createClient(
             function (string $method, string $url, array $options) use ($response): ResponseInterface {
                 $this->assertSame('GET', $method);
@@ -57,7 +58,6 @@ class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
     public function testInternalRequests(string $allowedOrigin, array $disallowedUrls): void
     {
         $resolve = [];
-
         $resolve[parse_url($allowedOrigin, PHP_URL_HOST)] = '127.0.0.1';
 
         foreach ($disallowedUrls as $disallowedUrl) {
@@ -65,6 +65,7 @@ class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
         }
 
         $response = new MockResponse('response');
+
         $client = $this->createClient(
             function (string $method, string $url, array $options) use ($allowedOrigin, $response): ResponseInterface {
                 $this->assertSame('GET', $method);
@@ -87,6 +88,7 @@ class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
                 $this->assertStringMatchesFormat('Host "%s" is blocked%s', $exception->getMessage());
                 continue;
             }
+
             $this->fail(\sprintf('Disallowed URL "%s" should be blocked.', $disallowedUrl));
         }
 
@@ -157,14 +159,11 @@ class NoPrivateNetworkExceptRootPagesHttpClientTest extends TestCase
                     return new MockResponse('response');
                 }
 
-                return new MockResponse(
-                    'redirect',
-                    [
-                        'http_code' => 302,
-                        'redirect_url' => $redirectUrls[$redirectIndex + 1],
-                        'response_headers' => ['Location' => $redirectUrls[$redirectIndex + 1]],
-                    ],
-                );
+                return new MockResponse('redirect', [
+                    'http_code' => 302,
+                    'redirect_url' => $redirectUrls[$redirectIndex + 1],
+                    'response_headers' => ['Location' => $redirectUrls[$redirectIndex + 1]],
+                ]);
             },
             array_map(
                 static fn ($origin) => "$origin/root-page-alias.html",

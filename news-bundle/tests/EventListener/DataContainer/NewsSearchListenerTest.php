@@ -88,115 +88,227 @@ class NewsSearchListenerTest extends ContaoTestCase
     public static function purgeSearchEntryProvider(): iterable
     {
         yield 'Test alias (1) unchanged should not purge the search entry' => [
-            'alias', 'foo', ['alias' => 'foo'], null, false,
+            'alias',
+            'foo',
+            ['alias' => 'foo'],
+            null,
+            false,
         ];
 
         yield 'Test alias (2) change should purge the search entry' => [
-            'alias', 'bar', ['alias' => 'foo'], null, true,
+            'alias',
+            'bar',
+            ['alias' => 'foo'],
+            null,
+            true,
         ];
 
         yield 'Test searchIndexer (1) unchanged should not purge the search entry.' => [
-            'searchIndexer', 'always_index', ['searchIndexer' => 'always_index'], null, false,
+            'searchIndexer',
+            'always_index',
+            ['searchIndexer' => 'always_index'],
+            null,
+            false,
         ];
 
         yield 'Test searchIndexer (2) change to always_index should not purge the search entry.' => [
-            'searchIndexer', 'always_index', ['searchIndexer' => ''], null, false,
+            'searchIndexer',
+            'always_index',
+            ['searchIndexer' => ''],
+            null,
+            false,
         ];
 
         yield 'Test searchIndexer (3) change to never_index should purge the search entry.' => [
-            'searchIndexer', 'never_index', ['searchIndexer' => ''], null, true,
+            'searchIndexer',
+            'never_index',
+            ['searchIndexer' => ''],
+            null,
+            true,
         ];
 
         yield 'Test searchIndexer (4) change to blank should not purge the search entry if the reader page has searchIndexer:always_index.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test searchIndexer (5) change to blank should purge the search entry if the reader page has searchIndexer:never_index.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => 'never_index'],
+            true,
         ];
 
         yield 'Test searchIndexer (6) change to blank should not purge the search entry if robots is set to index the reader page has searchIndexer:blank.' => [
-            'searchIndexer', '', ['robots' => 'index,follow', 'searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => ''], false,
+            'searchIndexer',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => ''],
+            false,
         ];
 
         yield 'Test searchIndexer (7) change to blank should purge the search entry if robots is set to noindex and the reader page has searchIndexer:blank.' => [
-            'searchIndexer', '', ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => ''], true,
+            'searchIndexer',
+            '',
+            ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => ''],
+            true,
         ];
 
         yield 'Test searchIndexer (8) change to blank should not purge the search entry if robots is not set and the reader page has searchIndexer:blank and robots:index.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'index,follow'], false,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => '', 'robots' => 'index,follow'],
+            false,
         ];
 
         yield 'Test searchIndexer (9) change to blank should purge the search entry if robots is not set and the reader page has searchIndexer:blank and robots:noindex.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'noindex,follow'], true,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'pid' => 5],
+            ['searchIndexer' => '', 'robots' => 'noindex,follow'],
+            true,
         ];
 
         yield 'Test robots (1) unchanged should not purge the search entry.' => [
-            'robots', 'index,follow', ['robots' => 'index,follow'], null, false,
+            'robots',
+            'index,follow',
+            ['robots' => 'index,follow'],
+            null,
+            false,
         ];
 
         yield 'Test robots (2) change to index should not purge the search entry if searchIndexer is set to always_index.' => [
-            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => 'always_index'], null, false,
+            'robots',
+            'index,follow',
+            ['robots' => '', 'searchIndexer' => 'always_index'],
+            null,
+            false,
         ];
 
         yield 'Test robots (3) change to index should purge the search entry if searchIndexer is set to never_index' => [
-            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => 'never_index'], null, true,
+            'robots',
+            'index,follow',
+            ['robots' => '', 'searchIndexer' => 'never_index'],
+            null,
+            true,
         ];
 
         yield 'Test robots (4) change to blank should not purge the search entry if searchIndexer is set to always_index' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => 'always_index'], null, false,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => 'always_index'],
+            null,
+            false,
         ];
 
         yield 'Test robots (5) change to blank should purge the search entry if searchIndexer is set to never_index' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => 'never_index'], null, true,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => 'never_index'],
+            null,
+            true,
         ];
 
         yield 'Test robots (6) change to noindex should not purge the search entry if searchIndexer is set to always_index' => [
-            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'always_index'], null, false,
+            'robots',
+            'noindex,follow',
+            ['robots' => 'index,follow', 'searchIndexer' => 'always_index'],
+            null,
+            false,
         ];
 
         yield 'Test robots (7) change to noindex should purge the search entry if searchIndexer is set to never_index' => [
-            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'never_index'], null, true,
+            'robots',
+            'noindex,follow',
+            ['robots' => 'index,follow', 'searchIndexer' => 'never_index'],
+            null,
+            true,
         ];
 
         yield 'Test robots (8) change to index should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank' => [
-            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => ''], false,
+            'robots',
+            'index,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => ''],
+            false,
         ];
 
         yield 'Test robots (9) change to index should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
-            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+            'robots',
+            'index,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test robots (10) change to index should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
-            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+            'robots',
+            'index,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'never_index'],
+            true,
         ];
 
         yield 'Test robots (11) change to noindex should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank' => [
-            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => ''], true,
+            'robots',
+            'noindex,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => ''],
+            true,
         ];
 
         yield 'Test robots (12) change to noindex should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
-            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+            'robots',
+            'noindex,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test robots (13) change to noindex should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
-            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+            'robots',
+            'noindex,follow',
+            ['robots' => '', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'never_index'],
+            true,
         ];
 
         yield 'Test robots (14) change to blank should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank and robots:index' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'index,follow'], false,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => '', 'robots' => 'index,follow'],
+            false,
         ];
 
         yield 'Test robots (15) change to blank should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test robots (16) change to blank should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => 'never_index'],
+            true,
         ];
 
         yield 'Test robots (17) change to blank should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank and robots:noindex' => [
-            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'noindex,follow'], true,
+            'robots',
+            '',
+            ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5],
+            ['searchIndexer' => '', 'robots' => 'noindex,follow'],
+            true,
         ];
     }
 
@@ -244,11 +356,13 @@ class NewsSearchListenerTest extends ContaoTestCase
     public static function deleteProvider(): iterable
     {
         yield 'Test purges the search entry on delete when id is present' => [
-            ['id' => 17], true,
+            ['id' => 17],
+            true,
         ];
 
         yield 'Test does not purge the search entry without id' => [
-            ['id' => null], false,
+            ['id' => null],
+            false,
         ];
     }
 }

@@ -137,6 +137,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $jobs = $this->getJobs();
+
         $job = $jobs->createJob('job-type');
         $job = $job->withProgress(37.0);
 
@@ -144,6 +145,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $jobs->addAttachment($job, 'foobar', 'foobar');
 
         $call = 0;
+
         $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->exactly(3))

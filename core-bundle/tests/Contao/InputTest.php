@@ -92,6 +92,7 @@ class InputTest extends TestCase
         Config::set('allowedAttributes', '');
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request(['key' => $source], ['key' => $source], [], ['key' => $source]));
 
         $this->assertSame($expected, Input::get('key', true));
@@ -312,6 +313,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncodedDouble ?? $expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request([], ['key' => $source]));
 
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
@@ -368,6 +370,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($source, $allowedTags, $allowedAttributes));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request([], ['key' => $source]));
 
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
@@ -841,6 +844,7 @@ class InputTest extends TestCase
         $data = ['key1' => 'string-key', '123' => 'integer-key'];
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request());
 
         $this->assertSame([], Input::getKeys());
@@ -917,6 +921,7 @@ class InputTest extends TestCase
     public function testAutoItemAttribute(): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request());
 
         $this->assertSame([], Input::getKeys());
@@ -949,6 +954,7 @@ class InputTest extends TestCase
         $data = ['key' => ['value1', 'value2']];
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request($data, $data, [], $data));
 
         $this->assertSame(['value1', 'value2'], Input::get('key'));

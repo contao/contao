@@ -238,7 +238,6 @@ class VirtualFilesystemTest extends TestCase
             ->with('prefix/path')
             ->willReturn($resourceExists)
         ;
-
         $mountManager
             // Called once each for directoryExists() and once each for has() if resource
             // does not exist
@@ -255,7 +254,6 @@ class VirtualFilesystemTest extends TestCase
             ->method('sync')
             ->with('prefix/path')
         ;
-
         $dbafsManager
             ->expects($this->exactly(3))
             ->method('match')
@@ -286,7 +284,6 @@ class VirtualFilesystemTest extends TestCase
             ->expects($this->never())
             ->method('fileExists')
         ;
-
         $mountManager
             ->expects($this->never())
             ->method('directoryExists')
@@ -297,17 +294,14 @@ class VirtualFilesystemTest extends TestCase
             ->method('match')
             ->willReturnMap([['prefix/path', true]])
         ;
-
         $dbafsManager
             ->method('fileExists')
             ->willReturnMap([['prefix/path', $resourceExists]])
         ;
-
         $dbafsManager
             ->method('directoryExists')
             ->willReturnMap([['prefix/path', $resourceExists]])
         ;
-
         $dbafsManager
             ->method('has')
             ->willReturnMap([['prefix/path', $resourceExists]])
@@ -345,8 +339,8 @@ class VirtualFilesystemTest extends TestCase
     public function testWrite(): void
     {
         $mountManager = $this->mockMountManagerWithCall('write', ['foo', ['some' => 'option']]);
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
         $filesystem->write('path', 'foo', ['some' => 'option']);
         $filesystem->write($this->defaultUuid, 'foo', ['some' => 'option']);
     }
@@ -356,8 +350,8 @@ class VirtualFilesystemTest extends TestCase
         $resource = tmpfile();
 
         $mountManager = $this->mockMountManagerWithCall('writeStream', [$resource, ['some' => 'option']]);
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
         $filesystem->writeStream('path', $resource, ['some' => 'option']);
         $filesystem->writeStream($this->defaultUuid, $resource, ['some' => 'option']);
 
@@ -367,8 +361,8 @@ class VirtualFilesystemTest extends TestCase
     public function testDelete(): void
     {
         $mountManager = $this->mockMountManagerWithCall('delete');
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
         $filesystem->delete('path');
         $filesystem->delete($this->defaultUuid);
     }
@@ -376,8 +370,8 @@ class VirtualFilesystemTest extends TestCase
     public function testDeleteDirectory(): void
     {
         $mountManager = $this->mockMountManagerWithCall('deleteDirectory');
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
         $filesystem->deleteDirectory('path');
         $filesystem->deleteDirectory($this->defaultUuid);
     }
@@ -385,8 +379,8 @@ class VirtualFilesystemTest extends TestCase
     public function testCreateDirectory(): void
     {
         $mountManager = $this->mockMountManagerWithCall('createDirectory', [['some' => 'option']]);
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
         $filesystem->createDirectory('path', ['some' => 'option']);
         $filesystem->createDirectory($this->defaultUuid, ['some' => 'option']);
     }
@@ -394,8 +388,8 @@ class VirtualFilesystemTest extends TestCase
     public function testCopy(): void
     {
         $mountManager = $this->mockMountManagerWithCall('copy', ['prefix/to/path', ['some' => 'option']]);
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
         $filesystem->copy('path', 'to/path', ['some' => 'option']);
         $filesystem->copy($this->defaultUuid, 'to/path', ['some' => 'option']);
     }
@@ -403,8 +397,8 @@ class VirtualFilesystemTest extends TestCase
     public function testMove(): void
     {
         $mountManager = $this->mockMountManagerWithCall('move', ['prefix/to/path', ['some' => 'option']]);
-        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
 
+        $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
         $filesystem->move('path', 'to/path', ['some' => 'option']);
         $filesystem->move($this->defaultUuid, 'to/path', ['some' => 'option']);
     }
@@ -418,12 +412,10 @@ class VirtualFilesystemTest extends TestCase
             ->method('fileExists')
             ->willReturnCallback(static fn (string $path): bool => 'foo/file_a' === $path)
         ;
-
         $mountManager
             ->method('directoryExists')
             ->willReturnCallback(static fn (string $path): bool => 'foo/dir_a' === $path)
         ;
-
         $mountManager
             ->method('getLastModified')
             ->willReturnCallback(
@@ -434,7 +426,6 @@ class VirtualFilesystemTest extends TestCase
                 },
             )
         ;
-
         $mountManager
             ->method('getFileSize')
             ->willReturnCallback(
@@ -445,7 +436,6 @@ class VirtualFilesystemTest extends TestCase
                 },
             )
         ;
-
         $mountManager
             ->method('getMimeType')
             ->willReturnCallback(
@@ -462,7 +452,6 @@ class VirtualFilesystemTest extends TestCase
             ->method('getSupportedFeatures')
             ->willReturn(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE)
         ;
-
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
@@ -499,7 +488,6 @@ class VirtualFilesystemTest extends TestCase
                 },
             )
         ;
-
         $dbafs
             ->expects($this->once())
             ->method('sync')
@@ -572,7 +560,6 @@ class VirtualFilesystemTest extends TestCase
             ->expects($this->never())
             ->method('listContents')
         ;
-
         $dbafsManager
             ->expects($this->once())
             ->method('getExtraMetadata')
@@ -637,7 +624,6 @@ class VirtualFilesystemTest extends TestCase
             ->expects($this->never())
             ->method('listContents')
         ;
-
         $mountManager
             ->expects($this->once())
             ->method('getFileSize')
@@ -652,7 +638,6 @@ class VirtualFilesystemTest extends TestCase
             ->with('prefix/foo/bar')
             ->willReturn(true)
         ;
-
         $dbafsManager
             ->expects($this->once())
             ->method('listContents')
@@ -735,13 +720,11 @@ class VirtualFilesystemTest extends TestCase
             ->with('prefix/foo/bar')
             ->willReturn(true)
         ;
-
         $dbafsManager
             ->expects($this->once())
             ->method('sync')
             ->with('prefix/foo/bar')
         ;
-
         $dbafsManager
             ->expects($this->once())
             ->method('listContents')
@@ -781,13 +764,11 @@ class VirtualFilesystemTest extends TestCase
             ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
-
         $dbafsManager
             ->expects($shouldSync ? $this->exactly(2) : $this->never())
             ->method('sync')
             ->with('prefix/path')
         ;
-
         $dbafsManager
             ->expects($shouldReadFromDbafs ? $this->exactly(2) : $this->never())
             ->method('getExtraMetadata')
@@ -810,19 +791,27 @@ class VirtualFilesystemTest extends TestCase
     public static function provideAccessFlags(): iterable
     {
         yield 'use DBAFS' => [
-            VirtualFilesystemInterface::NONE, false, true,
+            VirtualFilesystemInterface::NONE,
+            false,
+            true,
         ];
 
         yield 'force sync' => [
-            VirtualFilesystemInterface::FORCE_SYNC, true, true,
+            VirtualFilesystemInterface::FORCE_SYNC,
+            true,
+            true,
         ];
 
         yield 'bypass DBAFS' => [
-            VirtualFilesystemInterface::BYPASS_DBAFS, false, false,
+            VirtualFilesystemInterface::BYPASS_DBAFS,
+            false,
+            false,
         ];
 
         yield 'bypass DBAFS, but still sync' => [
-            VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS, true, false,
+            VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS,
+            true,
+            false,
         ];
     }
 
@@ -837,7 +826,6 @@ class VirtualFilesystemTest extends TestCase
             ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
-
         $dbafsManager
             ->expects($this->exactly(2))
             ->method('setExtraMetadata')
@@ -875,35 +863,48 @@ class VirtualFilesystemTest extends TestCase
     public static function provideReadOnlyMethods(): iterable
     {
         yield 'write' => [
-            'write', 'foo/bar', 'content',
+            'write',
+            'foo/bar',
+            'content',
         ];
 
         yield 'writeStream' => [
-            'write', 'foo/bar', 'stream-content',
+            'write',
+            'foo/bar',
+            'stream-content',
         ];
 
         yield 'delete' => [
-            'delete', 'foo/bar',
+            'delete',
+            'foo/bar',
         ];
 
         yield 'delete directory' => [
-            'deleteDirectory', 'foo/bar',
+            'deleteDirectory',
+            'foo/bar',
         ];
 
         yield 'create directory' => [
-            'createDirectory', 'foo/bar',
+            'createDirectory',
+            'foo/bar',
         ];
 
         yield 'copy' => [
-            'copy', 'foo/bar', 'foo/baz',
+            'copy',
+            'foo/bar',
+            'foo/baz',
         ];
 
         yield 'move' => [
-            'move', 'foo/bar', 'foo/baz',
+            'move',
+            'foo/bar',
+            'foo/baz',
         ];
 
         yield 'set extra metadata' => [
-            'setExtraMetadata', 'foo/bar', new ExtraMetadata(['some' => 'data']),
+            'setExtraMetadata',
+            'foo/bar',
+            new ExtraMetadata(['some' => 'data']),
         ];
     }
 
@@ -945,7 +946,6 @@ class VirtualFilesystemTest extends TestCase
             ->with($this->defaultUuid, 'prefix')
             ->willReturn('path1')
         ;
-
         $dbafsManager
             ->expects($shouldSync ? $this->exactly(3) : $this->never())
             ->method('sync')
@@ -953,7 +953,6 @@ class VirtualFilesystemTest extends TestCase
                 static fn (string $path) => \in_array($path, ['prefix/path1', 'prefix/path2'], true),
             ))
         ;
-
         $dbafsManager
             ->expects($shouldReadFromDbafs ? $this->exactly(3) : $this->never())
             ->method($method)
@@ -996,7 +995,6 @@ class VirtualFilesystemTest extends TestCase
             ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
-
         $dbafsManager
             ->expects(null !== $sync ? $this->exactly(2) : $this->never())
             ->method('sync')

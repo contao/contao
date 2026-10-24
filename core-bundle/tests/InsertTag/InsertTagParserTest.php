@@ -98,7 +98,6 @@ class InsertTagParserTest extends TestCase
     public function testParseTag(): void
     {
         $parser = $this->getInsertTagParser();
-
         $insertTag = $parser->parseTag('insert_tag::first::second::foo=bar::baz[]=1::baz[]=1.23|flag1|flag2');
 
         $this->assertInstanceOf(ResolvedInsertTag::class, $insertTag);
@@ -341,6 +340,7 @@ class InsertTagParserTest extends TestCase
                 $this->assertSame('conditional', $tag);
                 $this->assertSame(0, $_rit);
                 $this->assertSame([], $flags);
+
                 $_rit = array_search('conditional_end', $tags, true) - 1;
                 $this->assertSame('conditional_end', $tags[$_rit + 1]);
 
@@ -480,6 +480,7 @@ class InsertTagParserTest extends TestCase
         );
 
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
+
         $parser->replaceInline('{{recursion}}');
     }
 
@@ -507,6 +508,7 @@ class InsertTagParserTest extends TestCase
         );
 
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
+
         $parser->replaceInline('{{recursion::{{recursion}}}}');
     }
 

@@ -29,6 +29,7 @@ class DatabaseMigrationRunnerTest extends FunctionalTestCase
     public function testMigratesTheEntireDatabase(): void
     {
         self::bootKernel();
+
         $container = self::getContainer();
         System::setContainer($container);
 

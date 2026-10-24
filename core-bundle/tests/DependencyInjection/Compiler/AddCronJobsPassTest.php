@@ -34,7 +34,6 @@ class AddCronJobsPassTest extends TestCase
             ->with('contao.cron')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('findTaggedServiceIds')

@@ -116,6 +116,7 @@ final class ApiVersionContextTest extends TestCase
         $requests->push($child);
 
         $this->assertSame($childVersion, $provider->getVersion());
+
         $requests->pop();
         $this->assertSame($parentVersion, $provider->getVersion());
     }

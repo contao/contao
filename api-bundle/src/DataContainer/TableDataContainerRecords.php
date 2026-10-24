@@ -82,6 +82,7 @@ class TableDataContainerRecords
         }
 
         $this->validateContext($context);
+
         $offset = ($page - 1) * $itemsPerPage;
 
         return $this->run(
@@ -92,6 +93,7 @@ class TableDataContainerRecords
                     $sorting = $bag->get('sorting');
                     $sorting = \is_array($sorting) ? $sorting : [];
                     $sorting[$table] = $sort[0];
+
                     $bag->set('sorting', $sorting);
                 }
 
@@ -109,6 +111,7 @@ class TableDataContainerRecords
         }
 
         $this->validateContext($context);
+
         $parent = $context?->getImmediateParent();
 
         if (null !== $parent) {
@@ -133,6 +136,7 @@ class TableDataContainerRecords
             function (DC_Table $dc) use ($record, $context): DataContainerRecord {
                 $response = $this->runBackendAction($dc->create(...));
                 parse_str(parse_url((string) $response->headers->get('Location', ''), PHP_URL_QUERY) ?? '', $parameters);
+
                 $id = filter_var($parameters['id'] ?? null, FILTER_VALIDATE_INT);
 
                 if (false === $id || $id < 1 || 'edit' !== ($parameters['act'] ?? null)) {
@@ -170,6 +174,7 @@ class TableDataContainerRecords
                 }
 
                 $this->validateDestination($dc, $table, $move);
+
                 $parameters = $move->getParameters();
                 $dc->cut(true, $parameters['pid'], $parameters['mode']);
 
@@ -258,8 +263,10 @@ class TableDataContainerRecords
         $draft = 0 === (int) ($row['tstamp'] ?? 1);
         $previousFields = $create || $draft ? [] : $this->getPaletteFields($dc);
         $values = $this->mapper->toFormValues($record->table, $record->data);
+
         $request = $this->requestStack->getCurrentRequest();
         $main = $this->requestStack->getMainRequest();
+
         $previous = $request->request->all();
         $errors = $main->attributes->get('_contao_widget_errors');
         $main->attributes->remove('_contao_widget_errors');
@@ -276,6 +283,7 @@ class TableDataContainerRecords
                     // These fields can change the palette and field options, so persist them before
                     // submitting the complete request data against the updated DCA state
                     $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
+
                     $this->submitFormValues($dc, $submitOnChangeValues, []);
                 }
             }
@@ -308,6 +316,7 @@ class TableDataContainerRecords
 
         // Submit optional creation defaults too, so callbacks such as alias generation run
         $this->requestStack->getCurrentRequest()->request->add($defaults);
+
         $this->runBackendAction($dc->edit(...));
 
         if ($this->requestStack->getMainRequest()->attributes->has('_contao_widget_errors')) {
@@ -361,6 +370,7 @@ class TableDataContainerRecords
             }
 
             $this->validateParent($row, $previous);
+
             $previous = $parent;
         }
     }
@@ -458,6 +468,7 @@ class TableDataContainerRecords
 
         $url = $this->urlAnalyzer->getEditUrl($parameters['ptable'] ?? $table, (int) (isset($parameters['ptable']) ? ($parameters['pid'] ?? $parameters['id'] ?? 0) : ($parameters['id'] ?? $parameters['pid'] ?? 0)));
         parse_str(parse_url($url ?? '', PHP_URL_QUERY) ?? '', $query);
+
         $parameters += ['table' => $table, 'do' => $query['do'] ?? null];
         $url = $this->urlGenerator->generate('contao_backend', $parameters);
         $method = \in_array($parameters['act'] ?? null, ['show', 'select'], true) ? 'GET' : 'POST';
@@ -469,6 +480,7 @@ class TableDataContainerRecords
 
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());
+
         $bag = new ArrayAttributeBag('_contao_be_attributes');
         $bag->setName('contao_backend');
 

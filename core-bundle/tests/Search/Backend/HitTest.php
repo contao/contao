@@ -61,6 +61,7 @@ class HitTest extends TestCase
     public function testTitleAndViewUrlCanBeReplacedWithoutChangingTheOriginalHit(): void
     {
         $document = new Document('42', 'type', 'searchable');
+
         $hit = new Hit($document, 'title', 'https://example.com');
 
         $updatedHit = $hit

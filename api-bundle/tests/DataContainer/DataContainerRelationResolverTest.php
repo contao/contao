@@ -67,7 +67,6 @@ final class DataContainerRelationResolverTest extends TestCase
             ->expects($this->never())
             ->method('getContext')
         ;
-
         $router
             ->expects($this->never())
             ->method('match')
@@ -95,7 +94,6 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('getContext')
             ->willReturn($context)
         ;
-
         $router
             ->method('match')
             ->willThrowException(new ResourceNotFoundException())
@@ -121,7 +119,6 @@ final class DataContainerRelationResolverTest extends TestCase
             ->with('page_get', ['id' => 12])
             ->willReturn('/pages/12')
         ;
-
         $router
             ->method('match')
             ->willReturn(['_route' => 'page_get', 'id' => '12'])
@@ -234,7 +231,6 @@ final class DataContainerRelationResolverTest extends TestCase
             ->method('getContext')
             ->willReturn($context)
         ;
-
         $router
             ->method('match')
             ->willReturnCallback(static fn (): array => 'GET' === $context->getMethod() ? ['_route' => 'page_get', 'id' => '12'] : ['_route' => 'page_post'])

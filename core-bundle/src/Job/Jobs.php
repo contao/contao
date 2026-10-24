@@ -256,6 +256,7 @@ class Jobs
 
         if ($parent && $applyRecursive) {
             $this->persist($parent, false);
+
             $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid = ?', [$parent->getUuid()]) ?? 0;
         }
 
@@ -285,6 +286,7 @@ class Jobs
     public function removeJob(Job $job): void
     {
         $this->connection->delete('tl_job', ['uuid' => $job->getUuid()]);
+
         $this->removeAttachments($job);
     }
 
@@ -384,6 +386,7 @@ class Jobs
                 ),
             ),
         );
+
         $qb->setParameter('userOwner', $userid, ParameterType::INTEGER);
         $qb->setParameter('systemOwner', Owner::SYSTEM, ParameterType::INTEGER);
         $qb->orderBy('j.createdAt', 'DESC');
@@ -462,6 +465,7 @@ class Jobs
             foreach ($this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE id = ?', [$row['pid']], [Types::INTEGER]) as $jobRow) {
                 $children[] = $this->databaseRowToDto($jobRow, false);
             }
+
             $job = $job->withChildren($children);
         } elseif ($withParent) {
             $parentData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE id = ?', [$row['pid']]);

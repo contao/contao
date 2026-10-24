@@ -56,6 +56,7 @@ class BackendJobsListenerTest extends ContaoTestCase
         $menu->addChild($factory->createItem('burger'));
 
         $event = new MenuEvent($factory, $menu);
+
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
@@ -91,6 +92,7 @@ class BackendJobsListenerTest extends ContaoTestCase
         $loader->addPath(__DIR__.'/../../../core-bundle/contao/templates', 'Contao');
 
         $bundlePath = new KnpMenuBundle()->getPath();
+
         $loader->addPath($bundlePath.'/templates', 'KnpMenu');
         $loader->addPath(\dirname($bundlePath).'/knp-menu/src/Knp/Menu/Resources/views');
 

@@ -142,6 +142,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         }
 
         $source = $this->toLocation($move->source);
+
         $destination = $this->toLocation($move->destination);
         $destination = $destination instanceof Uuid ? $filesystem->resolveUuid($destination) : $destination;
 

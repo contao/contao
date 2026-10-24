@@ -33,6 +33,7 @@ class AutomatorCommandTest extends TestCase
     public function testHandlesAnInvalidSelection(): void
     {
         $command = $this->getCommand();
+
         $tester = new CommandTester($command);
         $tester->setInputs(["4800\n"]);
 

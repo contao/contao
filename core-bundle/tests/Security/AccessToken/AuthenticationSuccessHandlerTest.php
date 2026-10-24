@@ -34,7 +34,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('persist')
             ->with($this->identicalTo($personalAccessToken))
         ;
-
         $entityManager
             ->expects($this->once())
             ->method('flush')
@@ -58,7 +57,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')
@@ -78,7 +76,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')

@@ -68,6 +68,7 @@ final class SchemaAwareObjectNormalizerTest extends TestCase
         $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
 
         $this->expectException(\InvalidArgumentException::class);
+
         $normalizer->fromArray(ExtraMetadata::class, ['uuid' => '171bb68d-0094-4f6c-88f5-9b83c0d01521']);
     }
 
@@ -76,6 +77,7 @@ final class SchemaAwareObjectNormalizerTest extends TestCase
         $normalizer = new SchemaAwareObjectNormalizer(new Validator(), [new VirtualFilesystemMetadataNormalizationHandler()]);
 
         $this->expectException(NotNormalizableValueException::class);
+
         $normalizer->fromArray(ExtraMetadata::class, ['uuid' => null]);
     }
 }
