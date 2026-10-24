@@ -11,23 +11,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-use Contao\ManagerBundle\Console\ContaoApplication;
-use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Symfony\Component\Console\Input\ArgvInput;
+use Contao\ManagerBundle\Runtime\ApplicationFactory;
+use Symfony\Component\Console\Input\InputInterface;
 
-set_time_limit(0);
-@ini_set('zlib.output_compression', '0');
-@ini_set('display_errors', '0');
+require_once dirname(__DIR__).'/contao-bootstrap.php';
 
-// System maintenance mode comes first as it has to work even if the vendor directory does not exist
-if ('contao:cron' === ($_SERVER['argv'][1] ?? null) && file_exists(__DIR__.'/../var/maintenance.html')) {
-    exit;
-}
-
-require __DIR__.'/../vendor/autoload.php';
-
-$input = new ArgvInput();
-$kernel = ContaoKernel::fromInput(\dirname(__DIR__), $input);
-
-$application = new ContaoApplication($kernel);
-$application->run($input);
+return static fn (InputInterface $input) => new ApplicationFactory(dirname(__DIR__))->createConsoleApplication($input);

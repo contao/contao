@@ -164,6 +164,7 @@
         "symfony/psr-http-message-bridge": "^7.4 || ^8.0",
         "symfony/rate-limiter": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0",
+        "symfony/runtime": "^7.4.1 || ^8.0.1",
         "symfony/security-bundle": "^7.4 || ^8.0",
         "symfony/security-core": "^7.4 || ^8.0",
         "symfony/security-csrf": "^7.4 || ^8.0",
@@ -323,10 +324,20 @@
             "composer/package-versions-deprecated": true,
             "contao-components/installer": true,
             "contao/manager-plugin": true,
-            "php-http/discovery": false
+            "php-http/discovery": false,
+            "symfony/runtime": true
         }
     },
     "extra": {
+        "runtime": {
+            "class": "Symfony\\Component\\Runtime\\SymfonyRuntime",
+            "disable_dotenv": true,
+            "env": "prod",
+            "env_var_name": "CONTAO_RUNTIME_ENV",
+            "debug_var_name": "CONTAO_RUNTIME_DEBUG",
+            "debug": false,
+            "error_handler": false
+        },
         "bamarni-bin": {
             "bin-links": false,
             "forward-command": false

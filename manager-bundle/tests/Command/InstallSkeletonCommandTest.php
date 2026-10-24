@@ -21,6 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 class InstallSkeletonCommandTest extends ContaoTestCase
 {
@@ -43,6 +44,8 @@ class InstallSkeletonCommandTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
+        $this->filesystem->remove($this->getTempDir().'/bootstrap.php');
+        $this->filesystem->remove($this->getTempDir().'/contao-bootstrap.php');
         $this->filesystem->remove($this->getTempDir().'/bin');
         $this->filesystem->remove($this->getTempDir().'/public');
 
@@ -72,10 +75,41 @@ class InstallSkeletonCommandTest extends ContaoTestCase
         $commandTester->execute([]);
 
         $this->assertFileExists($this->getTempDir().'/bin/console');
+        $this->assertFileExists($this->getTempDir().'/contao-bootstrap.php');
 
         foreach ($this->webFiles as $file) {
             $this->assertFileExists($this->getTempDir().'/public/'.$file->getRelativePathname());
         }
+    }
+
+    public function testMaintenanceEntryPointsWorkWithoutDependencies(): void
+    {
+        $tester = new CommandTester($this->command);
+        $tester->execute([]);
+
+        $this->filesystem->dumpFile($this->getTempDir().'/var/maintenance.html', 'maintenance');
+
+        foreach (['index.php', 'preview.php'] as $entryPoint) {
+            $process = new Process([PHP_BINARY, $this->getTempDir().'/public/'.$entryPoint]);
+            $process->mustRun();
+
+            $this->assertSame('maintenance', $process->getOutput());
+        }
+
+        $process = new Process([PHP_BINARY, $this->getTempDir().'/bin/console', 'contao:cron']);
+        $process->mustRun();
+
+        $this->assertSame('', $process->getOutput());
+    }
+
+    public function testPreservesProjectOwnedBootstrap(): void
+    {
+        $contents = '<?php /* Project-owned bootstrap */';
+        $this->filesystem->dumpFile($this->getTempDir().'/bootstrap.php', $contents);
+
+        new CommandTester($this->command)->execute([]);
+
+        $this->assertStringEqualsFile($this->getTempDir().'/bootstrap.php', $contents);
     }
 
     public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
