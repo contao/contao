@@ -104,7 +104,7 @@ class InspectorNodeVisitorTest extends TestCase
         ];
 
         yield 'not analyzable' => [
-            new class() extends AbstractExpression {},
+            new class extends AbstractExpression {},
             null,
         ];
     }

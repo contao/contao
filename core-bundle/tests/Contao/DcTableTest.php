@@ -208,7 +208,7 @@ class DcTableTest extends TestCase
             }
         }];
 
-        $driver = new class() extends DC_Table {
+        $driver = new class extends DC_Table {
             public function __construct()
             {
                 $this->strTable = 'tl_undo';

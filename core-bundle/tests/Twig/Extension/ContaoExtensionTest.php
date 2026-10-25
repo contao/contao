@@ -247,7 +247,7 @@ class ContaoExtensionTest extends TestCase
             ->method('getExtension')
             ->willReturnMap([
                 [EscaperExtension::class, new EscaperExtension()],
-                [CoreExtension::class, new class() extends AbstractExtension {
+                [CoreExtension::class, new class extends AbstractExtension {
                 }],
             ])
         ;

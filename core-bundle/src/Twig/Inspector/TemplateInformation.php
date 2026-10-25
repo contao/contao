@@ -85,7 +85,7 @@ final class TemplateInformation
 
     public function isUsing(string $logicalName): bool
     {
-        foreach ($this->uses as [$name, $importMap]) {
+        foreach ($this->uses as $name) {
             if ($name === $logicalName) {
                 return true;
             }
