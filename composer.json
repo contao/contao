@@ -181,7 +181,7 @@
         "symfony/var-dumper": "^7.4 || ^8.0",
         "symfony/web-profiler-bundle": "^7.4 || ^8.0",
         "symfony/yaml": "^7.4 || ^8.0",
-        "terminal42/escargot": "^1.6.3",
+        "terminal42/escargot": "^1.6.3 || ^2.0",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
         "toflar/cronjob-supervisor": "^2.0",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
