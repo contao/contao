@@ -32,12 +32,15 @@ class ContaoPackageTest extends TestCase
 
         new Filesystem()->dumpFile(
             static::getTempDir().'/manifest.json',
-            json_encode([
-                'backend.js' => '/bundles/contaocore/backend.123.js',
-                'relative.js' => 'relative.123.js',
-                'external.js' => 'https://external.example.com/external.123.js',
-                'protocol-relative.js' => '//external.example.com/external.123.js',
-            ], JSON_THROW_ON_ERROR),
+            json_encode(
+                [
+                    'backend.js' => '/bundles/contaocore/backend.123.js',
+                    'relative.js' => 'relative.123.js',
+                    'external.js' => 'https://external.example.com/external.123.js',
+                    'protocol-relative.js' => '//external.example.com/external.123.js',
+                ],
+                JSON_THROW_ON_ERROR,
+            ),
         );
     }
 
@@ -91,7 +94,6 @@ class ContaoPackageTest extends TestCase
             ->method('loadDetails')
             ->willReturnSelf()
         ;
-
         $page
             ->method('__get')
             ->willReturnMap([

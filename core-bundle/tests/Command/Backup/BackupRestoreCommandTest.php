@@ -39,6 +39,7 @@ class BackupRestoreCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+
         $normalizedOutput = preg_replace('/\\s\\s+/', ' ', $commandTester->getDisplay(true));
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
@@ -151,7 +152,6 @@ class BackupRestoreCommandTest extends TestCase
             ->method('createRestoreConfig')
             ->willReturn(new RestoreConfig($backup))
         ;
-
         $backupManager
             ->expects($this->once())
             ->method('restore')

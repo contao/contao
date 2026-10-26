@@ -148,6 +148,7 @@ class Hierarchy
         $quotedTable = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+
         $orderBy = $this->getOrderBySelect($options);
         $fields = $this->getFields($options->columns());
         $fieldNames = $this->getFieldNames($options->columns());
@@ -192,6 +193,7 @@ class Hierarchy
         $quotedTable = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+
         $orderBy = $this->getOrderBySelect($options);
         $fields = $this->getFields($options->columns());
         $scopeCondition = $this->getScopeCondition($definition);
@@ -237,11 +239,14 @@ class Hierarchy
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+
         $fields = $this->getFields($options->columns());
         $parentFields = $this->getFields($options->columns(), 'parent');
         $fieldNames = $this->getFieldNames($options->columns());
+
         $anchorScope = $options->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
         $recursiveScope = $options->includesBoundaryRow() ? ' AND child.continue_traversal = 1' : $this->getScopeCondition($definition, 'parent');
+
         $depthColumn = null === $options->maxDepth() ? '' : ', depth';
         $anchorDepth = null === $options->maxDepth() ? '' : ', 1';
         $parentDepth = null === $options->maxDepth() ? '' : ', child.depth + 1';
@@ -279,8 +284,10 @@ class Hierarchy
     {
         $scope = array_values($definition->scopes());
         $scopeTypes = $this->getScopeTypes($definition);
+
         $condition = $options->includesBoundaryRow() ? [] : $scope;
         $conditionTypes = $options->includesBoundaryRow() ? [] : $scopeTypes;
+
         $anchor = 1 === \count($ids) ? $ids : [$ids];
         $anchorType = 1 === \count($ids) ? ParameterType::STRING : $this->getArrayParameterType($ids);
 
@@ -325,8 +332,10 @@ class Hierarchy
             $querySql = $select.str_repeat(' UNION '.$this->getParentUnionSelect($definition, $options, false), $batchSize - 1);
             $scope = array_values($definition->scopes());
             $scopeTypes = $this->getScopeTypes($definition);
+
             $condition = $options->includesBoundaryRow() ? [] : $scope;
             $conditionTypes = $options->includesBoundaryRow() ? [] : $scopeTypes;
+
             $parameters = array_merge([...$scope, $currentId, ...$condition], ...array_fill(0, $batchSize - 1, [...$scope, ...$condition]));
             $types = array_merge([...$scopeTypes, ParameterType::STRING, ...$conditionTypes], ...array_fill(0, $batchSize - 1, [...$scopeTypes, ...$conditionTypes]));
             $batch = $this->connection->fetchAllAssociative($querySql, $parameters, $types);
@@ -477,6 +486,7 @@ class Hierarchy
     {
         $idColumn = $definition?->idColumn() ?? 'node_id';
         $parentColumn = $definition?->parentColumn() ?? 'parent_id';
+
         $parents = [];
 
         foreach ($rows as $row) {
@@ -552,6 +562,7 @@ class Hierarchy
         $table = $this->connection->quoteIdentifier($definition->table());
         $idColumn = $this->connection->quoteIdentifier($definition->idColumn());
         $parentColumn = $this->connection->quoteIdentifier($definition->parentColumn());
+
         $fields = $this->getFields($options->columns());
         $scope = $options->includesBoundaryRow() ? '' : $this->getScopeCondition($definition);
         $continuation = $this->getScopeExpression($definition);

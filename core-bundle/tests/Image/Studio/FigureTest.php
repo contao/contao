@@ -175,7 +175,6 @@ class FigureTest extends TestCase
                 ->method('getLinkHref')
                 ->willReturn('path/from/lightbox')
             ;
-
             $lightbox
                 ->method('getGroupIdentifier')
                 ->willReturn('12345')
@@ -491,7 +490,6 @@ class FigureTest extends TestCase
             ->method('getImg')
             ->willReturn(['lightbox img'])
         ;
-
         $lightboxImage
             ->method('getSources')
             ->willReturn(['lightbox sources'])
@@ -502,17 +500,14 @@ class FigureTest extends TestCase
             ->method('hasImage')
             ->willReturn(true)
         ;
-
         $lightbox
             ->method('getImage')
             ->willReturn($lightboxImage)
         ;
-
         $lightbox
             ->method('getGroupIdentifier')
             ->willReturn('12345')
         ;
-
         $lightbox
             ->method('getLinkHref')
             ->willReturn('foo://bar')
@@ -651,7 +646,6 @@ class FigureTest extends TestCase
             ->with('caption')
             ->willReturn('plain-text-caption')
         ;
-
         $htmlDecoder
             ->expects($this->once())
             ->method('inputEncodedToPlainText')
@@ -695,7 +689,6 @@ class FigureTest extends TestCase
             ->method('getWidth')
             ->willReturn($originalWidth)
         ;
-
         $originalSize
             ->method('getHeight')
             ->willReturn($originalHeight)
@@ -712,22 +705,18 @@ class FigureTest extends TestCase
             ->method('getOriginalDimensions')
             ->willReturn($originalDimensions)
         ;
-
         $image
             ->method('getImg')
             ->willReturn($img)
         ;
-
         $image
             ->method('getSources')
             ->willReturn($sources)
         ;
-
         $image
             ->method('getFilePath')
             ->willReturn($filePath)
         ;
-
         $image
             ->method('getImageSrc')
             ->willReturnMap([

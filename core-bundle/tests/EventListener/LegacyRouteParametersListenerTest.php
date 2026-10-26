@@ -76,7 +76,6 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->method('getUnusedRouteParameters')
             ->willReturn([])
         ;
-
         $inputAdapter
             ->expects($this->never())
             ->method('setUnusedRouteParameters')
@@ -120,7 +119,6 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->method('getUnusedRouteParameters')
             ->willReturn(['foo'])
         ;
-
         $inputAdapter
             ->expects($this->once())
             ->method('setUnusedRouteParameters')
@@ -161,7 +159,6 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->expects($this->never())
             ->method('getUnusedRouteParameters')
         ;
-
         $inputAdapter
             ->expects($this->never())
             ->method('setUnusedRouteParameters')

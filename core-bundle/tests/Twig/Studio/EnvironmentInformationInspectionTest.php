@@ -35,7 +35,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testDiscoversEveryCategoryFromTheActiveEnvironment(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addExtension(new class() extends AbstractExtension implements GlobalsInterface {
+        $twig->addExtension(new class extends AbstractExtension implements GlobalsInterface {
             public function getFilters(): array
             {
                 return [new TwigFilter('inspection_filter', 'strtoupper')];
@@ -53,17 +53,19 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
             public function getTokenParsers(): array
             {
-                return [new class() extends AbstractTokenParser {
-                    public function parse(Token $token): Node
-                    {
-                        throw new \LogicException('Inspection must not parse tags.');
-                    }
+                return [
+                    new class extends AbstractTokenParser {
+                        public function parse(Token $token): Node
+                        {
+                            throw new \LogicException('Inspection must not parse tags.');
+                        }
 
-                    public function getTag(): string
-                    {
-                        return 'inspection_tag';
-                    }
-                }];
+                        public function getTag(): string
+                        {
+                            return 'inspection_tag';
+                        }
+                    },
+                ];
             }
 
             public function getGlobals(): array
@@ -72,13 +74,18 @@ final class EnvironmentInformationInspectionTest extends TestCase
             }
         });
 
-        $this->assertSame(['items' => [
-            ['kind' => 'filter', 'name' => 'inspection_filter', 'deprecated' => false],
-            ['kind' => 'function', 'name' => 'inspection_function', 'deprecated' => false],
-            ['kind' => 'global', 'name' => 'inspection_global'],
-            ['kind' => 'tag', 'name' => 'inspection_tag'],
-            ['kind' => 'test', 'name' => 'inspection_test', 'deprecated' => false],
-        ]], new EnvironmentInformation($twig)->discover(query: 'INSPECTION'));
+        $this->assertSame(
+            [
+                'items' => [
+                    ['kind' => 'filter', 'name' => 'inspection_filter', 'deprecated' => false],
+                    ['kind' => 'function', 'name' => 'inspection_function', 'deprecated' => false],
+                    ['kind' => 'global', 'name' => 'inspection_global'],
+                    ['kind' => 'tag', 'name' => 'inspection_tag'],
+                    ['kind' => 'test', 'name' => 'inspection_test', 'deprecated' => false],
+                ],
+            ],
+            new EnvironmentInformation($twig)->discover(query: 'INSPECTION'),
+        );
     }
 
     public function testFiltersAndSortsNames(): void
@@ -90,10 +97,15 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
         $inspector = new EnvironmentInformation($twig);
 
-        $this->assertSame(['items' => [
-            ['kind' => 'function', 'name' => 'inspection_a', 'deprecated' => false],
-            ['kind' => 'function', 'name' => 'inspection_z', 'deprecated' => false],
-        ]], $inspector->discover('function', 'INSPECTION'));
+        $this->assertSame(
+            [
+                'items' => [
+                    ['kind' => 'function', 'name' => 'inspection_a', 'deprecated' => false],
+                    ['kind' => 'function', 'name' => 'inspection_z', 'deprecated' => false],
+                ],
+            ],
+            $inspector->discover('function', 'INSPECTION'),
+        );
 
         $this->assertSame(['items' => []], $inspector->discover(query: 'unregistered_inspection_entry'));
     }
@@ -106,6 +118,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         $inspector = new EnvironmentInformation($twig);
 
         $this->assertSame(['items' => [['kind' => 'function', 'name' => 'inspection_old', 'deprecated' => true]]], $inspector->discover('function', 'inspection_old'));
+
         $data = $inspector->inspect('function', 'inspection_old');
         $this->assertTrue($data['deprecated']);
     }
@@ -113,12 +126,13 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testInspectsEffectiveOverrides(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addExtension(new class() extends AbstractExtension {
+        $twig->addExtension(new class extends AbstractExtension {
             public function getFunctions(): array
             {
                 return [new TwigFunction('inspection_override', 'strlen')];
             }
         });
+
         $twig->addFunction(new TwigFunction('inspection_override', 'strtoupper'));
 
         $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_override');
@@ -179,6 +193,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_sandbox');
 
         $this->assertTrue($data['requirements']['needs_is_sandboxed']);
+
         $this->assertSame(
             [
                 'status' => 'best_effort',
@@ -249,7 +264,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testReflectsRuntimeMethodsWithoutResolvingTheRuntime(): void
     {
-        $runtime = new class() {
+        $runtime = new class {
             public function build(\Countable&\Stringable $value): \Countable&\Stringable
             {
                 throw new \LogicException('Inspection must not execute the runtime.');
@@ -257,7 +272,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         };
 
         $twig = new Environment(new ArrayLoader());
-        $twig->addRuntimeLoader(new class() implements RuntimeLoaderInterface {
+        $twig->addRuntimeLoader(new class implements RuntimeLoaderInterface {
             public function load(string $class): object|null
             {
                 throw new \LogicException('Inspection must not resolve runtimes.');
@@ -284,12 +299,15 @@ final class EnvironmentInformationInspectionTest extends TestCase
     public function testReflectsInvokableObjectsWithoutCallingThem(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->addFunction(new TwigFunction('inspection_invoke', new class() {
-            public function __invoke(string $value): string
-            {
-                throw new \LogicException('Inspection must not invoke the object.');
-            }
-        }));
+        $twig->addFunction(new TwigFunction(
+            'inspection_invoke',
+            new class {
+                public function __invoke(string $value): string
+                {
+                    throw new \LogicException('Inspection must not invoke the object.');
+                }
+            },
+        ));
 
         $data = new EnvironmentInformation($twig)->inspect('function', 'inspection_invoke');
         $this->assertSame('class@anonymous::__invoke', $data['implementation']);
@@ -302,17 +320,21 @@ final class EnvironmentInformationInspectionTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addFunction(new TwigFunction('inspection_static_safe', 'strlen', ['is_safe' => ['html']]));
-        $twig->addFilter(new TwigFilter('inspection_dynamic_safe', 'strtoupper', [
-            'is_safe_callback' => static function (): array {
-                throw new \LogicException('Inspection must not execute safety callbacks.');
-            },
-            'pre_escape' => 'html',
-            'preserves_safety' => ['html'],
-        ]));
+        $twig->addFilter(new TwigFilter(
+            'inspection_dynamic_safe',
+            'strtoupper',
+            [
+                'is_safe_callback' => static function (): array {
+                    throw new \LogicException('Inspection must not execute safety callbacks.');
+                },
+                'pre_escape' => 'html',
+                'preserves_safety' => ['html'],
+            ],
+        ));
 
         $inspector = new EnvironmentInformation($twig);
-
         $data = $inspector->inspect('function', 'inspection_static_safe');
+
         $this->assertArrayNotHasKey('escaping', $data);
 
         $data = $inspector->inspect('filter', 'inspection_dynamic_safe');
@@ -346,7 +368,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testReflectsGlobalApisWithoutReadingValuesOrInvokingMembers(): void
     {
-        $global = new class() {
+        $global = new class {
             public string|null $uninitialized;
             public string $secret = 'inspection-secret-value';
             public static string $staticSecret = 'inspection-static-secret-value';
@@ -387,8 +409,8 @@ final class EnvironmentInformationInspectionTest extends TestCase
         $twig->addGlobal('inspection_callable', new TwigFunction('not_a_registered_function', 'strlen'));
 
         $inspector = new EnvironmentInformation($twig);
-
         $data = $inspector->inspect('global', 'inspection_object');
+
         $this->assertSame('class@anonymous', $data['type']);
 
         $this->assertSame(
@@ -423,7 +445,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
 
     public function testDoesNotInitializeLazyGlobalObjects(): void
     {
-        $object = new class() {
+        $object = new class {
             public string $secret;
 
             public function getSecret(): string
@@ -455,6 +477,7 @@ final class EnvironmentInformationInspectionTest extends TestCase
         foreach (['discover' => ['template'], 'inspect' => ['template', 'inspection']] as $method => $arguments) {
             try {
                 $inspector->$method(...$arguments);
+
                 $this->fail('Invalid kinds must be rejected.');
             } catch (\InvalidArgumentException $exception) {
                 $this->assertStringContainsString('Expected one of: filter, function, test, tag, global', $exception->getMessage());

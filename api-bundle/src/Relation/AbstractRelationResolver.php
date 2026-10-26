@@ -101,6 +101,7 @@ abstract class AbstractRelationResolver implements RelationResolverInterface
         // An IRI identifies the resource to read, regardless of the current request method
         $context = $router->getContext();
         $method = $context->getMethod();
+
         $context->setMethod('GET');
 
         try {

@@ -33,7 +33,7 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
 {
     public function testGeneratesDifferentSchemasForSuccessiveRequestVersions(): void
     {
-        $decorated = new class() implements OpenApiFactoryInterface {
+        $decorated = new class implements OpenApiFactoryInterface {
             public function __invoke(array $context = []): OpenApi
             {
                 $version = $context[ApiVersion::CONTEXT_KEY];
@@ -43,17 +43,24 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
                 $schema['type'] = 'object';
                 $schema['properties'] = [$property => ['type' => 'string']];
 
-                return new OpenApi(new Info('API', '1.0'), [], new Paths(), new Components(schemas: new \ArrayObject([
-                    'Example' => $schema,
-                ])));
+                return new OpenApi(
+                    new Info('API', '1.0'),
+                    [],
+                    new Paths(),
+                    new Components(schemas: new \ArrayObject([
+                        'Example' => $schema,
+                    ])),
+                );
             }
         };
+
         $requests = new RequestStack();
         $factory = new ApiVersionOpenApiFactory($decorated, new ApiVersionProvider($requests));
 
         foreach (['2024-02-29' => 'name', '2024-03-01' => 'displayName', '2024-02-28' => 'name'] as $date => $property) {
             $request = new Request();
             $request->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion($date));
+
             $requests->push($request);
 
             $spec = $factory(['request' => $request]);

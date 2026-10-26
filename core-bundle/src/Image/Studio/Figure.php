@@ -139,6 +139,7 @@ final class Figure
     public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
         $this->resolveIfClosure($this->linkAttributes);
+
         $this->linkAttributes ??= [];
 
         // Generate the href attribute
@@ -236,6 +237,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
+
         $fileInfoImageSize = new File($image->getImageSrc(true))->imageSize;
 
         $linkAttributes = iterator_to_array($this->getLinkAttributes());

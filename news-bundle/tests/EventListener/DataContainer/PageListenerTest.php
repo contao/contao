@@ -35,14 +35,12 @@ class PageListenerTest extends ContaoTestCase
             ->with('id, title')
             ->willReturn($queryBuilder)
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_news_archive')
             ->willReturn($queryBuilder)
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('fetchAllKeyValue')
@@ -92,14 +90,12 @@ class PageListenerTest extends ContaoTestCase
             ->with('id, title')
             ->willReturn($queryBuilder)
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_news_archive')
             ->willReturn($queryBuilder)
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('fetchAllKeyValue')

@@ -170,15 +170,15 @@ class ArticleColumnListenerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutModel = $this->createClassWithPropertiesStub(
-            LayoutModel::class,
-            ['type' => 'default', 'modules' => serialize([
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, [
+            'type' => 'default',
+            'modules' => serialize([
                 ['mod' => 0, 'enable' => true, 'col' => 'foo'],
                 ['mod' => 0, 'enable' => true, 'col' => 'bar'],
                 ['mod' => 1, 'enable' => true, 'col' => 'baz'],
                 ['mod' => 0, 'enable' => false, 'col' => 'bak'],
-            ])],
-        );
+            ]),
+        ]);
 
         $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter

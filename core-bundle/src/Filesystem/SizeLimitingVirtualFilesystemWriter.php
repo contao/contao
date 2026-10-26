@@ -29,6 +29,7 @@ final class SizeLimitingVirtualFilesystemWriter
     public function writeStream(Uuid|string $location, $contents, int $maximumSize): void
     {
         FilesystemUtil::assertIsResource($contents);
+
         $state = new LimitStreamSizeFilterState($maximumSize);
         $filter = $this->appendFilter($contents, $state);
 

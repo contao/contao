@@ -45,6 +45,7 @@ class FilesystemConfigurationTest extends TestCase
     public function testAddVirtualFilesystem(bool $readOnly): void
     {
         $container = $this->getContainerBuilder();
+
         $config = new FilesystemConfiguration($container);
         $definition = $config->addVirtualFilesystem('foo', 'some/prefix', $readOnly);
 
@@ -149,7 +150,6 @@ class FilesystemConfigurationTest extends TestCase
             ->method('getName')
             ->willReturn('foo')
         ;
-
         $fooAdapterDefinitionBuilder
             ->method('createAdapter')
             ->willReturn('flysystem.adapter.foo')
@@ -270,12 +270,14 @@ class FilesystemConfigurationTest extends TestCase
 
         // Hash generator
         $this->assertTrue($container->hasDefinition('contao.filesystem.hash_generator.foo'));
+
         $hashGenerator = $container->getDefinition('contao.filesystem.hash_generator.foo');
         $this->assertSame(HashGenerator::class, $hashGenerator->getClass());
         $this->assertSame(['xxh32', $useLastModified], $hashGenerator->getArguments());
 
         // DBAFS
         $this->assertTrue($container->hasDefinition('contao.filesystem.dbafs.foo'));
+
         $dbafs = $container->getDefinition('contao.filesystem.dbafs.foo');
         $this->assertSame(Dbafs::class, $dbafs->getClass());
         $this->assertSame('contao.filesystem.virtual.foo', (string) $dbafs->getArgument(0));

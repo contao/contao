@@ -53,7 +53,6 @@ class UserStateListener
         }
 
         $config = $this->framework->getAdapter(Config::class);
-
         $config->set('showHelp', $user->showHelp);
         $config->set('useRTE', $user->useRTE);
         $config->set('useCE', $user->useCE);

@@ -283,10 +283,13 @@ class ContentCompositionBuilderTest extends TestCase
                 function (string $template, array $parameters): string {
                     $this->assertSame('@Contao/<slot-template>.html.twig', $template);
 
-                    return implode(',', array_map(
-                        static fn (array $reference): string => "<rendered {$reference['type']} {$reference['id']}>",
-                        $parameters['references'],
-                    ));
+                    return implode(
+                        ',',
+                        array_map(
+                            static fn (array $reference): string => "<rendered {$reference['type']} {$reference['id']}>",
+                            $parameters['references'],
+                        ),
+                    );
                 },
             )
         ;
@@ -521,7 +524,6 @@ class ContentCompositionBuilderTest extends TestCase
             ThemeModel::class => $themeAdapter,
             System::class => $systemAdapter,
         ]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')

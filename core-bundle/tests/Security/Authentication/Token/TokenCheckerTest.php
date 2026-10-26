@@ -345,13 +345,11 @@ class TokenCheckerTest extends TestCase
             ->method('isStarted')
             ->willReturn(false)
         ;
-
         $session
             ->expects($this->once())
             ->method('getName')
             ->willReturn('foo')
         ;
-
         $session
             ->expects($this->never())
             ->method('has')
@@ -380,7 +378,6 @@ class TokenCheckerTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
-
         $session
             ->expects($this->once())
             ->method('has')
@@ -410,13 +407,11 @@ class TokenCheckerTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
-
         $session
             ->expects($this->once())
             ->method('has')
             ->willReturn(true)
         ;
-
         $session
             ->expects($this->once())
             ->method('get')
@@ -500,7 +495,6 @@ class TokenCheckerTest extends TestCase
             ->method('getSession')
             ->willReturn($session)
         ;
-
         $request
             ->method('hasPreviousSession')
             ->willReturn($hasPreviousSession)
@@ -570,13 +564,11 @@ class TokenCheckerTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
-
         $session
             ->expects($this->atLeastOnce())
             ->method('has')
             ->willReturn(true)
         ;
-
         $session
             ->expects($this->atLeastOnce())
             ->method('get')
@@ -595,13 +587,11 @@ class TokenCheckerTest extends TestCase
             ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn(true)
         ;
-
         $session
             ->expects($isPreview ? $this->exactly(2) : $this->never())
             ->method('getName')
             ->willReturn('foo')
         ;
-
         $session
             ->expects($isPreview ? $this->once() : $this->never())
             ->method('get')

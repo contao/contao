@@ -111,7 +111,6 @@ class Document
         // Try re-using an already parsed document if possible for performance reasons
         if (!$this->originalDocument) {
             $crawler = new Crawler($this->body);
-
             $originalDocument = $crawler->getNode(0)?->ownerDocument;
 
             if ($originalDocument instanceof \DOMDocument) {
@@ -338,6 +337,7 @@ class Document
 
                 if ('@' !== $key[0]) {
                     unset($data[$key]);
+
                     $data[$data['@context'].$key] = $value;
                 }
             }
@@ -365,6 +365,7 @@ class Document
                 foreach ($data as $key => $value) {
                     if (0 === strncmp($prefix.':', $key, \strlen((string) $prefix) + 1)) {
                         unset($data[$key]);
+
                         $data[$context.substr($key, \strlen((string) $prefix) + 1)] = $value;
                     }
                 }
@@ -384,8 +385,6 @@ class Document
         foreach ($data as $key => $value) {
             foreach ($contexts as $context) {
                 if ('@type' === $key) {
-                    $newData[$key] = $value;
-
                     $newData[$key] = array_map(
                         static fn (string $type): string => str_starts_with($type, $context)
                             ? substr($type, \strlen((string) $context))

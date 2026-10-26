@@ -25,6 +25,7 @@ final class VirtualFilesystemLocationTest extends TestCase
         $uuid = '171bb68d-0094-4f6c-88f5-9b83c0d01521';
 
         $this->assertSame($uuid, VirtualFilesystemLocation::fromArray(['path' => $uuid])->toLocation());
+
         $location = VirtualFilesystemLocation::fromArray(['uuid' => $uuid])->toLocation();
         $this->assertInstanceOf(Uuid::class, $location);
         $this->assertSame($uuid, $location->toRfc4122());
@@ -34,6 +35,7 @@ final class VirtualFilesystemLocationTest extends TestCase
     public function testRejectsInvalidOrAmbiguousSelectors(array $selector): void
     {
         $this->expectException(BadRequestHttpException::class);
+
         VirtualFilesystemLocation::fromArray($selector);
     }
 

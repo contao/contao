@@ -216,7 +216,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $model->reg_close = 'close_delete';
         $model->reg_deleteDir = true;
         $model->jumpTo = 1;
-
         $model = $this->createClassWithPropertiesMock(ContentModel::class, ['reg_close' => 'close_delete', 'reg_deleteDir' => true, 'jumpTo' => 1]);
         $model
             ->expects($this->once())
@@ -294,7 +293,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
             FilesModel::class => $filesModel,
             PageModel::class => $pageModel,
         ]);
-
         $framework
             ->method('createInstance')
             ->willReturn($template)
@@ -321,13 +319,11 @@ class CloseAccountControllerTest extends ContentElementTestCase
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('handleRequest')
         ;
-
         $form
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-
         $form
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('isValid')

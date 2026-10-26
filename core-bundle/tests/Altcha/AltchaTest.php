@@ -58,7 +58,6 @@ class AltchaTest extends TestCase
             ->expects($this->once())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->once())
             ->method('flush')
@@ -104,7 +103,6 @@ class AltchaTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')
@@ -150,7 +148,6 @@ class AltchaTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')
@@ -180,7 +177,6 @@ class AltchaTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')
@@ -210,7 +206,6 @@ class AltchaTest extends TestCase
             ->expects($this->never())
             ->method('persist')
         ;
-
         $entityManager
             ->expects($this->never())
             ->method('flush')

@@ -276,15 +276,18 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
         // The storage length describes binary UUIDs, not their API string representation
         unset($schema['maxLength']);
 
-        return array_replace($schema, $multiple
-            ? ['type' => 'array', 'items' => ['type' => 'string', 'format' => 'uuid']]
-            : ['type' => ['string', 'null'], 'format' => 'uuid'],
+        return array_replace(
+            $schema,
+            $multiple
+                ? ['type' => 'array', 'items' => ['type' => 'string', 'format' => 'uuid']]
+                : ['type' => ['string', 'null'], 'format' => 'uuid'],
         );
     }
 
     private function getBooleanSchema(array $schema): array
     {
         unset($schema['maxLength'], $schema['minLength']);
+
         $schema['type'] = 'boolean';
 
         return $schema;

@@ -21,13 +21,15 @@ final class DataContainerContextTest extends TestCase
 {
     public function testBuildsFiniteAndRecursiveParentChains(): void
     {
-        $operation = new Get(extraProperties: ['contao' => [
-            'parents' => [
-                ['table' => 'tl_news_archive', 'parameter' => 'news_archive_id'],
-                ['table' => 'tl_news', 'parameter' => 'news_id'],
+        $operation = new Get(extraProperties: [
+            'contao' => [
+                'parents' => [
+                    ['table' => 'tl_news_archive', 'parameter' => 'news_archive_id'],
+                    ['table' => 'tl_news', 'parameter' => 'news_id'],
+                ],
+                'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
             ],
-            'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
-        ]]);
+        ]);
 
         $context = DataContainerContext::fromOperation($operation, [
             'news_archive_id' => '23',
@@ -49,9 +51,11 @@ final class DataContainerContextTest extends TestCase
 
     public function testRejectsAnInvalidRecursiveParentChain(): void
     {
-        $operation = new Get(extraProperties: ['contao' => [
-            'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
-        ]]);
+        $operation = new Get(extraProperties: [
+            'contao' => [
+                'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
+            ],
+        ]);
 
         $this->expectException(UnprocessableEntityHttpException::class);
 
@@ -60,9 +64,11 @@ final class DataContainerContextTest extends TestCase
 
     public function testBuildsARecursiveParentChainFromAnIntegerIdentifier(): void
     {
-        $operation = new Get(extraProperties: ['contao' => [
-            'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
-        ]]);
+        $operation = new Get(extraProperties: [
+            'contao' => [
+                'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
+            ],
+        ]);
 
         $context = DataContainerContext::fromOperation($operation, ['nested' => 487]);
 

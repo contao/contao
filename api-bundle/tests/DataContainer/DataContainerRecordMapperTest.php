@@ -84,7 +84,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('getAdapter')
             ->willReturn(new Adapter(Date::class))
         ;
-
         $framework
             ->method('createInstance')
             ->willReturnCallback(static fn (string $class, array $arguments): Date => new Date(...$arguments))
@@ -135,7 +134,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             Controller::class => $controller,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -182,6 +180,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'tstamp' => '123', 'pid' => '42', 'ptable' => 'tl_article', 'sorting' => '128', 'internal' => 'hidden']);
 
         $this->assertSame(17, $record->id);
+
         $this->assertEquals(
             [
                 'tstamp' => date(\DateTimeInterface::ATOM, 123),
@@ -267,10 +266,16 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
 
-        $factory = new DataContainerSchemaFactory($this->createContaoFrameworkStub([
-            Controller::class => $controller,
-            System::class => $this->createAdapterStub(['loadLanguageFile']),
-        ]), $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters));
+        $factory = new DataContainerSchemaFactory(
+            $this->createContaoFrameworkStub([
+                Controller::class => $controller,
+                System::class => $this->createAdapterStub(['loadLanguageFile']),
+            ]),
+            $this->converters,
+            $this->relationResolver,
+            $this->localeSwitcher,
+            $this->createRelationDefinitionFactory($this->converters),
+        );
 
         $mapper = new DataContainerRecordMapper($factory, $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
         $record = $mapper->fromRow('tl_content', ['id' => 17, 'value' => $stored]);
@@ -308,6 +313,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         ]);
 
         $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $record = $mapper->fromRow('tl_content', [
@@ -350,7 +356,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testInheritsWidgetConversionIndependentlyOfSchema(): void
     {
-        $widget = new class() extends FileTree {
+        $widget = new class extends FileTree {
             public function __construct()
             {
             }
@@ -491,6 +497,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
     {
         $container = new ContainerBuilder();
         $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
+
         System::setContainer($container);
 
         $controller = $this->createAdapterStub(['loadDataContainer']);
@@ -522,7 +529,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testDelegatesCompleteValuesToTheWidget(): void
     {
-        $converter = new class() implements WidgetConverterInterface {
+        $converter = new class implements WidgetConverterInterface {
             public function supports(array $config): bool
             {
                 return 'customRows' === ($config['inputType'] ?? null);
@@ -572,7 +579,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     public function testOmitsUnsupportedWidgetsAndRejectsTheirInput(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
@@ -602,6 +609,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame([], $mapper->fromRow('tl_content', ['id' => 17, 'payload' => 'private'])->data);
         $this->expectException(UnprocessableEntityHttpException::class);
         $this->expectExceptionMessage('Field "payload" is not writable');
+
         $mapper->toFormValues('tl_content', ['payload' => 'changed']);
     }
 
@@ -652,6 +660,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $this->relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $this->relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         $this->expectException(UnprocessableEntityHttpException::class);
+
         $mapper->toFormValues('tl_content', ['locked' => 'Changed']);
     }
 
@@ -670,6 +679,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $this->expectExceptionMessage('Field "pid" is not writable through the update operation.');
+
         $mapper->toFormValues('tl_content', ['pid' => 42]);
     }
 
@@ -701,7 +711,6 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
             ->method('generate')
             ->willReturnCallback(static fn (string $route, array $parameters): string => 'files_get_by_uuid' === $route ? '/contao/api/files/by-uuid/'.$parameters['uuid'] : '/contao/api/dc/page/42')
         ;
-
         $router
             ->method('match')
             ->willReturnCallback(static fn (string $path): array => str_starts_with($path, '/contao/api/files/by-uuid/') ? ['_route' => 'files_get_by_uuid', 'uuid' => substr($path, \strlen('/contao/api/files/by-uuid/'))] : ['_route' => 'page_get', 'id' => '42'])
@@ -717,7 +726,7 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
 
     private function createRelationAwareConverter(): RelationAwareWidgetConverterInterface
     {
-        return new class() implements RelationAwareWidgetConverterInterface {
+        return new class implements RelationAwareWidgetConverterInterface {
             public function supports(array $config): bool
             {
                 return 'customRelation' === ($config['inputType'] ?? null);

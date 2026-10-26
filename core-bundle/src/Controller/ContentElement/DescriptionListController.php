@@ -24,13 +24,16 @@ class DescriptionListController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $template->set('descriptions', array_map(
-            static fn (array $row): array => [
-                'term' => $row['key'],
-                'details' => $row['value'],
-            ],
-            StringUtil::deserialize($model->data, true),
-        ));
+        $template->set(
+            'descriptions',
+            array_map(
+                static fn (array $row): array => [
+                    'term' => $row['key'],
+                    'details' => $row['value'],
+                ],
+                StringUtil::deserialize($model->data, true),
+            ),
+        );
 
         return $template->getResponse();
     }

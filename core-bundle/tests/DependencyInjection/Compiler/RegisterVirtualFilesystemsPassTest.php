@@ -39,6 +39,7 @@ class RegisterVirtualFilesystemsPassTest extends TestCase
                 new Reference('contao.filesystem.dbafs_manager'),
             ])
         ;
+
         $container->register('contao.filesystem.mount_manager', MountManager::class)->setSynthetic(true)->setPublic(true);
         $container->register('contao.filesystem.dbafs_manager', DbafsManager::class)->setSynthetic(true)->setPublic(true);
 

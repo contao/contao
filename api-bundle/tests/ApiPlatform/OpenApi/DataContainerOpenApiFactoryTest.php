@@ -89,6 +89,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ->willReturnCallback(
                 static function () use ($mode, $panelLayout, $fieldSortable): void {
                     $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => $mode, 'panelLayout' => $panelLayout];
+
                     $GLOBALS['TL_DCA']['tl_content']['fields'] = [
                         'id' => [
                             'sql' => ['type' => 'int', 'unsigned' => true, 'notnull' => true, 'default' => 0],
@@ -140,15 +141,17 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
         };
 
         $factory = new DataContainerOpenApiFactory($decorated, $resourceMetadataCollectionFactory, $schemaFactory, new Pagination(), '/contao/api');
-        $openApi = $factory();
 
+        $openApi = $factory();
         $schemas = $openApi->getComponents()->getSchemas();
+
         $this->assertInstanceOf(\ArrayObject::class, $schemas);
         $this->assertArrayHasKey('dc_content', $schemas->getArrayCopy());
 
         $componentSchema = $schemas['dc_content'];
         $this->assertInstanceOf(Schema::class, $componentSchema);
         $this->assertSame('object', $componentSchema['type']);
+
         $this->assertSame(
             [
                 'type' => ['object', 'null'],
@@ -162,6 +165,7 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
             ],
             $componentSchema['properties']['id'],
         );
+
         $this->assertSame(['Optional width', 'Optional height', 'Resize mode or image size reference'], array_column($componentSchema['properties']['size']['prefixItems'], 'title'));
         $this->assertStringContainsString('integer ID of a database image size record', $componentSchema['properties']['size']['prefixItems'][2]['description']);
 
@@ -274,13 +278,13 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
     public function testDoesNotDoublePrefixAlreadyPrefixedPaths(): void
     {
         $factory = new DataContainerOpenApiFactory(
-            new class() implements OpenApiFactoryInterface {
+            new class implements OpenApiFactoryInterface {
                 public function __invoke(array $context = []): OpenApi
                 {
                     return new OpenApi(new Info('Contao API', '1.0.0'), [], new Paths());
                 }
             },
-            new class() implements ResourceMetadataCollectionFactoryInterface {
+            new class implements ResourceMetadataCollectionFactoryInterface {
                 public function create(string $resourceClass): ResourceMetadataCollection
                 {
                     return new ResourceMetadataCollection(DataContainerRecord::class, []);
@@ -318,9 +322,11 @@ final class DataContainerOpenApiFactoryTest extends ContaoTestCase
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
                 ->withUriTemplate('/dc/content/{id}'),
-            'nested_get_collection' => new GetCollection(extraProperties: ['contao' => [
-                'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
-            ]])
+            'nested_get_collection' => new GetCollection(extraProperties: [
+                'contao' => [
+                    'recursive_parent' => ['table' => 'tl_content', 'parameter' => 'nested', 'segment' => 'content'],
+                ],
+            ])
                 ->withClass(DataContainerRecord::class)
                 ->withShortName('Content')
                 ->withUriTemplate('/dc/content/{nested}/content'),

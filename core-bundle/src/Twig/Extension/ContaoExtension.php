@@ -66,7 +66,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     ) {
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
-
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);

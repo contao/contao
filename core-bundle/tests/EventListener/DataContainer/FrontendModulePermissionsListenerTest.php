@@ -98,7 +98,6 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
-
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')

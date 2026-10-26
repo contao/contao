@@ -134,6 +134,7 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
     private function move(VirtualFilesystemMove $move, VirtualFilesystemInterface $filesystem): VirtualFilesystemItem
     {
         $source = $move->source->toLocation();
+
         $destination = $move->destination->toLocation();
         $destination = $destination instanceof Uuid ? $filesystem->resolveUuid($destination) : $destination;
 

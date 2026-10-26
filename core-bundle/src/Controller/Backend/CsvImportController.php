@@ -122,8 +122,8 @@ class CsvImportController extends AbstractController
         $this->framework->initialize();
 
         $uploader = $this->framework->createInstance(FileUpload::class);
-        $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
+        $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
         $template->submitLabel = $submitLabel ?? $this->translator->trans('MSC.apply', [], 'contao_default');
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
@@ -137,6 +137,7 @@ class CsvImportController extends AbstractController
             }
 
             $this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$table, new UpdateAction($table, $currentRecord, [$field => serialize($data)]));
+
             $this->connection->update($table, [$field => serialize($data)], ['id' => $currentRecord['id']]);
 
             return new RedirectResponse($this->getBackUrl($request));

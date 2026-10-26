@@ -23,6 +23,7 @@ class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
     public function testDeletingContentElementReturnsToParentArticle(): void
     {
         [$backend] = $this->openArticle();
+
         $this->createTextElement($backend);
 
         $contentElement = '[data-contao--operations-menu-record-id-value]:has-text("Lorem ipsum")';

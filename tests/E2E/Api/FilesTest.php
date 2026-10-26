@@ -73,6 +73,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     public function testUploaderCannotEditMetadataInsideItsMount(string $userFixture, int $file): void
     {
         $this->uploadFiles();
+
         $before = $this->readResource('/contao/api/files/by-path/'.self::FILES[$file], $userFixture);
 
         $response = $this->updateMetadata(self::FILES[$file], $userFixture);
@@ -107,12 +108,14 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
 
         $response = $this->sendAdminRequest(HttpRequest::create('PUT', $byUuid)
             ->withHeaders(['Content-Type' => 'application/octet-stream'])->withBody('original'));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
         $this->assertSame(8, $this->readResource($byUuid, 'kevin_jones')['fileSize']);
         $this->assertSame($literal['fileSize'], $this->readResource($byPath, 'kevin_jones')['fileSize']);
 
         $response = $this->sendAdminRequest(HttpRequest::create('PUT', $byPath)
             ->withHeaders(['Content-Type' => 'application/octet-stream'])->withBody('literal'));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
         $this->assertSame(7, $this->readResource($byPath, 'kevin_jones')['fileSize']);
         $this->assertSame(8, $this->readResource($byUuid, 'kevin_jones')['fileSize']);
@@ -122,25 +125,32 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$uuid, $literal] = $this->createUuidShapedFile();
         $operation = '/contao/api/files_operations/metadata';
+
         $response = $this->sendAdminRequest(HttpRequest::json('POST', $operation)->withJson([
             'path' => $uuid,
             'data' => ['localized' => ['en' => ['title' => 'Literal file']]],
         ]));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
         $response = $this->sendAdminRequest(HttpRequest::json('POST', $operation)->withJson([
             'uuid' => $uuid,
             'data' => ['localized' => ['en' => ['title' => 'Original file']]],
         ]));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
         $this->assertSame('Literal file', $this->readResource($literal['@id'], 'kevin_jones')['metadata']['localized']['en']['title']);
         $this->assertSame('Original file', $this->readResource('/contao/api/files/by-uuid/'.$uuid, 'kevin_jones')['metadata']['localized']['en']['title']);
 
         $destination = Uuid::v4()->toRfc4122();
+
         $response = $this->sendAdminRequest(HttpRequest::json('POST', '/contao/api/files_operations/move')->withHeaders(['Content-Type' => 'application/ld+json'])->withJson([
             'source' => ['path' => $uuid],
             'destination' => ['path' => $destination],
         ]));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
         $moved = $this->readResource('/contao/api/files/by-path/'.$destination, 'kevin_jones');
         $this->assertSame($literal['metadata']['uuid'], $moved['metadata']['uuid']);
         $this->assertSame(self::FILES[0], $this->readResource('/contao/api/files/by-uuid/'.$uuid, 'kevin_jones')['path']);
@@ -149,6 +159,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
             'source' => ['uuid' => $moved['metadata']['uuid']],
             'destination' => ['path' => $uuid],
         ]));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
         $this->assertSame($uuid, $response->toArray(false)['path']);
     }
@@ -158,9 +169,12 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
         $uuid = basename($this->uploadFiles()[0]['uuidIri']);
         $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
         $this->assertIsString($contents);
+
         $response = $this->sendAdminRequest(HttpRequest::create('PUT', '/contao/api/files/by-path/'.$uuid.'/child.jpg')
             ->withHeaders(['Content-Type' => 'application/octet-stream'])->withBody($contents));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
         $directory = $this->readResource('/contao/api/files/by-path/'.$uuid, 'kevin_jones');
 
         foreach (['path' => $uuid, 'uuid' => $directory['metadata']['uuid']] as $type => $value) {
@@ -177,6 +191,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     {
         $response = $this->sendAdminRequest(HttpRequest::get('/contao/api/docs.jsonopenapi'), 'application/vnd.openapi+json');
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
         $paths = $response->toArray(false)['paths'];
         $this->assertArrayHasKey('/contao/api/files/by-path/{path}', $paths);
         $this->assertArrayHasKey('/contao/api/files/by-uuid/{uuid}', $paths);
@@ -187,8 +202,10 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
         $uuid = basename($this->uploadFiles()[0]['uuidIri']);
         $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
         $this->assertIsString($contents);
+
         $response = $this->sendAdminRequest(HttpRequest::create('PUT', '/contao/api/files/by-path/'.$uuid)
             ->withHeaders(['Content-Type' => 'application/octet-stream'])->withBody($contents));
+
         $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
 
         return [$uuid, $response->toArray(false)];
@@ -237,6 +254,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     {
         $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
         $this->assertIsString($contents);
+
         $files = [];
 
         foreach (self::FILES as $path) {
@@ -250,8 +268,10 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
             );
 
             $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
             $file = $response->toArray(false);
             $this->assertTrue(Uuid::isValid($file['metadata']['uuid']));
+
             $files[] = ['iri' => $file['@id'], 'uuidIri' => '/contao/api/files/by-uuid/'.$file['metadata']['uuid']];
         }
 
@@ -273,6 +293,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig('api-bundle', 'calendar-bundle', 'core-bundle', 'faq-bundle', 'news-bundle', 'newsletter-bundle');
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')

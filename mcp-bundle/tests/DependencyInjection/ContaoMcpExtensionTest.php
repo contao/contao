@@ -68,6 +68,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $builder = $container->get('mcp.server.contao_backend.builder');
         $this->assertInstanceOf(Builder::class, $builder);
+
         $builder->build();
 
         $tools = [];
@@ -185,6 +186,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
+
         $extension->prepend($container);
 
         $this->assertSame(
@@ -245,7 +247,7 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register('contao.search.backend', BackendSearch::class)->setSynthetic(true)->setPublic(true);
         }
 
-        $otherTool = new class() {
+        $otherTool = new class {
             #[McpTool(name: 'frontend_example')]
             public function __invoke(): string
             {

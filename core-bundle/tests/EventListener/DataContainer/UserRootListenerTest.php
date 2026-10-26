@@ -102,7 +102,6 @@ class UserRootListenerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
-
         $security
             ->expects($this->once())
             ->method('isGranted')
@@ -228,6 +227,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback();
 
         $this->assertArrayNotHasKey('root', $GLOBALS['TL_DCA']['tl_foo']['list']['sorting'] ?? []);
@@ -241,6 +241,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback();
 
         $this->assertArrayHasKey('root', $GLOBALS['TL_DCA']['tl_foo']['list']['sorting'] ?? []);
@@ -259,6 +260,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback();
 
         $this->assertArrayHasKey('root', $GLOBALS['TL_DCA']['tl_foo']['list']['sorting'] ?? []);
@@ -277,6 +279,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback();
 
         $this->assertArrayHasKey('root', $GLOBALS['TL_DCA']['tl_foo']['list']['sorting'] ?? []);
@@ -307,6 +310,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['oncreate_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback(null, 1);
     }
 
@@ -330,6 +334,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['oncreate_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback(null, 42);
     }
 
@@ -357,6 +362,7 @@ class UserRootListenerTest extends TestCase
 
         $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['oncreate_callback'][0] ?? null;
         $this->assertIsCallable($callback);
+
         $callback(null, 42);
     }
 

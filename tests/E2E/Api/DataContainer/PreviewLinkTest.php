@@ -55,6 +55,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         ]));
 
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
+
         $response = self::managedEdition()->send(
             HttpRequest::get($path)
                 ->withHeaders([
@@ -79,6 +80,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         ]));
 
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
+
         $response = self::managedEdition()->send(
             HttpRequest::json('PATCH', $path)
                 ->withHeaders([
@@ -116,6 +118,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
         ]));
 
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
+
         $response = self::managedEdition()->send(
             HttpRequest::create('DELETE', $path)
                 ->withHeaders([

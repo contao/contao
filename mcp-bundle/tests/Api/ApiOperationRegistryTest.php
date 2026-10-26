@@ -80,18 +80,27 @@ final class ApiOperationRegistryTest extends TestCase
         $metadata
             ->method('create')
             ->willReturn(new ResourceMetadataCollection('ApiResource', [
-                new ApiResource(shortName: 'News', operations: [
-                    'contao_api_dc_news_get' => new Get(name: 'contao_api_dc_news_get', description: 'Read news.'),
-                ]),
-                new ApiResource(shortName: 'UserTemplate', operations: [
-                    'contao_api_user_template_read' => new Get(name: 'contao_api_user_template_read', description: 'Read a user template.'),
-                ]),
-                new ApiResource(shortName: 'File', operations: [
-                    'contao_api_files_upload' => new Put(
-                        name: 'contao_api_files_upload',
-                        inputFormats: ['binary' => ['application/octet-stream']],
-                    ),
-                ]),
+                new ApiResource(
+                    shortName: 'News',
+                    operations: [
+                        'contao_api_dc_news_get' => new Get(name: 'contao_api_dc_news_get', description: 'Read news.'),
+                    ],
+                ),
+                new ApiResource(
+                    shortName: 'UserTemplate',
+                    operations: [
+                        'contao_api_user_template_read' => new Get(name: 'contao_api_user_template_read', description: 'Read a user template.'),
+                    ],
+                ),
+                new ApiResource(
+                    shortName: 'File',
+                    operations: [
+                        'contao_api_files_upload' => new Put(
+                            name: 'contao_api_files_upload',
+                            inputFormats: ['binary' => ['application/octet-stream']],
+                        ),
+                    ],
+                ),
             ]))
         ;
 
@@ -121,10 +130,12 @@ final class ApiOperationRegistryTest extends TestCase
                         ],
                     ],
                 ],
-                'components' => ['schemas' => [
-                    'Identifier' => ['type' => 'integer'],
-                    'News' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string']]],
-                ]],
+                'components' => [
+                    'schemas' => [
+                        'Identifier' => ['type' => 'integer'],
+                        'News' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string']]],
+                    ],
+                ],
             ])
         ;
 

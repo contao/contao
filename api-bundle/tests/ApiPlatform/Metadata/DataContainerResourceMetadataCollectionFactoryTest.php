@@ -61,7 +61,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
-        $extendedDcTableClass = new class() extends DC_Table {
+        $extendedDcTableClass = new class extends DC_Table {
             public function __construct()
             {
             }
@@ -209,6 +209,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         );
 
         $loader = $this->createApiLoader($factory);
+
         $routes = $loader->load(null);
         $routes->addPrefix('/custom_api');
 
@@ -337,6 +338,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertTrue($resource->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
+
         $expectedResource = str_starts_with($expectedTable, 'tl_') ? substr($expectedTable, 3) : $expectedTable;
 
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedResource), $resource->getExtraProperties()['contao']['schema_path']);

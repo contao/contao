@@ -29,7 +29,6 @@ class UserAdminFieldListenerTest extends TestCase
             ->with('ROLE_ADMIN')
             ->willReturn(false)
         ;
-
         $security
             ->expects($this->never())
             ->method('getUser')
@@ -54,7 +53,6 @@ class UserAdminFieldListenerTest extends TestCase
             ->with('ROLE_ADMIN')
             ->willReturn(true)
         ;
-
         $security
             ->expects($this->once())
             ->method('getUser')
@@ -80,7 +78,6 @@ class UserAdminFieldListenerTest extends TestCase
             ->with('ROLE_ADMIN')
             ->willReturn(true)
         ;
-
         $security
             ->expects($this->once())
             ->method('getUser')

@@ -64,7 +64,6 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->method('getBaseUrl')
             ->willReturn('')
         ;
-
         $context
             ->expects($this->exactly(2))
             ->method('setBaseUrl')
@@ -76,7 +75,6 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->method('getContext')
             ->willReturn($context)
         ;
-
         $router
             ->expects($this->once())
             ->method('generate')

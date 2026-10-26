@@ -46,6 +46,7 @@ class TemplateStudioOperationsTest extends TestCase
                     $this->assertSame('save', $request->query->get('operation'));
                     $this->assertSame(['code' => ''], $request->request->all());
                     $this->assertSame('text/vnd.turbo-stream.html', $request->headers->get('Accept'));
+
                     $bag = $request->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
                     $this->assertSame('demo', $bag->get('template_studio_theme_slug'));
@@ -141,6 +142,7 @@ class TemplateStudioOperationsTest extends TestCase
 
         $this->expectException(UnprocessableEntityHttpException::class);
         $this->expectExceptionMessage('Template Studio returned a non-JSON response (HTTP 200).');
+
         $client->call('save', 'content_element/test', null, []);
     }
 }

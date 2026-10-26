@@ -68,7 +68,6 @@ abstract class AbstractOperation extends AbstractController implements Operation
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['twig'] = Environment::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;

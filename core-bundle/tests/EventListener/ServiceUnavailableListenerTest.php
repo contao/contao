@@ -171,7 +171,6 @@ class ServiceUnavailableListenerTest extends TestCase
             ->method('isMainRequest')
             ->willReturn($isMainRequest)
         ;
-
         $event
             ->method('getRequest')
             ->willReturn($request)

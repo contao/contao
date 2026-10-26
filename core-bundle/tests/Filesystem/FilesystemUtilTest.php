@@ -40,7 +40,6 @@ class FilesystemUtilTest extends TestCase
                 },
             )
         ;
-
         $storage
             ->method('listContents')
             ->willReturnMap([[

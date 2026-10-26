@@ -237,8 +237,10 @@ class TemplateStudioController extends AbstractBackendController
         for ($i = 0; $i < $numTemplates; ++$i) {
             $logicalName = $logicalNamesChain[$i];
             $source = $this->loader->getSourceContext($logicalName);
+
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
+
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
@@ -715,10 +717,16 @@ class TemplateStudioController extends AbstractBackendController
             $suppressedPrefixes[] = $this->themeNamespace->getPath((string) $slug);
         }
 
-        $regex = \sprintf('#^(%s)/#', implode('|', array_map(
-            static fn (string $path): string => preg_quote($path, '#'),
-            $suppressedPrefixes,
-        )));
+        $regex = \sprintf(
+            '#^(%s)/#',
+            implode(
+                '|',
+                array_map(
+                    static fn (string $path): string => preg_quote($path, '#'),
+                    $suppressedPrefixes,
+                ),
+            ),
+        );
 
         return $this->finder
             ->create()

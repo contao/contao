@@ -33,7 +33,7 @@ class EnvironmentInformationTest extends TestCase
             ->willReturn('if')
         ;
 
-        $tokenParserWithEndTag = new class() implements TokenParserInterface {
+        $tokenParserWithEndTag = new class implements TokenParserInterface {
             public function setParser(Parser $parser): void
             {
             }
@@ -59,17 +59,14 @@ class EnvironmentInformationTest extends TestCase
             ->method('getTokenParsers')
             ->willReturn([$tokenParser, $tokenParserWithEndTag])
         ;
-
         $environment
             ->method('getFunctions')
             ->willReturn([new TwigFunction('a_function'), new TwigFunction('123'), new TwigFunction('z_function')])
         ;
-
         $environment
             ->method('getFilters')
             ->willReturn([new TwigFilter('a_filter'), new TwigFilter('z_filter')])
         ;
-
         $environment
             ->method('getTests')
             ->willReturn([new TwigTest('a_test'), new TwigTest('z_test')])

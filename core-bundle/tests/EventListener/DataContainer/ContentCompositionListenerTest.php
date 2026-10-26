@@ -114,7 +114,6 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->once())
             ->method('hide')
         ;
-
         $operation
             ->expects($this->once())
             ->method('getRecord')
@@ -168,7 +167,6 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->once())
             ->method('hide')
         ;
-
         $operation
             ->expects($this->once())
             ->method('getRecord')
@@ -231,7 +229,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('setUrl')
             ->with('/contao?do=article&pn=17')
         ;
-
         $operation
             ->expects($this->once())
             ->method('getRecord')
@@ -290,7 +287,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('setUrl')
             ->with('/contao?do=article&pn=17')
         ;
-
         $operation
             ->expects($this->once())
             ->method('getRecord')
@@ -716,7 +712,6 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->never())
             ->method('insert')
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -782,7 +777,6 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->never())
             ->method('insert')
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -860,7 +854,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('insert')
             ->with('tl_article', $article)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -939,7 +932,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('insert')
             ->with('tl_article', $article)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -1054,7 +1046,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('preventSaving')
             ->with(false)
         ;
-
         $page
             ->expects($this->once())
             ->method('setRow')

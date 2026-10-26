@@ -30,7 +30,7 @@ class AbstractOperationTest extends TestCase
         $container = new Container();
         $container->set('request_stack', new RequestStack([$request]));
 
-        $operation = new class() extends AbstractOperation {
+        $operation = new class extends AbstractOperation {
             public function canExecute(OperationContext $context): bool
             {
                 return true;

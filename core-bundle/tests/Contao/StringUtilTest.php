@@ -286,6 +286,7 @@ class StringUtilTest extends TestCase
     public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request(['value' => $source]));
 
         $inputEncoded = Input::get('value');
@@ -539,6 +540,8 @@ class StringUtilTest extends TestCase
 
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
+
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame($ref, $array[0]);
 
         $this->assertSame(

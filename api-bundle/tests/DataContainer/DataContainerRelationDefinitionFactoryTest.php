@@ -43,7 +43,6 @@ final class DataContainerRelationDefinitionFactoryTest extends TestCase
             ->method('supports')
             ->willReturn(true)
         ;
-
         $converter
             ->method('getRelation')
             ->willReturn($relation)
@@ -67,6 +66,7 @@ final class DataContainerRelationDefinitionFactoryTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
         $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['mode'] = DataContainer::MODE_TREE;
+
         $factory = $this->createFactory(new WidgetConverterRegistry([]));
 
         $this->assertEquals(new DataContainerRelationDefinition('tl_page'), $factory->create(new DataContainerFieldContext([], 'tl_article', 'pid')));

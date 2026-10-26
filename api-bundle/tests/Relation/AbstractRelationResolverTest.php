@@ -41,7 +41,7 @@ final class AbstractRelationResolverTest extends TestCase
             /**
              * @extends AbstractRelationResolver<\stdClass>
              */
-            class() extends AbstractRelationResolver {
+            class extends AbstractRelationResolver {
                 public function supports(object $relation): bool
                 {
                     return $relation instanceof \stdClass;

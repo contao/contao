@@ -83,7 +83,9 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=page&ptg=all&state=1');
+
         $this->cutRecord($backend, 'page_string_mount_home', 'Move page');
+
         $backend->submitAction('Paste into page ID '.$fixtures->value('page_string_mount_destination'));
         $backend->visit('/contao?do=page&ptg=all&state=1');
 
@@ -96,7 +98,9 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->login('user_page_mount_manager');
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=article&ptg=all&state=1');
+
         $this->cutRecord($backend, 'article_string_mount_home', 'Move article');
+
         $backend->submitAction('Paste into page ID '.$fixtures->value('page_string_mount_destination'));
         $backend->visit('/contao?do=article&ptg=all&state=1');
 
@@ -110,12 +114,14 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=page&ptg=all&state=1');
         $original = $this->treePositions($backend);
+
         $this->cutRecord($backend, 'page_string_mount_home', 'Move page');
 
         // The unmounted destination grants hierarchy permissions.
         $label = 'Paste into page ID '.$fixtures->value('page_string_mount_destination');
         $this->submitPasteTo($backend, $label, (int) $fixtures->value('page_microsite_home'));
         $this->assertSelectorTextContains('h1', 'Forbidden');
+
         $backend->visit('/contao?do=page&ptg=all&state=1');
         $this->assertSelectorTextContains('#tl_listing', 'Page mount home');
         $this->assertSame($original, $this->treePositions($backend));
@@ -127,6 +133,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
         $fixtures = self::managedEdition()->database()->fixtures();
         $backend->visit('/contao?do=article&ptg=all&state=1');
         $original = $this->treePositions($backend);
+
         $this->cutRecord($backend, 'article_string_mount_home', 'Move article');
 
         // The destination permits article hierarchy changes and has an article layout,
@@ -134,6 +141,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
         $label = 'Paste into page ID '.$fixtures->value('page_string_mount_destination');
         $this->submitPasteTo($backend, $label, (int) $fixtures->value('page_main_home'));
         $this->assertSelectorTextContains('h1', 'Forbidden');
+
         $backend->visit('/contao?do=article&ptg=all&state=1');
         $this->assertSelectorTextContains('#tl_listing', 'Page mount article');
         $this->assertSame($original, $this->treePositions($backend));
@@ -142,6 +150,7 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
     private function cutRecord(BackendBrowser $backend, string $fixture, string $operation): void
     {
         $id = self::managedEdition()->database()->fixtures()->value($fixture);
+
         $backend->clickButton('[data-contao--operations-menu-record-id-value="'.$id.'"] [data-contao--operations-menu-target="controller"]');
         $backend->waitFor('.operations-menu.show');
         $backend->waitForNavigation(static fn () => $backend->clickButton('.operations-menu.show button[title^="'.$operation.'"]'));
@@ -154,14 +163,17 @@ class PageMountTest extends AbstractContaoMonorepoE2ETestCase
 
     private function submitPasteTo(BackendBrowser $backend, string $label, int $destination): void
     {
-        $backend->waitForFullNavigation(static fn () => $backend->page()->getByRole('button', ['name' => $label])->evaluate(<<<'JS'
-            (button, destination) => {
-                const form = button.form;
-                const url = new URL(form.action);
-                url.searchParams.set('pid', destination);
-                form.action = url.href;
-                form.submit();
-            }
-            JS, $destination));
+        $backend->waitForFullNavigation(static fn () => $backend->page()->getByRole('button', ['name' => $label])->evaluate(
+            <<<'JS'
+                (button, destination) => {
+                    const form = button.form;
+                    const url = new URL(form.action);
+                    url.searchParams.set('pid', destination);
+                    form.action = url.href;
+                    form.submit();
+                }
+                JS,
+            $destination,
+        ));
     }
 }

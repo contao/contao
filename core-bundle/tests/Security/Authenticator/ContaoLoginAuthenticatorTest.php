@@ -147,7 +147,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
             ->method('allTwoFactorProvidersAuthenticated')
             ->willReturn(true)
         ;
-
         $twoFactorToken
             ->expects($this->once())
             ->method('getAuthenticatedToken')

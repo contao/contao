@@ -184,7 +184,6 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->with($expectedPath)
             ->willReturnSelf()
         ;
-
         $builder
             ->expects($this->once())
             ->method('addViolation')
@@ -246,7 +245,6 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             Controller::class => $controllerAdapter,
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')

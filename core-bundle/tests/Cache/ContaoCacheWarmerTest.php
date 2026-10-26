@@ -74,12 +74,10 @@ class ContaoCacheWarmerTest extends TestCase
             ->method('getDomains')
             ->willReturn(['contao_tl_foobar'])
         ;
-
         $parentCatalogue
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $parentCatalogue
             ->method('all')
             ->willReturnMap([['contao_tl_foobar', ['tl_foobar.new.0' => 'Create new foobar']]])
@@ -189,7 +187,6 @@ class ContaoCacheWarmerTest extends TestCase
             ->method('getDomains')
             ->willReturn(['contao_default'])
         ;
-
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('all')
