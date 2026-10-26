@@ -34,6 +34,7 @@ export default class extends Controller {
         // Execute the config callback
         this.element?.configCallback(this.editor);
         this.setMaxLines();
+        this.restorePosition();
     }
 
     disconnect() {
@@ -47,6 +48,35 @@ export default class extends Controller {
         this.disconnect();
     }
 
+    storePosition(event) {
+        if (event.target !== this.element.form) {
+            return;
+        }
+
+        const { row, column } = this.editor.getCursorPosition();
+
+        window.sessionStorage.setItem(
+            this.positionKey,
+            JSON.stringify({ row, column, scrollTop: this.editor.getSession().getScrollTop() }),
+        );
+    }
+
+    restorePosition() {
+        const position = window.sessionStorage.getItem(this.positionKey);
+
+        if (!position) {
+            return;
+        }
+
+        window.sessionStorage.removeItem(this.positionKey);
+
+        const { row, column, scrollTop } = JSON.parse(position);
+
+        this.editor.moveCursorTo(row, column);
+        this.editor.clearSelection();
+        this.editor.getSession().setScrollTop(scrollTop);
+    }
+
     colorChange(event) {
         this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
@@ -56,5 +86,9 @@ export default class extends Controller {
             'maxLines',
             Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
         );
+    }
+
+    get positionKey() {
+        return `contao_ace_position_${window.location.pathname}${window.location.search}_${this.element.name}`;
     }
 }
