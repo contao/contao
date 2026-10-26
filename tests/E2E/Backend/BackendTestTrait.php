@@ -88,6 +88,7 @@ trait BackendTestTrait
     private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
     {
         $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
         $backend->loginOrReuseSessionAs(
             $username,

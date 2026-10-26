@@ -25,6 +25,7 @@ class QueryTest extends TestCase
         $this->assertSame('keywords', $query->getKeywords());
         $this->assertSame('type', $query->getType());
         $this->assertSame('tag', $query->getTag());
+
         $this->assertSame(
             [
                 'keywords' => 'keywords',

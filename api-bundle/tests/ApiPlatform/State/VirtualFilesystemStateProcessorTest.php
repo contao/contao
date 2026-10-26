@@ -51,7 +51,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('writeStream')
             ->with('example.txt', $this->anything())
         ;
-
         $files
             ->method('get')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 4, 'text/plain'))
@@ -63,7 +62,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('writeStream')
             ->with('example.txt', $this->anything())
         ;
-
         $testFilesystem
             ->method('get')
             ->willReturn(new FilesystemItem(true, 'example.txt', 1, 7, 'text/plain'))
@@ -71,10 +69,13 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         $normalizer = $this->createObjectNormalizer();
 
-        $registry = new VirtualFilesystemRegistry(new ServiceLocator([
-            'files' => fn () => new PermissionCheckingVirtualFilesystem($files, $this->createSecurityStub()),
-            'test_files' => static fn () => $testFilesystem,
-        ]), ['files' => [], 'test_files' => []]);
+        $registry = new VirtualFilesystemRegistry(
+            new ServiceLocator([
+                'files' => fn () => new PermissionCheckingVirtualFilesystem($files, $this->createSecurityStub()),
+                'test_files' => static fn () => $testFilesystem,
+            ]),
+            ['files' => [], 'test_files' => []],
+        );
 
         $processor = new VirtualFilesystemStateProcessor($registry, new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
         $request = Request::create('/', 'PUT', content: 'test');
@@ -95,6 +96,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
         $processor = new VirtualFilesystemStateProcessor($this->createRegistry(new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class))), new RequestStack(), $normalizer, new VirtualFilesystemItemFactory($normalizer), $this->createUploadSizeProvider(1234));
 
         $this->expectException(AccessDeniedException::class);
+
         $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['pathOrUuid' => 'example.txt'], ['request' => Request::create('/', 'PUT', content: 'test')]);
     }
 
@@ -111,7 +113,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
                 $this->callback(static fn ($stream): bool => \is_resource($stream) && 'content' === stream_get_contents($stream)),
             )
         ;
-
         $storage
             ->expects($this->once())
             ->method('get')
@@ -142,6 +143,7 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
 
         try {
             $processor->process(null, new Put(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'example.txt'], ['request' => Request::create('/', 'PUT', content: 'four')]);
+
             $this->fail('The oversized upload was not rejected.');
         } catch (HttpException $exception) {
             $this->assertSame(413, $exception->getStatusCode());
@@ -161,7 +163,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->with($uuid)
             ->willReturn('documents/example.txt')
         ;
-
         $storage
             ->expects($this->once())
             ->method('writeStream')
@@ -170,7 +171,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
                 $this->callback(static fn ($stream): bool => \is_resource($stream) && 'content' === stream_get_contents($stream)),
             )
         ;
-
         $storage
             ->expects($this->once())
             ->method('get')
@@ -194,7 +194,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('move')
             ->with('documents/example.txt', 'archive/example.txt')
         ;
-
         $storage
             ->expects($this->once())
             ->method('get')
@@ -224,13 +223,11 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
                 default => throw new \LogicException(\sprintf('Unexpected UUID "%s".', $uuid->toRfc4122())),
             })
         ;
-
         $storage
             ->expects($this->once())
             ->method('move')
             ->with($sourceUuid, 'archive/example.txt')
         ;
-
         $storage
             ->expects($this->once())
             ->method('get')
@@ -278,7 +275,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('setExtraMetadata')
             ->with('images/example.jpg', $extra)
         ;
-
         $storage
             ->expects($this->exactly(2))
             ->method('get')
@@ -310,13 +306,11 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->with($uuid)
             ->willReturn('images/example.jpg')
         ;
-
         $storage
             ->expects($this->once())
             ->method('setExtraMetadata')
             ->with($uuid, $extra)
         ;
-
         $storage
             ->expects($this->exactly(2))
             ->method('get')
@@ -345,7 +339,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->method('setExtraMetadata')
             ->with('images/example.jpg', $extra)
         ;
-
         $storage
             ->expects($this->exactly(2))
             ->method('get')
@@ -417,7 +410,6 @@ final class VirtualFilesystemStateProcessorTest extends TestCase
             ->with('missing.jpg')
             ->willReturn(null)
         ;
-
         $storage
             ->expects($this->never())
             ->method('setExtraMetadata')

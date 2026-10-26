@@ -58,7 +58,6 @@ class ProviderDelegatingVoterTest extends TestCase
             ->method('supportsType')
             ->willReturn(true)
         ;
-
         $provider
             ->expects($this->once())
             ->method('isDocumentGranted')

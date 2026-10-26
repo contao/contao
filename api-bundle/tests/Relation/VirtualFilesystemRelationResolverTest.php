@@ -62,7 +62,6 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->with('test_files_get', ['pathOrUuid' => $uuid])
             ->willReturn('/api/test-files/'.$uuid)
         ;
-
         $router
             ->method('match')
             ->willReturn(['_route' => 'test_files_get', 'pathOrUuid' => 'archive.zip'])
@@ -91,16 +90,19 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
             ->willReturn(['_route' => 'files_get', 'pathOrUuid' => 'private.txt'])
         ;
 
-        $resource = new ApiResource(operations: [new Get(
-            name: 'files_get',
-            extraProperties: ['contao' => ['filesystem' => 'test_files', 'relation_filesystem' => 'files']],
-        )]);
+        $resource = new ApiResource(operations: [
+            new Get(
+                name: 'files_get',
+                extraProperties: ['contao' => ['filesystem' => 'test_files', 'relation_filesystem' => 'files']],
+            ),
+        ]);
 
         $resolver = $this->createResolver([$resource], new PermissionCheckingVirtualFilesystem($filesystem, $this->createStub(Security::class)), $router);
         $relation = new VirtualFilesystemRelationDefinition('files');
 
         $this->assertTrue($resolver->supports($relation));
         $this->expectException(AccessDeniedException::class);
+
         $resolver->resolveToIdentifier('/api/files/private.txt', $relation);
     }
 
@@ -121,6 +123,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
         $this->expectException(UnprocessableEntityHttpException::class);
+
         $resolver->resolveToIdentifier(['iri' => '/api/files/archive.zip'], new VirtualFilesystemRelationDefinition('test_files'));
     }
 

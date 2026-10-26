@@ -73,6 +73,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     public function testUploaderCannotEditMetadataInsideItsMount(string $userFixture, int $file): void
     {
         $this->uploadFiles();
+
         $before = $this->readResource('/contao/api/files/'.self::FILES[$file], $userFixture);
 
         $response = $this->updateMetadata(self::FILES[$file], $userFixture);
@@ -129,6 +130,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     {
         $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
         $this->assertIsString($contents);
+
         $files = [];
 
         foreach (self::FILES as $path) {
@@ -142,8 +144,10 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
             );
 
             $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
             $file = $response->toArray(false);
             $this->assertTrue(Uuid::isValid($file['metadata']['uuid']));
+
             $files[] = ['iri' => $file['@id'], 'uuidIri' => '/contao/api/files/'.$file['metadata']['uuid']];
         }
 
@@ -165,6 +169,7 @@ class FilesTest extends AbstractContaoMonorepoE2ETestCase
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig('api-bundle', 'calendar-bundle', 'core-bundle', 'faq-bundle', 'news-bundle', 'newsletter-bundle');
+
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')

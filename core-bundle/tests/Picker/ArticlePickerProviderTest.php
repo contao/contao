@@ -64,6 +64,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
 
         $picker = $this->getPicker(null, $translator);
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'));
+
         $uri = 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
         $this->assertSame('Article picker', $item->getLabel());
@@ -132,9 +133,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
         );
 
         $this->assertSame(
-            [
-                'fieldType' => 'radio',
-            ],
+            ['fieldType' => 'radio'],
             $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }

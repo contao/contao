@@ -116,6 +116,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
+
         $removedQueryParameters = $request->attributes->get(self::REMOVED_QUERY_PARAMETERS);
 
         if (!$response?->isRedirect() || !\is_array($removedQueryParameters)) {

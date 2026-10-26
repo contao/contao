@@ -193,7 +193,6 @@ class TemplateStudioControllerTest extends TestCase
             ->method('getFirst')
             ->willReturn('@Contao/foo.html.twig')
         ;
-
         $loader
             ->method('getInheritanceChains')
             ->willReturn([

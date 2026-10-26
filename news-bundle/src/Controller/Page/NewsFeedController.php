@@ -63,6 +63,7 @@ class NewsFeedController extends AbstractFeedPageController
             }
 
             $feed->add($item);
+
             $this->tagResponse($article);
         }
 

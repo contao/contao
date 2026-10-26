@@ -131,6 +131,7 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertNull($converter->convertToApiValue(null, $config, $schema));
         $this->assertSame($binary, $converter->convertToApiValue($binary, $config + ['eval' => ['binary' => false]], $schema));
         $this->assertSame($uuid, $converter->convertToApiValue($uuid, $config + ['eval' => ['binary' => false]], $schema));
+
         $arraySchema = $converter->getSchema($config + ['eval' => ['multiple' => true]], []);
         $this->assertSame([$uuid, $uuid], $converter->convertToApiValue(serialize([$binary, $binary]), $config, $arraySchema));
         $this->assertSame($uuid.','.$uuid, $converter->convertToFormValue([$uuid, $uuid], $config, $arraySchema));
@@ -177,6 +178,7 @@ class CoreWidgetConverterTest extends TestCase
 
         $validator = new Validator();
         $this->assertTrue($validator->validate($api, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
+
         $form = $converter->convertToFormValue($api, $config, $schema);
         $this->assertSame(json_encode($api, JSON_THROW_ON_ERROR), json_encode($converter->convertToApiValue(serialize($form), $config, $schema), JSON_THROW_ON_ERROR));
     }

@@ -65,8 +65,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $globals = [];
         $preHandlers = [];
         $templates = [];
+
         $registry = $container->findDefinition('contao.fragment.registry');
         $compositor = $container->findDefinition('contao.fragment.compositor');
+
         $seenTagAndTypes = [];
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
@@ -80,6 +82,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
             $definition = $container->findDefinition((string) $reference);
             $tags = $definition->getTag($tag);
+
             $createChildDefinition = \count($tags) > 1;
 
             // When creating child definitions, we clear the tag on the original service
@@ -90,12 +93,15 @@ class RegisterFragmentsPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
+
                 $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
 
                 if ($createChildDefinition) {
                     $serviceId = 'contao.fragment._'.$identifier;
+
                     $controllerDefinition = new ChildDefinition((string) $reference);
                     $controllerDefinition->setTags($definition->getTags());
+
                     $controllerReference = new Reference($serviceId);
                     $container->setDefinition($serviceId, $controllerDefinition);
                 } else {
@@ -116,6 +122,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $attributes['priority'] ??= 0;
                 $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
+
                 $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {

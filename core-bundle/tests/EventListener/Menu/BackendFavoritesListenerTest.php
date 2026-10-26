@@ -177,7 +177,6 @@ class BackendFavoritesListenerTest extends TestCase
             ->method('getTree')
             ->willReturn($factory->createItem('mainMenu'))
         ;
-
         $event
             ->expects($this->never())
             ->method('getFactory')

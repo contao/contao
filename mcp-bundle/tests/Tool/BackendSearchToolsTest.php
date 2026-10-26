@@ -44,7 +44,6 @@ final class BackendSearchToolsTest extends TestCase
             ->method('isAvailable')
             ->willReturn(true)
         ;
-
         $backendSearch
             ->expects($this->once())
             ->method('search')
@@ -94,6 +93,7 @@ final class BackendSearchToolsTest extends TestCase
     {
         $method = new \ReflectionMethod(BackendSearchTools::class, 'search');
         $attribute = $method->getAttributes(McpTool::class)[0]->newInstance();
+
         $schema = new SchemaGenerator(new DocBlockParser())->generate($method);
 
         $this->assertSame('contao_backend_search', $attribute->name);

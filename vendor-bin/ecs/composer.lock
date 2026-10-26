@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "243f2330a3fbbc0c5a7f6fab2f9931dd",
+    "content-hash": "55f1c1dc13603198334af4ba0f9bcbd8",
     "packages": [
         {
             "name": "clue/ndjson-react",
@@ -291,16 +291,16 @@
         },
         {
             "name": "contao/easy-coding-standard",
-            "version": "7.1.1",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "8ba1b6172e7c1b45b79b7cb4487b2e59de9278b7"
+                "reference": "1c15a5c37a03a3f7585b6cacbf629e21cd6a98c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/8ba1b6172e7c1b45b79b7cb4487b2e59de9278b7",
-                "reference": "8ba1b6172e7c1b45b79b7cb4487b2e59de9278b7",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/1c15a5c37a03a3f7585b6cacbf629e21cd6a98c4",
+                "reference": "1c15a5c37a03a3f7585b6cacbf629e21cd6a98c4",
                 "shasum": ""
             },
             "require": {
@@ -311,6 +311,9 @@
             },
             "require-dev": {
                 "contao/rector": "^1.2",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-symfony": "^2.0",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -332,7 +335,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/7.1.1"
+                "source": "https://github.com/contao/easy-coding-standard/tree/8.0.1"
             },
             "funding": [
                 {
@@ -340,7 +343,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-10-23T06:35:27+00:00"
+            "time": "2026-10-24T21:40:44+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",

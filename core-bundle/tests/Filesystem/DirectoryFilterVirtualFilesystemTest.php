@@ -152,77 +152,92 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
     public static function provideIllegalOperations(): iterable
     {
         yield 'create file in root' => [
-            'write', ['file', ''],
+            'write',
+            ['file', ''],
             'Unable to write to "file".',
         ];
 
         yield 'create file in trail' => [
-            'write', ['bar/file', ''],
+            'write',
+            ['bar/file', ''],
             'Unable to write to "bar/file".',
         ];
 
         yield 'create directory in root' => [
-            'createDirectory', ['directory'],
+            'createDirectory',
+            ['directory'],
             'Unable to create directory at "directory".',
         ];
 
         yield 'create directory in trail' => [
-            'createDirectory', ['bar/directory'],
+            'createDirectory',
+            ['bar/directory'],
             'Unable to create directory at "bar/directory".',
         ];
 
         yield 'delete directory in root' => [
-            'deleteDirectory', ['bar'],
+            'deleteDirectory',
+            ['bar'],
             'Unable to delete directory at "bar".',
         ];
 
         yield 'delete allowed directory in root' => [
-            'deleteDirectory', ['foo'],
+            'deleteDirectory',
+            ['foo'],
             'Unable to delete directory at "foo".',
         ];
 
         yield 'delete allowed directory in trail' => [
-            'deleteDirectory', ['bar/baz'],
+            'deleteDirectory',
+            ['bar/baz'],
             'Unable to delete directory at "bar/baz".',
         ];
 
         yield 'copy to path in trail' => [
-            'copy', ['bar/baz/x', 'bar/x'],
+            'copy',
+            ['bar/baz/x', 'bar/x'],
             'Unable to copy file from "bar/baz/x" to "bar/x".',
         ];
 
         yield 'copy to arbitrary uncovered path' => [
-            'copy', ['bar/baz/x', 'somewhere'],
+            'copy',
+            ['bar/baz/x', 'somewhere'],
             'Unable to copy file from "bar/baz/x" to "somewhere".',
         ];
 
         yield 'move to path in trail' => [
-            'move', ['bar/baz/x', 'bar/x'],
+            'move',
+            ['bar/baz/x', 'bar/x'],
             'Unable to move file from "bar/baz/x" to "bar/x".',
         ];
 
         yield 'move to arbitrary uncovered path' => [
-            'move', ['bar/baz/x', 'somewhere'],
+            'move',
+            ['bar/baz/x', 'somewhere'],
             'Unable to move file from "bar/baz/x" to "somewhere".',
         ];
 
         yield 'get last modified from uncovered path' => [
-            'getLastModified', ['somewhere'],
+            'getLastModified',
+            ['somewhere'],
             'Unable to retrieve metadata from "somewhere".',
         ];
 
         yield 'get filesize from uncovered path' => [
-            'getFilesize', ['somewhere'],
+            'getFilesize',
+            ['somewhere'],
             'Unable to retrieve metadata from "somewhere".',
         ];
 
         yield 'get mime type from uncovered path' => [
-            'getMimeType', ['somewhere'],
+            'getMimeType',
+            ['somewhere'],
             'Unable to retrieve metadata from "somewhere".',
         ];
 
         yield 'get extra metadata from uncovered path' => [
-            'getExtraMetadata', ['somewhere'],
+            'getExtraMetadata',
+            ['somewhere'],
             'Unable to retrieve metadata from "somewhere".',
         ];
     }

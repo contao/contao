@@ -351,6 +351,7 @@ class PreviewFactoryTest extends TestCase
         $this->expectUserDeprecationMessageMatches('/Passing NULL as \$rootDir is deprecated and will no longer work in version 2.0\./');
 
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         $factory = $this->createFactoryWithExampleProvider();
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
 
@@ -372,6 +373,7 @@ class PreviewFactoryTest extends TestCase
 
         try {
             $figureBuilder->build();
+
             $this->fail('FigureBuilder::build() should throw an exception');
         } catch (InvalidResourceException $exception) {
             $this->assertInstanceOf(MissingPreviewProviderException::class, $exception->getPrevious());

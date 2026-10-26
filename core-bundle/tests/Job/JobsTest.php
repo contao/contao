@@ -46,8 +46,8 @@ class JobsTest extends AbstractJobsTestCase
     public function testRemoveJob(): void
     {
         $jobs = $this->getJobs();
-
         $job = $jobs->createJob('job-type');
+
         $this->assertInstanceOf(Job::class, $jobs->getByUuid($job->getUuid()));
 
         $jobs->removeJob($job);
@@ -58,16 +58,20 @@ class JobsTest extends AbstractJobsTestCase
     public function testWithProgressFromFixedAmounts(int|null $total, int $amount, float $expectedProgress): void
     {
         $jobs = $this->getJobs($this->mockSecurity());
+
         $job = $jobs->createJob('job-type');
         $job = $job->withProgressFromAmounts($amount, $total);
+
         $this->assertSame($expectedProgress, $job->getProgress());
     }
 
     public function testWithProgressFromUnknownTotal(): void
     {
         $jobs = $this->getJobs($this->mockSecurity());
+
         $job = $jobs->createJob('job-type');
         $job = $job->withProgressFromAmounts(100);
+
         $this->assertGreaterThan(0, $job->getProgress());
         $this->assertLessThan(100, $job->getProgress());
     }
@@ -108,6 +112,7 @@ class JobsTest extends AbstractJobsTestCase
     public function testEncodesAndDecodesDataCorrectlyForDCTable(): void
     {
         $jobs = $this->getJobs();
+
         $job = $jobs->createUserJob('strange > type', 42);
         $job = $jobs->getByUuid($job->getUuid());
 
@@ -125,6 +130,7 @@ class JobsTest extends AbstractJobsTestCase
         $uuid1 = $jobsUser1->createUserJob('my-type')->getUuid();
         $uuid2 = $jobsUser1->createSystemJob('my-type')->getUuid();
         $uuid3 = $jobsUser1->createSystemJob('my-type', false)->getUuid();
+
         $uuid4 = $jobsUser2->createUserJob('my-type')->getUuid();
 
         $this->assertContains($uuid1, $this->jobsToUuids($jobsUser1->findMyNewOrPending()));
@@ -155,6 +161,7 @@ class JobsTest extends AbstractJobsTestCase
         $newJob = $jobsUser1->createUserJob('my-type');
         $pendingJob = $jobsUser1->createUserJob('my-type')->markPending();
         $completedJob = $jobsUser1->createUserJob('my-type')->markCompleted();
+
         $otherJob = $jobsUser2->createUserJob('my-type');
 
         $jobsUser1->persist($pendingJob);
@@ -184,8 +191,8 @@ class JobsTest extends AbstractJobsTestCase
         ;
 
         $jobs = $this->getJobs($this->mockSecurity(42), messageBus: $messageBus);
-
         $job = $jobs->createUserJob('my-type');
+
         $jobs->dispatchJob($message, $job);
 
         $this->assertSame($message->getJobId(), $job->getUuid());
@@ -296,6 +303,7 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertCount(0, $jobs->getAttachments('i-do-not-exist'));
 
         $job = $jobs->createUserJob('type', 42);
+
         $jobs->addAttachment($job, 'my-attachment-key', 'foobar');
         $jobs->addAttachment($job, 'my-other-attachment-key', 'foobar');
 
@@ -316,11 +324,13 @@ class JobsTest extends AbstractJobsTestCase
         // Add job for 2 days ago
         $jobs = $this->getJobs(null, new MockClock(new \DateTimeImmutable('-2 days')));
         $job1 = $jobs->createUserJob('type', 1);
+
         $jobs->addAttachment($job1, 'my-attachment-key', 'foobar');
 
         $stream = fopen('php://memory', 'r+');
         fwrite($stream, 'foobar');
         rewind($stream);
+
         $jobs->addAttachment($job1, 'my-other-attachment-key', $stream);
 
         $this->assertNotNull($jobs->getByUuid($job1->getUuid()));
@@ -329,6 +339,7 @@ class JobsTest extends AbstractJobsTestCase
         // Add job now
         $jobs = $this->getJobs();
         $job2 = $jobs->createUserJob('type', 2);
+
         $jobs->addAttachment($job2, 'my-attachment-key', 'foobar');
 
         $this->assertNotNull($jobs->getByUuid($job2->getUuid()));

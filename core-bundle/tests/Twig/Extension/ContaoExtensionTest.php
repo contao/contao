@@ -203,7 +203,6 @@ class ContaoExtensionTest extends TestCase
             ->method('getAllFirstByThemeSlug')
             ->willReturnMap([['foo', ['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig']]])
         ;
-
         $filesystemLoader
             ->method('getCurrentThemeSlug')
             ->willReturn('theme')
@@ -224,13 +223,15 @@ class ContaoExtensionTest extends TestCase
             ->method('getRuntime')
             ->willReturn(new EscaperRuntime())
         ;
-
         $environment
             ->method('getExtension')
             ->willReturnMap([
                 [EscaperExtension::class, new EscaperExtension()],
-                [CoreExtension::class, new class extends AbstractExtension {
-                }],
+                [
+                    CoreExtension::class,
+                    new class extends AbstractExtension {
+                    },
+                ],
             ])
         ;
 
@@ -259,7 +260,6 @@ class ContaoExtensionTest extends TestCase
             ->method('getRuntime')
             ->willReturn(new EscaperRuntime())
         ;
-
         $environment
             ->method('getExtension')
             ->willReturnMap([

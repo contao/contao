@@ -20,6 +20,7 @@ final class VersionedExampleNormalizer implements NormalizerInterface
     public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {
         \assert($data instanceof VersionedExample);
+
         $property = $context[ApiVersion::CONTEXT_KEY]->isBefore('2026-03-01') ? 'legacyName' : 'displayName';
 
         return [$property => $data->name];

@@ -70,6 +70,7 @@ class WebWorkerTest extends TestCase
         };
 
         $this->eventDispatcher = new EventDispatcher();
+
         $this->createConsumeCommand();
     }
 
@@ -161,6 +162,7 @@ class WebWorkerTest extends TestCase
         // reflection would require setting up the entire message handler with all the
         // middleware which is not something we need to test
         $reflection = new \ReflectionObject($webWorker);
+
         $property = $reflection->getProperty('webWorkerRunning');
         $property->setValue($webWorker, true);
 
@@ -333,6 +335,7 @@ class WebWorkerTest extends TestCase
         );
 
         $sender = $this->createStub(SenderInterface::class);
+
         $webWorker->onMessageDispatched(new SendMessageToTransportsEvent(new Envelope(new \stdClass()), ['transport-1' => $sender]));
         $webWorker->onMessageDispatched(new SendMessageToTransportsEvent(new Envelope(new \stdClass()), ['transport-1' => $sender]));
 

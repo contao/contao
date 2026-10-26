@@ -39,6 +39,7 @@ final class AddTokenParser extends AbstractTokenParser
         }
 
         $stream->expect(Token::NAME_TYPE, 'to');
+
         $locationToken = $stream->expect(Token::NAME_TYPE, null, '');
         $locationString = $locationToken->getValue();
 

@@ -208,7 +208,6 @@ class DcaHierarchyTest extends ContaoTestCase
             ->with([1], $this->isDcaDefinition('tl_page'), $childOptions)
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
-
         $hierarchy
             ->expects($this->once())
             ->method('getParentRows')

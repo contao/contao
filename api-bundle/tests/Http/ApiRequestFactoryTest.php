@@ -51,13 +51,19 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testKeepsSessionAndLocaleWithoutLeakingTransportHeaders(): void
     {
-        $parent = Request::create('https://example.org/contao/mcp', 'POST', cookies: ['session' => 'value'], server: [
-            'HTTP_MCP_SESSION_ID' => 'mcp-session',
-            'HTTP_IF_NONE_MATCH' => 'etag',
-            'HTTP_AUTHORIZATION' => 'Bearer token',
-            'CONTENT_LENGTH' => 123,
-            'REMOTE_ADDR' => '192.0.2.1',
-        ], content: '{"jsonrpc":"2.0"}');
+        $parent = Request::create(
+            'https://example.org/contao/mcp',
+            'POST',
+            cookies: ['session' => 'value'],
+            server: [
+                'HTTP_MCP_SESSION_ID' => 'mcp-session',
+                'HTTP_IF_NONE_MATCH' => 'etag',
+                'HTTP_AUTHORIZATION' => 'Bearer token',
+                'CONTENT_LENGTH' => 123,
+                'REMOTE_ADDR' => '192.0.2.1',
+            ],
+            content: '{"jsonrpc":"2.0"}',
+        );
 
         $parent->setLocale('de');
         $parent->setSession(new Session(new MockArraySessionStorage()));
@@ -85,10 +91,13 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testGeneratesRoutesWithCustomPrefixAndBaseUrl(): void
     {
-        $parent = Request::create('https://example.org/app/index.php/contao/mcp', server: [
-            'SCRIPT_FILENAME' => '/var/www/app/index.php',
-            'SCRIPT_NAME' => '/app/index.php',
-        ]);
+        $parent = Request::create(
+            'https://example.org/app/index.php/contao/mcp',
+            server: [
+                'SCRIPT_FILENAME' => '/var/www/app/index.php',
+                'SCRIPT_NAME' => '/app/index.php',
+            ],
+        );
 
         $factory = $this->createFactory(new RequestContext('/app/index.php'));
         $request = $factory->create($parent, new Get(name: 'unused', routeName: 'records'), ['id' => 'an id', 'page' => 2]);

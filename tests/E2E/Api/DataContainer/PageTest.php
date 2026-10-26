@@ -22,7 +22,6 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
     public function testCreatesASubpage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $parentId = (int) $fixtures->value('page_main_home');
 
         $request = HttpRequest::json('POST', '/contao/api/dc/page')
@@ -76,7 +75,6 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
     public function testReadsPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_main_home}');
 
         $request = HttpRequest::get($path)
@@ -97,7 +95,6 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
     public function testUpdatesPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
 
         $request = HttpRequest::json('PATCH', $path)
@@ -163,7 +160,6 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
     public function testDeletesPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
 
         $request = HttpRequest::create('DELETE', $path)
@@ -191,7 +187,6 @@ class PageTest extends AbstractContaoMonorepoE2ETestCase
     public function testMovesAPageIntoAnotherParent(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/page/{page_microsite_home}');
         $parent = (int) $fixtures->value('page_main_home');
 

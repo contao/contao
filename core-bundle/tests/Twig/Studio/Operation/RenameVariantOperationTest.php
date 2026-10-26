@@ -113,14 +113,17 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
         $loader
             ->method('exists')
             ->willReturnCallback(
-                static fn (string $name) => \in_array($name, [
-                    '@Contao/prefix/foo.html.twig',
-                    '@Contao/prefix/foo/new_variant.html.twig',
-                    '@Contao/prefix/foo/new_variant2.html.twig',
-                ], true),
+                static fn (string $name) => \in_array(
+                    $name,
+                    [
+                        '@Contao/prefix/foo.html.twig',
+                        '@Contao/prefix/foo/new_variant.html.twig',
+                        '@Contao/prefix/foo/new_variant2.html.twig',
+                    ],
+                    true,
+                ),
             )
         ;
-
         $loader
             ->method('getInheritanceChains')
             ->willReturn([

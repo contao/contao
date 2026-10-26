@@ -129,7 +129,6 @@ class ContaoCoreBundleTest extends TestCase
                 },
             ))
         ;
-
         $container
             ->expects($this->once())
             ->method('getExtension')

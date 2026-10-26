@@ -51,9 +51,7 @@ class TemplateStudioClient
         return $this->request(
             'GET',
             '_contao_template_studio_editor_tab.stream',
-            [
-                'identifier' => $identifier,
-            ],
+            ['identifier' => $identifier],
             $themeSlug,
         );
     }

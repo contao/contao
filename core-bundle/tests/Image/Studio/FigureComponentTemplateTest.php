@@ -38,7 +38,6 @@ class FigureComponentTemplateTest extends ContentElementTestCase
                 ->method('getLinkHref')
                 ->willReturn('files/image.jpg')
             ;
-
             $lightbox
                 ->method('getGroupIdentifier')
                 ->willReturn('gal1')

@@ -63,7 +63,6 @@ final class UserTemplateImpactAnalyzerTest extends TestCase
                 },
             )
         ;
-
         $inspector
             ->expects($this->once())
             ->method('getBlockHierarchy')

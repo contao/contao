@@ -32,7 +32,6 @@ class VirtualFieldsHandlerTest extends TestCase
             ->method('getVirtualTargets')
             ->willReturn($targets)
         ;
-
         $dcaExtractor
             ->expects($this->once())
             ->method('getVirtualFields')

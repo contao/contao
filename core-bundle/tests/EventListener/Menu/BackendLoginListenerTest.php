@@ -70,6 +70,7 @@ class BackendLoginListenerTest extends ContaoTestCase
         $loader->addPath(__DIR__.'/../../../contao/templates', 'Contao');
 
         $bundlePath = new KnpMenuBundle()->getPath();
+
         $loader->addPath($bundlePath.'/templates', 'KnpMenu');
         $loader->addPath(\dirname($bundlePath).'/knp-menu/src/Knp/Menu/Resources/views');
 

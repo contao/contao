@@ -82,8 +82,8 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
     public function testExposesAnotherFilesystemAlongsideFiles(): void
     {
         $factory = $this->createTestFilesystemFactory();
-
         $resources = $factory->create(VirtualFilesystemItem::class);
+
         $this->assertCount(2, $resources);
         $this->assertCount(2, $factory->create(VirtualFilesystemItem::class));
         $this->assertSame('files', $resources[0]->getExtraProperties()['contao']['relation_filesystem']);
@@ -94,6 +94,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
         foreach ($operations as $operation) {
             $this->assertSame('test_files', $operation->getExtraProperties()['contao']['relation_filesystem']);
+
             $expected = "is_granted('ROLE_ADMIN')";
             $this->assertSame($expected, $operation->getSecurity());
         }
@@ -127,21 +128,23 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
     public function testConfiguresOtherOperationAttributesAndPreservesTheirTypes(): void
     {
-        $factory = $this->createFactory($this->createEmptyMetadataFactory(), ['assets' => [
-            'api_exposure' => true,
-            'api_path' => '/assets',
-            'api_operation_attributes' => [
-                '*' => ['status' => 202, 'extraProperties' => ['custom' => true]],
-                'upload' => ['status' => 201, 'validationContext' => ['groups' => ['upload']]],
-                'get' => ['security' => null, 'description' => 'Read an asset.'],
-                'get_collection' => [
-                    'paginationEnabled' => true,
-                    'paginationItemsPerPage' => 10,
-                    'security' => "is_granted('ROLE_ADMIN')",
+        $factory = $this->createFactory($this->createEmptyMetadataFactory(), [
+            'assets' => [
+                'api_exposure' => true,
+                'api_path' => '/assets',
+                'api_operation_attributes' => [
+                    '*' => ['status' => 202, 'extraProperties' => ['custom' => true]],
+                    'upload' => ['status' => 201, 'validationContext' => ['groups' => ['upload']]],
+                    'get' => ['security' => null, 'description' => 'Read an asset.'],
+                    'get_collection' => [
+                        'paginationEnabled' => true,
+                        'paginationItemsPerPage' => 10,
+                        'security' => "is_granted('ROLE_ADMIN')",
+                    ],
                 ],
+                'label' => 'Assets',
             ],
-            'label' => 'Assets',
-        ]]);
+        ]);
 
         $operations = iterator_to_array($factory->create(VirtualFilesystemItem::class)[1]->getOperations());
         $get = $operations['contao_api_assets_get'];
@@ -163,27 +166,33 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
     public function testRejectsUnknownOperationAttributes(): void
     {
-        $factory = $this->createFactory($this->createEmptyMetadataFactory(), ['assets' => [
-            'api_exposure' => true,
-            'api_path' => '/assets',
-            'api_operation_attributes' => ['upload' => ['securty' => "is_granted('ROLE_ADMIN')"]],
-        ]]);
+        $factory = $this->createFactory($this->createEmptyMetadataFactory(), [
+            'assets' => [
+                'api_exposure' => true,
+                'api_path' => '/assets',
+                'api_operation_attributes' => ['upload' => ['securty' => "is_granted('ROLE_ADMIN')"]],
+            ],
+        ]);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('securty');
+
         $factory->create(VirtualFilesystemItem::class);
     }
 
     public function testRejectsUnknownOperationNames(): void
     {
-        $factory = $this->createFactory($this->createEmptyMetadataFactory(), ['assets' => [
-            'api_exposure' => true,
-            'api_path' => '/assets',
-            'api_operation_attributes' => ['uplod' => ['security' => "is_granted('ROLE_ADMIN')"]],
-        ]]);
+        $factory = $this->createFactory($this->createEmptyMetadataFactory(), [
+            'assets' => [
+                'api_exposure' => true,
+                'api_path' => '/assets',
+                'api_operation_attributes' => ['uplod' => ['security' => "is_granted('ROLE_ADMIN')"]],
+            ],
+        ]);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('uplod');
+
         $factory->create(VirtualFilesystemItem::class);
     }
 
@@ -347,6 +356,7 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
 
         $context = new RequestContext();
         $context->setMethod('POST');
+
         $this->assertSame('contao_api_api_files_move', new UrlMatcher($routes, $context)->match('/files_operations/move')['_route']);
         $this->assertSame('contao_api_api_files_metadata', new UrlMatcher($routes, $context)->match('/files_operations/metadata')['_route']);
 
@@ -394,7 +404,6 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             ->method('isResourceClass')
             ->willReturn(true)
         ;
-
         $classes
             ->method('getResourceClass')
             ->willReturn(VirtualFilesystemItem::class)
@@ -473,17 +482,20 @@ final class VirtualFilesystemResourceMetadataCollectionFactoryTest extends TestC
             $decorated,
             $normalizer,
             $this->createUploadSizeProvider(),
-            new VirtualFilesystemRegistry(new ServiceLocator([]), [
-                'files' => [],
-                'api_files' => [
-                    'api_exposure' => true,
-                    'api_path' => '/files',
-                    'api_relation_filesystem' => 'files',
-                    'api_operation_attributes' => [
-                        'metadata' => ['security' => "is_granted('contao_user.fop.f2')"],
+            new VirtualFilesystemRegistry(
+                new ServiceLocator([]),
+                [
+                    'files' => [],
+                    'api_files' => [
+                        'api_exposure' => true,
+                        'api_path' => '/files',
+                        'api_relation_filesystem' => 'files',
+                        'api_operation_attributes' => [
+                            'metadata' => ['security' => "is_granted('contao_user.fop.f2')"],
+                        ],
                     ],
-                ],
-            ] + $tags),
+                ] + $tags,
+            ),
         );
     }
 

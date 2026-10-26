@@ -28,7 +28,6 @@ abstract class AbstractBackendController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['request_stack'] = RequestStack::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 

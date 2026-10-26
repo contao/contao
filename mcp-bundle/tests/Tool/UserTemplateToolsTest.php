@@ -70,6 +70,7 @@ final class UserTemplateToolsTest extends TestCase
         ] as $method => $arguments) {
             try {
                 $tools->$method(...$arguments);
+
                 $this->fail($method.' should require an administrator.');
             } catch (ToolCallException $exception) {
                 $this->assertSame('Template Studio tools require administrator privileges.', $exception->getMessage());
@@ -171,6 +172,7 @@ final class UserTemplateToolsTest extends TestCase
         $parametersSchema = $schema['properties']['parameters'];
 
         $this->assertSame([], $parametersSchema['default']);
+
         $this->assertSame(
             [
                 ['type' => 'object', 'additionalProperties' => true],
@@ -178,6 +180,7 @@ final class UserTemplateToolsTest extends TestCase
             ],
             $parametersSchema['anyOf'],
         );
+
         $this->assertSame(['operation', 'name'], $schema['required']);
 
         $validator = new SchemaValidator();
@@ -212,6 +215,7 @@ final class UserTemplateToolsTest extends TestCase
             ->willReturnCallback(
                 function (Request $request, int $type) use (&$payloads): Response {
                     $this->assertSame(HttpKernelInterface::SUB_REQUEST, $type);
+
                     $payloads[] = json_decode($request->getContent(), true, flags: JSON_THROW_ON_ERROR);
 
                     return new Response('{}', 200);

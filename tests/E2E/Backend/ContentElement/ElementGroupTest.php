@@ -28,11 +28,14 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 
         // Create an element group with another element group inside
         $this->createElementGroup($backend);
+
         $backend->clickTitlePrefix('Edit the child elements');
+
         $this->createElementGroup($backend);
 
         // Go back to the outer element group and move or copy it
         $backend->visit($articleUrl);
+
         $this->clipboard($backend, $record, $operation);
 
         // Paste at the top always works, paste after the element group itself only
@@ -68,7 +71,9 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 
         // Create an element group with another element group and a text element inside
         $this->createElementGroup($backend);
+
         $backend->clickTitlePrefix('Edit the child elements');
+
         $this->createElementGroup($backend);
         $this->createTextElement($backend);
 

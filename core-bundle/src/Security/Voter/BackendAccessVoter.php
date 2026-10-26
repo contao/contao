@@ -227,10 +227,13 @@ class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInte
         // Set default values
         $config = $this->framework->getAdapter(Config::class);
 
-        return [[
-            'chmod' => $config->get('defaultChmod'),
-            'cuser' => (int) $config->get('defaultUser'),
-            'cgroup' => (int) $config->get('defaultGroup'),
-        ], $parentIds];
+        return [
+            [
+                'chmod' => $config->get('defaultChmod'),
+                'cuser' => (int) $config->get('defaultUser'),
+                'cgroup' => (int) $config->get('defaultGroup'),
+            ],
+            $parentIds,
+        ];
     }
 }

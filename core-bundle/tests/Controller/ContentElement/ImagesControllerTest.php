@@ -234,18 +234,15 @@ class ImagesControllerTest extends ContentElementTestCase
             ->method('getPages')
             ->willReturn([1, 2])
         ;
-
         $pagination
             ->expects($this->exactly(2))
             ->method('getPageCount')
             ->willReturn(2)
         ;
-
         $pagination
             ->method('getCurrent')
             ->willReturn(1)
         ;
-
         $pagination
             ->expects($this->exactly(2))
             ->method('getUrlForPage')

@@ -57,7 +57,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     protected function getOptions(): array
     {
         $options = parent::getOptions();
-
         $options['trace_level'] = $_SERVER['TRACE_LEVEL'] ?? 'short';
         $options['trace_header'] = 'Contao-Cache';
 

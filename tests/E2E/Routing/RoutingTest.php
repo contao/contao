@@ -30,6 +30,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
         $fixtureResult = $this->loadFixtureFiles($fixtures);
         $request = $fixtureResult->interpolate($request);
+
         $browser = $this->request($request, $host);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -600,6 +601,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
 
         $this->loadFixtureFiles($fixtures);
+
         $browser = $this->request($request, $host, $acceptLanguages);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -848,6 +850,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testOrdersThePageModelsByCandidates(): void
     {
         $this->loadFixtureFiles(['theme', 'language-sorting']);
+
         $browser = $this->request('/main/sub-zh.html', 'root-zh.local');
 
         $this->assertResponse($browser, 200, '');
@@ -862,7 +865,9 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         [$disableLanguageRedirects, $indexAlias, $requestLocale, $expectedLocation] = $case;
 
         $request = 'https://example.local/';
+
         $this->loadFixtureFiles(['disable-language-redirect']);
+
         $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
         $alias = $indexAlias ? 'index' : 'home';
 
@@ -983,6 +988,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
         $this->loadFixtureFiles(['theme', 'protected-root']);
+
         $browser = $this->request('/', 'protected-root.local');
 
         $this->assertResponse($browser, 401, 'Error 401 Page');
@@ -994,6 +1000,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
         [$request, $acceptLanguage, $statusCode, $pageTitle] = $case;
 
         $this->loadFixtureFiles(['theme', 'url-prefix-mix']);
+
         $browser = $this->request($request, 'example.local', $acceptLanguage);
 
         $this->assertResponse($browser, $statusCode, $pageTitle);
@@ -1047,6 +1054,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     public function testMultidomainWithLanguages(): void
     {
         $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+
         $browser = $this->request('/de/bar/bar', 'example.ch', 'en_US,en');
 
         $this->assertResponse($browser, 200, 'Bar -');
@@ -1083,6 +1091,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     private function request(string $path, string $host, string $acceptLanguage = 'en'): HttpBrowser
     {
         $options = HttpBrowserOptions::create()->withSimulatedOrigin('https://'.$host);
+
         $browser = self::managedEdition()->createHttpBrowser($options);
         $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
         $browser->setServerParameter('HTTP_ACCEPT_LANGUAGE', $acceptLanguage);
@@ -1095,7 +1104,9 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         $response = $browser->getInternalResponse();
         $crawler = $browser->getCrawler();
+
         $this->assertSame($statusCode, $response->getStatusCode());
+
         $title = trim($crawler->filterXPath('//head/title')->text());
 
         $this->assertStringContainsString($expectedTitle, $title);

@@ -52,7 +52,6 @@ class PublishedFilterTest extends TestCase
             ->method('all')
             ->willReturn(['foo' => $route])
         ;
-
         $collection
             ->expects($this->never())
             ->method('remove')
@@ -82,7 +81,6 @@ class PublishedFilterTest extends TestCase
             ->method('all')
             ->willReturn(['foo' => $route])
         ;
-
         $collection
             ->expects($this->once())
             ->method('remove')
@@ -113,7 +111,6 @@ class PublishedFilterTest extends TestCase
             ->method('all')
             ->willReturn(['foo' => $route])
         ;
-
         $collection
             ->expects($this->once())
             ->method('remove')
@@ -144,7 +141,6 @@ class PublishedFilterTest extends TestCase
             ->method('all')
             ->willReturn(['foo' => $route])
         ;
-
         $collection
             ->expects($this->never())
             ->method('remove')

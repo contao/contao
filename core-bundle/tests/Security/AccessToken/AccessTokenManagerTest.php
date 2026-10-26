@@ -50,7 +50,6 @@ class AccessTokenManagerTest extends TestCase
                 static fn (PersonalAccessToken $personalAccessToken): bool => true,
             ))
         ;
-
         $entityManager
             ->expects($this->once())
             ->method('persist')
@@ -64,7 +63,6 @@ class AccessTokenManagerTest extends TestCase
                 },
             )
         ;
-
         $entityManager
             ->expects($this->once())
             ->method('flush')

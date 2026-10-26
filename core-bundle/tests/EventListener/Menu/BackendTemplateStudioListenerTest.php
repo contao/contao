@@ -65,7 +65,6 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('getName')
             ->willReturn('headerMenu')
         ;
-
         $item
             ->expects($this->never())
             ->method('getChild')
@@ -94,7 +93,6 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('getName')
             ->willReturn('mainMenu')
         ;
-
         $item
             ->expects($this->once())
             ->method('getChild')
@@ -107,7 +105,6 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('getTree')
             ->willReturn($item)
         ;
-
         $event
             ->expects($this->never())
             ->method('getFactory')
@@ -129,7 +126,6 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('getName')
             ->willReturn('mainMenu')
         ;
-
         $item
             ->expects($this->once())
             ->method('getChild')
@@ -142,7 +138,6 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('getTree')
             ->willReturn($item)
         ;
-
         $event
             ->expects($this->never())
             ->method('getFactory')

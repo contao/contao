@@ -38,6 +38,7 @@ class RegisterVirtualFilesystemsPass implements CompilerPassInterface
                 }
 
                 unset($attributes['name']);
+
                 $filesystems[$name] = new Reference($serviceId);
                 $metadata[$name] = $attributes;
             }

@@ -59,17 +59,14 @@ class DatabaseMigrationChecksTest extends TestCase
             ->method('getMysqlRowSize')
             ->willReturn(1)
         ;
-
         $calculator
             ->method('getMysqlRowSizeLimit')
             ->willReturn(2)
         ;
-
         $calculator
             ->method('getInnodbRowSize')
             ->willReturn(1)
         ;
-
         $calculator
             ->method('getInnodbRowSizeLimit')
             ->willReturn(2)
@@ -88,7 +85,6 @@ class DatabaseMigrationChecksTest extends TestCase
             ->method('fetchOne')
             ->willReturnMap([['SELECT @@sql_mode', $sqlMode]])
         ;
-
         $connection
             ->method('getDriver')
             ->willReturn($driver)

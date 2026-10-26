@@ -173,6 +173,7 @@ class FragmentRuntimeTest extends TestCase
                         ['type' => 'slider', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])],
                         $reference->getContentModel()->row(),
                     );
+
                     $this->assertSame(
                         ['type' => 'text', 'text' => '<p>Test</p>'],
                         $reference->attributes['nestedFragments'][0]->getContentModel()->row(),

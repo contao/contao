@@ -61,6 +61,7 @@ class VirtualBackendUserFactoryTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $this->createStub(Connection::class));
+
         System::setContainer($container);
 
         $factory = new VirtualBackendUserFactory($framework);

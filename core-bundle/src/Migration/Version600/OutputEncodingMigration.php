@@ -125,6 +125,7 @@ class OutputEncodingMigration extends AbstractMigration
                         }
                     },
                 );
+
                 $convertedValue = serialize($convertedValue);
             } else {
                 continue;
