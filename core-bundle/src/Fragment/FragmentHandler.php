@@ -13,7 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Fragment;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,9 +37,10 @@ class FragmentHandler extends BaseFragmentHandler
          */
         private readonly ContainerInterface $renderers,
         private readonly BaseFragmentHandler $fragmentHandler,
-        RequestStack $requestStack,
+        private readonly RequestStack $requestStack,
         private readonly FragmentRegistryInterface $fragmentRegistry,
         private readonly ContainerInterface $preHandlers,
+        private readonly ScopeMatcher $scopeMatcher,
         bool $debug = false,
     ) {
         parent::__construct($requestStack, [], $debug);
@@ -58,6 +62,17 @@ class FragmentHandler extends BaseFragmentHandler
 
         if ('inline' !== $renderer && $this->containsNonScalars($uri->attributes)) {
             $renderer = 'forward';
+        }
+
+        // Always render content elements and frontend modules inline in the backend. This way
+        // fragments do not react to parameters of the backend request, since Symfony's default
+        // `inline` renderer does not copy the original request for the subrequest.
+        if ($uri instanceof ContentElementReference || $uri instanceof FrontendModuleReference) {
+            if ($request = $this->requestStack->getCurrentRequest()) {
+                if ($this->scopeMatcher->isBackendRequest($request)) {
+                    $renderer = 'inline';
+                }
+            }
         }
 
         if (!isset($this->initialized[$renderer]) && $this->renderers->has($renderer)) {
