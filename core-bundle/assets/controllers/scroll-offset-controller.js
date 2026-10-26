@@ -173,6 +173,10 @@ export default class extends Controller {
             input.focus({ preventScroll: true });
             const len = input.value.length;
             input.setSelectionRange(len, len);
+
+            // Discard the offset, which the focus event of the input may have stored
+            // again, so that it is not applied to the next page (see #10485)
+            this.offset = null;
         });
 
         this.#pendingAutoFocus = null;

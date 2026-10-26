@@ -10,9 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\SymlinkUtil;
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Combines .css or .js files into one single file
@@ -320,19 +322,24 @@ class Combiner extends System
 			$arrPrefix[] = basename($arrFile['name']);
 		}
 
-		$strKey = StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
+		$strPrefix = StringUtil::substr(implode(',', $arrPrefix), 64, '...');
+		$strKey = $strPrefix . '-' . substr(md5($this->strKey), 0, 8);
 
-		// Load the existing file
-		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
+		$strDirectory = Path::join('assets', $strTarget);
+		$strLink = Path::join($strDirectory, $strKey . $this->strMode);
+		$strLinkPath = Path::join($this->strRootDir, $strLink);
+
+		// Resolve the key based symlink
+		if (is_link($strLinkPath) && is_file($strLinkPath))
 		{
-			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+			return Path::join($strUrl, $strDirectory, basename($this->filesystem->readlink($strLinkPath)));
 		}
 
 		$combinedContent = '';
 
 		foreach ($this->arrFiles as $arrFile)
 		{
-			$content = file_get_contents($this->strRootDir . '/' . $arrFile['name']);
+			$content = file_get_contents(Path::join($this->strRootDir, $arrFile['name']));
 
 			// Remove UTF-8 BOM
 			if (str_starts_with($content, "\xEF\xBB\xBF"))
@@ -363,10 +370,22 @@ class Combiner extends System
 
 		unset($content);
 
-		// Create the file
-		$this->filesystem->dumpFile($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode, $combinedContent);
+		// Update to a content based hash (#10372)
+		$strHash = substr(md5($this->strKey . '-c' . md5($combinedContent)), 0, 8);
+		$strPath = Path::join($strDirectory, $strPrefix . '-' . $strHash . $this->strMode);
 
-		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
+		// Create the file
+		$this->filesystem->dumpFile(Path::join($this->strRootDir, $strPath), $combinedContent);
+
+		// Create a symlink for the key based file
+		if (!is_link($strLinkPath) && file_exists($strLinkPath))
+		{
+			$this->filesystem->remove($strLinkPath);
+		}
+
+		SymlinkUtil::symlink(Path::join($this->strRootDir, $strPath), $strLinkPath, $this->strRootDir);
+
+		return Path::join($strUrl, $strPath);
 	}
 
 	/**

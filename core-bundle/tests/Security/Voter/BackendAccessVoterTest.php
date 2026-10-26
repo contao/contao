@@ -220,6 +220,106 @@ class BackendAccessVoterTest extends TestCase
         );
     }
 
+    public function testGrantsAccessToSubfolder(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['filemounts' => ['/foo/bar']]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, '/foo/bar/baz', [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH]),
+        );
+    }
+
+    public function testDeniesAccessToMountedFolder(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['filemounts' => ['/foo/bar']]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, '/foo/bar', [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH]),
+        );
+    }
+
+    public function testDeniesAccessForEmptyFilemount(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['filemounts' => ['', null]]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, '/foo/bar', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]),
+        );
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, '/foo/bar', [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH]),
+        );
+    }
+
+    public function testGrantsAccessToNonCanonicalizedSubfolderPath(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['filemounts' => ['/foo/bar']]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, '/foo/bar/sub/../baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]),
+        );
+
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, '/foo/bar/./baz', [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH]),
+        );
+    }
+
+    public function testDeniesAccessToPathOutsideFilemountWithTraversal(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['filemounts' => ['/foo/bar']]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, '/foo/bar/../baz', [ContaoCorePermissions::USER_CAN_ACCESS_PATH]),
+        );
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, '/foo/bar/../baz', [ContaoCorePermissions::USER_CAN_ACCESS_SUBPATH]),
+        );
+    }
+
     public function testGrantsAccessToChildPages(): void
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'pagemounts' => [1, 2, 3]]);

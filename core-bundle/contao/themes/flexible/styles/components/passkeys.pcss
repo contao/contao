@@ -1,36 +1,37 @@
 .passkeys {
     border-top: 1px solid var(--border);
-}
 
-.passkeys .list_passkeys {
-    margin: 0 15px 15px;
-}
+    .credential-table {
+        margin: 0 15px 15px;
+        width: calc(100% - 30px);
 
-.passkeys .credential-list td.created {
-    width: 30%;
-}
+        td.created {
+            width: 30%;
+        }
 
-.passkeys .credential-list td.actions {
-    text-align: right;
-    width: 50px;
+        td.actions {
+            text-align: right;
+            width: 50px;
 
-    button {
-        border: 0;
-        padding: 0;
-        background-color: transparent;
+            button {
+                border: 0;
+                padding: 0;
+                background-color: transparent;
 
-        img {
-            vertical-align: -3px;
+                img {
+                    vertical-align: -3px;
+                }
+            }
         }
     }
-}
 
-.passkeys input[name="passkey_name"] {
-    height: 100%;
-    width: 100%;
-    display: block;
-    margin: -6px; /* 1px more to counter the border-width */
-    padding: 5px;
+    input[name="passkey_name"] {
+        height: 100%;
+        width: 100%;
+        display: block;
+        margin: -6px; /* 1px more to counter the border-width */
+        padding: 5px;
+    }
 }
 
 .tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {

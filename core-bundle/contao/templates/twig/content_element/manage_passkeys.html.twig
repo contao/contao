@@ -46,7 +46,7 @@
             {{- item.name|default(item.id) -}}
         {%- endif -%}
     </div>
-    <div class="created"><span class="label">{{ 'MSC.passkeysCreatedAt'|trans }}</span> <span class="date">{{ item.createdAt|date(contao.datim_format|default('j. F Y, H:i')) }}</span></div>
+    <div class="created"><span class="label">{{ 'MSC.passkeysCreatedAt'|trans }}</span> <span class="date">{{ item.createdAt|date(contao.datim_format) }}</span></div>
     <div class="actions">
         <form method="post">
             <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">

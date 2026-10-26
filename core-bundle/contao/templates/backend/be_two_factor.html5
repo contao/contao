@@ -117,47 +117,45 @@
 <div class="two-factor passkeys">
   <h2 class="sub_headline"><?= $this->trans('MSC.passkeys') ?></h2>
   <p><?= $this->trans('MSC.passkeysDescription') ?></p>
-  <div class="list_passkeys">
-    <turbo-frame id="passkeys" data-turbo-action="advance">
-      <?php if ($this->credentials): ?>
-        <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
-          <thead>
-            <tr>
-              <th class="name"><?= $this->trans('MSC.passkeysName') ?></th>
-              <th class="created"><?= $this->trans('MSC.passkeysCreatedAt') ?></th>
-              <th class="actions"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($this->credentials as $credential): ?>
-              <tr class="hover-row">
-                <td class="name">
-                  <?php if ($this->editPassKeyId === $credential->getId()): ?>
-                    <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-<?= $credential->getId() ?>">
-                      <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
-                      <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-                      <input type="hidden" name="credential_id" value="<?= $credential->getId() ?>">
-                      <input type="text" name="passkey_name" class="tl_text" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" aria-label="<?= $this->trans('MSC.passkeysName') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
-                    </form>
-                  <?php else: ?>
-                    <?= Contao\StringUtil::specialchars($credential->name ?: $credential->getId()) ?>
-                  <?php endif; ?>
-                </td>
-                <td class="created"><?= $credential->createdAt->format('j. F Y, H:i') ?></td>
-                <td class="actions">
-                  <form method="post">
-                    <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
+  <turbo-frame id="passkeys" data-turbo-action="advance">
+    <?php if ($this->credentials): ?>
+      <table class="tl_listing showColumns with-border with-padding credential-table" data-controller="contao--passkeys">
+        <thead>
+          <tr>
+            <th class="name"><?= $this->trans('MSC.passkeysName') ?></th>
+            <th class="created"><?= $this->trans('MSC.passkeysCreatedAt') ?></th>
+            <th class="actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($this->credentials as $credential): ?>
+            <tr class="hover-row">
+              <td class="name">
+                <?php if ($this->editPassKeyId === $credential->getId()): ?>
+                  <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-<?= $credential->getId() ?>">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.save')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                    <input type="hidden" name="credential_id" value="<?= $credential->getId() ?>">
+                    <input type="text" name="passkey_name" class="tl_text" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" aria-label="<?= $this->trans('MSC.passkeysName') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                   </form>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      <?php endif; ?>
-    </turbo-frame>
-  </div>
+                <?php else: ?>
+                  <?= Contao\StringUtil::specialchars($credential->name ?: $credential->getId()) ?>
+                <?php endif; ?>
+              </td>
+              <td class="created"><?= $credential->createdAt->format('j. F Y, H:i') ?></td>
+              <td class="actions">
+                <form method="post">
+                  <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
+                  <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+                  <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.save')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    <?php endif; ?>
+  </turbo-frame>
   <div class="add_passkey"
     data-controller="contao--webauthn-registration contao--webauthn-error"
     data-contao--webauthn-registration-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>"

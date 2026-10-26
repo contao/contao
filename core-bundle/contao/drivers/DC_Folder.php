@@ -437,7 +437,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						continue;
 					}
 
-					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array(strtolower($objRoot->extension), $this->arrValidFileTypes))
 					{
 						$arrFound[] = $objRoot->path;
 					}
