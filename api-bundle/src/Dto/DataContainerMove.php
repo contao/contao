@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Dto;
 
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\DataContainer;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 final class DataContainerMove
 {
@@ -34,7 +34,7 @@ final class DataContainerMove
         public readonly string|null $ptable = null,
     ) {
         if ($target < 0 || !\in_array($position, ['first', 'last', 'after'], true) || ('after' === $position && 0 === $target) || '' === $ptable) {
-            throw new UnprocessableEntityHttpException('Invalid move destination or position.');
+            throw new InvalidInputException('Invalid move destination or position.');
         }
     }
 
@@ -46,7 +46,7 @@ final class DataContainerMove
                 'first' => DataContainer::PASTE_INTO,
                 'last' => DataContainer::PASTE_INTO_APPEND,
                 'after' => DataContainer::PASTE_AFTER,
-                default => throw new UnprocessableEntityHttpException('Invalid move position.'),
+                default => throw new InvalidInputException('Invalid move position.'),
             },
         ];
 

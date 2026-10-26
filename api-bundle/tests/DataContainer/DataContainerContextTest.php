@@ -14,8 +14,8 @@ namespace Contao\ApiBundle\Tests\DataContainer;
 
 use ApiPlatform\Metadata\Get;
 use Contao\ApiBundle\DataContainer\DataContainerContext;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 final class DataContainerContextTest extends TestCase
 {
@@ -57,7 +57,7 @@ final class DataContainerContextTest extends TestCase
             ],
         ]);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         DataContainerContext::fromOperation($operation, ['nested' => '5/content/1 OR 1=1']);
     }

@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use Contao\ApiBundle\ApiPlatform\State\VirtualFilesystemStateProvider;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\ApiBundle\Serializer\VirtualFilesystemMetadataNormalizationHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -36,7 +37,6 @@ use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Uuid;
 
 final class VirtualFilesystemStateProviderTest extends TestCase
@@ -246,7 +246,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
             ->willThrowException(new UnableToResolveUuidException($uuid))
         ;
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['uuid' => $uuid->toRfc4122()]);
     }
@@ -255,7 +255,7 @@ final class VirtualFilesystemStateProviderTest extends TestCase
     {
         $storage = $this->createStub(VirtualFilesystem::class);
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $this->createProvider($storage)->provide(new Get(extraProperties: ['contao' => ['filesystem' => 'files']]), ['path' => 'missing.txt']);
     }

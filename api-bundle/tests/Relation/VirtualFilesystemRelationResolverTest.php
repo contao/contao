@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\ApiBundle\Relation\RelationReference;
 use Contao\ApiBundle\Relation\VirtualFilesystemRelationDefinition;
 use Contao\ApiBundle\Relation\VirtualFilesystemRelationResolver;
@@ -31,7 +32,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -124,7 +124,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
 
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         $resolver->resolveToIdentifier(['iri' => '/api/files/archive.zip'], VirtualFilesystemRelationDefinition::forUuid('test_files'));
     }
@@ -147,7 +147,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
 
         $resolver = $this->createResolver([$this->resource('test_files', false)], $testFilesystem, $router);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
         $this->expectExceptionMessage('does not identify a file or directory with a uuid');
 
         $resolver->resolveToIdentifier(['iri' => '/api/test-files/missing.jpg'], VirtualFilesystemRelationDefinition::forUuid('test_files'));
@@ -241,7 +241,7 @@ final class VirtualFilesystemRelationResolverTest extends TestCase
 
         $resolver = $this->createResolver([$this->resource('test_files', false)], $filesystem, $router);
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(InvalidInputException::class);
 
         $resolver->resolveToIdentifier('/api/test-files/by-path/archive.zip', VirtualFilesystemRelationDefinition::forUuid('test_files'));
     }

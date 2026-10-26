@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
 use Contao\ApiBundle\Dto\UserTemplateUpdate;
+use Contao\ApiBundle\Exception\TemplateStudioException;
 use Contao\ApiBundle\UserTemplate\TemplateStudioClient;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +26,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -140,7 +140,7 @@ class TemplateStudioOperationsTest extends TestCase
 
         $client = new TemplateStudioClient($kernel, $router, new RequestStack([Request::create('/')]));
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(TemplateStudioException::class);
         $this->expectExceptionMessage('Template Studio returned a non-JSON response (HTTP 200).');
 
         $client->call('save', 'content_element/test', null, []);

@@ -16,10 +16,10 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
+use Contao\ApiBundle\Exception\InvalidInputException;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -78,20 +78,20 @@ final class VirtualFilesystemRelationResolver extends AbstractRelationResolver
         $operation = $this->getReadOperations($relation->filesystem)[$parameters['_route'] ?? ''] ?? null;
 
         if (!$operation) {
-            throw new UnprocessableEntityHttpException('The relation IRI points to an unexpected API resource.');
+            throw new InvalidInputException('The relation IRI points to an unexpected API resource.');
         }
 
         try {
             $location = VirtualFilesystemLocation::fromArray(array_intersect_key($parameters, ['path' => true, 'uuid' => true]))->toLocation();
             $item = $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem'])->get($location);
         } catch (BadRequestHttpException|UnableToResolveUuidException $exception) {
-            throw new UnprocessableEntityHttpException('The relation IRI does not identify an existing file or directory.', $exception);
+            throw new InvalidInputException('The relation IRI does not identify an existing file or directory.', previous: $exception);
         }
 
         $identifier = VirtualFilesystemRelationDefinition::PATH === $relation->identifier ? $item?->getPath() : $item?->getUuid()?->toRfc4122();
 
         if (null === $identifier) {
-            throw new UnprocessableEntityHttpException(\sprintf('The relation IRI does not identify a file or directory with a %s.', $relation->identifier));
+            throw new InvalidInputException(\sprintf('The relation IRI does not identify a file or directory with a %s.', $relation->identifier));
         }
 
         return $identifier;

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\DataContainer;
 
 use ApiPlatform\Metadata\Operation;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Contao\ApiBundle\Exception\InvalidInputException;
 
 final class DataContainerContext
 {
@@ -34,7 +34,7 @@ final class DataContainerContext
             $id = \is_string($parameter) ? filter_var($uriVariables[$parameter] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) : false;
 
             if (!\is_string($table) || '' === $table || false === $id) {
-                throw new UnprocessableEntityHttpException('The parent path contains an invalid record identifier.');
+                throw new InvalidInputException('The parent path contains an invalid record identifier.');
             }
 
             $parents[] = ['table' => $table, 'id' => $id];
@@ -60,14 +60,14 @@ final class DataContainerContext
         $value = \is_string($parameter) ? $uriVariables[$parameter] ?? null : null;
 
         if (!\is_string($table) || !\is_string($segment) || (!\is_int($value) && !\is_string($value))) {
-            throw new UnprocessableEntityHttpException('The nested parent path is invalid.');
+            throw new InvalidInputException('The nested parent path is invalid.');
         }
 
         foreach (explode('/'.$segment.'/', (string) $value) as $id) {
             $id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
             if (false === $id) {
-                throw new UnprocessableEntityHttpException('The nested parent path contains an invalid record identifier.');
+                throw new InvalidInputException('The nested parent path contains an invalid record identifier.');
             }
 
             $parents[] = ['table' => $table, 'id' => $id];
