@@ -175,7 +175,7 @@ export default class extends Controller {
             input.setSelectionRange(len, len);
 
             // Discard the offset, which the focus event of the input may have stored
-            // again so it is not applied to the next page (see #10485)
+            // again, so that it is not applied to the next page (see #10485)
             this.offset = null;
         });
 
