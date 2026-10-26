@@ -39,7 +39,7 @@
 
     {% block download_link %}
         {% set download_link_attributes = attrs(download.link_attributes|default)
-            .set('href', download.href)
+            .set('href', download.href, not as_editor_view|default)
             .setIfExists('title', title)
             .setIfExists('type', download.file.mimeType(''))
             .mergeWith(download_link_attributes|default)
