@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationDefinition;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
@@ -145,6 +146,8 @@ class CoreWidgetConverterTest extends TestCase
 
         $this->assertNotNull($relation);
         $this->assertSame('files', $relation->filesystem);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $relation->identifier);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $converter->getRelation(['inputType' => 'fileTree', 'eval' => ['binary' => false]])?->identifier);
         $this->assertNull($converter->getRelation(['inputType' => 'text']));
     }
 

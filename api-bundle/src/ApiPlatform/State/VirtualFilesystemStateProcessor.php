@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
 use Contao\ApiBundle\Dto\VirtualFilesystemMove;
 use Contao\ApiBundle\Serializer\SchemaAwareObjectNormalizer;
 use Contao\CoreBundle\File\UploadSizeProvider;
@@ -62,13 +63,9 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
                 return $this->updateMetadata($request, $filesystem);
             }
 
-            $path = $uriVariables['pathOrUuid'] ?? $uriVariables['path'] ?? null;
+            $location = VirtualFilesystemLocation::fromArray($uriVariables)->toLocation();
 
-            if (!\is_string($path) || '' === $path) {
-                throw new BadRequestHttpException('A file path or UUID is required.');
-            }
-
-            return $this->upload($this->toLocation($path), $request, $filesystem);
+            return $this->upload($location, $request, $filesystem);
         } catch (UnableToResolveUuidException $exception) {
             throw new NotFoundHttpException('The requested file or directory does not exist.', $exception);
         }
@@ -121,29 +118,24 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
             throw new BadRequestHttpException($exception->getMessage(), $exception);
         }
 
-        if (!$object instanceof \stdClass || !\is_array($payload) || array_diff_key($payload, ['path' => true, 'data' => true])) {
-            throw new BadRequestHttpException('The metadata body must contain only a non-empty path or UUID and a data object.');
+        if (!$object instanceof \stdClass || !\is_array($payload) || array_diff_key($payload, ['path' => true, 'uuid' => true, 'data' => true])) {
+            throw new BadRequestHttpException('The metadata body must contain exactly one path or UUID and a data object.');
         }
 
-        $path = $payload['path'] ?? null;
         $data = $payload['data'] ?? null;
 
-        if (!\is_string($path) || '' === $path || !(($object->data ?? null) instanceof \stdClass) || !\is_array($data)) {
-            throw new BadRequestHttpException('The metadata body must contain only a non-empty path or UUID and a data object.');
+        if (!(($object->data ?? null) instanceof \stdClass) || !\is_array($data)) {
+            throw new BadRequestHttpException('The metadata body must contain exactly one path or UUID and a data object.');
         }
 
-        return [$this->toLocation($path), $data];
+        return [VirtualFilesystemLocation::fromArray(array_diff_key($payload, ['data' => true]))->toLocation(), $data];
     }
 
     private function move(VirtualFilesystemMove $move, VirtualFilesystemInterface $filesystem): VirtualFilesystemItem
     {
-        if ('' === $move->source || '' === $move->destination) {
-            throw new BadRequestHttpException('Source and destination paths or UUIDs are required.');
-        }
+        $source = $move->source->toLocation();
 
-        $source = $this->toLocation($move->source);
-
-        $destination = $this->toLocation($move->destination);
+        $destination = $move->destination->toLocation();
         $destination = $destination instanceof Uuid ? $filesystem->resolveUuid($destination) : $destination;
 
         $filesystem->move($source, $destination);
@@ -181,10 +173,5 @@ final class VirtualFilesystemStateProcessor implements ProcessorInterface
         }
 
         return $this->itemFactory->create($item);
-    }
-
-    private function toLocation(string $location): Uuid|string
-    {
-        return Uuid::isValid($location) ? Uuid::fromString($location) : $location;
     }
 }

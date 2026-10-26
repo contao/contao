@@ -85,6 +85,38 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertRelatedFile($updated['multiple'][1], self::FILES[0]);
     }
 
+    public function testDistinguishesUuidShapedPathsFromUuidRelations(): void
+    {
+        $path = $this->createContentWithFiles('text', 'file_rows');
+        $file = $this->readResource($this->uploadFiles()[0]['iri']);
+        $uuid = $file['metadata']['uuid'];
+        $contents = file_get_contents(self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg');
+        $this->assertIsString($contents);
+
+        $response = self::managedEdition()->send(HttpRequest::create('PUT', '/contao/api/files/by-path/'.$uuid)->withHeaders([
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+            'Accept' => 'application/ld+json',
+            'Content-Type' => 'application/octet-stream',
+        ])->withBody($contents));
+
+        $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
+        $literal = $response->toArray(false);
+        $this->assertNotSame($uuid, $literal['metadata']['uuid']);
+
+        foreach ([
+            $literal['@id'] => $literal['metadata']['uuid'],
+            '/contao/api/files/by-uuid/'.$uuid => $uuid,
+        ] as $iri => $expectedUuid) {
+            $response = $this->patchResource($path, ['file_rows' => [['single' => ['iri' => $iri], 'multiple' => []]]], 'kevin_jones');
+            $this->assertSame(200, $response->getStatusCode(), $response->getContent(false));
+
+            $reference = $this->readResource($path)['file_rows'][0]['single'];
+            $this->assertSame($expectedUuid, $reference['id']);
+            $this->assertSame('/contao/api/files/by-uuid/'.$expectedUuid, $reference['@id']);
+        }
+    }
+
     #[DataProvider('provideFileMounts')]
     public function testAssignsOnlySingleFileRelationsInsideTheUsersMount(string $userFixture, int $allowed, int $denied): void
     {
@@ -164,7 +196,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
 
     private function assertRelatedFile(array $reference, string $path): void
     {
-        $this->assertSame('/contao/api/files/'.$reference['id'], $reference['@id']);
+        $this->assertSame('/contao/api/files/by-uuid/'.$reference['id'], $reference['@id']);
 
         $file = $this->readResource($reference['@id']);
 
@@ -211,7 +243,7 @@ class FileRelationTest extends AbstractContaoMonorepoE2ETestCase
         $files = [];
 
         foreach (self::FILES as $path) {
-            $response = self::managedEdition()->send(HttpRequest::create('PUT', '/contao/api/files/'.$path)->withHeaders([
+            $response = self::managedEdition()->send(HttpRequest::create('PUT', '/contao/api/files/by-path/'.$path)->withHeaders([
                 'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/octet-stream',
