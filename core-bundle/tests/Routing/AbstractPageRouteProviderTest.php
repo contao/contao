@@ -63,7 +63,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorting unknown if route has no PageModel' => [
-            new Route('', [], [], [], 'www.example.org'),
+            new Route('', [], [], [], 'www.example.com'),
             new Route('', [], [], [], 'www.example.com'),
             null,
             0,

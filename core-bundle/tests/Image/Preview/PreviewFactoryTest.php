@@ -380,7 +380,7 @@ class PreviewFactoryTest extends TestCase
 
     private function createFactoryWithExampleProvider(ContaoFramework|null $framework = null): PreviewFactory
     {
-        $pdfProvider = new class() implements PreviewProviderInterface {
+        $pdfProvider = new class implements PreviewProviderInterface {
             public function getFileHeaderSize(): int
             {
                 return 5;

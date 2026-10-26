@@ -50,7 +50,7 @@ class WebWorkerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger = new class() extends AbstractLogger {
+        $this->logger = new class extends AbstractLogger {
             private array $logs = [];
 
             /**

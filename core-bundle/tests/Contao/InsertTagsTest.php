@@ -427,7 +427,7 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame($expected, $output);
 
-        $plainInsertTag = new class() {
+        $plainInsertTag = new class {
             public function __invoke(ResolvedInsertTag $tag): InsertTagResult
             {
                 return new InsertTagResult(substr($tag->getParameters()->serialize(), 2));

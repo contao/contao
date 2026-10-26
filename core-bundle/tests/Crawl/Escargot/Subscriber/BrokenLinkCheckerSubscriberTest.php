@@ -341,6 +341,22 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
+    public function testOnTransportExceptionWithoutResponse(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::ERROR, 'Broken link! Could not request properly: Connection failed.')
+        ;
+
+        $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
+        $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), new TransportException('Connection failed'), null);
+
+        $this->assertSame(['ok' => 0, 'error' => 1], $subscriber->getResult()->getInfo('stats'));
+    }
+
     public static function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
