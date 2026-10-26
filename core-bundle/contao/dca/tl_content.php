@@ -15,6 +15,7 @@ use Contao\ContentModel;
 use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -972,7 +973,17 @@ class tl_content extends Backend
 		}
 		catch (Throwable $exception)
 		{
-			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+			$template = System::getContainer()->get('twig')->createTemplate('<p class="{{ class }}">{{ message }}</p>');
+			$messageClass = 'tl_error';
+			$message = $exception->getMessage();
+
+			if ($exception instanceof ResponseException)
+			{
+				$messageClass = 'tl_info';
+				$message = System::getContainer()->get('translator')->trans('ERR.fragmentResponseException', array(), 'contao_default');
+			}
+
+			$preview = $template->render(array('class' => $messageClass, 'message' => $message));
 		}
 
 		if (!empty($arrRow['sectionHeadline']))
