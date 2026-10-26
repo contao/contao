@@ -432,6 +432,7 @@ services:
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
             - '@contao.routing.page_finder'
+            - '@contao.routing.scope_matcher'
             - '%kernel.debug%'
 
     contao.fragment.pre_handlers:
