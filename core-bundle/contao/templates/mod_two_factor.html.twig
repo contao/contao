@@ -10,7 +10,7 @@
 
     {% if enable|default %}
         {% if message|default %}
-            <p class="tl_error">{{ message }}</p>
+            <p class="error">{{ message }}</p>
         {% endif %}
         <p>{{ 'MSC.twoFactorScan'|trans }}</p>
         <form class="tl_two_factor_form" method="post">
