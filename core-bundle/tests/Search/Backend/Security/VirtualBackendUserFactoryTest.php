@@ -63,6 +63,7 @@ class VirtualBackendUserFactoryTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $this->createStub(Connection::class));
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+
         System::setContainer($container);
 
         $factory = new VirtualBackendUserFactory($framework);

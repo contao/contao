@@ -392,7 +392,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('isPreviewMode')
             ->willReturn(true)
         ;
-
         $tokenChecker
             ->method('getPreviewTime')
             ->willReturn($previewTime)

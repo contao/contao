@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{url_legend},url;{config_legend},showUnpublished,restrictToUrl,expiresAt,previewTime,createdAt;{publishing_legend},published',
+		'default'                     => '{url_legend},url,restrictToUrl;{config_legend},expiresAt,showUnpublished,previewTime,createdAt;{publishing_legend},published',
 	),
 
 	// Fields

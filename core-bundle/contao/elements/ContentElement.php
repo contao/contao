@@ -284,9 +284,8 @@ abstract class ContentElement extends Frontend
 			return true;
 		}
 
-		// Same time as within the Model (see #10108)
+		// Same time as in the Model (see #10108)
 		$time = Date::floorToMinute();
-
 		$isInvisible = $this->invisible || ($this->start && $this->start > $time) || ($this->stop && $this->stop <= $time);
 
 		// The element is visible, so show it

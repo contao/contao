@@ -374,6 +374,7 @@ class TokenCheckerTest extends TestCase
     public function testReturnsThePreviewTimeInTheDefaultTimeZone(): void
     {
         $timezone = date_default_timezone_get();
+
         date_default_timezone_set('Europe/Zurich');
 
         $request = new Request();
@@ -417,14 +418,16 @@ class TokenCheckerTest extends TestCase
             ->method('has')
             ->willReturn(true)
         ;
-
         $session
             ->method('get')
-            ->willReturnMap([[FrontendPreviewAuthenticator::SESSION_NAME, [
-                'showUnpublished' => false,
-                'previewLinkId' => 1,
-                'previewTime' => 1600000000,
-            ]]])
+            ->willReturnMap([[
+                FrontendPreviewAuthenticator::SESSION_NAME,
+                [
+                    'showUnpublished' => false,
+                    'previewLinkId' => 1,
+                    'previewTime' => 1600000000,
+                ],
+            ]])
         ;
 
         $request->setSession($session);

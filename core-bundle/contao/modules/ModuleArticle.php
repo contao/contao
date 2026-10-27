@@ -81,9 +81,8 @@ class ModuleArticle extends Module
 
 	protected function isHidden()
 	{
-		// Same time as within the Model (see #10108)
+		// Same time as in the Model (see #10108)
 		$time = Date::floorToMinute();
-
 		$isUnpublished = !$this->published || ($this->start && $this->start > $time) || ($this->stop && $this->stop <= $time);
 
 		// The article is published, so show it

@@ -87,6 +87,7 @@ class PreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
         $previewTime = $this->tokenChecker->getPreviewTime();
+
         $shareLink = '';
 
         if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link')) {
@@ -142,7 +143,6 @@ class PreviewSwitchController
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
-
         $previewTime = null;
 
         // Only set previewTime if we are not showing unpublished
