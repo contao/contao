@@ -53,7 +53,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['request_stack'] = RequestStack::class;
         $services['contao.routing.page_finder'] = PageFinder::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
@@ -76,6 +75,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         if (null === $ttl) {
             $pageModel = $this->getPageModel();
             $ttl = $pageModel ? $this->getSharedMaxAge($pageModel) : TemporaryAccessOption::MAX_TTL;
+
             // Could still be configured to 0 (if caching is disabled on page)
             $ttl = $ttl <= 0 ? TemporaryAccessOption::MAX_TTL : $ttl;
         }
@@ -182,6 +182,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($headline);
+
         $template->set('headline', \is_array($data) ? $data['value'] ?? '' : $data);
         $template->set('hl', \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1');
     }
@@ -197,6 +198,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($cssID, true);
+
         $template->set('class', trim($templateName.' '.($data[1] ?? '')));
         $template->set('cssID', !empty($data[0]) ? ' id="'.StringUtil::specialchars($data[0]).'"' : '');
 

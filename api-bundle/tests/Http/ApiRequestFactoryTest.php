@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Contao\ApiBundle\Http\ApiRequestFactory;
+use Contao\ApiBundle\Version\ApiVersion;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -50,13 +51,19 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testKeepsSessionAndLocaleWithoutLeakingTransportHeaders(): void
     {
-        $parent = Request::create('https://example.org/contao/mcp', 'POST', cookies: ['session' => 'value'], server: [
-            'HTTP_MCP_SESSION_ID' => 'mcp-session',
-            'HTTP_IF_NONE_MATCH' => 'etag',
-            'HTTP_AUTHORIZATION' => 'Bearer token',
-            'CONTENT_LENGTH' => 123,
-            'REMOTE_ADDR' => '192.0.2.1',
-        ], content: '{"jsonrpc":"2.0"}');
+        $parent = Request::create(
+            'https://example.org/contao/mcp',
+            'POST',
+            cookies: ['session' => 'value'],
+            server: [
+                'HTTP_MCP_SESSION_ID' => 'mcp-session',
+                'HTTP_IF_NONE_MATCH' => 'etag',
+                'HTTP_AUTHORIZATION' => 'Bearer token',
+                'CONTENT_LENGTH' => 123,
+                'REMOTE_ADDR' => '192.0.2.1',
+            ],
+            content: '{"jsonrpc":"2.0"}',
+        );
 
         $parent->setLocale('de');
         $parent->setSession(new Session(new MockArraySessionStorage()));
@@ -84,10 +91,13 @@ final class ApiRequestFactoryTest extends TestCase
 
     public function testGeneratesRoutesWithCustomPrefixAndBaseUrl(): void
     {
-        $parent = Request::create('https://example.org/app/index.php/contao/mcp', server: [
-            'SCRIPT_FILENAME' => '/var/www/app/index.php',
-            'SCRIPT_NAME' => '/app/index.php',
-        ]);
+        $parent = Request::create(
+            'https://example.org/app/index.php/contao/mcp',
+            server: [
+                'SCRIPT_FILENAME' => '/var/www/app/index.php',
+                'SCRIPT_NAME' => '/app/index.php',
+            ],
+        );
 
         $factory = $this->createFactory(new RequestContext('/app/index.php'));
         $request = $factory->create($parent, new Get(name: 'unused', routeName: 'records'), ['id' => 'an id', 'page' => 2]);
@@ -116,6 +126,29 @@ final class ApiRequestFactoryTest extends TestCase
         $this->assertSame('application/merge-patch+json', $request->headers->get('Content-Type'));
         $this->assertSame('application/json', $request->headers->get('Accept'));
         $this->assertSame('{"title":null}', $request->getContent());
+    }
+
+    public function testForwardsTheApiVersionWithoutSharingRequestAttributes(): void
+    {
+        $parent = Request::create('/contao/api/example');
+        $parent->headers->set(ApiVersion::HEADER, '2024-02-29');
+        $parent->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion('2024-02-29'));
+
+        $request = $this->createFactory()->create($parent, new Get(name: 'records'));
+
+        $this->assertSame('2024-02-29', $request->headers->get(ApiVersion::HEADER));
+        $this->assertFalse($request->attributes->has(ApiVersion::CONTEXT_KEY));
+    }
+
+    public function testForwardsTheResolvedVersionWhenTheHeaderWasOmitted(): void
+    {
+        $parent = Request::create('/contao/api/example');
+        $parent->attributes->set(ApiVersion::CONTEXT_KEY, new ApiVersion('2024-02-29'));
+
+        $request = $this->createFactory()->create($parent, new Get(name: 'records'));
+
+        $this->assertSame('2024-02-29', $request->headers->get(ApiVersion::HEADER));
+        $this->assertFalse($parent->headers->has(ApiVersion::HEADER));
     }
 
     public function testUsesNonJsonInputFormatsForStringPayloads(): void

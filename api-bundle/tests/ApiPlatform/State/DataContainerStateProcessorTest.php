@@ -33,7 +33,6 @@ final class DataContainerStateProcessorTest extends TestCase
             ->expects($this->never())
             ->method('create')
         ;
-
         $records
             ->expects($this->once())
             ->method('move')

@@ -28,7 +28,6 @@ class PlayerControllerTest extends ContentElementTestCase
             ->method('getPrefix')
             ->willReturn('files')
         ;
-
         $storage
             ->method('get')
             ->willReturnCallback(
@@ -42,7 +41,6 @@ class PlayerControllerTest extends ContentElementTestCase
                 },
             )
         ;
-
         $storage
             ->method('generatePublicUri')
             ->willReturnCallback(
@@ -69,7 +67,8 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_OGV,
                 ]),
                 'playerOptions' => serialize([
-                    'player_autoplay', 'player_loop',
+                    'player_autoplay',
+                    'player_loop',
                 ]),
                 'playerCaption' => 'Caption',
             ],
@@ -94,9 +93,7 @@ class PlayerControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new PlayerController($this->getDefaultStorage()),
-            [
-                'type' => 'player',
-            ],
+            ['type' => 'player'],
         );
 
         $this->assertEmpty($response->getContent());

@@ -155,7 +155,7 @@ class DcaHierarchy
         $definition = new HierarchyDefinition($table, 'id', 'pid');
 
         if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false) {
-            $definition = $definition->withScope('ptable', $table);
+            $definition = $definition->withScopes(['ptable' => $table]);
         }
 
         return $definition;

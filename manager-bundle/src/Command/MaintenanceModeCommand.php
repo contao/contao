@@ -86,16 +86,13 @@ class MaintenanceModeCommand extends Command
         $this->filesystem->dumpFile(
             $this->maintenanceFilePath,
 
-            $this->twig->render(
-                $templateName,
-                [
-                    'statusCode' => 503,
-                    'language' => 'en',
-                    'template' => $templateName,
-                    'defaultLabels' => $this->generateDefaultLabels(),
-                    ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
-                ],
-            ),
+            $this->twig->render($templateName, [
+                'statusCode' => 503,
+                'language' => 'en',
+                'template' => $templateName,
+                'defaultLabels' => $this->generateDefaultLabels(),
+                ...json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR),
+            ]),
         );
     }
 

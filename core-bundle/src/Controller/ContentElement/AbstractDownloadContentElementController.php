@@ -46,7 +46,6 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['contao.filesystem.file_download_helper'] = FileDownloadHelper::class;
         $services['contao.image.preview_factory'] = PreviewFactory::class;
         $services['contao.image.studio'] = Studio::class;

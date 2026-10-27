@@ -44,7 +44,10 @@ class MetadataTest extends TestCase
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
-            'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
+            'title' => '',
+            'alt' => '',
+            'link' => '',
+            'caption' => '',
         ];
     }
 
@@ -322,9 +325,7 @@ class MetadataTest extends TestCase
     public function testCanCustomizeSchemaOrgData(): void
     {
         $metadata = new Metadata(
-            [
-                Metadata::VALUE_ALT => 'alt',
-            ],
+            [Metadata::VALUE_ALT => 'alt'],
             [
                 'ImageObject' => [
                     'name' => 'title',

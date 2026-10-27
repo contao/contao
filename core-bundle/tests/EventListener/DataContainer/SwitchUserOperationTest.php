@@ -59,7 +59,6 @@ class SwitchUserOperationTest extends TestCase
             ->with('ROLE_ALLOWED_TO_SWITCH')
             ->willReturn(true)
         ;
-
         $security
             ->expects($this->once())
             ->method('getUser')
@@ -72,7 +71,6 @@ class SwitchUserOperationTest extends TestCase
             ->method('getRecord')
             ->willReturn(['id' => 42, 'username' => 'foobar'])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -117,13 +115,11 @@ class SwitchUserOperationTest extends TestCase
             ->with('ROLE_ALLOWED_TO_SWITCH')
             ->willReturn(true)
         ;
-
         $security
             ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
-
         $security
             ->expects($this->once())
             ->method('getToken')
@@ -136,7 +132,6 @@ class SwitchUserOperationTest extends TestCase
             ->method('getRecord')
             ->willReturn(['id' => 42, 'username' => 'foobar'])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -184,7 +179,6 @@ class SwitchUserOperationTest extends TestCase
             ->method('setUrl')
             ->with('/url/to/switch')
         ;
-
         $operation
             ->expects($this->once())
             ->method('offsetGet')

@@ -63,12 +63,8 @@ class ContaoFilesystemLoaderTest extends TestCase
         ;
 
         $loader = $this->getContaoFilesystemLoaderWithTemplates(
-            [
-                'foo.html.twig' => '/test/foo.html.twig',
-            ],
-            [
-                'foo.html.twig' => '/theme/foo.html.twig',
-            ],
+            ['foo.html.twig' => '/test/foo.html.twig'],
+            ['foo.html.twig' => '/theme/foo.html.twig'],
             $pageFinder,
         );
 
@@ -378,12 +374,15 @@ class ContaoFilesystemLoaderTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->willReturnMap([['templates', [
-                'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
-                'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
-                'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
-                'App' => Path::join($projectDir, 'contao/templates'),
-            ]]])
+            ->willReturnMap([[
+                'templates',
+                [
+                    'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
+                    'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
+                    'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
+                    'App' => Path::join($projectDir, 'contao/templates'),
+                ],
+            ]])
         ;
 
         $themePaths = [
@@ -498,12 +497,8 @@ class ContaoFilesystemLoaderTest extends TestCase
     public function testGetAllDynamicParentByThemeSlug(): void
     {
         $loader = $this->getContaoFilesystemLoaderWithTemplates(
-            [
-                'foo.html.twig' => '/test/foo.html.twig',
-            ],
-            [
-                'foo.html.twig' => '/theme/foo.html.twig',
-            ],
+            ['foo.html.twig' => '/test/foo.html.twig'],
+            ['foo.html.twig' => '/theme/foo.html.twig'],
         );
 
         $this->assertSame(
@@ -518,12 +513,8 @@ class ContaoFilesystemLoaderTest extends TestCase
     public function testGetAllFirstByThemeSlug(): void
     {
         $loader = $this->getContaoFilesystemLoaderWithTemplates(
-            [
-                'foo.html.twig' => '/test/foo.html.twig',
-            ],
-            [
-                'foo.html.twig' => '/theme/foo.html.twig',
-            ],
+            ['foo.html.twig' => '/test/foo.html.twig'],
+            ['foo.html.twig' => '/theme/foo.html.twig'],
         );
 
         $this->assertSame(
@@ -570,17 +561,18 @@ class ContaoFilesystemLoaderTest extends TestCase
             ->method('findThemeDirectories')
             ->willReturn([])
         ;
-
         $templateLocator1
             ->method('findResourcesPaths')
             ->willReturn([])
         ;
-
         $templateLocator1
             ->method('findTemplates')
-            ->willReturnMap([['/templates', [
-                'foo.html.twig' => '/templates/foo.html.twig',
-            ]]])
+            ->willReturnMap([[
+                '/templates',
+                [
+                    'foo.html.twig' => '/templates/foo.html.twig',
+                ],
+            ]])
         ;
 
         $loader1 = new ContaoFilesystemLoader(
@@ -592,6 +584,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         $this->assertEmpty(array_filter($cacheAdapter->getValues()), 'cache is empty at initial state');
+
         $loader1->warmUp();
         $this->assertNotEmpty(array_filter($cacheAdapter->getValues()), 'cache is written after hierarchy was built');
 
@@ -601,12 +594,10 @@ class ContaoFilesystemLoaderTest extends TestCase
             ->expects($this->never())
             ->method('findThemeDirectories')
         ;
-
         $templateLocator2
             ->expects($this->never())
             ->method('findResourcesPaths')
         ;
-
         $templateLocator2
             ->expects($this->never())
             ->method('findTemplates')
@@ -634,12 +625,10 @@ class ContaoFilesystemLoaderTest extends TestCase
             ->method('findThemeDirectories')
             ->willReturn(['2025' => '2025'])
         ;
-
         $templateLocator
             ->method('findResourcesPaths')
             ->willReturn([])
         ;
-
         $templateLocator
             ->method('findTemplates')
             ->willReturnMap([
@@ -678,7 +667,6 @@ class ContaoFilesystemLoaderTest extends TestCase
                 null !== $themeTemplates ? ['demo' => '/theme'] : [],
             )
         ;
-
         $templateLocator
             ->method('findResourcesPaths')
             ->willReturn([
@@ -717,10 +705,13 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir ??= Path::canonicalize(__DIR__.'/../../Fixtures/Twig/default-project');
 
-        $paths = array_combine(array_map(
-            static fn (int $key): string => "Test{$key}Bundle",
-            array_keys($additionalPaths),
-        ), $additionalPaths);
+        $paths = array_combine(
+            array_map(
+                static fn (int $key): string => "Test{$key}Bundle",
+                array_keys($additionalPaths),
+            ),
+            $additionalPaths,
+        );
 
         if (is_dir(Path::join($projectDir, 'contao/templates'))) {
             $paths['App'] = Path::join($projectDir, 'contao/templates');

@@ -73,11 +73,15 @@ class DbafsTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnMap([
                 [
-                    'SELECT * FROM tl_files WHERE id = ?', [1], [],
+                    'SELECT * FROM tl_files WHERE id = ?',
+                    [1],
+                    [],
                     ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar1', 'type' => 'file'],
                 ],
                 [
-                    'SELECT * FROM tl_files WHERE uuid = ?', [$uuid2->toBinary()], [],
+                    'SELECT * FROM tl_files WHERE uuid = ?',
+                    [$uuid2->toBinary()],
+                    [],
                     ['id' => 2, 'uuid' => $uuid2->toBinary(), 'path' => 'foo/bar2', 'type' => 'file'],
                 ],
             ])
@@ -264,7 +268,6 @@ class DbafsTest extends TestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $connection
             ->expects($this->once())
             ->method('update')
@@ -315,11 +318,14 @@ class DbafsTest extends TestCase
 
         $dbafs = $this->getDbafs($connection, null, $eventDispatcher);
 
-        $dbafs->setExtraMetadata('some/path', new ExtraMetadata([
-            'foo' => 'complex a',
-            'bar' => 'complex b',
-            'baz' => 'complex c',
-        ]));
+        $dbafs->setExtraMetadata(
+            'some/path',
+            new ExtraMetadata([
+                'foo' => 'complex a',
+                'bar' => 'complex b',
+                'baz' => 'complex c',
+            ]),
+        );
 
         // Assert internal cache is cleared and file item correctly contains new metadata
         $item = $dbafs->getRecord('some/path');
@@ -536,7 +542,6 @@ class DbafsTest extends TestCase
          *
          * File 5a and 5b have the same hash (e.g. both empty files).
          */
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -596,12 +601,8 @@ class DbafsTest extends TestCase
         $filesystem2->write('bar/new-file', 'new');
 
         $changeSet2 = new ChangeSet(
-            [
-                ['hash' => '22af645d1859cb5ca6da0c484f1f37ea', 'path' => 'bar/new-file', 'type' => ChangeSet::TYPE_FILE],
-            ],
-            [
-                'bar' => ['hash' => 'c9baa6dc5b9218fb7bb83349ace1517b'],
-            ],
+            [['hash' => '22af645d1859cb5ca6da0c484f1f37ea', 'path' => 'bar/new-file', 'type' => ChangeSet::TYPE_FILE]],
+            ['bar' => ['hash' => 'c9baa6dc5b9218fb7bb83349ace1517b']],
             [],
         );
 
@@ -638,9 +639,7 @@ class DbafsTest extends TestCase
                     'foo' => ['hash' => '9579cd3e9ff37b98c0bc5c702e4e5beb'],
                     'foo/baz' => ['hash' => 'd41d8cd98f00b204e9800998ecf8427e'],
                 ],
-                [
-                    'foo/baz/file4' => ChangeSet::TYPE_FILE,
-                ],
+                ['foo/baz/file4' => ChangeSet::TYPE_FILE],
             ),
         ];
 
@@ -650,9 +649,7 @@ class DbafsTest extends TestCase
             new ChangeSet(
                 [],
                 [],
-                [
-                    'file1' => ChangeSet::TYPE_FILE,
-                ],
+                ['file1' => ChangeSet::TYPE_FILE],
             ),
         ];
 
@@ -677,12 +674,8 @@ class DbafsTest extends TestCase
             'foo/**',
             new ChangeSet(
                 [],
-                [
-                    'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724'],
-                ],
-                [
-                    'foo/file3' => ChangeSet::TYPE_FILE,
-                ],
+                ['foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724']],
+                ['foo/file3' => ChangeSet::TYPE_FILE],
             ),
         ];
 
@@ -800,15 +793,9 @@ class DbafsTest extends TestCase
             $filesystem10,
             '',
             new ChangeSet(
-                [
-                    ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'path' => 'foo/file3', 'type' => ChangeSet::TYPE_DIRECTORY],
-                ],
-                [
-                    'foo' => ['hash' => '5d93d7dddf717617c820c623e9b3168c'],
-                ],
-                [
-                    'foo/file3' => ChangeSet::TYPE_FILE,
-                ],
+                [['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'path' => 'foo/file3', 'type' => ChangeSet::TYPE_DIRECTORY]],
+                ['foo' => ['hash' => '5d93d7dddf717617c820c623e9b3168c']],
+                ['foo/file3' => ChangeSet::TYPE_FILE],
             ),
         ];
 
@@ -839,9 +826,7 @@ class DbafsTest extends TestCase
                     'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
                     'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
                 ],
-                [
-                    'bar/file5a' => ChangeSet::TYPE_FILE,
-                ],
+                ['bar/file5a' => ChangeSet::TYPE_FILE],
             ),
         ];
 
@@ -880,6 +865,7 @@ class DbafsTest extends TestCase
                     if ('old' === $path) {
                         $this->assertSame(99, $hashContext->getLastModified());
                         $this->assertTrue($hashContext->canSkipHashing());
+
                         $hashContext->skipHashing();
 
                         return;
@@ -888,6 +874,7 @@ class DbafsTest extends TestCase
                     if ('file2.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
+
                         $hashContext->updateLastModified(200);
                         $hashContext->setHash('8446b');
 
@@ -897,6 +884,7 @@ class DbafsTest extends TestCase
                     if ('new.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
+
                         $hashContext->updateLastModified(201);
                         $hashContext->setHash('cbab7');
                     }
@@ -911,7 +899,6 @@ class DbafsTest extends TestCase
             ->with('tl_files')
             ->willReturn('tl_files')
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
@@ -921,7 +908,6 @@ class DbafsTest extends TestCase
                 ['file1', $this->generateUuid(2)->toBinary(), '8446b', 0, 100],
             ])
         ;
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -939,7 +925,6 @@ class DbafsTest extends TestCase
                 ),
             )
         ;
-
         $connection
             ->expects($this->exactly(3))
             ->method('update')
@@ -1151,7 +1136,6 @@ class DbafsTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->expects($this->once())
             ->method('delete')

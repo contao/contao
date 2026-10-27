@@ -20,6 +20,7 @@ use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
 use Contao\McpBundle\Controller\SerializedMcpController;
@@ -67,6 +68,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $builder = $container->get('mcp.server.contao_backend.builder');
         $this->assertInstanceOf(Builder::class, $builder);
+
         $builder->build();
 
         $tools = [];
@@ -82,6 +84,9 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_api_discover',
                 'contao_api_describe',
                 'contao_api_execute',
+                'composer_package_version',
+                'contao_twig_environment_discover',
+                'contao_twig_environment_inspect',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -107,7 +112,7 @@ final class ContaoMcpExtensionTest extends TestCase
             }
         }
 
-        $this->assertSame(['contao://template-guidance', 'contao://twig/html-attributes'], $resources);
+        $this->assertSame(['contao://installation-guidance', 'contao://template-guidance', 'contao://twig/html-attributes'], $resources);
     }
 
     public function testKeepsBackendToolsOutOfASecondServer(): void
@@ -173,7 +178,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(17, $tools);
+        $this->assertCount(20, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
@@ -182,6 +187,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
+
         $extension->prepend($container);
 
         $this->assertSame(
@@ -228,6 +234,7 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'contao.twig.studio.environment_information' => EnvironmentInformation::class,
             'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
@@ -241,7 +248,7 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register('contao.search.backend', BackendSearch::class)->setSynthetic(true)->setPublic(true);
         }
 
-        $otherTool = new class() {
+        $otherTool = new class {
             #[McpTool(name: 'frontend_example')]
             public function __invoke(): string
             {

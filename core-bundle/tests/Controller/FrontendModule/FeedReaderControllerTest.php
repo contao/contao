@@ -347,7 +347,6 @@ class FeedReaderControllerTest extends TestCase
             ->method('exists')
             ->willReturn(true)
         ;
-
         $loader
             ->method('getFirst')
             ->willReturnCallback(

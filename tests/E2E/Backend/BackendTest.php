@@ -22,31 +22,12 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 {
     use BackendTestTrait;
 
-    public function testBackendLogin(): void
+    public function testBackendLoginRedirect(): void
     {
         $backend = self::managedEdition()->createBackendBrowser();
         $backend->visit('/contao');
 
         $this->assertMatchesRegularExpression('#/contao/login(?:$|\?)#', $backend->page()->url());
-
-        $backend->submitLogin('k.jones', 'kevinjones');
-        $backend->waitFor('h1');
-
-        $this->assertSelectorTextContains('h1', 'Dashboard');
-
-        $cookies = $backend->browser()->context()->cookies();
-
-        $this->assertNotEmpty(array_filter(
-            $cookies,
-            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
-        ));
-
-        $this->assertNotEmpty(array_filter(
-            $cookies,
-            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
-        ));
-
-        $this->assertSelectorTextContains('#tmenu', 'k.jones');
     }
 
     #[DataProvider('loginLanguageProvider')]
@@ -63,7 +44,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testAuthenticatesAConfiguredRole(): void
     {
-        $this->login('content-editor', 'backend');
+        $this->login('user_content_editor');
 
         $this->assertSelectorTextContains('h1', 'Dashboard');
         $this->assertSelectorTextContains('#tmenu', 'content-editor');

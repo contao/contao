@@ -30,9 +30,7 @@ class ElementGroupTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new AccordionController($this->getDefaultFramework()),
-            [
-                'type' => 'element_group',
-            ],
+            ['type' => 'element_group'],
             null,
             false,
             $responseContextData,

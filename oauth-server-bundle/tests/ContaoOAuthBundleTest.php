@@ -31,9 +31,7 @@ final class ContaoOAuthBundleTest extends TestCase
 
         $extension = new ContaoOAuthServerBundle()->getContainerExtension();
         $extension->load(
-            [
-                ['resource' => ['route' => 'contao_mcp_backend', 'scopes' => ['mcp']], 'cimd_trusted_domains' => ['claude.ai']],
-            ],
+            [['resource' => ['route' => 'contao_mcp_backend', 'scopes' => ['mcp']], 'cimd_trusted_domains' => ['claude.ai']]],
             $container,
         );
 

@@ -235,7 +235,6 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($modules)))
             ->method('addChild')
         ;
-
         $menu
             ->expects($this->once())
             ->method('getFirstChild')
@@ -416,6 +415,7 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
+
         $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'dynamicPtable' => true]];
 
         $params = [
@@ -686,17 +686,14 @@ class TablePickerProviderTest extends ContaoTestCase
             ->method('getContext')
             ->willReturn('dc.'.$table)
         ;
-
         $config
             ->method('getValue')
             ->willReturn($value)
         ;
-
         $config
             ->method('getCurrent')
             ->willReturn($current)
         ;
-
         $config
             ->method('urlEncode')
             ->willReturn('foobar')
@@ -784,21 +781,18 @@ class TablePickerProviderTest extends ContaoTestCase
             ->method('expr')
             ->willReturn($expr)
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('select')
             ->with('id')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with($table)
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('where')

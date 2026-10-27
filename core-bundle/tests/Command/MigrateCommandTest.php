@@ -53,6 +53,7 @@ class MigrateCommandTest extends TestCase
         $backupManager = $this->createBackupManager(false);
 
         $command = $this->getCommand([], [], null, $backupManager);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -76,6 +77,7 @@ class MigrateCommandTest extends TestCase
         ;
 
         $command = $this->getCommand([], [], $commandCompiler, $backupManager);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([], ['interactive' => false]);
         $display = $tester->getDisplay();
@@ -97,6 +99,7 @@ class MigrateCommandTest extends TestCase
         ;
 
         $command = $this->getCommand([], [], $commandCompiler, $backupManager);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([], ['interactive' => false]);
         $display = $tester->getDisplay();
@@ -134,6 +137,7 @@ class MigrateCommandTest extends TestCase
     public function testExecutesWithoutPendingMigrations(string $format): void
     {
         $command = $this->getCommand();
+
         $tester = new CommandTester($command);
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
@@ -309,12 +313,10 @@ class MigrateCommandTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->method('getDriver')
             ->willReturn(new PdoDriver())
         ;
-
         $connection
             ->expects($this->never())
             ->method('executeQuery')
@@ -472,12 +474,10 @@ class MigrateCommandTest extends TestCase
             ->method('getDriver')
             ->willReturn($driver)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQL80Platform())
         ;
-
         $connection
             ->method('getParams')
             ->willReturn(['serverVersion' => '5.7.39'])
@@ -488,7 +488,6 @@ class MigrateCommandTest extends TestCase
             ->method('compileConfigurationErrors')
             ->willReturn([])
         ;
-
         $checks
             ->method('validateDatabaseVersion')
             ->willReturn("Wrong database version configured!\nYou have version 8.0.29 but the database connection is configured to 5.7.39.")
@@ -536,12 +535,10 @@ class MigrateCommandTest extends TestCase
             ->method('fetchOne')
             ->willReturnMap([['SELECT @@version', $configuration['version'] ?? '10.10.0-MariaDB-foo-bar']])
         ;
-
         $connection
             ->method('getParams')
             ->willReturn(['defaultTableOptions' => $configuration['defaultTableOptions'] ?? []])
         ;
-
         $connection
             ->method('fetchAssociative')
             ->willReturnCallback(
@@ -554,7 +551,6 @@ class MigrateCommandTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->method('fetchAllAssociative')
             ->willReturnMap([['SHOW ENGINES', $configuration['engines'] ?? []]])
@@ -610,7 +606,8 @@ class MigrateCommandTest extends TestCase
                     'engine' => 'MyISAM',
                 ],
                 'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                    'Collation' => 'utf8mb4_general_ci',
+                    'Charset' => 'utf8mb4',
                 ],
                 'engines' => [
                     ['Engine' => 'MyISAM', 'Comment' => 'Non-transactional engine with good performance and small data footprint'],
@@ -627,13 +624,15 @@ class MigrateCommandTest extends TestCase
                     'engine' => 'InnoDB',
                 ],
                 'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                    'Collation' => 'utf8mb4_general_ci',
+                    'Charset' => 'utf8mb4',
                 ],
                 'engines' => [
                     ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
                 ],
                 'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'OFF',
+                    'Variable_name' => 'innodb_large_prefix',
+                    'Value' => 'OFF',
                 ],
             ],
             'The "innodb_large_prefix" option is not enabled!',
@@ -647,16 +646,19 @@ class MigrateCommandTest extends TestCase
                     'engine' => 'InnoDB',
                 ],
                 'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                    'Collation' => 'utf8mb4_general_ci',
+                    'Charset' => 'utf8mb4',
                 ],
                 'engines' => [
                     ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
                 ],
                 'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                    'Variable_name' => 'innodb_large_prefix',
+                    'Value' => 'ON',
                 ],
                 'innodb_file_format' => [
-                    'Variable_name' => 'innodb_file_format', 'Value' => 'snapper',
+                    'Variable_name' => 'innodb_file_format',
+                    'Value' => 'snapper',
                 ],
             ],
             'InnoDB is not configured properly!',
@@ -670,19 +672,23 @@ class MigrateCommandTest extends TestCase
                     'engine' => 'InnoDB',
                 ],
                 'collation' => [
-                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                    'Collation' => 'utf8mb4_general_ci',
+                    'Charset' => 'utf8mb4',
                 ],
                 'engines' => [
                     ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
                 ],
                 'innodb_large_prefix' => [
-                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                    'Variable_name' => 'innodb_large_prefix',
+                    'Value' => 'ON',
                 ],
                 'innodb_file_format' => [
-                    'Variable_name' => 'innodb_file_format', 'Value' => 'barracuda',
+                    'Variable_name' => 'innodb_file_format',
+                    'Value' => 'barracuda',
                 ],
                 'innodb_file_per_table' => [
-                    'Variable_name' => 'innodb_file_per_table', 'Value' => '2',
+                    'Variable_name' => 'innodb_file_per_table',
+                    'Value' => '2',
                 ],
             ],
             'InnoDB is not configured properly!',
@@ -741,19 +747,27 @@ class MigrateCommandTest extends TestCase
     public static function provideInvalidSqlModes(): iterable
     {
         yield 'empty sql_mode, pdo driver' => [
-            '', new PdoDriver(), 1002,
+            '',
+            new PdoDriver(),
+            1002,
         ];
 
         yield 'empty sql_mode, mysqli driver' => [
-            '', new MysqliDriver(), 3,
+            '',
+            new MysqliDriver(),
+            3,
         ];
 
         yield 'unrelated values, pdo driver' => [
-            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', new PdoDriver(), 1002,
+            'IGNORE_SPACE,ONLY_FULL_GROUP_BY',
+            new PdoDriver(),
+            1002,
         ];
 
         yield 'unrelated values, mysqli driver' => [
-            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', new MysqliDriver(), 3,
+            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION',
+            new MysqliDriver(),
+            3,
         ];
     }
 
@@ -779,7 +793,6 @@ class MigrateCommandTest extends TestCase
             ->method('getPending')
             ->willReturn(...$pendingMigrations)
         ;
-
         $migrations
             ->method('getPendingNames')
             ->willReturn(...$pendingMigrations)
@@ -809,6 +822,7 @@ class MigrateCommandTest extends TestCase
     private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&Stub
     {
         $driver ??= new PdoDriver();
+
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
@@ -820,22 +834,18 @@ class MigrateCommandTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->method('getDriver')
             ->willReturn($driver)
         ;
-
         $connection
             ->method('getServerVersion')
             ->willReturn('8.0.0')
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn($driver->getDatabasePlatform(new StaticServerVersionProvider('8.0.0')))
         ;
-
         $connection
             ->method('getParams')
             ->willReturn(['serverVersion' => '8.0.0'])
@@ -852,7 +862,6 @@ class MigrateCommandTest extends TestCase
             ->method('createCreateConfig')
             ->willReturn(new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql')))
         ;
-
         $backupManager
             ->expects($backupsEnabled ? $this->once() : $this->never())
             ->method('create')

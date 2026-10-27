@@ -60,6 +60,7 @@ class ContentCompositionListener
         }
 
         $record = $operation->getRecord();
+
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
         $pageModel->setRow($record);

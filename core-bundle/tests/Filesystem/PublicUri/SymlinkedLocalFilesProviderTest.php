@@ -32,7 +32,6 @@ class SymlinkedLocalFilesProviderTest extends TestCase
                 ['path/'.Dbafs::FILE_MARKER_PUBLIC, true],
             ])
         ;
-
         $adapter
             ->expects($this->once())
             ->method('directoryExists')
@@ -89,7 +88,6 @@ class SymlinkedLocalFilesProviderTest extends TestCase
                 ['to/'.Dbafs::FILE_MARKER_PUBLIC, false],
             ])
         ;
-
         $adapter
             ->expects($this->exactly(2))
             ->method('directoryExists')

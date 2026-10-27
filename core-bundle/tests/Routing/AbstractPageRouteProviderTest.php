@@ -63,7 +63,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorting unknown if route has no PageModel' => [
-            new Route('', [], [], [], 'www.example.org'),
+            new Route('', [], [], [], 'www.example.com'),
             new Route('', [], [], [], 'www.example.com'),
             null,
             0,
@@ -277,8 +277,8 @@ class AbstractPageRouteProviderTest extends TestCase
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
         $instance = $this->createStub(RouteProvider::class);
-        $class = new \ReflectionClass($instance);
 
+        $class = new \ReflectionClass($instance);
         $method = $class->getMethod('convertLanguagesForSorting');
         $preferredLanguages = $method->invoke($instance, $preferredLanguages);
 

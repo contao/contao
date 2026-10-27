@@ -57,7 +57,6 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['login' => 0, 'username' => 'foobar'])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -82,7 +81,6 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['login' => 1, 'username' => ''])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -109,7 +107,6 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['login' => 1, 'username' => 'foobar', 'groups' => serialize(['42'])])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -143,14 +140,12 @@ class SwitchMemberOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['login' => 1, 'username' => 'foobar', 'groups' => serialize(['42'])])
         ;
-
         $operation
             ->expects($this->once())
             ->method('offsetGet')
             ->with('attributes')
             ->willReturn($htmlAttributes)
         ;
-
         $operation
             ->expects($this->once())
             ->method('setUrl')

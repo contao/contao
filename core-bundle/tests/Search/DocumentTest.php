@@ -75,9 +75,10 @@ class DocumentTest extends TestCase
         $html = '<body><style>body { background: grey; }</style></body>';
         $request = Request::create('https://example.com/foo?bar=baz');
         $response = new Response($html, 200, ['content-type' => ['text/html']]);
-        $document = Document::createFromRequestResponse($request, $response);
 
+        $document = Document::createFromRequestResponse($request, $response);
         $crawler = $document->getContentCrawler();
+
         $this->assertStringContainsString($html, $crawler->html());
 
         // Simulate some listener doing something with the document crawler and remove

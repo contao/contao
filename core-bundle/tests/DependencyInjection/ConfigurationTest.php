@@ -542,19 +542,23 @@ class ConfigurationTest extends TestCase
     public static function cronConfigurationProvider(): iterable
     {
         yield 'Default value' => [
-            [], 'auto',
+            [],
+            'auto',
         ];
 
         yield 'Explicit auto' => [
-            [['cron' => ['web_listener' => 'auto']]], 'auto',
+            [['cron' => ['web_listener' => 'auto']]],
+            'auto',
         ];
 
         yield 'Explicit false' => [
-            [['cron' => ['web_listener' => false]]], false,
+            [['cron' => ['web_listener' => false]]],
+            false,
         ];
 
         yield 'Explicit true' => [
-            [['cron' => ['web_listener' => true]]], true,
+            [['cron' => ['web_listener' => true]]],
+            true,
         ];
     }
 

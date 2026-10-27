@@ -15,7 +15,7 @@
 }
 
 html {
-    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
     &[data-color-scheme="dark"] {
         color-scheme: dark;
@@ -42,7 +42,9 @@ body {
 
 .contao-api-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 10px;
     min-height: 45px;
     padding: 7px 10px;
     border-bottom: 1px solid var(--content-border);
@@ -78,6 +80,47 @@ body {
     font-size: 0.75rem;
 }
 
+.contao-api-version {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-inline-start: auto;
+    font-size: 0.875rem;
+
+    &[hidden] {
+        display: none;
+    }
+
+    input,
+    button {
+        padding: 5px 8px;
+        border: 1px solid var(--content-border);
+        border-radius: 4px;
+        color: var(--text);
+        background: var(--content-bg);
+        font: inherit;
+
+        &:focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+    }
+
+    button {
+        cursor: pointer;
+
+        &:disabled {
+            cursor: wait;
+            opacity: 0.6;
+        }
+    }
+
+    [role="status"] {
+        color: var(--gray);
+    }
+}
+
 .contao-api-color-scheme {
     margin-inline-start: auto;
     padding: 6px 8px;
@@ -100,7 +143,7 @@ body {
 }
 
 #swagger-ui {
-    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;;
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
     .api-content {
         background: var(--content-bg);

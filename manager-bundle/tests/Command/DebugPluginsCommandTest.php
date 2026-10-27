@@ -138,17 +138,14 @@ class DebugPluginsCommandTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn($container)
         ;
-
         $kernel
             ->method('getPluginLoader')
             ->willReturn($pluginLoader)
         ;
-
         $kernel
             ->method('getBundles')
             ->willReturn($bundles)
         ;
-
         $kernel
             ->method('getProjectDir')
             ->willReturn(\dirname(__DIR__, 4))

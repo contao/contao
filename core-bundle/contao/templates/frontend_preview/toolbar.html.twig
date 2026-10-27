@@ -34,6 +34,15 @@
                         </div>
                     {% endif %}
                     <div>
+                        <label for="ctrl_preview_time">{{ 'MSC.previewTime'|trans }}:</label>
+                        <span class="cto-toolbar__time">
+                            <input type="datetime-local" name="previewTime" id="ctrl_preview_time" class="tl_text" value="{{ previewTime }}">
+                            <button type="button" id="ctrl_preview_time_clear" class="cto-toolbar__clear-time">
+                                {{ backend_icon('close', 'MSC.clearPreviewTime'|trans, attrs().set('width', 14).set('height', 14).set('aria-hidden')) }}
+                            </button>
+                        </span>
+                    </div>
+                    <div>
                         <label for="ctrl_unpublished">{{ 'MSC.hiddenElements'|trans }}:</label>
                         <select name="unpublished" id="ctrl_unpublished" class="tl_select">
                             <option value="hide">{{ 'MSC.hiddenHide'|trans }}</option>
@@ -45,8 +54,8 @@
             {% endblock %}
         </div>
     </form>
-    <button class="cto-toolbar__close" title="{{ 'MSC.closeToolbar'|trans }}">
-        {{ backend_icon('close', attributes: attrs().set('width', 20).set('height', 20).set('aria-hidden')) }}
+    <button class="cto-toolbar__close">
+        {{ backend_icon('close', 'MSC.closeToolbar'|trans, attrs().set('width', 20).set('height', 20).set('aria-hidden')) }}
     </button>
 </div>
 <div class="cto-toolbar__clear"></div>

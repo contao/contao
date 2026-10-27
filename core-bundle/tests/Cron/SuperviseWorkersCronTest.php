@@ -41,7 +41,6 @@ class SuperviseWorkersCronTest extends TestCase
             ->with('contao:supervise-workers')
             ->willReturn($process)
         ;
-
         $processUtil
             ->expects($this->once())
             ->method('createPromise')

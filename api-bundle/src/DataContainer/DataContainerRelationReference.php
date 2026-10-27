@@ -12,11 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\DataContainer;
 
-final readonly class DataContainerRelationReference
+use Contao\ApiBundle\Relation\RelationReference;
+
+final readonly class DataContainerRelationReference extends RelationReference
 {
-    public function __construct(
-        public int|string $id,
-        public string $iri,
-    ) {
-    }
 }

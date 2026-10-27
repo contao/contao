@@ -53,6 +53,7 @@ class FormCaptchaTest extends TestCase
         ]));
 
         System::setContainer($container);
+
         $GLOBALS['TL_LANG']['ERR']['captcha'] = 'Invalid captcha';
     }
 

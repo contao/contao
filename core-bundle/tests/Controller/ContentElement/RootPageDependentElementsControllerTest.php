@@ -67,6 +67,7 @@ class RootPageDependentElementsControllerTest extends TestCase
         $requestStack = new RequestStack([$request]);
 
         $modelClass = $isContentElement ? ContentModel::class : ModuleModel::class;
+
         $selectedData = [
             'id' => 10,
             'origId' => 11,
@@ -81,6 +82,7 @@ class RootPageDependentElementsControllerTest extends TestCase
         ;
 
         $nestedReference = new ContentElementReference($this->createStub(ContentModel::class));
+
         $compositor = $this->createMock(FragmentCompositor::class);
         $compositor
             ->expects($isContentElement ? $this->once() : $this->never())
@@ -145,6 +147,7 @@ class RootPageDependentElementsControllerTest extends TestCase
         $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         $twig = new Environment($loader, ['strict_variables' => true]);
+
         $extension = new ContaoExtension(
             $twig,
             $filesystemLoader,

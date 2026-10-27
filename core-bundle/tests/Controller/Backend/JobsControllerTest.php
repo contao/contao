@@ -30,8 +30,10 @@ class JobsControllerTest extends AbstractJobsTestCase
     public function testPollingOnlyIncludesRecentlyCompletedJobs(int $interval, int $window): void
     {
         $clock = new MockClock();
+
         $jobs = $this->getJobs($this->mockSecurity(1), $clock);
         $pendingJob = $jobs->createUserJob('my-type')->markPending();
+
         $jobs->persist($pendingJob);
 
         $oldJob = $jobs->createUserJob('my-type')->markCompleted();
@@ -67,6 +69,7 @@ class JobsControllerTest extends AbstractJobsTestCase
 
         $controller = $this->getController($jobs, $request, $twig);
         $response = $controller->latestJobsAction($request);
+
         $this->assertSame('stream response', $response->getContent());
 
         $request->headers->set('If-None-Match', $response->getEtag());

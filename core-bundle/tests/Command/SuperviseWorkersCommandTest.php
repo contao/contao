@@ -163,7 +163,8 @@ class SuperviseWorkersCommandTest extends TestCase
         $converted = [];
 
         foreach ($commands as $command) {
-            $converted[] = \sprintf('[%s / %d] %s',
+            $converted[] = \sprintf(
+                '[%s / %d] %s',
                 $command->getIdentifier(),
                 $command->getNumProcs(),
                 $command->startNewProcess()->getCommandLine(),
