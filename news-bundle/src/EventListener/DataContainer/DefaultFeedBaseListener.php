@@ -25,7 +25,7 @@ class DefaultFeedBaseListener
     public function __invoke(mixed $value): mixed
     {
         if (!$value && ($request = $this->requestStack->getCurrentRequest())) {
-            $value = $request->getSchemeAndHttpHost().$request->getBaseUrl();
+            $value = rtrim($request->getSchemeAndHttpHost().$request->getBaseUrl(), '/').'/';
         }
 
         return $value;
