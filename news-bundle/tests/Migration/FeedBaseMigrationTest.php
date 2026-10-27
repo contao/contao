@@ -116,10 +116,10 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->with($this->isInstanceOf(PageModel::class), [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($this->isInstanceOf(PageModel::class), ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturnMap([
-                [$firstTarget, [], UrlGeneratorInterface::ABSOLUTE_URL, $url],
-                [$secondTarget, [], UrlGeneratorInterface::ABSOLUTE_URL, 'http://other.example/news.html'],
+                [$firstTarget, ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL, $url],
+                [$secondTarget, ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL, 'http://other.example/news.html'],
             ])
         ;
 
@@ -133,7 +133,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
                 1 => $expected,
                 2 => '',
                 3 => 'https://configured.example',
-                4 => 'http://other.example',
+                4 => 'http://other.example/',
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
@@ -150,9 +150,9 @@ class FeedBaseMigrationTest extends ContaoTestCase
 
     public static function getTargetUrls(): iterable
     {
-        yield 'https' => ['https://example.org/news.html?foo=bar#section', 'https://example.org'];
-        yield 'http' => ['http://example.org/subdirectory/news.html', 'http://example.org'];
-        yield 'scheme and host only' => ['https://user:password@example.org:8443/news.html', 'https://example.org'];
+        yield 'https' => ['https://example.org/news.html?foo=bar#section', 'https://example.org/'];
+        yield 'http' => ['http://example.org/subdirectory/news.html', 'http://example.org/'];
+        yield 'scheme and host only' => ['https://user:password@example.org:8443/news.html', 'https://example.org/'];
     }
 
     public function testTriesArchivesInOrderAndStopsAfterMigratingEachFeed(): void
@@ -182,7 +182,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $urlGenerator
             ->expects($this->exactly(3))
             ->method('generate')
-            ->with($this->isInstanceOf(PageModel::class), [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->with($this->isInstanceOf(PageModel::class), ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturnCallback(
                 static function (PageModel $page) use ($unroutableTarget, $firstTarget): string {
                     if ($page === $unroutableTarget) {
@@ -200,8 +200,8 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->assertTrue($migration->run()->isSuccessful());
         $this->assertSame(
             [
-                1 => 'https://first.example',
-                2 => 'http://second.example',
+                1 => 'https://first.example/',
+                2 => 'http://second.example/',
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
