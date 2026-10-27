@@ -90,7 +90,7 @@ class FeedBaseMigration extends AbstractMigration
                     continue;
                 }
 
-                $this->connection->update('tl_page', ['feedBase' => $uri->getScheme().'://'.$uri->getHost()], ['id' => (int) $id]);
+                $this->connection->update('tl_page', ['feedBase' => $uri->getScheme().'://'.$uri->getHost().'/'], ['id' => (int) $id]);
 
                 break;
             }
