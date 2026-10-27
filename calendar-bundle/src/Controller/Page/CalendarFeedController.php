@@ -19,7 +19,6 @@ use Contao\CoreBundle\Controller\Page\AbstractFeedPageController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\PageModel;
 use Contao\StringUtil;
-use FeedIo\Feed;
 use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

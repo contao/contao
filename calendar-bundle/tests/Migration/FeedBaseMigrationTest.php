@@ -142,7 +142,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
                 1 => $expected,
                 2 => '',
                 3 => 'https://configured.example',
-                4 => 'http://other.example',
+                4 => 'http://other.example/',
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
@@ -159,9 +159,9 @@ class FeedBaseMigrationTest extends ContaoTestCase
 
     public static function getTargetUrls(): iterable
     {
-        yield 'https' => ['https://example.org/event.html?foo=bar#section', 'https://example.org'];
-        yield 'http' => ['http://example.org/subdirectory/event.html', 'http://example.org'];
-        yield 'scheme and host only' => ['https://user:password@example.org:8443/event.html', 'https://example.org'];
+        yield 'https' => ['https://example.org/event.html?foo=bar#section', 'https://example.org/'];
+        yield 'http' => ['http://example.org/subdirectory/event.html', 'http://example.org/'];
+        yield 'scheme and host only' => ['https://user:password@example.org:8443/event.html', 'https://example.org/'];
     }
 
     public function testTriesCalendarsInOrderAndStopsAfterMigratingEachFeed(): void
@@ -209,8 +209,8 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->assertTrue($migration->run()->isSuccessful());
         $this->assertSame(
             [
-                1 => 'https://first.example',
-                2 => 'http://second.example',
+                1 => 'https://first.example/',
+                2 => 'http://second.example/',
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
