@@ -84,6 +84,7 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_api_discover',
                 'contao_api_describe',
                 'contao_api_execute',
+                'composer_package_version',
                 'contao_twig_environment_discover',
                 'contao_twig_environment_inspect',
                 'contao_template_list_themes',
@@ -111,7 +112,7 @@ final class ContaoMcpExtensionTest extends TestCase
             }
         }
 
-        $this->assertSame(['contao://template-guidance', 'contao://twig/html-attributes'], $resources);
+        $this->assertSame(['contao://installation-guidance', 'contao://template-guidance', 'contao://twig/html-attributes'], $resources);
     }
 
     public function testKeepsBackendToolsOutOfASecondServer(): void
@@ -177,7 +178,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(19, $tools);
+        $this->assertCount(20, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
