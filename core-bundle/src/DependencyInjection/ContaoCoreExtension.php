@@ -645,16 +645,20 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function getBackendIcons(): array
     {
-        $basePath = Path::canonicalize(__DIR__.'/../../public/icons');
+        $basePath = Path::canonicalize(__DIR__.'/../../public');
         $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
 
         $icons = [];
 
         foreach ($manifest as $name => $publicPath) {
-            $svg = new \DOMDocument();
-            $svg->loadXML(file_get_contents(Path::join($basePath, basename($publicPath))));
+            if (!str_starts_with($name, 'icons/')) {
+                continue;
+            }
 
-            $icons[$name] = [
+            $svg = new \DOMDocument();
+            $svg->loadXML(file_get_contents(Path::join($basePath, 'icons', basename($publicPath))));
+
+            $icons[substr($name, 6)] = [
                 'path' => $publicPath,
                 'width' => $svg->documentElement->getAttribute('width'),
                 'height' => $svg->documentElement->getAttribute('height'),
