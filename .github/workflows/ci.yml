@@ -353,7 +353,7 @@ jobs:
                   restore-keys: contao-e2e-${{ hashFiles('.contao-e2e/cache-keys/e2e') }}-
 
             - name: Install and verify Playwright browsers
-              run: vendor/bin/playwright-install chromium
+              run: vendor/bin/playwright-install --browsers
 
             - name: Run the E2E tests
               run: vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit
