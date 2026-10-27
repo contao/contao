@@ -17,10 +17,10 @@ use ApiPlatform\Metadata\ApiProperty;
 final readonly class VirtualFilesystemMove
 {
     public function __construct(
-        #[ApiProperty(description: 'The source path or UUID.')]
-        public string $source,
-        #[ApiProperty(description: 'The destination path or UUID.')]
-        public string $destination,
+        #[ApiProperty(description: 'The source location.', schema: VirtualFilesystemLocation::SCHEMA)]
+        public VirtualFilesystemLocation $source,
+        #[ApiProperty(description: 'The destination location.', schema: VirtualFilesystemLocation::SCHEMA)]
+        public VirtualFilesystemLocation $destination,
     ) {
     }
 }

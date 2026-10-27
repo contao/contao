@@ -65,6 +65,7 @@ class SitemapControllerTest extends TestCase
 
         $controller = new SitemapController($registry, $pageFinder, $this->createStub(ContentUrlGenerator::class));
         $controller->setContainer($container);
+
         $controller($request);
     }
 
@@ -377,7 +378,6 @@ class SitemapControllerTest extends TestCase
                 [$page2, true],
             ])
         ;
-
         $registry
             ->expects($this->once())
             ->method('isRoutable')
@@ -446,7 +446,6 @@ class SitemapControllerTest extends TestCase
             ->method('supportsContentComposition')
             ->willReturn(true)
         ;
-
         $registry
             ->expects($this->exactly(2))
             ->method('isRoutable')
@@ -514,7 +513,6 @@ class SitemapControllerTest extends TestCase
             ->method('supportsContentComposition')
             ->willReturn(true)
         ;
-
         $registry
             ->expects($this->exactly(2))
             ->method('isRoutable')

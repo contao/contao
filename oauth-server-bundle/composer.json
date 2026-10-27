@@ -48,7 +48,7 @@
         "symfony/security-bundle": "^7.4 || ^8.0",
         "symfony/security-core": "^7.4 || ^8.0",
         "symfony/security-http": "^7.4 || ^8.0",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.25"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",

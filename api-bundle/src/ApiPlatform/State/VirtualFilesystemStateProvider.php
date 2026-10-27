@@ -17,58 +17,55 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Dto\VirtualFilesystemItemFactory;
+use Contao\ApiBundle\Dto\VirtualFilesystemLocation;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
-use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
-use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemRegistry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @implements ProviderInterface<VirtualFilesystemItem>
  */
 final class VirtualFilesystemStateProvider implements ProviderInterface
 {
-    private readonly VirtualFilesystemInterface $filesStorage;
-
     public function __construct(
-        VirtualFilesystem $filesStorage,
-        Security $security,
+        private readonly VirtualFilesystemRegistry $filesystems,
         private readonly VirtualFilesystemItemFactory $itemFactory,
     ) {
-        $this->filesStorage = new PermissionCheckingVirtualFilesystem($filesStorage, $security);
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|object
     {
+        $filesystem = $this->filesystems->get($operation->getExtraProperties()['contao']['filesystem']);
+
         try {
             if ($operation instanceof CollectionOperationInterface) {
-                return $this->provideCollection($context);
+                return $this->provideCollection($context, $filesystem);
             }
 
-            $path = $uriVariables['pathOrUuid'] ?? $uriVariables['path'] ?? null;
+            $location = VirtualFilesystemLocation::fromArray($uriVariables)->toLocation();
 
-            if (!\is_string($path) || !$item = $this->filesStorage->get($this->toLocation($path))) {
-                throw new NotFoundHttpException('The requested file or directory does not exist.');
+            if (!$item = $filesystem->get($location)) {
+                throw new ResourceNotFoundException('The requested file or directory does not exist.');
             }
 
             return $this->itemFactory->create($item);
         } catch (UnableToResolveUuidException $exception) {
-            throw new NotFoundHttpException('The requested file or directory does not exist.', $exception);
+            throw new ResourceNotFoundException('The requested file or directory does not exist.', previous: $exception);
         }
     }
 
     /**
      * @return list<VirtualFilesystemItem>
      */
-    private function provideCollection(array $context): array
+    private function provideCollection(array $context, VirtualFilesystemInterface $filesystem): array
     {
         $filters = $this->getFilters($context);
-        $path = \is_string($filters['path'] ?? null) ? $this->toLocation($filters['path']) : '';
+        $selector = array_intersect_key($filters, ['path' => true, 'uuid' => true]);
+        $path = $selector ? VirtualFilesystemLocation::fromArray($selector)->toLocation() : '';
         $deep = filter_var($filters['deep'] ?? false, FILTER_VALIDATE_BOOL);
-        $items = $this->filesStorage->listContents($path, $deep);
+        $items = $filesystem->listContents($path, $deep);
 
         return array_map($this->itemFactory->create(...), $items->toArray());
     }
@@ -83,10 +80,5 @@ final class VirtualFilesystemStateProvider implements ProviderInterface
         }
 
         return \is_array($filters) ? $filters : [];
-    }
-
-    private function toLocation(string $location): Uuid|string
-    {
-        return Uuid::isValid($location) ? Uuid::fromString($location) : $location;
     }
 }

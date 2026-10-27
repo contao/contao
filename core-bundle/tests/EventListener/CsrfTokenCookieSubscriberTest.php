@@ -131,6 +131,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
     public function testDoesNotAddTheTokenCookiesToTheResponseIfTheyAlreadyExist(): void
     {
         $request = Request::create('https://foobar.com');
+
         $request->cookies = new InputBag([
             'csrf_foo' => 'bar',
             'unrelated-cookie' => 'to-activate-csrf',
@@ -202,7 +203,8 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $tokenStorage = new MemoryTokenStorage();
         $tokenStorage->initialize(['tokenName' => 'tokenValue']);
 
-        $response = new Response('',
+        $response = new Response(
+            '',
             200,
             ['Content-Type' => 'text/html', 'Content-Length' => 1234],
         );

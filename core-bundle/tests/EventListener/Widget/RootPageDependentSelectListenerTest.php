@@ -70,6 +70,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         );
 
         $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
+
         $dataContainer->value = serialize([
             '1' => '10',
             '2' => '20',

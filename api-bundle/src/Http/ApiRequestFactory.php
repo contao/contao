@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Http;
 
 use ApiPlatform\Metadata\HttpOperation;
+use Contao\ApiBundle\Version\ApiVersion;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
@@ -41,6 +42,12 @@ final class ApiRequestFactory
 
         $request->server->set('REMOTE_ADDR', $parent->getClientIp());
         $request->headers->set('Accept', $this->getJsonFormat($operation->getOutputFormats(), 'application/ld+json'));
+
+        if ($parent->headers->has(ApiVersion::HEADER)) {
+            $request->headers->set(ApiVersion::HEADER, $parent->headers->all(ApiVersion::HEADER));
+        } elseif (($version = $parent->attributes->get(ApiVersion::CONTEXT_KEY)) instanceof ApiVersion) {
+            $request->headers->set(ApiVersion::HEADER, (string) $version);
+        }
 
         if (null !== $payload) {
             $request->headers->set('Content-Type', $contentType);

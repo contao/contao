@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace Contao\ApiBundle\Schema;
 
 use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
-use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
 use Contao\Controller;
@@ -31,8 +32,9 @@ final class DataContainerSchemaFactory
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
-        private readonly DataContainerRelationResolver $relationResolver,
+        private readonly RelationResolverInterface $relationResolver,
         private readonly LocaleSwitcher $localeSwitcher,
+        private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
     ) {
     }
 
@@ -70,6 +72,7 @@ final class DataContainerSchemaFactory
         $this->framework->getAdapter(System::class)->loadLanguageFile($table);
 
         $properties = [];
+
         $dc = new \ReflectionClass(DC_Table::class)->newInstanceWithoutConstructor();
         $dc->strTable = $table;
 
@@ -207,7 +210,7 @@ final class DataContainerSchemaFactory
 
         $schema += $this->createLabelSchema($config['label'] ?? null);
 
-        if ($this->relationResolver->supports($field)) {
+        if ($this->isRelationField($field)) {
             $schema = $this->createRelationSchema($schema);
         }
 
@@ -239,6 +242,17 @@ final class DataContainerSchemaFactory
         return $schema;
     }
 
+    private function isRelationField(DataContainerFieldContext $field): bool
+    {
+        foreach ($this->relationDefinitionFactory->createForSchema($field) as $relation) {
+            if ($this->relationResolver->supports($relation)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function createRelationSchema(array $schema): array
     {
         $referenceSchema = [
@@ -257,7 +271,7 @@ final class DataContainerSchemaFactory
             return $schema;
         }
 
-        unset($schema['enum'], $schema['default'], $schema['maxLength'], $schema['minLength'], $schema['pattern']);
+        unset($schema['enum'], $schema['default'], $schema['maxLength'], $schema['minLength'], $schema['pattern'], $schema['format']);
 
         return $referenceSchema + $schema;
     }

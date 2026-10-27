@@ -79,12 +79,14 @@ class ContentElementTypeListenerTest extends TestCase
     public function testOverridesTheDefaultType(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] = 'bar';
+
         $GLOBALS['TL_CTE'] = [
             'foo' => [
                 'bar' => ContentProxy::class,
                 'baz' => ContentProxy::class,
             ],
         ];
+
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->exactly(2))

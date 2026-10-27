@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Api\Widget;
 
-use Contao\ApiBundle\Widget\WidgetConverterInterface;
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationDefinition;
+use Contao\ApiBundle\Widget\RelationAwareWidgetConverterInterface;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
@@ -40,7 +41,7 @@ use Contao\TextArea;
 use Contao\TextField;
 use Contao\TimePeriod;
 
-final class CoreWidgetConverter implements WidgetConverterInterface
+final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
 {
     // Match RootPageDependentSelect before SelectMenu because its value is a map.
     // RowWizard has its own converter for delegating to child widgets. Uploads need
@@ -79,6 +80,11 @@ final class CoreWidgetConverter implements WidgetConverterInterface
     public function supports(array $config): bool
     {
         return null !== $this->getWidgetType($config);
+    }
+
+    public function getRelation(array $config): VirtualFilesystemRelationDefinition|null
+    {
+        return FileTree::class === $this->getWidgetType($config) ? VirtualFilesystemRelationDefinition::forUuid('files') : null;
     }
 
     public function getSchema(array $config, array $schema): array
@@ -270,15 +276,18 @@ final class CoreWidgetConverter implements WidgetConverterInterface
         // The storage length describes binary UUIDs, not their API string representation
         unset($schema['maxLength']);
 
-        return array_replace($schema, $multiple
-            ? ['type' => 'array', 'items' => ['type' => 'string', 'format' => 'uuid']]
-            : ['type' => ['string', 'null'], 'format' => 'uuid'],
+        return array_replace(
+            $schema,
+            $multiple
+                ? ['type' => 'array', 'items' => ['type' => 'string', 'format' => 'uuid']]
+                : ['type' => ['string', 'null'], 'format' => 'uuid'],
         );
     }
 
     private function getBooleanSchema(array $schema): array
     {
         unset($schema['maxLength'], $schema['minLength']);
+
         $schema['type'] = 'boolean';
 
         return $schema;

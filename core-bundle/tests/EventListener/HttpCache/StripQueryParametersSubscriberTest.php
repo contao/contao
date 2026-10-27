@@ -114,7 +114,7 @@ class StripQueryParametersSubscriberTest extends TestCase
 
     public function testCachedRedirectPreservesRemovedQueryParameters(): void
     {
-        $backend = new class() implements HttpKernelInterface {
+        $backend = new class implements HttpKernelInterface {
             public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
             {
                 throw new \LogicException('The cached redirect should be used.');

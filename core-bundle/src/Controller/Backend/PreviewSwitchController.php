@@ -83,6 +83,7 @@ class PreviewSwitchController
     private function renderToolbar(): string
     {
         $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
+
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
         $previewTime = $this->tokenChecker->getPreviewTime();

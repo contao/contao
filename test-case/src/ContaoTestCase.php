@@ -358,7 +358,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('getUser')
             ->willReturn($this->createStub($class))
         ;
-
         $token
             ->method('getRoleNames')
             ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
@@ -461,7 +460,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('isComplete')
             ->willReturn(true)
         ;
-
         $adapter
             ->method('get')
             ->willReturnCallback(static fn (string $key) => $GLOBALS['TL_CONFIG'][$key] ?? null)
@@ -501,7 +499,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('isInitialized')
             ->willReturn(true)
         ;
-
         $object
             ->method('getAdapter')
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)

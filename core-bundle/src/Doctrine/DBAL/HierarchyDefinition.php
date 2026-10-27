@@ -14,9 +14,10 @@ namespace Contao\CoreBundle\Doctrine\DBAL;
 
 final class HierarchyDefinition
 {
-    private string|null $scopeColumn = null;
-
-    private int|string|null $scopeValue = null;
+    /**
+     * @var array<string, int|string>
+     */
+    private array $scopes = [];
 
     public function __construct(
         private readonly string $table,
@@ -25,11 +26,16 @@ final class HierarchyDefinition
     ) {
     }
 
-    public function withScope(string $column, int|string $value): self
+    /**
+     * Replaces all scope conditions. All conditions must match for a row to belong to
+     * the hierarchy. An empty map removes the scope restriction.
+     *
+     * @param array<string, int|string> $scopes Column/value equality conditions combined with AND
+     */
+    public function withScopes(array $scopes): self
     {
         $clone = clone $this;
-        $clone->scopeColumn = $column;
-        $clone->scopeValue = $value;
+        $clone->scopes = $scopes;
 
         return $clone;
     }
@@ -49,13 +55,11 @@ final class HierarchyDefinition
         return $this->parentColumn;
     }
 
-    public function scopeColumn(): string|null
+    /**
+     * @return array<string, int|string>
+     */
+    public function scopes(): array
     {
-        return $this->scopeColumn;
-    }
-
-    public function scopeValue(): int|string|null
-    {
-        return $this->scopeValue;
+        return $this->scopes;
     }
 }

@@ -84,6 +84,7 @@ class ContaoDataCollectorTest extends TestCase
         $layout->template = 'fe_page';
 
         $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
+
         $article = $this->createClassWithPropertiesStub(ArticleModel::class);
         $article->id = 3;
         $article->title = 'Article & content';

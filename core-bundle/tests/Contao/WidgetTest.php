@@ -23,6 +23,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class WidgetTest extends TestCase
 {
@@ -46,6 +48,41 @@ class WidgetTest extends TestCase
         parent::tearDown();
     }
 
+    #[DataProvider('provideErrorPropertyPaths')]
+    public function testAddingAnErrorCollectsViolations(string|null $field, string|null $name, string $path): void
+    {
+        $previous = new ConstraintViolation('Invalid alias', 'Invalid alias', [], null, 'alias', '123');
+        $errors = new ConstraintViolationList([$previous]);
+        $request = new Request(attributes: ['_contao_widget_errors' => $errors]);
+        System::getContainer()->get('request_stack')->push($request);
+
+        $widget = new class extends Widget {
+            public function __construct()
+            {
+            }
+        };
+
+        $widget->strField = $field;
+        $widget->name = $name;
+        $widget->value = 'Invalid value';
+        $widget->addError('Another error');
+
+        $this->assertSame($errors, $request->attributes->get('_contao_widget_errors'));
+        $this->assertCount(2, $errors);
+        $this->assertSame($previous, $errors[0]);
+        $this->assertSame('Another error', $errors[1]->getMessage());
+        $this->assertSame($path, $errors[1]->getPropertyPath());
+        $this->assertSame('Invalid value', $errors[1]->getInvalidValue());
+        $this->assertSame(['Another error'], $widget->getErrors());
+    }
+
+    public static function provideErrorPropertyPaths(): iterable
+    {
+        yield 'DCA field' => ['title', 'title_17', 'title'];
+        yield 'form field' => [null, 'email', 'email'];
+        yield 'unnamed widget' => [null, null, ''];
+    }
+
     /**
      * @param array<string|array>|string $value
      */
@@ -62,12 +99,14 @@ class WidgetTest extends TestCase
         $method = $class->getMethod('getPost');
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request([], [$input => $value]));
 
         $this->assertSame($expected, $method->invoke($widget, $key));
 
         // Restore the error reporting level
         error_reporting($errorReporting);
+
         $_POST = [];
     }
 
@@ -140,6 +179,7 @@ class WidgetTest extends TestCase
     public function testValidatesThePostData(): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request());
 
         $widget = $this
@@ -148,14 +188,12 @@ class WidgetTest extends TestCase
             ->onlyMethods(['validator'])
             ->getMock()
         ;
-
         $widget
             ->expects($this->exactly(3))
             ->method('validator')
             ->withAnyParameters()
             ->willReturnArgument(0)
         ;
-
         $widget
             ->setInputCallback(static fn (): string => 'foobar')
             ->validate()
@@ -188,6 +226,7 @@ class WidgetTest extends TestCase
         if (isset($parameters[2])) {
             $widget = new \ReflectionClass(TextField::class)->newInstanceWithoutConstructor();
             $widget->addAttributes($attrs);
+
             $this->assertSame($parameters[2], $widget->value);
         }
     }

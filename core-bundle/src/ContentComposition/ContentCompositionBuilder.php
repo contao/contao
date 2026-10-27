@@ -336,49 +336,52 @@ class ContentCompositionBuilder
                 : null,
         ];
 
-        $template->set('response_context', new class($responseContextData) {
-            /**
-             * @param array<string, \Closure(): mixed|mixed> $data
-             */
-            public function __construct(private array $data)
-            {
-            }
-
-            public function __get(string $key): mixed
-            {
-                if (!\array_key_exists($key, $this->data)) {
-                    return null;
+        $template->set(
+            'response_context',
+            new class($responseContextData) {
+                /**
+                 * @param array<string, \Closure(): mixed|mixed> $data
+                 */
+                public function __construct(private array $data)
+                {
                 }
 
-                if ($this->data[$key] instanceof \Closure) {
-                    $this->data[$key] = ($this->data[$key])();
+                public function __get(string $key): mixed
+                {
+                    if (!\array_key_exists($key, $this->data)) {
+                        return null;
+                    }
+
+                    if ($this->data[$key] instanceof \Closure) {
+                        $this->data[$key] = ($this->data[$key])();
+                    }
+
+                    return $this->data[$key] ?? null;
                 }
 
-                return $this->data[$key] ?? null;
-            }
-
-            public function __set(string $key, mixed $value): void
-            {
-                throw new \InvalidArgumentException(\sprintf('Cannot set readonly property "%s".', $key));
-            }
-
-            public function __isset(string $key): bool
-            {
-                return null !== $this->__get($key);
-            }
-
-            /**
-             * @internal
-             *
-             * @return \Generator<string, mixed>
-             */
-            public function all(): \Generator
-            {
-                foreach (array_keys($this->data) as $key) {
-                    yield $key => $this->__get($key);
+                public function __set(string $key, mixed $value): void
+                {
+                    throw new \InvalidArgumentException(\sprintf('Cannot set readonly property "%s".', $key));
                 }
-            }
-        });
+
+                public function __isset(string $key): bool
+                {
+                    return null !== $this->__get($key);
+                }
+
+                /**
+                 * @internal
+                 *
+                 * @return \Generator<string, mixed>
+                 */
+                public function all(): \Generator
+                {
+                    foreach (array_keys($this->data) as $key) {
+                        yield $key => $this->__get($key);
+                    }
+                }
+            },
+        );
     }
 
     private function addCompositedContentToTemplate(LayoutTemplate $template, array $elementReferencesBySlot): void

@@ -89,6 +89,7 @@ class CommandCompiler
                 foreach ($commands as $key => $command) {
                     try {
                         $this->executeSqlCommand($command);
+
                         $commandExecuted = true;
                         unset($commands[$key]);
                     } catch (\Throwable $e) {

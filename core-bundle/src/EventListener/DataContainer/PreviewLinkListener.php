@@ -89,6 +89,7 @@ class PreviewLinkListener
 
         $act = $request->query->get('act');
         $url = $request->query->getString('url');
+
         $now = $this->clock->now();
 
         if (!$act) {

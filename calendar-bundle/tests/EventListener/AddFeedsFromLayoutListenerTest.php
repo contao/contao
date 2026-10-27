@@ -181,11 +181,9 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
             ),
         );
 
-        $listener
-            ->onGeneratePage(
-                $this->createStub(PageModel::class),
-                $this->createStub(LayoutModel::class),
-            )
-        ;
+        $listener->onGeneratePage(
+            $this->createStub(PageModel::class),
+            $this->createStub(LayoutModel::class),
+        );
     }
 }

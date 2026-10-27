@@ -43,9 +43,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
                 $this->createStub(UriSigner::class),
             ),
-            [
-                'type' => 'manage_passkeys',
-            ],
+            ['type' => 'manage_passkeys'],
             adjustedContainer: $this->getAdjustedContainer(),
             page: $this->createStub(PageModel::class),
         );
@@ -61,9 +59,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
                 $this->createStub(UriSigner::class),
             ),
-            [
-                'type' => 'manage_passkeys',
-            ],
+            ['type' => 'manage_passkeys'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(BackendUser::class)),
             page: $this->createStub(PageModel::class),
         );
@@ -79,9 +75,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
                 $this->createStub(UriSigner::class),
             ),
-            [
-                'type' => 'manage_passkeys',
-            ],
+            ['type' => 'manage_passkeys'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class)),
         );
 
@@ -98,9 +92,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
                 $this->createStub(UriSigner::class),
             ),
-            [
-                'type' => 'manage_passkeys',
-            ],
+            ['type' => 'manage_passkeys'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class), false),
             page: $this->createStub(PageModel::class),
         );
@@ -126,9 +118,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 $repository,
                 $this->createStub(UriSigner::class),
             ),
-            [
-                'type' => 'manage_passkeys',
-            ],
+            ['type' => 'manage_passkeys'],
             adjustedContainer: $this->getAdjustedContainer($user, true),
             page: $this->createStub(PageModel::class),
         );
@@ -207,7 +197,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ->with($user)
             ->willReturn($credential)
         ;
-
         $repository
             ->expects($this->once())
             ->method('getAllForUser')
@@ -265,7 +254,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ->with('123')
             ->willReturn($credential)
         ;
-
         $repository
             ->expects($this->once())
             ->method('remove')
@@ -372,7 +360,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ->with('789')
             ->willReturn($credential)
         ;
-
         $repository
             ->expects($this->once())
             ->method('saveCredentialSource')

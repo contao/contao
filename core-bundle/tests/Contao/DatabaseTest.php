@@ -42,7 +42,6 @@ class DatabaseTest extends ContaoTestCase
             ->method('columnCount')
             ->willReturn(1)
         ;
-
         $result
             ->method('fetchAssociative')
             ->willReturnOnConsecutiveCalls(
@@ -60,12 +59,10 @@ class DatabaseTest extends ContaoTestCase
             ->method('getDatabase')
             ->willReturn('samename')
         ;
-
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $connection
             ->method('executeQuery')
             ->willReturnMap([

@@ -114,6 +114,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('form.yaml');
         $loader->load('listener.yaml');
         $loader->load('migrations.yaml');
+        $loader->load('repositories.yaml');
         $loader->load('services.yaml');
 
         $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
@@ -178,12 +179,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
-
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
         ;
-
         $container
             ->registerForAutoconfiguration(ContentUrlResolverInterface::class)
             ->addTag('contao.content_url_resolver')
@@ -251,7 +250,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
             ->setPublic(true)
         ;
-
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
@@ -412,9 +410,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $engine = $container->getDefinition('contao.search_backend.engine');
         $engine
-            ->setArgument(1, new Definition(BackendSearch::class)
-                ->setFactory([null, 'getSearchEngineSchema'])
-                ->setArgument('$indexName', $indexName),
+            ->setArgument(
+                1,
+                new Definition(BackendSearch::class)
+                    ->setFactory([null, 'getSearchEngineSchema'])
+                    ->setArgument('$indexName', $indexName),
             )
         ;
 

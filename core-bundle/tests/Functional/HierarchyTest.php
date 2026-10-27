@@ -51,6 +51,7 @@ class HierarchyTest extends FunctionalTestCase
         sort($ids);
 
         $this->assertSame([3, 4, 5, 7], $ids);
+
         $options = new ChildTraversalOptions()->withOrderBy('sorting');
 
         $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds(1, $definition, $options));
@@ -58,6 +59,7 @@ class HierarchyTest extends FunctionalTestCase
         $this->assertSame([4, 7, 3, 5], $this->hierarchy->getChildIds([4, 1], $definition, $options));
         $this->assertSame([4, 7], $this->hierarchy->getChildIds(1, $definition, $options->withWhere('id != 3')));
         $this->assertSame([4, 3], $this->hierarchy->getChildIds(1, $definition, $options->withMaxDepth(1)));
+
         $rootIds = $this->hierarchy->getChildIds(0, $definition);
         sort($rootIds);
 
@@ -128,7 +130,7 @@ class HierarchyTest extends FunctionalTestCase
 
     public function testIncludesTheFirstParentRowOutsideTheScope(): void
     {
-        $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScope('ptable', 'tl_content');
+        $definition = new HierarchyDefinition('tl_content', 'id', 'pid')->withScopes(['ptable' => 'tl_content']);
         $options = new ParentTraversalOptions()->withColumns('ptable')->withBoundaryRow();
 
         $this->assertSame(

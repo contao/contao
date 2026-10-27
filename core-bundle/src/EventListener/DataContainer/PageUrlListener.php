@@ -58,6 +58,7 @@ class PageUrlListener
         }
 
         $this->addInputToPage($pageModel);
+
         $isRoutable = $this->pageRegistry->isRoutable($pageModel);
 
         if ('' !== $value) {

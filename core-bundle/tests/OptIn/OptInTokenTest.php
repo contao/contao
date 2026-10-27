@@ -80,7 +80,6 @@ class OptInTokenTest extends TestCase
             ->expects($this->once())
             ->method('save')
         ;
-
         $related
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -124,7 +123,6 @@ class OptInTokenTest extends TestCase
             ->expects($this->never())
             ->method('save')
         ;
-
         $related
             ->expects($this->once())
             ->method('getRelatedRecords')

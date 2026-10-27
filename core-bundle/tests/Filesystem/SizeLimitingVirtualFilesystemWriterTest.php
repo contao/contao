@@ -82,6 +82,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
 
         try {
             $writer->writeStream('example.txt', $stream, 6);
+
             $this->fail('The oversized stream was not rejected.');
         } catch (MaximumStreamSizeExceededException $exception) {
             $this->assertSame($writeException, $exception->getPrevious());
@@ -113,6 +114,7 @@ final class SizeLimitingVirtualFilesystemWriterTest extends TestCase
 
         try {
             $writer->writeStream('example.txt', $stream, 7);
+
             $this->fail('The write exception was not thrown.');
         } catch (\RuntimeException $caught) {
             $this->assertSame($exception, $caught);

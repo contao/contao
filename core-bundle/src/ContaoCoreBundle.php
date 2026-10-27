@@ -31,6 +31,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterVirtualFilesystemsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -125,6 +126,7 @@ class ContaoCoreBundle extends AbstractBundle
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
+        $container->addCompilerPass(new RegisterVirtualFilesystemsPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
         $container->addCompilerPass(new RegisterTwigExtensionsPass());

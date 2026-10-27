@@ -83,7 +83,6 @@ class BackendSearchTest extends TestCase
                 ),
             )
         ;
-
         $engine
             ->expects($this->once())
             ->method('bulk')
@@ -179,21 +178,18 @@ class BackendSearchTest extends TestCase
             ->with('type')
             ->willReturn(true)
         ;
-
         $provider
             ->expects($this->exactly(3))
             ->method('convertTypeToVisibleType')
             ->with('type')
             ->willReturn('visible-type')
         ;
-
         $provider
             ->expects($this->once())
             ->method('getFacetLabelForTag')
             ->with('tag-1')
             ->willReturn('tag-1-label')
         ;
-
         $provider
             ->expects($this->exactly(2))
             ->method('convertDocumentToHit')
@@ -214,7 +210,6 @@ class BackendSearchTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
-
         $security
             ->expects($this->exactly(4))
             ->method('isGranted')
@@ -294,7 +289,6 @@ class BackendSearchTest extends TestCase
             ->with('type')
             ->willReturn(true)
         ;
-
         $provider
             ->expects($this->once())
             ->method('convertDocumentToHit')
