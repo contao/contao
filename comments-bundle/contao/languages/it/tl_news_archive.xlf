@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>Mostra i commenti dell'archivio news ID %s</target>
+        <target>Mostra i commenti dell&apos;archivio news ID %s</target>
       </trans-unit>
     </body>
   </file>

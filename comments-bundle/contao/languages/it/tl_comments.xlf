@@ -30,8 +30,8 @@
         <target>Nome</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
-        <source>Please enter the author's name.</source>
-        <target>Inserisci il nome reale dell'autore.</target>
+        <source>Please enter the author&apos;s name.</source>
+        <target>Inserisci il nome reale dell&apos;autore.</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>Inserisci l'indirizzo e-mail dell'autore (non verrà pubblicato).</target>
+        <target>Inserisci l&apos;indirizzo e-mail dell&apos;autore (non verrà pubblicato).</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
-        <target>Qui è possibile modificare l'autore della risposta</target>
+        <target>Qui è possibile modificare l&apos;autore della risposta</target>
       </trans-unit>
       <trans-unit id="tl_comments.reply.0">
         <source>Reply</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.ip.1">
         <source>The IP address of the author.</source>
-        <target>L'indirizzo IP dell'autore.</target>
+        <target>L&apos;indirizzo IP dell&apos;autore.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>

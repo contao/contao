@@ -46,8 +46,8 @@
         <target>Sizes attribute</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Hier kunt u de beoogde lay-outbreedte van de afbeelding definiëren, de werkelijke grootte moet via CSS worden gedefinieerd. Voorbeeld: &lt;em&gt;(max-breedte: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Hier kunt u de gewenste breedte van de afbeelding definiëren; de uiteindelijke grootte moet via CSS worden bepaald. Voorbeeld: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.children">
         <source>Edit the media queries of image size ID %s</source>
-        <target>Bewerk de mediaquery's van afbeelding grootte ID %s</target>
+        <target>Bewerk de mediaquery&apos;s van afbeelding grootte ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>

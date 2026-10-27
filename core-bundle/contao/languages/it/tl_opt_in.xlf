@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.resend">
         <source>Resend token ID %s</source>
-        <target>Inviare nuovamente l'ID del token %s</target>
+        <target>Inviare nuovamente l&apos;ID del token %s</target>
       </trans-unit>
     </body>
   </file>

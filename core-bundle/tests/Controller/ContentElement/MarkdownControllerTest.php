@@ -183,9 +183,7 @@ class MarkdownControllerTest extends ContentElementTestCase
             )
         ;
 
-        if (!isset($frameworkAdapters[Input::class])) {
-            $frameworkAdapters[Input::class] = new Adapter(Input::class);
-        }
+        $frameworkAdapters[Input::class] ??= new Adapter(Input::class);
 
         $framework = $this->mockContaoFramework($frameworkAdapters);
         $framework

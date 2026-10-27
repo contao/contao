@@ -875,6 +875,8 @@ a.tl_submit {
 	height: 15px;
 	overflow: hidden;
 	cursor: help;
+	text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tip {

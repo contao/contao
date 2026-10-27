@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Afficher les événements seulement une fois même s'ils s'étendent sur plusieurs jours.</target>
+        <target>Afficher les événements seulement une fois même s&apos;ils s&apos;étendent sur plusieurs jours.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
@@ -35,19 +35,19 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
-        <target>Format de la liste d'événements</target>
+        <target>Format de la liste d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Choisir un format pour la liste d'événements.</target>
+        <target>Choisir un format pour la liste d&apos;événements.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
-        <target>Ignorer les paramètres d'URL</target>
+        <target>Ignorer les paramètres d&apos;URL</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
-        <target>Ne pas changer la période de temps basée sur les paramètres d'URL jour/mois/année.</target>
+        <target>Ne pas changer la période de temps basée sur les paramètres d&apos;URL jour/mois/année.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
@@ -55,31 +55,31 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Choisir l'ordre de tri.</target>
+        <target>Choisir l&apos;ordre de tri.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
-        <target>Module lecteur d'événements</target>
+        <target>Module lecteur d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Basculer automatiquement vers le lecteur d'événements si un événement a été sélectionné.</target>
+        <target>Basculer automatiquement vers le lecteur d&apos;événements si un événement a été sélectionné.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
-        <target>Nombre d'événements</target>
+        <target>Nombre d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Vous pouvez limiter le nombre d'événements. Mettre 0 pour afficher tous les événements.</target>
+        <target>Vous pouvez limiter le nombre d&apos;événements. Mettre 0 pour afficher tous les événements.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
-        <target>Modèle d'événements</target>
+        <target>Modèle d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select an event template.</source>
-        <target>Choisir un modèle d'événements.</target>
+        <target>Choisir un modèle d&apos;événements.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
@@ -91,11 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
-        <target>Afficher le nombre d'événements</target>
+        <target>Afficher le nombre d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.1">
         <source>Show the number of events of each month in the menu.</source>
-        <target>Affiche le nombre d'événements de chaque mois dans le menu.</target>
+        <target>Affiche le nombre d&apos;événements de chaque mois dans le menu.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
@@ -107,19 +107,19 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
-        <target>Utiliser l'URL actuelle pour les liens canoniques</target>
+        <target>Utiliser l&apos;URL actuelle pour les liens canoniques</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
-        <target>Conserver l'URL actuelle au lieu de la page de lecture configurée pour les liens canoniques.</target>
+        <target>Conserver l&apos;URL actuelle au lieu de la page de lecture configurée pour les liens canoniques.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_overview_legend">
         <source>Overview page</source>
-        <target>Page d'aperçu</target>
+        <target>Page d&apos;aperçu</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
-        <target>Liste d'événements</target>
+        <target>Liste d&apos;événements</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_day">
         <source>Day</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_module.next_cur_year">
         <source>of the current year</source>
-        <target>de l'année courante</target>
+        <target>de l&apos;année courante</target>
       </trans-unit>
       <trans-unit id="tl_module.next_next_month">
         <source>of the next month</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_module.next_next_year">
         <source>of the next year</source>
-        <target>de l'année suivante</target>
+        <target>de l&apos;année suivante</target>
       </trans-unit>
       <trans-unit id="tl_module.next_all">
         <source>All upcoming events</source>
@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_module.past_cur_year">
         <source>of the current year</source>
-        <target>de l'année courante</target>
+        <target>de l&apos;année courante</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_month">
         <source>of the previous month</source>
@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_module.past_prev_year">
         <source>of the previous year</source>
-        <target>de l'année précédente</target>
+        <target>de l&apos;année précédente</target>
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>

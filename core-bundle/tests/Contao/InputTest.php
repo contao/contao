@@ -422,6 +422,36 @@ class InputTest extends TestCase
             'Text &#60;with&#62; <span> tags',
         ];
 
+        yield 'Allows self-closing tags' => [
+            '<p><img src="img.png" /></p>',
+            '<p><img src="img.png" /></p>',
+        ];
+
+        yield 'Self-closing no space' => [
+            '<img src="img.png"/>',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no quotes' => [
+            '<img src=img.png />',
+            '<img src="img.png" />',
+        ];
+
+        yield 'Self-closing no attributes' => [
+            '<img />',
+            '<img />',
+        ];
+
+        yield 'Self-closing no attributes no space' => [
+            '<img/>',
+            '<img />',
+        ];
+
+        yield 'Not self-closing' => [
+            '<img src=img.png/>',
+            '<img src="img.png/">',
+        ];
+
         yield 'Removes attributes' => [
             'foo <span onerror=alert(1)> bar',
             'foo <span> bar',
@@ -559,7 +589,7 @@ class InputTest extends TestCase
 
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
-            '<form><input></form>',
+            '<form><input /></form>',
         ];
 
         yield [

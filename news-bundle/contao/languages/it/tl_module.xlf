@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_format.1">
         <source>Here you can choose the news archive format.</source>
-        <target>Selezionare il formato dell'archivio</target>
+        <target>Selezionare il formato dell&apos;archivio</target>
       </trans-unit>
       <trans-unit id="tl_module.news_startDay.0">
         <source>Week start day</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Indicare l'ordinamento</target>
+        <target>Indicare l&apos;ordinamento</target>
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.0">
         <source>Show number of items</source>
@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
-        <target>Utilizzare l'URL corrente per i collegamenti canonici</target>
+        <target>Utilizzare l&apos;URL corrente per i collegamenti canonici</target>
       </trans-unit>
       <trans-unit id="tl_module.news_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
-        <target>Mantenere l'URL corrente invece della pagina del lettore configurata per i collegamenti canonici.</target>
+        <target>Mantenere l&apos;URL corrente invece della pagina del lettore configurata per i collegamenti canonici.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_overview_legend">
         <source>Overview page</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_module.all_items">
         <source>Show all news items</source>
-        <target>Mostra tutte le news dell'archivio</target>
+        <target>Mostra tutte le news dell&apos;archivio</target>
       </trans-unit>
       <trans-unit id="tl_module.featured">
         <source>Show featured news items only</source>

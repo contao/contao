@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
-        <target>Geef een door komma's gescheiden lijst op van extensies van downloadbare bestandstypes.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst op van extensies van downloadbare bestandstypes.</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
-        <target>Geef een door komma's gescheiden lijst op van extensies die geüpload kunnen worden.</target>
+        <target>Geef een door komma&apos;s gescheiden lijst op van extensies die geüpload kunnen worden.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.1">
         <source>Please assign the default access rights for pages and articles.</source>
-        <target>Ken de standaard toegangsrechten voor pagina's en artikelen toe.</target>
+        <target>Ken de standaard toegangsrechten voor pagina&apos;s en artikelen toe.</target>
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>

@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'addedOn' => array
 		(
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'active' => array
 		(

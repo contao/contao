@@ -6,7 +6,7 @@
         <target>E-Mail-Adresse</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
         <target>Bitte geben Sie die E-Mail-Adresse des Abonnenten ein.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">

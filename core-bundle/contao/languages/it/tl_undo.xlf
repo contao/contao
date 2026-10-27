@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.pid.1">
         <source>Name of the associated user</source>
-        <target>Nome dell'utente</target>
+        <target>Nome dell&apos;utente</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
         <source>Source</source>

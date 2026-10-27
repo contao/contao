@@ -361,6 +361,9 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
         <target>Različice %d ni mogoče obnoviti, ker ni skladna s trenutno strukturo v podatkovni bazi. Prosimo, da ročno obnovite podatke.</target>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Čas zaključka mora biti kasnejši od časa začetka.</target>
@@ -378,6 +381,16 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element z ID %d ne more biti vstavljen na to mesto, ker je v navzkrižju z obstoječim elementom.</target>
+      </trans-unit>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to &quot;%s&quot; if you are an admin.</source>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The &quot;auto&quot; keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -459,6 +472,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordion.1">
         <source>Generates an accordion.</source>
+        <target>Ustvari &quot;accordion&quot;.</target>
       </trans-unit>
       <trans-unit id="CTE.element_group.0">
         <source>Element group</source>
@@ -470,6 +484,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
         <source>Accordion wrapper start</source>
+        <target>Accordion wrapper start</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
@@ -477,6 +492,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
         <source>Accordion wrapper stop</source>
+        <target>Accordion wrapper stop</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
@@ -518,6 +534,7 @@
       </trans-unit>
       <trans-unit id="CTE.swiper.1">
         <source>Generates a content slider element.</source>
+        <target>Usvari drsnik vsebine (slider)</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -754,6 +771,7 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Range slider</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
@@ -812,6 +830,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Ta vrsta strani označuje začetno stran novega spletnega mesta.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -851,6 +870,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Ko je koren spletnega mesta v vzdrževalnem načinu, bodo vse strani prikazovale napako 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -2571,6 +2591,9 @@
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
         <target>Prevečkrat ste poskusili ponastaviti vaše geslo. Prosimo, poskusite znova čez 15 minut.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Neujemanje različic</target>
@@ -2731,9 +2754,17 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Vsaj ena skupina uporabnikov ima dostop do uvoza tem. Ker teme vsebujejo različne predloge in so predloge datoteke PHP, imajo ti uporabniki celoten nadzor nad sistemom.</target>
       </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>Vsaj ena skupina uporabnikov ima dostop do modula &quot;Listing&quot; in njegovih polj &quot;list_&quot;. Ker ti lahko vsebujejo različne poizvedbe SQL, imajo uporabniki teh skupin lahko celoten nadzor nad sistemom.</target>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
@@ -2803,6 +2834,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Naslov URL za predogled ne more biti ustvarjen, ker obrazec vsebuje napake.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -2818,6 +2850,7 @@
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Nadrejeni</target>
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>

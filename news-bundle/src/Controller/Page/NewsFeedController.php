@@ -90,7 +90,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
 
         $response = new Response($formatter->toString($feed));
-        $response->headers->set('Content-Type', $contentType);
+        $response->headers->set('Content-Type', $contentType.'; charset='.$this->charset);
 
         $this->setCacheHeaders($response, $pageModel);
 

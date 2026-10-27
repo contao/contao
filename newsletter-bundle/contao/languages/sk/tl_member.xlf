@@ -6,7 +6,7 @@
         <target>Odoberanie správ</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
-        <source>Here you can manage the member's subscriptions.</source>
+        <source>Here you can manage the member&apos;s subscriptions.</source>
         <target>Tu môžete pridať členov k jednej alebo viacerým správam.</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter_legend">

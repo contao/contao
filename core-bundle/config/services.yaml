@@ -77,6 +77,9 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
             - '@request_stack'
+            - []
+            - []
+            - '@=service("contao.http_client.no_private_network_except_root_pages").getFactory()'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
@@ -229,7 +232,7 @@ services:
     contao.feed.http_adapter:
         class: FeedIo\Adapter\Http\Client
         arguments:
-            - '@psr18.http_client'
+            - !service { class: Symfony\Component\HttpClient\Psr18Client, arguments: ['@contao.http_client.no_private_network_except_root_pages'] }
 
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
@@ -289,6 +292,7 @@ services:
             - '@request_stack'
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
+            - '@contao.routing.scope_matcher'
             - '%kernel.debug%'
 
     contao.fragment.pre_handlers:
@@ -309,6 +313,13 @@ services:
             - '%contao.error_level%'
         calls:
             - [setContainer, ['@service_container']]
+
+    contao.http_client.no_private_network_except_root_pages:
+        class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        arguments:
+            - '@http_client'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -431,6 +442,7 @@ services:
               contao.framework: '@contao.framework'
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
               event_dispatcher: '@event_dispatcher'
+              contao.string.html_decoder: '@contao.string.html_decoder'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.web_dir%'
@@ -575,6 +587,7 @@ services:
         arguments:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
+            - '@contao.routing.scope_matcher'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -651,15 +664,23 @@ services:
         arguments:
             - '%contao.console_path%'
 
+    contao.rate_limit.form_captcha_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.form_captcha, policy: fixed_window, limit: 1, interval: 30 minutes }
+            - '@contao.rate_limit.storage'
+            - '@?lock_factory'
+
     contao.rate_limit.member_password_factory:
         class: Symfony\Component\RateLimiter\RateLimiterFactory
         public: true
         arguments:
             - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
-            - '@contao.rate_limit.member_password_storage'
+            - '@contao.rate_limit.storage'
             - '@?lock_factory'
 
-    contao.rate_limit.member_password_storage:
+    contao.rate_limit.storage:
         class: Symfony\Component\RateLimiter\Storage\CacheStorage
         arguments:
             - '@cache.rate_limiter'
@@ -1163,6 +1184,11 @@ services:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
             - '@contao.resource_finder'
+
+    contao.twig.backend_helper_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime
+        arguments:
+            - '@contao.framework'
 
     contao.twig.content_url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime

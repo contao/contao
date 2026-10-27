@@ -126,7 +126,7 @@
         <target>言語の代替</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>サイトのアクセス者の言語に合うページがない場合に、このページを表示します。</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

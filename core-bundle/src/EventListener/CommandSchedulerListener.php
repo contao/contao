@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
@@ -25,9 +25,12 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
 #[AsEventListener]
 class CommandSchedulerListener
 {
+    final public const REQUEST_ATTRIBUTE_ENABLE = '_contao_command_scheduler';
+
     public function __construct(
         private readonly Cron $cron,
         private readonly Connection $connection,
+        private readonly ScopeMatcher $scopeMatcher,
         private readonly string $fragmentPath = '_fragment',
         private readonly bool $autoMode = false,
     ) {
@@ -38,17 +41,21 @@ class CommandSchedulerListener
      */
     public function __invoke(TerminateEvent $event): void
     {
-        if ($this->shouldRunCron($event->getRequest())) {
+        if ($this->shouldRunCron($event)) {
             $this->cron->run(Cron::SCOPE_WEB);
         }
     }
 
-    private function shouldRunCron(Request $request): bool
+    private function shouldRunCron(TerminateEvent $event): bool
     {
-        $pathInfo = $request->getPathInfo();
+        $pathInfo = $event->getRequest()->getPathInfo();
 
         // Skip the listener upon fragment URLs
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $pathInfo)) {
+            return false;
+        }
+
+        if (!$this->allowsCommandScheduler($event)) {
             return false;
         }
 
@@ -62,6 +69,21 @@ class CommandSchedulerListener
         }
 
         return true;
+    }
+
+    private function allowsCommandScheduler(TerminateEvent $event): bool
+    {
+        $request = $event->getRequest();
+
+        // The feature is enabled explicitly
+        if (true === $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE)) {
+            return true;
+        }
+
+        // Automatically enable the feature for Contao requests unless it is
+        // disabled explicitly
+        return $this->scopeMatcher->isContaoMainRequest($event)
+            && false !== $request->attributes->get(self::REQUEST_ATTRIBUTE_ENABLE);
     }
 
     /**

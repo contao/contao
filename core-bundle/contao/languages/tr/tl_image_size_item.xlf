@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.invisible.1">
         <source>Do not use the image size definition.</source>
-        <target>Bu seçenek etkinleştirildiğinde, görsel boyutu tanımı kullanılmaz.</target>
+        <target>Etkinleştirildiğinde, görsel boyutu tanımı kullanılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.tstamp.0">
         <source>Revision date</source>

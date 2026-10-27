@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>Saisir un titre d'archive.</target>
+        <target>Saisir un titre d&apos;archive.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
         <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
-        <target>Sélectionner la page du lecteur d'actualités vers laquelle les visiteurs seront redirigés en cliquant sur une actualité.</target>
+        <target>Sélectionner la page du lecteur d&apos;actualités vers laquelle les visiteurs seront redirigés en cliquant sur une actualité.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.0">
         <source>Protect archive</source>
-        <target>Protéger l'archive d'actualités</target>
+        <target>Protéger l&apos;archive d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.1">
         <source>Show news items to certain member groups only.</source>
@@ -47,15 +47,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
-        <target>Protection d'accès</target>
+        <target>Protection d&apos;accès</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
         <source>News feeds</source>
-        <target>Flux RSS d'actualités</target>
+        <target>Flux RSS d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
-        <target>Gérer les flux d'actualités</target>
+        <target>Gérer les flux d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -63,27 +63,27 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
-        <target>Créer une nouvelle archive d'actualités</target>
+        <target>Créer une nouvelle archive d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>Afficher les détails de l'archive d'actualités ID %s</target>
+        <target>Afficher les détails de l&apos;archive d&apos;actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
-        <target>Éditer l'archive d'actualités ID %s</target>
+        <target>Éditer l&apos;archive d&apos;actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children">
         <source>Edit the news items of news archive ID %s</source>
-        <target>Éditer les éléments d'actualités de l'archive ID %s</target>
+        <target>Éditer les éléments d&apos;actualités de l&apos;archive ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>Dupliquer l'archive d'actualités ID %s</target>
+        <target>Dupliquer l&apos;archive d&apos;actualités ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>Supprimer l'archive d'actualités ID %s</target>
+        <target>Supprimer l&apos;archive d&apos;actualités ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -30,7 +30,7 @@
         <target>HTML-Inhalt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Hier können Sie den HTML-Inhalt des Newsletters eingeben. Benutzen Sie den Platzhalter &lt;em&gt;##email##&lt;/em&gt;, um die Empfängeradresse einzufügen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>Text-Inhalt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>Hier können Sie den Text-Inhalt des Newsletters eingeben. Benutzen Sie den Platzhalter &lt;em&gt;##email##&lt;/em&gt;, um die Empfängeradresse einzufügen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

@@ -90,11 +90,8 @@ class DebugContaoTwigCommand extends Command
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore isset.offset */
-                if (!isset($node[$part])) {
-                    $node[$part] = [];
-                }
-
+                /** @phpstan-ignore nullCoalesce.offset */
+                $node[$part] ??= [];
                 $node = &$node[$part];
             }
 

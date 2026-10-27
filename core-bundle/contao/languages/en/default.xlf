@@ -272,6 +272,9 @@
       <trans-unit id="ERR.versionNotRestored">
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
       </trans-unit>
@@ -286,6 +289,18 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
+      <trans-unit id="ERR.grantAdminOnly">
+        <source>You can only grant access to "%s" if you are an admin.</source>
+      </trans-unit>
+      <trans-unit id="ERR.sizesStartWithAuto">
+        <source>The "auto" keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.</source>
+      </trans-unit>
+      <trans-unit id="ERR.lazyLoadingSizesAuto">
+        <source>Lazy loading must be enabled if the sizes attribute is set to "auto".</source>
+      </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1946,6 +1961,9 @@
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
+      <trans-unit id="MSC.tooManyResendActivationAttempts">
+        <source>You have tried to resend the activation email too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
       </trans-unit>
@@ -2066,8 +2084,17 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
+      <trans-unit id="MSC.userThemeLayout">
+        <source>There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeLayout">
+        <source>There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userListingModule">
+        <source>There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*" fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <source>There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>

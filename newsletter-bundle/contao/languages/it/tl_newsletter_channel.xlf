@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can select an e-mail template.</source>
-        <target>Seleziona una template per l'email.</target>
+        <target>Seleziona una template per l&apos;email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.0">
         <source>Mailer transport</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.1">
         <source>Please enter the e-mail address of the sender.</source>
-        <target>Inserire l'indirizzo e-mail del mittente</target>
+        <target>Inserire l&apos;indirizzo e-mail del mittente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.0">
         <source>Sender name</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>

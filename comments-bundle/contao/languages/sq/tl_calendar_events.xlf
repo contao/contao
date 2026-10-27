@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_calendar_events.noComments.0">
         <source>Disable comments</source>
-        <target>ç'aktivizo komentet</target>
+        <target>ç&apos;aktivizo komentet</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.1">
         <source>Do not allow comments for this particular event.</source>

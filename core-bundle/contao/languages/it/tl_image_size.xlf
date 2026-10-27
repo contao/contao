@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.height.1">
         <source>Here you can enter the height in pixels.</source>
-        <target>Qui è possibile inserire l'altezza in pixel.</target>
+        <target>Qui è possibile inserire l&apos;altezza in pixel.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.resizeMode.0">
         <source>Resize mode</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.zoom.1">
         <source>0 = the whole image is visible, 100 = only the important part of the image is visible.</source>
-        <target>0 = l'intera immagine è visibile, 100 = solo la parte importante di questa immagine è visibile.</target>
+        <target>0 = l&apos;intera immagine è visibile, 100 = solo la parte importante di questa immagine è visibile.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.0">
         <source>Sizes attribute</source>
         <target>Dimensioni attributi</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Qui puoi definire la larghezza di layout dell'immagine, la dimensione effettiva dovrebbe essere definita tramite CSS. Esempio: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Qui è possibile definire la larghezza desiderata dell&apos;immagine nel layout; la dimensione effettiva va definita tramite CSS. Esempio: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw &lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
-        <target>Usa l'immagine originale se le dimensioni corrispondono</target>
+        <target>Usa l&apos;immagine originale se le dimensioni corrispondono</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.imageQuality.1">
         <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
-        <target>Qui è possibile impostare la qualità di compressione dell'immagine tra 0 (qualità più bassa) e 100 (qualità più alta). Lascia vuoto per utilizzare l'impostazione predefinita del sistema.</target>
+        <target>Qui è possibile impostare la qualità di compressione dell&apos;immagine tra 0 (qualità più bassa) e 100 (qualità più alta). Lascia vuoto per utilizzare l&apos;impostazione predefinita del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
-        <target>Rimanda il caricamento dell'immagine fino a quando non viene fatta scorrere nella finestra.</target>
+        <target>Rimanda il caricamento dell&apos;immagine fino a quando non viene fatta scorrere nella finestra.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_image_size.title_legend">
         <source>Image size settings</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
-        <target>Impostazioni della sorgente dell'immagine</target>
+        <target>Impostazioni della sorgente dell&apos;immagine</target>
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.proportional.1">
         <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Il lato più lungo dell'immagine viene variato in base alle dimensioni indicate e l'immagine viene ridimensionata in modo proporzionale.</target>
+        <target>Il lato più lungo dell&apos;immagine viene variato in base alle dimensioni indicate e l&apos;immagine viene ridimensionata in modo proporzionale.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.box.0">
         <source>Fit the box</source>
@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
         <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>L&apos;immagine verrà ridimensionata in modo proporzionale, in modo che nessun lato superi le dimensioni specificate. Questo comportamento è simile al valore &lt;em&gt; contain &lt;/em&gt;nei CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
@@ -166,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>L&apos;immagine verrà ridimensionata in base alle dimensioni esatte specificate, ritagliandola se necessario e preservando la parte importante, se specificato. Questo funziona in modo simile al valore &lt;em&gt;cover&lt;/em&gt; nei CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
@@ -197,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.children">
         <source>Edit the media queries of image size ID %s</source>
-        <target>Modifica la media queries dell'immagine ID %s</target>
+        <target>Modifica la media queries dell&apos;immagine ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>

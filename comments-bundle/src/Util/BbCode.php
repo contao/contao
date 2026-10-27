@@ -197,7 +197,7 @@ final class BbCode
 
                     try {
                         if (Validator::isUrl($uri)) {
-                            return \sprintf('<a href="%s" rel="noopener noreferrer nofollow">%s</a>', StringUtil::specialchars(Idna::encodeUrl($uri), true), StringUtil::specialchars($title, true));
+                            return \sprintf('<a href="%s" rel="noopener noreferrer nofollow">%s</a>', StringUtil::specialcharsUrl(Idna::encodeUrl($uri), true), StringUtil::specialchars($title, true));
                         }
                     } catch (\InvalidArgumentException) {
                     }
@@ -222,6 +222,6 @@ final class BbCode
 
     private function subCompile(array $nodes): string
     {
-        return implode('', array_map(fn (Node $node): string => $this->compile($node), $nodes));
+        return implode('', array_map($this->compile(...), $nodes));
     }
 }

@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_user.admin.1">
         <source>Administrators have unlimited access to all modules and elements!</source>
-        <target>Een administrator heeft onbeperkte toegang tot alle pagina's, modules, extensies en mappen!</target>
+        <target>Een administrator heeft onbeperkte toegang tot alle pagina&apos;s, modules, extensies en mappen!</target>
       </trans-unit>
       <trans-unit id="tl_user.groups.0">
         <source>User groups</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.1">
         <source>Here you can grant access to one or more pages (subpages are included automatically).</source>
-        <target>Selecteer de pagina's die u wil activeren voor de huidige gebruiker. Subpagina's zijn automatisch inbegrepen.</target>
+        <target>Selecteer de pagina&apos;s die u wil activeren voor de huidige gebruiker. Subpagina&apos;s zijn automatisch inbegrepen.</target>
       </trans-unit>
       <trans-unit id="tl_user.alpty.0">
         <source>Allowed page types</source>

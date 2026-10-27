@@ -193,14 +193,17 @@ class StringUtilTest extends TestCase
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
+
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+            $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+            $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+            $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        }
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void

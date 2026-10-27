@@ -46,8 +46,7 @@
         <target>Atrybuty rozmiarów</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
-        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Tutaj można zdefiniować zamierzoną szerokość układu obrazu, rzeczywisty rozmiar powinien być zdefiniowany poprzez CSS. Przykład: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -159,6 +158,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
         <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany proporcjonalnie tak, aby żaden z jego boków nie przekroczył podanych wymiarów. Działa to podobnie jak wartość &lt;em&gt;contain&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
@@ -166,6 +166,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany do dokładnie podanych wymiarów. W razie potrzeby zostanie przycięty, z zachowaniem istotnego obszaru, jeśli został określony. Działa to podobnie jak wartość &lt;em&gt;cover&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>

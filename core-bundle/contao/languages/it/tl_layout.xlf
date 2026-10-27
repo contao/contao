@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2rwh.1">
         <source>Show a header above the main row.</source>
-        <target>Mostra un'intestazione sopra la riga principale.</target>
+        <target>Mostra un&apos;intestazione sopra la riga principale.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2rwf.0">
         <source>Main row and footer</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.3rw.1">
         <source>Show a header above and a footer below the main row.</source>
-        <target>Mostra un'intestazione al di sopra e un piè di pagina al di sotto della riga principale.</target>
+        <target>Mostra un&apos;intestazione al di sopra e un piè di pagina al di sotto della riga principale.</target>
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.0">
         <source>Header height</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.1">
         <source>Please enter the height of the page header.</source>
-        <target>Inserisci l'altezza dell'intestazione.</target>
+        <target>Inserisci l&apos;altezza dell&apos;intestazione.</target>
       </trans-unit>
       <trans-unit id="tl_layout.footerHeight.0">
         <source>Footer height</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.footerHeight.1">
         <source>Please enter the height of the page footer.</source>
-        <target>Inserisci l'altezza del piè di pagina.</target>
+        <target>Inserisci l&apos;altezza del piè di pagina.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cols.0">
         <source>Columns</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>Aggiunge il mata tag viewport nell'header della pagina e ridimensiona le dimensioni del layout in base al dispositivo.</target>
+        <target>Aggiunge il mata tag viewport nell&apos;header della pagina e ridimensiona le dimensioni del layout in base al dispositivo.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -215,11 +215,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
-        <target>Qui puoi selezionare una dimensione dell'immagine che viene mostrata nel lightbox.</target>
+        <target>Qui puoi selezionare una dimensione dell&apos;immagine che viene mostrata nel lightbox.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
-        <target>Default densità pixel dell'immagine</target>
+        <target>Default densità pixel dell&apos;immagine</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Assegna ogni modulo ad un elemento della pagina. Utilizza i pulsanti aggiungi, sposta o elimina un modulo. Se non hai Javascript attivo, devi salvare i cambiamenti prima di modificare l'ordine.</target>
+        <target>Assegna ogni modulo ad un elemento della pagina. Utilizza i pulsanti aggiungi, sposta o elimina un modulo. Se non hai Javascript attivo, devi salvare i cambiamenti prima di modificare l&apos;ordine.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
-        <target>Seleziona un modello di layout. Il modello predefinito si chiama &lt;em&gt;fe_page.tpl&lt;/em&gt;. Se desideri aggiungere un modello personalizzato, carica il file nella cartella &lt;em&gt;templates&lt;/em&gt;. I modelli di layout devono cominciare con &lt;em&gt;fe_&lt;/em&gt; e terminare con l'estensione &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <target>Seleziona un modello di layout. Il modello predefinito si chiama &lt;em&gt;fe_page.tpl&lt;/em&gt;. Se desideri aggiungere un modello personalizzato, carica il file nella cartella &lt;em&gt;templates&lt;/em&gt;. I modelli di layout devono cominciare con &lt;em&gt;fe_&lt;/em&gt; e terminare con l&apos;estensione &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.0">
         <source>Minify the markup</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.onload.1">
         <source>Here you can add a body &lt;em&gt;onload&lt;/em&gt; attribute.</source>
-        <target>Nel caso in cui uno dei vostri script personalizzati richieda l'evento body &lt;em&gt;onload&lt;/em&gt;, puoi inserire il codice qui.</target>
+        <target>Nel caso in cui uno dei vostri script personalizzati richieda l&apos;evento body &lt;em&gt;onload&lt;/em&gt;, puoi inserire il codice qui.</target>
       </trans-unit>
       <trans-unit id="tl_layout.head.0">
         <source>Additional &amp;lt;head&amp;gt; tags</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.mootools.1">
         <source>Here you can select one or more MooTools templates.</source>
-        <target>Se desideri eseguire un mootools a fisarmonica nel tuo sito web, devi inserire un JavaScript che inizializzi l'effetto. Puoi scegliere il codice Javascript qui. I modelli Mootools devono cominciare con &lt;em&gt;moo_&lt;/em&gt;. (estensione dei file &lt;em&gt;.tpl&lt;/em&gt;)</target>
+        <target>Se desideri eseguire un mootools a fisarmonica nel tuo sito web, devi inserire un JavaScript che inizializzi l&apos;effetto. Puoi scegliere il codice Javascript qui. I modelli Mootools devono cominciare con &lt;em&gt;moo_&lt;/em&gt;. (estensione dei file &lt;em&gt;.tpl&lt;/em&gt;)</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
@@ -375,7 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.align.1">
         <source>Please select the alignment of the page.</source>
-        <target>Seleziona l'allineamento del sito.</target>
+        <target>Seleziona l&apos;allineamento del sito.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
         <source>Title</source>

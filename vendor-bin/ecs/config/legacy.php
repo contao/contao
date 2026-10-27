@@ -19,6 +19,7 @@ use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesPositionFixer;
 use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
+use PhpCsFixer\Fixer\ClassNotation\ModifierKeywordsFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
@@ -81,6 +82,7 @@ return ECSConfig::configure()
         IncrementStyleFixer::class,
         MethodChainingIndentationFixer::class,
         ModernizeStrposFixer::class,
+        ModifierKeywordsFixer::class,
         MultiLineLambdaFunctionArgumentsFixer::class,
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,

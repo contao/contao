@@ -339,13 +339,13 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'session' => array
 		(
@@ -460,7 +460,9 @@ class tl_user extends Backend
 			SELECT
 				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning,
 				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND themes LIKE '%\"theme_import\"%') as showThemeWarning,
-				EXISTS(SELECT * FROM tl_user WHERE inherit != 'group' AND elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND themes LIKE '%\"layout\"%') as showLayoutWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND frontendModules LIKE '%\"listing\"%') as showListingWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND (elements LIKE '%\"unfiltered_html\"%' OR frontendModules LIKE '%\"unfiltered_html\"%')) as showUnfilteredHtmlWarning
 		");
 
 		if ($objResult->showTemplateWarning)
@@ -471,6 +473,16 @@ class tl_user extends Backend
 		if ($objResult->showThemeWarning)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+		}
+
+		if ($objResult->showLayoutWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeLayout']);
+		}
+
+		if ($objResult->showListingWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userListingModule']);
 		}
 
 		if ($objResult->showUnfilteredHtmlWarning)
@@ -656,11 +668,9 @@ class tl_user extends Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getModules(DataContainer $dc)
+	public function getModules()
 	{
 		$arrModules = array();
 
@@ -680,15 +690,6 @@ class tl_user extends Backend
 			}
 
 			$arrModules[$k] = array_keys($v);
-		}
-
-		$modules = StringUtil::deserialize($dc->activeRecord->modules);
-
-		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
-		if (!BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
-		{
-			unset($arrModules['design'][$key]);
-			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;

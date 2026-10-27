@@ -61,7 +61,7 @@ class BackendMain extends Backend
 		}
 
 		// Two-factor setup required
-		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security')
+		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security' && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
@@ -228,7 +228,7 @@ class BackendMain extends Backend
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
-		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
+		$data['title'] = StringUtil::specialchars(trim(strip_tags(preg_replace('~</span> <span.*?>~', ' › ', $data['title']))));
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];

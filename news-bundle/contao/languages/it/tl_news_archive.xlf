@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>Inserisci un titolo per l'archivio news.</target>
+        <target>Inserisci un titolo per l&apos;archivio news.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.title_legend">
         <source>Title and redirect page</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>Mostra i dettagli dell'archivio news ID %s</target>
+        <target>Mostra i dettagli dell&apos;archivio news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
@@ -75,15 +75,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.children">
         <source>Edit the news items of news archive ID %s</source>
-        <target>Modifica gli elementi dell'archivio news ID %s</target>
+        <target>Modifica gli elementi dell&apos;archivio news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>Duplica l'archivio news ID %s</target>
+        <target>Duplica l&apos;archivio news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>Cancella l'archivio news ID %s</target>
+        <target>Cancella l&apos;archivio news ID %s</target>
       </trans-unit>
     </body>
   </file>

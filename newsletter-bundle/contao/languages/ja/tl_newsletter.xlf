@@ -30,7 +30,7 @@
         <target>HTMLの内容</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
-        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>ニュースレターのHTMLによる内容を入力します。&lt;em&gt;##email##&lt;/em&gt;というワイルドカードを使用して、宛先の電子メールアドレスを挿入できます。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
@@ -38,7 +38,7 @@
         <target>テキストの内容</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
-        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient&apos;s e-mail address.</source>
         <target>ニュースレターのテキストによる内容を入力します。&lt;em&gt;##email##&lt;/em&gt;というワイルドカードを使用して、宛先の電子メールアドレスを挿入できます。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">

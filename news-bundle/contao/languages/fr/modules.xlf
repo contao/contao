@@ -19,35 +19,35 @@
       </trans-unit>
       <trans-unit id="FMD.newslist.0">
         <source>Newslist</source>
-        <target>Liste d'actualités</target>
+        <target>Liste d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="FMD.newslist.1">
         <source>Adds a list of news items to the page</source>
-        <target>Ajoute une liste d'actualités à la page.</target>
+        <target>Ajoute une liste d&apos;actualités à la page.</target>
       </trans-unit>
       <trans-unit id="FMD.newsreader.0">
         <source>Newsreader</source>
-        <target>Lecteur d'actualités</target>
+        <target>Lecteur d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="FMD.newsreader.1">
         <source>Shows the details of a news item</source>
-        <target>Affiche les détails d'une actualité.</target>
+        <target>Affiche les détails d&apos;une actualité.</target>
       </trans-unit>
       <trans-unit id="FMD.newsarchive.0">
         <source>News archive</source>
-        <target>Archive d'actualités</target>
+        <target>Archive d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="FMD.newsarchive.1">
         <source>Adds a news archive to the page</source>
-        <target>Ajoute une archive d'actualités à la page.</target>
+        <target>Ajoute une archive d&apos;actualités à la page.</target>
       </trans-unit>
       <trans-unit id="FMD.newsmenu.0">
         <source>News archive menu</source>
-        <target>Menu archive d'actualités</target>
+        <target>Menu archive d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="FMD.newsmenu.1">
         <source>Generates a navigation menu to browse the news archive</source>
-        <target>Génère un menu de navigation pour une archive d'actualités.</target>
+        <target>Génère un menu de navigation pour une archive d&apos;actualités.</target>
       </trans-unit>
     </body>
   </file>

@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
-        <target>Aperçu de l'image</target>
+        <target>Aperçu de l&apos;image</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Marquer la partie importante de l'image avec le curseur de la souris.</target>
+        <target>Marquer la partie importante de l&apos;image avec le curseur de la souris.</target>
       </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
-        <target>L'extension du fichier</target>
+        <target>L&apos;extension du fichier</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>

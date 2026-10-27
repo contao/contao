@@ -6,7 +6,7 @@
         <target>電子メールアドレス</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
         <target>宛先の電子メールアドレスを入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">

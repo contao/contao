@@ -306,7 +306,7 @@
         <target>個人データ</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>メンバーの個人データを編集するフォームを生成</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

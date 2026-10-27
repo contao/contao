@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="2" resname="contao_manager_title">
         <source>Manage updates and extensions and maintain the application</source>
-        <target>Gestisci aggiornamenti ed estensioni e mantieni l'applicazione</target>
+        <target>Gestisci aggiornamenti ed estensioni e mantieni l&apos;applicazione</target>
       </trans-unit>
     </body>
   </file>

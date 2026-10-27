@@ -6,7 +6,7 @@
         <target>Haber bültenleri</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
-        <source>Here you can manage the member's subscriptions.</source>
+        <source>Here you can manage the member&apos;s subscriptions.</source>
         <target>Buradan üyenin aboneliklerini yönetebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter_legend">

@@ -15,6 +15,7 @@ use Contao\ContentModel;
 use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -591,7 +592,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerAspect' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
+			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2', '9:16', '1:1'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
@@ -755,13 +756,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		)
 	)
 );
@@ -972,7 +973,17 @@ class tl_content extends Backend
 		}
 		catch (Throwable $exception)
 		{
-			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+			$template = System::getContainer()->get('twig')->createTemplate('<p class="{{ class }}">{{ message }}</p>');
+			$messageClass = 'tl_error';
+			$message = $exception->getMessage();
+
+			if ($exception instanceof ResponseException)
+			{
+				$messageClass = 'tl_info';
+				$message = System::getContainer()->get('translator')->trans('ERR.fragmentResponseException', array(), 'contao_default');
+			}
+
+			$preview = $template->render(array('class' => $messageClass, 'message' => $message));
 		}
 
 		if (!empty($arrRow['sectionHeadline']))
@@ -1101,6 +1112,11 @@ class tl_content extends Backend
 			$module = $dc->getCurrentRecord($dc->value, 'tl_module');
 		}
 		catch (AccessDeniedException)
+		{
+			$module = null;
+		}
+
+		if ($module === null)
 		{
 			return '';
 		}

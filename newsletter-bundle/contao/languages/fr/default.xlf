@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="ERR.unsubscribed">
         <source>You are not subscribed to the selected channels.</source>
-        <target>Vous n'êtes pas abonné à cette liste de diffusion.</target>
+        <target>Vous n&apos;êtes pas abonné à cette liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>Ce lien d'activation est non valide ou périmé.</target>
+        <target>Ce lien d&apos;activation est non valide ou périmé.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="ERR.onDenyList">
         <source>The e-mail address has been unsubscribed from the channel.</source>
-        <target>L'adresse e-mail a été désabonnée de la liste de diffusion.</target>
+        <target>L&apos;adresse e-mail a été désabonnée de la liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
-        <target>S'abonner</target>
+        <target>S&apos;abonner</target>
       </trans-unit>
       <trans-unit id="MSC.unsubscribe">
         <source>Unsubscribe</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_overview">
         <source>Back to the newsletter overview</source>
-        <target>Retour à l'aperçu des bulletins d'information</target>
+        <target>Retour à l&apos;aperçu des bulletins d&apos;information</target>
       </trans-unit>
     </body>
   </file>

@@ -10,7 +10,7 @@
         <section>
           <h3 id="<?= $faq->alias ?>"><?= $faq->question ?></h3>
 
-          <div class="ce_text block">
+          <div class="ce_text content-text block">
             <?php if (!$faq->addBefore): ?>
               <?= $this->cspInlineStyles($faq->answer) ?>
             <?php endif; ?>

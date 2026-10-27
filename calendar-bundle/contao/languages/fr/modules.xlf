@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.calendar.1">
         <source>Manage events and display them in a calendar or event list</source>
-        <target>Gérer les événements et les afficher dans un calendrier ou une liste d'événements.</target>
+        <target>Gérer les événements et les afficher dans un calendrier ou une liste d&apos;événements.</target>
       </trans-unit>
       <trans-unit id="MOD.tl_calendar_feed">
         <source>Calendar feeds</source>
@@ -31,27 +31,27 @@
       </trans-unit>
       <trans-unit id="FMD.eventlist.0">
         <source>Event list</source>
-        <target>Liste d'événements</target>
+        <target>Liste d&apos;événements</target>
       </trans-unit>
       <trans-unit id="FMD.eventlist.1">
         <source>Adds a list of events to the page</source>
-        <target>Ajoute une liste d'événements dans une page.</target>
+        <target>Ajoute une liste d&apos;événements dans une page.</target>
       </trans-unit>
       <trans-unit id="FMD.eventreader.0">
         <source>Event reader</source>
-        <target>Lecteur d'événements</target>
+        <target>Lecteur d&apos;événements</target>
       </trans-unit>
       <trans-unit id="FMD.eventreader.1">
         <source>Shows the details of an event</source>
-        <target>Affiche les détails d'un événement.</target>
+        <target>Affiche les détails d&apos;un événement.</target>
       </trans-unit>
       <trans-unit id="FMD.eventmenu.0">
         <source>Event list menu</source>
-        <target>Menu liste d'événements</target>
+        <target>Menu liste d&apos;événements</target>
       </trans-unit>
       <trans-unit id="FMD.eventmenu.1">
         <source>Generates a navigation menu to browse the event list</source>
-        <target>Génère un menu de navigation pour parcourir la liste d'événements.</target>
+        <target>Génère un menu de navigation pour parcourir la liste d&apos;événements.</target>
       </trans-unit>
     </body>
   </file>

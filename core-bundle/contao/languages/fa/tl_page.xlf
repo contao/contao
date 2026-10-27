@@ -126,7 +126,7 @@
         <target>زبان جایگزین</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>این برگه زمانی که هیچ برگه منطبق بر زبان بازدیدکننده وجود نداشته باشد نمایش داده می‌شود.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -427,6 +427,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>پنهان کردن در صورت ورود کاربران</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>

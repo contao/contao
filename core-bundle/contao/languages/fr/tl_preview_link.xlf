@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.url.1">
         <source>The front end URL to be shared.</source>
-        <target>L'URL front-end à partager.</target>
+        <target>L&apos;URL front-end à partager.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.showUnpublished.0">
         <source>Show unpublished</source>
@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
-        <target>Restreindre l'accès à l'URL spécifié</target>
+        <target>Restreindre l&apos;accès à l&apos;URL spécifié</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
-        <target>Autoriser l'accès uniquement à l'URL spécifiée plutôt qu'à l'ensemble du site web.</target>
+        <target>Autoriser l&apos;accès uniquement à l&apos;URL spécifiée plutôt qu&apos;à l&apos;ensemble du site web.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
-        <target>L'utilisateur qui a créé le lien de prévisualisation.</target>
+        <target>L&apos;utilisateur qui a créé le lien de prévisualisation.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
-        <target>Valable jusqu'au</target>
+        <target>Valable jusqu&apos;au</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.1">
         <source>Preview of the final date until which the link is available.</source>
-        <target>Aperçu de la date finale jusqu'à laquelle le lien est disponible.</target>
+        <target>Aperçu de la date finale jusqu&apos;à laquelle le lien est disponible.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.published.0">
         <source>Enable</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
-        <target>Pour ajouter un lien de prévisualisation, utilisez le bouton &quot;Partager l'URL&quot; dans la barre d'outils de prévisualisation en front-end.</target>
+        <target>Pour ajouter un lien de prévisualisation, utilisez le bouton &quot;Partager l&apos;URL&quot; dans la barre d&apos;outils de prévisualisation en front-end.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
