@@ -28,6 +28,7 @@
     ],
     "require": {
         "php": "^8.4",
+        "composer-runtime-api": "^2.0.14",
         "api-platform/core": "^5.0",
         "contao/api-bundle": "self.version",
         "contao/core-bundle": "self.version",
