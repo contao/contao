@@ -406,15 +406,18 @@ class InsertTagsTest extends TestCase
     public static function provideInvalidFigureInsertTags(): iterable
     {
         yield 'missing resource' => [
-            '{{figure}}', false,
+            '{{figure}}',
+            false,
         ];
 
         yield 'too many arguments' => [
-            '{{figure::5?size=1::other}}', false,
+            '{{figure::5?size=1::other}}',
+            false,
         ];
 
         yield 'invalid configuration' => [
-            '{{figure::1?foo=bar}}', true,
+            '{{figure::1?foo=bar}}',
+            true,
         ];
     }
 
@@ -431,7 +434,7 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame($expected, $output);
 
-        $plainInsertTag = new class() {
+        $plainInsertTag = new class {
             public function __invoke(ResolvedInsertTag $tag): InsertTagResult
             {
                 return new InsertTagResult(substr($tag->getParameters()->serialize(), 2));
@@ -737,8 +740,8 @@ class InsertTagsTest extends TestCase
         ;
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
-
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), $insertTags);
 
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
@@ -1100,6 +1103,7 @@ class InsertTagsTest extends TestCase
         $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');
+
         ini_set('pcre.backtrack_limit', '0');
 
         $this->expectException(\RuntimeException::class);

@@ -219,7 +219,7 @@ class HtmlAttributesTest extends TestCase
         yield ['', ''];
 
         yield [
-            new class() implements \Stringable {
+            new class implements \Stringable {
                 public function __toString(): string
                 {
                     return 'stringable';
@@ -433,8 +433,8 @@ class HtmlAttributesTest extends TestCase
         // Test truthy values fulfil the condition
         foreach ($truthyValues as $value) {
             $attributes = new HtmlAttributes();
-
             $attributes->set('data-feature', condition: $value);
+
             $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
 
             $attributes->unset('data-feature', condition: $value);
@@ -444,8 +444,8 @@ class HtmlAttributesTest extends TestCase
         // Test falsy values do not fulfil the condition
         foreach ($falsyValues as $value) {
             $attributes = new HtmlAttributes(['data-feature' => '']);
-
             $attributes->set('data-foo', condition: $value);
+
             $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
 
             $attributes->unset('data-feature', condition: $value);
@@ -474,7 +474,6 @@ class HtmlAttributesTest extends TestCase
     public function testAddAndRemoveConditionalClasses(): void
     {
         $attributes = new HtmlAttributes();
-
         $attributes->addClass('a', null);
         $attributes->addClass('b', false);
         $attributes->addClass('c', 0);
@@ -576,8 +575,8 @@ class HtmlAttributesTest extends TestCase
     public function testAddAndRemoveDoubleStyles(): void
     {
         $attributes = new HtmlAttributes();
-
         $attributes->addStyle('baz: 1; baz: 2');
+
         $this->assertSame('baz: 1; baz: 2;', $attributes['style']);
 
         $attributes->addStyle('baz: 3; color: red; baz: 4');
@@ -593,7 +592,6 @@ class HtmlAttributesTest extends TestCase
     public function testAddAndRemoveConditionalStyles(): void
     {
         $attributes = new HtmlAttributes();
-
         $attributes->addStyle('foo: a', null);
         $attributes->addStyle('foo: b', false);
         $attributes->addStyle('foo: c', 0);

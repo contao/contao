@@ -22,12 +22,11 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
     public function testCreatesArticleOnPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $pageId = (int) $fixtures->value('page_main_home');
 
         $request = HttpRequest::json('POST', '/contao/api/dc/article')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -47,7 +46,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get('/contao/api/dc/article')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -62,13 +61,12 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
     public function testMovesAnArticleIntoAnotherPage(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
-
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}');
         $parent = (int) $fixtures->value('page_microsite_home');
 
         $request = HttpRequest::json('POST', $path.'/move')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -86,7 +84,7 @@ class ArticleTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($parent, $data['pid']['id']);
 
         $response = self::managedEdition()->send(HttpRequest::get($path)->withHeaders([
-            'Authorization' => 'Bearer e2e',
+            'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
             'Accept' => 'application/ld+json',
         ]));
 

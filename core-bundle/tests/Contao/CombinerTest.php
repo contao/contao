@@ -30,7 +30,6 @@ class CombinerTest extends TestCase
         parent::setUp();
 
         $this->filesystem = new Filesystem();
-
         $this->filesystem->mkdir($this->getTempDir().'/assets/css');
         $this->filesystem->mkdir($this->getTempDir().'/public');
         $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
@@ -279,6 +278,7 @@ class CombinerTest extends TestCase
 
         // Cached requests keep using the compiled output until the script cache is cleared.
         $this->assertSame($originalFile, $combiner->getCombinedFile());
+
         $this->filesystem->remove($this->getTempDir().'/assets/css');
 
         $updatedFile = $combiner->getCombinedFile();
@@ -309,7 +309,6 @@ class CombinerTest extends TestCase
             ->onlyMethods(['handleScssLess'])
             ->getMock()
         ;
-
         $combiner
             ->expects($this->once())
             ->method('handleScssLess')
@@ -337,7 +336,6 @@ class CombinerTest extends TestCase
             ->onlyMethods(['handleCss'])
             ->getMock()
         ;
-
         $cachedCombiner
             ->expects($this->never())
             ->method('handleCss')

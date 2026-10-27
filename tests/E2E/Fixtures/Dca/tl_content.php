@@ -70,6 +70,17 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_with_limited_actions'] = 
     'eval' => ['actions' => ['copy', 'edit'], 'sortable' => false, 'tl_class' => 'clr'],
 ];
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['table_wizard_basic'] = [
+    'label' => ['Table wizard basic', ''],
+    'inputType' => 'tableWizard',
+    'eval' => ['multiple' => true, 'tl_class' => 'clr'],
+];
+
+PaletteManipulator::create()
+    ->addField('table_wizard_basic', 'table_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('table', 'tl_content')
+;
+
 PaletteManipulator::create()
     ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions'], 'text_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('text', 'tl_content')

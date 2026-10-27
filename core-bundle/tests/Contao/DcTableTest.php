@@ -55,6 +55,7 @@ class DcTableTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $stack);
+
         System::setContainer($container);
 
         $dc = $this->getMockBuilder(DC_Table::class)
@@ -62,7 +63,6 @@ class DcTableTest extends TestCase
             ->onlyMethods(['getCurrentRecord'])
             ->getMock()
         ;
-
         $dc
             ->expects(DataContainer::PASTE_AFTER === $mode ? $this->once() : $this->never())
             ->method('getCurrentRecord')
@@ -150,13 +150,11 @@ class DcTableTest extends TestCase
             ->method('set')
             ->willReturnSelf()
         ;
-
         $statement
             ->expects($this->exactly(null === $failure || 'delete' === $failure ? 1 : 0))
             ->method('limit')
             ->willReturnSelf()
         ;
-
         $statement
             ->expects($this->exactly('insert' === $failure ? 1 : 2))
             ->method('__get')
@@ -199,7 +197,6 @@ class DcTableTest extends TestCase
             ->method('getFieldNames')
             ->willReturn(['id'])
         ;
-
         $database
             ->method('prepare')
             ->willReturnCallback(
@@ -229,7 +226,6 @@ class DcTableTest extends TestCase
             ->expects(null === $failure ? $this->once() : $this->never())
             ->method('info')
         ;
-
         $logger
             ->expects(null === $failure ? $this->never() : $this->once())
             ->method('error')
@@ -240,17 +236,20 @@ class DcTableTest extends TestCase
         $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
         $container->set('monolog.logger.contao.general', $logger);
         $container->set('monolog.logger.contao.error', $logger);
+
         System::setContainer($container);
 
         $GLOBALS['TL_LANG']['ERR']['undoNotRestored'] = 'Restore failed.';
 
-        $GLOBALS['TL_DCA']['tl_undo_test']['config']['onundo_callback'] = [static function (string $table, array $row) use ($failure): void {
-            if ('callback' === $failure && 2 === $row['id']) {
-                throw new \Error('Callback failed.');
-            }
-        }];
+        $GLOBALS['TL_DCA']['tl_undo_test']['config']['onundo_callback'] = [
+            static function (string $table, array $row) use ($failure): void {
+                if ('callback' === $failure && 2 === $row['id']) {
+                    throw new \Error('Callback failed.');
+                }
+            },
+        ];
 
-        $driver = new class() extends DC_Table {
+        $driver = new class extends DC_Table {
             public function __construct()
             {
                 $this->strTable = 'tl_undo';
@@ -286,6 +285,7 @@ class DcTableTest extends TestCase
 
         try {
             $driver->undo();
+
             $this->fail('Undo must redirect back to the list.');
         } catch (ResponseException $exception) {
             $this->assertSame('/contao?do=undo', $exception->getResponse()->headers->get('Location'));
@@ -347,6 +347,7 @@ class DcTableTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack([$request]));
+
         System::setContainer($container);
 
         $GLOBALS['TL_CONFIG']['maxResultsPerPage'] = 2;
@@ -356,6 +357,7 @@ class DcTableTest extends TestCase
             public function __construct(bool $api)
             {
                 $this->strTable = 'tl_test';
+
                 $this->setApiMode($api);
             }
 
@@ -418,8 +420,10 @@ class DcTableTest extends TestCase
     public function testApiRejectsUnavailableSorting(string $sort, array $sorting, int $flag): void
     {
         $dc = $this->createSortingDataContainer($sort);
+
         $GLOBALS['TL_DCA']['tl_test']['list']['sorting'] = $sorting;
         $GLOBALS['TL_DCA']['tl_test']['fields']['title']['flag'] = $flag;
+
         $this->expectException(UnprocessableEntityHttpException::class);
 
         $dc->showAll();
@@ -478,6 +482,7 @@ class DcTableTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $stack);
+
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_test'] = [
@@ -485,11 +490,12 @@ class DcTableTest extends TestCase
             'fields' => ['title' => ['sorting' => true, 'flag' => DataContainer::SORT_BOTH]],
         ];
 
-        return new class() extends DC_Table {
+        return new class extends DC_Table {
             public function __construct()
             {
                 $this->strTable = 'tl_test';
                 $this->orderBy = ['callback DESC'];
+
                 $this->setApiMode();
             }
 

@@ -29,7 +29,6 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
             ->method('has')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('findDefinition')

@@ -286,6 +286,7 @@ class Palette implements \Stringable
             if (preg_match('#{(.+?)(:collapsed|:hide)?}#', (string) $fields[0], $matches)) {
                 $legend = $matches[1];
                 $hide = isset($matches[2]);
+
                 array_shift($fields);
             } else {
                 $legend = $legendCount++;

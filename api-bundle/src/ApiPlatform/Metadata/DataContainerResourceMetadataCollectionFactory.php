@@ -127,9 +127,12 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         $operations = [
             'get_collection' => $this->createCollectionOperation(),
             'get' => new Get(),
-            'post' => new Post(),
             'patch' => new Patch(),
         ];
+
+        if (!($config['notCreatable'] ?? false)) {
+            $operations['post'] = new Post();
+        }
 
         if (!($config['notDeletable'] ?? false)) {
             $operations['delete'] = new Delete();

@@ -11,7 +11,7 @@ export default class extends Controller {
                 : 0;
 
         for (const el of this.countTargets) {
-            el.innerText = count !== 0 ? count : '';
+            el.textContent = count !== 0 ? count : '';
         }
     }
 }

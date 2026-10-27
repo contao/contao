@@ -37,6 +37,7 @@ class DomainFilterTest extends TestCase
         ;
 
         $expected = ['nohost', 'barfoo'];
+
         $collection
             ->expects($this->exactly(2))
             ->method('remove')
@@ -70,7 +71,6 @@ class DomainFilterTest extends TestCase
             ->method('all')
             ->willReturn($routes)
         ;
-
         $collection
             ->expects($this->never())
             ->method('remove')

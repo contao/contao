@@ -27,6 +27,7 @@ class IndexDocumentEventTest extends TestCase
 
         $document = $document->withMetadata(['something-on-top-for-my-template' => 'foobar']);
         $this->assertSame([], $event->getDocument()->getMetadata());
+
         $event->setDocument($document);
         $this->assertSame(['something-on-top-for-my-template' => 'foobar'], $event->getDocument()->getMetadata());
     }
@@ -34,8 +35,10 @@ class IndexDocumentEventTest extends TestCase
     public function testCanPreventDocumentFromBeingIndexedCompletely(): void
     {
         $document = new Document('42', 'type', 'searchable');
+
         $event = new IndexDocumentEvent($document);
         $event->setDocument(null);
+
         $this->assertNull($event->getDocument());
     }
 }

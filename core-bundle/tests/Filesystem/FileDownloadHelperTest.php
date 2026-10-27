@@ -115,7 +115,6 @@ class FileDownloadHelperTest extends TestCase
             ->method('getPath')
             ->willReturn('files/my_file.txt')
         ;
-
         $file
             ->expects($this->once())
             ->method('getMimeType')
@@ -133,7 +132,6 @@ class FileDownloadHelperTest extends TestCase
             ->with('files/my_file.txt')
             ->willReturn($file)
         ;
-
         $mountManager
             ->expects($this->once())
             ->method('readStream')

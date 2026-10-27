@@ -76,7 +76,7 @@ class DatabaseMigrationRunnerTest extends TestCase
 
     public function testReturnsPendingMigrationNamesLazily(): void
     {
-        $pendingNames = new class() implements \IteratorAggregate {
+        $pendingNames = new class implements \IteratorAggregate {
             public int $iterations = 0;
 
             public function getIterator(): \Traversable

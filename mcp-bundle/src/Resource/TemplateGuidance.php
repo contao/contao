@@ -27,76 +27,89 @@ final class TemplateGuidance
     )]
     public function templateGuidance(): string
     {
-        return str_replace('__CONTAO_VERSION__', ContaoCoreBundle::getVersion(), <<<'MARKDOWN'
-            # Contao template editing guidance
+        return str_replace(
+            '__CONTAO_VERSION__',
+            ContaoCoreBundle::getVersion(),
+            <<<'MARKDOWN'
+                # Contao template editing guidance
 
-            Installed Contao version: __CONTAO_VERSION__
+                Installed Contao version: __CONTAO_VERSION__
 
-            All `contao_template_*` tools expose Template Studio functionality and require the current backend user to have administrator privileges (`ROLE_ADMIN`).
+                All `contao_template_*` tools expose Template Studio functionality and require the current backend user to have administrator privileges (`ROLE_ADMIN`).
 
-            ## Choosing an edit target
+                ## Choosing an edit target
 
-            - Discover and read templates instead of guessing identifiers or source.
-            - Template identifiers come from `contao_template_discover` and do not include a file extension.
-            - Use `contao_template_list_themes` when the task targets a theme. Pass the returned slug unchanged to every subsequent tool; omit `theme` consistently for global user templates.
-            - Analyze impact before choosing the template to override.
-            - Prefer the narrowest template matching the requested scope.
-            - A `component/*` change can affect unrelated template families; a concrete template is narrower.
-            - Use the reported resolution chain and transitive consumers to account for user, theme, application and bundle overrides.
+                - Discover and read templates instead of guessing identifiers or source.
+                - Template identifiers come from `contao_template_discover` and do not include a file extension.
+                - Use `contao_template_list_themes` when the task targets a theme. Pass the returned slug unchanged to every subsequent tool; omit `theme` consistently for global user templates.
+                - Analyze impact before choosing the template to override.
+                - Prefer the narrowest template matching the requested scope.
+                - A `component/*` change can affect unrelated template families; a concrete template is narrower.
+                - Use the reported resolution chain and transitive consumers to account for user, theme, application and bundle overrides.
 
-            ## Extending templates and components
+                ## Discovering the Twig environment
 
-            - Prefer extending/importing a template and changing a block over copying its complete source.
-            - Call `parent()` when enhancing a block; omit it only when intentionally replacing the block.
-            - Treat `@Contao/...` as a managed name resolved through user, theme, application and bundle templates.
-            - Respect shadowing and inspect transitive consumers before making broad changes.
-            - Reusable components conventionally live below `component/`, document mandatory and optional variables with `@var`, and expose a top-level `*_component` block plus smaller blocks.
-            - Import reusable blocks with `{% use '@Contao/component/_name.html.twig' %}` and invoke them with `block()`.
-            - Pass component input through a scoped `{% with {…} %}` context instead of leaking temporary variables into the caller.
-            - Some generic components accept either a grouped object or the current context, e.g. `list|default(_context)`; the grouped object takes precedence.
-            - Preserve fine-grained blocks around wrappers, attributes and inner content. They are intentional customization points.
+                - Use `contao_twig_environment_discover` to discover registered filters, functions, tests, tags and globals, not templates. Discover names rather than guessing availability.
+                - Use `contao_twig_environment_inspect` with a returned kind and exact name before using unfamiliar constructs. Prefer non-deprecated alternatives.
+                - Signatures are best-effort reflection metadata, not usage documentation or a guarantee of Twig named-argument behavior. Tag metadata does not describe tag grammar.
+                - Globals describe declared APIs, not current frontend or request values. Template-local variables are outside this inventory. Obtaining globals may initialize extension-provided services, but inspection does not invoke their members or disclose their values.
+                - Continue validating proposed template code with `contao_template_validate`; environment discovery does not replace compilation checks.
+                - Consult `contao://twig/html-attributes` for `attrs()` usage.
 
-            ## Code style
+                ## Extending templates and components
 
-            - Match the style and naming of the template being extended and nearby templates.
-            - Indent nested Twig and HTML with four spaces, and separate logical sections with blank lines.
-            - Use descriptive `snake_case` names for new blocks and template variables, including element-specific attribute variables.
-            - Preserve existing block structure and Twig whitespace controls (`{%-` and `-%}`) when editing rendered output.
+                - Prefer extending/importing a template and changing a block over copying its complete source.
+                - Call `parent()` when enhancing a block; omit it only when intentionally replacing the block.
+                - Treat `@Contao/...` as a managed name resolved through user, theme, application and bundle templates.
+                - Respect shadowing and inspect transitive consumers before making broad changes.
+                - Reusable components conventionally live below `component/`, document mandatory and optional variables with `@var`, and expose a top-level `*_component` block plus smaller blocks.
+                - Import reusable blocks with `{% use '@Contao/component/_name.html.twig' %}` and invoke them with `block()`.
+                - Pass component input through a scoped `{% with {…} %}` context instead of leaking temporary variables into the caller.
+                - Some generic components accept either a grouped object or the current context, e.g. `list|default(_context)`; the grouped object takes precedence.
+                - Preserve fine-grained blocks around wrappers, attributes and inner content. They are intentional customization points.
 
-            ## Variables and attributes
+                ## Code style
 
-            - Use `|default`, `|default(null)` or `is defined` for optional extension variables.
-            - Preserve existing `HtmlAttributes` extension points. Build core defaults first and merge the identically named incoming variable last.
-            - Attribute variable names describe their element or role, such as `figure_attributes`, `link_attributes` or `script_attributes`.
-            - Merge data-owned attribute collections before the template extension variable. The extension variable remains the final customization layer.
-            - See `contao://twig/html-attributes` before changing attributes.
+                - Match the style and naming of the template being extended and nearby templates.
+                - Indent nested Twig and HTML with four spaces, and separate logical sections with blank lines.
+                - Use descriptive `snake_case` names for new blocks and template variables, including element-specific attribute variables.
+                - Preserve existing block structure and Twig whitespace controls (`{%-` and `-%}`) when editing rendered output.
 
-            ## Output, scripts and page composition
+                ## Variables and attributes
 
-            - Match the surrounding output policy: trusted rich HTML commonly uses `sanitize_html('contao')` before `insert_tag_html`; do not introduce `raw` for ordinary content.
-            - Register scripts and styles through `{% add … to body|head|stylesheets %}` when the surrounding component uses response-context assets.
-            - Add CSP nonces to inline scripts with `.setIfExists('nonce', csp_nonce('script-src'))`.
-            - Keep initialization options in dedicated blocks when a component exposes them.
-            - Preserve `{% defer %}` when output depends on response context populated later in rendering.
-            - Preserve page slots and their `slot()` fallback behavior.
+                - Use `|default`, `|default(null)` or `is defined` for optional extension variables.
+                - Preserve existing `HtmlAttributes` extension points. Build core defaults first and merge the identically named incoming variable last.
+                - Attribute variable names describe their element or role, such as `figure_attributes`, `link_attributes` or `script_attributes`.
+                - Merge data-owned attribute collections before the template extension variable. The extension variable remains the final customization layer.
+                - See `contao://twig/html-attributes` before changing attributes.
 
-            ## Workflow
+                ## Output, scripts and page composition
 
-            - Read the template before changing it. The returned `operations` are the operations currently available for that identifier and theme context; do not assume another operation is supported.
-            - Create a snapshot before the first mutation in a task and keep its hash until the work is accepted.
-            - If `can_edit` is false and `create` is available, create the override before saving. Creation writes generated default content, which must then be replaced with the intended complete source.
-            - Validation compiles the complete proposed source in context but does not render it with runtime data. Treat a successful result as a syntax and compilation check, not proof of correct output.
-            - For an advertised `create_*` or `rename_*` operation, first call `contao_template_execute_operation` without `parameters`. This returns operation guidance without creating or renaming a file. Then call it again with the required parameters, such as a valid `identifier_fragment`.
-            - Re-read and re-analyze the result after creating, renaming or changing an override. Use the new identifier returned by a rename operation.
-            - Dynamic template references and references created in PHP may require human review.
+                - Match the surrounding output policy: trusted rich HTML commonly uses `sanitize_html('contao')` before `insert_tag_html`; do not introduce `raw` for ordinary content.
+                - Register scripts and styles through `{% add … to body|head|stylesheets %}` when the surrounding component uses response-context assets.
+                - Add CSP nonces to inline scripts with `.setIfExists('nonce', csp_nonce('script-src'))`.
+                - Keep initialization options in dedicated blocks when a component exposes them.
+                - Preserve `{% defer %}` when output depends on response context populated later in rendering.
+                - Preserve page slots and their `slot()` fallback behavior.
 
-            ## Snapshot recovery
+                ## Workflow
 
-            - A snapshot covers the entire project `templates/` directory, not just the template being edited. Its history is stored in the application cache, separate from the project Git repository, and can be cleared with that cache; it is not a durable backup.
-            - Use `contao_template_diff` with the saved hash to inspect changes against that recovery point. Omitting the hash compares with the latest snapshot.
-            - Use `contao_template_snapshots` to find snapshot hashes. An explicit hash can be used with both `contao_template_diff` and `contao_template_rollback`.
-            - `contao_template_rollback` replaces the entire `templates/` directory. Only call it when the user explicitly requests a restore and identifies the intended snapshot, preferably by hash. If hash is omitted, the latest snapshot is restored.
-            MARKDOWN);
+                - Read the template before changing it. The returned `operations` are the operations currently available for that identifier and theme context; do not assume another operation is supported.
+                - Create a snapshot before the first mutation in a task and keep its hash until the work is accepted.
+                - If `can_edit` is false and `create` is available, create the override before saving. Creation writes generated default content, which must then be replaced with the intended complete source.
+                - Validation compiles the complete proposed source in context but does not render it with runtime data. Treat a successful result as a syntax and compilation check, not proof of correct output.
+                - For an advertised `create_*` or `rename_*` operation, first call `contao_template_execute_operation` without `parameters`. This returns operation guidance without creating or renaming a file. Then call it again with the required parameters, such as a valid `identifier_fragment`.
+                - Re-read and re-analyze the result after creating, renaming or changing an override. Use the new identifier returned by a rename operation.
+                - Dynamic template references and references created in PHP may require human review.
+
+                ## Snapshot recovery
+
+                - A snapshot covers the entire project `templates/` directory, not just the template being edited. Its history is stored in the application cache, separate from the project Git repository, and can be cleared with that cache; it is not a durable backup.
+                - Use `contao_template_diff` with the saved hash to inspect changes against that recovery point. Omitting the hash compares with the latest snapshot.
+                - Use `contao_template_snapshots` to find snapshot hashes. An explicit hash can be used with both `contao_template_diff` and `contao_template_rollback`.
+                - `contao_template_rollback` replaces the entire `templates/` directory. Only call it when the user explicitly requests a restore and identifies the intended snapshot, preferably by hash. If hash is omitted, the latest snapshot is restored.
+                MARKDOWN,
+        );
     }
 
     #[McpResource(

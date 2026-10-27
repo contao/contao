@@ -38,7 +38,6 @@ class StringRuntimeTest extends TestCase
             ->with('html', true)
             ->willReturn('plain text')
         ;
-
         $htmlDecoder
             ->expects($this->once())
             ->method('inputEncodedToPlainText')

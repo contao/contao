@@ -20,9 +20,6 @@ Encore
             }
         };
     })
-    .cleanupOutputBeforeBuild(options => {
-        options.keep = /icons\//;
-    })
     .addEntry('backend', './core-bundle/assets/backend.js')
     .addEntry('navigation', './core-bundle/assets/navigation.js')
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
@@ -30,29 +27,8 @@ Encore
     .addStyleEntry('login', './core-bundle/assets/styles/login.pcss')
     .addStyleEntry('hugerte', './core-bundle/assets/styles/vendors/hugerte/theme/light.pcss')
     .addStyleEntry('hugerte-dark', './core-bundle/assets/styles/vendors/hugerte/theme/dark.pcss')
-    .configureDevServerOptions(options => {
-        options.server = {
-            type: 'https',
-            options: {
-                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
-            }
-        };
-        options.allowedHosts = 'all';
-    })
-;
-
-const jsConfig = Encore.getWebpackConfig();
-
-Encore.reset();
-
-// Back end icons
-Encore
-    .setOutputPath('core-bundle/public/icons')
-    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public/icons' : '/bundles/contaocore/icons')
-    .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild()
-    .disableSingleRuntimeChunk()
     .addPlugin(new ImageMinimizerPlugin({
+        test: /(^|\/)icons\//,
         minimizer: {
             implementation: ImageMinimizerPlugin.svgoMinify,
             options: {
@@ -75,10 +51,14 @@ Encore
             },
         },
     }))
-    .copyFiles({
-        from: './core-bundle/assets/icons',
-        to: '[name].[hash:8].[ext]',
-        pattern: /\.svg$/,
+    .configureImageRule({}, rule => {
+        rule.oneOf.unshift({
+            include: path.resolve(__dirname, 'core-bundle/assets/icons'),
+            type: 'asset/resource',
+            generator: {
+                filename: 'icons/[name].[hash:8][ext]',
+            },
+        });
     })
     .configureDevServerOptions(options => {
         options.server = {
@@ -91,8 +71,4 @@ Encore
     })
 ;
 
-const iconConfig = Encore.getWebpackConfig();
-
-delete iconConfig.devServer;
-
-module.exports = [jsConfig, iconConfig];
+module.exports = Encore.getWebpackConfig();

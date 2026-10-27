@@ -73,6 +73,7 @@ class Altcha
         }
 
         parse_str(explode('?', $json['salt'], 2)[1] ?? '', $parameters);
+
         $expiry = (int) ($parameters['expires'] ?? 0);
 
         if ($expiry < time()) {

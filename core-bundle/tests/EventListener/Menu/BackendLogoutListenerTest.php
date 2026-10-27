@@ -121,6 +121,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
         $factory = new MenuFactory();
         $menu = $factory->createItem('headerMenu');
+
         $event = new MenuEvent($factory, $menu);
 
         $listener = new BackendLogoutListener(
@@ -145,7 +146,6 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->with('ROLE_USER')
             ->willReturn(true)
         ;
-
         $security
             ->expects($this->atLeastOnce())
             ->method('getToken')

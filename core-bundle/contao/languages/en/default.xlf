@@ -320,6 +320,9 @@
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to "auto".</source>
       </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -1069,6 +1072,42 @@
       </trans-unit>
       <trans-unit id="MSC.tw_cdelete">
         <source>Delete the column</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_above">
+        <source>Insert above</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_below">
+        <source>Insert below</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_left">
+        <source>Insert left</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_insert_right">
+        <source>Insert right</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_duplicate">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_clear">
+        <source>Clear content</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_delete">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_row_actions">
+        <source>Row actions and sorting</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_col_actions">
+        <source>Column actions and sorting</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_row">
+        <source>Click to add a new row. Drag to add or remove rows.</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_column">
+        <source>Click to add a new column. Drag to add or remove columns.</source>
+      </trans-unit>
+      <trans-unit id="MSC.tw_add_row_column">
+        <source>Click to add rows/columns. Drag to add or remove rows/columns.</source>
       </trans-unit>
       <trans-unit id="MSC.ow_copy">
         <source>Duplicate the row</source>
@@ -2360,6 +2399,54 @@
       <trans-unit id="MSC.deletePasskey">
         <source>Delete passkey &quot;%s&quot;</source>
       </trans-unit>
+      <trans-unit id="MSC.personalAccessTokens">
+        <source>Personal access tokens</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokensDescription">
+        <source>Personal access tokens allow you to authenticate as your backend user for stateless APIs.</source>
+      </trans-unit>
+      <trans-unit id="MSC.generatePersonalAccessToken">
+        <source>Generate token</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenName">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenNameDescription">
+        <source>What‘s this token for?</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenCopy">
+        <source>Copy the token to your clipboard</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAt">
+        <source>Expires at</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresIn">
+        <source>Expires in</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtDescription">
+        <source>The token will expire on the given date.</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.7">
+        <source>7 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.30">
+        <source>30 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.60">
+        <source>60 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.90">
+        <source>90 days</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.365">
+        <source>1 year</source>
+      </trans-unit>
+      <trans-unit id="MSC.personalAccessTokenExpiresAtOptions.unlimited">
+        <source>No expiration</source>
+      </trans-unit>
+      <trans-unit id="MSC.lastUsed">
+        <source>Last used</source>
+      </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
       </trans-unit>
@@ -2437,6 +2524,12 @@
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+      </trans-unit>
+      <trans-unit id="MSC.previewTime">
+        <source>Time</source>
+      </trans-unit>
+      <trans-unit id="MSC.clearPreviewTime">
+        <source>Clear preview time</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

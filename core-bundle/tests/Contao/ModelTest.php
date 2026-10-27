@@ -51,6 +51,7 @@ class ModelTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.doctrine.schema_provider', $schemaProvider);
+
         System::setContainer($container);
     }
 
@@ -114,7 +115,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testConvertToPhpValue(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -128,7 +129,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDefaultValues')]
     public function testDefaultValues(string $key, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -171,7 +172,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testMagicSetterTypes(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -290,6 +291,7 @@ class ModelTest extends TestCase
     private function createSchema(bool $fromDatabase): Schema
     {
         $schema = new Schema();
+
         $table = $schema->createTable('tl_Foo');
         $table->addColumn('string_not_null', Types::STRING, ['notnull' => true, 'default' => 'string']);
         $table->addColumn('string_null', Types::STRING, ['notnull' => false, 'default' => 1]);

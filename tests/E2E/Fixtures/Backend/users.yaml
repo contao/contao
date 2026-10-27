@@ -78,7 +78,7 @@ tl_user:
         thumbnails: 1
         useRTE: 1
         useCE: 1
-        password: $2y$13$r2Bm9Yt7UdhbHJQ/HjgYZuUM89vVl9FSb0slHzlOfOY.ExQbj7u1.
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         admin: 1
         disable: 0
         dateAdded: 1257428510
@@ -93,7 +93,7 @@ tl_user:
         thumbnails: 1
         useRTE: 1
         useCE: 1
-        password: $argon2id$v=19$m=65536,t=4,p=1$KtVG/rsaYC1BY48jQNDgNg$ROCOHE3uh8Al1vH+AkVzYX1YirS2q28VpHJRfPDjiBY
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups: ['@editors']
         inherit: extend
         disable: 0
@@ -109,8 +109,26 @@ tl_user:
         thumbnails: 1
         useRTE: 1
         useCE: 1
-        password: $argon2id$v=19$m=65536,t=4,p=1$Kwd39s0EBayBe+63POnPqw$QMQKLMcKdvDdBbySlV5+cE+hk+rpBayospme0ZAtZiY
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups: ['@editors']
         inherit: extend
         disable: 0
         dateAdded: 1259754527
+
+# All backend fixture users have a PAT with the test-only secret "e2e".
+personal_access_token:
+    kevin_jones_token: &backend_token_defaults
+        id: !!binary 2TQMBchKUI67kly2rxxBxg==
+        userId: '@kevin_jones'
+        scope: backend
+        createdAt: '2026-10-12 12:00:00'
+        name: E2E
+        secret: bYdJxP4At1fBvBw3apnzHRvTi0ItRPW2qi1qbF6XXLo=
+    james_wilson_token:
+        <<: *backend_token_defaults
+        id: !!binary so8/3JtLXwyj8npPSy+Qiw==
+        userId: '@james_wilson'
+    helen_lewis_token:
+        <<: *backend_token_defaults
+        id: !!binary vxGDc4YKWqahXpGcfa+7OA==
+        userId: '@helen_lewis'

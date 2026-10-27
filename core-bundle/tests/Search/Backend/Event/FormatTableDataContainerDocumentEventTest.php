@@ -32,9 +32,10 @@ class FormatTableDataContainerDocumentEventTest extends TestCase
     public function testSetSearchableContent(): void
     {
         $searchableContent = 'searchable content';
-        $event = new FormatTableDataContainerDocumentEvent('foobar', []);
 
+        $event = new FormatTableDataContainerDocumentEvent('foobar', []);
         $event->setSearchableContent($searchableContent);
+
         $this->assertSame($searchableContent, $event->getSearchableContent());
     }
 }

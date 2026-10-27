@@ -89,15 +89,12 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 'picker' => $config->cloneForCurrent($this->getName().'.'.$name)->urlEncode(),
             ];
 
-            $menu->addChild($this->menuFactory->createItem(
-                $name,
-                [
-                    'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
-                    'linkAttributes' => ['class' => $name.'Picker'],
-                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
-                    'uri' => $this->router->generate('contao_backend', $params),
-                ],
-            ));
+            $menu->addChild($this->menuFactory->createItem($name, [
+                'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
+                'linkAttributes' => ['class' => $name.'Picker'],
+                'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
+                'uri' => $this->router->generate('contao_backend', $params),
+            ]));
         }
     }
 

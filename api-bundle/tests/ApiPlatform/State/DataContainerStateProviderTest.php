@@ -65,6 +65,7 @@ final class DataContainerStateProviderTest extends TestCase
         $operation = new Get(read: true, extraProperties: ['contao' => ['table' => 'tl_content']]);
 
         $this->expectException(NotFoundHttpException::class);
+
         $provider->provide($operation, ['id' => 17]);
     }
 
@@ -102,10 +103,12 @@ final class DataContainerStateProviderTest extends TestCase
             )
         ;
 
-        $operation = new GetCollection(extraProperties: ['contao' => [
-            'table' => 'tl_news',
-            'parents' => [['table' => 'tl_news_archive', 'parameter' => 'news_archive_id']],
-        ]]);
+        $operation = new GetCollection(extraProperties: [
+            'contao' => [
+                'table' => 'tl_news',
+                'parents' => [['table' => 'tl_news_archive', 'parameter' => 'news_archive_id']],
+            ],
+        ]);
 
         new DataContainerStateProvider($records, new Pagination())->provide($operation, ['news_archive_id' => 23]);
     }

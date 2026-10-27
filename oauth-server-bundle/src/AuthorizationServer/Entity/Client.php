@@ -27,6 +27,7 @@ final class Client implements ClientEntityInterface
     public function __construct(string $identifier, string $name, array $redirectUris)
     {
         $this->setIdentifier($identifier);
+
         $this->name = $name;
         $this->redirectUri = $redirectUris;
         $this->isConfidential = false;

@@ -193,7 +193,6 @@ class DeferredImageResponseFactoryTest extends TestCase
             ->method('getPath')
             ->willReturn($this->getTempDir().'/missing.jpg')
         ;
-
         $image
             ->method('getDimensions')
             ->willReturn(new ImageDimensions(new Box(320, 180)))

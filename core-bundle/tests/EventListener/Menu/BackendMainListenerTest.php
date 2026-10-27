@@ -81,7 +81,6 @@ class BackendMainListenerTest extends TestCase
             ->method('getCatalogue')
             ->willReturn($messageCatalogue)
         ;
-
         $translator
             ->method('trans')
             ->willReturnMap([
@@ -247,7 +246,6 @@ class BackendMainListenerTest extends TestCase
             ->method('getCatalogue')
             ->willReturn($messageCatalogue)
         ;
-
         $translator
             ->method('trans')
             ->willReturnMap([
@@ -349,6 +347,7 @@ class BackendMainListenerTest extends TestCase
         ;
 
         $menu->addChild($group);
+
         $group->addChild($module);
         $group->addChild($legacyModule);
 
@@ -403,6 +402,7 @@ class BackendMainListenerTest extends TestCase
         ;
 
         $item->addChild('child')->setUri('/child');
+
         $menu->addChild($item);
 
         $html = $this->createRenderer([])->render($menu);
@@ -419,6 +419,7 @@ class BackendMainListenerTest extends TestCase
         $loader->addPath(__DIR__.'/../../../contao/templates', 'Contao');
 
         $bundlePath = new KnpMenuBundle()->getPath();
+
         $loader->addPath($bundlePath.'/templates', 'KnpMenu');
         $loader->addPath(\dirname($bundlePath).'/knp-menu/src/Knp/Menu/Resources/views');
 

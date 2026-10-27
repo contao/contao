@@ -85,13 +85,39 @@ trait BackendTestTrait
         return Uuid::fromBinary($uuid);
     }
 
-    private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
+    private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
     {
+        $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->loginOrReuseSessionAs($username, $password);
-        $backend->waitFor('h1');
+        $backend->loginOrReuseSessionAs(
+            $username,
+            self::backendPassword($userFixture),
+            fn (BackendBrowser $browser) => $this->assertBackendLogin($browser, $username),
+        );
 
         return $backend;
+    }
+
+    private function assertBackendLogin(BackendBrowser $backend, string $username): void
+    {
+        $backend->waitFor('h1');
+
+        $this->assertSelectorTextContains('h1', 'Dashboard');
+
+        $cookies = $backend->browser()->context()->cookies();
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
+        ));
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
+        ));
+
+        $this->assertSelectorTextContains('#tmenu', $username);
     }
 
     /**

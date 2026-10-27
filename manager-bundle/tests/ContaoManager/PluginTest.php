@@ -254,6 +254,7 @@ class PluginTest extends ContaoTestCase
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
+
         $routes = array_values($collection->all());
 
         $this->assertCount(1, $routes);
@@ -292,6 +293,7 @@ class PluginTest extends ContaoTestCase
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
+
         $routes = array_values($collection->all());
 
         $this->assertCount(3, $routes);

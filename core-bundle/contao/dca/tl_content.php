@@ -14,6 +14,7 @@ use Contao\ContentModel;
 use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
@@ -321,11 +322,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tableitems' => array
 		(
 			'inputType'               => 'tableWizard',
-			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'doNotSaveEmpty'=>true, 'style'=>'width:142px;height:66px'),
-			'xlabel' => array
-			(
-				array('tl_content', 'tableImportWizard')
-			),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'rte'=>'inlineRTE', 'doNotSaveEmpty'=>true),
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		),
 		'summary' => array
@@ -1069,7 +1066,17 @@ class tl_content extends Backend
 		}
 		catch (Throwable $exception)
 		{
-			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+			$template = System::getContainer()->get('twig')->createTemplate('<p class="{{ class }}">{{ message }}</p>');
+			$messageClass = 'tl_error';
+			$message = $exception->getMessage();
+
+			if ($exception instanceof ResponseException)
+			{
+				$messageClass = 'tl_info';
+				$message = System::getContainer()->get('translator')->trans('ERR.fragmentResponseException', array(), 'contao_default');
+			}
+
+			$preview = $template->render(array('class' => $messageClass, 'message' => $message));
 		}
 
 		if (!empty($arrRow['sectionHeadline']))
@@ -1190,6 +1197,11 @@ class tl_content extends Backend
 		}
 		catch (AccessDeniedException)
 		{
+			$module = null;
+		}
+
+		if ($module === null)
+		{
 			return '';
 		}
 
@@ -1273,9 +1285,13 @@ class tl_content extends Backend
 	 * Add a link to the table items import wizard
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated in Contao 6.1, to be removed in Contao 7.
 	 */
 	public function tableImportWizard()
 	{
+		trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
+
 		return ' <a href="' . StringUtil::ampersand($this->addToUrl('key=table')) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '</a> ' . Image::getHtml('demagnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_shrink'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)" data-contao--tooltips-target="tooltip"') . Image::getHtml('magnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_expand'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)" data-contao--tooltips-target="tooltip"');
 	}
 
