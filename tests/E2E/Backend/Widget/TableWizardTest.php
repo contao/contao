@@ -37,6 +37,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->openTableElement();
 
         $this->edit($backend, 1, 1, 'Dolor');
+
         $backend->submitForm('Save');
 
         $this->assertSame('IpsumDolor', $this->grid($backend)[1][1]);
@@ -143,6 +144,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     {
         $backend = $this->openTableElement();
         $keyboard = $backend->page()->keyboard();
+
         $handle = $this->handle($backend, 'row', 1);
         $menu = $this->wizard($backend)->locator('.table-wizard-menu');
 
@@ -158,6 +160,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         $keyboard->press('ArrowDown');
         $keyboard->press('Tab');
+
         $this->assertSame('insertBefore', $this->focusedOperation($backend));
 
         // Escape closes the menu and focuses the handle again
@@ -220,6 +223,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([$middle, $foot, $head], $this->grid($backend));
 
         $this->dragHandle($backend, 'column', 0, 2);
+
         $expected = array_map(static fn ($row) => [$row[1], $row[2], $row[0]], [$middle, $foot, $head]);
         $this->assertSame($expected, $this->grid($backend));
 
@@ -254,6 +258,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([[0, 2], [1, 2], [2, 2]], $this->activeCells($backend));
 
         $backend->page()->keyboard()->press('Escape');
+
         $this->handle($backend, 'column', 2)->blur();
         $this->assertSame([], $this->activeCells($backend));
     }
@@ -261,9 +266,10 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     public function testAddButtonsAppendCellsAndFocusThem(): void
     {
         $backend = $this->openTableElement();
-        $wizard = $this->wizard($backend, self::BASIC_TABLE_WIZARD);
 
+        $wizard = $this->wizard($backend, self::BASIC_TABLE_WIZARD);
         $wizard->locator('.table-wizard-add-row')->click();
+
         $this->assertSame([[''], ['']], $this->grid($backend, self::BASIC_TABLE_WIZARD));
         $this->assertSame([1, 0], $this->focusedCell($backend, self::BASIC_TABLE_WIZARD));
 
@@ -341,6 +347,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         // A selection is collapsed instead of leaving the cell
         $keyboard->press('Shift+ArrowLeft');
         $keyboard->press('ArrowDown');
+
         $this->assertSame([0, 0, 2], $this->caret($backend));
     }
 
@@ -357,7 +364,9 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([0, 0], $this->focusedCell($backend, self::RTE));
 
         $this->moveRteCaret($backend, true);
+
         $keyboard->press('ArrowRight');
+
         $this->waitForEditor($backend, 0, 1);
 
         // Inside the text, the caret moves as usual
@@ -365,15 +374,21 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([0, 1], $this->focusedCell($backend, self::RTE));
 
         $this->moveRteCaret($backend, true);
+
         $keyboard->press('ArrowDown');
+
         $this->waitForEditor($backend, 1, 1);
 
         $this->moveRteCaret($backend, false);
+
         $keyboard->press('ArrowUp');
+
         $this->waitForEditor($backend, 0, 1);
 
         $this->moveRteCaret($backend, false);
+
         $keyboard->press('ArrowLeft');
+
         $this->waitForEditor($backend, 0, 0);
 
         // Escape leaves the editor
@@ -405,6 +420,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertNull($copy->getAttribute('contenteditable'));
 
         $this->edit($backend, 2, 0, 'Y');
+
         $backend->submitForm('Save');
 
         $this->assertSame('LoremX', $this->grid($backend)[1][0]);
@@ -421,6 +437,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         // Drag the resize handle in the bottom right corner of the first cell
         $box = $this->input($backend, self::BASIC_TABLE_WIZARD, 0, 0)->boundingBox();
+
         $mouse = $backend->page()->mouse();
         $mouse->move($box['x'] + $box['width'] - 3, $box['y'] + $box['height'] - 3);
         $mouse->down();
@@ -446,8 +463,10 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     public function testZoomButtonsResizeAllCellsAndRememberTheSize(): void
     {
         $backend = $this->openTableElement();
+
         $wizard = $this->wizard($backend, self::BASIC_TABLE_WIZARD);
         $expand = $wizard->locator('[data-action="contao--table-wizard#expandCellSizes"]');
+
         $wizard->locator('.table-wizard-add-both')->click();
 
         $initial = $this->cellSizes($wizard);
@@ -480,9 +499,12 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend->visit($backend->page()->url());
         $backend->waitFor('.table-wizard:has(#ctrl_'.self::BASIC_TABLE_WIZARD.')');
 
-        $this->assertSame([\sprintf('%dpx|%dpx', ...$maximum[0])], array_values(array_unique(
-            $backend->page()->locator('.table-wizard-input:not([hidden])')->evaluateAll('inputs => inputs.map(input => `${input.style.width}|${input.style.height}`)'),
-        )));
+        $this->assertSame(
+            [\sprintf('%dpx|%dpx', ...$maximum[0])],
+            array_values(array_unique(
+                $backend->page()->locator('.table-wizard-input:not([hidden])')->evaluateAll('inputs => inputs.map(input => `${input.style.width}|${input.style.height}`)'),
+            )),
+        );
     }
 
     public function testImportReplacesTheTableItems(): void
@@ -524,6 +546,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         // The first cell of the new row is focused and edited directly
         $this->wizard($backend)->locator('.table-wizard-add-row')->click();
         $this->waitForEditor($backend, 3, 0);
+
         $backend->page()->keyboard()->type('Added');
         $backend->submitForm('Save');
 
@@ -539,13 +562,14 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $button->evaluate('el => el.scrollIntoView({block: "start"})');
 
         $box = $button->boundingBox();
-        $mouse = $backend->page()->mouse();
 
+        $mouse = $backend->page()->mouse();
         $mouse->move($box['x'] + $box['width'] / 2, $box['y'] + $box['height'] / 2);
         $mouse->down();
 
         // The browser takes over the pointer and no pointerup follows
         $backend->page()->evaluate('window.dispatchEvent(new PointerEvent("pointercancel"))');
+
         $mouse->move($box['x'] + $box['width'] / 2, $box['y'] + 150, ['steps' => 10]);
         $mouse->up();
 
@@ -555,8 +579,10 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     public function testEditMultipleTogglesTheAppearanceCheckboxes(): void
     {
         $backend = $this->login();
+
         $fixtures = self::managedEdition()->database()->fixtures();
         $id = (string) $fixtures->value('content_table');
+
         $field = self::RTE.'_'.$id;
 
         $backend->visit($fixtures->interpolate('/contao?do=article&table=tl_content&id={article_microsite_home}&act=select'));
@@ -652,6 +678,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($checked ? 'true' : 'false', $item->getAttribute('aria-checked'));
 
         $backend->page()->keyboard()->press('Escape');
+
         $this->wizard($backend, $field)->locator('.table-wizard-menu')->waitFor(['state' => 'detached']);
     }
 
@@ -662,6 +689,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     {
         $this->activate($backend, $row, $column);
         $this->moveRteCaret($backend, true);
+
         $backend->page()->keyboard()->type($text);
     }
 
@@ -691,6 +719,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     {
         $target = $this->handle($backend, $axis, $to);
         $box = $target->boundingBox();
+
         $position = 'row' === $axis ? ['x' => $box['width'] / 2, 'y' => $box['height'] - 2] : ['x' => $box['width'] - 2, 'y' => $box['height'] / 2];
 
         $this->handle($backend, $axis, $from)->dragTo($target, ['targetPosition' => $position]);
