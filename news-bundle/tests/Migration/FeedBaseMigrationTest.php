@@ -47,7 +47,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
     {
         $this->connection->executeStatement($sql);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -71,7 +71,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->connection->insert('tl_page', ['id' => 1, 'type' => 'regular']);
         $this->connection->insert('tl_page', ['id' => 2, 'type' => 'news_feed', 'feedBase' => 'https://configured.example']);
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -104,7 +104,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
             ])
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkMock([PageModel::class => $pageAdapter]);
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')
