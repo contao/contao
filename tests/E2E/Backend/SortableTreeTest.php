@@ -26,6 +26,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     {
         $backend = $this->openExpandedTree();
         $tree = $backend->page()->locator('ul.tl_tree[data-id="0"]');
+
         $ids = $this->recordIds($tree);
         $backend->page()->locator('.header_toggle:visible')->first()->click();
 
@@ -34,6 +35,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(array_reverse($ids), $this->recordIds($tree));
         $this->assertTrue($tree->locator(':scope > li')->first()->evaluate('el => el.classList.contains("tl_folder_top")'));
+
         $backend->visit('/contao?do=page');
         $this->assertSame(array_reverse($ids), $this->recordIds($tree));
     }
@@ -46,7 +48,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $target = $this->record($backend, 'page_tree_empty')->locator(':scope > ul[data-contao--sortable-group-value="tree"]');
 
         $this->assertSame(0, $target->locator(':scope > li')->count());
+
         $before = (int) $child->locator(':scope > .tl_file > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")');
+
         $this->drag($backend, $page, $target);
         $this->waitForMove($backend);
 
@@ -56,6 +60,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('2', $page->locator(':scope > div > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")'));
 
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame([$this->fixtureId('page_main_home')], $this->recordIds($target));
         $this->assertSame($this->fixtureId('page_main_home'), $child->evaluate('el => el.parentElement.dataset.id'));
@@ -71,7 +76,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         $expected = array_map($this->fixtureId(...), ['page_tree_empty', 'page_tree_child', 'page_tree_second_child']);
         $this->assertSame($expected, $this->recordIds($target));
+
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($expected, $this->recordIds($target));
     }
@@ -88,10 +95,12 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $request = $backend->page()->evaluate('Object.fromEntries(new URL(window.sortingRequests[0]).searchParams)');
         $this->assertSame('1', $request['mode']);
         $this->assertSame($this->fixtureId('page_tree_error'), $request['pid']);
+
         $expected = array_map($this->fixtureId(...), ['page_main_home', 'page_tree_error', 'page_tree_empty']);
         $this->assertSame($expected, $this->recordIds($list));
 
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($expected, $this->recordIds($list));
     }
@@ -99,19 +108,24 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     public function testChildListRemainsSortableAfterMovingItsParent(): void
     {
         $backend = $this->openExpandedTree();
+
         $parent = $this->record($backend, 'page_main_home');
         $children = $parent->locator(':scope > ul[data-contao--sortable-group-value="tree"]');
+
         $target = $this->record($backend, 'page_tree_empty')->locator(':scope > ul[data-contao--sortable-group-value="tree"]');
 
         $this->drag($backend, $parent, $target);
         $this->waitForMove($backend);
         $this->assertSame([$this->fixtureId('page_main_home')], $this->recordIds($target));
+
         $this->drag($backend, $this->record($backend, 'page_tree_second_child'), $this->record($backend, 'page_tree_child')->locator(':scope > .tl_file'));
         $this->waitForMove($backend, 2);
 
         $expected = array_map($this->fixtureId(...), ['page_tree_second_child', 'page_tree_child']);
         $this->assertSame($expected, $this->recordIds($children));
+
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($this->fixtureId('page_tree_empty'), $parent->evaluate('el => el.parentElement.dataset.id'));
         $this->assertSame($expected, $this->recordIds($children));
@@ -121,8 +135,10 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     public function testDragRejectsInvalidPageDestinations(string $source, string $destination, bool $topLevel): void
     {
         $backend = $this->openExpandedTree();
+
         $record = $this->record($backend, $source);
         $parent = $record->evaluate('el => el.parentElement.dataset.id');
+
         $target = $topLevel
             ? $backend->page()->locator('.tl_folder_top')
             : $this->record($backend, $destination)->locator(':scope > ul[data-contao--sortable-group-value="tree"]');
@@ -131,7 +147,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame($parent, $record->evaluate('el => el.parentElement.dataset.id'));
         $this->assertSame([], $backend->page()->evaluate('window.sortingRequests'));
+
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($parent, $record->evaluate('el => el.parentElement.dataset.id'));
     }
@@ -153,7 +171,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $this->waitForMove($backend);
 
         $this->assertSame(array_reverse($ids), $this->recordIds($articles));
+
         $backend->visit('/contao?do=article');
+
         $this->expandTree($backend);
         $this->assertSame(array_reverse($ids), $this->recordIds($articles));
     }
@@ -166,12 +186,15 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $level = (int) $article->locator(':scope > .tl_file > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")');
 
         $this->assertSame(0, $target->locator(':scope > li')->count());
+
         $this->drag($backend, $article, $target);
         $this->waitForMove($backend);
 
         $this->assertSame([$this->fixtureId('article_main_home')], $this->recordIds($target));
         $this->assertSame((string) ($level + 1), $article->locator(':scope > .tl_file > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")'));
+
         $backend->visit('/contao?do=article');
+
         $this->expandTree($backend);
         $this->assertSame([$this->fixtureId('article_main_home')], $this->recordIds($target));
         $this->assertSame((string) ($level + 1), $article->locator(':scope > .tl_file > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")'));
@@ -188,7 +211,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame($this->fixtureId('page_main_home'), $article->evaluate('el => el.parentElement.dataset.id'));
         $this->assertSame([], $backend->page()->evaluate('window.sortingRequests'));
+
         $backend->visit('/contao?do=article');
+
         $this->expandTree($backend);
         $this->assertSame($this->fixtureId('page_main_home'), $article->evaluate('el => el.parentElement.dataset.id'));
     }
@@ -209,13 +234,16 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $target->evaluate('el => el.setAttribute("data-contao--sortable-request-token-value", "invalid")');
 
         $this->drag($backend, $page, $target);
+
         $backend->page()->waitForFunction('window.sortingErrors.length === 1');
 
         $this->assertStringContainsString('/contao/confirm', $backend->page()->evaluate('window.sortingResponses[0].redirect'));
         $this->assertSame('error', $backend->page()->evaluate('window.sortingErrors[0].type'));
         $this->assertSame($original, $this->recordIds($page->locator('..')));
         $this->assertSame($levels, $page->locator('li[data-id] > div > .tl_left, :scope > div > .tl_left')->evaluateAll('labels => labels.map(el => el.style.getPropertyValue("--level"))'));
+
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($original, $this->recordIds($page->locator('..')));
         $this->assertSame($levels, $page->locator('li[data-id] > div > .tl_left, :scope > div > .tl_left')->evaluateAll('labels => labels.map(el => el.style.getPropertyValue("--level"))'));
@@ -234,7 +262,9 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($this->fixtureId('page_main_website'), $page->evaluate('el => el.parentElement.dataset.id'));
         $this->assertSame($original, $this->recordIds($page->locator('..')));
         $this->assertSame('2', $page->locator(':scope > .tl_file > .tl_left')->evaluate('el => el.style.getPropertyValue("--level")'));
+
         $backend->visit('/contao?do=page');
+
         $this->expandTree($backend);
         $this->assertSame($original, $this->recordIds($page->locator('..')));
     }
@@ -243,17 +273,22 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     public function testKeyboardSortingRetainsFocusAndPersists(string $module, string $fixture, bool $article): void
     {
         $backend = $this->openExpandedTree($module);
+
         $record = $this->record($backend, $fixture, $article);
         $list = $record->locator('..');
-        $ids = $this->recordIds($list);
-        $handle = $record->locator(':scope > div > .drag-handle');
 
+        $ids = $this->recordIds($list);
+
+        $handle = $record->locator(':scope > div > .drag-handle');
         $handle->press('ArrowDown');
+
         $this->waitForMove($backend);
 
         $this->assertSame(array_reverse($ids), $this->recordIds($list));
         $this->assertTrue($handle->evaluate('el => el === document.activeElement'));
+
         $backend->visit('/contao?do='.$module);
+
         $this->expandTree($backend);
         $this->assertSame(array_reverse($ids), $this->recordIds($list));
     }
@@ -289,28 +324,33 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         [$backend, $tree, $ids] = $this->openPageTree();
 
         // Resolve the failed request only after the intervening keydown.
-        $backend->page()->evaluate(<<<'JS'
-            () => {
-                window.fetch = () => new Promise(resolve => {
-                    window.failSorting = () => resolve(new Response('', {status: 403}));
-                });
-            }
-            JS);
+        $backend->page()->evaluate(
+            <<<'JS'
+                () => {
+                    window.fetch = () => new Promise(resolve => {
+                        window.failSorting = () => resolve(new Response('', {status: 403}));
+                    });
+                }
+                JS,
+        );
 
         $handle = $tree->locator(\sprintf(':scope > li[data-id="%s"] > .tl_folder > .drag-handle', $ids[0]));
         $handle->press('ArrowDown');
+
         $this->assertSame(array_reverse($ids), $this->recordIds($tree));
 
         if ($pressTab) {
             $handle->press('Tab');
         }
 
-        $backend->page()->evaluate(<<<'JS'
-            () => new Promise(resolve => {
-                document.addEventListener('contao--message', () => resolve(), {once: true});
-                window.failSorting();
-            })
-            JS);
+        $backend->page()->evaluate(
+            <<<'JS'
+                () => new Promise(resolve => {
+                    document.addEventListener('contao--message', () => resolve(), {once: true});
+                    window.failSorting();
+                })
+                JS,
+        );
 
         $this->assertSame($ids, $this->recordIds($tree));
     }
@@ -327,19 +367,23 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         // Sortable stores its instance on the list. Retain it to observe cleanup after
         // Stimulus processes removal of the controller identifier.
-        $this->assertTrue($tree->evaluate(<<<'JS'
-            el => {
-                window.treeSortable = Object.entries(el).find(([key, value]) => key.startsWith('Sortable') && value?.el === el)?.[1];
-                return Boolean(window.treeSortable);
-            }
-            JS));
+        $this->assertTrue($tree->evaluate(
+            <<<'JS'
+                el => {
+                    window.treeSortable = Object.entries(el).find(([key, value]) => key.startsWith('Sortable') && value?.el === el)?.[1];
+                    return Boolean(window.treeSortable);
+                }
+                JS,
+        ));
 
-        $tree->evaluate(<<<'JS'
-            async (el) => {
-                el.dataset.controller = el.dataset.controller.split(/\s+/).filter(value => value !== 'contao--sortable').join(' ');
-                await new Promise(resolve => setTimeout(resolve, 0));
-            }
-            JS);
+        $tree->evaluate(
+            <<<'JS'
+                async (el) => {
+                    el.dataset.controller = el.dataset.controller.split(/\s+/).filter(value => value !== 'contao--sortable').join(' ');
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+                JS,
+        );
 
         $this->assertTrue($tree->evaluate('el => el.isConnected'));
         $this->assertTrue($tree->evaluate('() => window.treeSortable.el === null'));
@@ -384,28 +428,33 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 
         $backend = $this->login();
         $backend->visit('/contao?do='.$module);
+
         $this->assertSame(1, $backend->page()->locator('ul.tl_listing[data-id="0"]')->count(), $backend->page()->locator('body')->innerText());
+
         $this->expandTree($backend);
-        $backend->page()->evaluate(<<<'JS'
-            () => {
-                window.sortingResponses = [];
-                window.sortingRequests = [];
-                window.sortingErrors = [];
-                window.sortingDrags = 0;
-                document.addEventListener('dragstart', () => window.sortingDrags++);
-                document.addEventListener('contao--message', event => window.sortingErrors.push(event.detail));
-                const originalFetch = window.fetch;
-                window.fetch = async (...args) => {
-                    const isCut = new URL(args[0], location.href).searchParams.get('act') === 'cut';
-                    if (isCut) window.sortingRequests.push(String(args[0]));
-                    const response = await originalFetch(...args);
-                    if (isCut) {
-                        window.sortingResponses.push({status: response.status, redirect: response.headers.get('X-Ajax-Location')});
-                    }
-                    return response;
-                };
-            }
-            JS);
+
+        $backend->page()->evaluate(
+            <<<'JS'
+                () => {
+                    window.sortingResponses = [];
+                    window.sortingRequests = [];
+                    window.sortingErrors = [];
+                    window.sortingDrags = 0;
+                    document.addEventListener('dragstart', () => window.sortingDrags++);
+                    document.addEventListener('contao--message', event => window.sortingErrors.push(event.detail));
+                    const originalFetch = window.fetch;
+                    window.fetch = async (...args) => {
+                        const isCut = new URL(args[0], location.href).searchParams.get('act') === 'cut';
+                        if (isCut) window.sortingRequests.push(String(args[0]));
+                        const response = await originalFetch(...args);
+                        if (isCut) {
+                            window.sortingResponses.push({status: response.status, redirect: response.headers.get('X-Ajax-Location')});
+                        }
+                        return response;
+                    };
+                }
+                JS,
+        );
 
         return $backend;
     }
@@ -420,6 +469,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $operation->click();
+
         $this->record($backend, 'page_tree_child')->waitFor(['state' => 'visible']);
     }
 
@@ -447,6 +497,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $this->startDrag($backend, $record);
+
         $mouse = $backend->page()->mouse();
 
         // Approach a zero-height list from its empty-insert margin so the next siblings
@@ -468,10 +519,12 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $handle->scrollIntoViewIfNeeded();
 
         $start = $handle->boundingBox();
+
         $mouse = $backend->page()->mouse();
         $mouse->move($start['x'] + $start['width'] / 2, $start['y'] + $start['height'] / 2);
         $mouse->down();
         $mouse->move($start['x'] + $start['width'] / 2 + 10, $start['y'] + $start['height'] / 2, ['steps' => 5]);
+
         $backend->page()->waitForFunction('id => document.querySelector(".sortable-ghost")?.dataset.id === id', $record->getAttribute('data-id'));
     }
 
@@ -482,6 +535,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(303, $responses[$count - 1]['status']);
         $this->assertNotEmpty($responses[$count - 1]['redirect']);
         $this->assertSame([], $backend->page()->evaluate('window.sortingErrors'));
+
         $backend->page()->waitForFunction('Array.from(document.querySelectorAll("ul.tl_listing li[data-id]")).every(el => el.getAnimations().length === 0)');
     }
 
