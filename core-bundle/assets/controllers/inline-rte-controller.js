@@ -3,6 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     #editors = new WeakMap();
     #initializations = new WeakMap();
+    #activeTarget = null;
 
     static targets = ['editor'];
 
@@ -17,6 +18,7 @@ export default class extends Controller {
     }
 
     activate({ currentTarget }) {
+        this.#activeTarget = currentTarget;
         const editor = this.#editors.get(currentTarget);
 
         // Still initializing or already editing
@@ -116,30 +118,55 @@ export default class extends Controller {
         // Initialize map
         this.#editors.set(el, null);
 
-        const initialization = hugerte?.init({ ...config, target: el, setup: (editor) => this.#setup(editor) });
+        const activeElement = document.activeElement;
+        const initialization = Promise.resolve().then(() =>
+            hugerte.init({ ...config, target: el, setup: (editor) => this.#setup(editor) }),
+        );
+
         this.#initializations.set(el, initialization);
 
-        initialization.then((editors) => {
-            const editor = editors[0] ?? null;
+        initialization
+            .then((editors) => {
+                const editor = editors[0] ?? null;
 
-            if (this.#initializations.get(el) !== initialization || !this.element.contains(el)) {
-                editor?.remove();
-                return;
-            }
+                if (this.#initializations.get(el) !== initialization || !this.element.contains(el)) {
+                    editor?.remove();
+                    return;
+                }
 
-            this.#initializations.delete(el);
+                this.#initializations.delete(el);
 
-            if (!editor) {
-                this.#editors.delete(el);
-                return;
-            }
+                if (!editor) {
+                    this.#editors.delete(el);
+                    return;
+                }
 
-            this.#editors.set(el, editor);
-            this.#focus(editor, offset);
-        });
+                this.#editors.set(el, editor);
+
+                if (
+                    this.#activeTarget === el &&
+                    (document.activeElement === activeElement || el.contains(document.activeElement))
+                ) {
+                    this.#focus(editor, offset);
+                } else {
+                    editor.hide();
+                }
+            })
+            .catch((error) => {
+                if (this.#initializations.get(el) === initialization) {
+                    this.#initializations.delete(el);
+                    this.#editors.delete(el);
+                }
+
+                console.error('Could not initialize the inline editor.', error);
+            });
     }
 
     #remove(el) {
+        if (this.#activeTarget === el) {
+            this.#activeTarget = null;
+        }
+
         const editor = this.#editors.get(el);
         this.#editors.delete(el);
         this.#initializations.delete(el);
@@ -174,12 +201,47 @@ export default class extends Controller {
         }
 
         const body = editor.getBody();
-        const before = editor.selection.getRng().cloneRange();
-        const after = before.cloneRange();
-        before.setStart(body, 0);
-        after.setEnd(body, body.childNodes.length);
+        const caret = editor.selection.getRng();
 
-        return { atStart: '' === before.toString().trim(), atEnd: '' === after.toString().trim() };
+        const hasContent = (node) =>
+            Node.TEXT_NODE === node.nodeType
+                ? node.length > 0
+                : Node.ELEMENT_NODE === node.nodeType && !node.hasAttribute('data-mce-bogus');
+
+        const isAtBoundary = (end) => {
+            let node = caret.startContainer;
+            const offset = caret.startOffset;
+
+            if (Node.TEXT_NODE === node.nodeType) {
+                if (offset !== (end ? node.length : 0)) {
+                    return false;
+                }
+            } else {
+                const children = Array.from(node.childNodes);
+
+                if ((end ? children.slice(offset) : children.slice(0, offset)).some(hasContent)) {
+                    return false;
+                }
+            }
+
+            while (node !== body) {
+                let sibling = end ? node.nextSibling : node.previousSibling;
+
+                while (sibling) {
+                    if (hasContent(sibling)) {
+                        return false;
+                    }
+
+                    sibling = end ? sibling.nextSibling : sibling.previousSibling;
+                }
+
+                node = node.parentNode;
+            }
+
+            return true;
+        };
+
+        return { atStart: isAtBoundary(false), atEnd: isAtBoundary(true) };
     }
 
     #commit(editor) {

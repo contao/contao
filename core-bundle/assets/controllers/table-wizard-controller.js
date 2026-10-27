@@ -1,4 +1,4 @@
-import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
 import { Controller } from '@hotwired/stimulus';
 import Sortable from 'sortablejs';
 
@@ -14,6 +14,7 @@ export default class extends Controller {
     #dragging = false;
     #dragAbortController = null;
     #syncing = false;
+    #resizeFrame = null;
     #observer = null;
     #flags = { head: false, foot: false, left: false };
 
@@ -78,6 +79,10 @@ export default class extends Controller {
         this.columnSortable?.destroy();
         this.#observer?.disconnect();
 
+        cancelAnimationFrame(this.#resizeFrame);
+        this.#resizeFrame = null;
+        this.#syncing = false;
+
         // Target callbacks run before connect() and must not reactivate the old observer
         this.#observer = null;
     }
@@ -99,9 +104,10 @@ export default class extends Controller {
             return;
         }
 
-        const { element, handle } = this.#menu;
+        const { element, handle, cleanup } = this.#menu;
         this.#menu = null;
 
+        cleanup();
         element.remove();
 
         handle.setAttribute('aria-expanded', 'false');
@@ -334,11 +340,15 @@ export default class extends Controller {
 
         menu.addEventListener('keydown', (event) => this.#navigateMenu(event));
         this.element.appendChild(menu);
-        positionAt(menu, handle, 'row' === axis ? 'right-start' : 'bottom-start');
+
+        const cleanup = autoUpdate(handle, menu, () =>
+            positionAt(menu, handle, 'row' === axis ? 'right-start' : 'bottom-start'),
+        );
+
         handle.setAttribute('aria-expanded', 'true');
         this.#setActive(axis, index);
         // Set the menu first, so blur of the handle does not clear the highlight
-        this.#menu = { element: menu, handle, axis, index };
+        this.#menu = { element: menu, handle, axis, index, cleanup };
         menu.querySelector('.table-wizard-menu-item')?.focus({ preventScroll: true });
     }
 
@@ -654,12 +664,18 @@ export default class extends Controller {
         this.#syncing = true;
 
         // Run logic after next paint due to being used in the resize observer
-        requestAnimationFrame(() => {
+        this.#resizeFrame = requestAnimationFrame(() => {
+            this.#resizeFrame = null;
+
             for (const { target } of entries) {
+                if (!this.inputTargets.includes(target)) {
+                    continue;
+                }
+
                 const cell = target.closest('.table-wizard-cell');
                 const row = cell?.closest('.table-wizard-row');
 
-                if (!row) {
+                if (!this.rowTargets.includes(row)) {
                     continue;
                 }
 
