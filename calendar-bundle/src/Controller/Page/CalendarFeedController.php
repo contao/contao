@@ -44,10 +44,7 @@ class CalendarFeedController extends AbstractFeedPageController
         $staticUrl = $this->contaoContext->getBasePath();
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
-        $feed = new Feed();
-        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $feed->setLanguage($pageModel->language);
+        $feed = $this->initFeed($pageModel, $this->charset);
 
         $event = new FetchEventsForFeedEvent($feed, $request, $pageModel);
 

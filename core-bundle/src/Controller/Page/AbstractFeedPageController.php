@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\PageModel;
+use FeedIo\Feed;
 
 class AbstractFeedPageController extends AbstractController implements DynamicRouteInterface
 {
@@ -44,5 +46,16 @@ class AbstractFeedPageController extends AbstractController implements DynamicRo
     public function getUrlSuffixes(): array
     {
         return array_unique(array_values($this->urlSuffixes));
+    }
+
+    protected function initFeed(PageModel $page, string $charset): Feed
+    {
+        $feed = new Feed();
+        $feed->setTitle(html_entity_decode($page->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $charset));
+        $feed->setDescription(html_entity_decode($page->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $charset));
+        $feed->setLanguage($page->language);
+        $feed->setLink($page->feedBase);
+
+        return $feed;
     }
 }

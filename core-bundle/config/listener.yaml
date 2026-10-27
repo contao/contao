@@ -135,6 +135,11 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
 
+    contao.listener.data_container.default_feed_base:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultFeedBaseListener
+        arguments:
+            - '@request_stack'
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
