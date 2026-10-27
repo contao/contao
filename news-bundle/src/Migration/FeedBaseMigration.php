@@ -82,7 +82,7 @@ class FeedBaseMigration extends AbstractMigration
                 try {
                     // Use a dummy parameter for when requireItem is enabled
                     $uri = new Uri($this->urlGenerator->generate($page, ['parameters' => '/foo'], UrlGeneratorInterface::ABSOLUTE_URL));
-                } catch (ExceptionInterface $e) {
+                } catch (ExceptionInterface) {
                     continue;
                 }
 
