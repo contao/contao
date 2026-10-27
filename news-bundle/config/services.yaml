@@ -26,6 +26,11 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_news.listener.data_container.default_feed_base:
+        class: Contao\NewsBundle\EventListener\DataContainer\DefaultFeedBaseListener
+        arguments:
+            - '@request_stack'
+
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:
@@ -96,6 +101,13 @@ services:
             - '@database_connection'
             - '@filesystem'
             - '%contao.web_dir%'
+
+    contao_news.migration.feed_base:
+        class: Contao\NewsBundle\Migration\FeedBaseMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao_news.migration.keep_canonical:
         class: Contao\NewsBundle\Migration\KeepCanonicalMigration
