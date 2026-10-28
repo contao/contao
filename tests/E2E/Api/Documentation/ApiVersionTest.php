@@ -69,7 +69,7 @@ class ApiVersionTest extends AbstractContaoMonorepoE2ETestCase
 
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile($fixtures.'/Backend/users.yaml')
-            ->withConfigFile($fixtures.'/Backend/security.yaml')
+            ->withConfigFile(self::configDirectory().'/security.yaml')
             ->withConfigFile($fixtures.'/ApiVersion/config.yaml')
             ->withFileMapping(new FileMapping($fixtures.'/ApiVersion/VersionedExample.php', 'src/Api/VersionedExample.php'))
             ->withFileMapping(new FileMapping($fixtures.'/ApiVersion/VersionedExampleProvider.php', 'src/Api/VersionedExampleProvider.php'))

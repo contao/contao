@@ -27,7 +27,7 @@ class BackendSearchTest extends AbstractContaoMonorepoE2ETestCase
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
-            ->withConfigFile(self::fixtureDirectory().'/security.yaml')
+            ->withConfigFile(self::configDirectory().'/security.yaml')
         ;
 
         return ManagedEditionConfig::create($recipe, self::projectDirectory());
