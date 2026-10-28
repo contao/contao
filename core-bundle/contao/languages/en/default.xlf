@@ -2530,6 +2530,7 @@
       </trans-unit>
       <trans-unit id="MSC.indent">
         <source>Indent</source>
+      </trans-unit>
       <trans-unit id="MSC.previewTime">
         <source>Time</source>
       </trans-unit>
