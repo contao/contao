@@ -45,6 +45,7 @@ trait BackendTestTrait
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
+            ->withConfigFile(self::configDirectory().'/security.yaml')
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
             ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
             ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
@@ -63,6 +64,11 @@ trait BackendTestTrait
     private static function customDcaDirectory(): string
     {
         return self::projectDirectory().'/tests/E2E/Fixtures/Dca';
+    }
+
+    private static function configDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Config';
     }
 
     /**

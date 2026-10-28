@@ -22,12 +22,8 @@ abstract class AbstractContaoMonorepoE2ETestCase extends AbstractManagedEditionT
 {
     protected static function backendPassword(string $userFixture): string
     {
-        static $verifiedPasswords = [];
-
-        $hash = self::managedEdition()->database()->fixtures()->value($userFixture, 'password');
-        self::assertTrue($verifiedPasswords[$hash] ??= password_verify('backend', $hash), 'The backend fixture password must be "backend".');
-
-        return 'backend';
+        // The fixture passwords are stored in plaintext
+        return self::managedEdition()->database()->fixtures()->value($userFixture, 'password');
     }
 
     protected static function backendAccessToken(string $userFixture): string
