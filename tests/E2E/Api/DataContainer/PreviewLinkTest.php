@@ -15,18 +15,12 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testDoesNotDocumentCreatingPreviewLinks(): void
     {
-        self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
         $response = self::managedEdition()->send(
             HttpRequest::get('/contao/api/docs.jsonopenapi')
                 ->withHeaders([
@@ -49,11 +43,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testReadsAPreviewLink(): void
     {
-        $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
 
         $response = self::managedEdition()->send(
@@ -74,11 +64,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testUpdatesAPreviewLink(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
 
         $response = self::managedEdition()->send(
@@ -112,11 +98,7 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeletesAPreviewLink(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao/api/dc/preview_link/{preview_link}');
 
         $response = self::managedEdition()->send(
@@ -154,6 +136,11 @@ class PreviewLinkTest extends AbstractContaoMonorepoE2ETestCase
             'newsletter-bundle',
         );
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory());
     }
 }

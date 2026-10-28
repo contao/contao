@@ -169,7 +169,8 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
      */
     private function openNewTextElement(): BackendBrowser
     {
-        [$backend] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
 
         $backend->submitNew();
         $backend->submitAction('Paste at the top');
