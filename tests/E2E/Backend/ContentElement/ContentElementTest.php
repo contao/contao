@@ -22,7 +22,8 @@ class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testDeletingContentElementReturnsToParentArticle(): void
     {
-        [$backend] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_string_mount_home');
 
         $this->createTextElement($backend);
 
@@ -34,8 +35,8 @@ class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
         $backend->waitFor('.operations-menu.show');
         $backend->waitForNavigation(static fn () => $backend->clickButton('.operations-menu.show button[title^="Delete content element"]'));
 
-        $expectedUrl = self::managedEdition()->database()->fixtures()->interpolate(
-            '/contao?do=article&id={article_main_home}&table=tl_content',
+        $expectedUrl = $fixtures->interpolate(
+            '/contao?do=article&id={article_string_mount_home}&table=tl_content',
         );
 
         $this->assertStringEndsWith($expectedUrl, $backend->page()->url());

@@ -28,7 +28,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
 
-        $fixtureResult = $this->loadFixtureFiles($fixtures);
+        $fixtureResult = $this->prepareFixtures($fixtures);
         $request = $fixtureResult->interpolate($request);
 
         $browser = $this->request($request, $host);
@@ -233,7 +233,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
 
-        $fixtureResult = $this->loadFixtureFiles($fixtures);
+        $fixtureResult = self::managedEdition()->resetDatabase($this->createFixtureSet($fixtures));
         $request = $fixtureResult->interpolate($request);
 
         self::managedEdition()
@@ -453,7 +453,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$fixtures, $request, $statusCode, $pageTitle, , $host] = $case;
 
-        $this->loadFixtureFiles($fixtures);
+        self::managedEdition()->resetDatabase($this->createFixtureSet($fixtures));
 
         self::managedEdition()
             ->database()
@@ -600,7 +600,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
 
-        $this->loadFixtureFiles($fixtures);
+        $this->prepareFixtures($fixtures);
 
         $browser = $this->request($request, $host, $acceptLanguages);
 
@@ -691,7 +691,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$fixtures, $request, $statusCode, $pageTitle, $acceptLanguages, $host] = $case;
 
-        $this->loadFixtureFiles($fixtures);
+        self::managedEdition()->resetDatabase($this->createFixtureSet($fixtures));
 
         self::managedEdition()
             ->database()
@@ -862,7 +862,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        $this->loadFixtureFiles(['theme', 'language-sorting']);
+        $this->prepareFixtures(['theme', 'language-sorting']);
 
         $browser = $this->request('/main/sub-zh.html', 'root-zh.local');
 
@@ -879,7 +879,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = 'https://example.local/';
 
-        $this->loadFixtureFiles(['disable-language-redirect']);
+        self::managedEdition()->resetDatabase($this->createFixtureSet(['disable-language-redirect']));
 
         $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
         $alias = $indexAlias ? 'index' : 'home';
@@ -1000,7 +1000,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testRendersLoginPageWhenRootIsProtected(): void
     {
-        $this->loadFixtureFiles(['theme', 'protected-root']);
+        $this->prepareFixtures(['theme', 'protected-root']);
 
         $browser = $this->request('/', 'protected-root.local');
 
@@ -1012,7 +1012,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$request, $acceptLanguage, $statusCode, $pageTitle] = $case;
 
-        $this->loadFixtureFiles(['theme', 'url-prefix-mix']);
+        $this->prepareFixtures(['theme', 'url-prefix-mix']);
 
         $browser = $this->request($request, 'example.local', $acceptLanguage);
 
@@ -1066,7 +1066,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testMultidomainWithLanguages(): void
     {
-        $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+        $this->prepareFixtures(['theme', 'multidomain-languages']);
 
         $browser = $this->request('/de/bar/bar', 'example.ch', 'en_US,en');
 
@@ -1093,12 +1093,21 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * @param list<string> $fileNames
      */
-    private function loadFixtureFiles(array $fileNames): FixtureResult
+    private function prepareFixtures(array $fileNames): FixtureResult
     {
-        return self::managedEdition()->prepareDatabase(new FixtureSet(array_map(
+        // Cases that modify fixtures use resetDatabase(), which invalidates reuse.
+        return self::managedEdition()->prepareDatabase($this->createFixtureSet($fileNames));
+    }
+
+    /**
+     * @param list<string> $fileNames
+     */
+    private function createFixtureSet(array $fileNames): FixtureSet
+    {
+        return new FixtureSet(array_map(
             static fn ($file) => \dirname(__DIR__, 3).'/core-bundle/tests/Fixtures/Functional/Routing/'.$file.'.yaml',
             $fileNames,
-        )));
+        ));
     }
 
     private function request(string $path, string $host, string $acceptLanguage = 'en'): HttpBrowser

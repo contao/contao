@@ -16,7 +16,7 @@ use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTesting\Browser\BrowserOptions;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\InstallationRecipe\File\FileMapping;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
+use Contao\InstallationRecipe\Fixture\FixtureResult;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 use Symfony\Component\Uid\Uuid;
 
@@ -121,20 +121,15 @@ trait BackendTestTrait
     }
 
     /**
-     * Logs in and opens the content elements of the article fixture.
+     * Logs in and opens the content elements of the given article fixture.
      *
      * @return array{BackendBrowser, string}
      */
-    private function openArticle(): array
+    private function openArticle(FixtureResult $fixtures, string $articleFixture): array
     {
-        $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::fixtureDirectory().'/'.self::FIXTURE_USERS,
-            self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT,
-        ]));
-
         $backend = $this->login();
 
-        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article_main_home}');
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={'.$articleFixture.'}');
         $backend->visit($articleUrl);
 
         return [$backend, $articleUrl];

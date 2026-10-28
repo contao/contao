@@ -23,7 +23,8 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
     #[DataProvider('clipboardOperationProvider')]
     public function testPasteElementGroupIntoItselfOrItsChildren(string $operation, bool $canPaste): void
     {
-        [$backend, $articleUrl] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend, $articleUrl] = $this->openArticle($fixtures, 'article_main_home');
         $record = '[data-contao--operations-menu-record-id-value]';
 
         // Create an element group with another element group inside
@@ -67,7 +68,8 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCanPasteAfterSiblingInsideElementGroup(): void
     {
-        [$backend] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
 
         // Create an element group with another element group and a text element inside
         $this->createElementGroup($backend);
