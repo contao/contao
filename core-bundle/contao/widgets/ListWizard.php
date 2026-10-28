@@ -35,12 +35,7 @@ class ListWizard extends Widget
 	{
 		parent::__construct($arrAttributes);
 
-		/*
-		 * Disable nesting if we use the legacy content element.
-		 *
-		 * @deprecated Deprecated since Contao 6.1, to be removed in Contao 7.
-		 * 			   Nesting will not be disabled if we are not using the `contentList` anymore.
-		 */
+		// Backwards compatibility - disable nesting if the legacy content element is used (see #10104)
 		$this->allowNesting = $this->allowNesting && ($GLOBALS['TL_CTE']['texts']['list'] ?? null) !== ContentList::class;
 	}
 
