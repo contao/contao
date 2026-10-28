@@ -28,22 +28,17 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     }
 
     private const string NESTED = 'listitems';
-
     private const string BASIC_LIST_WIZARD = 'list_wizard_basic';
-
     private const array FIXTURE = ['Foo', '-Bar', '-Baz', 'Qux', 'Quux'];
 
     #[DataProvider('operationProvider')]
     public function testOperationsChangeTheNesting(int $row, string $button, array $expected): void
     {
         $backend = $this->openListElement();
-
         $this->rows($backend)->nth($row)->locator(':scope > '.$button)->click();
-
         $this->assertSame($expected, $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame($expected, $this->tree($backend));
     }
 
@@ -64,11 +59,9 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         // [indent, outdent] for each item: the first item of a list cannot be indented
         // and root items cannot be outdented
         $expected = [[false, false], [false, true], [true, true], [true, false], [true, false]];
-
         $this->assertSame($expected, $this->buttonStates($backend));
 
         $this->rows($backend)->nth(3)->locator(':scope > .indent')->click();
-
         $this->assertSame([[false, false], [false, true], [true, true], [true, true], [true, false]], $this->buttonStates($backend));
     }
 
@@ -82,7 +75,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->moveCaret($backend, true);
 
         $keyboard->press('ArrowRight');
-
         $this->assertSame(['Foo', '-Bar', '-Baz', '-Qux', 'Quux'], $this->tree($backend));
 
         $this->waitForEditor($backend, 3);
@@ -91,7 +83,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->moveCaret($backend, false);
 
         $keyboard->press('ArrowLeft');
-
         $this->assertSame(self::FIXTURE, $this->tree($backend));
 
         $this->waitForEditor($backend, 3);
@@ -102,7 +93,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $keyboard->press('ArrowUp');
 
         $this->waitForEditor($backend, 2);
-
         $this->moveCaret($backend, true);
 
         $keyboard->press('ArrowDown');
@@ -116,7 +106,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $keyboard->type('X');
 
         $backend->submitForm('Save');
-
         $this->assertSame(['Foo', '-Bar', '-Baz', '<p>QuXx</p>', 'Quux'], $this->tree($backend));
     }
 
@@ -142,7 +131,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertCount(6, $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame(['Foo', '-Bar', '-<p>Corge<br>Grault</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
     }
 
@@ -161,25 +149,21 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->moveCaret($backend, false);
 
         $keyboard->press('Shift+ArrowLeft');
-
         $this->assertSame(self::FIXTURE, $this->tree($backend));
 
         // A selection is collapsed instead of outdenting the item
         $backend->page()->evaluate('() => { const editor = hugerte.activeEditor; editor.selection.select(editor.getBody(), true) }');
         $keyboard->press('ArrowLeft');
-
         $this->assertSame(self::FIXTURE, $this->tree($backend));
 
         // Confirming an IME composition does not add an item
         $this->editor($backend, 1)->evaluate('el => el.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", isComposing: true, bubbles: true, cancelable: true}))');
-
         $this->assertSame(self::FIXTURE, $this->tree($backend));
     }
 
     public function testEditedItemsAreSavedAsHtml(): void
     {
         $backend = $this->openListElement();
-
         $this->activate($backend, 1);
         $this->moveCaret($backend, true);
 
@@ -190,18 +174,15 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertArrayNotHasKey('lists', $backend->page()->evaluate('Object.fromEntries(Object.keys(hugerte.activeEditor.plugins).map(name => [name, true]))'));
 
         $backend->submitForm('Save');
-
         $this->assertSame(['Foo', '-<p>BarX</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
 
         $crawler = $this->requestPage();
-
         $this->assertSame('BarX', $crawler->filter('.content-list > ul > li:first-child > ul > li:first-child > p')->text());
     }
 
     public function testSubmittingWhileEditingKeepsTheChanges(): void
     {
         $backend = $this->openListElement();
-
         $this->activate($backend, 1);
         $this->moveCaret($backend, true);
 
@@ -209,14 +190,12 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         // Submit the form while the item is still being edited
         $backend->waitForNavigation(static fn () => $backend->page()->evaluate('document.getElementById("save").form.requestSubmit(document.getElementById("save"))'));
-
         $this->assertSame(['Foo', '-<p>BarX</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
     }
 
     public function testCopiedItemsCanBeEdited(): void
     {
         $backend = $this->openListElement();
-
         $this->activate($backend, 0);
         $this->moveCaret($backend, true);
 
@@ -246,11 +225,9 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         );
 
         $expected = ['Quux', 'Foo', '-Bar', '-Baz', 'Qux'];
-
         $this->assertSame($expected, $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame($expected, $this->tree($backend));
     }
 
@@ -267,7 +244,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($expected, $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame($expected, $this->tree($backend));
     }
 
@@ -300,11 +276,9 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $mouse->up();
-
         $this->assertSame(['Foo', '-Bar', '-Baz', 'Qux', '-Quux'], $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame(['Foo', '-Bar', '-Baz', 'Qux', '-Quux'], $this->tree($backend));
     }
 
@@ -320,11 +294,9 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->rows($backend)->nth(0)->locator(':scope > .drag-handle')->press('ArrowUp');
 
         $expected = ['Qux', 'Quux', 'Foo', '-Baz', '-Bar'];
-
         $this->assertSame($expected, $this->tree($backend));
 
         $backend->submitForm('Save');
-
         $this->assertSame($expected, $this->tree($backend));
     }
 
@@ -344,14 +316,12 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $backend->waitFor('#ctrl_'.self::NESTED);
-
         $this->assertSame(['Grault', 'Garply', 'Waldo'], $this->tree($backend));
     }
 
     public function testNestedItemsAreRenderedInTheFrontEnd(): void
     {
         $crawler = $this->requestPage();
-
         $this->assertSame(['Foo', 'Qux', 'Quux'], $crawler->filter('.content-list > ul > li')->each(static fn ($li) => trim($li->getNode(0)->firstChild->textContent)));
         $this->assertSame(['Bar', 'Baz'], $crawler->filter('.content-list > ul > li:first-child > ul > li')->each(static fn ($li) => trim($li->text())));
     }
@@ -359,7 +329,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     public function testEmptyItemsAreRenderedInTheFrontEnd(): void
     {
         $backend = $this->openListElement();
-
         $this->activate($backend, 4);
         $this->moveCaret($backend, true);
 
@@ -369,7 +338,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([...self::FIXTURE, ''], $this->tree($backend));
 
         $crawler = $this->requestPage();
-
         $this->assertSame(['Foo', 'Qux', 'Quux', ''], $crawler->filter('.content-list > ul > li')->each(static fn ($li) => trim($li->getNode(0)->firstChild?->textContent ?? '')));
     }
 
@@ -378,7 +346,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->openListElement();
         $wizard = $this->wizard($backend, self::BASIC_LIST_WIZARD);
         $keyboard = $backend->page()->keyboard();
-
         $this->assertSame(0, $wizard->locator('.indent, .outdent')->count());
         $this->assertSame([''], $this->items($backend));
 
@@ -392,7 +359,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->focus($backend, 1, 'start', self::BASIC_LIST_WIZARD);
 
         $keyboard->press('ArrowLeft');
-
         $this->assertSame(['First', 'Second'], $this->items($backend));
         $this->assertSame(0, $wizard->locator('ul ul li')->count());
 
@@ -430,7 +396,6 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $browser->setServerParameter('HTTP_ACCEPT', 'text/html');
 
         $crawler = $browser->request('GET', '/microsite-home');
-
         $this->assertSame(200, $browser->getInternalResponse()->getStatusCode(), $browser->getInternalResponse()->getContent());
 
         return $crawler;
