@@ -123,6 +123,20 @@ tl_article:
         published: 1
 
 tl_content:
+    content_list:
+        pid: '@article_microsite_home'
+        ptable: tl_article
+        sorting: 256
+        tstamp: 1704067200
+        type: list
+        listtype: unordered
+        listitems:
+            - item: Foo
+              list:
+                  - item: Bar
+                  - item: Baz
+            - item: Qux
+            - item: Quux
     content_table:
         pid: '@article_microsite_home'
         ptable: tl_article

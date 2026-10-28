@@ -23,11 +23,21 @@ class ListWizard extends Widget
 	 */
 	protected $blnSubmitInput = true;
 
+	private bool $allowNesting = false;
+
 	/**
 	 * Template
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
+
+	public function __construct($arrAttributes=null)
+	{
+		parent::__construct($arrAttributes);
+
+		// Backwards compatibility: disable nesting if the legacy content element is used (see #10104)
+		$this->allowNesting = $this->allowNesting && ($GLOBALS['TL_CTE']['texts']['list'] ?? null) !== ContentList::class;
+	}
 
 	/**
 	 * Add specific attributes
@@ -37,17 +47,35 @@ class ListWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		if ($strKey == 'maxlength')
+		switch ($strKey)
 		{
-			if ($varValue > 0)
-			{
-				$this->arrAttributes['maxlength'] = $varValue;
-			}
+			case 'maxlength':
+				if ($varValue > 0)
+				{
+					$this->arrAttributes['maxlength'] = $varValue;
+				}
+				break;
+
+			case 'nesting':
+				$this->allowNesting = $varValue ?: false;
+				break;
+
+			default:
+				parent::__set($strKey, $varValue);
+				break;
 		}
-		else
+	}
+
+	public function validate(): void
+	{
+		parent::validate();
+
+		if (!$this->allowNesting)
 		{
-			parent::__set($strKey, $varValue);
+			return;
 		}
+
+		$this->varValue = $this->normalize($this->varValue);
 	}
 
 	/**
@@ -65,7 +93,44 @@ class ListWizard extends Widget
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/widget/list_wizard.html.twig', array(
 			'id' => $this->strId,
-			'rows' => $this->varValue,
+			'rows' => $this->allowNesting ? $this->normalize($this->varValue) : $this->varValue,
+			'allow_nesting' => $this->allowNesting,
+			'rte' => $this->hasInlineRte(),
 		));
+	}
+
+	private function hasInlineRte(): bool
+	{
+		if (!$this->rte || isset($this->arrAttributes['readonly']) || !($GLOBALS['TL_CONFIG']['useRTE'] ?? false))
+		{
+			return false;
+		}
+
+		if (!$this->allowHtml)
+		{
+			throw new \LogicException('The inline RTE of the list wizard requires the "allowHtml" eval option');
+		}
+
+		return true;
+	}
+
+	private function normalize($varValue): array
+	{
+		$arrRows = array();
+
+		foreach ((array) $varValue as $varRow)
+		{
+			if (!\is_array($varRow))
+			{
+				$varRow = array('item' => $varRow);
+			}
+
+			$arrRows[] = array(
+				'item' => (string) ($varRow['item'] ?? ''),
+				'list' => $this->normalize($varRow['list'] ?? array()),
+			);
+		}
+
+		return $arrRows;
 	}
 }

@@ -85,3 +85,14 @@ PaletteManipulator::create()
     ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions'], 'text_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('text', 'tl_content')
 ;
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['list_wizard_basic'] = [
+    'label' => ['List wizard basic', ''],
+    'inputType' => 'listWizard',
+    'eval' => ['multiple' => true, 'tl_class' => 'clr'],
+];
+
+PaletteManipulator::create()
+    ->addField('list_wizard_basic', 'list_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('list', 'tl_content')
+;
