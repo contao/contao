@@ -35,7 +35,7 @@ class ListWizard extends Widget
 	{
 		parent::__construct($arrAttributes);
 
-		// Backwards compatibility - disable nesting if the legacy content element is used (see #10104)
+		// Backwards compatibility: disable nesting if the legacy content element is used (see #10104)
 		$this->allowNesting = $this->allowNesting && ($GLOBALS['TL_CTE']['texts']['list'] ?? null) !== ContentList::class;
 	}
 
