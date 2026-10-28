@@ -558,7 +558,7 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
-    public function testReadsTheIconManifestJson(): void
+    public function testReadsTheIconsFromTheSharedManifestJson(): void
     {
         $container = $this->getContainerBuilder();
 
@@ -566,6 +566,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $icons = $container->getParameter('contao.backend.icons');
 
+        $this->assertArrayNotHasKey('backend.js', $icons);
+        $this->assertArrayNotHasKey('images/help.svg', $icons);
+        $this->assertArrayNotHasKey('icons/help.svg', $icons);
         $this->assertArrayHasKey('help.svg', $icons);
         $this->assertMatchesRegularExpression('~^/bundles/contaocore/icons/help\.[a-f0-9]{8}\.svg$~', $icons['help.svg']['path']);
         $this->assertSame('14', $icons['help.svg']['width']);
