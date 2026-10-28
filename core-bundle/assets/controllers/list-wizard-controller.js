@@ -30,7 +30,9 @@ export default class extends Controller {
         }
 
         if (this.rowTargets.length > 1) {
-            this.#focus(row.nextElementSibling) || this.#focus(row.previousElementSibling);
+            this.#focus(row.nextElementSibling) ||
+                this.#focus(row.previousElementSibling) ||
+                this.#focus(row.parentElement.closest('li'));
 
             row.remove();
         } else {
