@@ -130,6 +130,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
                 ->append($this->addPaginationNode())
+                ->append($this->addRetentionNode())
                 ->scalarNode('auto_refresh_template_hierarchy')
                     ->info('Automatically refreshes the template hierarchy on every request.')
                     ->defaultNull()
@@ -1057,6 +1058,34 @@ class Configuration implements ConfigurationInterface
                     ->info('Sets the default range of items for the pagination factory.')
                     ->min(0)
                     ->defaultValue(7)
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addRetentionNode(): ArrayNodeDefinition
+    {
+        return new TreeBuilder('retention')
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->integerNode('undo')
+                    ->info('The retention period for undo records in seconds. Use 0 to disable cleanup.')
+                    ->min(0)
+                    ->defaultValue(2592000)
+                ->end()
+                ->integerNode('versions')
+                    ->info('The retention period for version records in seconds. Use 0 to disable cleanup.')
+                    ->min(0)
+                    ->defaultValue(7776000)
+                ->end()
+                ->integerNode('logs')
+                    ->info('The retention period for log records in seconds. Use 0 to disable cleanup.')
+                    ->min(0)
+                    ->defaultValue(604800)
                 ->end()
             ->end()
         ;
