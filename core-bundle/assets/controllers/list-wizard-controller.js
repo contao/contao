@@ -34,19 +34,19 @@ export default class extends Controller {
 
             row.remove();
         } else {
-            row.querySelector(':scope > input').value = '';
+            this.#setValue(row.querySelector(':scope > input'), '');
         }
 
         this.update();
     }
 
     navigate(event) {
-        const input = event.target;
         const row = this.#getRow(event);
 
         if ('Enter' === event.key) {
-            // Do not add an item when Enter only confirms a word typed with an input method
-            if (!event.isComposing) {
+            // Do not add an item when Enter only confirms a word typed with an input method, and
+            // keep Shift+Enter as a line break in the inline RTE
+            if (!event.isComposing && !(event.shiftKey && this.#isEditor(event.target))) {
                 this.#addRow(row, true);
                 event.preventDefault();
             }
@@ -54,33 +54,31 @@ export default class extends Controller {
             return;
         }
 
-        // Leave selections and shortcuts to the browser
-        if (
-            event.shiftKey ||
-            event.altKey ||
-            event.ctrlKey ||
-            event.metaKey ||
-            input.selectionStart !== input.selectionEnd
-        ) {
+        // The inline RTE dispatches the arrow keys including the caret position
+        const caret = event.detail?.key ? event.detail : this.#getCaretPosition(event);
+
+        if (!caret) {
             return;
         }
 
         const rows = this.rowTargets;
         const i = rows.indexOf(row);
-        const atStart = 0 === input.selectionStart;
-        const atEnd = input.value.length === input.selectionStart;
 
-        if (this.allowNestingValue && 'ArrowLeft' === event.key && atStart) {
+        if (this.allowNestingValue && 'ArrowLeft' === caret.key && caret.atStart) {
             this.outdent(event);
-            input.focus();
-        } else if (this.allowNestingValue && 'ArrowRight' === event.key && atEnd) {
+            this.#focus(row);
+        } else if (this.allowNestingValue && 'ArrowRight' === caret.key && caret.atEnd) {
             this.indent(event);
-            input.focus();
-        } else if ('ArrowUp' === event.key && atStart) {
+            this.#focus(row, true);
+        } else if ('ArrowUp' === caret.key && caret.atStart) {
             this.#focus(rows[i - 1]);
-        } else if ('ArrowDown' === event.key && atEnd) {
+        } else if ('ArrowDown' === caret.key && caret.atEnd) {
             this.#focus(rows[i + 1]);
+        } else {
+            return;
         }
+
+        event.preventDefault();
     }
 
     indent(event) {
@@ -117,26 +115,64 @@ export default class extends Controller {
         const newRow = row.cloneNode(true);
 
         if (reset) {
-            for (const input of newRow.querySelectorAll('input')) {
-                input.value = '';
-            }
-
             newRow.querySelector(':scope > ul')?.replaceChildren();
         }
 
         row.after(newRow);
+
+        // Update the values after inserting the row, so the inline RTE resets the copied editors
+        for (const input of newRow.querySelectorAll('input')) {
+            this.#setValue(input, reset ? '' : input.value);
+        }
+
         this.#focus(newRow);
         this.update();
     }
 
-    #focus(el) {
-        if (!el) {
+    #focus(row, atEnd = false) {
+        if (!row) {
             return false;
         }
 
-        el.querySelector(':scope > input')?.focus();
+        const editor = row.querySelector(':scope > .inline-rte');
+
+        if (!editor) {
+            row.querySelector(':scope > input')?.focus();
+
+            return true;
+        }
+
+        queueMicrotask(() => {
+            window.getSelection().collapse(editor, atEnd ? editor.childNodes.length : 0);
+            editor.focus();
+        });
 
         return true;
+    }
+
+    #setValue(input, value) {
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    #getCaretPosition({ target, key, shiftKey, altKey, ctrlKey, metaKey }) {
+        // Leave selections and shortcuts to the browser
+        if (
+            !(target instanceof HTMLInputElement) ||
+            shiftKey ||
+            altKey ||
+            ctrlKey ||
+            metaKey ||
+            target.selectionStart !== target.selectionEnd
+        ) {
+            return null;
+        }
+
+        return { key, atStart: 0 === target.selectionStart, atEnd: target.value.length === target.selectionStart };
+    }
+
+    #isEditor(el) {
+        return el.classList.contains('inline-rte');
     }
 
     #reorder(list, prefix, depth) {

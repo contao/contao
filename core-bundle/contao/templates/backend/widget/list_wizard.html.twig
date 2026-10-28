@@ -1,22 +1,34 @@
 {% trans_default_domain 'contao_default' %}
 
+{% set actions = ['contao--sortable:update->contao--list-wizard#update'] %}
+
+{% if rte|default %}
+    {% set actions = actions|merge([
+        'input->contao--inline-rte#update',
+        'contao--inline-rte:navigate->contao--list-wizard#navigate',
+        'turbo:before-cache@document->contao--inline-rte#disconnect',
+    ]) %}
+{% endif %}
+
 {% set list_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
-    .set('data-controller', 'contao--list-wizard contao--sortable')
+    .set('data-controller', rte|default ? 'contao--list-wizard contao--sortable contao--inline-rte' : 'contao--list-wizard contao--sortable')
     .set('data-contao--list-wizard-name-value', id)
     .set('data-contao--list-wizard-allow-nesting-value', allow_nesting)
     .set('data-contao--sortable-handle-value', '.drag-handle')
-    .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
+    .set('data-contao--sortable-group-value', "list-wizard-#{id}", allow_nesting)
+    .set('data-contao--sortable-swap-threshold-value', '1', allow_nesting)
+    .set('data-action', actions|join(' '))
     .addClass('tl_listwizard')
     .addClass('is-nested', allow_nesting)
 %}
 <ul{{ list_attributes }}>
     {% for row in rows %}
-        {{ _self.row(allow_nesting ? "#{id}[#{loop.index0}]" : "#{id}[]", row, true, loop.first, allow_nesting) }}
+        {{ _self.row(id, allow_nesting ? "#{id}[#{loop.index0}]" : "#{id}[]", row, true, loop.first, allow_nesting, rte|default) }}
     {% endfor %}
 </ul>
 
-{% macro row(prefix, row, root, first, allow_nesting) %}
+{% macro row(id, prefix, row, root, first, allow_nesting, rte) %}
     {% set item_attributes = attrs()
         .set('data-contao--list-wizard-target', 'row')
     %}
@@ -29,14 +41,25 @@
         %}
         <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
 
+        {% set value = allow_nesting ? row.item|default : row %}
         {% set value_attributes = attrs()
-            .set('type', 'text')
+            .set('type', rte ? 'hidden' : 'text')
             .set('name', allow_nesting ? "#{prefix}[item]" : prefix)
-            .set('value', allow_nesting ? row.item|default : row)
-            .set('data-action', 'keydown->contao--list-wizard#navigate')
-            .addClass('tl_text')
+            .set('value', value)
+            .set('data-action', 'keydown->contao--list-wizard#navigate', not rte)
+            .addClass('tl_text', not rte)
         %}
         <input{{ value_attributes }}>
+
+        {% if rte %}
+            {% set editor_attributes = attrs()
+                .addClass(['tl_text', 'inline-rte'])
+                .set('tabindex', '0')
+                .set('data-contao--inline-rte-target', 'editor')
+                .set('data-action', 'focusin->contao--inline-rte#activate keydown->contao--inline-rte#navigate keydown->contao--list-wizard#navigate pointerdown->contao--inline-rte#click click->contao--inline-rte#click')
+            %}
+            <div{{ editor_attributes }}>{{ value|raw }}</div>
+        {% endif %}
 
         {# Controls #}
         {% if allow_nesting %}
@@ -78,11 +101,13 @@
             {% set sub_list_attributes = attrs()
                 .set('data-controller', 'contao--sortable')
                 .set('data-contao--sortable-handle-value', '.drag-handle')
+                .set('data-contao--sortable-group-value', "list-wizard-#{id}")
+                .set('data-contao--sortable-swap-threshold-value', '1')
                 .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
             %}
             <ul{{ sub_list_attributes }}>
                 {% for list_item in row.list|default([]) %}
-                    {{ _self.row("#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, allow_nesting) }}
+                    {{ _self.row(id, "#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, allow_nesting, rte) }}
                 {% endfor %}
             </ul>
         {% endif %}

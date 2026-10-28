@@ -100,7 +100,23 @@ class ListWizard extends Widget
 			'id' => $this->strId,
 			'rows' => $this->allowNesting ? $this->normalize($this->varValue) : $this->varValue,
 			'allow_nesting' => $this->allowNesting,
+			'rte' => $this->hasInlineRte(),
 		));
+	}
+
+	private function hasInlineRte(): bool
+	{
+		if (!$this->rte || isset($this->arrAttributes['readonly']) || !($GLOBALS['TL_CONFIG']['useRTE'] ?? false))
+		{
+			return false;
+		}
+
+		if (!$this->allowHtml)
+		{
+			throw new \LogicException('The inline RTE of the list wizard requires the "allowHtml" eval option');
+		}
+
+		return true;
 	}
 
 	private function normalize($varValue): array

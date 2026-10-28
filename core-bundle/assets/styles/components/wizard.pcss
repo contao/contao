@@ -186,6 +186,12 @@
     margin-left: 1px;
 }
 
+.tl_listwizard .inline-rte {
+    height: auto;
+    min-height: 30px;
+    padding: 5px 6px 6px;
+}
+
 .tl_listwizard:not(.is-nested) {
     .tl_text {
         width: 78%;
@@ -199,10 +205,6 @@
     ul {
         list-style: none;
         padding-inline-start: 20px;
-
-        &:not(:has(> li)) {
-            display: none;
-        }
     }
 
     li {

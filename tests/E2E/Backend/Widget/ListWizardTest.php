@@ -77,38 +77,47 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->openListElement();
         $keyboard = $backend->page()->keyboard();
 
-        // At the end of the text, ArrowRight indents the item
-        $this->focus($backend, 3, 'end');
+        // At the end of the text, ArrowRight indents the item and keeps editing it
+        $this->activate($backend, 3);
+        $this->moveCaret($backend, true);
 
         $keyboard->press('ArrowRight');
 
         $this->assertSame(['Foo', '-Bar', '-Baz', '-Qux', 'Quux'], $this->tree($backend));
-        $this->assertSame(['Qux', 3], $this->focused($backend));
+
+        $this->waitForEditor($backend, 3);
 
         // At the start of the text, ArrowLeft outdents it again
-        $this->focus($backend, 3, 'start');
+        $this->moveCaret($backend, false);
 
         $keyboard->press('ArrowLeft');
 
         $this->assertSame(self::FIXTURE, $this->tree($backend));
-        $this->assertSame(['Qux', 0], $this->focused($backend));
+
+        $this->waitForEditor($backend, 3);
 
         // ArrowUp and ArrowDown move to the previous or next item across the levels
-        $keyboard->press('ArrowUp');
-        $this->assertSame('Baz', $this->focused($backend)[0]);
+        $this->moveCaret($backend, false);
 
-        $this->focus($backend, 2, 'end');
+        $keyboard->press('ArrowUp');
+
+        $this->waitForEditor($backend, 2);
+
+        $this->moveCaret($backend, true);
 
         $keyboard->press('ArrowDown');
-        $this->assertSame('Qux', $this->focused($backend)[0]);
+
+        $this->waitForEditor($backend, 3);
 
         // Inside the text, the caret moves as usual
-        $this->focus($backend, 3, 'end');
+        $this->moveCaret($backend, true);
 
         $keyboard->press('ArrowLeft');
+        $keyboard->type('X');
 
-        $this->assertSame(self::FIXTURE, $this->tree($backend));
-        $this->assertSame(['Qux', 2], $this->focused($backend));
+        $backend->submitForm('Save');
+
+        $this->assertSame(['Foo', '-Bar', '-Baz', '<p>QuXx</p>', 'Quux'], $this->tree($backend));
     }
 
     public function testEnterAddsAnItemInsteadOfSubmittingTheForm(): void
@@ -116,17 +125,25 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->openListElement();
         $url = $backend->page()->url();
 
-        $this->focus($backend, 1, 'end');
+        $this->activate($backend, 1);
+        $this->moveCaret($backend, true);
 
         $backend->page()->keyboard()->press('Enter');
+
+        $this->waitForEditor($backend, 2);
+
         $backend->page()->keyboard()->type('Corge');
 
+        // Shift+Enter adds a line break instead of an item
+        $backend->page()->keyboard()->press('Shift+Enter');
+        $backend->page()->keyboard()->type('Grault');
+
         $this->assertSame($url, $backend->page()->url());
-        $this->assertSame(['Foo', '-Bar', '-Corge', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
+        $this->assertCount(6, $this->tree($backend));
 
         $backend->submitForm('Save');
 
-        $this->assertSame(['Foo', '-Bar', '-Corge', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
+        $this->assertSame(['Foo', '-Bar', '-<p>Corge<br>Grault</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
     }
 
     public function testModifierKeysAndSelectionsAreLeftToTheBrowser(): void
@@ -135,27 +152,88 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $keyboard = $backend->page()->keyboard();
 
         // Extending the selection does not indent or outdent
-        $this->focus($backend, 3, 'end');
+        $this->activate($backend, 3);
+        $this->moveCaret($backend, true);
 
         $keyboard->press('Shift+ArrowRight');
 
-        $this->focus($backend, 1, 'start');
+        $this->activate($backend, 1);
+        $this->moveCaret($backend, false);
 
         $keyboard->press('Shift+ArrowLeft');
 
         $this->assertSame(self::FIXTURE, $this->tree($backend));
 
         // A selection is collapsed instead of outdenting the item
-        $this->input($backend, 1)->evaluate('el => { el.focus(); el.select() }');
-
+        $backend->page()->evaluate('() => { const editor = hugerte.activeEditor; editor.selection.select(editor.getBody(), true) }');
         $keyboard->press('ArrowLeft');
 
         $this->assertSame(self::FIXTURE, $this->tree($backend));
 
         // Confirming an IME composition does not add an item
-        $this->input($backend, 1)->evaluate('el => el.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", isComposing: true, bubbles: true, cancelable: true}))');
+        $this->editor($backend, 1)->evaluate('el => el.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", isComposing: true, bubbles: true, cancelable: true}))');
 
         $this->assertSame(self::FIXTURE, $this->tree($backend));
+    }
+
+    public function testEditedItemsAreSavedAsHtml(): void
+    {
+        $backend = $this->openListElement();
+
+        $this->activate($backend, 1);
+        $this->moveCaret($backend, true);
+
+        $backend->page()->keyboard()->type('X');
+
+        // The editor does not offer lists inside list items
+        $this->assertSame('bold | link unlink | code', $backend->page()->evaluate('hugerte.activeEditor.options.get("toolbar")'));
+        $this->assertArrayNotHasKey('lists', $backend->page()->evaluate('Object.fromEntries(Object.keys(hugerte.activeEditor.plugins).map(name => [name, true]))'));
+
+        $backend->submitForm('Save');
+
+        $this->assertSame(['Foo', '-<p>BarX</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
+
+        $crawler = $this->requestPage();
+
+        $this->assertSame('BarX', $crawler->filter('.content-list > ul > li:first-child > ul > li:first-child > p')->text());
+    }
+
+    public function testSubmittingWhileEditingKeepsTheChanges(): void
+    {
+        $backend = $this->openListElement();
+
+        $this->activate($backend, 1);
+        $this->moveCaret($backend, true);
+
+        $backend->page()->keyboard()->type('X');
+
+        // Submit the form while the item is still being edited
+        $backend->waitForNavigation(static fn () => $backend->page()->evaluate('document.getElementById("save").form.requestSubmit(document.getElementById("save"))'));
+
+        $this->assertSame(['Foo', '-<p>BarX</p>', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
+    }
+
+    public function testCopiedItemsCanBeEdited(): void
+    {
+        $backend = $this->openListElement();
+
+        $this->activate($backend, 0);
+        $this->moveCaret($backend, true);
+
+        $backend->page()->keyboard()->type('X');
+
+        $this->rows($backend)->nth(0)->locator(':scope > [data-action^="contao--list-wizard#copy"]')->click();
+
+        // The copy is focused and edited with its own editor
+        $this->waitForEditor($backend, 3);
+        $this->assertSame('FooX', trim($this->editor($backend, 3)->innerText()));
+
+        $this->moveCaret($backend, true);
+
+        $backend->page()->keyboard()->type('Y');
+        $backend->submitForm('Save');
+
+        $this->assertSame(['<p>FooX</p>', '-Bar', '-Baz', '<p>FooXY</p>', '-Bar', '-Baz', 'Qux', 'Quux'], $this->tree($backend));
     }
 
     public function testDraggingSortsItemsWithinTheirList(): void
@@ -174,6 +252,60 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend->submitForm('Save');
 
         $this->assertSame($expected, $this->tree($backend));
+    }
+
+    #[DataProvider('dragNestingProvider')]
+    public function testDraggingMovesItemsBetweenLevels(int $row, int $target, array $expected): void
+    {
+        $backend = $this->openListElement();
+
+        $this->rows($backend)->nth($row)->locator(':scope > .drag-handle')->dragTo(
+            $this->rows($backend)->nth($target)->locator(':scope > .drag-handle'),
+            ['targetPosition' => ['x' => 8, 'y' => 2]],
+        );
+
+        $this->assertSame($expected, $this->tree($backend));
+
+        $backend->submitForm('Save');
+
+        $this->assertSame($expected, $this->tree($backend));
+    }
+
+    public static function dragNestingProvider(): iterable
+    {
+        yield 'into a nested list' => [3, 2, ['Foo', '-Bar', '-Qux', '-Baz', 'Quux']];
+        yield 'out of a nested list' => [1, 4, ['Foo', '-Baz', 'Qux', 'Bar', 'Quux']];
+        yield 'not into its own children' => [0, 1, self::FIXTURE];
+    }
+
+    public function testDraggingIntoAnEmptyNestedList(): void
+    {
+        $backend = $this->openListElement();
+        $mouse = $backend->page()->mouse();
+
+        $handle = $this->rows($backend)->nth(4)->locator(':scope > .drag-handle');
+        $start = $handle->boundingBox();
+
+        $mouse->move($start['x'] + $start['width'] / 2, $start['y'] + $start['height'] / 2);
+        $mouse->down();
+        $mouse->move($start['x'] + $start['width'] / 2 + 10, $start['y'] + $start['height'] / 2, ['steps' => 5]);
+
+        $backend->page()->locator('.sortable-ghost')->waitFor();
+
+        // Approach the empty list below "Qux" from its empty insert margin
+        for ($step = 0; $step < 2; ++$step) {
+            $end = $this->rows($backend)->nth(3)->locator(':scope > ul')->evaluate('el => { const r = el.getBoundingClientRect(); return {x: r.left - 2, y: r.top}; }');
+            $mouse->move($end['x'] + $step, $end['y']);
+            $backend->page()->evaluate('() => new Promise(resolve => setTimeout(resolve, 150))');
+        }
+
+        $mouse->up();
+
+        $this->assertSame(['Foo', '-Bar', '-Baz', 'Qux', '-Quux'], $this->tree($backend));
+
+        $backend->submitForm('Save');
+
+        $this->assertSame(['Foo', '-Bar', '-Baz', 'Qux', '-Quux'], $this->tree($backend));
     }
 
     public function testDragHandlesSortItemsWithTheKeyboard(): void
@@ -228,7 +360,8 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     {
         $backend = $this->openListElement();
 
-        $this->focus($backend, 4, 'end');
+        $this->activate($backend, 4);
+        $this->moveCaret($backend, true);
 
         $backend->page()->keyboard()->press('Enter');
         $backend->submitForm('Save');
@@ -262,6 +395,10 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(['First', 'Second'], $this->items($backend));
         $this->assertSame(0, $wizard->locator('ul ul li')->count());
+
+        // ArrowUp at the start of the text moves to the previous item
+        $keyboard->press('ArrowUp');
+        $this->assertSame('First', $backend->page()->evaluate('document.activeElement.value'));
 
         $wizard->locator('li')->nth(0)->locator('[data-action^="contao--list-wizard#copy"]')->click();
         $this->assertSame(['First', 'First', 'Second'], $this->items($backend));
@@ -318,19 +455,35 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     }
 
     /**
-     * Focuses an item and puts the caret at the start or end of its text.
+     * Focuses an input of the basic list wizard and puts the caret at the start or end.
      */
-    private function focus(BackendBrowser $backend, int $row, string $caret, string $field = self::NESTED): void
+    private function focus(BackendBrowser $backend, int $row, string $caret, string $field = self::BASIC_LIST_WIZARD): void
     {
         $this->input($backend, $row, $field)->evaluate('(el, end) => { el.focus(); el.setSelectionRange(end ? el.value.length : 0, end ? el.value.length : 0) }', 'end' === $caret);
     }
 
-    /**
-     * Returns the value of the focused input and the caret position.
-     */
-    private function focused(BackendBrowser $backend): array
+    private function editor(BackendBrowser $backend, int $row): LocatorInterface
     {
-        return $backend->page()->evaluate('[document.activeElement?.value ?? null, document.activeElement?.selectionStart ?? null]');
+        return $this->rows($backend)->nth($row)->locator(':scope > .inline-rte');
+    }
+
+    private function activate(BackendBrowser $backend, int $row): void
+    {
+        $this->editor($backend, $row)->click();
+        $this->waitForEditor($backend, $row);
+    }
+
+    private function waitForEditor(BackendBrowser $backend, int $row): void
+    {
+        $this->rows($backend)->nth($row)->locator(':scope > .inline-rte[contenteditable="true"]:focus')->waitFor();
+    }
+
+    /**
+     * Moves the caret of the active inline editor to the start or end of its text.
+     */
+    private function moveCaret(BackendBrowser $backend, bool $end): void
+    {
+        $backend->page()->evaluate('end => { const editor = hugerte.activeEditor; editor.selection.select(editor.getBody(), true); editor.selection.collapse(!end) }', $end);
     }
 
     /**
