@@ -1,0 +1,7 @@
+# The fixture users have a bcrypt hash with cost 4 so that logging in is fast
+# and does not trigger a rehash, which would invalidate the cached sessions.
+security:
+    password_hashers:
+        Contao\User:
+            algorithm: bcrypt
+            cost: 4

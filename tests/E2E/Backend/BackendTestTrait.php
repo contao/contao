@@ -45,6 +45,7 @@ trait BackendTestTrait
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
+            ->withConfigFile(self::fixtureDirectory().'/security.yaml')
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
             ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
             ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
