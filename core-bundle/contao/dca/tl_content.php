@@ -322,7 +322,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tableitems' => array
 		(
 			'inputType'               => 'tableWizard',
-			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'rte'=>'inlineRTE', 'doNotSaveEmpty'=>true),
+			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'rte'=>'tableRTE', 'doNotSaveEmpty'=>true),
 			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		),
 		'summary' => array
