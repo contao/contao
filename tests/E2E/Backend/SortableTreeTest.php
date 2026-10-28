@@ -28,16 +28,18 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $tree = $backend->page()->locator('ul.tl_tree[data-id="0"]');
 
         $ids = $this->recordIds($tree);
+        $expected = [$ids[1], $ids[0], ...\array_slice($ids, 2)];
+
         $backend->page()->locator('.header_toggle:visible')->first()->click();
 
         $this->drag($backend, $this->record($backend, 'page_microsite'), $this->record($backend, 'page_main_website')->locator(':scope > .tl_folder'));
         $this->waitForMove($backend);
 
-        $this->assertSame(array_reverse($ids), $this->recordIds($tree));
+        $this->assertSame($expected, $this->recordIds($tree));
         $this->assertTrue($tree->locator(':scope > li')->first()->evaluate('el => el.classList.contains("tl_folder_top")'));
 
         $backend->visit('/contao?do=page');
-        $this->assertSame(array_reverse($ids), $this->recordIds($tree));
+        $this->assertSame($expected, $this->recordIds($tree));
     }
 
     public function testDragMovesPageWithChildrenIntoAnEmptyPage(): void
@@ -304,18 +306,22 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     {
         [$backend, $tree, $ids] = $this->openPageTree();
 
+        $expected = 'ArrowUp' === $key
+            ? [...\array_slice($ids, 1), $ids[0]]
+            : [$ids[array_key_last($ids)], ...\array_slice($ids, 0, -1)];
+
         // Keep the optimistic order visible without sending a cut request.
         $backend->page()->evaluate('() => { window.fetch = () => new Promise(() => {}); }');
         $tree->locator(':scope > li[data-id] > .tl_folder > .drag-handle')->nth($index)->press($key);
 
         $this->assertTrue($tree->locator(':scope > li')->first()->evaluate('el => el.classList.contains("tl_folder_top")'));
-        $this->assertSame(array_reverse($ids), $this->recordIds($tree));
+        $this->assertSame($expected, $this->recordIds($tree));
     }
 
     public static function wrapProvider(): iterable
     {
         yield 'first record up' => ['ArrowUp', 0];
-        yield 'last record down' => ['ArrowDown', 1];
+        yield 'last record down' => ['ArrowDown', -1];
     }
 
     #[DataProvider('rollbackProvider')]
@@ -337,7 +343,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $handle = $tree->locator(\sprintf(':scope > li[data-id="%s"] > .tl_folder > .drag-handle', $ids[0]));
         $handle->press('ArrowDown');
 
-        $this->assertSame(array_reverse($ids), $this->recordIds($tree));
+        $this->assertSame([$ids[1], $ids[0], ...\array_slice($ids, 2)], $this->recordIds($tree));
 
         if ($pressTab) {
             $handle->press('Tab');
@@ -402,7 +408,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $tree->locator(':scope > li[data-id] > .tl_folder > .drag-handle')->nth(1)->waitFor(['state' => 'visible']);
 
         $ids = $this->recordIds($tree);
-        $this->assertCount(2, $ids);
+        $this->assertGreaterThanOrEqual(2, \count($ids));
 
         return [$backend, $tree, $ids];
     }
