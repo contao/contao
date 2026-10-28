@@ -34,11 +34,14 @@ class BearerChallenge
             'error_description' => $description,
         ]);
 
-        $header = 'Bearer '.implode(', ', array_map(
-            static fn (string $k, string $v): string => \sprintf('%s="%s"', $k, addcslashes($v, '"\\')),
-            array_keys($params),
-            $params,
-        ));
+        $header = 'Bearer '.implode(
+            ', ',
+            array_map(
+                static fn (string $k, string $v): string => \sprintf('%s="%s"', $k, addcslashes($v, '"\\')),
+                array_keys($params),
+                $params,
+            ),
+        );
 
         $response = new JsonResponse(['error' => $error ?? 'unauthorized'], Response::HTTP_UNAUTHORIZED);
         $response->headers->set('WWW-Authenticate', $header);

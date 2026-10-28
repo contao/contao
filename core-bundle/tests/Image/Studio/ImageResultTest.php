@@ -65,7 +65,6 @@ class ImageResultTest extends TestCase
             ->with($projectDir, $staticUrl)
             ->willReturn($sources)
         ;
-
         $picture
             ->expects($this->once())
             ->method('getImg')
@@ -361,7 +360,6 @@ class ImageResultTest extends TestCase
             ->with()
             ->willReturn([])
         ;
-
         $picture
             ->expects($this->once())
             ->method('getImg')
@@ -403,7 +401,6 @@ class ImageResultTest extends TestCase
             ->with()
             ->willReturn([])
         ;
-
         $picture
             ->expects($this->once())
             ->method('getImg')
@@ -454,7 +451,6 @@ class ImageResultTest extends TestCase
             ->with()
             ->willReturn($sources)
         ;
-
         $picture
             ->expects($this->once())
             ->method('getImg')

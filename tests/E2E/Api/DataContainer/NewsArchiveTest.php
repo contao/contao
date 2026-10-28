@@ -15,23 +15,18 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class NewsArchiveTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testCreatesANewsArchiveWithARedirectPage(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $pageId = (int) $fixtures->value('page_main_home');
 
         $request = HttpRequest::json('POST', '/contao/api/dc/news_archive')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -59,6 +54,11 @@ class NewsArchiveTest extends AbstractContaoMonorepoE2ETestCase
             'newsletter-bundle',
         );
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory());
     }
 }

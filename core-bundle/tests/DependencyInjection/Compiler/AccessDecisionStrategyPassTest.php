@@ -30,7 +30,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with('security.access.decision_manager')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('getDefinition')
@@ -52,7 +51,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with(1)
             ->willReturn($strategy)
         ;
-
         $definition
             ->expects($this->once())
             ->method('replaceArgument')
@@ -76,7 +74,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with('security.access.decision_manager')
             ->willReturn(true)
         ;
-
         $container
             ->expects($this->once())
             ->method('getDefinition')

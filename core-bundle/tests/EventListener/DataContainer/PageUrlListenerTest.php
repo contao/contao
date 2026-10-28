@@ -159,7 +159,6 @@ class PageUrlListenerTest extends TestCase
             ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -233,7 +232,6 @@ class PageUrlListenerTest extends TestCase
             ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -291,7 +289,6 @@ class PageUrlListenerTest extends TestCase
             ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
-
         $pageAdapter
             ->expects($this->never())
             ->method('findSimilarByAlias')
@@ -349,7 +346,6 @@ class PageUrlListenerTest extends TestCase
             ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -1038,7 +1034,6 @@ class PageUrlListenerTest extends TestCase
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
-
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
@@ -1192,12 +1187,10 @@ class PageUrlListenerTest extends TestCase
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
-
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
         ;
-
         $pageAdapter
             ->method('findSimilarByAlias')
             ->willReturn(null, null, [$pageModels['id'][6]])
@@ -1302,12 +1295,10 @@ class PageUrlListenerTest extends TestCase
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
-
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
         ;
-
         $pageAdapter
             ->method('findSimilarByAlias')
             ->willReturn(null, null, [$pageModels['id'][4]])
@@ -1476,7 +1467,6 @@ class PageUrlListenerTest extends TestCase
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
-
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
@@ -1576,12 +1566,10 @@ class PageUrlListenerTest extends TestCase
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
         ;
-
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(static fn (int $pid) => $pageModels['pid'][$pid] ?? null)
         ;
-
         $pageAdapter
             ->method('findSimilarByAlias')
             ->willReturn(null, null, [$pageModels['id'][4]])
@@ -1805,7 +1793,6 @@ class PageUrlListenerTest extends TestCase
             ->method('isRoutable')
             ->willReturn(...$isRoutable)
         ;
-
         $pageRegistry
             ->method('getRoute')
             ->willReturnOnConsecutiveCalls(...$routes)

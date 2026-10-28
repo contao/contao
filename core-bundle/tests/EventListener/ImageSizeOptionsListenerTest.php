@@ -23,7 +23,9 @@ class ImageSizeOptionsListenerTest extends TestCase
         $imageSizeConfig = [
             'image_sizes' => [],
             'custom' => [
-                'crop', 'proportional', 'box',
+                'crop',
+                'proportional',
+                'box',
             ],
         ];
 

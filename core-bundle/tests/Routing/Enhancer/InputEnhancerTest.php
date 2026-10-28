@@ -83,7 +83,6 @@ class InputEnhancerTest extends TestCase
                 static fn (...$parameters) => $setters[$matcher->numberOfInvocations() - 1] === $parameters,
             ))
         ;
-
         $input
             ->expects($this->once())
             ->method('setUnusedRouteParameters')

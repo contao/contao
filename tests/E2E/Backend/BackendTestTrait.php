@@ -16,7 +16,7 @@ use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTesting\Browser\BrowserOptions;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\InstallationRecipe\File\FileMapping;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
+use Contao\InstallationRecipe\Fixture\FixtureResult;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 use Symfony\Component\Uid\Uuid;
 
@@ -85,30 +85,51 @@ trait BackendTestTrait
         return Uuid::fromBinary($uuid);
     }
 
-    private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
+    private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
     {
+        $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->loginOrReuseSessionAs($username, $password);
-        $backend->waitFor('h1');
+        $backend->loginOrReuseSessionAs(
+            $username,
+            self::backendPassword($userFixture),
+            fn (BackendBrowser $browser) => $this->assertBackendLogin($browser, $username),
+        );
 
         return $backend;
     }
 
+    private function assertBackendLogin(BackendBrowser $backend, string $username): void
+    {
+        $backend->waitFor('h1');
+
+        $this->assertSelectorTextContains('h1', 'Dashboard');
+
+        $cookies = $backend->browser()->context()->cookies();
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
+        ));
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
+        ));
+
+        $this->assertSelectorTextContains('#tmenu', $username);
+    }
+
     /**
-     * Logs in and opens the content elements of the article fixture.
+     * Logs in and opens the content elements of the given article fixture.
      *
      * @return array{BackendBrowser, string}
      */
-    private function openArticle(): array
+    private function openArticle(FixtureResult $fixtures, string $articleFixture): array
     {
-        $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::fixtureDirectory().'/'.self::FIXTURE_USERS,
-            self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT,
-        ]));
-
         $backend = $this->login();
 
-        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article_main_home}');
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={'.$articleFixture.'}');
         $backend->visit($articleUrl);
 
         return [$backend, $articleUrl];

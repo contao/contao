@@ -337,6 +337,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $this->inheritanceChains = null;
         $this->themeSlugs = null;
         $this->lookupCache = [];
+
         $this->ensureHierarchyIsBuilt(false);
     }
 

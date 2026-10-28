@@ -132,7 +132,7 @@ class TableAccessVoterTest extends TestCase
     {
         $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
 
-        $token = new class() extends AbstractToken implements OfflineTokenInterface {};
+        $token = new class extends AbstractToken implements OfflineTokenInterface {};
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager

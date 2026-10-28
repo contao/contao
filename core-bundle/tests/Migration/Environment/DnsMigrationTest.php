@@ -66,7 +66,6 @@ class DnsMigrationTest extends TestCase
             ->with(['tl_page'])
             ->willReturn(true)
         ;
-
         $schemaManager
             ->expects($this->once())
             ->method('introspectTableByUnquotedName')
@@ -96,7 +95,6 @@ class DnsMigrationTest extends TestCase
             ->with(['tl_page'])
             ->willReturn(true)
         ;
-
         $schemaManager
             ->expects($this->once())
             ->method('introspectTableByUnquotedName')
@@ -114,25 +112,21 @@ class DnsMigrationTest extends TestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $db
             ->expects($this->once())
             ->method('createQueryBuilder')
             ->willReturn(new QueryBuilder($db))
         ;
-
         $db
             ->expects($this->once())
             ->method('createExpressionBuilder')
             ->willReturn(new ExpressionBuilder($db))
         ;
-
         $db
             ->expects($this->once())
             ->method('executeQuery')
             ->with($query, $params)
         ;
-
         $db
             ->method('getDatabasePlatform')
             ->willReturn(new MariaDBPlatform())
@@ -214,7 +208,6 @@ class DnsMigrationTest extends TestCase
             ->method('createQueryBuilder')
             ->willReturn(new QueryBuilder($db))
         ;
-
         $db
             ->expects($this->once())
             ->method('executeQuery')

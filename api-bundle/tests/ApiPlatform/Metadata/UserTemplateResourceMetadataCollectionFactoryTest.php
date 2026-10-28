@@ -147,11 +147,14 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $operation = iterator_to_array($factory->create(UserTemplate::class)[0]->getOperations())['contao_api_user_template_operation_save'];
 
         $routes = new RouteCollection();
-        $routes->add($operation->getName(), new Route(
-            '/contao/_api'.$operation->getUriTemplate(),
-            requirements: $operation->getRequirements(),
-            methods: ['PATCH'],
-        ));
+        $routes->add(
+            $operation->getName(),
+            new Route(
+                '/contao/_api'.$operation->getUriTemplate(),
+                requirements: $operation->getRequirements(),
+                methods: ['PATCH'],
+            ),
+        );
 
         $matcher = new UrlMatcher($routes, new RequestContext(method: 'PATCH'));
         $parameters = $matcher->match('/contao/_api/user_templates/content_element%2Ftext%2Fsave');
@@ -182,11 +185,14 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
                 continue;
             }
 
-            $routes->add($operation->getName(), new Route(
-                '/contao/_api'.$operation->getUriTemplate(),
-                requirements: $operation->getRequirements() ?? [],
-                methods: ['POST'],
-            ));
+            $routes->add(
+                $operation->getName(),
+                new Route(
+                    '/contao/_api'.$operation->getUriTemplate(),
+                    requirements: $operation->getRequirements() ?? [],
+                    methods: ['POST'],
+                ),
+            );
         }
 
         $parameters = new UrlMatcher($routes, new RequestContext(method: 'POST'))->match('/contao/_api/user_template_operations/custom');

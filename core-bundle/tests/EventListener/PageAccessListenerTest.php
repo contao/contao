@@ -346,7 +346,6 @@ class PageAccessListenerTest extends TestCase
                 ->expects($this->never())
                 ->method('initialize')
             ;
-
             $framework
                 ->expects($this->never())
                 ->method('getAdapter')
@@ -366,7 +365,6 @@ class PageAccessListenerTest extends TestCase
             ->expects($this->once())
             ->method('initialize')
         ;
-
         $framework
             ->expects($this->once())
             ->method('getAdapter')

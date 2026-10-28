@@ -99,13 +99,11 @@ class ContaoCacheTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn(new Container())
         ;
-
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('handle')
             ->willReturnOnConsecutiveCalls($response, $response)
         ;
-
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('terminate')

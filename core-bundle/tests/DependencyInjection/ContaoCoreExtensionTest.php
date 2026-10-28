@@ -70,6 +70,7 @@ class ContaoCoreExtensionTest extends TestCase
         new ContaoCoreExtension()->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
+
         $definition = $container->getDefinition('contao.api.widget_converter');
 
         $this->assertSame(CoreWidgetConverter::class, $definition->getClass());
@@ -491,6 +492,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.listener.search_index.default_rate_limiter'), $definition->getArgument('$rateLimiterFactory'));
 
         $rateLimiterDefinition = $container->getDefinition('contao.listener.search_index.default_rate_limiter');
+
         $this->assertSame(
             [
                 'id' => 'contao.listener.search_index.default_rate_limiter',
@@ -556,7 +558,7 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
-    public function testReadsTheIconManifestJson(): void
+    public function testReadsTheIconsFromTheSharedManifestJson(): void
     {
         $container = $this->getContainerBuilder();
 
@@ -564,6 +566,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $icons = $container->getParameter('contao.backend.icons');
 
+        $this->assertArrayNotHasKey('backend.js', $icons);
+        $this->assertArrayNotHasKey('images/help.svg', $icons);
+        $this->assertArrayNotHasKey('icons/help.svg', $icons);
         $this->assertArrayHasKey('help.svg', $icons);
         $this->assertMatchesRegularExpression('~^/bundles/contaocore/icons/help\.[a-f0-9]{8}\.svg$~', $icons['help.svg']['path']);
         $this->assertSame('14', $icons['help.svg']['width']);
@@ -634,6 +639,7 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $matcher = $this->exactly(4);
+
         $expected = [
             ['upload/path', 'upload/path', 'files'],
             ['var/backups', 'backups', 'backups'],
@@ -671,6 +677,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(31536000, $listener->getArgument(1));
 
@@ -688,6 +695,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(500, $listener->getArgument(1));
 
@@ -735,11 +743,13 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.search_backend.adapter'));
+
         $adapter = $container->getDefinition('contao.search_backend.adapter');
         $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
 
         $this->assertTrue($container->hasDefinition('contao.search.backend'));
         $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
+
         $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
         $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
 
@@ -755,6 +765,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(
@@ -790,6 +801,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));

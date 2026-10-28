@@ -142,7 +142,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->method('getTree')
             ->willReturn(new MenuFactory()->createItem('mainMenu'))
         ;
-
         $event
             ->expects($this->never())
             ->method('getFactory')

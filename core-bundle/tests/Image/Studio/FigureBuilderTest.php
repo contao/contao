@@ -239,6 +239,7 @@ class FigureBuilderTest extends TestCase
         [, , $projectDir] = self::getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
+
         $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
         $exception = $figureBuilder->getLastException();
 
@@ -446,12 +447,10 @@ class FigureBuilderTest extends TestCase
             ->method('findByUuid')
             ->willReturnMap([['1d902bf1-2683-406e-b004-f0b59095e5a1', $filesModel]])
         ;
-
         $filesModelAdapter
             ->method('findById')
             ->willReturnMap([[5, $filesModel]])
         ;
-
         $filesModelAdapter
             ->method('findByPath')
             ->willReturnMap([[$absoluteFilePath, $filesModel]])
@@ -624,7 +623,6 @@ class FigureBuilderTest extends TestCase
                 ['invalid-uuid', null],
             ])
         ;
-
         $filesModelAdapter
             ->method('findById')
             ->willReturnMap([
@@ -632,7 +630,6 @@ class FigureBuilderTest extends TestCase
                 [123, null],
             ])
         ;
-
         $filesModelAdapter
             ->method('findByPath')
             ->willReturnMap([
@@ -758,7 +755,10 @@ class FigureBuilderTest extends TestCase
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
-            'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
+            'title' => '',
+            'alt' => '',
+            'link' => '',
+            'caption' => '',
         ];
 
         $currentPage = $this->createClassWithPropertiesStub(PageModel::class);
@@ -954,7 +954,10 @@ class FigureBuilderTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
-            'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
+            'title' => '',
+            'alt' => '',
+            'link' => '',
+            'caption' => '',
         ];
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
@@ -1027,7 +1030,6 @@ class FigureBuilderTest extends TestCase
             ->method('getMetaFields')
             ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
         ;
-
         $filesModelAdapter
             ->method('findByPath')
             ->willReturn(null)
@@ -1252,35 +1254,47 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'absolute file path with valid extension' => [
-            $absoluteFilePath, [$absoluteFilePath, null],
+            $absoluteFilePath,
+            [$absoluteFilePath, null],
         ];
 
         yield 'relative file path with valid extension' => [
-            $relativeFilePath, [$absoluteFilePath, null],
+            $relativeFilePath,
+            [$absoluteFilePath, null],
         ];
 
         yield 'absolute file path with invalid extension' => [
-            $absoluteFilePathWithInvalidExtension, [null, $absoluteFilePathWithInvalidExtension], false,
+            $absoluteFilePathWithInvalidExtension,
+            [null, $absoluteFilePathWithInvalidExtension],
+            false,
         ];
 
         yield 'relative file path with invalid extension' => [
-            $relativeFilePathWithInvalidExtension, [null, $relativeFilePathWithInvalidExtension], false,
+            $relativeFilePathWithInvalidExtension,
+            [null, $relativeFilePathWithInvalidExtension],
+            false,
         ];
 
         yield 'external url/path with valid lowercase extension' => [
-            'https://example.com/valid_extension.png', [null, 'https://example.com/valid_extension.png'],
+            'https://example.com/valid_extension.png',
+            [null, 'https://example.com/valid_extension.png'],
         ];
 
         yield 'external url/path with valid uppercase extension' => [
-            'https://example.com/valid_extension.PNG', [null, 'https://example.com/valid_extension.PNG'],
+            'https://example.com/valid_extension.PNG',
+            [null, 'https://example.com/valid_extension.PNG'],
         ];
 
         yield 'external url/path with invalid extension' => [
-            'https://example.com/invalid_extension.xml', [], false,
+            'https://example.com/invalid_extension.xml',
+            [],
+            false,
         ];
 
         yield 'file path with valid extension to a non-existing resource' => [
-            'this/does/not/exist.png', [], false,
+            'this/does/not/exist.png',
+            [],
+            false,
         ];
 
         yield 'file URL with special chars to an existing resource' => [
@@ -1300,7 +1314,9 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'absolute file path with special URL chars to an non-existing resource' => [
-            __DIR__.'/../../Fixtures/files/public/does%20not%20exist(bar).jpg', [], false,
+            __DIR__.'/../../Fixtures/files/public/does%20not%20exist(bar).jpg',
+            [],
+            false,
         ];
 
         yield 'absolute file path returned by the {{files::*}} insert tag' => [
@@ -1346,15 +1362,21 @@ class FigureBuilderTest extends TestCase
         $url = 'https://example.com/valid_image.png';
 
         yield 'metadata with url' => [
-            new Metadata([Metadata::VALUE_URL => $url]), null, $url,
+            new Metadata([Metadata::VALUE_URL => $url]),
+            null,
+            $url,
         ];
 
         yield 'metadata without url -> use base resource' => [
-            new Metadata([]), $absoluteFilePath, null,
+            new Metadata([]),
+            $absoluteFilePath,
+            null,
         ];
 
         yield 'no metadata -> use base resource' => [
-            null, $absoluteFilePath, null,
+            null,
+            $absoluteFilePath,
+            null,
         ];
     }
 
@@ -1450,7 +1472,6 @@ class FigureBuilderTest extends TestCase
                 [$filePath2, null, null, $imageResult2],
             ])
         ;
-
         $studio
             ->expects($this->once())
             ->method('createLightboxImage')

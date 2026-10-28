@@ -51,7 +51,6 @@ class AddAssetsPackagesPassTest extends TestCase
             ->with('assets.packages')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('getDefinition')

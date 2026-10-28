@@ -32,7 +32,6 @@ class RequestTokenListenerTest extends TestCase
     public function testValidatesTheRequestToken(): void
     {
         $request = $this->createPostRequest();
-
         $request->attributes->set('_token_check', true);
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -44,7 +43,6 @@ class RequestTokenListenerTest extends TestCase
     public function testValidatesTheRequestTokenUponAuthenticatedRequest(): void
     {
         $request = $this->createPostRequest();
-
         $request->headers->set('PHP_AUTH_USER', 'user');
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -111,7 +109,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -147,7 +144,6 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $request = $this->createPostRequest();
-
         $request->request->set('REQUEST_TOKEN', 'foo');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
@@ -158,7 +154,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -189,7 +184,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -206,7 +200,6 @@ class RequestTokenListenerTest extends TestCase
         $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
-
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
@@ -216,7 +209,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -242,7 +234,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -259,7 +250,6 @@ class RequestTokenListenerTest extends TestCase
         $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
-
         $request->attributes->set('_token_check', false);
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
@@ -270,7 +260,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -293,7 +282,6 @@ class RequestTokenListenerTest extends TestCase
         $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
-
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
@@ -302,7 +290,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -323,7 +310,6 @@ class RequestTokenListenerTest extends TestCase
             ->expects($this->never())
             ->method('getRequest')
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')
@@ -379,7 +365,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('isTokenValid')
             ->willReturn(true)
         ;
-
         $csrfTokenManager
             ->method('canSkipTokenValidation')
             ->willReturnCallback(
@@ -397,7 +382,6 @@ class RequestTokenListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request)
         ;
-
         $event
             ->expects($this->once())
             ->method('isMainRequest')

@@ -81,6 +81,7 @@ abstract class AbstractPageController extends AbstractController
 
         // Set cache headers
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+
         $this->setCacheHeaders($response, $pageModel);
 
         return $response;

@@ -49,7 +49,6 @@ final class BearerChallengeTest extends TestCase
             ->method('getProtectedResourceMetadataUrl')
             ->willReturn('https://example.com/.well-known/oauth-protected-resource/contao/mcp')
         ;
-
         $context
             ->method('getScopes')
             ->willReturn(['mcp', 'read'])

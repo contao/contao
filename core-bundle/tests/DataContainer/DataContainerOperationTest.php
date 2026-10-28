@@ -57,6 +57,7 @@ class DataContainerOperationTest extends TestCase
         $operation->setHtml('<a href="#">foobar</a>');
 
         $this->assertSame('<a href="#">foobar</a>', $operation->getHtml());
+
         $operation->hide();
         $this->assertSame('', $operation->getHtml());
     }

@@ -1,4 +1,49 @@
 tl_page:
+    page_string_mount:
+        # A fixed ID lets the user's serialized mount retain its string type.
+        id: 1001
+        pid: 0
+        sorting: 384
+        title: Page mount website
+        alias: page-mount-website
+        type: root
+        language: en
+        published: 1
+        includeLayout: 1
+        layout: '@layout_editorial'
+        includeChmod: 1
+        cgroup: '@group_pages_main_content'
+        chmod:
+            - g1
+            - g4
+    page_string_mount_home:
+        pid: '@page_string_mount'
+        sorting: 128
+        title: Page mount home
+        alias: page-mount-home
+        type: regular
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_page_mount_structure'
+        chmod:
+            - w1
+            - w4
+            - g2
+            - g5
+    page_string_mount_destination:
+        pid: '@page_string_mount'
+        sorting: 256
+        title: Page mount destination
+        alias: page-mount-destination
+        type: regular
+        published: 1
+        includeChmod: 1
+        cgroup: '@group_page_mount_structure'
+        chmod:
+            - w1
+            - w4
+            - g2
+            - g5
     page_main_website:
         pid: 0
         sorting: 128
@@ -53,6 +98,13 @@ tl_page:
         published: 1
 
 tl_article:
+    article_string_mount_home:
+        pid: '@page_string_mount_home'
+        sorting: 128
+        title: Page mount article
+        alias: page-mount-article
+        inColumn: main
+        published: 1
     article_main_home:
         pid: '@page_main_home'
         sorting: 128
@@ -85,6 +137,17 @@ tl_content:
                   - item: Baz
             - item: Qux
             - item: Quux
+    content_table:
+        pid: '@article_microsite_home'
+        ptable: tl_article
+        sorting: 128
+        tstamp: 1704067200
+        type: table
+        thead: 1
+        tableitems:
+            - [Name, Value, Link]
+            - [Lorem, Ipsum, <a href="https://contao.org">Contao</a>]
+            - [Dolor, Sit, Amet]
 
 tl_files:
     files_media:
@@ -195,6 +258,13 @@ tl_newsletter_channel:
         jumpTo: '@page_main_home'
 
 tl_user_group:
+    group_page_mount_structure:
+        name: Page mount | Manage structure
+    group_fields_page_mount:
+        name: Fields | Page mount editor
+        alexf:
+            - tl_page::title
+            - tl_article::title
     group_pages_main_content:
         tstamp: 1704067200
         name: Pages | Main website | Edit content
@@ -215,23 +285,33 @@ tl_user_group:
             - forward
             - redirect
         disable: 0
-    group_files_media_upload:
+    group_files_module:
         tstamp: 1704067200
-        name: Files | Media | Upload
+        name: Files | Access module
         modules:
             - files
+        disable: 0
+    group_file_mounts_media:
+        tstamp: 1704067200
+        name: File mounts | Media
         filemounts:
             - '@files_media->uuid'
+        disable: 0
+    group_file_mounts_private:
+        tstamp: 1704067200
+        name: File mounts | Private
+        filemounts:
+            - '@files_private->uuid'
+        disable: 0
+    group_file_operations_upload:
+        tstamp: 1704067200
+        name: File operations | Upload
         fop:
             - f1
         disable: 0
-    group_files_private_manage:
+    group_file_operations_manage:
         tstamp: 1704067200
-        name: Files | Private | Manage
-        modules:
-            - files
-        filemounts:
-            - '@files_private->uuid'
+        name: File operations | Manage
         fop:
             - f1
             - f2
@@ -354,8 +434,57 @@ tl_user_group:
             - tl_page::description
             - tl_page::robots
         disable: 0
+    group_content_elements_media:
+        tstamp: 1704067200
+        name: Content elements | Media
+        elements:
+            - image
+            - gallery
+        disable: 0
+    group_fields_content_media:
+        tstamp: 1704067200
+        name: Fields | Content media
+        alexf:
+            - tl_content::singleSRC
+            - tl_content::multiSRC
+        disable: 0
+    group_records_content_create_update:
+        tstamp: 1704067200
+        name: Records | Content | Create and update
+        cud:
+            - tl_content::create
+            - tl_content::update
+        disable: 0
 
 tl_user:
+    user_page_mount_manager:
+        username: page-mount-manager
+        name: Page mount manager
+        email: page-mount-manager@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_fields_page_mount'
+            - '@group_page_mount_structure'
+            - '@group_pages_microsite_structure'
+        inherit: extend
+        pagemounts:
+            - '1001'
+        disable: 0
+    user_page_mount_editor:
+        username: page-mount-editor
+        name: Page mount editor
+        email: page-mount-editor@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_fields_page_mount'
+        inherit: extend
+        pagemounts:
+            - '1001'
+        disable: 0
     user_administrator:
         tstamp: 1704067200
         username: administrator
@@ -407,7 +536,9 @@ tl_user:
         language: en
         password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
-            - '@group_files_media_upload'
+            - '@group_files_module'
+            - '@group_file_mounts_media'
+            - '@group_file_operations_upload'
         inherit: group
         disable: 0
         dateAdded: 1704067200
@@ -419,7 +550,9 @@ tl_user:
         language: en
         password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
         groups:
-            - '@group_files_private_manage'
+            - '@group_files_module'
+            - '@group_file_mounts_private'
+            - '@group_file_operations_manage'
         inherit: group
         disable: 0
         dateAdded: 1704067200
@@ -511,3 +644,164 @@ tl_user:
             - '@page_main_website'
         disable: 0
         dateAdded: 1704067200
+
+    user_media_content_editor:
+        tstamp: 1704067200
+        username: media-content-editor
+        name: Media content editor
+        email: media-content-editor@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_content_elements_basic'
+            - '@group_content_elements_media'
+            - '@group_fields_content_media'
+            - '@group_records_content_create_update'
+            - '@group_files_module'
+            - '@group_file_mounts_media'
+            - '@group_file_operations_upload'
+        inherit: extend
+        pagemounts:
+            - '@page_main_website'
+        disable: 0
+        dateAdded: 1704067200
+    user_private_files_content_editor:
+        tstamp: 1704067200
+        username: private-files-content-editor
+        name: Private files content editor
+        email: private-files-content-editor@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_pages_main_content'
+            - '@group_content_elements_basic'
+            - '@group_content_elements_media'
+            - '@group_fields_content_media'
+            - '@group_records_content_create_update'
+            - '@group_files_module'
+            - '@group_file_mounts_private'
+            - '@group_file_operations_manage'
+        inherit: extend
+        pagemounts:
+            - '@page_main_website'
+        disable: 0
+        dateAdded: 1704067200
+
+    user_media_file_manager:
+        tstamp: 1704067200
+        username: media-file-manager
+        name: Media file manager
+        email: media-file-manager@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_files_module'
+            - '@group_file_mounts_media'
+            - '@group_file_operations_manage'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_private_file_uploader:
+        tstamp: 1704067200
+        username: private-file-uploader
+        name: Private file uploader
+        email: private-file-uploader@example.com
+        language: en
+        password: $argon2id$v=19$m=65536,t=4,p=1$UWdQamxXYUxFc0FOVlI2Qg$SywupsMOC9bZJn3xuIWq+7Eq0NbZ+WHVNH4KztCpc/g
+        groups:
+            - '@group_files_module'
+            - '@group_file_mounts_private'
+            - '@group_file_operations_upload'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+
+tl_preview_link:
+    preview_link:
+        tstamp: 1704067200
+        url: https://example.test/preview
+        showUnpublished: 0
+        restrictToUrl: 1
+        createdAt: 1704067200
+        expiresAt: 1893456000
+        published: 0
+        createdBy: '@kevin_jones'
+
+# All backend fixture users have a PAT with the test-only secret "e2e".
+personal_access_token:
+    user_page_mount_manager_token: &backend_token_defaults
+        id: !!binary sA9y3d7FWmqFn+6NqdtCJQ==
+        userId: '@user_page_mount_manager'
+        scope: backend
+        createdAt: '2026-10-12 12:00:00'
+        name: E2E
+        secret: bYdJxP4At1fBvBw3apnzHRvTi0ItRPW2qi1qbF6XXLo=
+    user_page_mount_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary PLTzWoDgXwKWMzBu6tzRIw==
+        userId: '@user_page_mount_editor'
+    user_administrator_token:
+        <<: *backend_token_defaults
+        id: !!binary 71HN5ctcVa66uQlNG2uUcg==
+        userId: '@user_administrator'
+    user_content_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary N1OwFrbHU/63uXmAZnRGuQ==
+        userId: '@user_content_editor'
+    user_site_manager_token:
+        <<: *backend_token_defaults
+        id: !!binary Lq6Jk7t2XRuk4LQhNjNdBA==
+        userId: '@user_site_manager'
+    user_file_uploader_token:
+        <<: *backend_token_defaults
+        id: !!binary ldt2hGpdWSuT1rzembC5fg==
+        userId: '@user_file_uploader'
+    user_file_manager_token:
+        <<: *backend_token_defaults
+        id: !!binary EjmVVgktUhWnhUHzYCDfBA==
+        userId: '@user_file_manager'
+    user_form_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary wqrY28h4UjCS852nD1lRSg==
+        userId: '@user_form_editor'
+    user_member_manager_token:
+        <<: *backend_token_defaults
+        id: !!binary 4iGLNvtAXIm9wzCQMmP8UQ==
+        userId: '@user_member_manager'
+    user_news_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary zoTAH/eAWFyUSkDkAtMj8A==
+        userId: '@user_news_editor'
+    user_calendar_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary nP1xtZA0VA29W5poBEIqnQ==
+        userId: '@user_calendar_editor'
+    user_faq_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary 1eUDy/ONWF24C+p9/M3hFg==
+        userId: '@user_faq_editor'
+    user_newsletter_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary ka6qyL4fWliebNFaNhEqRw==
+        userId: '@user_newsletter_editor'
+    user_restricted_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary a0htSA9CXW6fzXhBUz+DYA==
+        userId: '@user_restricted_editor'
+    user_media_content_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary vrVnfDkBUiupTe5F5iwKAA==
+        userId: '@user_media_content_editor'
+    user_private_files_content_editor_token:
+        <<: *backend_token_defaults
+        id: !!binary Z0LymDErUqeijaBFbivRCg==
+        userId: '@user_private_files_content_editor'
+    user_media_file_manager_token:
+        <<: *backend_token_defaults
+        id: !!binary eOEVHQeFVESaI8NFp7b7rQ==
+        userId: '@user_media_file_manager'
+    user_private_file_uploader_token:
+        <<: *backend_token_defaults
+        id: !!binary sJoYlqzVXmWRqLeFMbvKNg==
+        userId: '@user_private_file_uploader'

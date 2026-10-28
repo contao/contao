@@ -37,10 +37,12 @@ class BackupListCommandTest extends TestCase
         $command = new BackupListCommand($this->mockBackupManager());
 
         $tz = date_default_timezone_get();
+
         date_default_timezone_set('UTC');
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
 
         date_default_timezone_set($tz);

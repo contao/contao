@@ -122,9 +122,12 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         }
 
         // To create a record, both hierarchy and edit permissions must be available.
-        return array_any($pageIds, fn ($pageId) => $this->canEdit($action, $token, $pageId)
-            && $this->canChangeHierarchy($action, $token, $pageId)
-            && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()));
+        return array_any(
+            $pageIds,
+            fn ($pageId) => $this->canEdit($action, $token, $pageId)
+                && $this->canChangeHierarchy($action, $token, $pageId)
+                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()),
+        );
     }
 
     private function canRead(ReadAction $action, TokenInterface $token): bool
@@ -204,7 +207,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
         $children = $this->hierarchy->getChildIds($user->pagemounts, 'tl_page');
 
-        return $this->pagemountsCache[$user->id] = [...$children, ...$user->pagemounts];
+        return $this->pagemountsCache[$user->id] = array_map(\intval(...), [...$children, ...$user->pagemounts]);
     }
 
     private function getPagemountTrail(TokenInterface $token): array

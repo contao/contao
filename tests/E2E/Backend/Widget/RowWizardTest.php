@@ -75,6 +75,7 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('First', $this->input($backend, 'row_wizard_basic', 1, 'name')->inputValue());
 
         $this->input($backend, 'row_wizard_basic', 1, 'name')->fill('Second');
+
         $backend->submitForm('Save');
 
         $this->assertRows($backend, 'row_wizard_basic', 2);
@@ -90,11 +91,13 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->add($backend, 'row_wizard_basic');
         $this->input($backend, 'row_wizard_basic', 0, 'name')->fill('Only');
+
         $backend->submitForm('Save');
 
         $this->assertRows($backend, 'row_wizard_basic', 1);
 
         $this->buttons($backend, 'row_wizard_basic', 'delete')->first()->click();
+
         $backend->submitForm('Save');
 
         // No empty row is rendered for an empty value, only the add button (see #10073)
@@ -166,7 +169,8 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
      */
     private function openNewTextElement(): BackendBrowser
     {
-        [$backend] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
 
         $backend->submitNew();
         $backend->submitAction('Paste at the top');

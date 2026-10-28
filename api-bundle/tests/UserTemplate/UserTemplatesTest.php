@@ -73,6 +73,7 @@ class UserTemplatesTest extends TestCase
                     $this->assertSame('text/vnd.turbo-stream.html', $request->headers->get('Accept'));
                     $this->assertSame('de', $request->attributes->get('_locale'));
                     $this->assertNotSame($parent, $request);
+
                     $bag = $request->getSession()->getBag('contao_backend');
                     $this->assertInstanceOf(AttributeBagInterface::class, $bag);
                     $this->assertSame($theme, $bag->get('template_studio_theme_slug'));
@@ -109,6 +110,7 @@ class UserTemplatesTest extends TestCase
         $client = new TemplateStudioClient($kernel, $this->createStub(UrlGeneratorInterface::class), new RequestStack());
 
         $this->expectException(\LogicException::class);
+
         $client->discover(null);
     }
 
@@ -138,12 +140,14 @@ class UserTemplatesTest extends TestCase
             ->expects($this->once())
             ->method('discover')
             ->with('demo')
-            ->willReturn(new JsonResponse(['tree' => [
-                'content_element' => [
-                    'text' => [['identifier' => 'content_element/text']],
-                    'image' => [['identifier' => 'content_element/image']],
+            ->willReturn(new JsonResponse([
+                'tree' => [
+                    'content_element' => [
+                        'text' => [['identifier' => 'content_element/text']],
+                        'image' => [['identifier' => 'content_element/image']],
+                    ],
                 ],
-            ]]))
+            ]))
         ;
 
         $request = Request::create('/contao/api/user_templates', parameters: ['theme' => 'demo', 'query' => 'TEXT']);

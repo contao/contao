@@ -63,8 +63,10 @@ class PageRoutingListener
         }
 
         $conflicts = [];
+
         $currentRoute = $this->pageRegistry->getRoute($currentPage);
         $currentUrl = $currentRoute->compile()->getStaticPrefix().$currentRoute->getUrlSuffix();
+
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {

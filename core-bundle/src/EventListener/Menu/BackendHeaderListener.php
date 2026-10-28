@@ -53,8 +53,8 @@ class BackendHeaderListener
         }
 
         $factory = $event->getFactory();
-        $tree = $event->getTree();
 
+        $tree = $event->getTree();
         $tree->addChild($this->createManual($factory));
         $tree->addChild($this->createAlerts($factory));
         $tree->addChild($this->createProfileMenu($factory, $user));
@@ -107,6 +107,7 @@ class BackendHeaderListener
         ;
 
         $submenu->addChild($info);
+
         $this->addProfileLinks($factory, $submenu, $user);
 
         $colorScheme = $factory

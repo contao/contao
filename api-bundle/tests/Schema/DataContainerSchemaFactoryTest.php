@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Tests\Schema;
 
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
@@ -42,6 +43,8 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactoryTest extends ContaoTestCase
 {
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
     private DataContainerRelationResolver $relationResolver;
 
     protected function setUp(): void
@@ -50,6 +53,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         System::setContainer($container);
+
         $this->relationResolver = $this->createRelationResolver();
 
         $GLOBALS['BE_FFL'] = [
@@ -135,8 +139,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
-
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $schema = $factory->create('tl_content');
 
         $this->assertSame('object', $schema['type']);
@@ -155,7 +158,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testRequiresExplicitWidgetSupportEvenWithSchemaOverrides(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
@@ -171,7 +174,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'internal' => ['sql' => ['type' => 'string']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
 
         $this->assertSame(['id', 'title'], array_keys($factory->create('tl_content')['properties']));
         $this->assertArrayNotHasKey('required', $factory->create('tl_content'));
@@ -190,7 +193,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'passwords' => ['inputType' => 'password', 'eval' => ['multiple' => true], 'sql' => ['type' => 'string']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertTrue($properties['secret']['writeOnly']);
@@ -250,6 +253,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]),
             $this->relationResolver,
             $localeSwitcher,
+            $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])),
         );
 
         $properties = $factory->create('tl_content')['properties'];
@@ -270,7 +274,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testInheritsWidgetSchemaForEveryFieldUsingThatWidget(): void
     {
-        $widget = new class() extends FileTree {
+        $widget = new class extends FileTree {
             public function __construct()
             {
             }
@@ -284,7 +288,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'textual' => ['inputType' => 'customFiles', 'eval' => ['binary' => false]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'uuid'], $properties['single']);
@@ -294,7 +298,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
     public function testConvertersCanSupportUnmodifiedThirdPartyWidgets(): void
     {
-        $widget = new class() extends Widget {
+        $widget = new class extends Widget {
             public function __construct()
             {
             }
@@ -313,14 +317,13 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ->method('supports')
             ->willReturnCallback(static fn (array $config): bool => 'customText' === ($config['inputType'] ?? null))
         ;
-
         $converter
             ->expects($this->exactly(3))
             ->method('getSchema')
             ->willReturn(['type' => 'string', 'readOnly' => true])
         ;
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([$converter, new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame($properties['first'], $properties['second']);
@@ -337,7 +340,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'options' => ['inputType' => 'checkbox', 'options' => ['one', 'two'], 'eval' => ['multiple' => true]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame('integer', $properties['page']['type']);
@@ -359,7 +362,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'sorting' => ['sql' => ['type' => 'integer']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         foreach (['pid', 'ptable', 'sorting'] as $field) {
@@ -398,7 +401,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'eventDateTime' => ['inputType' => 'text', 'eval' => ['rgxp' => 'datim'], 'sql' => ['type' => 'integer']],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null'], 'format' => 'date-time', 'default' => null, 'readOnly' => true], $properties['tstamp']);
@@ -426,7 +429,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             'secret' => ['inputType' => 'password', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => true]],
         ];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $schemas = $factory->createOperationSchemas('tl_content');
 
         $this->assertSame(['id', 'pid', 'ptable', 'sorting', 'title'], array_keys($schemas['read']['properties']));
@@ -442,7 +445,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['id'] = ['sql' => ['type' => 'integer']];
 
-        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher());
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
         $schema = json_decode(json_encode($factory->createOperationSchemas('tl_content')['update'], JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
 
         $validator = new \Opis\JsonSchema\Validator();
@@ -461,11 +464,11 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
             ->willReturn(new ResourceMetadataCollection(DataContainerRecord::class, []))
         ;
 
+        $this->relationMetadataFactory = $metadataFactory;
+
         return new DataContainerRelationResolver(
             $connection,
-            new ForeignKeyParser($connection),
-            new WidgetConverterRegistry([]),
-            $metadataFactory,
+            $this->relationMetadataFactory,
             $this->createStub(RouterInterface::class),
             $this->createStub(DcaHierarchy::class),
         );
@@ -482,7 +485,6 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
                 },
             )
         ;
-
         $localeSwitcher
             ->method('runWithLocale')
             ->willReturnCallback(
@@ -500,5 +502,10 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         ;
 
         return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
     }
 }

@@ -43,7 +43,7 @@ export default class extends Controller {
 
         for (const el of this.sectionTargets) {
             const action = this.#btn.cloneNode();
-            action.innerText = el.getAttribute(`data-${this.identifier}-label-value`);
+            action.textContent = el.getAttribute(`data-${this.identifier}-label-value`);
 
             action.addEventListener('click', () => {
                 this.dispatch('scrollto', { target: el });

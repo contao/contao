@@ -15,24 +15,20 @@ namespace Contao\E2eTests\Api\DataContainer;
 use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 
 class ContentTest extends AbstractContaoMonorepoE2ETestCase
 {
     public function testIdentifiesRecordsInsideElementGroups(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
+        $fixtures = self::managedEdition()->database()->fixtures();
 
         // Create the element group in the article.
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -48,7 +44,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Nest another group using the first group's returned IRI
         $request = HttpRequest::json('POST', $group['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -65,7 +61,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Add content in the second element group and check the parent reference.
         $request = HttpRequest::json('POST', $innerGroup['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -85,7 +81,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         // Read the content through the returned IRI to verify the full nested route
         $request = HttpRequest::get($data['@id'])
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -101,17 +97,13 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCreatesNestedContentAfterAPrecedingTextElement(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
         // Add text first so the group ID differs from the article ID.
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -126,7 +118,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -142,7 +134,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::json('POST', $group['@id'].'/content')
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -158,7 +150,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
         $request = HttpRequest::get($data['@id'])
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
             ])
         ;
@@ -174,16 +166,12 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testRejectsAParentInThePayloadOfANestedRoute(): void
     {
-        $fixtures = self::managedEdition()->resetDatabase(new FixtureSet([
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml',
-            self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml',
-        ]));
-
+        $fixtures = self::managedEdition()->database()->fixtures();
         $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
 
         $request = HttpRequest::json('POST', $path)
             ->withHeaders([
-                'Authorization' => 'Bearer e2e',
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
                 'Accept' => 'application/ld+json',
                 'Content-Type' => 'application/ld+json',
             ])
@@ -211,6 +199,11 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
             'newsletter-bundle',
         );
 
-        return ManagedEditionConfig::create(InstallationRecipe::create($composer), self::projectDirectory());
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory());
     }
 }
