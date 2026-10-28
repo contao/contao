@@ -103,7 +103,6 @@
                 .set('data-contao--sortable-handle-value', '.drag-handle')
                 .set('data-contao--sortable-group-value', "list-wizard-#{id}")
                 .set('data-contao--sortable-swap-threshold-value', '1')
-                .set('data-action', 'contao--sortable:update->contao--list-wizard#update')
             %}
             <ul{{ sub_list_attributes }}>
                 {% for list_item in row.list|default([]) %}
