@@ -12,11 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlTag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\UnicodeString;
 
 final class HtmlHeadBag
 {
+    public const TAG_TITLE = 'contao.title';
+
+    public const TAG_ROBOTS = 'contao.meta.robots';
+
+    public const TAG_DESCRIPTION = 'contao.meta.description';
+
+    public const TAG_CANONICAL = 'contao.canonical';
+
     private string $name = '';
 
     private string $title = '';
@@ -38,6 +48,23 @@ final class HtmlHeadBag
      * @var list<HtmlAttributes>
      */
     private array $linkTags = [];
+
+    /**
+     * @var list<HtmlTag>
+     */
+    private array $tags = [];
+
+    /**
+     * @var array<array-key, string>
+     */
+    private array $rawHeadTags = [];
+
+    /**
+     * @var array<array-key, string>
+     */
+    private array $rawStylesheetTags = [];
+
+    private bool $canonicalEnabled = false;
 
     public function getName(): string
     {
@@ -146,6 +173,16 @@ final class HtmlHeadBag
         return $request->getUri();
     }
 
+    /**
+     * @internal
+     */
+    public function setCanonicalEnabled(bool $canonicalEnabled): self
+    {
+        $this->canonicalEnabled = $canonicalEnabled;
+
+        return $this;
+    }
+
     public function getMetaTags(): array
     {
         return $this->metaTags;
@@ -196,5 +233,80 @@ final class HtmlHeadBag
         $this->linkTags = array_filter($this->linkTags, static fn (HtmlAttributes $linkTag): bool => ($linkTag[$key] ?? null) !== $value);
 
         return $this;
+    }
+
+    public function add(HtmlTag $tag): self
+    {
+        $this->tags[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * @internal
+     */
+    public function addRawToHead(string $markup, string|null $identifier = null): self
+    {
+        $this->addRawContent($this->rawHeadTags, $markup, $identifier);
+
+        return $this;
+    }
+
+    /**
+     * @internal
+     */
+    public function addRawToStylesheets(string $markup, string|null $identifier = null): self
+    {
+        $this->addRawContent($this->rawStylesheetTags, $markup, $identifier);
+
+        return $this;
+    }
+
+    /**
+     * @return array<array-key, HtmlTag|string>
+     */
+    public function all(Request|null $request = null): array
+    {
+        $tags = [
+            self::TAG_TITLE => HtmlTag::title($this->title),
+            self::TAG_ROBOTS => HtmlTag::meta(['name' => 'robots', 'content' => $this->metaRobots]),
+            self::TAG_DESCRIPTION => HtmlTag::meta(['name' => 'description', 'content' => new UnicodeString($this->metaDescription)->truncate(320, '…')]),
+        ];
+
+        foreach ($this->metaTags as $key => $attributes) {
+            $tags["contao.meta.additional.$key"] = HtmlTag::meta($attributes);
+        }
+
+        if ($this->canonicalEnabled && $request) {
+            $tags[self::TAG_CANONICAL] = HtmlTag::link(['rel' => 'canonical', 'href' => $this->getCanonicalUriForRequest($request)]);
+        }
+
+        foreach ($this->linkTags as $key => $attributes) {
+            $tags["contao.link.additional.$key"] = HtmlTag::link($attributes);
+        }
+
+        array_push($tags, ...$this->tags);
+
+        foreach ($this->rawStylesheetTags as $identifier => $markup) {
+            $tags["contao.twig.stylesheets.$identifier"] = $markup;
+        }
+
+        foreach ($this->rawHeadTags as $identifier => $markup) {
+            $tags["contao.twig.head.$identifier"] = $markup;
+        }
+
+        return $tags;
+    }
+
+    /**
+     * @param array<array-key, string> $content
+     */
+    private function addRawContent(array &$content, string $markup, string|null $identifier): void
+    {
+        if (null === $identifier) {
+            $content[] = $markup;
+        } else {
+            $content[$identifier] = $markup;
+        }
     }
 }
