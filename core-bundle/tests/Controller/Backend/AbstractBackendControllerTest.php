@@ -15,9 +15,14 @@ namespace Contao\CoreBundle\Tests\Controller\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\Backend\AbstractBackendController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
@@ -103,6 +108,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'backendWidth' => null,
             'menu' => '<menu>',
+            'metaTags' => [],
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
@@ -180,6 +186,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'backendWidth' => null,
             'menu' => '<menu>',
+            'metaTags' => [],
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
@@ -313,6 +320,85 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame($sessionBag, $controller->getBackendSessionBagDelegate());
     }
 
+    public function testAddsMetaTags(): void
+    {
+        $controller = new class extends AbstractBackendController {
+            public function fooAction(): Response
+            {
+                return $this->render('custom_be.html.twig', ['foo' => 'bar', 'version' => 'my version']);
+            }
+        };
+
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'version' => 'version',
+            'dashboard' => 'dashboard',
+            'home' => 'home',
+            'learnMore' => 'learn more',
+        ];
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        $metaTag = (new HtmlAttributes())
+            ->set('name', 'foo')
+            ->set('content', 'bar')
+        ;
+
+        $expectedContext = [
+            'version' => 'my version',
+            'headline' => 'dashboard',
+            'title' => '',
+            'theme' => 'flexible',
+            'language' => 'en',
+            'host' => 'localhost',
+            'charset' => 'UTF-8',
+            'home' => 'home',
+            'isDebug' => false,
+            'isPopup' => null,
+            'learnMore' => 'learn more',
+            'backendWidth' => null,
+            'menu' => '<menu>',
+            'metaTags' => [$metaTag],
+            'renderMainOnly' => false,
+            'headerMenu' => '<header_menu>',
+            'badgeTitle' => '',
+            'foo' => 'bar',
+            'Template' => $this->anything(),
+            'getLocaleString' => $this->anything(),
+            'getDateString' => $this->anything(),
+            'as_editor_view' => true,
+        ];
+
+        $container = $this->getContainerWithDefaultConfiguration($expectedContext);
+
+        $responseContext = new ResponseContext();
+        $responseContext->addLazy(HtmlHeadBag::class);
+
+        $responseContext->get(HtmlHeadBag::class)->addMetaTag($metaTag);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->exactly(2))
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->never())
+            ->method('createWebpageResponseContext')
+        ;
+
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
+
+        System::setContainer($container);
+        $controller->setContainer($container);
+
+        $controller->fooAction();
+    }
+
     private function getContainerWithDefaultConfiguration(array $expectedContext, Request|null $request = null): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -375,6 +461,21 @@ class AbstractBackendControllerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $responseContext = new ResponseContext();
+        $responseContext->addLazy(HtmlHeadBag::class);
+
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $responseContextFactory = $this->createStub(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->method('createWebpageResponseContext')
+            ->willReturn($responseContext)
+        ;
+
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
@@ -385,6 +486,8 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 
