@@ -2113,17 +2113,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   ' . $strButtons . '
 </form>';
 
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-			}
-
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 			{

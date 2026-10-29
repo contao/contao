@@ -219,6 +219,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
+                'Symfony\Component\PropertyAccess\PropertyAccessor',
                 'Symfony\Component\String\\',
                 'Symfony\Component\Uid\Ulid',
                 'Symfony\Component\VarDumper\\',

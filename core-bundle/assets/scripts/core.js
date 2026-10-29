@@ -1725,6 +1725,9 @@ window.Backend =
 				isDrawing = false;
 			},
 			init = function() {
+				if (el.editPreviewWizardInitialized) {
+					return;
+				}
 				el.getParent('.tl_tbox,.tl_box').getElements('input[name^="importantPart"]').each(function(input) {
 					['x', 'y', 'width', 'height'].each(function(key) {
 						if (input.get('name').substr(13, key.length) === key.capitalize()) {
@@ -1735,10 +1738,13 @@ window.Backend =
 				if (Object.getLength(inputElements) !== 4) {
 					return;
 				}
+				el.editPreviewWizardInitialized = true;
 				Object.each(inputElements, function(input) {
 					input.getParent().setStyle('display', 'none');
 				});
 				el.addClass('tl_edit_preview_enabled');
+				// Remove the element restored from the Turbo cache (see #10509)
+				el.getElements('.tl_edit_preview_important_part').destroy();
 				partElement = new Element('div', {
 					'class': 'tl_edit_preview_important_part'
 				}).inject(el);
