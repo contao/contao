@@ -1882,7 +1882,7 @@ window.Backend =
 document.documentElement.classList.add('js');
 
 // Mark touch devices (see #5563)
-if (Browser.Features.Touch) {
+if (navigator.maxTouchPoints > 0) {
 	document.documentElement.classList.add('touch');
 }
 
