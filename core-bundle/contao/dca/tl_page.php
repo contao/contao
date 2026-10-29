@@ -722,7 +722,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude' => true,
 			'inputType' => 'text',
-			'eval' => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'alwaysSave'=>true),
+			'eval' => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql' => array('type' => 'string', 'length' => 255, 'default' => ''),
 		)
 	)
