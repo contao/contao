@@ -8,7 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
+
+$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedBase,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,
@@ -66,4 +68,11 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['imgSize'] = array(
 	'eval' => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
 	'options_callback' => array('contao.listener.image_size_options', '__invoke'),
 	'sql' => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['feedBase'] = array(
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+	'sql' => array('type' => 'string', 'length' => 255, 'default' => ''),
 );
