@@ -49,6 +49,7 @@ class BackendPassword extends Backend
 		$widget->dataContainer = $dc;
 		$widget->label = null;
 		$widget->prependLabel = true;
+		$widget->autofocus = true;
 		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 		$widget->currentRecord = $user->id;
