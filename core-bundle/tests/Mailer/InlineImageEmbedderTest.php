@@ -146,7 +146,6 @@ class InlineImageEmbedderTest extends TestCase
             ->method('exists')
             ->willReturn(false)
         ;
-
         $file
             ->expects($this->once())
             ->method('createIfDeferred')
