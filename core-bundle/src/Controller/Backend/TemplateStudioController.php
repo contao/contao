@@ -718,7 +718,7 @@ class TemplateStudioController extends AbstractBackendController
         }
 
         $regex = \sprintf(
-            '#^(%s)/#',
+            '#^(?!backend/rte/)(%s)/#',
             implode(
                 '|',
                 array_map(
