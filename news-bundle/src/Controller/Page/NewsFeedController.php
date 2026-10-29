@@ -44,7 +44,6 @@ class NewsFeedController extends AbstractFeedPageController
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = $this->initFeed($pageModel, $this->charset);
-
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
         $dispatcher = $this->container->get('event_dispatcher');

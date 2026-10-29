@@ -137,6 +137,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->assertTrue($migration->shouldRun());
         $this->assertSame('', $this->connection->fetchOne('SELECT feedBase FROM tl_page WHERE id = 1'));
         $this->assertTrue($migration->run()->isSuccessful());
+
         $this->assertSame(
             [
                 1 => $expected,
@@ -146,6 +147,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
+
         $this->assertFalse($migration->shouldRun());
 
         // Feeds added by another migration must still be processed on the next pass.
@@ -207,6 +209,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
 
         $this->assertTrue($migration->shouldRun());
         $this->assertTrue($migration->run()->isSuccessful());
+
         $this->assertSame(
             [
                 1 => 'https://first.example/',
@@ -214,6 +217,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
             ],
             $this->connection->fetchAllKeyValue('SELECT id, feedBase FROM tl_page ORDER BY id'),
         );
+
         $this->assertFalse($migration->shouldRun());
     }
 
@@ -259,6 +263,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->connection->insert('tl_page', ['id' => 1, 'type' => 'calendar_feed', 'eventCalendars' => serialize([42])]);
 
         $pageAdapter = $this->createConfiguredAdapterStub(['findById' => $this->createStub(PageModel::class)]);
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $invocation = $urlGenerator
             ->expects($this->once())
@@ -294,6 +299,7 @@ class FeedBaseMigrationTest extends ContaoTestCase
         $this->connection->insert('tl_page', ['id' => 1, 'type' => 'calendar_feed', 'eventCalendars' => serialize([42, 43])]);
 
         $pageAdapter = $this->createConfiguredAdapterStub(['findById' => $this->createStub(PageModel::class)]);
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $invocation = $urlGenerator
             ->expects($this->once())

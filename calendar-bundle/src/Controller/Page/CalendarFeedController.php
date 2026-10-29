@@ -44,7 +44,6 @@ class CalendarFeedController extends AbstractFeedPageController
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = $this->initFeed($pageModel, $this->charset);
-
         $event = new FetchEventsForFeedEvent($feed, $request, $pageModel);
 
         $dispatcher = $this->container->get('event_dispatcher');
