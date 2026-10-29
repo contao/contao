@@ -150,6 +150,7 @@ class Locales
             if (\in_array($default, $locales, true)) {
                 unset($locales[array_search($default, $locales, true)]);
             }
+
             array_unshift($locales, $default);
         }
 

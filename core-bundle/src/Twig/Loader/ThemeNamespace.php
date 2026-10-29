@@ -47,22 +47,25 @@ class ThemeNamespace
 
         $invalidCharacters = [];
 
-        $slug = implode('_', array_map(
-            static function (string $chunk) use (&$invalidCharacters) {
-                // Allow paths outside the template directory (see #3271)
-                if ('..' === $chunk) {
-                    return '';
-                }
+        $slug = implode(
+            '_',
+            array_map(
+                static function (string $chunk) use (&$invalidCharacters) {
+                    // Allow paths outside the template directory (see #3271)
+                    if ('..' === $chunk) {
+                        return '';
+                    }
 
-                // Check for invalid characters (see #3354)
-                if (0 !== preg_match_all('%[^a-zA-Z0-9-]%', $chunk, $matches)) {
-                    $invalidCharacters = [...$invalidCharacters, ...$matches[0]];
-                }
+                    // Check for invalid characters (see #3354)
+                    if (0 !== preg_match_all('%[^a-zA-Z0-9-]%', $chunk, $matches)) {
+                        $invalidCharacters = [...$invalidCharacters, ...$matches[0]];
+                    }
 
-                return $chunk;
-            },
-            explode('/', $path),
-        ));
+                    return $chunk;
+                },
+                explode('/', $path),
+            ),
+        );
 
         if ($invalidCharacters) {
             throw new InvalidThemePathException($path, $invalidCharacters);

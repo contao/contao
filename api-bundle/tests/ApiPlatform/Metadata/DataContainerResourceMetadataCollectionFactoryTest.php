@@ -28,8 +28,6 @@ use ApiPlatform\Metadata\Resource\ResourceNameCollection;
 use ApiPlatform\Symfony\Routing\ApiLoader;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\Config;
@@ -63,7 +61,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $decorated = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
 
-        $extendedDcTableClass = new class() extends DC_Table {
+        $extendedDcTableClass = new class extends DC_Table {
             public function __construct()
             {
             }
@@ -211,6 +209,7 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         );
 
         $loader = $this->createApiLoader($factory);
+
         $routes = $loader->load(null);
         $routes->addPrefix('/custom_api');
 
@@ -264,6 +263,47 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $this->assertSame('4/content/5', $match['nested']);
     }
 
+    #[DataProvider('provideCreationConfigurations')]
+    public function testOnlyExposesPostForCreatableTables(bool|null $notCreatable, bool $creatable): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table) use ($notCreatable): void {
+                    $config = ['dataContainer' => DC_Table::class];
+
+                    if (null !== $notCreatable) {
+                        $config['notCreatable'] = $notCreatable;
+                    }
+
+                    $GLOBALS['TL_DCA'][$table] = ['config' => $config, 'fields' => ['id' => []]];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_preview_link']),
+        );
+
+        $routes = $this->createApiLoader($factory)->load(null);
+
+        $this->assertSame($creatable, \array_key_exists('contao_api_dc_preview_link_post', $routes->all()));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get_collection'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_patch'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_delete'));
+    }
+
+    public static function provideCreationConfigurations(): iterable
+    {
+        yield 'unset' => [null, true];
+        yield 'explicitly creatable' => [false, true];
+        yield 'not creatable' => [true, false];
+    }
+
     private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader
     {
         $names = $this->createStub(ResourceNameCollectionFactoryInterface::class);
@@ -291,13 +331,14 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
     {
         $this->assertSame(DataContainerRecord::class, $resource->getClass());
         $this->assertSame($expectedShortName, $resource->getShortName());
-        $this->assertSame(DataContainerStateProvider::class, $resource->getProvider());
-        $this->assertSame(DataContainerStateProcessor::class, $resource->getProcessor());
+        $this->assertSame('contao_api.api_platform.data_container_state_provider', $resource->getProvider());
+        $this->assertSame('contao_api.api_platform.data_container_state_processor', $resource->getProcessor());
         $this->assertSame($expectedRoutePrefix, $resource->getRoutePrefix());
         $this->assertSame(['_scope' => 'backend'], $resource->getDefaults());
         $this->assertTrue($resource->getStateless());
         $this->assertSame("is_granted('ROLE_USER')", $resource->getSecurity());
         $this->assertSame($expectedTable, $resource->getExtraProperties()['contao']['table']);
+
         $expectedResource = str_starts_with($expectedTable, 'tl_') ? substr($expectedTable, 3) : $expectedTable;
 
         $this->assertSame(DataContainerOpenApiFactory::getSchemaPath($expectedResource), $resource->getExtraProperties()['contao']['schema_path']);
@@ -312,8 +353,8 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         foreach ($operations as $name => $operation) {
             $this->assertSame($name, $operation->getName());
             $this->assertSame($expectedTable, $operation->getExtraProperties()['contao']['table']);
-            $this->assertSame(DataContainerStateProvider::class, $operation->getProvider());
-            $this->assertSame(DataContainerStateProcessor::class, $operation->getProcessor());
+            $this->assertSame('contao_api.api_platform.data_container_state_provider', $operation->getProvider());
+            $this->assertSame('contao_api.api_platform.data_container_state_processor', $operation->getProcessor());
         }
 
         $this->assertOperation($operations['contao_api_dc_'.$operationPrefix.'_get_collection'], GetCollection::class, $expectedShortName, $expectedRoutePrefix);

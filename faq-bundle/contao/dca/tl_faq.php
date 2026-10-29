@@ -125,9 +125,9 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => BackendUser::getInstance()->id,
+			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
-			'backendSearch' 		  => false,
+			'backendSearch'           => false,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',

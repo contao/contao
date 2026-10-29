@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -32,6 +34,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Provide methods to modify the database.
@@ -125,6 +129,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @var array<string, array<<int, array<int>>
 	 */
 	private $parentPagesCache = array();
+
+	/**
+	 * @var array<string, array<int, list<int>>>
+	 */
+	private array $childrenPagesCache = array();
 
 	/**
 	 * Initialize the object
@@ -347,7 +356,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode == self::PASTE_INTO)
+			if ($mode == self::PASTE_INTO || $mode == self::PASTE_INTO_APPEND)
 			{
 				return $pid;
 			}
@@ -409,7 +418,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'pid' => $this->intCurrentPid,
 			'sorting_mode' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0),
 			'display_grid' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false),
-			'limit_height' => BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
+			'limit_height' => Config::get('doNotCollapse') ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0),
 			'is_upload_form' => $this->blnUploadable,
 			'form_onsubmit' => $this->onsubmit,
 			'error' => $this->noReload,
@@ -952,6 +961,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($currentRecord === null)
 		{
+			// Let asynchronous requests know that nothing has been moved (e.g. drag and drop - see #10091)
+			if (Environment::get('isAjaxRequest'))
+			{
+				throw new AccessDeniedException('Cannot move record "' . $this->strTable . '.id=' . $this->intId . '".');
+			}
+
 			if (!$blnDoNotRedirect)
 			{
 				$this->redirect($this->getReferer());
@@ -1873,9 +1888,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		// Resolve the parent URL while the current record still exists (see #10460)
+		$referer = $blnDoNotRedirect ? null : $this->getReferer();
+
+		$user = System::getContainer()->get('security.helper')->getUser();
+
 		$objUndoStmt = $db
 			->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-			->execute(BackendUser::getInstance()->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+			->execute($user instanceof BackendUser ? $user->id : 0, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -1924,7 +1944,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$blnDoNotRedirect)
 		{
-			$this->redirect($this->getReferer());
+			$this->redirect($referer);
 		}
 	}
 
@@ -2036,74 +2056,86 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		$error = false;
 		$query = $currentRecord['query'] ?? null;
 		$data = StringUtil::deserialize($currentRecord['data'] ?? null);
 
 		if (!\is_array($data))
 		{
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
 			$this->redirect($this->getReferer());
 		}
 
-		$db = Database::getInstance();
 		$arrFields = array();
 
-		// Restore the data
-		foreach ($data as $table=>$fields)
+		$db = Database::getInstance();
+		$db->beginTransaction();
+
+		try
 		{
-			$this->loadDataContainer($table);
-
-			// Get the currently available fields
-			if (!isset($arrFields[$table]))
+			// Restore the data
+			foreach ($data as $table=>$fields)
 			{
-				$arrFields[$table] = array_flip($db->getFieldNames($table));
-			}
+				$this->loadDataContainer($table);
 
-			foreach ($fields as $row)
-			{
-				// Unset fields that no longer exist in the database
-				$row = array_intersect_key($row, $arrFields[$table]);
-
-				// Re-insert the data
-				$objInsertStmt = $db
-					->prepare("INSERT INTO " . $table . " %s")
-					->set($row)
-					->execute();
-
-				// Do not delete record from tl_undo if there is an error
-				if ($objInsertStmt->affectedRows < 1)
+				// Get the currently available fields
+				if (!isset($arrFields[$table]))
 				{
-					$error = true;
+					$arrFields[$table] = array_flip($db->getFieldNames($table));
 				}
 
-				// Trigger the undo_callback
-				if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+				foreach ($fields as $row)
 				{
-					foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
+					// Unset fields that no longer exist in the database
+					$row = array_intersect_key($row, $arrFields[$table]);
+
+					// Re-insert the data
+					$objInsertStmt = $db
+						->prepare("INSERT INTO " . $table . " %s")
+						->set($row)
+						->execute();
+
+					if ($objInsertStmt->affectedRows < 1)
 					{
-						if (\is_array($callback))
+						throw new \RuntimeException('Could not restore record "' . $table . '.id=' . ($row['id'] ?? '') . '".');
+					}
+
+					// Trigger the undo_callback
+					if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] ?? null))
+					{
+						foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
 						{
-							System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($table, $row, $this);
+							if (\is_array($callback))
+							{
+								System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
+							}
+							elseif (\is_callable($callback))
+							{
+								$callback($table, $row, $this);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// Add log entry and delete record from tl_undo if there was no error
-		if (!$error)
-		{
-			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
-
+			// Delete the undo entry only if all records have been restored
 			$db
 				->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 				->limit(1)
 				->execute($this->intId);
+
+			$db->commitTransaction();
 		}
+		catch (\Throwable $e)
+		{
+			$db->rollbackTransaction();
+
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not undo ' . $query . ': ' . $e->getMessage());
+			Message::addError($GLOBALS['TL_LANG']['ERR']['undoNotRestored']);
+
+			$this->redirect($this->getReferer());
+		}
+
+		System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 		$this->invalidateCacheTags();
 
@@ -2465,7 +2497,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2693,7 +2724,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
@@ -2824,7 +2855,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$user = BackendUser::getInstance();
 
 		$this->configurePidAndSortingFields();
 
@@ -2974,7 +3004,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
 
 		// Add meta fields if the current user is an administrator
-		if ($user->isAdmin)
+		if ($security->isGranted('ROLE_ADMIN'))
 		{
 			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
@@ -3166,7 +3196,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$this->noReload = true;
 						Message::addError($e->getMessage());
-						System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
+						$request = System::getContainer()->get('request_stack')?->getMainRequest();
+
+						if ($request !== null)
+						{
+							$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+							$errors->add(new ConstraintViolation($e->getMessage(), $e->getMessage(), array(), null, '', null));
+							$request->attributes->set('_contao_widget_errors', $errors);
+						}
 
 						break;
 					}
@@ -3904,14 +3941,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$objChildren = $db
-					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-					->execute($id);
-
-				if ($objChildren->numRows)
-				{
-					$children = array_values(array_intersect($objChildren->fetchEach('id'), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
-				}
+				$children = array_values(array_intersect($this->getTreeChildIds($table, (int) $id, $blnHasSorting), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
 			}
 		}
 
@@ -4126,7 +4156,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($blnIsSortable && $isCurrentTable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
 		{
+			$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'] ?? '';
+
 			$parameters['allow_dragging'] = true;
+			$parameters['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $currentRecord['id']);
 		}
 
 		if ($table != $this->strTable)
@@ -4138,21 +4171,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				array_unshift($arrValues, $id);
 
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute(...$arrValues);
 			}
 			else
 			{
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT * FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 			}
 
 			if ($objChildren->numRows)
 			{
-				$ids = $objChildren->fetchEach('id');
+				$ids = array();
 
-				static::preloadCurrentRecords($ids, $this->strTable);
+				while ($objChildren->next())
+				{
+					static::setCurrentRecordCache($objChildren->id, $this->strTable, $objChildren->row());
+					$ids[] = $objChildren->id;
+				}
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
@@ -5558,6 +5595,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$rootIds = $this->root;
+
+		// Also add the child records of the table (see #1811)
+		if ($rootIds && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
+		{
+			$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
+		}
+
 		// Add sorting options
 		$filters = array();
 
@@ -5625,19 +5671,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
-
 			// Limit the options if there are root records
 			if ($this->root)
 			{
-				$rootIds = $this->root;
-
-				// Also add the child records of the table (see #1811)
-				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
-				{
-					$rootIds = array_merge($rootIds, System::getContainer()->get('contao.data_container.dca_hierarchy')->getChildIds($rootIds, $table));
-				}
-
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 				{
 					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
@@ -5742,7 +5778,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$lp = (int) Input::get('lp') - 1;
 
-			if ($lp >= 0 && $lp < ceil($this->total / $limit))
+			if ($limit > 0 && $lp >= 0 && $lp < ceil($this->total / $limit))
 			{
 				$session['filter'][$filter]['limit'] = ($lp * $limit) . ',' . $limit;
 				$objSessionBag->replace($session);
@@ -5920,8 +5956,45 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return array_keys($allParents);
 	}
 
+	/**
+	 * @return list<int>
+	 */
+	private function getTreeChildIds(string $table, int $id, bool $hasSorting): array
+	{
+		$key = $table . ':' . (int) $hasSorting;
+
+		if (!isset($this->childrenPagesCache[$key][$id]))
+		{
+			// Fetch children for all visible nodes, including root trails and leaves
+			$parentIds = array_values(array_unique(array_map('\intval', array_merge($this->visibleRootTrails, $this->root, $this->rootChildren, array($id)))));
+			$options = (new ChildTraversalOptions())->withMaxDepth(1);
+
+			if ($hasSorting)
+			{
+				$options = $options->withOrderBy('sorting');
+			}
+
+			// Keep the unscoped lookup used by tree rendering
+			$rows = System::getContainer()->get('contao.doctrine.dbal.hierarchy')->getChildRows(
+				$parentIds,
+				new HierarchyDefinition($table, 'id', 'pid'),
+				$options,
+			);
+
+			$this->childrenPagesCache[$key] = array_fill_keys($parentIds, array());
+
+			foreach ($rows as $row)
+			{
+				$this->childrenPagesCache[$key][(int) $row['pid']][] = (int) $row['id'];
+			}
+		}
+
+		return $this->childrenPagesCache[$key][$id];
+	}
+
 	protected function updateRoot(array $root, bool $isSearch = false)
 	{
+		$this->childrenPagesCache = array();
 		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 

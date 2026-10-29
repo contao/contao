@@ -92,7 +92,6 @@ class DebugPagesCommandTest extends TestCase
             ->method('keys')
             ->willReturn(array_values(array_column($pages, 0)))
         ;
-
         $pageRegistry
             ->method('supportsContentComposition')
             ->willReturnCallback(static fn (PageModel $pageModel): bool => 'regular' === $pageModel->type)

@@ -28,7 +28,6 @@ abstract class AbstractBackendController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['request_stack'] = RequestStack::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
@@ -45,7 +44,7 @@ abstract class AbstractBackendController extends AbstractController
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
         $getBackendContext = function (Request $request) {
-            $templateClosure = new class() extends BackendMain {
+            $templateClosure = new class extends BackendMain {
                 public function __invoke(Request $request): BackendTemplate
                 {
                     // Create an empty template, so that the template engine's parse() method won't
@@ -96,7 +95,7 @@ abstract class AbstractBackendController extends AbstractController
 
         // Set the status code to 422 if a widget did not validate, so that Turbo can
         // handle form errors.
-        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error')) {
+        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_errors')) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

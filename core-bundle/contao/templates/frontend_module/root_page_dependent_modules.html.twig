@@ -1,0 +1,3 @@
+{% block fragment %}
+    {{ is_content_element ? content_element(fragment) : frontend_module(fragment) }}
+{% endblock %}

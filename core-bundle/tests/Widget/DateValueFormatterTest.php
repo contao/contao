@@ -48,7 +48,6 @@ class DateValueFormatterTest extends ContaoTestCase
             ->expects($this->exactly(3))
             ->method('initialize')
         ;
-
         $framework
             ->expects($this->exactly(3))
             ->method('getAdapter')
@@ -103,7 +102,6 @@ class DateValueFormatterTest extends ContaoTestCase
             ->method('getAdapter')
             ->willReturn($adapter)
         ;
-
         $framework
             ->expects($this->once())
             ->method('createInstance')

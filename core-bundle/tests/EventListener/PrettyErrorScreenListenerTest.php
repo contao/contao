@@ -397,7 +397,6 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->method('getLoader')
             ->willReturn($loader)
         ;
-
         $twig
             ->method('render')
             ->willReturnCallback(static fn (string $template) => "template: $template")

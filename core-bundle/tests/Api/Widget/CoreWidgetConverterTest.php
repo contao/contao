@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Api\Widget;
 
+use Contao\ApiBundle\Relation\VirtualFilesystemRelationDefinition;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
@@ -85,7 +86,7 @@ class CoreWidgetConverterTest extends TestCase
             $this->assertTrue($converter->supports(['inputType' => $inputType]));
         }
 
-        $widget = new class() extends TextField {
+        $widget = new class extends TextField {
             public function __construct()
             {
             }
@@ -131,10 +132,23 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertNull($converter->convertToApiValue(null, $config, $schema));
         $this->assertSame($binary, $converter->convertToApiValue($binary, $config + ['eval' => ['binary' => false]], $schema));
         $this->assertSame($uuid, $converter->convertToApiValue($uuid, $config + ['eval' => ['binary' => false]], $schema));
+
         $arraySchema = $converter->getSchema($config + ['eval' => ['multiple' => true]], []);
         $this->assertSame([$uuid, $uuid], $converter->convertToApiValue(serialize([$binary, $binary]), $config, $arraySchema));
         $this->assertSame($uuid.','.$uuid, $converter->convertToFormValue([$uuid, $uuid], $config, $arraySchema));
         $this->assertSame($uuid, $converter->convertToFormValue($uuid, $config, $schema));
+    }
+
+    public function testProvidesFileRelationMetadata(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $relation = $converter->getRelation(['inputType' => 'fileTree']);
+
+        $this->assertNotNull($relation);
+        $this->assertSame('files', $relation->filesystem);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $relation->identifier);
+        $this->assertSame(VirtualFilesystemRelationDefinition::UUID, $converter->getRelation(['inputType' => 'fileTree', 'eval' => ['binary' => false]])?->identifier);
+        $this->assertNull($converter->getRelation(['inputType' => 'text']));
     }
 
     public function testPreparesFormInputInsteadOfSerializedStorage(): void
@@ -167,6 +181,7 @@ class CoreWidgetConverterTest extends TestCase
 
         $validator = new Validator();
         $this->assertTrue($validator->validate($api, json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR))->isValid());
+
         $form = $converter->convertToFormValue($api, $config, $schema);
         $this->assertSame(json_encode($api, JSON_THROW_ON_ERROR), json_encode($converter->convertToApiValue(serialize($form), $config, $schema), JSON_THROW_ON_ERROR));
     }

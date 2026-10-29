@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\Asset\ContaoPackage;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Asset\Packages;
@@ -50,7 +51,6 @@ class AddAssetsPackagesPassTest extends TestCase
             ->with('assets.packages')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('getDefinition')
@@ -123,6 +123,7 @@ class AddAssetsPackagesPassTest extends TestCase
 
         $service = $container->getDefinition('assets._package_manifest_json');
 
+        $this->assertSame(ContaoPackage::class, $service->getClass());
         $this->assertSame('bundles/manifestjson', $service->getArgument(0));
         $this->assertSame('assets._version_manifest_json', (string) $service->getArgument(1));
         $this->assertTrue($container->hasDefinition('assets._version_manifest_json'));

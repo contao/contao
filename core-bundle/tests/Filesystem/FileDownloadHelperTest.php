@@ -115,7 +115,6 @@ class FileDownloadHelperTest extends TestCase
             ->method('getPath')
             ->willReturn('files/my_file.txt')
         ;
-
         $file
             ->expects($this->once())
             ->method('getMimeType')
@@ -133,7 +132,6 @@ class FileDownloadHelperTest extends TestCase
             ->with('files/my_file.txt')
             ->willReturn($file)
         ;
-
         $mountManager
             ->expects($this->once())
             ->method('readStream')
@@ -322,12 +320,42 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
+    #[DataProvider('provideDownloadRequests')]
+    public function testDetectsDownloadRequests(string $url, bool $expected): void
+    {
+        $this->assertSame($expected, $this->getFileDownloadHelper()->isDownloadRequest(Request::create($url)));
+    }
+
+    public static function provideDownloadRequests(): iterable
+    {
+        yield 'download URL' => ['https://example.com/?_hash=foo&p=my_file.txt', true];
+        yield 'signed URL without path' => ['https://example.com/?_hash=foo', false];
+        yield 'path without signature' => ['https://example.com/?p=my_file.txt', false];
+        yield 'regular URL' => ['https://example.com/', false];
+    }
+
     public function testPreservesQueryParameters(): void
     {
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt');
 
         $this->assertTrue(str_ends_with($url, '&d=attachment&foo=bar&p=my_file.txt'));
+    }
+
+    public function testRemovesParametersOfPreviousDownloadUrls(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $downloadUrl = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt', 'custom_name.txt', ['id' => 1]);
+
+        $this->assertSame(
+            $helper->generateInlineUrl('https://example.com/path?foo=bar', 'my_file.unknown', ['id' => 2]),
+            $helper->generateInlineUrl($downloadUrl, 'my_file.unknown', ['id' => 2]),
+        );
+
+        $this->assertSame(
+            $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.unknown'),
+            $helper->generateDownloadUrl($downloadUrl, 'my_file.unknown'),
+        );
     }
 
     public static function provideDownloadContext(): iterable

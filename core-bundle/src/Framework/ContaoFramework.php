@@ -240,6 +240,7 @@ class ContaoFramework implements ResetInterface
                     $priorities[0] = [...array_values($GLOBALS['TL_HOOKS'][$hookName]), ...$priorities[0]];
                 } else {
                     $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
+
                     krsort($priorities);
                 }
             }

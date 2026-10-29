@@ -33,7 +33,7 @@ final class TemplateSnapshots
         private readonly ContaoFilesystemLoader $loader,
     ) {
         $this->workTree = Path::join($projectDir, 'templates');
-        $this->gitDir = Path::join($cacheDir, 'template-snapshots', 'git');
+        $this->gitDir = Path::join($cacheDir, 'template-snapshots', '.git');
     }
 
     public function isAvailable(): bool
@@ -118,6 +118,7 @@ final class TemplateSnapshots
         return $this->locked(
             function () use ($hash): string {
                 $target = $this->resolve($hash);
+
                 $this->git(['add', '-A', '-f']);
 
                 return $this->git(['diff', '--cached', '--no-ext-diff', '--no-renames', $target, '--', '.']);
@@ -134,7 +135,9 @@ final class TemplateSnapshots
             function () use ($hash): array {
                 $target = $this->resolve($hash);
                 $this->cacheInvalidator->invalidateCache('');
+
                 $this->git(['read-tree', '--reset', '-u', $target]);
+
                 $this->loader->warmUp(true);
                 $this->cacheInvalidator->invalidateCache('');
 
@@ -204,8 +207,13 @@ final class TemplateSnapshots
     private function command(array $arguments): array
     {
         return [
-            'git', '--git-dir='.$this->gitDir, '--work-tree='.$this->workTree,
-            '-c', 'core.bare=false', '-c', 'core.hooksPath=/dev/null',
+            'git',
+            '--git-dir='.$this->gitDir,
+            '--work-tree='.$this->workTree,
+            '-c',
+            'core.bare=false',
+            '-c',
+            'core.hooksPath=/dev/null',
             ...$arguments,
         ];
     }
@@ -219,6 +227,7 @@ final class TemplateSnapshots
             'GIT_CONFIG_GLOBAL' => '/dev/null',
             'GIT_CONFIG_SYSTEM' => '/dev/null',
         ];
+
         $process = new Process($command, $this->workTree, $environment);
         $process->run();
 
@@ -252,8 +261,17 @@ final class TemplateSnapshots
 
             return $callback();
         } finally {
-            flock($lock, LOCK_UN);
-            fclose($lock);
+            try {
+                $objectsDir = Path::join($this->gitDir, 'objects');
+
+                if ('\\' === \DIRECTORY_SEPARATOR && is_dir($objectsDir)) {
+                    // Clear Git's read-only attribute so Windows can delete the cache.
+                    $filesystem->chmod($objectsDir, 0o700, recursive: true);
+                }
+            } finally {
+                flock($lock, LOCK_UN);
+                fclose($lock);
+            }
         }
     }
 }

@@ -23,16 +23,20 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
     #[DataProvider('clipboardOperationProvider')]
     public function testPasteElementGroupIntoItselfOrItsChildren(string $operation, bool $canPaste): void
     {
-        [$backend, $articleUrl] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend, $articleUrl] = $this->openArticle($fixtures, 'article_main_home');
         $record = '[data-contao--operations-menu-record-id-value]';
 
         // Create an element group with another element group inside
         $this->createElementGroup($backend);
+
         $backend->clickTitlePrefix('Edit the child elements');
+
         $this->createElementGroup($backend);
 
         // Go back to the outer element group and move or copy it
         $backend->visit($articleUrl);
+
         $this->clipboard($backend, $record, $operation);
 
         // Paste at the top always works, paste after the element group itself only
@@ -64,11 +68,14 @@ class ElementGroupTest extends AbstractContaoMonorepoE2ETestCase
 
     public function testCanPasteAfterSiblingInsideElementGroup(): void
     {
-        [$backend] = $this->openArticle();
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
 
         // Create an element group with another element group and a text element inside
         $this->createElementGroup($backend);
+
         $backend->clickTitlePrefix('Edit the child elements');
+
         $this->createElementGroup($backend);
         $this->createTextElement($backend);
 

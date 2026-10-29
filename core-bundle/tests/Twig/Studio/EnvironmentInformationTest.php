@@ -33,7 +33,7 @@ class EnvironmentInformationTest extends TestCase
             ->willReturn('if')
         ;
 
-        $tokenParserWithEndTag = new class() implements TokenParserInterface {
+        $tokenParserWithEndTag = new class implements TokenParserInterface {
             public function setParser(Parser $parser): void
             {
             }
@@ -59,30 +59,34 @@ class EnvironmentInformationTest extends TestCase
             ->method('getTokenParsers')
             ->willReturn([$tokenParser, $tokenParserWithEndTag])
         ;
-
         $environment
             ->method('getFunctions')
-            ->willReturn([new TwigFunction('function')])
+            ->willReturn([new TwigFunction('a_function'), new TwigFunction('123'), new TwigFunction('z_function')])
         ;
-
         $environment
             ->method('getFilters')
-            ->willReturn([new TwigFilter('filter')])
+            ->willReturn([new TwigFilter('a_filter'), new TwigFilter('z_filter')])
         ;
-
         $environment
             ->method('getTests')
-            ->willReturn([new TwigTest('test')])
+            ->willReturn([new TwigTest('a_test'), new TwigTest('z_test')])
         ;
+
+        $information = new EnvironmentInformation($environment);
 
         $this->assertSame(
             [
                 'tags' => ['region', 'elseif', 'else', 'if', 'endregion'],
-                'functions' => ['function'],
-                'filters' => ['filter'],
-                'tests' => ['test'],
+                'functions' => ['z_function', 'a_function', '123'],
+                'filters' => ['z_filter', 'a_filter'],
+                'tests' => ['z_test', 'a_test'],
             ],
-            new EnvironmentInformation($environment)->getData(),
+            $information->getData(),
+        );
+
+        $this->assertSame(
+            ['items' => [['kind' => 'tag', 'name' => 'if'], ['kind' => 'tag', 'name' => 'region']]],
+            $information->discover('tag'),
         );
     }
 }

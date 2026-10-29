@@ -89,6 +89,7 @@ abstract class InsertTagParameters
             ) {
                 $value = iterator_to_array($parameter);
                 $value[0] = substr($value[0], \strlen($key) + 1);
+
                 $values[] = new ParsedSequence($value);
             }
         }

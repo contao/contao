@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\ApiBundle\Dto;
 
+use ApiPlatform\Metadata\ApiProperty;
+
 final readonly class VirtualFilesystemMove
 {
     public function __construct(
-        public string $source,
-        public string $destination,
+        #[ApiProperty(description: 'The source location.', schema: VirtualFilesystemLocation::SCHEMA)]
+        public VirtualFilesystemLocation $source,
+        #[ApiProperty(description: 'The destination location.', schema: VirtualFilesystemLocation::SCHEMA)]
+        public VirtualFilesystemLocation $destination,
     ) {
     }
 }

@@ -53,6 +53,7 @@ abstract class AbstractColumnToVirtualMigration extends AbstractMigration
     {
         $platform = $this->connection->getDatabasePlatform();
         $schemaManager = $this->connection->createSchemaManager();
+
         $mapping = $this->getMapping();
 
         foreach ($mapping as $table => $fields) {

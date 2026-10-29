@@ -67,7 +67,7 @@ class MigrationCollectionTest extends TestCase
 
     public function testRunsAllPendingMigrations(): void
     {
-        $state = new class() {
+        $state = new class {
             public bool $firstRun = false;
 
             public bool $secondRun = false;
@@ -80,7 +80,6 @@ class MigrationCollectionTest extends TestCase
                 static fn (): bool => !$state->firstRun,
             )
         ;
-
         $firstMigration
             ->expects($this->once())
             ->method('run')
@@ -100,7 +99,6 @@ class MigrationCollectionTest extends TestCase
                 static fn (): bool => $state->firstRun && !$state->secondRun,
             )
         ;
-
         $secondMigration
             ->expects($this->once())
             ->method('run')
@@ -189,7 +187,7 @@ class MigrationCollectionTest extends TestCase
     public function getMigrationServices(): array
     {
         return [
-            new class() extends AbstractMigration {
+            new class extends AbstractMigration {
                 public function getName(): string
                 {
                     return 'Successful Migration';
@@ -205,7 +203,7 @@ class MigrationCollectionTest extends TestCase
                     return $this->createResult(true, 'successful');
                 }
             },
-            new class() extends AbstractMigration {
+            new class extends AbstractMigration {
                 public function getName(): string
                 {
                     return 'Failing Migration';
@@ -221,7 +219,7 @@ class MigrationCollectionTest extends TestCase
                     return $this->createResult(false, 'failing');
                 }
             },
-            new class() extends AbstractMigration {
+            new class extends AbstractMigration {
                 public function getName(): string
                 {
                     return 'Inactive Migration';

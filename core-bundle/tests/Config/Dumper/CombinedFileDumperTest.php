@@ -36,12 +36,12 @@ class CombinedFileDumperTest extends TestCase
             <?php
             /*
              * Source files (line ranges in this cache file):
-             * 8-8: source.php
+             * 8-8: ../../source.php
              */
 
-            /* START of file: source.php */
+            /* START of file: ../../source.php */
             echo 'test';
-            /* END of file: source.php */
+            /* END of file: ../../source.php */
             PHP;
 
         $this->assertSame($expected."\n", file_get_contents($cacheDirectory.'/dca/test.php'));

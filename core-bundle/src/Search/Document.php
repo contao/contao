@@ -111,7 +111,6 @@ class Document
         // Try re-using an already parsed document if possible for performance reasons
         if (!$this->originalDocument) {
             $crawler = new Crawler($this->body);
-
             $originalDocument = $crawler->getNode(0)?->ownerDocument;
 
             if ($originalDocument instanceof \DOMDocument) {
@@ -299,7 +298,7 @@ class Document
         foreach ($jsonLds as $data) {
             $data = $this->expandJsonLdContexts($data);
 
-            if ('' !== $type && (!isset($data['@type']) || $data['@type'] !== $context.$type)) {
+            if ('' !== $type && (!isset($data['@type']) || !\in_array($context.$type, (array) $data['@type'], true))) {
                 continue;
             }
 
@@ -322,12 +321,23 @@ class Document
 
             foreach ($data as $key => $value) {
                 if ('@type' === $key) {
-                    $data[$key] = $data['@context'].$value;
+                    $context = $data['@context'];
+
+                    $data[$key] = array_map(
+                        static fn (string $type): string => $context.$type,
+                        (array) $value,
+                    );
+
+                    if (!\is_array($value)) {
+                        $data[$key] = $data[$key][0];
+                    }
+
                     continue;
                 }
 
                 if ('@' !== $key[0]) {
                     unset($data[$key]);
+
                     $data[$data['@context'].$key] = $value;
                 }
             }
@@ -341,13 +351,21 @@ class Document
                     continue;
                 }
 
-                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
+                if (isset($data['@type']) && \is_array($data['@type'])) {
+                    $data['@type'] = array_map(
+                        static fn (string $type): string => 0 === strncmp($type, $prefix.':', \strlen((string) $prefix) + 1)
+                            ? $context.substr($type, \strlen((string) $prefix) + 1)
+                            : $type,
+                        $data['@type'],
+                    );
+                } elseif (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
                     $data['@type'] = $context.substr($data['@type'], \strlen((string) $prefix) + 1);
                 }
 
                 foreach ($data as $key => $value) {
                     if (0 === strncmp($prefix.':', $key, \strlen((string) $prefix) + 1)) {
                         unset($data[$key]);
+
                         $data[$context.substr($key, \strlen((string) $prefix) + 1)] = $value;
                     }
                 }
@@ -367,13 +385,22 @@ class Document
         foreach ($data as $key => $value) {
             foreach ($contexts as $context) {
                 if ('@type' === $key) {
-                    $newData[$key] = $value;
+                    $newData[$key] = array_map(
+                        static fn (string $type): string => str_starts_with($type, $context)
+                            ? substr($type, \strlen((string) $context))
+                            : $type,
+                        (array) $value,
+                    );
 
-                    if (str_starts_with($value, $context)) {
-                        $newData[$key] = substr($value, \strlen((string) $context));
-                        $found = true;
-                        break;
+                    if (!\is_array($value)) {
+                        $newData[$key] = $newData[$key][0];
                     }
+
+                    if (array_filter((array) $value, static fn (string $type): bool => str_starts_with($type, $context))) {
+                        $found = true;
+                    }
+
+                    break;
                 }
 
                 if (0 === strncmp($context, $key, \strlen((string) $context))) {

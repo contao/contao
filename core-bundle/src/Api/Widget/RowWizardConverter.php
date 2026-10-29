@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Api\Widget;
 
+use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Widget\WidgetConverterInterface;
 use Contao\ApiBundle\Widget\WidgetConverterRegistry;
@@ -23,6 +26,8 @@ final class RowWizardConverter implements WidgetConverterInterface
     public function __construct(
         private readonly WidgetConverterRegistry $converters,
         private readonly DataContainerSchemaFactory $schemaFactory,
+        private readonly RelationResolverInterface $relationResolver,
+        private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
     ) {
     }
 
@@ -75,8 +80,11 @@ final class RowWizardConverter implements WidgetConverterInterface
             default => StringUtil::deserialize($value, true),
         };
 
+        $converters = $this->getConverters($config);
+        $relations = $this->getRelations($config);
+
         return array_map(
-            function ($row) use ($config, $schema): object {
+            function ($row) use ($config, $schema, $converters, $relations): object {
                 $row = (array) $row;
                 $converted = [];
 
@@ -87,7 +95,8 @@ final class RowWizardConverter implements WidgetConverterInterface
                         continue;
                     }
 
-                    $converted[$name] = $this->converters->get($field)?->convertToApiValue($row[$name] ?? null, $field, $property);
+                    $value = $converters[$name]?->convertToApiValue($row[$name] ?? null, $field, $property);
+                    $converted[$name] = $relations[$name] ? $this->relationResolver->resolveToReference($value, $relations[$name]) : $value;
                 }
 
                 if ($this->hasEnableAction($config)) {
@@ -107,6 +116,9 @@ final class RowWizardConverter implements WidgetConverterInterface
         // RowWizard validates as many rows as there are hidden _rows inputs
         $converted = ['_rows' => array_fill(0, \count($rows), '1')];
 
+        $converters = $this->getConverters($config);
+        $relations = $this->getRelations($config);
+
         foreach ($rows as $index => $row) {
             $row = (array) $row;
             $converted[$index] = [];
@@ -118,7 +130,10 @@ final class RowWizardConverter implements WidgetConverterInterface
                     continue;
                 }
 
-                $converted[$index][$name] = $this->converters->get($field)?->convertToFormValue($row[$name] ?? null, $field, $property);
+                $value = $row[$name] ?? null;
+                $value = $relations[$name] ? $this->relationResolver->resolveToIdentifier($value, $relations[$name]) : $value;
+
+                $converted[$index][$name] = $converters[$name]?->convertToFormValue($value, $field, $property);
             }
 
             if ($this->hasEnableAction($config)) {
@@ -133,6 +148,19 @@ final class RowWizardConverter implements WidgetConverterInterface
     {
         // RowWizard::getAttributesFromDca() gives top-level fields precedence over eval.fields
         return $config['fields'] ?? $config['eval']['fields'] ?? [];
+    }
+
+    private function getConverters(array $config): array
+    {
+        return array_map($this->converters->get(...), $this->getFields($config));
+    }
+
+    private function getRelations(array $config): array
+    {
+        return array_map(
+            fn (array $field): object|null => $this->relationDefinitionFactory->create(new DataContainerFieldContext($field)),
+            $this->getFields($config),
+        );
     }
 
     private function hasEnableAction(array $config): bool

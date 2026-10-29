@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\ModuleModel;
@@ -172,6 +173,7 @@ class FragmentRuntimeTest extends TestCase
                         ['type' => 'slider', 'headline' => serialize(['unit' => 'h2', 'value' => 'Test'])],
                         $reference->getContentModel()->row(),
                     );
+
                     $this->assertSame(
                         ['type' => 'text', 'text' => '<p>Test</p>'],
                         $reference->attributes['nestedFragments'][0]->getContentModel()->row(),
@@ -268,5 +270,23 @@ class FragmentRuntimeTest extends TestCase
         $result = $runtime->renderContent(42, ['foo' => 'bar']);
 
         $this->assertSame('', $result);
+    }
+
+    public function testRenderModuleFromReference(): void
+    {
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['id' => 42, 'type' => 'navigation']);
+        $reference = new FrontendModuleReference($model, 'header', ['cssID' => ' id="example"'], true);
+
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getFrontendModule')
+            ->with($this->identicalTo($reference))
+            ->willReturn('runtime-result')
+        ;
+
+        $runtime = new FragmentRuntime($this->createContaoFrameworkStub([Controller::class => $controllerAdapter]));
+
+        $this->assertSame('runtime-result', $runtime->renderModule(['_slot_name' => 'footer'], $reference));
     }
 }

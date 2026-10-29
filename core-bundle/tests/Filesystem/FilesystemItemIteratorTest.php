@@ -108,7 +108,6 @@ class FilesystemItemIteratorTest extends TestCase
         $dirBar = new FilesystemItem(false, 'bar', 500);
 
         $iterator = new FilesystemItemIterator([$fileA, $fileB, $fileC, $fileD, $dirFoo, $dirBar]);
-
         $sortedByPathAsc = $iterator->sort(SortMode::pathAscending);
         $sortedByPathDesc = $sortedByPathAsc->sort(SortMode::pathDescending);
         $sortedByPathNaturalAsc = $sortedByPathDesc->sort(SortMode::pathNaturalAscending);

@@ -106,6 +106,7 @@ use Contao\Model\MetadataTrait;
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property boolean           $showPreview
+ * @property string|array|null $rootPageDependentElements
  *
  * @property string  $typePrefix
  * @property array   $classes

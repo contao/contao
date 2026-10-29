@@ -55,9 +55,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(BackendUser::class), null, null),
         );
 
@@ -345,7 +343,6 @@ class LoginControllerTest extends ContentElementTestCase
             ->method('getLastAuthenticationError')
             ->willReturn($exception)
         ;
-
         $authUtils
             ->expects($this->once())
             ->method('getLastUsername')
@@ -361,9 +358,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
@@ -393,9 +388,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class)),
         );
 
@@ -420,9 +413,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class), false, true),
         );
 
@@ -489,9 +480,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class)),
             page: $page,
             request: $request,
@@ -521,9 +510,7 @@ class LoginControllerTest extends ContentElementTestCase
                 $this->createStub(EventDispatcherInterface::class),
                 $this->createStub(ContaoFramework::class),
             ),
-            [
-                'type' => 'login',
-            ],
+            ['type' => 'login'],
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class), true),
             page: $page,
         );

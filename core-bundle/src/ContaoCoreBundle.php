@@ -31,6 +31,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterVirtualFilesystemsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -51,9 +52,9 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class ContaoCoreBundle extends Bundle
+class ContaoCoreBundle extends AbstractBundle
 {
     final public const SCOPE_BACKEND = 'backend';
 
@@ -71,8 +72,6 @@ class ContaoCoreBundle extends Bundle
 
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $extension = $container->getExtension('security');
         $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
@@ -127,6 +126,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
+        $container->addCompilerPass(new RegisterVirtualFilesystemsPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
         $container->addCompilerPass(new RegisterTwigExtensionsPass());
@@ -145,10 +145,5 @@ class ContaoCoreBundle extends Bundle
         }
 
         return $version;
-    }
-
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
     }
 }

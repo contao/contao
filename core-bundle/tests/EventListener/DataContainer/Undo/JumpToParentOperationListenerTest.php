@@ -61,7 +61,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -101,7 +100,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -140,7 +138,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -162,7 +159,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn($row)
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -187,7 +183,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -214,7 +209,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn($row)
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -248,7 +242,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn($row)
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -271,7 +264,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -295,7 +287,6 @@ class JumpToParentOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn($row)
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')

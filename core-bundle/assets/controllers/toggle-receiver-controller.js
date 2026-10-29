@@ -95,7 +95,7 @@ export default class extends Controller {
 
         setTimeout(() => {
             if (state) {
-                this.element.focus();
+                this.element.focus({ preventScroll: true });
             } else if (this.hasContaoToggleSenderOutlet) {
                 this.contaoToggleSenderOutlet.element.focus();
             }

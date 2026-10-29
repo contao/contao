@@ -41,6 +41,7 @@ class PaginationTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
+
         $_GET = [];
 
         Input::setUnusedRouteParameters([]);

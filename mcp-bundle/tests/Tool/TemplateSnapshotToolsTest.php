@@ -39,6 +39,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
         foreach (['snapshot', 'listSnapshots', 'diff', 'rollback'] as $method) {
             try {
                 $tools->$method();
+
                 $this->fail($method.' should require an administrator.');
             } catch (ToolCallException $exception) {
                 $this->assertSame('Template Studio tools require administrator privileges.', $exception->getMessage());
@@ -107,6 +108,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
 
         try {
             $tools->diff('invalid');
+
             $this->fail('Comparing with an invalid hash should fail.');
         } catch (ToolCallException $exception) {
             $this->assertSame('Invalid template snapshot hash.', $exception->getMessage());

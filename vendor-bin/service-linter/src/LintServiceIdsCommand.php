@@ -15,6 +15,7 @@ namespace Contao\Tools\ServiceLinter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
@@ -97,6 +98,7 @@ class LintServiceIdsCommand
     private static array $generalServiceClasses = [
         ResourceFinder::class,
         MemoryTokenStorage::class,
+        PermissionCheckingVirtualFilesystem::class,
     ];
 
     /**
@@ -181,12 +183,14 @@ class LintServiceIdsCommand
             ->name('*.yaml')
             ->name('*.yml')
             ->in([
+                $this->projectDir.'/api-bundle/config',
                 $this->projectDir.'/calendar-bundle/config',
                 $this->projectDir.'/comments-bundle/config',
                 $this->projectDir.'/core-bundle/config',
                 $this->projectDir.'/faq-bundle/config',
                 $this->projectDir.'/maker-bundle/config',
                 $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/mcp-bundle/config',
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
                 $this->projectDir.'/oauth-server-bundle/config',
@@ -243,8 +247,9 @@ class LintServiceIdsCommand
                     && !isset($config['alias'])
                     && str_contains($serviceId, '\\')
                     && !str_ends_with($serviceId, 'Controller')
+                    && !str_ends_with($serviceId, 'Repository')
                 ) {
-                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.', $serviceId, $fileName);
+                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers and repositories.', $serviceId, $fileName);
                 }
 
                 if (!isset($config['class'])) {
@@ -292,12 +297,14 @@ class LintServiceIdsCommand
 
             $sortedIds = $serviceIds;
             usort($sortedIds, strnatcasecmp(...));
+
             $sortedIds = array_values($sortedIds);
 
             if ($serviceIds !== $sortedIds) {
                 $this->hasError = true;
 
                 $this->error('The services in the %s file are not sorted correctly.', $fileName);
+
                 $this->io->writeln(new \Diff($serviceIds, $sortedIds)->render(new \Diff_Renderer_Text_Unified()));
             }
         }

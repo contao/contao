@@ -179,17 +179,14 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             ->expects($this->once())
             ->method('setUsername')
         ;
-
         $versions
             ->expects($this->once())
             ->method('setEditUrl')
         ;
-
         $versions
             ->expects($this->once())
             ->method('initialize')
         ;
-
         $versions
             ->expects($this->once())
             ->method('create')
@@ -293,7 +290,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             System::class => $systemAdapter,
             OptInModel::class => $optInAdapter,
         ]);
-
         $framework
             ->method('createInstance')
             ->willReturn($versions ?: $template)
@@ -341,13 +337,11 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('handleRequest')
         ;
-
         $form
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-
         $form
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('isValid')

@@ -53,6 +53,7 @@ class PaletteTest extends TestCase
         $palette = new Palette('{first_legend},field1');
         $palette->addLegend('second_legend', null, Palette::POSITION_APPEND, true);
         $palette->addField('field2', 'second_legend', Palette::POSITION_APPEND);
+
         $this->assertSame('{first_legend},field1;{second_legend:hide},field2', $palette->toString());
     }
 
@@ -61,6 +62,7 @@ class PaletteTest extends TestCase
         $palette = new Palette('{first_legend},field1');
         $palette->addLegend('second_legend', null, Palette::POSITION_PREPEND);
         $palette->addField('field2', 'second_legend', Palette::POSITION_APPEND);
+
         $this->assertSame('{second_legend},field2;{first_legend},field1', $palette->toString());
     }
 
@@ -69,6 +71,7 @@ class PaletteTest extends TestCase
         $palette = new Palette('{first_legend},field1');
         $palette->addLegend('second_legend', null, Palette::POSITION_AFTER, true);
         $palette->addField('field2', 'second_legend', Palette::POSITION_APPEND);
+
         $this->assertSame('{first_legend},field1;{second_legend:hide},field2', $palette->toString());
     }
 
@@ -77,6 +80,7 @@ class PaletteTest extends TestCase
         $palette = new Palette('{first_legend},field1;{second_legend:hide},field2');
         $palette->addLegend('third_legend', 'first_legend', Palette::POSITION_AFTER, true);
         $palette->addField('field3', 'third_legend', Palette::POSITION_APPEND);
+
         $this->assertSame('{first_legend},field1;{third_legend:hide},field3;{second_legend:hide},field2', $palette->toString());
     }
 
@@ -84,6 +88,7 @@ class PaletteTest extends TestCase
     {
         $palette = new Palette('{legend},field1');
         $palette->addField('field2', 'legend', Palette::POSITION_APPEND);
+
         $this->assertTrue($palette->hasField('field2'));
     }
 
@@ -91,6 +96,7 @@ class PaletteTest extends TestCase
     {
         $palette = new Palette('{legend},field1,field2');
         $palette->addField('field3', 'field1');
+
         $this->assertSame('{legend},field1,field3,field2', $palette->toString());
     }
 
@@ -98,6 +104,7 @@ class PaletteTest extends TestCase
     {
         $palette = new Palette();
         $palette->addField('fallbackField', null, Palette::POSITION_APPEND, ['fallbackLegend']);
+
         $this->assertTrue($palette->hasField('fallbackField'));
         $this->assertTrue($palette->hasLegend('fallbackLegend'));
     }
@@ -106,6 +113,7 @@ class PaletteTest extends TestCase
     {
         $palette = new Palette('{legend},field1,field2');
         $palette->removeField('field1');
+
         $this->assertFalse($palette->hasField('field1'));
         $this->assertTrue($palette->hasField('field2'));
     }
@@ -113,6 +121,7 @@ class PaletteTest extends TestCase
     public function testInvalidPositionThrowsException(): void
     {
         $this->expectException(PalettePositionException::class);
+
         $palette = new Palette();
         $palette->addField('field', 'legend', 'invalid-position');
     }
@@ -120,6 +129,7 @@ class PaletteTest extends TestCase
     public function testInvalidFallbackPositionThrowsException(): void
     {
         $this->expectException(PalettePositionException::class);
+
         $palette = new Palette();
         $palette->addField('field', 'legend', Palette::POSITION_BEFORE, null, Palette::POSITION_BEFORE);
     }

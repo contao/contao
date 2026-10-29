@@ -16,13 +16,14 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Contao\ApiBundle\Http\ApiRequestFactory;
+use Contao\CoreBundle\File\UploadSizeProvider;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\ContaoMcpBundle;
 use Contao\McpBundle\Controller\SerializedMcpController;
-use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Server\Builder;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +45,13 @@ use Twig\Environment;
 
 final class ContaoMcpExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumBinaryPayloadSize(): void
+    {
+        $container = $this->getContainerBuilder(maximumBinaryPayloadSize: 1234);
+
+        $this->assertSame(1234, $container->getParameter('contao.mcp.max_binary_payload_size'));
+    }
+
     public function testRegistersTemplateToolsThroughTheBundleConfiguration(): void
     {
         $container = $this->getContainerBuilder();
@@ -60,6 +68,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $builder = $container->get('mcp.server.contao_backend.builder');
         $this->assertInstanceOf(Builder::class, $builder);
+
         $builder->build();
 
         $tools = [];
@@ -75,6 +84,9 @@ final class ContaoMcpExtensionTest extends TestCase
                 'contao_api_discover',
                 'contao_api_describe',
                 'contao_api_execute',
+                'composer_package_version',
+                'contao_twig_environment_discover',
+                'contao_twig_environment_inspect',
                 'contao_template_list_themes',
                 'contao_template_discover',
                 'contao_template_read',
@@ -100,7 +112,7 @@ final class ContaoMcpExtensionTest extends TestCase
             }
         }
 
-        $this->assertSame(['contao://template-guidance', 'contao://twig/html-attributes'], $resources);
+        $this->assertSame(['contao://installation-guidance', 'contao://template-guidance', 'contao://twig/html-attributes'], $resources);
     }
 
     public function testKeepsBackendToolsOutOfASecondServer(): void
@@ -142,7 +154,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $container->compile();
 
-        $this->assertFalse($container->hasDefinition(TemplateSnapshotTools::class));
+        $this->assertFalse($container->hasDefinition('contao_mcp.tool.template_snapshot_tools'));
     }
 
     public function testRegistersBackendSearchToolWhenBackendSearchIsConfigured(): void
@@ -166,7 +178,7 @@ final class ContaoMcpExtensionTest extends TestCase
         }
 
         $this->assertContains('contao_backend_search', $tools);
-        $this->assertCount(17, $tools);
+        $this->assertCount(20, $tools);
     }
 
     public function testRegistersTheMcpEndpointAsOAuthProtectedResource(): void
@@ -175,6 +187,7 @@ final class ContaoMcpExtensionTest extends TestCase
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
         $this->assertInstanceOf(PrependExtensionInterface::class, $extension);
+
         $extension->prepend($container);
 
         $this->assertSame(
@@ -196,7 +209,7 @@ final class ContaoMcpExtensionTest extends TestCase
         );
     }
 
-    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true): ContainerBuilder
+    private function getContainerBuilder(bool $withBackendSearch = false, bool $withSnapshots = true, int|null $maximumBinaryPayloadSize = null): ContainerBuilder
     {
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -211,7 +224,8 @@ final class ContaoMcpExtensionTest extends TestCase
 
         foreach ([
             'http_kernel' => HttpKernelInterface::class,
-            ApiRequestFactory::class => ApiRequestFactory::class,
+            'contao_api.http.api_request_factory' => ApiRequestFactory::class,
+            'contao.file.upload_size_provider' => UploadSizeProvider::class,
             'request_stack' => RequestStack::class,
             'api_platform.metadata.resource.name_collection_factory' => ResourceNameCollectionFactoryInterface::class,
             'api_platform.metadata.resource.metadata_collection_factory' => ResourceMetadataCollectionFactoryInterface::class,
@@ -220,6 +234,7 @@ final class ContaoMcpExtensionTest extends TestCase
             'twig' => Environment::class,
             'contao.twig.filesystem_loader' => ContaoFilesystemLoader::class,
             'contao.twig.inspector' => Inspector::class,
+            'contao.twig.studio.environment_information' => EnvironmentInformation::class,
             'security.helper' => Security::class,
         ] as $id => $class) {
             $container->register($id, $class)->setSynthetic(true)->setPublic(true);
@@ -233,7 +248,7 @@ final class ContaoMcpExtensionTest extends TestCase
             $container->register('contao.search.backend', BackendSearch::class)->setSynthetic(true)->setPublic(true);
         }
 
-        $otherTool = new class() {
+        $otherTool = new class {
             #[McpTool(name: 'frontend_example')]
             public function __invoke(): string
             {
@@ -249,7 +264,7 @@ final class ContaoMcpExtensionTest extends TestCase
         $container->register('lock.factory', LockFactory::class)->addArgument(new Definition(InMemoryStore::class));
 
         $extension = new ContaoMcpBundle()->getContainerExtension();
-        $extension->load([], $container);
+        $extension->load(null === $maximumBinaryPayloadSize ? [] : [['max_binary_payload_size' => $maximumBinaryPayloadSize]], $container);
         new ContaoMcpBundle()->build($container);
 
         return $container;

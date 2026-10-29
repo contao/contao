@@ -16,7 +16,7 @@ use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTesting\Browser\BrowserOptions;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\InstallationRecipe\File\FileMapping;
-use Contao\InstallationRecipe\Fixture\FixtureSet;
+use Contao\InstallationRecipe\Fixture\FixtureResult;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
 use Symfony\Component\Uid\Uuid;
 
@@ -24,7 +24,13 @@ trait BackendTestTrait
 {
     private const string DUMMY_IMAGE = 'files/images/dummy.jpg';
 
-    protected static function createManagedEditionConfig(): ManagedEditionConfig
+    private const string FIXTURE_USERS = 'users.yaml';
+
+    private const string FIXTURE_DEFAULT = 'default.yaml';
+
+    private const string DCA_CONTENT = 'tl_content.php';
+
+    protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
             'calendar-bundle',
@@ -37,19 +43,32 @@ trait BackendTestTrait
         $dummyImage = self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg';
 
         $recipe = InstallationRecipe::create($composer)
-            ->withFixtureFile(self::fixtureDirectory().'/users.yaml')
-            ->withFixtureFile(self::fixtureDirectory().'/default.yaml')
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
+            ->withConfigFile(self::configDirectory().'/security.yaml')
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
             ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
             ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
         ;
 
-        return ManagedEditionConfig::create($recipe, self::projectDirectory());
+        return ManagedEditionConfig::create($recipe, self::projectDirectory())
+            ->withDcaFile(self::customDcaDirectory().'/'.self::DCA_CONTENT)
+        ;
     }
 
     private static function fixtureDirectory(): string
     {
         return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
+    }
+
+    private static function customDcaDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Dca';
+    }
+
+    private static function configDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Config';
     }
 
     /**
@@ -72,32 +91,51 @@ trait BackendTestTrait
         return Uuid::fromBinary($uuid);
     }
 
-    private function login(string $username = 'k.jones', string $password = 'kevinjones', BrowserOptions|null $options = null): BackendBrowser
+    private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
     {
+        $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
+
         $backend = self::managedEdition()->createBackendBrowser(options: $options);
-        $backend->visit('/contao/login');
-        $backend->submitLogin($username, $password);
-        $backend->waitFor('h1');
+        $backend->loginOrReuseSessionAs(
+            $username,
+            self::backendPassword($userFixture),
+            fn (BackendBrowser $browser) => $this->assertBackendLogin($browser, $username),
+        );
 
         return $backend;
     }
 
+    private function assertBackendLogin(BackendBrowser $backend, string $username): void
+    {
+        $backend->waitFor('h1');
+
+        $this->assertSelectorTextContains('h1', 'Dashboard');
+
+        $cookies = $backend->browser()->context()->cookies();
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
+        ));
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
+        ));
+
+        $this->assertSelectorTextContains('#tmenu', $username);
+    }
+
     /**
-     * Logs in and opens the content elements of the article fixture.
+     * Logs in and opens the content elements of the given article fixture.
      *
      * @return array{BackendBrowser, string}
      */
-    private function openArticle(): array
+    private function openArticle(FixtureResult $fixtures, string $articleFixture): array
     {
-        $fixtures = self::managedEdition()->prepareDatabase(new FixtureSet([
-            self::fixtureDirectory().'/users.yaml',
-            self::fixtureDirectory().'/default.yaml',
-            self::fixtureDirectory().'/article.yaml',
-        ]));
-
         $backend = $this->login();
 
-        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={article}');
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={'.$articleFixture.'}');
         $backend->visit($articleUrl);
 
         return [$backend, $articleUrl];

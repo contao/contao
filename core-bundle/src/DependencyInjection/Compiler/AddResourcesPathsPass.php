@@ -33,8 +33,8 @@ class AddResourcesPathsPass implements CompilerPassInterface
     private function getResourcesPaths(ContainerBuilder $container): array
     {
         $paths = [];
-        $projectDir = $container->getParameter('kernel.project_dir');
 
+        $projectDir = $container->getParameter('kernel.project_dir');
         $bundles = $container->getParameter('kernel.bundles');
         $meta = $container->getParameter('kernel.bundles_metadata');
 

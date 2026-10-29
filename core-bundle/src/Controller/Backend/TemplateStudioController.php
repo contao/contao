@@ -34,6 +34,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
@@ -211,7 +213,7 @@ class TemplateStudioController extends AbstractBackendController
             return $this->render(
                 '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
                 ['identifier' => $identifier],
-                apiError: new \InvalidArgumentException('Given identifier does not exist.'),
+                apiError: new NotFoundHttpException('Given identifier does not exist.'),
             );
         }
 
@@ -235,8 +237,10 @@ class TemplateStudioController extends AbstractBackendController
         for ($i = 0; $i < $numTemplates; ++$i) {
             $logicalName = $logicalNamesChain[$i];
             $source = $this->loader->getSourceContext($logicalName);
+
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
+
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
@@ -447,10 +451,12 @@ class TemplateStudioController extends AbstractBackendController
         $operationContext = $this->getOperationContext($identifier);
 
         $result = null;
+        $executed = false;
 
         foreach ($candidates as $candidate) {
             if ($candidate->canExecute($operationContext)) {
                 $result = $candidate->execute($request, $operationContext);
+                $executed = true;
 
                 break;
             }
@@ -460,10 +466,14 @@ class TemplateStudioController extends AbstractBackendController
         // nothing at all - in which case we stream a default result.
         $request->setRequestFormat('turbo_stream');
 
-        return $result ?? $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
-            'operation' => $operationName,
-            'context' => $operationContext,
-        ]);
+        return $result ?? $this->render(
+            '@Contao/backend/template_studio/operation/default_result.stream.html.twig',
+            [
+                'operation' => $operationName,
+                'context' => $operationContext,
+            ],
+            apiError: $executed ? null : new UnprocessableEntityHttpException('The operation is not available for this template.'),
+        );
     }
 
     #[Route(
@@ -707,10 +717,16 @@ class TemplateStudioController extends AbstractBackendController
             $suppressedPrefixes[] = $this->themeNamespace->getPath((string) $slug);
         }
 
-        $regex = \sprintf('#^(%s)/#', implode('|', array_map(
-            static fn (string $path): string => preg_quote($path, '#'),
-            $suppressedPrefixes,
-        )));
+        $regex = \sprintf(
+            '#^(?!backend/rte/)(%s)/#',
+            implode(
+                '|',
+                array_map(
+                    static fn (string $path): string => preg_quote($path, '#'),
+                    $suppressedPrefixes,
+                ),
+            ),
+        );
 
         return $this->finder
             ->create()

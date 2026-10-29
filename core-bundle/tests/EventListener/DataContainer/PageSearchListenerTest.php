@@ -74,55 +74,94 @@ class PageSearchListenerTest extends TestCase
     public static function purgeSearchIndexProvider(): iterable
     {
         yield 'Test alias (1) unchanged should not purge the search entry' => [
-            'alias', 'foo', ['alias' => 'foo'], false,
+            'alias',
+            'foo',
+            ['alias' => 'foo'],
+            false,
         ];
 
         yield 'Test alias (2) change should purge the search entry' => [
-            'alias', 'bar', ['alias' => 'foo'], true,
+            'alias',
+            'bar',
+            ['alias' => 'foo'],
+            true,
         ];
 
         yield 'Test searchIndexer (1) unchanged should not purge the search index.' => [
-            'searchIndexer', 'always_index', ['searchIndexer' => 'always_index'], false,
+            'searchIndexer',
+            'always_index',
+            ['searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test searchIndexer (2) change to never_index should purge the search index.' => [
-            'searchIndexer', 'never_index', ['searchIndexer' => ''], true,
+            'searchIndexer',
+            'never_index',
+            ['searchIndexer' => ''],
+            true,
         ];
 
         yield 'Test searchIndexer (3) change to always_index should not purge the search index.' => [
-            'searchIndexer', 'always_index', ['searchIndexer' => ''], false,
+            'searchIndexer',
+            'always_index',
+            ['searchIndexer' => ''],
+            false,
         ];
 
         yield 'Test searchIndexer (4) change to blank should not purge the search index if robots is set to index.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'robots' => 'index,follow'], false,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'robots' => 'index,follow'],
+            false,
         ];
 
         yield 'Test searchIndexer (5) change to blank should purge the search index if robots is set to noindex.' => [
-            'searchIndexer', '', ['searchIndexer' => 'always_index', 'robots' => 'noindex,follow'], true,
+            'searchIndexer',
+            '',
+            ['searchIndexer' => 'always_index', 'robots' => 'noindex,follow'],
+            true,
         ];
 
         yield 'Test robots (1) unchanged should not purge the search entry.' => [
-            'robots', 'index,follow', ['robots' => 'index,follow'], false,
+            'robots',
+            'index,follow',
+            ['robots' => 'index,follow'],
+            false,
         ];
 
         yield 'Test robots (2) change to index should not purge the search entry if searchIndexer is set to blank.' => [
-            'robots', 'index,follow', ['robots' => 'noindex,follow', 'searchIndexer' => ''], false,
+            'robots',
+            'index,follow',
+            ['robots' => 'noindex,follow', 'searchIndexer' => ''],
+            false,
         ];
 
         yield 'Test robots (3) change to index should not purge the search entry if searchIndexer is set to always_index.' => [
-            'robots', 'index,follow', ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index'], false,
+            'robots',
+            'index,follow',
+            ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test robots (4) change to noindex should purge the search entry if searchIndexer is set to blank.' => [
-            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => ''], true,
+            'robots',
+            'noindex,follow',
+            ['robots' => 'index,follow', 'searchIndexer' => ''],
+            true,
         ];
 
         yield 'Test robots (5) change to noindex should not purge the search entry if searchIndexer is set to always_index.' => [
-            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'always_index'], false,
+            'robots',
+            'noindex,follow',
+            ['robots' => 'index,follow', 'searchIndexer' => 'always_index'],
+            false,
         ];
 
         yield 'Test robots (6) change to noindex should purge the search entry if searchIndexer is set to never_index.' => [
-            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'never_index'], true,
+            'robots',
+            'noindex,follow',
+            ['robots' => 'index,follow', 'searchIndexer' => 'never_index'],
+            true,
         ];
     }
 

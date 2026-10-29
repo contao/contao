@@ -73,7 +73,6 @@ class CronTest extends TestCase
             ->expects($this->once())
             ->method('onMinutely')
         ;
-
         $cronjob
             ->expects($this->once())
             ->method('onHourly')
@@ -117,12 +116,10 @@ class CronTest extends TestCase
             ->expects($this->once())
             ->method('setLastRun')
         ;
-
         $entity
             ->method('getName')
             ->willReturn('UpdateEntitiesCron::onHourly')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn(new \DateTime()->modify('-1 hours'))
@@ -141,7 +138,6 @@ class CronTest extends TestCase
             ->with('findOneByName', [$cronjob::class.'::onHourly'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -199,6 +195,7 @@ class CronTest extends TestCase
         }
 
         $this->expectException(\InvalidArgumentException::class);
+
         $cron->run('invalid_scope');
     }
 
@@ -231,12 +228,10 @@ class CronTest extends TestCase
             ->method('getName')
             ->willReturn('UpdateEntitiesCron::onHourly')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn(new \DateTime()->modify('+2 hours'))
         ;
-
         $entity
             ->expects($this->never())
             ->method('setLastRun')
@@ -255,7 +250,6 @@ class CronTest extends TestCase
             ->with('findOneByName', [$cronjob::class.'::onHourly'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -279,12 +273,10 @@ class CronTest extends TestCase
             ->method('getName')
             ->willReturn('UpdateEntitiesCron::onHourly')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn(new \DateTime()->modify('+2 hours'))
         ;
-
         $entity
             ->expects($this->once())
             ->method('setLastRun')
@@ -303,7 +295,6 @@ class CronTest extends TestCase
             ->with('findOneByName', [$cronjob::class.'::onHourly'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -330,12 +321,10 @@ class CronTest extends TestCase
             ->method('setLastRun')
             ->willReturnSelf()
         ;
-
         $entity
             ->method('getName')
             ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn($lastRun)
@@ -348,7 +337,6 @@ class CronTest extends TestCase
             ->with('findOneByName', ['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -365,6 +353,7 @@ class CronTest extends TestCase
         );
 
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
+
         $this->assertFalse($cron->hasMinutelyCliCron());
 
         $cron->run(Cron::SCOPE_CLI);
@@ -383,12 +372,10 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('setLastRun')
         ;
-
         $entity
             ->method('getName')
             ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn($lastRun)
@@ -401,7 +388,6 @@ class CronTest extends TestCase
             ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -440,12 +426,10 @@ class CronTest extends TestCase
             ))
             ->willReturnSelf()
         ;
-
         $entity
             ->method('getName')
             ->willReturn('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn($previousRun)
@@ -458,7 +442,6 @@ class CronTest extends TestCase
             ->with('findOneByName', ['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -503,12 +486,10 @@ class CronTest extends TestCase
             ))
             ->willReturnSelf()
         ;
-
         $entity
             ->method('getName')
             ->willReturn('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod')
         ;
-
         $entity
             ->method('getLastRun')
             ->willReturn($previousRun)
@@ -521,7 +502,6 @@ class CronTest extends TestCase
             ->with('findOneByName', ['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod'])
             ->willReturn($entity)
         ;
-
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
@@ -554,12 +534,10 @@ class CronTest extends TestCase
             ->method('lockTable')
             ->willThrowException(new LockWaitTimeoutException($this->createStub(DriverException::class), null))
         ;
-
         $repository
             ->expects($this->never())
             ->method('__call')
         ;
-
         $repository
             ->expects($this->never())
             ->method('purgeOldRecords')

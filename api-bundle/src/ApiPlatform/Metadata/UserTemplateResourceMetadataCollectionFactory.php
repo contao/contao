@@ -22,8 +22,6 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
-use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\UserTemplateStateProvider;
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
 use Contao\ApiBundle\Dto\UserTemplateUpdate;
@@ -106,8 +104,8 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
             $operations[$name] = $operation
                 ->withClass(UserTemplate::class)
                 ->withShortName('UserTemplate')
-                ->withProvider(UserTemplateStateProvider::class)
-                ->withProcessor(UserTemplateStateProcessor::class)
+                ->withProvider('contao_api.api_platform.user_template_state_provider')
+                ->withProcessor('contao_api.api_platform.user_template_state_processor')
                 ->withDefaults(['_scope' => 'backend'])
                 ->withStateless(true)
                 ->withSecurity("is_granted('ROLE_ADMIN')")

@@ -44,7 +44,7 @@
                     <h1>{{ headline }}</h1>
                     <div class="widget widget-text">
                         <label for="verify">{{ authCode }}</label>
-                        <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="one-time-code" placeholder="{{ authCode }}" required>
+                        <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="one-time-code" placeholder="{{ authCode }}" required autofocus>
                     </div>
                     <div class="widget widget-checkbox">
                         <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
@@ -60,12 +60,6 @@
         {{ messages|raw }}
     </div>
 {% endblock %}
-
-<script>
-    window.addEvent('domready', function() {
-        $('verify').focus();
-    });
-</script>
 
 </body>
 </html>
