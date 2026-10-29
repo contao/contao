@@ -85,6 +85,11 @@ export default class extends Controller {
         // Scrolls to a pending autofocus if one exists and resets the guard
         if (this.#scrollToAutoFocusTarget()) return;
 
+        if (this.hasWidgetErrorTarget) {
+            this.offset = null;
+            return;
+        }
+
         if (!this.offset) return;
 
         // Execute scroll restore after Turbo scrolled to top
@@ -126,11 +131,11 @@ export default class extends Controller {
         this.#pendingAutoFocus = input;
     }
 
-    widgetErrorTargetConnected() {
-        this.widgetErrorTarget.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-        });
+    async widgetErrorTargetConnected() {
+        // Execute after Turbo scrolled to top (see #10508)
+        await new Promise(requestAnimationFrame);
+
+        this.scrollToWidgetError();
     }
 
     store() {
@@ -143,7 +148,10 @@ export default class extends Controller {
 
     scrollToWidgetError() {
         if (this.hasWidgetErrorTarget) {
-            this.widgetErrorTargetConnected();
+            this.widgetErrorTarget.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
         }
     }
 
