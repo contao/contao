@@ -186,6 +186,7 @@ services:
             - '@security.helper'
             - '@contao.image.factory'
             - '%kernel.project_dir%'
+            - '@twig'
 
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener

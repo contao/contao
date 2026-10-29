@@ -22,6 +22,7 @@ use Contao\File;
 use Contao\Image\ResizeConfiguration;
 use Contao\Message;
 use Symfony\Bundle\SecurityBundle\Security;
+use Twig\Environment;
 
 #[AsCallback(table: 'tl_files', target: 'fields.preview.input_field')]
 class FileImagePreviewListener
@@ -31,6 +32,7 @@ class FileImagePreviewListener
         private readonly Security $security,
         private readonly ImageFactoryInterface $imageFactory,
         private readonly string $projectDir,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -64,20 +66,23 @@ class FileImagePreviewListener
         }
 
         $objImage = new File($image);
-        $ctrl = 'ctrl_preview_'.substr(md5($image), 0, 8);
 
-        $strPreview = '
-<div id="'.$ctrl.'" class="tl_edit_preview">
-<img src="'.$objImage->dataUri.'" width="'.$objImage->width.'" height="'.$objImage->height.'" alt="">
-</div>';
+        // Get the input field suffix (edit multiple mode)
+        $suffix = substr($dc->inputName, \strlen($dc->field));
 
-        // Add the script to mark the important part
-        $strPreview .= '<script>Backend.editPreviewWizard($(\''.$ctrl."'));</script>";
-
-        if ($this->framework->getAdapter(Config::class)->get('showHelp')) {
-            $strPreview .= '<p class="tl_help tl_tip" data-contao--tooltips-target="content">'.$GLOBALS['TL_LANG']['tl_files']['preview'][1].'</p>';
-        }
-
-        return '<div class="widget">'.$strPreview.'</div>';
+        return $this->twig->render('@Contao/backend/file_manager/image_preview.html.twig', [
+            'image' => [
+                'src' => $objImage->dataUri,
+                'width' => $objImage->width,
+                'height' => $objImage->height,
+            ],
+            'fields' => [
+                'x' => 'ctrl_importantPartX'.$suffix,
+                'y' => 'ctrl_importantPartY'.$suffix,
+                'width' => 'ctrl_importantPartWidth'.$suffix,
+                'height' => 'ctrl_importantPartHeight'.$suffix,
+            ],
+            'show_help' => (bool) $this->framework->getAdapter(Config::class)->get('showHelp'),
+        ]);
     }
 }
