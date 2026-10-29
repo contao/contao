@@ -1872,15 +1872,16 @@ window.Backend =
 	}
 };
 
+// Set the classes on the root element, which Turbo does not replace
+document.documentElement.classList.add('js');
+
+// Mark touch devices (see #5563)
+if (Browser.Features.Touch) {
+	document.documentElement.classList.add('touch');
+}
+
 // Initialize the back end script
 window.addEvent('domready', function() {
-	$(document.body).addClass('js');
-
-	// Mark touch devices (see #5563)
-	if (Browser.Features.Touch) {
-		$(document.body).addClass('touch');
-	}
-
 	Backend.tableWizardSetWidth();
 });
 
