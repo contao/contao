@@ -170,6 +170,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
+                'Symfony\Component\PropertyAccess\PropertyAccessor',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
