@@ -10,7 +10,7 @@
 
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['calendar_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{calendars_legend},eventCalendars;{feed_legend},feedFormat,feedSource,maxFeedItems,feedRecurrenceLimit,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['calendar_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{calendars_legend},eventCalendars;{feed_legend},feedFormat,feedSource,maxFeedItems,feedBase,feedFeatured,feedRecurrenceLimit,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['eventCalendars'] = array(
 	'exclude' => true,

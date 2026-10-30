@@ -105,6 +105,13 @@ services:
             - '@filesystem'
             - '%contao.web_dir%'
 
+    contao_news.migration.feed_base:
+        class: Contao\NewsBundle\Migration\FeedBaseMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+
     contao_news.migration.field_permission:
         class: Contao\NewsBundle\Migration\FieldPermissionMigration
         arguments:
