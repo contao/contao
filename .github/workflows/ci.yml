@@ -273,7 +273,7 @@ jobs:
 
             - name: Initialize the database
               run: |
-                  sudo /etc/init.d/mysql start
+                  sudo systemctl start mysql.service
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
@@ -395,7 +395,7 @@ jobs:
 
             - name: Initialize the database
               run: |
-                  sudo /etc/init.d/mysql start
+                  sudo systemctl start mysql.service
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
@@ -430,7 +430,7 @@ jobs:
 
             - name: Initialize the database
               run: |
-                  sudo /etc/init.d/mysql start
+                  sudo systemctl start mysql.service
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
