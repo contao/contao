@@ -218,6 +218,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\HttpClient\Response\MockResponse',
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
+                'Symfony\Component\Mime\Part\File',
                 'Symfony\Component\Process\Process',
                 'Symfony\Component\PropertyAccess\PropertyAccessor',
                 'Symfony\Component\String\\',
