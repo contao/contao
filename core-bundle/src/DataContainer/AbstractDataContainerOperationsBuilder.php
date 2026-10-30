@@ -141,18 +141,21 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
         $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
-        $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
 
-        $body = $xml->getElementsByTagName('body')[0];
+        // Prevent libxml from wrapping leading text in an implicit paragraph.
+        $xml->loadHTML('<?xml encoding="UTF-8"><div>'.$operation['html'].'</div>');
 
-        if ($body->childNodes->length < 2) {
+        $container = $xml->getElementsByTagName('div')[0];
+
+        if ($container->childNodes->length < 2) {
             return [$operation];
         }
 
         $operations = [];
         $current = null;
+        $currentIsText = false;
 
-        foreach ($body->childNodes as $node) {
+        foreach ($container->childNodes as $node) {
             if ($node instanceof \DOMText) {
                 if ('' === trim($html = $xml->saveHTML($node))) {
                     continue;
@@ -164,12 +167,18 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
                 }
             }
 
-            if ($current) {
+            if ($current && !$currentIsText) {
                 $operations[] = $current;
+                $current = null;
             }
 
-            $current = $operation;
-            $current['html'] = $xml->saveHTML($node);
+            if (null === $current) {
+                $current = $operation;
+                $current['html'] = '';
+            }
+
+            $current['html'] .= $xml->saveHTML($node);
+            $currentIsText = $node instanceof \DOMText;
 
             if ('a' === strtolower($node->nodeName)) {
                 $operations[] = $current;
@@ -177,7 +186,9 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
             }
         }
 
-        $operations[] = $current;
+        if (null !== $current) {
+            $operations[] = $current;
+        }
 
         return $operations;
     }
