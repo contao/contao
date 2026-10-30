@@ -1882,11 +1882,6 @@ window.Backend =
 // Set the classes on the root element, which Turbo does not replace
 document.documentElement.classList.add('js');
 
-// Mark touch devices (see #5563)
-if (navigator.maxTouchPoints > 0) {
-	document.documentElement.classList.add('touch');
-}
-
 // Initialize the back end script
 window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
