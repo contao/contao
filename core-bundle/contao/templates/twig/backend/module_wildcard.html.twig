@@ -8,5 +8,5 @@
     <span class="upper">### {{ ('FMD.' ~ type ~ '.0')|trans }} ###</span>
     <br>
     {% set href = path('contao_backend', {do: 'themes', table: 'tl_module', act: 'edit', id, rt: contao.request_token}) %}
-    {{ name }} (<a href="{{ href }}" class="tl_gray">ID: {{ id }}</a>)
+    {{ name }} (<a href="{{ href }}" onclick="Backend.openModalIframe({ title: '{{ name|e('js') }}', url:this.href + '&amp;popup=1&amp;nb=1' });return false" class="tl_gray">ID: {{ id }}</a>)
 </div>
