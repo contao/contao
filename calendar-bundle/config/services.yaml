@@ -62,6 +62,13 @@ services:
             - '%kernel.project_dir%'
             - '%kernel.charset%'
 
+    contao_calendar.listener.data_container.default_user_id:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultUserIdListener
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: contao.callback, table: tl_calendar_events, target: fields.author.default }
+
     contao_calendar.listener.data_container.event_search:
         class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
         arguments:
