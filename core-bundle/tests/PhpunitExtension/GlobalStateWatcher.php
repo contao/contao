@@ -153,6 +153,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
+                'Nette\Schema\TypeExpression',
                 'PHPUnit\\',
                 'ScssPhp\\',
                 'SebastianBergmann\\',
