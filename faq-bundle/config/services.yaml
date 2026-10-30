@@ -18,6 +18,13 @@ services:
             - '@contao.routing.content_url_generator'
             - '@twig'
 
+    contao_faq.listener.data_container.default_user_id:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultUserIdListener
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: contao.callback, table: tl_faq, target: fields.author.default }
+
     contao_faq.listener.data_container.faq_search:
         class: Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener
         arguments:

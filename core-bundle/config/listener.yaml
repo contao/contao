@@ -143,6 +143,11 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.default_user_id:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultUserIdListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.description_list_label:
         class: Contao\CoreBundle\EventListener\DataContainer\DescriptionListLabelListener
         public: true
