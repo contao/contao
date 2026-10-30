@@ -14,6 +14,7 @@ namespace Contao\ApiBundle\Schema;
 
 use Contao\ApiBundle\DataContainer\DataContainerFieldContext;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Relation\RelationResolverInterface;
@@ -24,7 +25,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DC_Table;
 use Contao\System;
 use Contao\Validator as ContaoValidator;
-use Contao\Widget;
 use Symfony\Component\Translation\LocaleSwitcher;
 
 final class DataContainerSchemaFactory
@@ -35,6 +35,7 @@ final class DataContainerSchemaFactory
         private readonly RelationResolverInterface $relationResolver,
         private readonly LocaleSwitcher $localeSwitcher,
         private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
+        private readonly DataContainerWidgetFactory $widgetFactory,
     ) {
     }
 
@@ -78,8 +79,8 @@ final class DataContainerSchemaFactory
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] ?? [] as $fieldName => $config) {
             $fieldName = (string) $fieldName;
-            $config = $this->applyWidgetAttributes(\is_array($config) ? $config : [], $fieldName, $table, $dc);
-            $schema = $this->createFieldSchema(new DataContainerFieldContext($config, $table, $fieldName));
+            $field = new DataContainerFieldContext(\is_array($config) ? $config : [], $table, $fieldName);
+            $schema = $this->createFieldSchema($this->widgetFactory->resolve($field, $dc));
 
             if ([] === $schema) {
                 continue;
@@ -116,31 +117,6 @@ final class DataContainerSchemaFactory
         $converter = $this->converters->get($config);
 
         return $converter ? $this->createSchema(new DataContainerFieldContext($config), $converter) : [];
-    }
-
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @return array<string, mixed>
-     */
-    private function applyWidgetAttributes(array $config, string $fieldName, string $table, DC_Table $dc): array
-    {
-        /** @var class-string<Widget>|null $widgetClass */
-        $widgetClass = $GLOBALS['BE_FFL'][$config['inputType'] ?? ''] ?? null;
-
-        if (!\is_string($widgetClass) || !is_a($widgetClass, Widget::class, true)) {
-            return $config;
-        }
-
-        $dc->field = $fieldName;
-
-        try {
-            $config['eval'] = $widgetClass::getAttributesFromDca($config, $fieldName, null, $fieldName, $table, $dc);
-        } catch (\Throwable $exception) {
-            throw new \RuntimeException(\sprintf('Could not resolve the widget attributes for field "%s.%s". Make sure the DCA callbacks work statically without a record.', $table, $fieldName), previous: $exception);
-        }
-
-        return $config;
     }
 
     private function projectSchema(array $schema, string $operation): array
