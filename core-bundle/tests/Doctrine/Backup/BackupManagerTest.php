@@ -147,9 +147,6 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testUnsuccessfulCreate(): void
     {
-        $this->expectException(BackupManagerException::class);
-        $this->expectExceptionMessage('Error!');
-
         $connection = $this->mockConnection();
 
         $dumper = $this->createMock(DumperInterface::class);
@@ -163,7 +160,13 @@ class BackupManagerTest extends ContaoTestCase
         $manager = $this->getBackupManager($connection, $dumper);
         $config = $manager->createCreateConfig();
 
-        $manager->create($config);
+        try {
+            $manager->create($config);
+
+            $this->fail('create() should propagate the exception from the dumper.');
+        } catch (BackupManagerException $exception) {
+            $this->assertSame('Error!', $exception->getMessage());
+        }
 
         $this->assertFalse($this->vfs->fileExists($config->getBackup()->getFilename()));
     }
