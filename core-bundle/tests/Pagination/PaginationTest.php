@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Pagination\Pagination;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class PaginationTest extends TestCase
@@ -56,6 +57,34 @@ class PaginationTest extends TestCase
         $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withIgnoreOutOfBounds());
 
         $this->assertSame(2, $pagination->getCurrent());
+    }
+
+    #[DataProvider('getInvalidPageParameters')]
+    public function testThrowsOutOfRangeExceptionForInvalidPageParameter(string $query): void
+    {
+        $this->expectException(PageOutOfRangeException::class);
+
+        $request = Request::create('/foobar?'.$query);
+
+        new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request));
+    }
+
+    #[DataProvider('getInvalidPageParameters')]
+    public function testFallsBackToFirstPageForInvalidPageParameter(string $query): void
+    {
+        $request = Request::create('/foobar?'.$query);
+
+        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withIgnoreOutOfBounds());
+
+        $this->assertSame(1, $pagination->getCurrent());
+    }
+
+    public static function getInvalidPageParameters(): iterable
+    {
+        yield ['page=foo'];
+        yield ['page=2foo'];
+        yield ['page=1.5'];
+        yield ['page[]=2'];
     }
 
     public function testDoesNotShowFirstLastPrevNext(): void

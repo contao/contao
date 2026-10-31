@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Pagination;
 
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class Pagination implements PaginationInterface
 {
@@ -32,7 +33,7 @@ class Pagination implements PaginationInterface
     {
         $this->pageCount = $config->getPerPage() > 0 ? max(1, (int) ceil($config->getTotal() / $config->getPerPage())) : 1;
 
-        $currentPage = $config->getCurrentPage() ?? $this->config->getRequest()?->query->getInt($this->getQueryParameterName(), 1) ?? 1;
+        $currentPage = $config->getCurrentPage() ?? $this->getCurrentPageFromRequest();
 
         if ($currentPage < 1 || $currentPage > $this->pageCount) {
             if (!$config->getIgnoreOutOfBounds()) {
@@ -150,5 +151,19 @@ class Pagination implements PaginationInterface
         $end = min($this->getPerPage() + $start, $this->getTotal());
 
         return [$start, $end];
+    }
+
+    private function getCurrentPageFromRequest(): int
+    {
+        if (!$request = $this->config->getRequest()) {
+            return 1;
+        }
+
+        // Treat invalid values (e.g. "?page=foo") like an out of range page
+        try {
+            return $request->query->getInt($this->getQueryParameterName(), 1);
+        } catch (BadRequestException) {
+            return 0;
+        }
     }
 }
