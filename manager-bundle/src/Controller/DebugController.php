@@ -18,6 +18,8 @@ use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
@@ -32,6 +34,7 @@ class DebugController
         private readonly JwtManager $jwtManager,
         private readonly ContaoCsrfTokenManager $csrfTokenManager,
         private readonly string $csrfTokenName,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -57,6 +60,11 @@ class DebugController
 
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($this->csrfTokenName, $request->query->get('rt')))) {
             throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
+        }
+
+        // The referer is a full URI, so the link must not be tampered with
+        if (!$this->uriSigner->checkRequest($request)) {
+            throw new BadRequestHttpException('Invalid URI signature. Please reload the page and try again.');
         }
 
         // Default to the back end root (e.g. if there is no or an invalid referer).

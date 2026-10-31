@@ -19,6 +19,8 @@ use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -37,6 +39,7 @@ class BackendMenuListener
         private readonly string|null $managerPath,
         private readonly JwtManager|null $jwtManager,
         private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -89,7 +92,7 @@ class BackendMenuListener
         $debug = $event->getFactory()
             ->createItem('debug')
             ->setLabel('debug_mode')
-            ->setUri($this->router->generate('contao_backend', $params))
+            ->setUri($this->uriSigner->sign($this->router->generate('contao_backend', $params, UrlGeneratorInterface::ABSOLUTE_URL)))
             ->setLinkAttribute('class', $class)
             ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')

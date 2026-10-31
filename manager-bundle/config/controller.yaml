@@ -10,3 +10,4 @@ services:
             - '@contao_manager.jwt_manager'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
+            - '@uri_signer'

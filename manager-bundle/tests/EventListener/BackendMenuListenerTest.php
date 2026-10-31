@@ -21,6 +21,8 @@ use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -39,7 +41,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
     }
 
@@ -68,8 +70,8 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with('contao_backend', $params)
-            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('/contao/page?act=edit&id=1').'&ref=foo')
+            ->with('contao_backend', $params, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/contao?do=debug&key=enable&referer='.base64_encode('/contao/page?act=edit&id=1').'&ref=foo')
         ;
 
         $factory = new MenuFactory();
@@ -89,7 +91,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->willReturn('request-token-value')
         ;
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $tokenManager);
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $tokenManager, new UriSigner('secret'));
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -100,7 +102,10 @@ class BackendMenuListenerTest extends ContaoTestCase
         $debug = $children['debug'];
 
         $this->assertSame('debug_mode', $debug->getLabel());
-        $this->assertSame('/contao?do=debug&key=enable&referer=L2NvbnRhby9wYWdlP2FjdD1lZGl0JmlkPTE=&ref=foo', $debug->getUri());
+        $uri = $debug->getUri();
+
+        $this->assertStringStartsWith('https://example.com/contao?do=debug&key=enable&referer=L2NvbnRhby9wYWdlP2FjdD1lZGl0JmlkPTE=&ref=foo&_hash=', $uri);
+        $this->assertTrue((new UriSigner('secret'))->check($uri));
         $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode'], $debug->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }
@@ -120,7 +125,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $jwtManager = $this->createMock(JwtManager::class);
         $security = $this->getSecurity();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, true, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, true, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
 
         $children = $event->getTree()->getChildren();
@@ -141,7 +146,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
     }
 
@@ -165,7 +170,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $translator = $this->getTranslator();
         $jwtManager = $this->createMock(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
     }
 
@@ -184,7 +189,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $translator = $this->getTranslator();
         $jwtManager = $this->createMock(JwtManager::class);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request stack did not contain a request');
@@ -217,7 +222,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
 
         $children = $event->getTree()->getChild('system')->getChildren();
@@ -249,7 +254,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($this->createMock(Request::class));
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
@@ -270,7 +275,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $translator = $this->getTranslator();
         $managerPath = 'contao-manager.phar.php';
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
@@ -291,7 +296,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $translator = $this->getTranslator();
         $managerPath = 'contao-manager.phar.php';
 
-        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class));
+        $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null, $this->createMock(ContaoCsrfTokenManager::class), new UriSigner('secret'));
         $listener($event);
 
         $this->assertNull($event->getTree()->getChild('system'));
