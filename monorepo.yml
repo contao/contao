@@ -97,6 +97,9 @@ repositories:
     oauth-server-bundle:
         url: https://github.com/contao/oauth-server-bundle.git
 
+    webhooks-bundle:
+        url: https://github.com/contao/webhooks-bundle.git
+
     test-case:
         url: https://github.com/contao/test-case.git
         mapping:
