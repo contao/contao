@@ -200,7 +200,7 @@ final class GlobalStateWatcher implements Extension
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
-                'Nette\\Schema\\TypeExpression',
+                'Nette\Schema\TypeExpression',
                 'PHPUnit\\',
                 'ScssPhp\\',
                 'SebastianBergmann\\',
