@@ -300,7 +300,8 @@ class CombinerTest extends TestCase
 
         $link = $this->getTempDir().'/assets/css/file.scss-'.substr(md5('-ffile.scss-v1-mall'), 0, 8).'.css';
         $this->assertTrue(is_link($link));
-        $this->assertSame(realpath($this->getTempDir().'/'.$updatedFile), realpath($link));
+        $this->assertSame(basename($updatedFile), basename($this->filesystem->readlink($link)));
+        $this->assertFileEquals($this->getTempDir().'/'.$updatedFile, $link);
         $this->assertFileDoesNotExist($link.'.hash');
     }
 
@@ -383,7 +384,8 @@ class CombinerTest extends TestCase
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertTrue(is_link($link));
-        $this->assertSame(realpath($this->getTempDir().'/'.$combinedFile), realpath($link));
+        $this->assertSame(basename($combinedFile), basename($this->filesystem->readlink($link)));
+        $this->assertFileEquals($this->getTempDir().'/'.$combinedFile, $link);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "body { color: red }\n");
 
         if ('\\' !== \DIRECTORY_SEPARATOR) {
