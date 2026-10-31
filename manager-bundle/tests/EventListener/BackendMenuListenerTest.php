@@ -104,8 +104,16 @@ class BackendMenuListenerTest extends ContaoTestCase
         $this->assertSame('debug_mode', $debug->getLabel());
         $uri = $debug->getUri();
 
-        $this->assertStringStartsWith('https://example.com/contao?do=debug&key=enable&referer=L2NvbnRhby9wYWdlP2FjdD1lZGl0JmlkPTE=&ref=foo&_hash=', $uri);
         $this->assertTrue((new UriSigner('secret'))->check($uri));
+
+        // The signer sorts the query parameters, so compare them separately
+        parse_str((string) parse_url($uri, PHP_URL_QUERY), $query);
+
+        $this->assertStringStartsWith('https://example.com/contao?', $uri);
+        $this->assertSame('debug', $query['do']);
+        $this->assertSame('enable', $query['key']);
+        $this->assertSame('/contao/page?act=edit&id=1', base64_decode($query['referer'], true));
+        $this->assertSame('foo', $query['ref']);
         $this->assertSame(['class' => 'icon-debug', 'title' => 'debug_mode'], $debug->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }

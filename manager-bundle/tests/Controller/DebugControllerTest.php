@@ -186,7 +186,7 @@ class DebugControllerTest extends ContaoTestCase
         return $security;
     }
 
-    private function mockRequestStack(string $path = '', string|null $referer = null, bool $signed = true): RequestStack&MockObject
+    private function mockRequestStack(string $path = 'https://example.com/contao', string|null $referer = null, bool $signed = true): RequestStack&MockObject
     {
         $uriSigner = new UriSigner('secret');
 
