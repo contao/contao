@@ -34,7 +34,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $container->set(
             'security.authorization_checker',
-            new class() implements AuthorizationCheckerInterface {
+            new class implements AuthorizationCheckerInterface {
                 public function isGranted(mixed $attribute, mixed $subject = null): bool
                 {
                     return true;
@@ -176,7 +176,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $container->set(
             'security.authorization_checker',
-            new class() implements AuthorizationCheckerInterface {
+            new class implements AuthorizationCheckerInterface {
                 public function isGranted(mixed $attribute, mixed $subject = null): bool
                 {
                     // Deny read access to root page ID 3
@@ -210,7 +210,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $container->set(
             'security.authorization_checker',
-            new class() implements AuthorizationCheckerInterface {
+            new class implements AuthorizationCheckerInterface {
                 public function isGranted(mixed $attribute, mixed $subject = null): bool
                 {
                     return true;
@@ -247,7 +247,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $container->set(
             'security.authorization_checker',
-            new class() implements AuthorizationCheckerInterface {
+            new class implements AuthorizationCheckerInterface {
                 public function isGranted(mixed $attribute, mixed $subject = null): bool
                 {
                     return true;
@@ -297,7 +297,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $container->set(
             'security.authorization_checker',
-            new class() implements AuthorizationCheckerInterface {
+            new class implements AuthorizationCheckerInterface {
                 public function isGranted(mixed $attribute, mixed $subject = null): bool
                 {
                     return true;

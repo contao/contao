@@ -80,7 +80,7 @@
                     {# Enable checkbox #}
                     {% if 'enable' in actions %}
                         {% set enable_input_attributes = attrs()
-                            .set('id', "#{id}_#{loop.index0}_enable")
+                            .set('id', "#{id}[#{loop.index0}][enable]")
                             .set('name', "#{id}[#{loop.index0}][enable]")
                             .set('type', 'checkbox')
                             .set('checked', condition: row.controls.enable)
@@ -91,7 +91,7 @@
                         <input{{ enable_input_attributes }}>
 
                         {% set enable_label_attributes = attrs()
-                            .set('for', "#{id}_#{loop.index0}_enable")
+                            .set('for', "#{id}[#{loop.index0}][enable]")
                             .set('data-action', 'click->contao--scroll-offset#store')
                             .addClass('mw_enable')
                         %}

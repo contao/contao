@@ -33,7 +33,7 @@ class EnvironmentInformationTest extends TestCase
             ->willReturn('if')
         ;
 
-        $tokenParserWithEndTag = new class() implements TokenParserInterface {
+        $tokenParserWithEndTag = new class implements TokenParserInterface {
             public function setParser(Parser $parser): void
             {
             }

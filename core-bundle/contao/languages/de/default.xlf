@@ -365,6 +365,10 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
         <target>Version %d konnte nicht wiederhergestellt werden, da sie nicht mehr mit der aktuellen Datenbankstruktur kompatibel ist. Bitte stellen Sie die Daten manuell wieder her.</target>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+        <target>Die gelöschten Datensätze konnten nicht wiederhergestellt werden. Es wurden keine Änderungen vorgenommen.</target>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Die Endzeit muss nach der Anfangszeit liegen.</target>

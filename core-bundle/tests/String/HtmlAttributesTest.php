@@ -221,7 +221,7 @@ class HtmlAttributesTest extends TestCase
         yield ['', ''];
 
         yield [
-            new class() implements \Stringable {
+            new class implements \Stringable {
                 public function __toString(): string
                 {
                     return 'stringable';

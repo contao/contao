@@ -29,7 +29,7 @@ export default class BackendSearchController extends Controller {
     }
 
     shortcutTargetConnected() {
-        this.shortcutTarget.innerText = /^(Mac|iPhone|iPad)/.test(navigator.platform)
+        this.shortcutTarget.textContent = /^(Mac|iPhone|iPad)/.test(navigator.platform)
             ? this.shortcutMacosLabelValue
             : this.shortcutLabelValue;
     }
@@ -96,7 +96,7 @@ export default class BackendSearchController extends Controller {
         }
 
         this.#stopPendingSearch();
-        this.resultsTarget.innerText = '';
+        this.resultsTarget.textContent = '';
 
         this.inputTarget.blur();
         this.inputTarget.value = '';

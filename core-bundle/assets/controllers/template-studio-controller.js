@@ -59,7 +59,7 @@ export default class extends Controller {
     }
 
     close(event) {
-        document.getElementById(event.target.getAttribute('aria-controls')).innerText = '';
+        document.getElementById(event.target.getAttribute('aria-controls')).textContent = '';
     }
 
     editorTargetConnected(el) {
@@ -74,7 +74,7 @@ export default class extends Controller {
     editorAnnotationsTargetConnected(el) {
         this.#editors
             .get(el.closest('*[data-contao--template-studio-target="editor"]'))
-            ?.setAnnotationsData(JSON.parse(el.innerText));
+            ?.setAnnotationsData(JSON.parse(el.textContent));
     }
 
     colorChange(event) {

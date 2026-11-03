@@ -81,13 +81,17 @@ class ArrayAttributeBagTest extends TestCase
         $bag->set('bar', ['baz' => 'foo']);
 
         $foo = $bag['foo'];
-        $foo = '';
+        $foo .= 'x';
 
         $baz = $bag['bar']['baz'];
-        $baz = '';
+        $baz .= 'x';
 
         $bar = $bag['bar'];
-        $bar = [];
+        $bar[] = 'x';
+
+        $this->assertSame('barx', $foo);
+        $this->assertSame('foox', $baz);
+        $this->assertSame(['baz' => 'foo', 0 => 'x'], $bar);
 
         $this->assertSame('bar', $bag['foo']);
         $this->assertSame(['baz' => 'foo'], $bag['bar']);

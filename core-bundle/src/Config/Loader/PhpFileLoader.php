@@ -74,7 +74,7 @@ class PhpFileLoader extends Loader
 
         $namespaceResolver = new NameResolver();
 
-        $nodeStripper = new class() extends NodeVisitorAbstract {
+        $nodeStripper = new class extends NodeVisitorAbstract {
             public function leaveNode(Node $node): array|int|null
             {
                 // Drop namespace and use declarations
@@ -134,7 +134,7 @@ class PhpFileLoader extends Loader
 
         // Add an if statement around all class declarations to skip them if they exist:
         // if (!\class_exists(tl_foo::class, false)) { class tl_foo … { … } }
-        $classWrapper = new class() extends NodeVisitorAbstract {
+        $classWrapper = new class extends NodeVisitorAbstract {
             public function leaveNode(Node $node): If_|null
             {
                 if ($node instanceof Class_) {

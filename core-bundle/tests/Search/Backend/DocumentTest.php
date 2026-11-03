@@ -31,12 +31,23 @@ class DocumentTest extends TestCase
             ->withTags(['tag-one', 'tag-two'])
         ;
 
-        $document = $document->withSearchableContent($document->getSearchableContent().' more data');
+        $originalDocument = $document;
+        $document = $document->withAddedSearchableContent('more data');
 
         $this->assertSame('id', $document->getId());
         $this->assertSame('type', $document->getType());
+        $this->assertSame('searchContent', $originalDocument->getSearchableContent());
         $this->assertSame('searchContent more data', $document->getSearchableContent());
         $this->assertSame(['meta' => 'data', 'recursive' => ['also' => 'works']], $document->getMetadata());
         $this->assertSame(['tag-one', 'tag-two'], $document->getTags());
+    }
+
+    public function testAddedSearchableContentHandlesEmptyContent(): void
+    {
+        $document = new Document('id', 'type', '');
+
+        $this->assertSame('more data', $document->withAddedSearchableContent('more data')->getSearchableContent());
+        $this->assertSame('', $document->withAddedSearchableContent('')->getSearchableContent());
+        $this->assertSame('content', $document->withSearchableContent('content')->withAddedSearchableContent('')->getSearchableContent());
     }
 }

@@ -76,10 +76,10 @@ final class GlobalStateWatcher implements Extension
     {
         $this->globalKeys = $this->buildGlobalKeys();
         $this->globals = $this->buildGlobals();
-        $this->staticMembers = $this->buildStaticMembers();
+        $this->staticMembers ??= $this->buildStaticMembers();
         $this->phpIni = $this->buildPhpIni();
         $this->setFunctions = $this->buildSetFunctions();
-        $this->fileSystem = $this->buildFileSystem();
+        $this->fileSystem ??= $this->buildFileSystem();
         $this->constants = $this->buildConstants();
         $this->env = $this->buildEnv();
     }
@@ -200,6 +200,7 @@ final class GlobalStateWatcher implements Extension
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
+                'Nette\Schema\TypeExpression',
                 'PHPUnit\\',
                 'ScssPhp\\',
                 'SebastianBergmann\\',
@@ -218,6 +219,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
+                'Symfony\Component\PropertyAccess\PropertyAccessor',
                 'Symfony\Component\String\\',
                 'Symfony\Component\Uid\Ulid',
                 'Symfony\Component\VarDumper\\',

@@ -147,7 +147,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
     private function createEscargot(LazyQueue $lazyQueue): Escargot
     {
         $escargot = Escargot::create($this->baseUriCollection, $lazyQueue)->withHttpClient(new MockHttpClient());
-        $escargot->addSubscriber(new class() implements SubscriberInterface {
+        $escargot->addSubscriber(new class implements SubscriberInterface {
             public function shouldRequest(CrawlUri $crawlUri): string
             {
                 return self::DECISION_POSITIVE;

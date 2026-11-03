@@ -156,7 +156,7 @@ class TemplateStudioControllerTest extends TestCase
             )
         ;
 
-        $fooOperation = new class() extends AbstractOperation {
+        $fooOperation = new class extends AbstractOperation {
             public function canExecute(OperationContext $context): bool
             {
                 return false;

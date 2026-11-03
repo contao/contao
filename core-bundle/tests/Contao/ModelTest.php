@@ -110,7 +110,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testConvertToPhpValue(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()
@@ -124,7 +124,7 @@ class ModelTest extends TestCase
     #[DataProvider('getDatabaseValues')]
     public function testMagicSetterTypesDeprecation(string $key, mixed $value, mixed $expected): void
     {
-        $fooModel = new class() extends Model {
+        $fooModel = new class extends Model {
             protected static $strTable = 'tl_Foo';
 
             public function __construct()

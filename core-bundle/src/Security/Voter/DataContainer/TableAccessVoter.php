@@ -30,18 +30,19 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 {
-    private array $canAccessTable = [];
-
-    private array $canReadAccessTable = [];
+    /**
+     * @var \WeakMap<TokenInterface, array{access: array<string, bool>, read: array<string, bool>}>
+     */
+    private \WeakMap $moduleAccessCache;
 
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
+        $this->moduleAccessCache = new \WeakMap();
     }
 
     public function reset(): void
     {
-        $this->canAccessTable = [];
-        $this->canReadAccessTable = [];
+        $this->moduleAccessCache = new \WeakMap();
     }
 
     public function supportsAttribute(string $attribute): bool
@@ -98,12 +99,11 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 
     private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
-        $tokenHash = hash('xxh128', serialize($token));
         $table = $subject->getDataSource();
-        $cacheKey = $tokenHash.' '.$table;
+        $cache = $this->moduleAccessCache[$token] ?? ['access' => [], 'read' => []];
 
-        if (isset($this->canAccessTable[$cacheKey]) || ($subject instanceof ReadAction && isset($this->canReadAccessTable[$cacheKey]))) {
-            return $this->canAccessTable[$cacheKey] ?? $this->canReadAccessTable[$cacheKey];
+        if (isset($cache['access'][$table]) || ($subject instanceof ReadAction && isset($cache['read'][$table]))) {
+            return $cache['access'][$table] ?? $cache['read'][$table];
         }
 
         foreach ($GLOBALS['BE_MOD'] as $modules) {
@@ -113,7 +113,10 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
                     && \in_array($table, $config['tables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return $this->canAccessTable[$cacheKey] = true;
+                    $cache['access'][$table] = true;
+                    $this->moduleAccessCache[$token] = $cache;
+
+                    return true;
                 }
 
                 if (
@@ -122,11 +125,17 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
                     && \in_array($table, $config['ptables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return $this->canReadAccessTable[$cacheKey] = true;
+                    $cache['read'][$table] = true;
+                    $this->moduleAccessCache[$token] = $cache;
+
+                    return true;
                 }
             }
         }
 
-        return $this->canAccessTable[$cacheKey] = false;
+        $cache['access'][$table] = false;
+        $this->moduleAccessCache[$token] = $cache;
+
+        return false;
     }
 }

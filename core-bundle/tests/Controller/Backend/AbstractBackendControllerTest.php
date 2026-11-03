@@ -62,7 +62,7 @@ class AbstractBackendControllerTest extends TestCase
 
     public function testAddsAndMergesBackendContext(): void
     {
-        $controller = new class() extends AbstractBackendController {
+        $controller = new class extends AbstractBackendController {
             public function fooAction(): Response
             {
                 return $this->render('custom_be.html.twig', ['foo' => 'bar', 'version' => 'my version']);
@@ -124,7 +124,7 @@ class AbstractBackendControllerTest extends TestCase
     #[DataProvider('provideRequests')]
     public function testHandlesTurboRequests(Request $request, string $view, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html', int $expectedStatus = Response::HTTP_OK, Response|null $response = null): void
     {
-        $controller = new class() extends AbstractBackendController {
+        $controller = new class extends AbstractBackendController {
             public function fooAction(string $view, bool|null $includeChromeContext, Response|null $response = null): Response
             {
                 return $this->render(
@@ -264,7 +264,7 @@ class AbstractBackendControllerTest extends TestCase
 
     public function testThrowsAnExceptionWhenRenderingAStreamWithoutBeingAccepted(): void
     {
-        $controller = new class() extends AbstractBackendController {
+        $controller = new class extends AbstractBackendController {
             public function fooAction(string $view, bool|null $includeChromeContext, Response|null $response = null): Response
             {
                 return $this->render(
@@ -287,7 +287,7 @@ class AbstractBackendControllerTest extends TestCase
 
     public function testGetSessionBag(): void
     {
-        $controller = new class() extends AbstractBackendController {
+        $controller = new class extends AbstractBackendController {
             public function getBackendSessionBagDelegate(): AttributeBagInterface|null
             {
                 return $this->getBackendSessionBag();

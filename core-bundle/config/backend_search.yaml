@@ -64,7 +64,7 @@ services:
             - '@contao.framework'
             - '@contao.resource_finder'
             - '@database_connection'
-            - '@security.access.decision_manager'
+            - '@security.helper'
             - '@event_dispatcher'
             - '@contao.data_container.dca_url_analyzer'
             - '@translator'

@@ -67,6 +67,11 @@ final class Document
         return $clone;
     }
 
+    public function withAddedSearchableContent(string $searchableContent): self
+    {
+        return $this->withSearchableContent(trim($this->searchableContent.' '.$searchableContent));
+    }
+
     /**
      * @param array<string> $tags
      */

@@ -36,7 +36,7 @@ const init = (element) => {
         const optionsJSON = await resp.json();
 
         if ('error' === optionsJSON.status) {
-            elemError.innerText = config.attestationFailure;
+            elemError.textContent = config.attestationFailure;
 
             return;
         }
@@ -47,9 +47,9 @@ const init = (element) => {
             attResp = await startRegistration({ optionsJSON });
         } catch (error) {
             if (error.name === 'InvalidStateError') {
-                elemError.innerText = config.invalidState;
+                elemError.textContent = config.invalidState;
             } else {
-                elemError.innerText = error;
+                elemError.textContent = error;
             }
 
             throw error;
@@ -64,7 +64,7 @@ const init = (element) => {
         const verificationJSON = await verificationResp.json();
 
         if ('error' === verificationJSON.status) {
-            elemError.innerText = config.attestationFailure;
+            elemError.textContent = config.attestationFailure;
 
             return;
         }

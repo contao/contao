@@ -67,11 +67,11 @@ export default class extends Controller {
 
             // Allow others to listen on the input event of the underlying textarea
             editor?.on('keyup', () => {
-                const before = this.element.innerText;
+                const before = this.element.textContent;
                 const after = editor.getContent();
 
                 if (before !== after) {
-                    this.element.innerText = editor.getContent();
+                    this.element.textContent = editor.getContent();
                     this.element.dispatchEvent(new Event('input'));
                 }
             });

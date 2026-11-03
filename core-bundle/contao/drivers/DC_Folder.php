@@ -437,7 +437,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						continue;
 					}
 
-					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+					if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array(strtolower($objRoot->extension), $this->arrValidFileTypes))
 					{
 						$arrFound[] = $objRoot->path;
 					}
@@ -2118,17 +2118,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
   ' . $strButtons . '
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-			}
 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)

@@ -202,6 +202,11 @@ class PreviewFactoryTest extends TestCase
                     ],
                 ],
             ],
+            '_predefined_without_densities' => [
+                'width' => 200,
+                'height' => 100,
+                'resizeMode' => 'crop',
+            ],
         ]);
 
         $this->assertSame($expectedSize, $factory->getPreviewSizeFromImageSize($size));
@@ -228,6 +233,8 @@ class PreviewFactoryTest extends TestCase
         yield ['_predefined', 123];
         yield [[0, 0, '_predefined'], 123];
         yield [[500, 500, '_predefined'], 123];
+        yield ['_predefined_without_densities', 200];
+        yield [[0, 0, '_predefined_without_densities'], 200];
         yield [456, 789];
         yield [[0, 0, 456], 789];
         yield [[500, 500, 456], 789];
@@ -373,7 +380,7 @@ class PreviewFactoryTest extends TestCase
 
     private function createFactoryWithExampleProvider(ContaoFramework|null $framework = null): PreviewFactory
     {
-        $pdfProvider = new class() implements PreviewProviderInterface {
+        $pdfProvider = new class implements PreviewProviderInterface {
             public function getFileHeaderSize(): int
             {
                 return 5;

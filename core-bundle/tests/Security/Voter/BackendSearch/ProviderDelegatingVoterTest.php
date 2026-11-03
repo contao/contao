@@ -20,6 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProviderDelegatingVoterTest extends TestCase
 {
@@ -42,6 +43,15 @@ class ProviderDelegatingVoterTest extends TestCase
     #[DataProvider('supportedChecksCorrectlyProvider')]
     public function testSupportedChecksCorrectly(bool $accessGranted): void
     {
+        $user = $this->createStub(UserInterface::class);
+        $document = new Document('id', 'type', 'searchable content');
+
+        $token = $this->createStub(TokenInterface::class);
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
         $provider = $this->createMock(ProviderInterface::class);
         $provider
             ->expects($this->exactly(2))
@@ -52,13 +62,14 @@ class ProviderDelegatingVoterTest extends TestCase
         $provider
             ->expects($this->once())
             ->method('isDocumentGranted')
+            ->with($this->identicalTo($user), $this->identicalTo($document))
             ->willReturn($accessGranted)
         ;
 
         $voter = new ProviderDelegatingVoter([$provider]);
         $result = $voter->vote(
-            $this->createStub(TokenInterface::class),
-            new Document('id', 'type', 'searchable content'),
+            $token,
+            $document,
             [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT],
         );
 

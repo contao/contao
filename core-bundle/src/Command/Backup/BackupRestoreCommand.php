@@ -30,8 +30,6 @@ class BackupRestoreCommand extends AbstractBackupCommand
 {
     private SymfonyStyle $io;
 
-    private string|null $backupName = null;
-
     protected function configure(): void
     {
         parent::configure();
@@ -46,7 +44,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
 
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if ($this->backupName = $input->getArgument('name')) {
+        if ($input->getArgument('name')) {
             return;
         }
 
@@ -59,23 +57,14 @@ class BackupRestoreCommand extends AbstractBackupCommand
             );
 
             $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($choices), 0);
-            $option = $this->io->askQuestion($question);
-
-            $this->backupName = $option;
+            $input->setArgument('name', $this->io->askQuestion($question));
         }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->backupManager->createRestoreConfig();
-
-        if (null !== $this->backupName) {
-            $config = $config->withFileName($this->backupName);
-        }
-
-        if ($tablesToIgnore = $input->getOption('ignore-tables')) {
-            $config = $config->withTablesToIgnore(explode(',', (string) $tablesToIgnore));
-        }
+        $config = $this->handleCommonConfig($input, $config);
 
         if ($input->getOption('force')) {
             $config = $config->withIgnoreOriginCheck(true);

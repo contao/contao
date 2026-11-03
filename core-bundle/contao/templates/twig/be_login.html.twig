@@ -60,7 +60,7 @@
                     <h1>{{ headline }}</h1>
                     <div class="widget widget-text">
                         <label for="username">{{ username }}</label>
-                        <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ username }}" required>
+                        <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ username }}" required autofocus>
                     </div>
                     <div class="widget widget-password" data-controller="contao--password-visibility">
                         <label for="password">{{ password }}</label>
@@ -88,12 +88,9 @@
 </div>
 
 <script>
-    window.addEvent('domready', function() {
-        if (parent.frames[0] && parent.frames[0].name == 'switch') {
-            parent.location.reload();
-        }
-        $('username').focus();
-    });
+    if (parent.frames[0] && parent.frames[0].name === 'switch') {
+        parent.location.reload();
+    }
 </script>
 
 </body>

@@ -365,6 +365,9 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
         <target>Verzi %d nelze obnovit, protože již není kompatibilní s aktuální strukturou databáze. Obnovte data ručně.</target>
       </trans-unit>
+      <trans-unit id="ERR.undoNotRestored">
+        <source>The deleted records could not be restored. No changes have been made.</source>
+      </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
         <target>Čas ukončení musí být pozdější než čas zahájení.</target>

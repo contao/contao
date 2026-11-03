@@ -101,6 +101,21 @@ class DataContainerOperationBuilderTest extends TestCase
         ];
 
         yield [
+            'foo <a href="#">bar</a> <a href="#">baz</a>',
+            ['foo <a href="#">bar</a>', '<a href="#">baz</a>'],
+        ];
+
+        yield [
+            'foo <img src="foo.svg" alt="foo"> <img src="bar.svg" alt="bar">',
+            ['foo <img src="foo.svg" alt="foo">', '<img src="bar.svg" alt="bar">'],
+        ];
+
+        yield [
+            '<a href="#">foo</a><a href="#">bar</a>',
+            ['<a href="#">foo</a>', '<a href="#">bar</a>'],
+        ];
+
+        yield [
             '<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a> <img src="pasteafter.svg" alt="Danach einfügen"> ',
             ['<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a>', '<img src="pasteafter.svg" alt="Danach einfügen">'],
         ];
