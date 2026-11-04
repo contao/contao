@@ -23,7 +23,7 @@ maintain. Visit the [project website][6] for more information.
 composer require contao/oauth-server-bundle
 ```
 
-**This repository is a READ-ONLY sub-tree split**. See https://github.com/contao/contao to create issues or submit
+**This repository is a READ-ONLY subtree split**. See https://github.com/contao/contao to create issues or submit
 pull requests.
 
 ## License

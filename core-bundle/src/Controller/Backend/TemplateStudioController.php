@@ -90,7 +90,7 @@ class TemplateStudioController extends AbstractBackendController
 
             return new JsonResponse(
                 $parameters,
-                $apiError ? JsonResponse::HTTP_BAD_REQUEST : JsonResponse::HTTP_OK,
+                $apiError ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK,
             );
         }
 
