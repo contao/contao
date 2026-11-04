@@ -19,6 +19,7 @@ use Contao\ApiBundle\DataContainer\DataContainerContext;
 use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
 use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
 use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
@@ -717,7 +718,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $relationResolver = $this->createRelationResolver();
-        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters)), $this->converters, $relationResolver, $this->createRelationDefinitionFactory($this->converters));
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters), new DataContainerWidgetFactory()), $this->converters, $relationResolver, $this->createRelationDefinitionFactory($this->converters));
 
         if (!$connection) {
             $connection = $this->createStub(Connection::class);

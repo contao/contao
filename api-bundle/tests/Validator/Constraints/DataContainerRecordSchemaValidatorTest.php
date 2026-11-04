@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use Contao\ApiBundle\ApiPlatform\Serializer\DataContainerRecordNormalizer;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
 use Contao\ApiBundle\Dto\DataContainerRecord;
 use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
 use Contao\ApiBundle\Validator\Constraints\DataContainerRecordSchema;
@@ -161,7 +162,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             System::class => $this->createAdapterStub(['loadLanguageFile']),
         ]);
 
-        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]))), new JsonSchemaValidator());
+        $validator = new DataContainerRecordSchemaValidator(new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory()), new JsonSchemaValidator());
 
         $context = $this->createMock(ExecutionContextInterface::class);
         $context
@@ -250,7 +251,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
             ->method('initialize')
         ;
 
-        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])));
+        $schemaFactory = new DataContainerSchemaFactory($framework, new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->createRelationResolver(), $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
 
         return new DataContainerRecordSchemaValidator($schemaFactory, new JsonSchemaValidator());
     }

@@ -19,6 +19,7 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
 use Contao\ApiBundle\Dto\VirtualFilesystemItem;
 use Contao\ApiBundle\Relation\RelationReference;
 use Contao\ApiBundle\Relation\RelationResolver;
@@ -313,7 +314,7 @@ class RowWizardConverterTest extends TestCase
 
         $resolver = $this->createRelationResolver($files);
         $definitions = $this->createRelationDefinitionFactory($registry);
-        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $resolver, $this->createLocaleSwitcher(), $definitions), $resolver, $definitions);
+        $converter = new RowWizardConverter($registry, new DataContainerSchemaFactory($framework, $registry, $resolver, $this->createLocaleSwitcher(), $definitions, new DataContainerWidgetFactory()), $resolver, $definitions);
         $converters[] = $converter;
 
         return $converter;
