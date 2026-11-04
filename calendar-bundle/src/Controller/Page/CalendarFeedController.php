@@ -19,7 +19,6 @@ use Contao\CoreBundle\Controller\Page\AbstractFeedPageController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\PageModel;
 use Contao\StringUtil;
-use FeedIo\Feed;
 use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,11 +43,7 @@ class CalendarFeedController extends AbstractFeedPageController
         $staticUrl = $this->contaoContext->getBasePath();
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
-        $feed = new Feed();
-        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $feed->setLanguage($pageModel->language);
-
+        $feed = $this->initFeed($pageModel, $this->charset);
         $event = new FetchEventsForFeedEvent($feed, $request, $pageModel);
 
         $dispatcher = $this->container->get('event_dispatcher');

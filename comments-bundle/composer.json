@@ -29,6 +29,7 @@
     "require": {
         "php": "^8.4",
         "contao/core-bundle": "self.version",
+        "nyholm/psr7": "^1.2",
         "symfony/http-kernel": "^7.4 || ^8.0"
     },
     "require-dev": {
