@@ -207,6 +207,52 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
+    public function testRendersTwigSurrogateFromThemeFolder(): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/surrogate_template.html5'), 'legacy');
+        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/foobar/surrogate_template.html.twig'), 'theme');
+
+        TemplateLoader::addFile('surrogate_template', 'templates');
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn(['templates/foobar'])
+        ;
+
+        $templateLocator = new TemplateLocator(
+            $this->getTempDir(),
+            $this->createMock(ResourceFinder::class),
+            $themeNamespace = new ThemeNamespace(),
+            $connection,
+        );
+
+        $filesystemLoader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $this->getTempDir());
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('twig', new Environment($filesystemLoader));
+        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+
+        System::setContainer($container);
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/foobar';
+
+        $GLOBALS['objPage'] = $page;
+
+        $template = new FrontendTemplate('surrogate_template');
+
+        try {
+            $this->assertSame('theme', $template->parse());
+        } finally {
+            unset($GLOBALS['objPage']);
+        }
+    }
+
     public function testRendersAttributes(): void
     {
         $templateContent = <<<'TEMPLATE'
