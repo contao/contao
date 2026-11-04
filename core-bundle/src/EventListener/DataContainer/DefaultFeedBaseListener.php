@@ -15,19 +15,19 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsCallback('tl_page', 'fields.feedBase.default')]
+#[AsCallback('tl_page', 'fields.feedBase.load')]
 class DefaultFeedBaseListener
 {
     public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
-    public function __invoke(): string|null
+    public function __invoke(mixed $value): mixed
     {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            return null;
+        if (!$value && ($request = $this->requestStack->getCurrentRequest())) {
+            $value = rtrim($request->getSchemeAndHttpHost().$request->getBaseUrl(), '/').'/';
         }
 
-        return rtrim($request->getSchemeAndHttpHost().$request->getBaseUrl(), '/').'/';
+        return $value;
     }
 }
