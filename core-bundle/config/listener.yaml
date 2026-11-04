@@ -150,7 +150,6 @@ services:
 
     contao.listener.data_container.default_user_id:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultUserIdListener
-        autoconfigure: false
         arguments:
             - '@security.helper'
         tags:
