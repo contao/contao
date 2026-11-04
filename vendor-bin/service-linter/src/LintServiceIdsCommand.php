@@ -96,6 +96,7 @@ class LintServiceIdsCommand
      * @var array<string>
      */
     private static array $exceptions = [
+        'contao.listener.data_container.start_stop_validation',
         'contao.listener.menu.backend',
         'contao.migration.version_400.version_400_update',
     ];
@@ -239,7 +240,11 @@ class LintServiceIdsCommand
                     $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.', $serviceId, $fileName);
                 }
 
-                if (!isset($config['class'])) {
+                if (!isset($config['class']) || \in_array($config['class'], $ignoreClasses, true)) {
+                    continue;
+                }
+
+                if (\in_array($serviceId, self::$exceptions, true)) {
                     continue;
                 }
 
@@ -267,14 +272,6 @@ class LintServiceIdsCommand
 
                 if (!isset($config['deprecated'])) {
                     $serviceIds[] = $serviceId;
-                }
-
-                if (\in_array($config['class'], $ignoreClasses, true)) {
-                    continue;
-                }
-
-                if (\in_array($serviceId, self::$exceptions, true)) {
-                    continue;
                 }
 
                 if (($id = $this->getServiceIdFromClass($config['class'])) && $id !== $serviceId) {
