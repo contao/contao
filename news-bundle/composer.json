@@ -29,8 +29,9 @@
     "require": {
         "php": "^8.3",
         "contao/core-bundle": "self.version",
-        "php-feed-io/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^3.0",
+        "nyholm/psr7": "^1.2",
+        "php-feed-io/feed-io": "^6.0",
         "symfony/config": "^7.4",
         "symfony/dependency-injection": "^7.4",
         "symfony/deprecation-contracts": "^3.0",
