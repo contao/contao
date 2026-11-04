@@ -16,6 +16,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Validator;
@@ -34,14 +35,14 @@ class HyperlinkController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Link with attributes
-        $href = $this->insertTagParser->replaceInline($model->url ?? '');
+        $href = $this->insertTagParser->replaceInline($model->url ?? '', OutputType::text);
 
         if (Validator::isRelativeUrl($href)) {
             $href = $request->getBasePath().'/'.$href;
         }
 
         // Link title
-        $titleText = $this->insertTagParser->replaceInline($model->titleText ?? '');
+        $titleText = $this->insertTagParser->replaceInline($model->titleText ?? '', OutputType::text);
 
         $linkAttributes = new HtmlAttributes()
             ->set('href', $href)

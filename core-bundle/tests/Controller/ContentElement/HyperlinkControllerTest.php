@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\StringUtil;
 
 class HyperlinkControllerTest extends ContentElementTestCase
@@ -65,6 +67,43 @@ class HyperlinkControllerTest extends ContentElementTestCase
             <div class="content-hyperlink">
                 See the <a href="https://www.php.net/manual/en/function.sprintf.php" title="See the sprintf() documentation" target="_blank" rel="noreferrer noopener">sprintf() documentation</a>
                 on how to use the %s placeholder.
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testDoesNotDoubleEncodeInsertTagResults(): void
+    {
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->exactly(2))
+            ->method('replaceInline')
+            ->willReturnMap([
+                ['mailto:{{email_url::info@example.org}}', OutputType::text, 'mailto:info@example.org'],
+                ['{{page::title}}', OutputType::text, 'A & B'],
+            ])
+        ;
+
+        $response = $this->renderWithModelData(
+            new HyperlinkController($this->getDefaultStudio(), $insertTagParser),
+            [
+                'type' => 'hyperlink',
+                'url' => 'mailto:{{email_url::info@example.org}}',
+                'titleText' => '{{page::title}}',
+                'linkTitle' => 'Mail',
+                'target' => false,
+                'embed' => '',
+                'useImage' => false,
+                'singleSRC' => '',
+                'size' => '',
+                'rel' => '',
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-hyperlink">
+                <a href="mailto:info@example.org" title="A &amp; B">Mail</a>
             </div>
             HTML;
 
