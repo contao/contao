@@ -13,18 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\DataContainer;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsCallback(table: 'tl_article', target: 'fields.author.default')]
 class DefaultUserIdListener
 {
     public function __construct(private readonly Security $security)
     {
     }
 
-    public function __invoke(DataContainer $dc): int
+    public function __invoke(): int
     {
         $user = $this->security->getUser();
 
