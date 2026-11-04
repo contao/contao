@@ -116,13 +116,6 @@ services:
             - '@filesystem'
             - '%contao.web_dir%'
 
-    contao_calendar.migration.feed_base:
-        class: Contao\CalendarBundle\Migration\FeedBaseMigration
-        arguments:
-            - '@database_connection'
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
-
     contao_calendar.migration.field_permission:
         class: Contao\CalendarBundle\Migration\FieldPermissionMigration
         arguments:
