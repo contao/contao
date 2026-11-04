@@ -35,6 +35,7 @@ use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
 use Contao\FrontendTemplate;
+use Contao\PageModel;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
@@ -222,6 +223,61 @@ class TwigIntegrationTest extends TestCase
         $obLevel = ob_get_level();
         $this->assertSame('value<br>,test1<<,test2>>,test3,test4,test5,(value{{br}}),test6,test7', $template->parse());
         $this->assertSame($obLevel, ob_get_level());
+    }
+
+    public function testRendersTwigSurrogateFromThemeFolder(): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/surrogate_template.html5'), 'legacy');
+        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/foobar/surrogate_template.html.twig'), 'theme');
+
+        TemplateLoader::addFile('surrogate_template', 'templates');
+
+        $connection = $this->createStub(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn(['templates/foobar'])
+        ;
+
+        $templateLocator = new TemplateLocator(
+            $this->getTempDir(),
+            $this->createStub(ResourceFinder::class),
+            $themeNamespace = new ThemeNamespace(),
+            $connection,
+        );
+
+        $page = $this->createStub(PageModel::class);
+        $page
+            ->method('__get')
+            ->willReturnMap([['templateGroup', 'templates/foobar']])
+        ;
+
+        $pageFinder = $this->createStub(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
+
+        $filesystemLoader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createStub(ContaoFramework::class),
+            $pageFinder,
+            $this->getTempDir(),
+        );
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('twig', new Environment($filesystemLoader));
+        $container->set(ContextFactory::class, new ContextFactory($this->mockScopeMatcher()));
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate('surrogate_template');
+        $this->assertSame('theme', $template->parse());
     }
 
     public function testRendersAttributes(): void
