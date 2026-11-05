@@ -104,15 +104,6 @@ class LintServiceIdsCommand
     /**
      * @var array<string>
      */
-    private static array $exceptions = [
-        'contao.listener.data_container.start_stop_validation',
-        'contao.listener.menu.backend',
-        'contao.migration.version_400.version_400_update',
-    ];
-
-    /**
-     * @var array<string>
-     */
     private static array $tagToAttribute = [
         'contao.content_element' => '#[AsContentElement]',
         'contao.frontend_module' => '#[AsFrontendModule]',
@@ -254,10 +245,6 @@ class LintServiceIdsCommand
                 }
 
                 if (!isset($config['class']) || \in_array($config['class'], $ignoreClasses, true)) {
-                    continue;
-                }
-
-                if (\in_array($serviceId, self::$exceptions, true)) {
                     continue;
                 }
 
