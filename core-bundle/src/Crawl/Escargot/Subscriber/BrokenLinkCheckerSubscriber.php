@@ -132,7 +132,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         return $result;
     }
 
-    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
+    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface|null $response): void
     {
         $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }

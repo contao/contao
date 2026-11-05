@@ -403,6 +403,28 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
+    public function testOnTransportExceptionWithoutResponse(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::DEBUG, 'Broken link! Could not request properly: Connection failed.')
+        ;
+
+        $indexer = $this->createMock(IndexerInterface::class);
+        $indexer
+            ->expects($this->never())
+            ->method('index')
+        ;
+
+        $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
+        $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), new TransportException('Connection failed'), null);
+
+        $this->assertSame(['ok' => 0, 'warning' => 1, 'error' => 0], $subscriber->getResult()->getInfo('stats'));
+    }
+
     public function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
@@ -523,7 +545,7 @@ class SearchIndexSubscriberTest extends TestCase
         return $response;
     }
 
-    private function getTranslator(): TranslatorInterface&MockObject
+    private function getTranslator(): MockObject&TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

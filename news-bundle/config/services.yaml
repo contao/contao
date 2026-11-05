@@ -26,6 +26,11 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_news.listener.data_container.default_feed_base:
+        class: Contao\NewsBundle\EventListener\DataContainer\DefaultFeedBaseListener
+        arguments:
+            - '@request_stack'
+
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:

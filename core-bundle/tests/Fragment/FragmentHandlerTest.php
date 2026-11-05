@@ -12,13 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Fragment;
 
+use Contao\ContentModel;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Fragment\UnknownFragmentException;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -139,6 +142,33 @@ class FragmentHandlerTest extends TestCase
         yield ['inline', 'inline'];
     }
 
+    public function testOverridesRenderingForFragmentsInBackend(): void
+    {
+        $uri = new ContentElementReference($this->createStub(ContentModel::class));
+        $uri->controller = 'foo.bar';
+
+        $fragmentRegistry = new FragmentRegistry();
+        $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'forward'));
+
+        $request = new Request();
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->with($request)
+            ->willReturn(true)
+        ;
+
+        $renderers = $this->mockServiceLocatorWithRenderer(
+            'inline',
+            [$uri, $request, ['ignore_errors' => false]],
+        );
+
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, request: $request, scopeMatcher: $scopeMatcher);
+        $fragmentHandler->render($uri);
+    }
+
     public function testAddsThePageIdFromTheGlobalPageObject(): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -245,18 +275,19 @@ class FragmentHandlerTest extends TestCase
      * @param ServiceLocator<mixed>|null $renderers
      * @param ServiceLocator<mixed>|null $preHandlers
      */
-    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null): FragmentHandler
+    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null, ScopeMatcher|null $scopeMatcher = null): FragmentHandler
     {
         $registry ??= new FragmentRegistry();
         $renderers ??= new ServiceLocator([]);
         $preHandlers ??= new ServiceLocator([]);
         $request ??= new Request();
-        $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
+        $fragmentHandler ??= $this->createStub(BaseFragmentHandler::class);
+        $scopeMatcher ??= $this->createStub(ScopeMatcher::class);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, true);
+        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, $scopeMatcher, true);
     }
 
     /**
