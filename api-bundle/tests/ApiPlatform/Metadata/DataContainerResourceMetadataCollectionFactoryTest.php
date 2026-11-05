@@ -304,6 +304,48 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         yield 'not creatable' => [true, false];
     }
 
+    #[DataProvider('provideEditingConfigurations')]
+    public function testOnlyExposesWriteOperationsForEditableTables(bool|null $notEditable, bool $editable): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table) use ($notEditable): void {
+                    $config = ['dataContainer' => DC_Table::class];
+
+                    if (null !== $notEditable) {
+                        $config['notEditable'] = $notEditable;
+                    }
+
+                    $GLOBALS['TL_DCA'][$table] = ['config' => $config, 'fields' => ['id' => [], 'sorting' => []]];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_preview_link']),
+        );
+
+        $routes = $this->createApiLoader($factory)->load(null);
+
+        $this->assertSame($editable, \array_key_exists('contao_api_dc_preview_link_post', $routes->all()));
+        $this->assertSame($editable, \array_key_exists('contao_api_dc_preview_link_patch', $routes->all()));
+        $this->assertSame($editable, \array_key_exists('contao_api_dc_preview_link_move', $routes->all()));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get_collection'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_get'));
+        $this->assertNotNull($routes->get('contao_api_dc_preview_link_delete'));
+    }
+
+    public static function provideEditingConfigurations(): iterable
+    {
+        yield 'unset' => [null, true];
+        yield 'explicitly editable' => [false, true];
+        yield 'not editable' => [true, false];
+    }
+
     private function createApiLoader(ResourceMetadataCollectionFactoryInterface $factory): ApiLoader
     {
         $names = $this->createStub(ResourceNameCollectionFactoryInterface::class);
