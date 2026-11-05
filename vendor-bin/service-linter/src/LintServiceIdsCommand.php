@@ -99,9 +99,7 @@ class LintServiceIdsCommand extends Command
      * @var array<string>
      */
     private static array $exceptions = [
-        'contao.listener.data_container.start_stop_validation',
         'contao.listener.menu.backend',
-        'contao.migration.version_400.version_400_update',
     ];
 
     /**
