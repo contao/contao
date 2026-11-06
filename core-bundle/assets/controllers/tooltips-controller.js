@@ -71,6 +71,7 @@ export default class extends Controller {
         this.#timer = setTimeout(() => {
             this.#positionTooltip();
             this.popupTarget.style.display = 'block';
+            this.#current.setAttribute('aria-describedby', this.popupTarget.id);
         }, 1000);
     }
 
@@ -96,6 +97,7 @@ export default class extends Controller {
 
         clearTimeout(this.#timer);
         this.#migrateElementTitle(this.#current, false);
+        this.#current.removeAttribute('aria-describedby');
         this.#current = null;
         this.popupTarget.style.display = 'none';
     }
