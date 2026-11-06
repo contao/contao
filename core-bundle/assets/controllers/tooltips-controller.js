@@ -97,6 +97,7 @@ export default class TooltipsController extends Controller {
     #createTipContainer() {
         const tooltip = document.createElement('div');
         tooltip.setAttribute('role', 'tooltip');
+        tooltip.id = 'tooltip';
         tooltip.classList.add('tip');
         tooltip.style.position = 'absolute';
         tooltip.style.display = 'none';
@@ -148,6 +149,7 @@ export default class TooltipsController extends Controller {
             this.#tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
             this.#tooltip.style.display = 'block';
             this.#tooltip.style.willChange = 'auto';
+            el.setAttribute('aria-describedby', 'tooltip');
         }, delay);
     }
 
@@ -160,6 +162,7 @@ export default class TooltipsController extends Controller {
             el.removeAttribute('data-original-title');
         }
 
+        el.removeAttribute('aria-describedby');
         clearTimeout(this.#timer);
         this.#tooltip.style.willChange = 'auto';
 
