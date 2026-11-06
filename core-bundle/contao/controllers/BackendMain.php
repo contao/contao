@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -253,6 +255,10 @@ class BackendMain extends Backend
 		$data['menu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/main_menu.html.twig') : '';
 		$data['headerMenu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled)) : '';
 		$data['isDebug'] = $container->getParameter('kernel.debug');
+
+		/** @var ResponseContext|null $responseContext */
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+		$data['metaTags'] = $responseContext->get(HtmlHeadBag::class)->getMetaTags();
 
 		return $data;
 	}
