@@ -121,6 +121,32 @@ class AbstractPageRouteProviderTest extends TestCase
             ],
             null,
         ];
+
+        $stringPriority = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'regular',
+            'rootLanguage' => 'en',
+            'rootIsFallback' => false,
+            'rootSorting' => 128,
+            'routePriority' => '0',
+        ]);
+
+        yield 'Numerically equal priorities with different types still compare paths' => [
+            [
+                'First path' => new Route('/a', ['pageModel' => $this->mockPageModel('en')]),
+                'String priority' => new Route('/z', ['pageModel' => $stringPriority]),
+                'Second path' => new Route('/b', ['pageModel' => $this->mockPageModel('en')]),
+            ],
+            null,
+        ];
+
+        yield 'Routes without page models do not compare equal to every page' => [
+            [
+                'First page' => new Route('/a', ['pageModel' => $this->mockPageModel('en')]),
+                'No page model' => new Route('/z'),
+                'Second page' => new Route('/b', ['pageModel' => $this->mockPageModel('en')]),
+            ],
+            null,
+        ];
     }
 
     /**
@@ -397,6 +423,18 @@ class AbstractPageRouteProviderTest extends TestCase
 
     public static function ordersRoutesByPreferredLanguages(): iterable
     {
+        yield 'Shared fallback follows the explicitly requested variants' => [
+            ['de-DE', 'de', 'en'],
+            ['de-CH', 'en', 'de-DE'],
+            ['en', 'de-DE', 'de'],
+        ];
+
+        yield 'Specific region takes precedence over its generic language' => [
+            ['de-DE', 'de-CH'],
+            ['de', 'de-CH', 'fr'],
+            ['de-CH', 'de-DE'],
+        ];
+
         yield [
             ['de', 'en'],
             ['en', 'de'],
@@ -505,7 +543,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Does not change the sorting' => [
             ['de-DE', 'de-CH', 'fr', 'de', 'en-US', 'en'],
-            array_flip(['de_DE', 'de', 'de_CH', 'fr', 'de', 'en_US', 'en', 'en']),
+            array_flip(['de_DE', 'de_CH', 'fr', 'de', 'en_US', 'en']),
         ];
 
         yield 'Adds primary language if it does not exist' => [
@@ -513,9 +551,14 @@ class AbstractPageRouteProviderTest extends TestCase
             array_flip(['de_DE', 'de']),
         ];
 
-        yield 'Adds primary languages after first region' => [
+        yield 'Keeps the last occurrence of duplicate languages' => [
+            ['en', 'de', 'en'],
+            array_flip(['de', 'en']),
+        ];
+
+        yield 'Moves primary languages after the last region' => [
             ['de_DE', 'de_CH', 'en', 'en_US', 'fr_FR'],
-            array_flip(['de_DE', 'de', 'de_CH', 'en', 'en_US', 'fr_FR', 'fr']),
+            array_flip(['de_DE', 'de_CH', 'de', 'en_US', 'en', 'fr_FR', 'fr']),
         ];
 
         yield 'Strips array keys' => [
@@ -525,7 +568,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Compiles all fallback locales' => [
             ['zh-Hant-TW', 'zh-Hans-CN'],
-            array_flip(['zh_Hant_TW', 'zh_Hant', 'zh_TW', 'zh', 'zh_Hans_CN', 'zh_Hans', 'zh_CN']),
+            array_flip(['zh_Hant_TW', 'zh_Hant', 'zh_TW', 'zh_Hans_CN', 'zh_Hans', 'zh_CN', 'zh']),
         ];
     }
 
