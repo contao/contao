@@ -293,14 +293,6 @@
         <source>Generates a login form</source>
         <target>Tento modul vstavá formulár, pomocou ktorého sa členovia prihlasujú. Ak sa člen prihlási, bude schopný pristupovať k chráneným stránkam.</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>Automatické odhlásenie</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>Automaticky odhlási člena</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Osobné dáta</target>
