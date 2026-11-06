@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.5] (2026-11-06)
+
+**Fixed issues:**
+
+- [#10547] Add `aria-describedby` to the back end tooltips ([zoglo])
+- [#10489] Fix the CSS class names in the two-factor Twig templates ([mdollde])
+- [#10455] Replace a leftover `&nbsp;` with the actual character ([m-vo])
+- [#10453] Skip missing table columns in the `OutputEncodingMigration` ([ausi])
+
 ## [6.0.4] (2026-10-09)
 
 ## [6.0.3] (2026-10-09)
@@ -169,6 +178,7 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.5]: https://github.com/contao/contao/releases/tag/6.0.5
 [6.0.4]: https://github.com/contao/contao/releases/tag/6.0.4
 [6.0.3]: https://github.com/contao/contao/releases/tag/6.0.3
 [6.0.2]: https://github.com/contao/contao/releases/tag/6.0.2
@@ -183,6 +193,7 @@ This project adheres to [Semantic Versioning].
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[mdollde]: https://github.com/mdollde
 [Toflar]: https://github.com/Toflar
 [vstelmakh]: https://github.com/vstelmakh
 [zoglo]: https://github.com/zoglo
@@ -320,3 +331,7 @@ This project adheres to [Semantic Versioning].
 [#10275]: https://github.com/contao/contao/pull/10275
 [#10303]: https://github.com/contao/contao/pull/10303
 [#10305]: https://github.com/contao/contao/pull/10305
+[#10453]: https://github.com/contao/contao/pull/10453
+[#10455]: https://github.com/contao/contao/pull/10455
+[#10489]: https://github.com/contao/contao/pull/10489
+[#10547]: https://github.com/contao/contao/pull/10547
