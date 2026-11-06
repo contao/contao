@@ -26,6 +26,7 @@
       <directory>./news-bundle/src</directory>
       <directory>./newsletter-bundle/src</directory>
       <directory>./oauth-server-bundle/src</directory>
+      <directory>./webhooks-bundle/src</directory>
     </include>
     <exclude>
       <!-- exclude resources that are exempt from testing -->
