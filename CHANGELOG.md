@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.16] (2026-11-06)
+
+**Fixed issues:**
+
+- [#10546] Add `aria-describedby` to the back end tooltips ([zoglo])
+- [#10501] Re-add the base URL field for feeds ([fritzmg])
+- [#10277] Fix the backend badge title (again) ([zoglo])
+- [#10529] Fix the `add_jump_targets` check ([ReneLuecking])
+- [#10510] Replace the MooTools focus with the native autofocus attribute in the back end login templates ([zoglo])
+- [#10508] Fix scrolling to the first widget error after a failed form submission ([zoglo])
+- [#10509] Fix the edit preview wizard being initialized twice ([zoglo])
+- [#10486] Restore the ACE editor position after saving ([zoglo])
+- [#10485] Discard the scroll offset after the autofocus ([zoglo])
+- [#10487] Prevent scrolling when focusing an opened toggle receiver ([zoglo])
+- [#10476] Fix the backup restore command ignoring the name in non-interactive mode ([zoglo])
+
 ## [5.7.15] (2026-10-09)
 
 **Fixed issues:**
@@ -80,17 +96,17 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [GHSA-x2rp-9qf7-2fmq]: Exposure of sensitive information through a stale search index
-- [GHSA-mfxh-vp55-7gc6]: Unrestricted activation email resending
-- [GHSA-9ff2-p842-45wq]: Cross-site request forgery in custom backend actions
-- [GHSA-mrvp-7wmx-5m4h]: Path traversal in the images controller
-- [GHSA-628f-v4f6-p37r]: Cross-site scripting in the comments bundle
-- [GHSA-q6wp-fr43-gm9v]: Improper access control in the preview links module
+- [CVE-2026-107842]: Exposure of sensitive information through a stale search index
+- [CVE-2026-107843]: Unrestricted activation email resending
+- [CVE-2026-107848]: Cross-site request forgery in custom backend actions
+- [CVE-2026-107844]: Path traversal in the images controller
+- [CVE-2026-107845]: Cross-site scripting in the comments bundle
+- [CVE-2026-107850]: Improper access control in the preview links module
 - [CVE-2026-104884]: Cross-site scripting in the frontend search results
 - [CVE-2026-104883]: Non-admin users can self-grant permissions that implicitly make them administrators
 - [CVE-2026-104882]: Improper access control in the CSV import wizard
 - [CVE-2026-104881]: Improper access control in the newsletter module
-- [GHSA-5974-gfqc-wrcm]: Improper access control in the table access voter
+- [CVE-2026-107851]: Improper access control in the table access voter
 
 ## [5.7.11] (2026-08-06)
 
@@ -659,6 +675,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.16]: https://github.com/contao/contao/releases/tag/5.7.16
 [5.7.15]: https://github.com/contao/contao/releases/tag/5.7.15
 [5.7.14]: https://github.com/contao/contao/releases/tag/5.7.14
 [5.7.13]: https://github.com/contao/contao/releases/tag/5.7.13
@@ -679,17 +696,17 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
-[GHSA-x2rp-9qf7-2fmq]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
-[GHSA-mfxh-vp55-7gc6]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
-[GHSA-9ff2-p842-45wq]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
-[GHSA-mrvp-7wmx-5m4h]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
-[GHSA-628f-v4f6-p37r]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
-[GHSA-q6wp-fr43-gm9v]: https://github.com/contao/contao/security/advisories/GHSA-q6wp-fr43-gm9v
+[CVE-2026-107842]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
+[CVE-2026-107843]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
+[CVE-2026-107848]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
+[CVE-2026-107844]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
+[CVE-2026-107845]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
+[CVE-2026-107850]: https://github.com/contao/contao/security/advisories/GHSA-q6wp-fr43-gm9v
 [CVE-2026-104884]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
 [CVE-2026-104883]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
 [CVE-2026-104882]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
 [CVE-2026-104881]: https://github.com/contao/contao/security/advisories/GHSA-3r9g-pfhv-3228
-[GHSA-5974-gfqc-wrcm]: https://github.com/contao/contao/security/advisories/GHSA-5974-gfqc-wrcm
+[CVE-2026-107851]: https://github.com/contao/contao/security/advisories/GHSA-5974-gfqc-wrcm
 [CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
 [CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2026-55825]: https://github.com/contao/contao/security/advisories/GHSA-grm4-wm43-9jh5
@@ -710,6 +727,7 @@ This project adheres to [Semantic Versioning].
 [michb]: https://github.com/michb
 [pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
+[ReneLuecking]: https://github.com/ReneLuecking
 [rfay]: https://github.com/rfay
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
@@ -1225,6 +1243,7 @@ This project adheres to [Semantic Versioning].
 [#10266]: https://github.com/contao/contao/pull/10266
 [#10267]: https://github.com/contao/contao/pull/10267
 [#10276]: https://github.com/contao/contao/pull/10276
+[#10277]: https://github.com/contao/contao/pull/10277
 [#10291]: https://github.com/contao/contao/pull/10291
 [#10307]: https://github.com/contao/contao/pull/10307
 [#10321]: https://github.com/contao/contao/pull/10321
@@ -1244,3 +1263,13 @@ This project adheres to [Semantic Versioning].
 [#10403]: https://github.com/contao/contao/pull/10403
 [#10430]: https://github.com/contao/contao/pull/10430
 [#10432]: https://github.com/contao/contao/pull/10432
+[#10476]: https://github.com/contao/contao/pull/10476
+[#10485]: https://github.com/contao/contao/pull/10485
+[#10486]: https://github.com/contao/contao/pull/10486
+[#10487]: https://github.com/contao/contao/pull/10487
+[#10501]: https://github.com/contao/contao/pull/10501
+[#10508]: https://github.com/contao/contao/pull/10508
+[#10509]: https://github.com/contao/contao/pull/10509
+[#10510]: https://github.com/contao/contao/pull/10510
+[#10529]: https://github.com/contao/contao/pull/10529
+[#10546]: https://github.com/contao/contao/pull/10546

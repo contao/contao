@@ -5,7 +5,7 @@
         "/bundles/contaocore/backend.1599e560.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.e5ee3872.js"
+        "/bundles/contaocore/backend.9bba3cb4.js"
       ]
     },
     "navigation": {
@@ -18,12 +18,12 @@
     },
     "passkey_login": {
       "js": [
-        "/bundles/contaocore/passkey_login.afe616fc.js"
+        "/bundles/contaocore/passkey_login.b02349f0.js"
       ]
     },
     "passkey_create": {
       "js": [
-        "/bundles/contaocore/passkey_create.4dd30716.js"
+        "/bundles/contaocore/passkey_create.0e3a19e1.js"
       ]
     }
   }

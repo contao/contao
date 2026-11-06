@@ -313,14 +313,6 @@
         <source>Generates a login form</source>
         <target>فرم ورود را ایجاد می‌کند</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>خروج خودکار</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>به صورت خودکار یک عضو را خارج کن</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>اطلاعات شخصی</target>
