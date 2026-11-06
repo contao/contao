@@ -71,7 +71,7 @@ export default class extends Controller {
         this.#timer = setTimeout(() => {
             this.#positionTooltip();
             this.popupTarget.style.display = 'block';
-            el.setAttribute('aria-describedby', this.popupTarget.id);
+            this.#current.setAttribute('aria-describedby', this.popupTarget.id);
         }, 1000);
     }
 
