@@ -1,0 +1,28 @@
+{% trans_default_domain 'contao_tl_files' %}
+
+{% set image_preview_attributes = attrs()
+    .addClass('tl_edit_preview')
+    .set('data-controller', 'contao--important-part')
+    .set('data-contao--important-part-fields-value', fields|json_encode)
+    .set('data-contao--important-part-enabled-class', 'tl_edit_preview_enabled')
+    .set('data-action', 'pointerdown->contao--important-part#start pointermove@document->contao--important-part#draw pointerup@document->contao--important-part#stop pointercancel@document->contao--important-part#stop resize@window->contao--important-part#update')
+%}
+
+{% set image_attributes = attrs()
+    .set('src', image.src)
+    .set('width', image.width)
+    .set('height', image.height)
+    .set('alt', '')
+    .set('data-contao--important-part-target', 'image')
+    .set('data-action', 'load->contao--important-part#update')
+%}
+
+<div class="widget">
+    <div{{ image_preview_attributes }}>
+        <img{{ image_attributes }}>
+        <div class="tl_edit_preview_important_part" data-contao--important-part-target="part" hidden></div>
+    </div>
+    {% if show_help %}
+        <p class="tl_help tl_tip" data-contao--tooltips-target="content">{{ 'tl_files.preview.1'|trans }}</p>
+    {% endif %}
+</div>
