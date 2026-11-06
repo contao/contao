@@ -114,46 +114,35 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         /** @var PageModel|null $pageB */
         $pageB = $b->getDefault('pageModel');
 
-        // Check if the page models are valid (should always be the case, as routes are
-        // generated from pages)
+        // Routes generated from pages should always have a page model. Keep any other
+        // routes in a separate group so they cannot compare equal to all pages.
         if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
-            return 0;
+            return ($pageB instanceof PageModel) <=> ($pageA instanceof PageModel);
         }
 
-        $langA = null;
-        $langB = null;
+        $langA = null !== $languages ? $this->getLocalePriority(LocaleUtil::getFallbacks($pageA->rootLanguage), $languages) : null;
+        $langB = null !== $languages ? $this->getLocalePriority(LocaleUtil::getFallbacks($pageB->rootLanguage), $languages) : null;
 
-        if (null !== $languages && ($pageA->rootLanguage !== $pageB->rootLanguage || $pageA->domain !== $pageB->domain)) {
-            $fallbackA = LocaleUtil::getFallbacks($pageA->rootLanguage);
-            $fallbackB = LocaleUtil::getFallbacks($pageB->rootLanguage);
-            $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
-            $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
-
-            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === LocaleUtil::getPrimaryLanguage($pageB->rootLanguage)) {
-                // If both pages have the same language without region and neither region has a
-                // priority, (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by
-                // their root page order.
-                $langA = $pageA->rootSorting;
-                $langB = $pageB->rootSorting;
-            }
+        if (null === $langA && null !== $langB) {
+            return 1;
         }
 
-        if (null === $langA && null === $langB) {
-            if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                return -1;
-            }
+        if (null !== $langA && null === $langB) {
+            return -1;
+        }
 
-            if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                return 1;
+        if ($langA !== $langB) {
+            return $langA <=> $langB;
+        }
+
+        if (null !== $langA) {
+            // Equally preferred languages use root page order, including pages with
+            // identical locales. Unmatched languages use the fallback flag instead.
+            if ($order = $pageA->rootSorting <=> $pageB->rootSorting) {
+                return $order;
             }
-        } elseif (null === $langA && null !== $langB) {
-            return 1;
-        } elseif (null !== $langA && null === $langB) {
-            return -1;
-        } elseif ($langA < $langB) {
-            return -1;
-        } elseif ($langA > $langB) {
-            return 1;
+        } elseif ($order = (bool) $pageB->rootIsFallback <=> (bool) $pageA->rootIsFallback) {
+            return $order;
         }
 
         if ('root' !== $pageA->type && 'root' === $pageB->type) {
@@ -164,26 +153,12 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        if ($pageA->routePriority !== $pageB->routePriority) {
-            return $pageB->routePriority <=> $pageA->routePriority;
+        if ($order = $pageB->routePriority <=> $pageA->routePriority) {
+            return $order;
         }
 
         $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
-
-        // Prioritize the default behaviour when "requireItem" is enabled
-        if ($pathA === $pathB && str_ends_with($pathA, '{!parameters}')) {
-            $paramA = $a->getRequirement('parameters');
-            $paramB = $b->getRequirement('parameters');
-
-            if ('/.+?' === $paramA && '(/.+?)?' === $paramB) {
-                return -1;
-            }
-
-            if ('(/.+?)?' === $paramA && '/.+?' === $paramB) {
-                return 1;
-            }
-        }
 
         $countA = \count(explode('/', $pathA));
         $countB = \count(explode('/', $pathB));
@@ -196,35 +171,38 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        return strnatcasecmp($pathA, $pathB);
+        if ($order = strnatcasecmp($pathA, $pathB)) {
+            return $order;
+        }
+
+        // Use the same path equivalence as above and rank each requirement
+        // independently, including custom requirements.
+        $requiredA = str_ends_with($pathA, '{!parameters}') && '/.+?' === $a->getRequirement('parameters');
+        $requiredB = str_ends_with($pathB, '{!parameters}') && '/.+?' === $b->getRequirement('parameters');
+
+        return $requiredB <=> $requiredA;
     }
 
     protected function convertLanguagesForSorting(array $languages): array
     {
         $result = [];
 
+        // Shared fallbacks follow the last requested variant, even if the generic
+        // language was requested earlier. This gives every locale a fixed priority.
         foreach ($languages as $language) {
-            if (!$locales = LocaleUtil::getFallbacks($language)) {
-                continue;
-            }
-
-            $language = array_pop($locales);
-            $result[] = $language;
-
-            foreach (array_reverse($locales) as $locale) {
-                if (!\in_array($locale, $result, true)) {
-                    $result[] = $locale;
-                }
+            foreach (array_reverse(LocaleUtil::getFallbacks($language)) as $locale) {
+                unset($result[$locale]);
+                $result[$locale] = true;
             }
         }
 
-        return array_flip($result);
+        return array_flip(array_keys($result));
     }
 
-    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): int|null
+    private function getLocalePriority(array $locales, array $languagePriority): int|null
     {
         foreach (array_reverse($locales) as $locale) {
-            if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {
+            if (isset($languagePriority[$locale])) {
                 return $languagePriority[$locale];
             }
         }
