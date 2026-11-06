@@ -3,6 +3,7 @@
 
     const tip = document.createElement('div');
     tip.setAttribute('role', 'tooltip');
+    tip.id = 'tooltip';
     tip.classList.add('tip')
     tip.style.position = 'absolute';
     tip.style.display = 'none';
@@ -57,6 +58,8 @@
                     if (!tip.parentNode && document.body) {
                         document.body.append(tip);
                     }
+
+                    el.setAttribute('aria-describedby', 'tooltip');
                 }, 'mouseenter' === e.type ? 1000 : 0)
             })
         });
@@ -71,6 +74,7 @@
             }
 
             clearTimeout(timer)
+            el.removeAttribute('aria-describedby');
             tip.style.willChange = 'auto';
 
             if (tip.style.display === 'block') {
@@ -99,6 +103,7 @@
         if (action) {
             action.addEventListener('click', function() {
                 clearTimeout(timer);
+                el.removeAttribute('aria-describedby');
                 tip.style.display = 'none';
                 tip.style.willChange = 'auto';
             })
