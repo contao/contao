@@ -369,6 +369,7 @@
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "e2e-tests": [
+            "npx encore production",
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=off",
             "@php vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit"
