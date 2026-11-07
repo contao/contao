@@ -29,12 +29,12 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $enabledLocales = $this->getEnabledLocales($container);
             $locales = array_values(array_unique([...$enabledLocales, ...$this->getDefaultLocales()]));
 
-            $definition->setArgument(1, $locales);
-            $definition->setArgument(2, $enabledLocales);
+            $definition->setArgument('$defaultLocales', $locales);
+            $definition->setArgument('$defaultEnabledLocales', $enabledLocales);
         }
 
         if ($container->has('contao.intl.countries')) {
-            $container->findDefinition('contao.intl.countries')->setArgument(1, SymfonyCountries::getCountryCodes());
+            $container->findDefinition('contao.intl.countries')->setArgument('$defaultCountries', SymfonyCountries::getCountryCodes());
         }
     }
 
