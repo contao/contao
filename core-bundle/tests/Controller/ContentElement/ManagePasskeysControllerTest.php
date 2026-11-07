@@ -87,7 +87,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
     {
         $this->expectException(AccessDeniedException::class);
 
-        $response = $this->renderWithModelData(
+        $this->renderWithModelData(
             new ManagePasskeysController(
                 new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
                 $this->createStub(UriSigner::class),
@@ -96,9 +96,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class), false),
             page: $this->createStub(PageModel::class),
         );
-
-        $this->assertSame('', $response->getContent());
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testRendersEmptyList(): void
