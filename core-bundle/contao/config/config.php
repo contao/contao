@@ -18,6 +18,7 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
+use Contao\ContentForm;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentSliderStart;
@@ -27,7 +28,6 @@ use Contao\Crawl;
 use Contao\CudTable;
 use Contao\FilesModel;
 use Contao\FileTree;
-use Contao\Form;
 use Contao\FormAltcha;
 use Contao\FormCaptcha;
 use Contao\FormCheckbox;
@@ -63,6 +63,7 @@ use Contao\ModuleBreadcrumb;
 use Contao\ModuleChangePassword;
 use Contao\ModuleCloseAccount;
 use Contao\ModuleCustomnav;
+use Contao\ModuleForm;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
 use Contao\ModuleLostPassword;
@@ -251,7 +252,7 @@ $GLOBALS['FE_MOD'] = array
 	),
 	'application' => array
 	(
-		'form'           => Form::class,
+		'form'           => ModuleForm::class,
 		'search'         => ModuleSearch::class
 	),
 	'miscellaneous' => array
@@ -276,7 +277,7 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'article'         => ContentArticle::class,
 		'alias'           => ContentAlias::class,
-		'form'            => Form::class,
+		'form'            => ContentForm::class,
 		'module'          => ContentModule::class,
 	),
 	'legacy' => array
