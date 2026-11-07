@@ -71,6 +71,9 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
+		'undoPeriod' => 'contao.retention.undo',
+		'versionPeriod' => 'contao.retention.versions',
+		'logPeriod' => 'contao.retention.logs',
 		'maxFileSize' => 'contao.max_file_upload_size',
 		'maxPaginationLinks' => 'contao.pagination.default_range',
 	);
@@ -81,6 +84,9 @@ class Config
 
 	private static $arrDeprecatedSince = array
 	(
+		'undoPeriod' => '6.1',
+		'versionPeriod' => '6.1',
+		'logPeriod' => '6.1',
 		'maxFileSize' => '6.1',
 		'maxPaginationLinks' => '6.0',
 	);
