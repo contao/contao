@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
@@ -169,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
 			'backendSearch'           => false,
 			'filter'                  => true,

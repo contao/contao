@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
@@ -161,7 +160,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'filter'                  => true,
