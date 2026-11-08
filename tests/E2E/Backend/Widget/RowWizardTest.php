@@ -15,7 +15,6 @@ namespace Contao\E2eTests\Backend\Widget;
 use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Backend\BackendTestTrait;
-use Playwright\Locator\LocatorInterface;
 
 class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
 {
@@ -185,7 +184,7 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-add', $field))->click();
     }
 
-    private function ghost(BackendBrowser $backend, string $field): LocatorInterface
+    private function ghost(BackendBrowser $backend, string $field)
     {
         return $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-ghost', $field));
     }
@@ -194,7 +193,7 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
      * Only looks at the body rows, because the ghost row in the footer contains
      * disabled copies of the inputs with the same names.
      */
-    private function input(BackendBrowser $backend, string $field, int $row, string $key): LocatorInterface
+    private function input(BackendBrowser $backend, string $field, int $row, string $key)
     {
         return $backend->page()->locator(\sprintf('#ctrl_%1$s > tbody [name="%1$s[%2$d][%3$s]"]', $field, $row, $key));
     }
@@ -202,7 +201,7 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * Returns the copy or delete buttons of the visible rows.
      */
-    private function buttons(BackendBrowser $backend, string $field, string $action, string $state = ''): LocatorInterface
+    private function buttons(BackendBrowser $backend, string $field, string $action, string $state = '')
     {
         return $backend->page()->locator(\sprintf('#ctrl_%s > tbody > tr:visible button[data-contao--row-wizard-target="%s"]%s', $field, $action, $state));
     }

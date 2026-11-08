@@ -16,7 +16,6 @@ use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Backend\BackendTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Playwright\Locator\LocatorInterface;
 
 class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
 {
@@ -620,27 +619,27 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         return $backend;
     }
 
-    private function wizard(BackendBrowser $backend, string $field = self::RTE): LocatorInterface
+    private function wizard(BackendBrowser $backend, string $field = self::RTE)
     {
         return $backend->page()->locator(\sprintf('.table-wizard:has(#ctrl_%s)', $field));
     }
 
-    private function rows(BackendBrowser $backend, string $field = self::RTE): LocatorInterface
+    private function rows(BackendBrowser $backend, string $field = self::RTE)
     {
         return $this->wizard($backend, $field)->locator('.table-wizard-body > .table-wizard-row');
     }
 
-    private function cell(BackendBrowser $backend, int $row, int $column): LocatorInterface
+    private function cell(BackendBrowser $backend, int $row, int $column)
     {
         return $this->rows($backend)->nth($row)->locator(':scope > .table-wizard-cell')->nth($column);
     }
 
-    private function input(BackendBrowser $backend, string $field, int $row, int $column): LocatorInterface
+    private function input(BackendBrowser $backend, string $field, int $row, int $column)
     {
         return $backend->page()->locator(\sprintf('textarea[name="%s[%d][%d]"]', $field, $row, $column));
     }
 
-    private function handle(BackendBrowser $backend, string $axis, int $index, string $field = self::RTE): LocatorInterface
+    private function handle(BackendBrowser $backend, string $axis, int $index, string $field = self::RTE)
     {
         if ('row' === $axis) {
             return $this->rows($backend, $field)->nth($index)->locator('.table-wizard-handle-row');
@@ -649,7 +648,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
         return $this->wizard($backend, $field)->locator('.table-wizard-handle-column')->nth($index);
     }
 
-    private function openMenu(BackendBrowser $backend, string $axis, int $index, string $field = self::RTE): LocatorInterface
+    private function openMenu(BackendBrowser $backend, string $axis, int $index, string $field = self::RTE)
     {
         $this->handle($backend, $axis, $index, $field)->click();
 
@@ -773,7 +772,7 @@ class TableWizardTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * Returns the distinct sizes of the cell inputs.
      */
-    private function cellSizes(LocatorInterface $wizard): array
+    private function cellSizes($wizard): array
     {
         $sizes = $wizard->locator('.table-wizard-input:not([hidden])')->evaluateAll('inputs => inputs.map(input => [input.offsetWidth, input.offsetHeight])');
 
