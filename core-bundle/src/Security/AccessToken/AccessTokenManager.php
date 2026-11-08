@@ -37,7 +37,7 @@ class AccessTokenManager
      */
     public function createBackendToken(BackendUser $user, string $name, \DateTimeImmutable|null $expiresAt = null): string
     {
-        return $this->createToken(ContaoCoreBundle::SCOPE_BACKEND, (int) $user->id, $name, $expiresAt);
+        return $this->createToken(ContaoCoreBundle::SCOPE_BACKEND, $user->id, $name, $expiresAt);
     }
 
     public function parseAndValidateToken(string $accessToken, string $scope): PersonalAccessToken|null

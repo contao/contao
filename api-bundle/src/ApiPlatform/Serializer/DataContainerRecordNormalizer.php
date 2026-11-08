@@ -37,7 +37,7 @@ final class DataContainerRecordNormalizer implements NormalizerInterface, Denorm
     }
 
     /**
-     * @param array{operation?: Operation, contao_table?: string} $context
+     * @param array{operation?: Operation, contao_table?: string, jsonld_has_context?: bool} $context
      */
     public function normalize(mixed $data, string|null $format = null, array $context = []): array
     {

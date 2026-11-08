@@ -98,7 +98,7 @@ class InsertTagRuntimeTest extends TestCase
 
         $this->assertSame(
             '{{tag}} foo',
-            (string) $runtime->replaceInsertTagsHtml(['as_editor_view' => true], '{{tag}} foo'),
+            $runtime->replaceInsertTagsHtml(['as_editor_view' => true], '{{tag}} foo'),
         );
     }
 

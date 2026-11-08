@@ -192,6 +192,9 @@ services:
             $urlAnalyzer: '@contao.data_container.dca_url_analyzer'
             $urlGenerator: '@router'
 
+    contao_api.data_container.widget_factory:
+        class: Contao\ApiBundle\DataContainer\DataContainerWidgetFactory
+
     contao_api.dto.virtual_filesystem_item_factory:
         class: Contao\ApiBundle\Dto\VirtualFilesystemItemFactory
         arguments:
@@ -251,6 +254,7 @@ services:
             $relationResolver: '@contao_api.relation.resolver'
             $localeSwitcher: '@translation.locale_switcher'
             $relationDefinitionFactory: '@contao_api.data_container.relation_definition_factory'
+            $widgetFactory: '@contao_api.data_container.widget_factory'
 
     contao_api.serializer.relation_reference_normalizer:
         class: Contao\ApiBundle\Serializer\RelationReferenceNormalizer

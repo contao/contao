@@ -1379,10 +1379,11 @@ window.Backend =
 	 * Set the width of the table wizard
 	 */
 	tableWizardSetWidth: function() {
-		console.warn('Backend.tableWizardSetWidth() is deprecated. Please use the Stimulus controller instead.');
-
 		var wrap = $('tl_tablewizard');
 		if (!wrap) return;
+
+		console.warn('Backend.tableWizardSetWidth() is deprecated. Please use the Stimulus controller instead.');
+
 		wrap.setStyle('width', Math.round(wrap.getParent('.tl_formbody_edit').getComputedSize().width * 0.96));
 	},
 
@@ -1882,15 +1883,11 @@ window.Backend =
 	}
 };
 
+// Set the classes on the root element, which Turbo does not replace
+document.documentElement.classList.add('js');
+
 // Initialize the back end script
 window.addEvent('domready', function() {
-	$(document.body).addClass('js');
-
-	// Mark touch devices (see #5563)
-	if (Browser.Features.Touch) {
-		$(document.body).addClass('touch');
-	}
-
 	Backend.tableWizardSetWidth();
 });
 

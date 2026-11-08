@@ -17,6 +17,7 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -107,7 +108,7 @@ class TemplateStudioClient
             throw new TemplateStudioException(\sprintf('Template Studio returned a non-JSON response (HTTP %d).', $response->getStatusCode()));
         }
 
-        if (JsonResponse::HTTP_OK !== $response->getStatusCode()) {
+        if (Response::HTTP_OK !== $response->getStatusCode()) {
             $content = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
             throw new $content['errorClass']($content['errorMessage']);

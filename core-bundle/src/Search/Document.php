@@ -351,22 +351,24 @@ class Document
                     continue;
                 }
 
+                $prefixLength = \strlen($prefix) + 1;
+
                 if (isset($data['@type']) && \is_array($data['@type'])) {
                     $data['@type'] = array_map(
-                        static fn (string $type): string => 0 === strncmp($type, $prefix.':', \strlen((string) $prefix) + 1)
-                            ? $context.substr($type, \strlen((string) $prefix) + 1)
+                        static fn (string $type): string => 0 === strncmp($type, $prefix.':', $prefixLength)
+                            ? $context.substr($type, $prefixLength)
                             : $type,
                         $data['@type'],
                     );
-                } elseif (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
-                    $data['@type'] = $context.substr($data['@type'], \strlen((string) $prefix) + 1);
+                } elseif (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', $prefixLength)) {
+                    $data['@type'] = $context.substr($data['@type'], $prefixLength);
                 }
 
                 foreach ($data as $key => $value) {
-                    if (0 === strncmp($prefix.':', $key, \strlen((string) $prefix) + 1)) {
+                    if (0 === strncmp($prefix.':', $key, $prefixLength)) {
                         unset($data[$key]);
 
-                        $data[$context.substr($key, \strlen((string) $prefix) + 1)] = $value;
+                        $data[$context.substr($key, $prefixLength)] = $value;
                     }
                 }
             }

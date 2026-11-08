@@ -544,7 +544,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 return null;
             }
 
-            return $allUuidsByPath[$parentPath];
+            return $allUuidsByPath[$parentPath] ?? null;
         };
 
         $allLastModifiedUpdatesByPath = [];

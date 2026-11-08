@@ -268,7 +268,7 @@ class DcTableTest extends TestCase
             {
             }
 
-            public static function getReferer($blnEncodeAmpersands = false, $strTable = null, $intLevel = 1)
+            public static function getReferer($blnEncodeAmpersands = false, $strTable = null, $intLevel = 1): string
             {
                 return '/contao?do=undo';
             }

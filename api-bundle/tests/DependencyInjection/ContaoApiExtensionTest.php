@@ -29,6 +29,7 @@ use Contao\ApiBundle\ApiPlatform\State\ApiVersionStateProvider;
 use Contao\ApiBundle\ContaoApiBundle;
 use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
 use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
 use Contao\ApiBundle\Relation\RelationResolver;
 use Contao\ApiBundle\Relation\RelationResolverInterface;
 use Contao\ApiBundle\Version\ApiVersionProvider;
@@ -88,6 +89,8 @@ class ContaoApiExtensionTest extends ContaoTestCase
 
         $this->assertTrue($container->hasDefinition('contao_api.schema.data_container_factory'));
         $this->assertTrue($container->hasDefinition('contao_api.widget.converter_registry'));
+        $this->assertSame(DataContainerWidgetFactory::class, $container->getDefinition('contao_api.data_container.widget_factory')->getClass());
+        $this->assertSame('contao_api.data_container.widget_factory', (string) $container->getDefinition('contao_api.schema.data_container_factory')->getArgument('$widgetFactory'));
     }
 
     public function testCompilesTheApiVersionDecorators(): void
@@ -380,7 +383,7 @@ class ContaoApiExtensionTest extends ContaoTestCase
         $extension->load([], $container);
 
         foreach (array_keys($container->getDefinitions()) as $id) {
-            if (!\in_array($id, ['service_container', 'contao_api.widget.converter_registry', 'contao.api.widget_converter', 'contao.api.widget.row_wizard_converter', 'contao_api.schema.data_container_factory', 'contao.widget.date_value_formatter'], true)) {
+            if (!\in_array($id, ['service_container', 'contao_api.widget.converter_registry', 'contao.api.widget_converter', 'contao.api.widget.row_wizard_converter', 'contao_api.schema.data_container_factory', 'contao_api.data_container.widget_factory', 'contao.widget.date_value_formatter'], true)) {
                 $container->removeDefinition($id);
             }
         }
