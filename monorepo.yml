@@ -11,6 +11,7 @@ composer:
         bamarni/composer-bin-plugin: ^1.4
         contao/e2e-testing: dev-main
         contao/installation-recipe: dev-main
+        playwright-php/playwright: ^1.6
         shipmonk/composer-dependency-analyser: ^1.4
     autoload-dev:
         psr-4:

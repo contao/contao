@@ -16,6 +16,7 @@ use Contao\E2eTesting\Browser\BackendBrowser;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Playwright\Locator\LocatorInterface;
 
 class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
 {
@@ -395,7 +396,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     }
 
     /**
-     * @return array{BackendBrowser, object, list<string>}
+     * @return array{BackendBrowser, LocatorInterface, list<string>}
      */
     private function openPageTree(): array
     {
@@ -415,7 +416,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * @return list<string>
      */
-    private function recordIds($tree): array
+    private function recordIds(LocatorInterface $tree): array
     {
         return $tree->locator(':scope > li[data-id]')->evaluateAll('items => items.map(item => item.dataset.id)');
     }
@@ -483,12 +484,12 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         return (string) self::managedEdition()->database()->fixtures()->value($fixture);
     }
 
-    private function record(BackendBrowser $backend, string $fixture, bool $article = false)
+    private function record(BackendBrowser $backend, string $fixture, bool $article = false): LocatorInterface
     {
         return $backend->page()->locator(\sprintf('ul.tl_listing li[data-id="%s"]%s', $this->fixtureId($fixture), $article ? '[data-leaf-record]' : ':not([data-leaf-record])'));
     }
 
-    private function drag(BackendBrowser $backend, $record, $target, bool $after = false): void
+    private function drag(BackendBrowser $backend, LocatorInterface $record, LocatorInterface $target, bool $after = false): void
     {
         $handle = $record->locator(':scope > div > .drag-handle');
         $drags = $backend->page()->evaluate('window.sortingDrags');
@@ -518,7 +519,7 @@ class SortableTreeTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($drags + 1, $backend->page()->evaluate('window.sortingDrags'));
     }
 
-    private function startDrag(BackendBrowser $backend, $record): void
+    private function startDrag(BackendBrowser $backend, LocatorInterface $record): void
     {
         $handle = $record->locator(':scope > div > .drag-handle');
         $handle->scrollIntoViewIfNeeded();

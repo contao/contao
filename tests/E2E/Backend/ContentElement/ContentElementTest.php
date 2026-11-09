@@ -14,6 +14,7 @@ namespace Contao\E2eTests\Backend\ContentElement;
 
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Backend\BackendTestTrait;
+use Playwright\Dialog\DialogInterface;
 
 class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
 {
@@ -29,7 +30,7 @@ class ContentElementTest extends AbstractContaoMonorepoE2ETestCase
         $contentElement = '[data-contao--operations-menu-record-id-value]:has-text("Lorem ipsum")';
         $this->assertSame(1, $backend->page()->locator($contentElement)->count());
 
-        $backend->page()->events()->onDialog(static fn ($dialog) => $dialog->accept());
+        $backend->page()->events()->onDialog(static fn (DialogInterface $dialog) => $dialog->accept());
         $backend->clickButton($contentElement.' [data-contao--operations-menu-target="controller"]');
         $backend->waitFor('.operations-menu.show');
         $backend->waitForNavigation(static fn () => $backend->clickButton('.operations-menu.show button[title^="Delete content element"]'));

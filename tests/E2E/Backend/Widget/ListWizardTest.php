@@ -18,6 +18,7 @@ use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\E2eTests\Backend\BackendTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Playwright\Locator\LocatorInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
@@ -400,7 +401,7 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         return $crawler;
     }
 
-    private function wizard(BackendBrowser $backend, string $field = self::NESTED)
+    private function wizard(BackendBrowser $backend, string $field = self::NESTED): LocatorInterface
     {
         return $backend->page()->locator('#ctrl_'.$field);
     }
@@ -408,12 +409,12 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
     /**
      * Returns all items in document order, including the nested ones.
      */
-    private function rows(BackendBrowser $backend, string $field = self::NESTED)
+    private function rows(BackendBrowser $backend, string $field = self::NESTED): LocatorInterface
     {
         return $this->wizard($backend, $field)->locator('li[data-contao--list-wizard-target="row"]');
     }
 
-    private function input(BackendBrowser $backend, int $row, string $field = self::NESTED)
+    private function input(BackendBrowser $backend, int $row, string $field = self::NESTED): LocatorInterface
     {
         return $this->rows($backend, $field)->nth($row)->locator(':scope > input');
     }
@@ -426,7 +427,7 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->input($backend, $row, $field)->evaluate('(el, end) => { el.focus(); el.setSelectionRange(end ? el.value.length : 0, end ? el.value.length : 0) }', 'end' === $caret);
     }
 
-    private function editor(BackendBrowser $backend, int $row)
+    private function editor(BackendBrowser $backend, int $row): LocatorInterface
     {
         return $this->rows($backend)->nth($row)->locator(':scope > .inline-rte');
     }
