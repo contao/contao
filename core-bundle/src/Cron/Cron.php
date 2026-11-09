@@ -183,7 +183,7 @@ class Cron
 
         // Callback to restore previous run date in case cronjob skips itself
         $onSkip = static function (CronJob $cron) use ($repository, $entityManager, $now): void {
-            // Each lock acquisition already waits up to one second.
+            // Each lock acquisition already waits up to one second
             for ($attempt = 1; $attempt <= self::SKIPPED_JOB_LOCK_ATTEMPTS; ++$attempt) {
                 try {
                     $repository->lockTable();
