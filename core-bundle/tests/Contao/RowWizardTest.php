@@ -105,6 +105,102 @@ class RowWizardTest extends TestCase
         );
     }
 
+    public function testChainsLoadCallbacksForEachRowAndCachesTheWidgets(): void
+    {
+        $dataContainer = $this->createStub(DataContainer::class);
+        $callback = new class() {
+            public array $calls = [];
+
+            public function load(string $value, DataContainer $dc): string
+            {
+                $this->calls[] = [$value, $dc];
+
+                return strtoupper($value);
+            }
+        };
+
+        System::getContainer()->set('row_wizard.callback', $callback);
+
+        $fields = [
+            'name' => [
+                'inputType' => 'text',
+                'load_callback' => [
+                    ['row_wizard.callback', 'load'],
+                    static fn (string $value, DataContainer $dc) => $value.'-'.$dc::class,
+                ],
+            ],
+            'unchanged' => ['inputType' => 'text'],
+        ];
+        $rows = [
+            ['name' => 'First', 'unchanged' => 'one'],
+            ['name' => 'Second', 'unchanged' => 'two'],
+        ];
+        $wizard = $this->createWizard($fields, $rows);
+        $wizard->dataContainer = $dataContainer;
+        $wizard->value = $rows;
+        $prepareWidget = new \ReflectionMethod(RowWizard::class, 'prepareWidget');
+
+        foreach ($rows as $i => $row) {
+            foreach ($fields as $key => $options) {
+                [$widget, $data] = $prepareWidget->invoke($wizard, $key, $row[$key], $options, $i);
+                $expected = 'name' === $key ? strtoupper($row[$key]).'-'.$dataContainer::class : $row[$key];
+
+                $this->assertSame($expected, $widget->value);
+                $this->assertSame($expected, $data['value']);
+                $this->assertSame([$widget, $data], $prepareWidget->invoke($wizard, $key, $row[$key], $options, $i));
+            }
+        }
+
+        $this->assertSame([['First', $dataContainer], ['Second', $dataContainer]], $callback->calls);
+        $this->assertSame($rows, $wizard->value);
+
+        $wizard->validate();
+
+        $this->assertSame($rows, $wizard->value);
+        $this->assertSame([['First', $dataContainer], ['Second', $dataContainer]], $callback->calls);
+    }
+
+    public function testLoadCallbacksRunBeforeDeserializingTheValue(): void
+    {
+        $stored = serialize(['stored']);
+        $fields = [
+            'name' => [
+                'inputType' => 'text',
+                'load_callback' => [static function ($value, $dc) use ($stored) {
+                    self::assertSame($stored, $value);
+                    self::assertNull($dc);
+
+                    return serialize(['loaded']);
+                }],
+            ],
+        ];
+        $wizard = $this->createWizard($fields, []);
+        $prepareWidget = new \ReflectionMethod(RowWizard::class, 'prepareWidget');
+        [$widget, $data] = $prepareWidget->invoke($wizard, 'name', $stored, $fields['name'], 0);
+
+        $this->assertSame(['loaded'], $widget->value);
+        $this->assertSame(['loaded'], $data['value']);
+    }
+
+    public function testLoadCallbackExceptionsPropagate(): void
+    {
+        $fields = [
+            'name' => [
+                'inputType' => 'text',
+                'load_callback' => [static function () {
+                    throw new \RuntimeException('Cannot load name');
+                }],
+            ],
+        ];
+        $wizard = $this->createWizard($fields, []);
+        $prepareWidget = new \ReflectionMethod(RowWizard::class, 'prepareWidget');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot load name');
+
+        $prepareWidget->invoke($wizard, 'name', null, $fields['name'], 0);
+    }
+
     public function testCallbackExceptionsBecomeNestedWidgetErrors(): void
     {
         $wizard = $this->createWizard(
@@ -126,7 +222,7 @@ class RowWizardTest extends TestCase
         $this->assertSame('error', $wizard->class);
         $this->assertSame([['unchanged' => 'one']], $wizard->value);
 
-        $widgets = new \ReflectionProperty(RowWizard::class, 'widgets')->getValue($wizard);
+        $widgets = (new \ReflectionProperty(RowWizard::class, 'widgets'))->getValue($wizard);
 
         $this->assertSame(['Invalid name'], $widgets[0]['name'][0]->getErrors());
         $this->assertSame('Keep', $widgets[0]['name'][0]->value);

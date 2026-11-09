@@ -319,6 +319,21 @@ class RowWizard extends Widget
 			return array(null, array());
 		}
 
+		if (\is_array($options['load_callback'] ?? null))
+		{
+			foreach ($options['load_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$value = System::importStatic($callback[0])->{$callback[1]}($value, $this->objDca);
+				}
+				elseif (\is_callable($callback))
+				{
+					$value = $callback($value, $this->objDca);
+				}
+			}
+		}
+
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
