@@ -48,7 +48,6 @@ class CronJobRepository extends ServiceEntityRepository
      */
     public function lockTable(): void
     {
-        // TODO: Use DoctrineDbalMysqlStore in Contao 6 (Symfony 8.2+).
         $locked = $this->connection->fetchOne('SELECT GET_LOCK(?, 1)', [$this->getLockName()]);
 
         if (null === $locked) {
