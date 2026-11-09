@@ -61,7 +61,7 @@ class RowWizardTest extends TestCase
     public function testChainsSaveCallbacksForEachRow(): void
     {
         $dataContainer = $this->createStub(DataContainer::class);
-        $callback = new class() {
+        $callback = new class {
             public array $calls = [];
 
             public function save(string $value, DataContainer $dc): string
@@ -108,7 +108,7 @@ class RowWizardTest extends TestCase
     public function testChainsLoadCallbacksForEachRowAndCachesTheWidgets(): void
     {
         $dataContainer = $this->createStub(DataContainer::class);
-        $callback = new class() {
+        $callback = new class {
             public array $calls = [];
 
             public function load(string $value, DataContainer $dc): string
@@ -131,13 +131,16 @@ class RowWizardTest extends TestCase
             ],
             'unchanged' => ['inputType' => 'text'],
         ];
+
         $rows = [
             ['name' => 'First', 'unchanged' => 'one'],
             ['name' => 'Second', 'unchanged' => 'two'],
         ];
+
         $wizard = $this->createWizard($fields, $rows);
         $wizard->dataContainer = $dataContainer;
         $wizard->value = $rows;
+
         $prepareWidget = new \ReflectionMethod(RowWizard::class, 'prepareWidget');
 
         foreach ($rows as $i => $row) {
