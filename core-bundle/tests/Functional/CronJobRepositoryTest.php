@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Exception\LockAcquireTimeoutException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\TestCase\FunctionalTestCase;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 class CronJobRepositoryTest extends FunctionalTestCase
@@ -50,7 +50,7 @@ class CronJobRepositoryTest extends FunctionalTestCase
         try {
             $manager->flush();
 
-            $this->expectException(LockWaitTimeoutException::class);
+            $this->expectException(LockAcquireTimeoutException::class);
             $otherRepository->lockTable();
         } finally {
             $otherRepository->unlockTable();
