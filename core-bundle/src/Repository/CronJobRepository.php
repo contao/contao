@@ -13,10 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\CronJob;
-use Contao\CoreBundle\Exception\LockAcquireTimeoutException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
@@ -41,28 +42,34 @@ class CronJobRepository extends ServiceEntityRepository
     }
 
     /**
-     * Acquires a database-scoped cron lock that survives transactions, waiting at
-     * most 1 second.
+     * Locks the tl_cron_job table with a lock wait timeout of only 1 second.
      *
-     * @throws LockAcquireTimeoutException
+     * @throws LockWaitTimeoutException
      */
     public function lockTable(): void
     {
-        // TODO: Use DoctrineDbalMysqlStore in Contao 6 (Symfony 8.2+).
-        $locked = $this->connection->fetchOne('SELECT GET_LOCK(?, 1)', [$this->getLockName()]);
+        $table = $this->getClassMetadata()->getTableName();
 
-        if (null === $locked) {
-            throw new \RuntimeException('An error occurred while acquiring the cron lock.');
+        $defaultLockTimeout = $this->connection->fetchOne('SELECT @@lock_wait_timeout');
+
+        // Use default lock timeout from MariaDB, if it cannot be retrieved
+        if (false === $defaultLockTimeout) {
+            $defaultLockTimeout = 86400;
         }
 
-        if (1 !== (int) $locked) {
-            throw new LockAcquireTimeoutException('Timed out waiting for the cron lock.');
+        try {
+            // Set a short lock timeout, so that the next statement throws an exception sooner
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
+            $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        } finally {
+            // Restore the previous lock timeout
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
         }
     }
 
     public function unlockTable(): void
     {
-        $this->connection->fetchOne('SELECT RELEASE_LOCK(?)', [$this->getLockName()]);
+        $this->connection->executeStatement('UNLOCK TABLES');
     }
 
     /**
@@ -88,10 +95,5 @@ class CronJobRepository extends ServiceEntityRepository
         }
 
         $qb->getQuery()->execute();
-    }
-
-    private function getLockName(): string
-    {
-        return 'contao.cron.'.hash('xxh3', $this->connection->getDatabase().'.'.$this->getClassMetadata()->getTableName());
     }
 }
