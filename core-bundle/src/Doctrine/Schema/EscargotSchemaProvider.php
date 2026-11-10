@@ -37,7 +37,7 @@ class EscargotSchemaProvider
             $options = $column->toArray();
             unset($options['name'], $options['type'], $options['typeName']);
 
-            $table->addColumn($column->getName(), Type::lookupName($column->getType()), $options);
+            $table->addColumn($column->getName(), Type::getTypeRegistry()->lookupName($column->getType()), $options);
         }
 
         foreach ($queueTable->getIndexes() as $index) {
