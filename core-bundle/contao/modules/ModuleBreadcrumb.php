@@ -108,15 +108,6 @@ class ModuleBreadcrumb extends Module
 			// Get href
 			switch ($pages[$i]->type)
 			{
-				case 'redirect':
-					$href = $pages[$i]->url;
-
-					if (strncasecmp($href, 'mailto:', 7) === 0)
-					{
-						$href = StringUtil::encodeEmail($href);
-					}
-					break;
-
 				case 'forward':
 					if ($pages[$i]->jumpTo)
 					{
@@ -136,6 +127,12 @@ class ModuleBreadcrumb extends Module
 
 				default:
 					$href = $this->generateContentUrl($pages[$i]);
+
+					if (strncasecmp($href, 'mailto:', 7) === 0)
+					{
+						$href = StringUtil::encodeEmail($href);
+					}
+
 					break;
 			}
 
@@ -239,7 +236,7 @@ class ModuleBreadcrumb extends Module
 					'@type' => 'ListItem',
 					'position' => ++$position,
 					'item' => array(
-						'@id' => $insertTagParser->replaceInline($item['href']),
+						'@id' => $item['href'],
 						'name' => $insertTagParser->replaceInline($item['link'])
 					)
 				);
