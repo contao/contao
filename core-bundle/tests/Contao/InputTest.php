@@ -433,13 +433,13 @@ class InputTest extends TestCase
         ];
 
         yield 'Keeps underscores in allowed attributes' => [
-            'foo <span data-foo_bar="baz"> bar',
-            'foo <span data-foo_bar="baz"> bar',
+            'foo <span aria-foo_bar="baz"> bar',
+            'foo <span aria-foo_bar="baz"> bar',
         ];
 
         yield 'Reformats attributes' => [
-            "<span \n \t title = \nwith-spaces class\n=' with \" and &apos; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
-            "<span title=\"with-spaces\" class=\" with &quot; and &apos; quotes\" lang=\"with &quot; and &apos; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
+            "<span \n \t title = \nwith-spaces class\n=' with \" and &apos; quotes' lang \t =\"with &quot; and ' quotes \t \n \" aria-boolean-flag aria-int = 0>",
+            "<span title=\"with-spaces\" class=\" with &quot; and &apos; quotes\" lang=\"with &quot; and &apos; quotes \t \n \" aria-boolean-flag=\"\" aria-int=\"0\">",
         ];
 
         yield 'Encodes insert tags in attributes' => [
@@ -483,28 +483,28 @@ class InputTest extends TestCase
         ];
 
         yield 'Do not destroy JSON attributes' => [
-            '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
-            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            '<span aria-myjson=\'{"foo":{"bar":"baz"}}\'>',
+            '<span aria-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
         ];
 
         yield 'Do not destroy nested JSON attributes' => [
-            '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
-            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            '<span aria-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+            '<span aria-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
         ];
 
         yield 'Do not destroy quoted JSON attributes' => [
-            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
-            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            '<span aria-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+            '<span aria-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
         ];
 
         yield 'Do not destroy nested quoted JSON attributes' => [
-            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
-            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            '<span aria-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+            '<span aria-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
         ];
 
         yield 'Trick insert tag detection with JSON' => [
-            '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
-            '<span data-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
+            '<span aria-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+            '<span aria-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
         ];
 
         yield 'Allows for comments' => [
@@ -555,6 +555,81 @@ class InputTest extends TestCase
         yield 'Does not allow colon in namespaced URL attributes' => [
             '<use xlink:href="ja{{noop}}vascript:alert(1)">',
             '<use xlink:href="ja{{noop|urlattr}}vascript%3Aalert(1)">',
+        ];
+
+        yield 'Does not allow DOM clobbering' => [
+            '<a id="foo"><a id="foo" name="bar">',
+            '<a><a>',
+        ];
+
+        yield 'Adds rel=noopener for links with target=_blank' => [
+            '<a href="https://example.com/" target="_blank">',
+            '<a href="https://example.com/" target="_blank" rel="noopener">',
+        ];
+
+        yield 'Adds rel=noopener for links with target' => [
+            '<a href="https://example.com/" target="foo">',
+            '<a href="https://example.com/" target="foo" rel="noopener">',
+        ];
+
+        yield 'Does not allow other rel values together with target' => [
+            '<a href="https://example.com/" target="_blank" rel="opener">',
+            '<a href="https://example.com/" target="_blank" rel="noopener">',
+        ];
+
+        yield 'Allows rel=lightbox' => [
+            '<a href="image.jpeg" rel="lightbox[123]">',
+            '<a href="image.jpeg" rel="lightbox[123]">',
+        ];
+
+        yield 'Allows data-lightbox' => [
+            '<a href="image.jpeg" data-lightbox="123">',
+            '<a href="image.jpeg" data-lightbox="123">',
+        ];
+
+        yield 'Does not allow download link attribute' => [
+            '<a href="data:…" download="foo.exe">',
+            '<a href="data%3A…">',
+        ];
+
+        yield 'Adds rel=noopener for links with target=_blank using <area>' => [
+            '<map name="foo"><area href="https://example.com/" target="_blank">',
+            '<map name="foo"><area href="https://example.com/" target="_blank" rel="noopener">',
+        ];
+
+        yield 'Adds rel=noopener for links with target using <area>' => [
+            '<map name="foo"><area href="https://example.com/" target="foo">',
+            '<map name="foo"><area href="https://example.com/" target="foo" rel="noopener">',
+        ];
+
+        yield 'Does not allow other rel values together with target using <area>' => [
+            '<map name="foo"><area href="https://example.com/" target="_blank" rel="opener">',
+            '<map name="foo"><area href="https://example.com/" target="_blank" rel="noopener">',
+        ];
+
+        yield 'Allows rel=lightbox using <area>' => [
+            '<map name="foo"><area href="image.jpeg" rel="lightbox[123]">',
+            '<map name="foo"><area href="image.jpeg" rel="lightbox[123]">',
+        ];
+
+        yield 'Allows data-lightbox using <area>' => [
+            '<map name="foo"><area href="image.jpeg" data-lightbox="123">',
+            '<map name="foo"><area href="image.jpeg" data-lightbox="123">',
+        ];
+
+        yield 'Does not allow download link attribute using <area>' => [
+            '<map name="foo"><area href="data:…" download="foo.exe">',
+            '<map name="foo"><area href="data%3A…">',
+        ];
+
+        yield 'Does not allow arbitrary data- attributes' => [
+            '<span data-bs-toggle="tooltip" data-bs-html="true" title="&lt;img src=x onerror=alert(1)&gt;">',
+            '<span title="&lt;img src=x onerror=alert(1)&gt;">',
+        ];
+
+        yield 'Does not allow referrerpolicy attribute' => [
+            '<a href="" referrerpolicy="unsafe-url"><map name="foo"><area href="" referrerpolicy="unsafe-url"><img src="" referrerpolicy="unsafe-url">',
+            '<a href=""><map name="foo"><area href=""><img src="">',
         ];
 
         yield [
