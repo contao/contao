@@ -457,6 +457,7 @@ services:
 
     contao.http_client.no_private_network_except_root_pages:
         class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        public: true
         arguments:
             - '@http_client'
             - '@contao.framework'
