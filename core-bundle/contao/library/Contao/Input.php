@@ -812,6 +812,12 @@ class Input
 			$arrAttributes[$strAttribute] = $strValue;
 		}
 
+		if (isset($arrAttributes['target']))
+		{
+			$arrAttributes['rel'] = preg_replace('/(\s|^)(?:no)?opener(?:\s|$)/i', '$1', $arrAttributes['rel'] ?? '');
+			$arrAttributes['rel'] = trim('noopener ' . $arrAttributes['rel']);
+		}
+
 		return $arrAttributes;
 	}
 
