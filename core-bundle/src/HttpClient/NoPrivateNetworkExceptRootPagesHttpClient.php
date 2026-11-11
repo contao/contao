@@ -191,7 +191,7 @@ final class NoPrivateNetworkExceptRootPagesHttpClient implements HttpClientInter
         }
 
         if ($dnsCache->offsetExists($host)) {
-            return $dnsCache[$host];
+            return $options['resolve'][$host] = $dnsCache[$host];
         }
 
         if ((FILTER_FLAG_IPV4 & $ipFlags) && $ip = gethostbynamel($host)) {
