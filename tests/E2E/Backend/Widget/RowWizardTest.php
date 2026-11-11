@@ -105,6 +105,37 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertTrue($this->ghost($backend, 'row_wizard_basic')->isVisible());
     }
 
+    public function testMandatoryFieldOfAnEmptyRowWizardDoesNotBlockSaving(): void
+    {
+        $backend = $this->openNewRowWizardMandatoryElement();
+
+        // Without a row, the browser must not validate the mandatory field
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+        $this->assertTrue($this->isFormValid($backend));
+
+        // Saving the untouched row wizard does not create a row either
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+
+        $this->add($backend, 'row_wizard_with_mandatory');
+        $this->assertFalse($this->isFormValid($backend));
+
+        $this->input($backend, 'row_wizard_with_mandatory', 0, 'name')->fill('Only');
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 1);
+
+        // The same applies after deleting the last row, which stores an empty value
+        $this->buttons($backend, 'row_wizard_with_mandatory', 'delete')->first()->click();
+        $this->assertTrue($this->isFormValid($backend));
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();
@@ -180,6 +211,21 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         return $backend;
     }
 
+    private function openNewRowWizardMandatoryElement(): BackendBrowser
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
+
+        $backend->submitNew();
+        $backend->submitAction('Paste at the top');
+
+        // Changing the type auto-submits the form so we wait until the text palette is gone
+        $backend->select('type', 'row_wizard_mandatory');
+        $backend->page()->locator('textarea[name="text"]')->waitFor(['state' => 'detached']);
+
+        return $backend;
+    }
+
     private function add(BackendBrowser $backend, string $field): void
     {
         $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-add', $field))->click();
@@ -188,6 +234,14 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
     private function ghost(BackendBrowser $backend, string $field): LocatorInterface
     {
         return $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-ghost', $field));
+    }
+
+    /**
+     * Returns whether the browser would submit the edit form.
+     */
+    private function isFormValid(BackendBrowser $backend): bool
+    {
+        return $backend->page()->locator('#ctrl_row_wizard_with_mandatory')->evaluate('el => el.closest("form").checkValidity()');
     }
 
     /**

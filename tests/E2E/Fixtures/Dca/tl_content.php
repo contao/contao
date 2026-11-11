@@ -70,6 +70,19 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_with_limited_actions'] = 
     'eval' => ['actions' => ['copy', 'edit'], 'sortable' => false, 'tl_class' => 'clr'],
 ];
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_with_mandatory'] = [
+    'label' => ['Row wizard with mandatory field', ''],
+    'inputType' => 'rowWizard',
+    'fields' => [
+        'name' => [
+            'label' => ['Name', ''],
+            'inputType' => 'text',
+            'eval' => ['mandatory' => true],
+        ],
+    ],
+    'eval' => ['tl_class' => 'clr'],
+];
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['table_wizard_basic'] = [
     'label' => ['Table wizard basic', ''],
     'inputType' => 'tableWizard',
@@ -85,6 +98,9 @@ PaletteManipulator::create()
     ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions'], 'text_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('text', 'tl_content')
 ;
+
+// A mandatory field in a hidden row would block saving the other row wizards
+$GLOBALS['TL_DCA']['tl_content']['palettes']['row_wizard_mandatory'] = '{type_legend},type,row_wizard_with_mandatory';
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['list_wizard_basic'] = [
     'label' => ['List wizard basic', ''],
