@@ -21,6 +21,7 @@ use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Database;
 use Contao\Date;
 use Contao\Environment;
@@ -30,6 +31,8 @@ use Contao\Frontend;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\Idna;
+use Contao\Input;
+use Contao\InputEncodingMode;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
@@ -472,16 +475,45 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             // Images
             case 'figure':
                 // Expected format: {{figure::<from>[?<key>=<value>,[&<key>=<value>]*]}}
-                [$from, $configuration] = $this->parseUrlWithQueryString((string) $insertTag->getParameters()->get(0));
+                [$from, $query] = $this->parseUrlWithQueryString((string) $insertTag->getParameters()->get(0));
 
                 if (null === $from || 1 !== \count($insertTag->getParameters()->all()) || Validator::isInsecurePath($from) || Path::isAbsolute($from)) {
                     break;
                 }
 
-                $size = $configuration['size'] ?? null;
-                $template = $configuration['template'] ?? '@Contao/insert_tag/figure.html.twig';
+                $size = $query['size'] ?? null;
+                $template = $query['template'] ?? '@Contao/insert_tag/figure.html.twig';
+                $configuration = [];
 
-                unset($configuration['size'], $configuration['template']);
+                if (\is_array($query['metadata'] ?? null)) {
+                    $configuration['metadata'] = $query['metadata'];
+                    if (isset($configuration['metadata']['link'])) {
+                        $configuration['metadata']['link'] = StringUtil::specialcharsUrl($configuration['metadata']['link']);
+                    }
+                }
+
+                if (isset($query['linkHref'])) {
+                    $configuration['linkHref'] = StringUtil::specialcharsUrl($query['linkHref']);
+                }
+
+                foreach (['disableMetadata', 'locale', 'lightboxSize', 'lightboxGroupIdentifier', 'enableLightbox'] as $key) {
+                    if (isset($query[$key])) {
+                        $configuration[$key] = $query[$key];
+                    }
+                }
+
+                foreach ([
+                    'figure' => 'attr',
+                    'a' => 'link_attr',
+                    'figcaption' => 'caption_attr',
+                    'img' => 'img_attr',
+                    'picture' => 'picture_attr',
+                    'source' => 'source_attr',
+                ] as $tag => $option) {
+                    if (\is_array($value = $query['options'][$option] ?? null)) {
+                        $configuration['options'][$option] = $this->sanitizeHtmlAttributes($tag, $value);
+                    }
+                }
 
                 // Render the figure
                 $figureRenderer = $this->container->get('contao.image.studio.figure_renderer');
@@ -653,5 +685,20 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
         );
 
         return [$base, $attributes];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function sanitizeHtmlAttributes(string $tag, array $attributes): array
+    {
+        $attr = new HtmlAttributes($attributes);
+        $sanitized = Input::encodeInput("<$tag$attr>", InputEncodingMode::sanitizeHtml, false);
+
+        if (substr($sanitized, 0, \strlen($tag) + 2) === "<$tag ") {
+            return iterator_to_array(new HtmlAttributes(substr($sanitized, \strlen($tag) + 2)));
+        }
+
+        return [];
     }
 }
