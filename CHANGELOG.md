@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.17] (2026-11-11)
+
+**Security fixes:**
+
+- [GHSA-xh3r-77ch-frm3]: Stored cross-site scripting in the file manager via crafted filenames
+- [GHSA-wvj5-rchg-986m]: NoPrivateNetworkExceptRootPagesHttpClient does not pin the checked IP of cached hosts
+- [GHSA-6m74-9w88-r3fh]: Insert tag injection in the breadcrumb module on 404 pages
+- [GHSA-5mg3-mv6j-57wc]: Session invalidation upon enabling or disabling 2FA
+- [GHSA-pc2r-hvrc-f4v6]: Cross-site scripting in the figure insert tag
+- [GHSA-rgq4-cg48-xjxj]: Insufficient CSRF protection for backend login
+- [GHSA-5mw8-wv8h-h6hx]: Insufficient scope validation for passkey authentication
+- [GHSA-26h3-f97j-vj85]: Contao crawler leaks confidental headers
+- [GHSA-9jfh-v443-w3fj]: Filemount access-control bypass in DC_Folder::editAll
+- [GHSA-r7cf-mfp4-r23h]: Path traversal via decode-after-check in the image insert tag
+- [GHSA-4mx5-xq7q-77cm]: Server-side request forgery via unvalidated feed URL in the legacy RSS reader module
+- [GHSA-58r4-2p86-jp4x]: HTML sanitizer is vulnerable to DOM clobbering
+
 ## [5.7.16] (2026-11-06)
 
 **Fixed issues:**
@@ -675,6 +692,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.17]: https://github.com/contao/contao/releases/tag/5.7.17
 [5.7.16]: https://github.com/contao/contao/releases/tag/5.7.16
 [5.7.15]: https://github.com/contao/contao/releases/tag/5.7.15
 [5.7.14]: https://github.com/contao/contao/releases/tag/5.7.14
@@ -696,6 +714,18 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
+[GHSA-xh3r-77ch-frm3]: https://github.com/contao/contao/security/advisories/GHSA-xh3r-77ch-frm3
+[GHSA-wvj5-rchg-986m]: https://github.com/contao/contao/security/advisories/GHSA-wvj5-rchg-986m
+[GHSA-6m74-9w88-r3fh]: https://github.com/contao/contao/security/advisories/GHSA-6m74-9w88-r3fh
+[GHSA-5mg3-mv6j-57wc]: https://github.com/contao/contao/security/advisories/GHSA-5mg3-mv6j-57wc
+[GHSA-pc2r-hvrc-f4v6]: https://github.com/contao/contao/security/advisories/GHSA-pc2r-hvrc-f4v6
+[GHSA-rgq4-cg48-xjxj]: https://github.com/contao/contao/security/advisories/GHSA-rgq4-cg48-xjxj
+[GHSA-5mw8-wv8h-h6hx]: https://github.com/contao/contao/security/advisories/GHSA-5mw8-wv8h-h6hx
+[GHSA-26h3-f97j-vj85]: https://github.com/contao/contao/security/advisories/GHSA-26h3-f97j-vj85
+[GHSA-9jfh-v443-w3fj]: https://github.com/contao/contao/security/advisories/GHSA-9jfh-v443-w3fj
+[GHSA-r7cf-mfp4-r23h]: https://github.com/contao/contao/security/advisories/GHSA-r7cf-mfp4-r23h
+[GHSA-4mx5-xq7q-77cm]: https://github.com/contao/contao/security/advisories/GHSA-4mx5-xq7q-77cm
+[GHSA-58r4-2p86-jp4x]: https://github.com/contao/contao/security/advisories/GHSA-58r4-2p86-jp4x
 [CVE-2026-107842]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
 [CVE-2026-107843]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
 [CVE-2026-107848]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
