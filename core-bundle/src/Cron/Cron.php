@@ -32,6 +32,8 @@ class Cron
 
     final public const SCOPE_CLI = 'cli';
 
+    private const SKIPPED_JOB_LOCK_ATTEMPTS = 5;
+
     /**
      * @var array<CronJob>
      */
@@ -137,6 +139,8 @@ class Cron
             return;
         }
 
+        $commit = false;
+
         try {
             // Go through each cron job
             foreach ($cronJobs as $cron) {
@@ -148,6 +152,7 @@ class Cron
                 $lastRunEntity = $repository->findOneByName($name);
 
                 if ($lastRunEntity) {
+                    $entityManager->refresh($lastRunEntity);
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
@@ -173,16 +178,46 @@ class Cron
 
             $entityManager->flush();
             $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
+            $commit = true;
         } finally {
-            $repository->unlockTable();
+            $repository->unlockTable($commit);
         }
 
         // Callback to restore previous run date in case cronjob skips itself
-        $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
-            $lastRunEntity = $repository->findOneByName($cron->getName());
-            $lastRunEntity->setLastRun($cron->getPreviousRun());
+        $onSkip = static function (CronJob $cron) use ($repository, $entityManager, $now): void {
+            for ($attempt = 1; $attempt <= self::SKIPPED_JOB_LOCK_ATTEMPTS; ++$attempt) {
+                try {
+                    $repository->lockTable();
+                    break;
+                } catch (LockWaitTimeoutException $e) {
+                    if (self::SKIPPED_JOB_LOCK_ATTEMPTS === $attempt) {
+                        throw $e;
+                    }
+                }
+            }
 
-            $entityManager->flush();
+            $commit = true;
+
+            try {
+                if (!$lastRunEntity = $repository->findOneByName($cron->getName())) {
+                    return;
+                }
+
+                $entityManager->refresh($lastRunEntity);
+
+                if ($lastRunEntity->getLastRun()->getTimestamp() !== $now->getTimestamp()) {
+                    return;
+                }
+
+                $lastRunEntity->setLastRun($cron->getPreviousRun());
+                $entityManager->flush();
+            } catch (\Throwable $e) {
+                $commit = false;
+
+                throw $e;
+            } finally {
+                $repository->unlockTable($commit);
+            }
         };
 
         $this->executeCrons($cronJobsToBeRun, $scope, $entityManager, $onSkip);
@@ -195,6 +230,15 @@ class Cron
     {
         $promises = [];
         $exception = null;
+
+        $handleSkip = function (CronJob $cron) use ($onSkip, &$exception): void {
+            try {
+                $onSkip($cron);
+            } catch (\Throwable $e) {
+                $this->logger?->error(\sprintf('Could not restore the previous run date for skipped cron job "%s": %s', $cron->getName(), $e));
+                $exception ??= $e;
+            }
+        };
 
         foreach ($crons as $cron) {
             try {
@@ -210,9 +254,9 @@ class Cron
                     function () use ($cron): void {
                         $this->logger?->debug(\sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
                     },
-                    function ($reason) use ($onSkip, $cron): void {
+                    function ($reason) use ($handleSkip, $cron): void {
                         if ($reason instanceof CronExecutionSkippedException) {
-                            $onSkip($cron);
+                            $handleSkip($cron);
                         } else {
                             $this->logger?->debug(\sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
@@ -221,7 +265,7 @@ class Cron
 
                 $promises[] = $promise;
             } catch (CronExecutionSkippedException) {
-                $onSkip($cron);
+                $handleSkip($cron);
             } catch (\Throwable $e) {
                 // Catch any exceptions so that other cronjobs are still executed
                 $this->logger?->error((string) $e);
