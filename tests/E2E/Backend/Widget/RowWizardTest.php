@@ -165,6 +165,41 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
     }
 
+    public function testNestedRowsAddedAfterCopyingBelongToTheirRow(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('Outer');
+
+        // Both nested row wizards are still empty after copying the outer row
+        $this->copyOuterRow($backend, 0);
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->assertSame(0, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(0, $this->nestedRows($backend, 1)->count());
+
+        // The nested rows are named after the outer row they have been added to
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('First');
+
+        $this->addNested($backend, 1);
+        $this->nestedInput($backend, 1, 0)->fill('Second');
+
+        $this->addNested($backend, 1);
+        $this->nestedInput($backend, 1, 1)->fill('Third');
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+        $this->assertSame(1, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(2, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('First', $this->nestedInput($backend, 0, 0)->inputValue());
+        $this->assertSame('Second', $this->nestedInput($backend, 1, 0)->inputValue());
+        $this->assertSame('Third', $this->nestedInput($backend, 1, 1)->inputValue());
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();
