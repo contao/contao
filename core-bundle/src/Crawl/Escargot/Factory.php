@@ -228,9 +228,15 @@ class Factory
             }
         }
 
-        foreach ($options['headers'] ?? [] as $header => $value) {
+        foreach ($options['headers'] ?? [] as $key => $value) {
+            $header = $key;
+
+            if (\is_int($key) && (\is_string($value) || $value instanceof \Stringable)) {
+                $header = explode(':', (string) $value, 2)[0];
+            }
+
             if (\in_array(strtolower((string) $header), ['authorization', 'cookie'], true)) {
-                unset($options['headers'][$header]);
+                unset($options['headers'][$key]);
             }
         }
 
