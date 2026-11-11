@@ -32,6 +32,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html', 'POST');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->attributes->set('_token_check', true);
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -45,6 +46,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->headers->set('PHP_AUTH_USER', 'user');
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -59,6 +61,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
         $request->setSession($session);
 
         $request->attributes->set('_token_check', true);
@@ -71,6 +74,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $this->validateRequestTokenForRequest($request, false);
     }
@@ -79,6 +83,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['csrf_contao_csrf_token' => 'value']);
 
@@ -105,6 +110,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -157,6 +163,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -190,6 +197,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -217,6 +225,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
@@ -247,6 +256,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->attributes->set('_token_check', false);
 
@@ -282,6 +292,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -321,6 +332,23 @@ class RequestTokenListenerTest extends TestCase
 
         $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
+    }
+
+    public function testValidatesTheRequestTokenWithoutOriginHeader(): void
+    {
+        $request = Request::create('/account.html');
+        $request->setMethod('POST');
+
+        $this->validateRequestTokenForRequest($request);
+    }
+
+    public function testDoesNotValidateTheRequestTokenWithOriginHeader(): void
+    {
+        $request = Request::create('https://example.com/account.html');
+        $request->setMethod('POST');
+        $request->headers->set('Origin', 'https://example.com');
+
+        $this->validateRequestTokenForRequest($request, false);
     }
 
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
