@@ -167,7 +167,8 @@ export default class extends Controller {
 
     updateSorting() {
         const selector = this.nameValue.replaceAll('[', '\\[').replaceAll(']', '\\]');
-        const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
+        const escapedName = this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regexPattern = new RegExp(`${escapedName}\\[[0-9]+\\]`, 'g');
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
@@ -199,21 +200,36 @@ export default class extends Controller {
             }
         });
 
-        const optionsRegexPattern = new RegExp(`^${this.nameValue}_(default|group)_(\\d+)$`);
+        const idPatterns = [
+            {
+                selectors: [
+                    `[for^=${selector}_default_]`,
+                    `[for^=${selector}_group_]`,
+                    `[id^=${selector}_default_]`,
+                    `[id^=${selector}_group_]`,
+                ],
+                pattern: new RegExp(`^${escapedName}_(default|group)_(\\d+)$`),
+                format: (index) => `${this.nameValue}_$1_${index}`,
+            },
+            {
+                selectors: [`[for^=${selector}_][for$=_enable]`, `[id^=${selector}_][id$=_enable]`],
+                pattern: new RegExp(`^${escapedName}_\\d+_enable$`),
+                format: (index) => `${this.nameValue}_${index}_enable`,
+            },
+        ];
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll(
-                `[for^=${selector}_default_], [for^=${selector}_group_], [id^=${selector}_default_], [id^=${selector}_group_]`,
-            )) {
-                if (el.id) {
-                    el.id = el.id.replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`);
-                }
+            for (const { selectors, pattern, format } of idPatterns) {
+                const replacement = format(i);
 
-                if (el.getAttribute('for')) {
-                    el.setAttribute(
-                        'for',
-                        el.getAttribute('for').replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`),
-                    );
+                for (const el of tr.querySelectorAll(selectors.join(', '))) {
+                    if (el.id) {
+                        el.id = el.id.replace(pattern, replacement);
+                    }
+
+                    if (el.getAttribute('for')) {
+                        el.setAttribute('for', el.getAttribute('for').replace(pattern, replacement));
+                    }
                 }
             }
         });
