@@ -200,6 +200,37 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Third', $this->nestedInput($backend, 1, 1)->inputValue());
     }
 
+    public function testMovingARowKeepsTheRowsOfANestedRowWizard(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('First');
+        $this->input($backend, 'row_wizard_nested', 1, 'title')->fill('Second');
+
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('Inner');
+
+        // Moving the first row below the second one reconnects its nested row wizard
+        $this->outerRow($backend, 0, '> td:first-child > .drag-handle')->focus();
+
+        $backend->page()->keyboard()->press('ArrowDown');
+
+        $this->assertSame('First', $this->input($backend, 'row_wizard_nested', 1, 'title')->inputValue());
+        $this->assertSame(1, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertSame('Second', $this->input($backend, 'row_wizard_nested', 0, 'title')->inputValue());
+        $this->assertSame('First', $this->input($backend, 'row_wizard_nested', 1, 'title')->inputValue());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();
