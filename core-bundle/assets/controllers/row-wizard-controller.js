@@ -20,7 +20,7 @@ export default class extends Controller {
         }
 
         if (this.emptyValue) {
-            this.rowTargets[0].hidden = true;
+            this.#disableRow(this.rowTargets[0]);
         }
 
         this.#updatePermissions();
@@ -260,7 +260,15 @@ export default class extends Controller {
             return;
         }
 
-        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
+        // Disable all form controls of the hidden row, so they are neither submitted nor
+        // validated by the browser (a hidden required field would block the form submission)
+        for (const el of row.querySelectorAll('input, select, textarea, button')) {
+            if (!el.disabled) {
+                el.disabled = true;
+                el.dataset.rowWizardDisabled = '';
+            }
+        }
+
         row.hidden = true;
     }
 
@@ -270,7 +278,12 @@ export default class extends Controller {
         }
 
         row.hidden = false;
-        row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
+
+        // Only re-enable the form controls that have been disabled in #disableRow()
+        for (const el of row.querySelectorAll('[data-row-wizard-disabled]')) {
+            el.disabled = false;
+            delete el.dataset.rowWizardDisabled;
+        }
     }
 
     #resetInputs(row) {
