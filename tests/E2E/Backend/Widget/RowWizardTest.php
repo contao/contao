@@ -231,6 +231,32 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
     }
 
+    public function testChosenSelectOfAnAddedRowIsUsable(): void
+    {
+        $backend = $this->openNewTextElement();
+        $page = $backend->page();
+
+        $choices = '#ctrl_row_wizard_with_chosen > tbody > tr:nth-child(1) .choices';
+
+        $this->assertRows($backend, 'row_wizard_with_chosen', 0);
+
+        $this->add($backend, 'row_wizard_with_chosen');
+
+        // The enhanced select menu of the first row is not disabled
+        $page->locator($choices)->waitFor(['state' => 'visible']);
+        $this->assertSame(0, $page->locator($choices.'.is-disabled')->count());
+
+        $page->locator($choices)->click();
+        $page->locator($choices.' .choices__item--choice[data-value="b"]')->click();
+
+        $this->assertSame('b', $this->input($backend, 'row_wizard_with_chosen', 0, 'type')->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_chosen', 1);
+        $this->assertSame('b', $this->input($backend, 'row_wizard_with_chosen', 0, 'type')->inputValue());
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();

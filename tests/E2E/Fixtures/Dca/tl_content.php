@@ -105,6 +105,20 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_nested'] = [
     'eval' => ['tl_class' => 'clr'],
 ];
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_with_chosen'] = [
+    'label' => ['Row wizard with chosen select', ''],
+    'inputType' => 'rowWizard',
+    'fields' => [
+        'type' => [
+            'label' => ['Type', ''],
+            'inputType' => 'select',
+            'options' => ['a', 'b', 'c'],
+            'eval' => ['chosen' => true],
+        ],
+    ],
+    'eval' => ['tl_class' => 'clr'],
+];
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['table_wizard_basic'] = [
     'label' => ['Table wizard basic', ''],
     'inputType' => 'tableWizard',
@@ -117,7 +131,7 @@ PaletteManipulator::create()
 ;
 
 PaletteManipulator::create()
-    ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions', 'row_wizard_nested'], 'text_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions', 'row_wizard_nested', 'row_wizard_with_chosen'], 'text_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('text', 'tl_content')
 ;
 
