@@ -32,7 +32,6 @@ class WebauthnUserEntityRepositoryTest extends TestCase
             ->method('getPasskeyUserHandle')
             ->willReturn($scope.'.42')
         ;
-
         $user
             ->method('getDisplayName')
             ->willReturn('Jane Doe')
@@ -50,7 +49,6 @@ class WebauthnUserEntityRepositoryTest extends TestCase
                 ->with($providerArgument)
                 ->willReturn($user)
             ;
-
             $provider
                 ->expects($this->never())
                 ->method('loadUserByIdentifier' === $providerMethod ? 'loadUserById' : 'loadUserByIdentifier')
@@ -62,7 +60,6 @@ class WebauthnUserEntityRepositoryTest extends TestCase
             ->method('isBackendRequest')
             ->willReturn('backend' === $scope)
         ;
-
         $scopeMatcher
             ->method('isFrontendRequest')
             ->willReturn('frontend' === $scope)
