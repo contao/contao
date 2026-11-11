@@ -568,7 +568,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     }
 
                     $strFile = $objFile->path;
-                } elseif (Validator::isInsecurePath($strFile)) {
+                } elseif (Validator::isInsecurePath(rawurldecode($strFile))) {
                     throw new \RuntimeException('Invalid path '.$strFile);
                 }
 
