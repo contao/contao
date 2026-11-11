@@ -714,7 +714,8 @@ class PageRegular extends Frontend
 				return '';
 			}
 
-			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
+			// Escape insert tags
+			return str_replace(array('{{', '}}'), array('\{\{', '\}\}'), $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs());
 		};
 	}
 }
