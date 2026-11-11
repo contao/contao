@@ -136,6 +136,35 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
     }
 
+    public function testCopyingARowKeepsTheRowsOfANestedRowWizard(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('Outer');
+
+        // The nested row wizard starts empty as well
+        $this->assertSame(0, $this->nestedRows($backend, 0)->count());
+
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('Inner');
+
+        // Copying the outer row reconnects the nested row wizards
+        $this->copyOuterRow($backend, 0);
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->assertSame(1, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(1, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+        $this->assertSame('Inner', $this->nestedInput($backend, 0, 0)->inputValue());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();
@@ -228,7 +257,7 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
 
     private function add(BackendBrowser $backend, string $field): void
     {
-        $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-add', $field))->click();
+        $backend->page()->locator(\sprintf('#ctrl_%s > tfoot .row-wizard-add', $field))->click();
     }
 
     private function ghost(BackendBrowser $backend, string $field): LocatorInterface
@@ -273,5 +302,36 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $this->assertSame($count, $rows->count());
+    }
+
+    /**
+     * Returns an element inside a row of the "row_wizard_nested" field.
+     */
+    private function outerRow(BackendBrowser $backend, int $row, string $selector): LocatorInterface
+    {
+        return $backend->page()->locator(\sprintf('#ctrl_row_wizard_nested > tbody > tr:nth-child(%d) %s', $row + 1, $selector));
+    }
+
+    private function copyOuterRow(BackendBrowser $backend, int $row): void
+    {
+        $this->outerRow($backend, $row, '> td.tl_right > button[data-contao--row-wizard-target="copy"]')->click();
+    }
+
+    private function addNested(BackendBrowser $backend, int $row): void
+    {
+        $this->outerRow($backend, $row, 'table.row_wizard .row-wizard-add')->click();
+    }
+
+    /**
+     * Returns the visible rows of the nested row wizard in the given row.
+     */
+    private function nestedRows(BackendBrowser $backend, int $row): LocatorInterface
+    {
+        return $this->outerRow($backend, $row, 'table.row_wizard > tbody > tr:visible');
+    }
+
+    private function nestedInput(BackendBrowser $backend, int $row, int $nestedRow): LocatorInterface
+    {
+        return $backend->page()->locator(\sprintf('#ctrl_row_wizard_nested > tbody table.row_wizard > tbody [name="row_wizard_nested[%d][items][%d][name]"]:visible', $row, $nestedRow));
     }
 }

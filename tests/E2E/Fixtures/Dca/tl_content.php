@@ -83,6 +83,28 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_with_mandatory'] = [
     'eval' => ['tl_class' => 'clr'],
 ];
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['row_wizard_nested'] = [
+    'label' => ['Nested row wizard', ''],
+    'inputType' => 'rowWizard',
+    'fields' => [
+        'title' => [
+            'label' => ['Title', ''],
+            'inputType' => 'text',
+        ],
+        'items' => [
+            'label' => ['Items', ''],
+            'inputType' => 'rowWizard',
+            'fields' => [
+                'name' => [
+                    'label' => ['Name', ''],
+                    'inputType' => 'text',
+                ],
+            ],
+        ],
+    ],
+    'eval' => ['tl_class' => 'clr'],
+];
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['table_wizard_basic'] = [
     'label' => ['Table wizard basic', ''],
     'inputType' => 'tableWizard',
@@ -95,7 +117,7 @@ PaletteManipulator::create()
 ;
 
 PaletteManipulator::create()
-    ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions'], 'text_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField(['row_wizard_basic', 'row_wizard_with_min', 'row_wizard_with_max', 'row_wizard_with_limited_actions', 'row_wizard_nested'], 'text_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('text', 'tl_content')
 ;
 
