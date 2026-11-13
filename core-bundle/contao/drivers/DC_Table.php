@@ -2331,7 +2331,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$security = System::getContainer()->get('security.helper');
 
-		// Check the position where save and new/duplicate buttons redirect to (see #10474 / #10475)
+		// Check the position where save and new/duplicate buttons redirect to (see #10474 and #10475)
 		if ($this->treeView || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT && Database::getInstance()->fieldExists('sorting', $this->strTable)))
 		{
 			$arrNew = $this->addDynamicPtable(array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1));
