@@ -74,6 +74,11 @@ services:
             - '@database_connection'
             - '@contao.framework'
 
+    contao.migration.version_503.cron_job:
+        class: Contao\CoreBundle\Migration\Version503\CronJobMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_503.file_extension:
         class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
         arguments:
