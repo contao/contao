@@ -148,6 +148,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $roles = array();
 
 	/**
+	 * Two-factor fingerprint used for session invalidation
+	 * @var string|false|null
+	 */
+	private $twoFactorFingerprint;
+
+	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone()
@@ -386,18 +392,26 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'password' => $this->password,
 			'disable' => $this->disable,
 			'start' => $this->start,
-			'stop' => $this->stop
+			'stop' => $this->stop,
+			'twoFactorFingerprint' => $this->getTwoFactorFingerprint(),
 		);
 	}
 
 	public function __unserialize(array $data): void
 	{
-		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop', 'twoFactorFingerprint'))
 		{
-			return;
+			// Backwards compatibility
+			if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
+			{
+				return;
+			}
+
+			// Invalidate old sessions
+			$data['twoFactorFingerprint'] = 'invalidate';
 		}
 
-		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop, $this->twoFactorFingerprint) = array_values($data);
 	}
 
 	/**
@@ -442,6 +456,26 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
+		if ($this->getTwoFactorFingerprint() !== $user->getTwoFactorFingerprint())
+		{
+			return false;
+		}
+
 		return true;
+	}
+
+	private function getTwoFactorFingerprint(): string|false
+	{
+		if (null !== $this->twoFactorFingerprint)
+		{
+			return $this->twoFactorFingerprint;
+		}
+
+		if (!$this->useTwoFactor)
+		{
+			return false;
+		}
+
+		return hash('sha256', $this->secret);
 	}
 }

@@ -2,6 +2,42 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.54] (2026-11-11)
+
+**Security fixes:**
+
+- [GHSA-xh3r-77ch-frm3]: Stored cross-site scripting in the file manager via crafted filenames
+- [GHSA-wvj5-rchg-986m]: NoPrivateNetworkExceptRootPagesHttpClient does not pin the checked IP of cached hosts
+- [GHSA-6m74-9w88-r3fh]: Insert tag injection in the breadcrumb module on 404 pages
+- [GHSA-5mg3-mv6j-57wc]: Session invalidation upon enabling or disabling 2FA
+- [GHSA-pc2r-hvrc-f4v6]: Cross-site scripting in the figure insert tag
+- [GHSA-rgq4-cg48-xjxj]: Insufficient CSRF protection for backend login
+- [GHSA-26h3-f97j-vj85]: Contao crawler leaks confidental headers
+- [GHSA-9jfh-v443-w3fj]: Filemount access-control bypass in DC_Folder::editAll
+- [GHSA-r7cf-mfp4-r23h]: Path traversal via decode-after-check in the image insert tag
+- [GHSA-4mx5-xq7q-77cm]: Server-side request forgery via unvalidated feed URL in the legacy RSS reader module
+- [GHSA-58r4-2p86-jp4x]: HTML sanitizer is vulnerable to DOM clobbering
+
+## [5.3.53] (2026-11-06)
+
+**Fixed issues:**
+
+- [#10545] Add `aria-describedby` to the back end tooltips ([zoglo])
+- [#10542] Complete the 2FA provider for valid backup codes as well ([zoglo])
+- [#10539] Do not use autoconfiguration for shared listeners ([leofeyer])
+- [#10537] Migrate `feedBase` from legacy feeds ([fritzmg])
+- [#10499] Add the base URL for news feeds ([fritzmg])
+- [#10533] Fix the base path in two templates ([leofeyer])
+- [#10473] Backport checking for the theme slug when rendering Twig surrogate templates ([zoglo])
+- [#10525] Fix a potential `undefined array key` warning in the `Dbafs` service ([qzminski])
+- [#10409] Do not use the `asset` function for theme files ([aschempp])
+- [#10490] Render fragments always inline in the back end ([fritzmg])
+- [#10488] Handle fragment response exceptions in preview ([fritzmg])
+- [#10461] Fix non-transitive route sorting ([ausi])
+- [#10452] Prevent an error when editing a missing module ([aschempp])
+- [#10449] Support Escargot 2.0 while retaining 1.x compatibility ([Toflar])
+- [#10446] Remove leftover logout stuff ([aschempp])
+
 ## [5.3.52] (2026-10-09)
 
 **Fixed issues:**
@@ -58,11 +94,11 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [GHSA-x2rp-9qf7-2fmq]: Exposure of sensitive information through a stale search index
-- [GHSA-mfxh-vp55-7gc6]: Unrestricted activation email resending
-- [GHSA-9ff2-p842-45wq]: Cross-site request forgery in custom backend actions
-- [GHSA-mrvp-7wmx-5m4h]: Path traversal in the images controller
-- [GHSA-628f-v4f6-p37r]: Cross-site scripting in the comments bundle
+- [CVE-2026-107842]: Exposure of sensitive information through a stale search index
+- [CVE-2026-107843]: Unrestricted activation email resending
+- [CVE-2026-107848]: Cross-site request forgery in custom backend actions
+- [CVE-2026-107844]: Path traversal in the images controller
+- [CVE-2026-107845]: Cross-site scripting in the comments bundle
 - [CVE-2026-104884]: Cross-site scripting in the frontend search results
 - [CVE-2026-104883]: Non-admin users can self-grant permissions that implicitly make them administrators
 - [CVE-2026-104882]: Improper access control in the CSV import wizard
@@ -853,7 +889,7 @@ This project adheres to [Semantic Versioning].
 - [#6946] Improve the performance of the database dumper ([Toflar])
 - [#6944] Correctly check if a "jump to" page is set when generating event feeds ([leofeyer])
 - [#6919] Make full authentication optional in the personal data module ([leofeyer])
-- [#6941] Handle unicode strings in insert tag flags ([ausi])
+- [#6941] Handle Unicode strings in insert tag flags ([ausi])
 - [#6938] Add a button to the "invalid request token" template ([leofeyer])
 - [#6939] Correctly implement the `ImageFactoryInterface` ([leofeyer])
 - [#6936] Fix the Twig loader infrastructure ([m-vo])
@@ -1044,6 +1080,8 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.54]: https://github.com/contao/contao/releases/tag/5.3.54
+[5.3.53]: https://github.com/contao/contao/releases/tag/5.3.53
 [5.3.52]: https://github.com/contao/contao/releases/tag/5.3.52
 [5.3.51]: https://github.com/contao/contao/releases/tag/5.3.51
 [5.3.50]: https://github.com/contao/contao/releases/tag/5.3.50
@@ -1101,11 +1139,22 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
-[GHSA-x2rp-9qf7-2fmq]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
-[GHSA-mfxh-vp55-7gc6]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
-[GHSA-9ff2-p842-45wq]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
-[GHSA-mrvp-7wmx-5m4h]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
-[GHSA-628f-v4f6-p37r]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
+[GHSA-xh3r-77ch-frm3]: https://github.com/contao/contao/security/advisories/GHSA-xh3r-77ch-frm3
+[GHSA-wvj5-rchg-986m]: https://github.com/contao/contao/security/advisories/GHSA-wvj5-rchg-986m
+[GHSA-6m74-9w88-r3fh]: https://github.com/contao/contao/security/advisories/GHSA-6m74-9w88-r3fh
+[GHSA-5mg3-mv6j-57wc]: https://github.com/contao/contao/security/advisories/GHSA-5mg3-mv6j-57wc
+[GHSA-pc2r-hvrc-f4v6]: https://github.com/contao/contao/security/advisories/GHSA-pc2r-hvrc-f4v6
+[GHSA-rgq4-cg48-xjxj]: https://github.com/contao/contao/security/advisories/GHSA-rgq4-cg48-xjxj
+[GHSA-26h3-f97j-vj85]: https://github.com/contao/contao/security/advisories/GHSA-26h3-f97j-vj85
+[GHSA-9jfh-v443-w3fj]: https://github.com/contao/contao/security/advisories/GHSA-9jfh-v443-w3fj
+[GHSA-r7cf-mfp4-r23h]: https://github.com/contao/contao/security/advisories/GHSA-r7cf-mfp4-r23h
+[GHSA-4mx5-xq7q-77cm]: https://github.com/contao/contao/security/advisories/GHSA-4mx5-xq7q-77cm
+[GHSA-58r4-2p86-jp4x]: https://github.com/contao/contao/security/advisories/GHSA-58r4-2p86-jp4x
+[CVE-2026-107842]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
+[CVE-2026-107843]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
+[CVE-2026-107848]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
+[CVE-2026-107844]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
+[CVE-2026-107845]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
 [CVE-2026-104884]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
 [CVE-2026-104883]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
 [CVE-2026-104882]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
@@ -1864,4 +1913,19 @@ This project adheres to [Semantic Versioning].
 [#10390]: https://github.com/contao/contao/pull/10390
 [#10406]: https://github.com/contao/contao/pull/10406
 [#10408]: https://github.com/contao/contao/pull/10408
+[#10409]: https://github.com/contao/contao/pull/10409
 [#10427]: https://github.com/contao/contao/pull/10427
+[#10446]: https://github.com/contao/contao/pull/10446
+[#10449]: https://github.com/contao/contao/pull/10449
+[#10452]: https://github.com/contao/contao/pull/10452
+[#10461]: https://github.com/contao/contao/pull/10461
+[#10473]: https://github.com/contao/contao/pull/10473
+[#10488]: https://github.com/contao/contao/pull/10488
+[#10490]: https://github.com/contao/contao/pull/10490
+[#10499]: https://github.com/contao/contao/pull/10499
+[#10525]: https://github.com/contao/contao/pull/10525
+[#10533]: https://github.com/contao/contao/pull/10533
+[#10537]: https://github.com/contao/contao/pull/10537
+[#10539]: https://github.com/contao/contao/pull/10539
+[#10542]: https://github.com/contao/contao/pull/10542
+[#10545]: https://github.com/contao/contao/pull/10545

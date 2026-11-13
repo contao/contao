@@ -93,7 +93,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.purge_expired_data:
@@ -206,6 +206,11 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
+
     contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
         class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
         decorates: doctrine.orm.proxy_cache_warmer
@@ -316,6 +321,7 @@ services:
 
     contao.http_client.no_private_network_except_root_pages:
         class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        public: true
         arguments:
             - '@http_client'
             - '@contao.framework'
@@ -585,7 +591,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 

@@ -525,7 +525,7 @@ abstract class System
 		// Handle single quotes in the deleteConfirm message
 		if ($strName == 'default' && isset($GLOBALS['TL_LANG']['MSC']['deleteConfirm']))
 		{
-			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
+			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 	}
 
