@@ -21,6 +21,135 @@ use Symfony\Component\Routing\Route;
 class AbstractPageRouteProviderTest extends TestCase
 {
     /**
+     * @dataProvider transitiveRoutesProvider
+     */
+    public function testRouteComparisonIsTransitive(array $routes, array|null $languages): void
+    {
+        $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
+        $class = new \ReflectionClass($instance);
+
+        if (null !== $languages) {
+            $languages = $class->getMethod('convertLanguagesForSorting')->invoke($instance, $languages);
+        }
+
+        $method = $class->getMethod('compareRoutes');
+        $comparisons = [];
+
+        foreach ($routes as $nameA => $a) {
+            foreach ($routes as $nameB => $b) {
+                $comparisons[$nameA][$nameB] = $method->invoke($instance, $a, $b, $languages) <=> 0;
+            }
+        }
+
+        // Include ties: A <= B and B <= C must imply A <= C.
+        foreach (array_keys($routes) as $a) {
+            foreach (array_keys($routes) as $b) {
+                foreach (array_keys($routes) as $c) {
+                    if ($comparisons[$a][$b] <= 0 && $comparisons[$b][$c] <= 0) {
+                        $this->assertLessThanOrEqual(
+                            0,
+                            $comparisons[$a][$c],
+                            \sprintf('%s <= %s and %s <= %s, but %s > %s', $a, $b, $b, $c, $a, $c),
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    public function transitiveRoutesProvider(): iterable
+    {
+        $rootB = $this->mockPageModel('nl', true, true, 256);
+        $rootB->domain = 'b.example.com';
+
+        $indexC = $this->mockPageModel('nl', true, false, 384);
+        $indexC->domain = 'c.example.com';
+
+        $indexA = $this->mockPageModel('zh', true, false, 128);
+        $indexA->domain = 'a.example.com';
+
+        yield 'Host grouping prevents conflicting language and page type ordering across domains' => [
+            [
+                'Domain B root' => new Route('/', ['pageModel' => $rootB], [], [], $rootB->domain),
+                'Domain C index' => new Route('/', ['pageModel' => $indexC], [], [], $indexC->domain),
+                'Domain A index' => new Route('/', ['pageModel' => $indexA], [], [], $indexA->domain),
+            ],
+            ['en', 'de'],
+        ];
+
+        yield 'Shared language fallback changes the priority depending on the other route' => [
+            [
+                'German (Germany)' => new Route('/', ['pageModel' => $this->mockPageModel('de-DE')]),
+                'German' => new Route('/', ['pageModel' => $this->mockPageModel('de')]),
+                'English' => new Route('/', ['pageModel' => $this->mockPageModel('en')]),
+            ],
+            ['de-CH', 'en', 'de-DE'],
+        ];
+
+        yield 'Regional root ordering conflicts with fallback and page type ordering' => [
+            [
+                'Swiss German root' => new Route('/', ['pageModel' => $this->mockPageModel('de-CH', false, true, 128)]),
+                'German fallback index' => new Route('/', ['pageModel' => $this->mockPageModel('de-DE', true, false, 256)]),
+                'French index' => new Route('/', ['pageModel' => $this->mockPageModel('fr', false, false, 384)]),
+            ],
+            ['en'],
+        ];
+
+        yield 'Identical locales skip root ordering used for different regions' => [
+            [
+                'First Swiss German index' => new Route('/', ['pageModel' => $this->mockPageModel('de-CH', false, false, 128)]),
+                'German index' => new Route('/', ['pageModel' => $this->mockPageModel('de-DE', false, false, 256)]),
+                'Last Swiss German index with higher priority' => new Route('/', ['pageModel' => $this->mockPageModel('de-CH', false, false, 384, 1)]),
+            ],
+            ['en'],
+        ];
+
+        yield 'Custom parameter requirement compares equal to both required and optional parameters' => [
+            [
+                'Required' => new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '/.+?']),
+                'Optional' => new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '(/.+?)?']),
+                'Custom' => new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '/[0-9]+']),
+            ],
+            null,
+        ];
+
+        yield 'Parameter ordering uses case-sensitive paths but path ordering ignores case' => [
+            [
+                'Required lowercase' => new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '/.+?']),
+                'Optional lowercase' => new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '(/.+?)?']),
+                'Required uppercase' => new Route('/FOO{!parameters}', ['pageModel' => $this->mockPageModel('en')], ['parameters' => '/.+?']),
+            ],
+            null,
+        ];
+
+        $stringPriority = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'regular',
+            'rootLanguage' => 'en',
+            'rootIsFallback' => false,
+            'rootSorting' => 128,
+            'routePriority' => '0',
+        ]);
+
+        yield 'Numerically equal priorities with different types still compare paths' => [
+            [
+                'First path' => new Route('/a', ['pageModel' => $this->mockPageModel('en')]),
+                'String priority' => new Route('/z', ['pageModel' => $stringPriority]),
+                'Second path' => new Route('/b', ['pageModel' => $this->mockPageModel('en')]),
+            ],
+            null,
+        ];
+
+        yield 'Routes without page models do not compare equal to every page' => [
+            [
+                'First page' => new Route('/a', ['pageModel' => $this->mockPageModel('en')]),
+                'No page model' => new Route('/z'),
+                'Second page' => new Route('/b', ['pageModel' => $this->mockPageModel('en')]),
+            ],
+            null,
+        ];
+    }
+
+    /**
      * @dataProvider compareRoutesProvider
      */
     public function testCompareRoutes(Route $a, Route $b, array|null $languages, int $expected): void
@@ -294,6 +423,18 @@ class AbstractPageRouteProviderTest extends TestCase
 
     public static function ordersRoutesByPreferredLanguages(): iterable
     {
+        yield 'Shared fallback follows the explicitly requested variants' => [
+            ['de-DE', 'de', 'en'],
+            ['de-CH', 'en', 'de-DE'],
+            ['en', 'de-DE', 'de'],
+        ];
+
+        yield 'Specific region takes precedence over its generic language' => [
+            ['de-DE', 'de-CH'],
+            ['de', 'de-CH', 'fr'],
+            ['de-CH', 'de-DE'],
+        ];
+
         yield [
             ['de', 'en'],
             ['en', 'de'],
@@ -402,7 +543,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Does not change the sorting' => [
             ['de-DE', 'de-CH', 'fr', 'de', 'en-US', 'en'],
-            array_flip(['de_DE', 'de', 'de_CH', 'fr', 'de', 'en_US', 'en', 'en']),
+            array_flip(['de_DE', 'de_CH', 'fr', 'de', 'en_US', 'en']),
         ];
 
         yield 'Adds primary language if it does not exist' => [
@@ -410,9 +551,14 @@ class AbstractPageRouteProviderTest extends TestCase
             array_flip(['de_DE', 'de']),
         ];
 
-        yield 'Adds primary languages after first region' => [
+        yield 'Keeps the last occurrence of duplicate languages' => [
+            ['en', 'de', 'en'],
+            array_flip(['de', 'en']),
+        ];
+
+        yield 'Moves primary languages after the last region' => [
             ['de_DE', 'de_CH', 'en', 'en_US', 'fr_FR'],
-            array_flip(['de_DE', 'de', 'de_CH', 'en', 'en_US', 'fr_FR', 'fr']),
+            array_flip(['de_DE', 'de_CH', 'de', 'en_US', 'en', 'fr_FR', 'fr']),
         ];
 
         yield 'Strips array keys' => [
@@ -422,7 +568,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Compiles all fallback locales' => [
             ['zh-Hant-TW', 'zh-Hans-CN'],
-            array_flip(['zh_Hant_TW', 'zh_Hant', 'zh_TW', 'zh', 'zh_Hans_CN', 'zh_Hans', 'zh_CN']),
+            array_flip(['zh_Hant_TW', 'zh_Hant', 'zh_TW', 'zh_Hans_CN', 'zh_Hans', 'zh_CN', 'zh']),
         ];
     }
 
