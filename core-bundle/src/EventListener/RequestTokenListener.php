@@ -55,7 +55,8 @@ class RequestTokenListener
         // - the request is a CORS Content-Type that requires a preflight request,
         // - the _token_check attribute is not false,
         // - the _token_check attribute is true or the request is a Contao request and
-        // - the request has cookies, an authenticated user or the session has been started.
+        // - the request is cross-origin, has cookies, an authenticated user or the
+        // session has been started.
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
