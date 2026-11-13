@@ -16,12 +16,9 @@ use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class CronJobTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testThrowsExceptionIfNoMethodIsGivenAndServiceIsNotInvokable(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -45,24 +42,18 @@ class CronJobTest extends TestCase
         $this->assertSame('Example::job_%123', $job->getName());
     }
 
-    /**
-     * @group legacy
-     */
     public function testNormalizesNonAsciiNames(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
         $job = new CronJob(static fn () => null, '@daily', name: 'täglich_😀');
 
         $this->assertSame('tc3a4glich_f09f9880', $job->getName());
     }
 
-    /**
-     * @group legacy
-     */
     public function testNormalizesDerivedNames(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
-        $service = new class() {
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
+        $service = new class {
             public function täglich(): void
             {
             }

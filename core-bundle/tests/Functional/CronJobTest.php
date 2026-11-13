@@ -40,7 +40,7 @@ class CronJobTest extends FunctionalTestCase
         $this->repository = new CronJobRepository($registry);
         $this->connection->executeStatement('DROP TABLE IF EXISTS tl_cron_job');
         $manager = $registry->getManager();
-        $table = (new SchemaTool($manager))->getSchemaFromMetadata([$manager->getClassMetadata(CronJob::class)])->getTable('tl_cron_job');
+        $table = new SchemaTool($manager)->getSchemaFromMetadata([$manager->getClassMetadata(CronJob::class)])->getTable('tl_cron_job');
         $this->connection->createSchemaManager()->createTable($table);
     }
 
