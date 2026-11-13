@@ -96,11 +96,6 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
 
-// Timeout values
-$GLOBALS['TL_CONFIG']['undoPeriod']     = 2592000;
-$GLOBALS['TL_CONFIG']['versionPeriod']  = 7776000;
-$GLOBALS['TL_CONFIG']['logPeriod']      = 604800;
-
 // User defaults
 $GLOBALS['TL_CONFIG']['showHelp']   = true;
 $GLOBALS['TL_CONFIG']['thumbnails'] = true;
