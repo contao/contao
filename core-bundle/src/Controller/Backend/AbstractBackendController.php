@@ -17,6 +17,8 @@ use Contao\BackendMain;
 use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,6 +33,8 @@ abstract class AbstractBackendController extends AbstractController
 
         $services['request_stack'] = RequestStack::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
 
         return $services;
     }
@@ -45,6 +49,11 @@ abstract class AbstractBackendController extends AbstractController
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
         $getBackendContext = function (Request $request) {
+            // Ensure a response context is created
+            if (!$this->container->get('contao.routing.response_context_accessor')->getResponseContext()) {
+                $this->container->get('contao.routing.response_context_factory')->createWebpageResponseContext();
+            }
+
             $templateClosure = new class extends BackendMain {
                 public function __invoke(Request $request): BackendTemplate
                 {
