@@ -1,0 +1,3 @@
+contao_webhooks:
+    resource: ../src/Controller/WebhookController.php
+    type: attribute

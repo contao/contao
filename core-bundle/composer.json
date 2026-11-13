@@ -172,6 +172,7 @@
         "contao/api-bundle": "self.version",
         "contao/manager-plugin": "^2.3.1",
         "contao/news-bundle": "self.version",
+        "contao/webhooks-bundle": "self.version",
         "contao/test-case": "self.version",
         "doctrine/collections": "^2.1 || ^3.0",
         "league/flysystem-memory": "^3.0",

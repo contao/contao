@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_webhook_outgoing.php" source-language="en">
+    <body>
+      <trans-unit id="tl_webhook_outgoing.name.0">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.name.1">
+        <source>Please enter a name for the outgoing webhook.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.url.0">
+        <source>URL</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.url.1">
+        <source>The URL that receives the subscribed webhook events.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.events.0">
+        <source>Events</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.events.1">
+        <source>Please select the events for this outgoing webhook.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.secret.0">
+        <source>Secret</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.secret.1">
+        <source>The secret used to sign outgoing webhook events.</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.enabled.0">
+        <source>Enabled</source>
+      </trans-unit>
+      <trans-unit id="tl_webhook_outgoing.enabled.1">
+        <source>Enable this outgoing webhook.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
