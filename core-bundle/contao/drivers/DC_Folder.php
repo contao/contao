@@ -1684,6 +1684,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				$this->isValid($id);
+
+				if (!file_exists($this->strRootDir . '/' . $id) || !$this->isMounted($id))
+				{
+					throw new AccessDeniedException('File or folder "' . $id . '" is not mounted or cannot be found.');
+				}
+
 				try
 				{
 					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $id)));
@@ -2118,17 +2125,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
   ' . $strButtons . '
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-			}
 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)

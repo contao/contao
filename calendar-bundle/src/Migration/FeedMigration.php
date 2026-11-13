@@ -50,6 +50,7 @@ class FeedMigration extends AbstractMigration
             'feedFeatured' => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'",
             'feedDescription' => 'text NULL',
             'imgSize' => "varchar(255) NOT NULL default ''",
+            'feedBase' => "varchar(255) NOT NULL default ''",
         ];
 
         foreach ($newFields as $field => $definition) {
@@ -85,6 +86,7 @@ class FeedMigration extends AbstractMigration
                 'maxFeedItems' => $feed['maxItems'],
                 'feedDescription' => $feed['description'],
                 'imgSize' => $feed['imgSize'],
+                'feedBase' => $feed['feedBase'],
                 'published' => 1,
                 'hide' => 1,
             ]);

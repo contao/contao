@@ -12,6 +12,7 @@ export default class TooltipsController extends Controller {
         '.sgallery img[alt]': { x: 0, y: 75 },
         'p.tl_tip': { x: 0, y: 23, useContent: true },
         '#home[title]': { x: 6, y: 42 },
+        'header .badge-title': { x: 6, y: 25, useContent: true },
         '#tmenu a[title]': { x: 0, y: 42 },
         '#tmenu button[title]': { x: 0, y: 42 },
         'a[title][class^="group-"]': { x: -6, y: 27 },
@@ -96,6 +97,7 @@ export default class TooltipsController extends Controller {
     #createTipContainer() {
         const tooltip = document.createElement('div');
         tooltip.setAttribute('role', 'tooltip');
+        tooltip.id = 'tooltip';
         tooltip.classList.add('tip');
         tooltip.style.position = 'absolute';
         tooltip.style.display = 'none';
@@ -147,6 +149,7 @@ export default class TooltipsController extends Controller {
             this.#tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
             this.#tooltip.style.display = 'block';
             this.#tooltip.style.willChange = 'auto';
+            el.setAttribute('aria-describedby', 'tooltip');
         }, delay);
     }
 
@@ -159,6 +162,7 @@ export default class TooltipsController extends Controller {
             el.removeAttribute('data-original-title');
         }
 
+        el.removeAttribute('aria-describedby');
         clearTimeout(this.#timer);
         this.#tooltip.style.willChange = 'auto';
 

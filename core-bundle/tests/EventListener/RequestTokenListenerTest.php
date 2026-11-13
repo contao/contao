@@ -180,6 +180,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -365,6 +366,22 @@ class RequestTokenListenerTest extends TestCase
         $this->assertFalse(RequestTokenListener::isSimpleCorsRequest(new Request()));
     }
 
+    public function testValidatesTheRequestTokenWithoutOriginHeader(): void
+    {
+        $request = $this->createPostRequest();
+        $request->headers->remove('Sec-Fetch-Site');
+
+        $this->validateRequestTokenForRequest($request);
+    }
+
+    public function testDoesNotValidateTheRequestTokenWithOriginHeader(): void
+    {
+        $request = Request::create('https://example.com/account.html', 'POST');
+        $request->headers->set('Origin', 'https://example.com');
+
+        $this->validateRequestTokenForRequest($request, false);
+    }
+
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
@@ -410,6 +427,9 @@ class RequestTokenListenerTest extends TestCase
 
     private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded'): Request
     {
-        return Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
+        $request = Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+
+        return $request;
     }
 }

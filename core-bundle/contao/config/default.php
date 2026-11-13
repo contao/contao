@@ -41,11 +41,11 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<var><video>'
 	. '<wbr>';
 $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
-	array('key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
-	array('key' => 'a', 'value' => 'href,hreflang,rel,target,download,referrerpolicy'),
-	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'),
+	array('key' => '*', 'value' => 'data-lightbox,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
+	array('key' => 'a', 'value' => 'href,hreflang,rel,target'),
+	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap'),
 	array('key' => 'map', 'value' => 'name'),
-	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'),
+	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target'),
 	array('key' => 'video', 'value' => 'src,crossorigin,width,height,autoplay,controls,controlslist,loop,muted,poster,preload,playsinline'),
 	array('key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'),
 	array('key' => 'source', 'value' => 'src,srcset,media,sizes,type'),
