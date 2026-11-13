@@ -43,6 +43,37 @@ class NewsArchiveTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($pageId, $data['jumpTo']['id']);
     }
 
+    public function testDeniesUpdatingANewsArchiveWithoutTheUpdatePermission(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/news_archive/{news_archive_corporate}');
+
+        $response = self::managedEdition()->send(
+            HttpRequest::json('PATCH', $path)
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken('user_news_writer'),
+                    'Accept' => 'application/ld+json',
+                    'Content-Type' => 'application/merge-patch+json',
+                ])
+                ->withJson(['title' => 'Renamed archive']),
+        );
+
+        $this->assertSame(403, $response->getStatusCode(), $response->getContent(false));
+
+        $response = self::managedEdition()->send(
+            HttpRequest::get($path)
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken('user_news_writer'),
+                    'Accept' => 'application/ld+json',
+                ]),
+        );
+
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($fixtures->value('news_archive_corporate', 'title'), $data['title']);
+    }
+
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(

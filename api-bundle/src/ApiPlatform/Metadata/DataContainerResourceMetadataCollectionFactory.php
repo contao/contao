@@ -127,10 +127,15 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
         $operations = [
             'get_collection' => $this->createCollectionOperation(),
             'get' => new Get(),
-            'patch' => new Patch(),
         ];
 
-        if (!($config['notCreatable'] ?? false)) {
+        $editable = !($config['notEditable'] ?? false);
+
+        if ($editable) {
+            $operations['patch'] = new Patch();
+        }
+
+        if ($editable && !($config['notCreatable'] ?? false)) {
             $operations['post'] = new Post();
         }
 
@@ -138,7 +143,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             $operations['delete'] = new Delete();
         }
 
-        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false) && (isset($fields['pid']) || isset($fields['sorting']))) {
+        if ($editable && !($config['notSortable'] ?? false) && (isset($fields['pid']) || isset($fields['sorting']))) {
             $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
         }
 
