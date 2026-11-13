@@ -37,13 +37,6 @@ services:
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
 
-    contao.cache.shared:
-        parent: cache.adapter.filesystem
-        arguments:
-            $directory: '%kernel.project_dir%/var/cache/shared'
-        tags:
-            - { name: cache.pool, namespace: contao_shared }
-
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
         public: true
@@ -100,7 +93,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@contao.cache.shared'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.purge_expired_data:
@@ -593,7 +586,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@contao.cache.shared'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 

@@ -33,6 +33,8 @@ framework:
     handle_all_throwables: true
     cache:
         pools:
+            contao.cache.cross_env:
+                adapter: contao.cache.adapter.cross_env
             doctrine.result_cache_pool:
                 adapter: cache.app
             doctrine.system_cache_pool:
@@ -55,6 +57,16 @@ framework:
             'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
             'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
             'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
+
+# Service configuration
+services:
+    contao.cache.adapter.cross_env:
+        parent: cache.adapter.filesystem
+        abstract: true
+        arguments:
+            $directory: '%kernel.project_dir%/var/cache/cross_env'
+        tags:
+            - { name: cache.pool, namespace: contao_cross_env }
 
 # Contao configuration
 contao:
