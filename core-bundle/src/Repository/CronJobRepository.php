@@ -82,46 +82,6 @@ class CronJobRepository extends ServiceEntityRepository
     }
 
     /**
-     * Locks the tl_cron_job table with a lock wait timeout of only 1 second.
-     *
-     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7.
-     *
-     * @throws LockWaitTimeoutException
-     */
-    public function lockTable(): void
-    {
-        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
-
-        $table = $this->getClassMetadata()->getTableName();
-
-        $defaultLockTimeout = $this->connection->fetchOne('SELECT @@lock_wait_timeout');
-
-        // Use default lock timeout from MariaDB, if it cannot be retrieved
-        if (false === $defaultLockTimeout) {
-            $defaultLockTimeout = 86400;
-        }
-
-        try {
-            // Set a short lock timeout, so that the next statement throws an exception sooner
-            $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
-            $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
-        } finally {
-            // Restore the previous lock timeout
-            $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
-        }
-    }
-
-    /**
-     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 7.
-     */
-    public function unlockTable(): void
-    {
-        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 7.', __METHOD__);
-
-        $this->connection->executeStatement('UNLOCK TABLES');
-    }
-
-    /**
      * Purges cron job entries where lastRun is older than 1 year.
      *
      * @param list<string> $keepByName the cron job entries to keep by name
