@@ -75,6 +75,7 @@ use Contao\Model\Collection;
  * @property boolean           $reg_activate
  * @property integer           $reg_jumpTo
  * @property string|null       $reg_text
+ * @property boolean           $reg_preventEnumeration
  * @property string|null       $reg_password
  * @property boolean           $protected
  * @property string|array|null $groups
@@ -147,6 +148,7 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByReg_activate($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_jumpTo($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_text($val, array $opt=array())
+ * @method static ModuleModel|null findOneByReg_preventEnumeration($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_password($val, array $opt=array())
  * @method static ModuleModel|null findOneByProtected($val, array $opt=array())
  * @method static ModuleModel|null findOneByGroups($val, array $opt=array())
@@ -212,6 +214,7 @@ use Contao\Model\Collection;
  * @method static Collection<ModuleModel>|null findByReg_activate($val, array $opt=array())
  * @method static Collection<ModuleModel>|null findByReg_jumpTo($val, array $opt=array())
  * @method static Collection<ModuleModel>|null findByReg_text($val, array $opt=array())
+ * @method static Collection<ModuleModel>|null findByReg_preventEnumeration($val, array $opt=array())
  * @method static Collection<ModuleModel>|null findByReg_password($val, array $opt=array())
  * @method static Collection<ModuleModel>|null findByProtected($val, array $opt=array())
  * @method static Collection<ModuleModel>|null findByGroups($val, array $opt=array())
@@ -281,6 +284,7 @@ use Contao\Model\Collection;
  * @method static integer countByReg_activate($val, array $opt=array())
  * @method static integer countByReg_jumpTo($val, array $opt=array())
  * @method static integer countByReg_text($val, array $opt=array())
+ * @method static integer countByReg_preventEnumeration($val, array $opt=array())
  * @method static integer countByReg_password($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
