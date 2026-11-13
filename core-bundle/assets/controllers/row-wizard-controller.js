@@ -22,7 +22,7 @@ export default class extends Controller {
         }
 
         if (this.emptyValue) {
-            this.rowTargets[0].hidden = true;
+            this.#disableRow(this.rowTargets[0]);
             this.emptyValue = false;
         }
 
@@ -286,6 +286,12 @@ export default class extends Controller {
 
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
 
+        // Remove required as the browser validates fields of a hidden row (see #10563)
+        for (const el of row.querySelectorAll('[required]')) {
+            el.required = false;
+            el.dataset.rowWizardRequired = '';
+        }
+
         row.hidden = true;
     }
 
@@ -296,6 +302,14 @@ export default class extends Controller {
 
         row.hidden = false;
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
+
+        // Skip the fields of nested rows that are still hidden (see #10563)
+        for (const el of row.querySelectorAll('[data-row-wizard-required]')) {
+            if (!el.closest('[hidden]')) {
+                el.required = true;
+                delete el.dataset.rowWizardRequired;
+            }
+        }
     }
 
     #resetInputs(row) {
