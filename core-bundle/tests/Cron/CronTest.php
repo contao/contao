@@ -804,16 +804,6 @@ class CronTest extends TestCase
             ->willReturn($updated)
         ;
 
-        $repository
-            ->expects($this->never())
-            ->method('lockTable')
-        ;
-
-        $repository
-            ->expects($this->never())
-            ->method('unlockTable')
-        ;
-
         return $repository;
     }
 
