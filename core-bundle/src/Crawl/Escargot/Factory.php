@@ -99,11 +99,16 @@ class Factory
         );
     }
 
+    public function createDoctrineQueue(): DoctrineQueue
+    {
+        return new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue');
+    }
+
     public function createLazyQueue(): LazyQueue
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
+            $this->createDoctrineQueue(),
         );
     }
 

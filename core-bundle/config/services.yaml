@@ -355,6 +355,11 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
+
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
         arguments:

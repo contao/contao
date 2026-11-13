@@ -424,6 +424,7 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@contao.doctrine.escargot_schema_provider'
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
