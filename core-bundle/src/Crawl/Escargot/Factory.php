@@ -99,11 +99,16 @@ class Factory
         );
     }
 
+    public function createDoctrineQueue(): DoctrineQueue
+    {
+        return new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue');
+    }
+
     public function createLazyQueue(): LazyQueue
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
+            $this->createDoctrineQueue(),
         );
     }
 
@@ -222,29 +227,25 @@ class Factory
 
     private function cleanOptionsFromConfidentialData(array $options): array
     {
-        $cleanOptions = [];
-
-        foreach ($options as $k => $v) {
-            if ('headers' === $k) {
-                foreach ($v as $header => $value) {
-                    if (\in_array(strtolower($header), ['authorization', 'cookie'], true)) {
-                        continue;
-                    }
-
-                    $cleanOptions['headers'][$header] = $value;
-                }
-
-                continue;
+        foreach ($options as $key => $value) {
+            if (str_starts_with($key, 'auth_')) {
+                unset($options[$key]);
             }
-
-            if ('basic_auth' === $k || 'bearer_auth' === $k) {
-                continue;
-            }
-
-            $cleanOptions[$k] = $v;
         }
 
-        return $cleanOptions;
+        foreach ($options['headers'] ?? [] as $key => $value) {
+            $header = $key;
+
+            if (\is_int($key) && (\is_string($value) || $value instanceof \Stringable)) {
+                $header = explode(':', (string) $value, 2)[0];
+            }
+
+            if (\in_array(strtolower((string) $header), ['authorization', 'cookie'], true)) {
+                unset($options['headers'][$key]);
+            }
+        }
+
+        return $options;
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

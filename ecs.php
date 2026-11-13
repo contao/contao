@@ -13,6 +13,7 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Set\SetList;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
+use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
@@ -46,6 +47,9 @@ return ECSConfig::configure()
     ->withSkip([
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
+        ],
+        ReferenceUsedNamesOnlySniff::class => [
+            'core-bundle/tests/Config/Loader/PhpFileLoaderTest.php',
         ],
         UnusedVariableSniff::class => [
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',

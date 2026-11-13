@@ -107,6 +107,10 @@ class PickerConfig implements \JsonSerializable
     {
         $decoded = base64_decode(strtr($data, '-_,', '+/='), true);
 
+        if (false === $decoded) {
+            throw new \InvalidArgumentException('Invalid base64 data');
+        }
+
         if (\function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($decoded))) {
             $decoded = $uncompressed;
         }
@@ -115,6 +119,10 @@ class PickerConfig implements \JsonSerializable
             $json = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             throw new \InvalidArgumentException('Invalid JSON data', 0, $e);
+        }
+
+        if (!\is_array($json) || !isset($json['context'], $json['extras'], $json['value'], $json['current'])) {
+            throw new \InvalidArgumentException('Invalid picker configuration');
         }
 
         return new self($json['context'], $json['extras'], $json['value'], $json['current']);

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Messenger;
 
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Tests\TestCase;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
@@ -27,10 +28,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 use Symfony\Component\Messenger\RoutableMessageBus;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class WebWorkerTest extends TestCase
 {
@@ -75,6 +79,7 @@ class WebWorkerTest extends TestCase
         $webWorker = new WebWorker(
             $cache,
             $this->command,
+            $this->mockScopeMatcher(),
             ['transport-1'],
         );
 
@@ -89,6 +94,7 @@ class WebWorkerTest extends TestCase
         $webWorker = new WebWorker(
             $cache,
             $this->command,
+            $this->mockScopeMatcher(),
             ['transport-1'],
         );
 
@@ -101,11 +107,188 @@ class WebWorkerTest extends TestCase
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
-    private function triggerWebWorker(): void
+    public function testWorkerAlsoRunsInBackendScope(): void
     {
+        $cache = new ArrayAdapter(); // No real workers running
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'backend');
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+
+        // @phpstan-ignore method.notFound
+        $this->assertContains('Stopping worker.', $this->logger->getLogs());
+    }
+
+    public function testDoesNotRunWebWorkerForNonContaoMainRequestsWithoutOptInOrDispatchedMessages(): void
+    {
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->expects($this->never())
+            ->method('getItem')
+        ;
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+    }
+
+    public function testRunsWebWorkerForNonContaoMainRequestsIfExplicitlyEnabled(): void
+    {
+        $cache = new ArrayAdapter(); // No real workers running
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set(WebWorker::REQUEST_ATTRIBUTE_ENABLE, true);
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+
+        // @phpstan-ignore method.notFound
+        $this->assertContains('Stopping worker.', $this->logger->getLogs());
+    }
+
+    public function testDoesNotRunWebWorkerForContaoMainRequestsIfExplicitlyDisabledWithoutDispatchedMessages(): void
+    {
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->expects($this->never())
+            ->method('getItem')
+        ;
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+        $request->attributes->set(WebWorker::REQUEST_ATTRIBUTE_ENABLE, false);
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            new Response(),
+        ));
+    }
+
+    public function testRunsWebWorkerForNonContaoMainRequestsIfMessagesWereDispatched(): void
+    {
+        $cache = new ArrayAdapter(); // No real workers running
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+
+        $this->eventDispatcher->dispatch(new SendMessageToTransportsEvent(new Envelope(new \stdClass()), ['transport-1' => $this->createMock(SenderInterface::class)]));
+
         $this->eventDispatcher->dispatch(new TerminateEvent(
             $this->createMock(HttpKernelInterface::class),
             new Request(),
+            new Response(),
+        ));
+
+        // @phpstan-ignore method.notFound
+        $this->assertContains('Stopping worker.', $this->logger->getLogs());
+    }
+
+    public function testLimitsFallbackConsumptionToDispatchedMessagesPerTransport(): void
+    {
+        $cacheItem = $this->createMock(CacheItemInterface::class);
+        $cacheItem
+            ->method('isHit')
+            ->willReturn(false)
+        ;
+
+        $cache = $this->createMock(CacheItemPoolInterface::class);
+        $cache
+            ->method('getItem')
+            ->willReturn($cacheItem)
+        ;
+
+        $command = $this->createMock(ConsumeMessagesCommand::class);
+        $command
+            ->expects($this->once())
+            ->method('run')
+            ->with(
+                $this->callback(static fn (ArrayInput $input): bool => '2' === (string) $input->getParameterOption('--limit')),
+                $this->isInstanceOf(NullOutput::class),
+            )
+            ->willReturn(0)
+        ;
+
+        $webWorker = new WebWorker(
+            $cache,
+            $command,
+            $this->mockScopeMatcher(),
+            ['transport-1'],
+        );
+
+        $sender = $this->createMock(SenderInterface::class);
+        $webWorker->onMessageDispatched(new SendMessageToTransportsEvent(new Envelope(new \stdClass()), ['transport-1' => $sender]));
+        $webWorker->onMessageDispatched(new SendMessageToTransportsEvent(new Envelope(new \stdClass()), ['transport-1' => $sender]));
+
+        $webWorker->onKernelTerminate(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            new Request(),
+            new Response(),
+        ));
+    }
+
+    private function triggerWebWorker(): void
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
+        $this->eventDispatcher->dispatch(new TerminateEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $request,
             new Response(),
         ));
     }
@@ -156,6 +339,13 @@ class WebWorkerTest extends TestCase
             WorkerRunningEvent::class,
             static function (WorkerRunningEvent $event) use ($webWorker): void {
                 $webWorker->onWorkerRunning($event);
+            },
+        );
+
+        $this->eventDispatcher->addListener(
+            SendMessageToTransportsEvent::class,
+            static function (SendMessageToTransportsEvent $event) use ($webWorker): void {
+                $webWorker->onMessageDispatched($event);
             },
         );
 

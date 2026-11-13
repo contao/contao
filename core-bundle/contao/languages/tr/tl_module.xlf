@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.hardLimit.1">
         <source>Never show any menu items beyond the stop level.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bitiş düzeyinin altındaki herhangi bir menü ögesi asla görüntülenmez.</target>
+        <target>Etkinleştirildiğinde, bitiş düzeyinin altındaki herhangi bir menü ögesi asla görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.0">
         <source>Show protected items</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
         <source>Show items that are usually only visible to authenticated members.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnızca kimliği doğrulanmış üyeler tarafından görülebilen ögeler görüntülenir.</target>
+        <target>Etkinleştirildiğinde, yalnızca kimliği doğrulanmış üyeler tarafından görülebilen ögeler görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showHidden.1">
         <source>Show items that are usually hidden in the navigation menu.</source>
-        <target>Bu seçenek etkinleştirildiğinde gezinme menüsündeki gizli ögeler görüntülenir.</target>
+        <target>Etkinleştirildiğinde, gezinme menüsündeki gizli ögeler görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.0">
         <source>Custom label</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_module.autologin.1">
         <source>Allow members to log into the front end automatically.</source>
-        <target>Bu seçenek etkinleştirildiğinde, üyeler ön yüzde otomatik olarak oturum açabilir.</target>
+        <target>Etkinleştirildiğinde, üyeler ön yüzde otomatik olarak oturum açabilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
-        <target>Bu seçenek etkinleştirildiğinde, üye yönlendirilecek sayfa yerine son ziyaret ettiği sayfaya yönlendirilir.</target>
+        <target>Etkinleştirildiğinde, üye yönlendirilecek sayfa yerine son ziyaret ettiği sayfaya yönlendirilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_module.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
+        <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalamayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
-        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
+        <target>Yazının görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_module.loadFirst.1">
         <source>Automatically redirect to the first item if none is selected.</source>
-        <target>Bu seçenek etkinleştirildiğinde, hiç bir öge seçilmediğinde, otomatik olarak ilk ögeye geçilir.</target>
+        <target>Etkinleştirildiğinde, hiç bir öge seçilmediğinde, otomatik olarak ilk ögeye geçilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_module.useCaption.1">
         <source>Display the image name or caption below the image.</source>
-        <target>Bu seçenek etkinleştirildiğinde, görselin altında görsel adı ya da alt yazı görüntülenir.</target>
+        <target>Etkinleştirildiğinde, görselin altında görsel adı ya da alt yazı görüntülenir.</target>
       </trans-unit>
       <trans-unit id="tl_module.multiSRC.0">
         <source>Source files</source>
@@ -431,7 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
         <source>Allow the new member to log into the front end.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yeni üye ön yüzde oturum açabilir.</target>
+        <target>Etkinleştirildiğinde, yeni üye ön yüzde oturum açabilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -439,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.1">
         <source>Do not require the username to request a new password.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yeni parola isteği yapılırken kullanıcı adı istenmez.</target>
+        <target>Etkinleştirildiğinde, yeni parola isteği yapılırken kullanıcı adı istenmez.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_close.0">
         <source>Mode</source>
@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.1">
         <source>Delete the home directory when the account is deleted.</source>
-        <target>Bu seçenek etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
+        <target>Etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>

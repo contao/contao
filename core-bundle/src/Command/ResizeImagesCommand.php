@@ -222,9 +222,11 @@ class ResizeImagesCommand extends Command
 
             if (0 !== $failedCount && $count - $failedCount <= 0) {
                 $this->io->error('No image could be resized successfully.');
-
-                return Command::FAILURE;
             }
+        }
+
+        if (0 !== $failedCount && $count - $failedCount <= 0) {
+            return Command::FAILURE;
         }
 
         return Command::SUCCESS;

@@ -33,6 +33,8 @@ framework:
     handle_all_throwables: true
     cache:
         pools:
+            contao.cache.cross_env:
+                adapter: contao.cache.adapter.cross_env
             doctrine.result_cache_pool:
                 adapter: cache.app
             doctrine.system_cache_pool:
@@ -56,6 +58,16 @@ framework:
             'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
             'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
 
+# Service configuration
+services:
+    contao.cache.adapter.cross_env:
+        parent: cache.adapter.filesystem
+        abstract: true
+        arguments:
+            $directory: '%kernel.project_dir%/var/cache/contao'
+        tags:
+            - { name: cache.pool, namespace: cross_env }
+
 # Contao configuration
 contao:
     preview_script: /preview.php
@@ -70,7 +82,7 @@ contao:
                 transports:
                     - contao_prio_high
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=5
                 autoscale:
                     desired_size: 5
@@ -79,7 +91,7 @@ contao:
                 transports:
                     - contao_prio_normal
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=10
                 autoscale:
                     desired_size: 10
@@ -88,7 +100,7 @@ contao:
                 transports:
                     - contao_prio_low
                 options:
-                    - --time-limit=60
+                    - --time-limit=55
                     - --sleep=20
                 autoscale:
                     desired_size: 20
@@ -140,9 +152,6 @@ nelmio_security:
         policies:
             - no-referrer-when-downgrade
             - strict-origin-when-cross-origin
-    xss_protection:
-        enabled: true
-        mode_block: true
 
 # FOS HttpCache configuration
 fos_http_cache:

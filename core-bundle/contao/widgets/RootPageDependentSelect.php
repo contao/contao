@@ -25,8 +25,9 @@ class RootPageDependentSelect extends SelectMenu
 		$cssClasses = 'tl_select tl_chosen';
 		$rootPages = $framework->getAdapter(PageModel::class)->findByType('root', array('order' => 'sorting'));
 		$wizard = StringUtil::deserialize($this->wizard);
+		$name = $this->arrAttributes['strField'] ?? 'rootPageDependentModules';
 
-		$this->blankOptionLabel = $translator->trans(\sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_tl_module');
+		$this->blankOptionLabel = $translator->trans(\sprintf('tl_module.%sBlankOptionLabel', $name), array(), 'contao_tl_module');
 
 		foreach ($rootPages as $rootPage)
 		{

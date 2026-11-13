@@ -2,6 +2,189 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.54] (2026-11-11)
+
+**Security fixes:**
+
+- [GHSA-xh3r-77ch-frm3]: Stored cross-site scripting in the file manager via crafted filenames
+- [GHSA-wvj5-rchg-986m]: NoPrivateNetworkExceptRootPagesHttpClient does not pin the checked IP of cached hosts
+- [GHSA-6m74-9w88-r3fh]: Insert tag injection in the breadcrumb module on 404 pages
+- [GHSA-5mg3-mv6j-57wc]: Session invalidation upon enabling or disabling 2FA
+- [GHSA-pc2r-hvrc-f4v6]: Cross-site scripting in the figure insert tag
+- [GHSA-rgq4-cg48-xjxj]: Insufficient CSRF protection for backend login
+- [GHSA-26h3-f97j-vj85]: Contao crawler leaks confidental headers
+- [GHSA-9jfh-v443-w3fj]: Filemount access-control bypass in DC_Folder::editAll
+- [GHSA-r7cf-mfp4-r23h]: Path traversal via decode-after-check in the image insert tag
+- [GHSA-4mx5-xq7q-77cm]: Server-side request forgery via unvalidated feed URL in the legacy RSS reader module
+- [GHSA-58r4-2p86-jp4x]: HTML sanitizer is vulnerable to DOM clobbering
+
+## [5.3.53] (2026-11-06)
+
+**Fixed issues:**
+
+- [#10545] Add `aria-describedby` to the back end tooltips ([zoglo])
+- [#10542] Complete the 2FA provider for valid backup codes as well ([zoglo])
+- [#10539] Do not use autoconfiguration for shared listeners ([leofeyer])
+- [#10537] Migrate `feedBase` from legacy feeds ([fritzmg])
+- [#10499] Add the base URL for news feeds ([fritzmg])
+- [#10533] Fix the base path in two templates ([leofeyer])
+- [#10473] Backport checking for the theme slug when rendering Twig surrogate templates ([zoglo])
+- [#10525] Fix a potential `undefined array key` warning in the `Dbafs` service ([qzminski])
+- [#10409] Do not use the `asset` function for theme files ([aschempp])
+- [#10490] Render fragments always inline in the back end ([fritzmg])
+- [#10488] Handle fragment response exceptions in preview ([fritzmg])
+- [#10461] Fix non-transitive route sorting ([ausi])
+- [#10452] Prevent an error when editing a missing module ([aschempp])
+- [#10449] Support Escargot 2.0 while retaining 1.x compatibility ([Toflar])
+- [#10446] Remove leftover logout stuff ([aschempp])
+
+## [5.3.52] (2026-10-09)
+
+**Fixed issues:**
+
+- [#10427] Require `enshrined/svg-sanitize` in version `^1.0` ([zoglo])
+- [#10406] Ensure file extensions are checked in lowercase when searching for files ([qzminski])
+- [#10408] Fix division by zero in the pagination menu if no limit is set ([zoglo])
+- [#10368] Rollback all changes if an undo operation fails ([lukasbableck])
+- [#10372] Also use a file content hash in the combiner ([fritzmg])
+- [#10390] Keep an explicit link title on a figure with a lightbox ([developerjillur])
+- [#10385] CAPTCHA replay protection can be bypassed ([leofeyer])
+- [#10373] Correctly prepend the assets URL ([lukasbableck])
+- [#10336] Do not swallow the error responses of download requests ([bytehead])
+- [#10337] Fix a warning in the indexer when multiple types are specified in JSON-LD ([lukasbableck])
+- [#10327] Prevent forms from being submitted multiple times by sending the POST request again ([lukasbableck])
+- [#10352] Handle predefined image sizes without densities in the preview factory ([developerjillur])
+- [#10332] Remove the parameters of previous download URLs when generating new ones ([bytehead])
+- [#10350] Fix the `CrawlCommandTest` when console window is narrow ([fritzmg])
+- [#10320] Fix the regex boundary check ([ausi])
+- [#10323] Remove an obsolete `$user->save()` call ([aschempp])
+- [#10290] Fix `LocaleUtil` for older ICU versions ([ausi])
+- [#10288] Check for pcre.jit in PCRE backtrack limit test ([ausi])
+- [#10268] Preserve stripped query parameters in redirects ([Toflar])
+- [#10264] Fix incorrectly removed tags in labels ([lukasbableck])
+- [#10284] Validate the table name in `getCurrentRecord()` ([ausi])
+- [#10259] Add a table alias in the listing count query ([shoaib0300])
+- [#10255] Remove known limitation for moving content elements into different parent types ([zoglo])
+- [#10228] Do not unset the `$_FILES` array in the `FormUpload` class ([leofeyer])
+- [#10198] Do not cast column values for aliases to binary ([lukasbableck])
+- [#10191] Suppress warnings from failed DNS lookups ([Toflar])
+- [#10188] Add additional type checks in the `PickerConfig` class ([bytehead])
+- [#10189] Ignore the LinkedIn click identifier in the HTTP cache ([eki89])
+- [#10183] Backport the HTML5-to-Twig template override order ([ausi])
+- [#10185] Do not return from `finally` blocks ([ausi])
+- [#10181] Prevent saving inherited backend user permissions ([Toflar])
+- [#10179] Remove the deprecated `xss_protection` option ([leofeyer])
+- [#10172] Ignore dates that cannot be converted when loading a widget ([aschempp])
+- [#10176] Exclude `+intl-icu` from being a Contao translation domain ([bytehead])
+
+## [5.3.51] (2026-08-31)
+
+**Fixed issues:**
+
+- [#10111] Use consistent `datim` field definitions ([fritzmg])
+- [#10158] Check for the main request in more listeners ([fritzmg])
+- [#10157] Do not set the translator locale for subrequests ([Toflar])
+- [#10138] Process JSON-LD data for figures ([fritzmg])
+- [#10059] Merge the module CSS classes for root page dependent modules ([bennyborn])
+- [#10123] Backport the `BackendHelperRuntime` ([zoglo])
+- [#10122] Optimize file counting in the maintenance module ([Toflar])
+- [#10101] Use `Uuid::fromString()` for UUIDs with an unknown format ([ausi])
+
+## [5.3.50] (2026-08-25)
+
+**Security fixes:**
+
+- [CVE-2026-107842]: Exposure of sensitive information through a stale search index
+- [CVE-2026-107843]: Unrestricted activation email resending
+- [CVE-2026-107848]: Cross-site request forgery in custom backend actions
+- [CVE-2026-107844]: Path traversal in the images controller
+- [CVE-2026-107845]: Cross-site scripting in the comments bundle
+- [CVE-2026-104884]: Cross-site scripting in the frontend search results
+- [CVE-2026-104883]: Non-admin users can self-grant permissions that implicitly make them administrators
+- [CVE-2026-104882]: Improper access control in the CSV import wizard
+- [CVE-2026-104881]: Improper access control in the newsletter module
+
+## [5.3.49] (2026-08-06)
+
+**Fixed issues:**
+
+- [#10086] Use `NodeCaptureInterface` for `AddNode` ([fritzmg])
+- [#10080] Support string UUIDs for `posterSRC` in the player element ([qzminski])
+- [#10076] Prevent array-to-string warnings in JSON-LD context definitions ([Toflar])
+- [#10063] Fix the cache settings inheritance ([fritzmg])
+- [#10067] Add default values for the `content_element` and `frontend_module` Twig functions ([ausi])
+- [#10065] Increase the size of `tl_log.browser` ([ausi])
+- [#10046] Add the new element CSS classes in addition to the old ones ([leofeyer])
+- [#9931] Fix the blank label for the root page dependent module ([zoglo])
+- [#10007] Fix `VideoObject` JSON-LD as per Google Schema Validator requirements ([lukasbableck])
+
+## [5.3.48] (2026-07-13)
+
+**Security fixes:**
+
+- [CVE-2026-57232]: Server-side request forgery via unvalidated RSS feed URLs
+
+**Fixed issues:**
+
+- [#10004] Resolve insert tags in the accordion header ([dennisbohn])
+- [#9996] Only consider items from the same `ptable` for sorting ([lukasbableck])
+- [#9926] Fix compatibility with ICU version 78 ([ausi])
+- [#9920] Handle invalid database values in the `InputUnit` widget ([aschempp])
+- [#9940] Remove the obsolete `Input::setGet()` from the event list ([ausi])
+- [#9915] Handle file errors in the Twig filesystem loader ([aschempp])
+- [#9927] Delete `OptIn` tokens if the model does not exist anymore ([fritzmg])
+- [#9911] Complete the contao 2FA provider on the `code_valid` event ([zoglo])
+
+## [5.3.47] (2026-06-18)
+
+**Security fixes:**
+
+- [CVE-2026-55824]: Contao crawler leaks auth credentials to external hosts
+
+**Fixed issues:**
+
+- [#9894] Support  the `form` attribute in widgets ([aschempp])
+- [#9900] Fix an issue with adding multiple `ptable` conditions to `$strWhere` ([lukasbableck])
+- [#9903] Use the correct sitemap namespace identifier ([lukasbableck])
+- [#9888] Convert binary UUIDs in user insert tag ([fritzmg])
+- [#8688] Remove newsletter deny list entries upon activation ([de-es])
+- [#9879] Generate `panel` in `DC_Folder` before adding messages ([lukasbableck])
+- [#9878] Check `ptable` when fetching child records ([lukasbableck])
+- [#9880] Enable cache invalidation in `dev` ([fritzmg])
+- [#9875] Simplify converting the backend headline to the page title ([leofeyer])
+- [#9848] Restrict web-triggered cron/worker execution to the Contao scope ([Toflar])
+- [#9868] Allow version 4 of `spatie/schema-org` ([leofeyer])
+- [#9850] Fix non-DBAFS images not appearing in the search results ([qzminski])
+- [#9847] Simplify the search index listener ([Toflar])
+- [#9841] Remove `<style>` and `<script>` content when converting HTML to plain text ([lukasbableck])
+- [#9844] Do not enforce 2FA when impersonated ([aschempp])
+- [#9819] Support self-closing tags in the `Input::stripAttributes()` method ([leofeyer])
+- [#9823] Add a trace to the maximum insert tag nesting level exception ([Toflar])
+- [#9812] Allow a lower `--time-limit` for messenger workers ([fritzmg])
+- [#9811] Add an `attributes` variable to the `player.html.twig` template ([fritzmg])
+- [#9795] Correctly set the poster URL in the `PlayerController` ([leofeyer])
+- [#9783] Fix setting integer properties on models to invalid types ([ausi])
+- [#9779] Improve the support and documentation of `sizes=auto` in images ([ausi])
+- [#9787] Use the null-safe operator for `getBaseUrl()` and `getBasePath()` ([Toflar])
+
+## [5.3.46] (2026-04-24)
+
+**Fixed issues:**
+
+- [#9756] Conflict with `league/flysystem-bundle` 3.7 ([ausi])
+- [#9730] Show infinitely repeating events only once if the list is open-ended ([ausi])
+- [#9736] Require `symfony/polyfill-php84` and update the usage of `Mysql::ATTR_MULTI_STATEMENTS` ([zoglo])
+- [#9711] Support JSON-LD multiple types ([koertho])
+- [#9717] Fix the missing `Vary` header in the CAPTCHA controller ([Toflar])
+- [#9701] Cast bigint columns to integer ([ausi])
+- [#9704] Add the charset to the news feed content type ([fritzmg])
+- [#9694] Normalize paths in the `generateScriptTag()` and `generateStyleTag()` methods ([fritzmg])
+- [#9665] Add the missing aspect ratios for Reels, Shorts and TikTok videos ([fritzmg])
+- [#9656] Add text overflow handling to the `tl_tip` class ([Tastaturberuf])
+- [#9625] Move the template editor check to a `save_callback` ([fritzmg])
+- [#9638] Check for nested parent tables in the picker ([aschempp])
+- [#9635] Encode invalid and disallowed URL protocols in BBCode ([ausi])
+
 ## [5.3.45] (2026-03-04)
 
 **Fixed issues:**
@@ -706,7 +889,7 @@ This project adheres to [Semantic Versioning].
 - [#6946] Improve the performance of the database dumper ([Toflar])
 - [#6944] Correctly check if a "jump to" page is set when generating event feeds ([leofeyer])
 - [#6919] Make full authentication optional in the personal data module ([leofeyer])
-- [#6941] Handle unicode strings in insert tag flags ([ausi])
+- [#6941] Handle Unicode strings in insert tag flags ([ausi])
 - [#6938] Add a button to the "invalid request token" template ([leofeyer])
 - [#6939] Correctly implement the `ImageFactoryInterface` ([leofeyer])
 - [#6936] Fix the Twig loader infrastructure ([m-vo])
@@ -897,6 +1080,15 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.54]: https://github.com/contao/contao/releases/tag/5.3.54
+[5.3.53]: https://github.com/contao/contao/releases/tag/5.3.53
+[5.3.52]: https://github.com/contao/contao/releases/tag/5.3.52
+[5.3.51]: https://github.com/contao/contao/releases/tag/5.3.51
+[5.3.50]: https://github.com/contao/contao/releases/tag/5.3.50
+[5.3.49]: https://github.com/contao/contao/releases/tag/5.3.49
+[5.3.48]: https://github.com/contao/contao/releases/tag/5.3.48
+[5.3.47]: https://github.com/contao/contao/releases/tag/5.3.47
+[5.3.46]: https://github.com/contao/contao/releases/tag/5.3.46
 [5.3.45]: https://github.com/contao/contao/releases/tag/5.3.45
 [5.3.44]: https://github.com/contao/contao/releases/tag/5.3.44
 [5.3.43]: https://github.com/contao/contao/releases/tag/5.3.43
@@ -947,6 +1139,28 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[GHSA-xh3r-77ch-frm3]: https://github.com/contao/contao/security/advisories/GHSA-xh3r-77ch-frm3
+[GHSA-wvj5-rchg-986m]: https://github.com/contao/contao/security/advisories/GHSA-wvj5-rchg-986m
+[GHSA-6m74-9w88-r3fh]: https://github.com/contao/contao/security/advisories/GHSA-6m74-9w88-r3fh
+[GHSA-5mg3-mv6j-57wc]: https://github.com/contao/contao/security/advisories/GHSA-5mg3-mv6j-57wc
+[GHSA-pc2r-hvrc-f4v6]: https://github.com/contao/contao/security/advisories/GHSA-pc2r-hvrc-f4v6
+[GHSA-rgq4-cg48-xjxj]: https://github.com/contao/contao/security/advisories/GHSA-rgq4-cg48-xjxj
+[GHSA-26h3-f97j-vj85]: https://github.com/contao/contao/security/advisories/GHSA-26h3-f97j-vj85
+[GHSA-9jfh-v443-w3fj]: https://github.com/contao/contao/security/advisories/GHSA-9jfh-v443-w3fj
+[GHSA-r7cf-mfp4-r23h]: https://github.com/contao/contao/security/advisories/GHSA-r7cf-mfp4-r23h
+[GHSA-4mx5-xq7q-77cm]: https://github.com/contao/contao/security/advisories/GHSA-4mx5-xq7q-77cm
+[GHSA-58r4-2p86-jp4x]: https://github.com/contao/contao/security/advisories/GHSA-58r4-2p86-jp4x
+[CVE-2026-107842]: https://github.com/contao/contao/security/advisories/GHSA-x2rp-9qf7-2fmq
+[CVE-2026-107843]: https://github.com/contao/contao/security/advisories/GHSA-mfxh-vp55-7gc6
+[CVE-2026-107848]: https://github.com/contao/contao/security/advisories/GHSA-9ff2-p842-45wq
+[CVE-2026-107844]: https://github.com/contao/contao/security/advisories/GHSA-mrvp-7wmx-5m4h
+[CVE-2026-107845]: https://github.com/contao/contao/security/advisories/GHSA-628f-v4f6-p37r
+[CVE-2026-104884]: https://github.com/contao/contao/security/advisories/GHSA-h57j-5f5m-789v
+[CVE-2026-104883]: https://github.com/contao/contao/security/advisories/GHSA-r9qp-pqx5-8369
+[CVE-2026-104882]: https://github.com/contao/contao/security/advisories/GHSA-23w9-4pg3-xwm3
+[CVE-2026-104881]: https://github.com/contao/contao/security/advisories/GHSA-3r9g-pfhv-3228
+[CVE-2026-57232]: https://github.com/contao/contao/security/advisories/GHSA-87mg-5grr-rhwh
+[CVE-2026-55824]: https://github.com/contao/contao/security/advisories/GHSA-3mr9-p497-58f6
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
@@ -970,10 +1184,13 @@ This project adheres to [Semantic Versioning].
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [dennisbohn]: https://github.com/dennisbohn
+[developerjillur]: https://github.com/developerjillur
 [dmolineus]: https://github.com/dmolineus
+[eki89]: https://github.com/eki89
 [falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
 [kllmanu]: https://github.com/kllmanu
+[koertho]: https://github.com/koertho
 [kuestenweb]: https://github.com/kuestenweb
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
@@ -988,6 +1205,7 @@ This project adheres to [Semantic Versioning].
 [ReneLuecking]: https://github.com/ReneLuecking
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
+[shoaib0300]: https://github.com/shoaib0300
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
@@ -1513,6 +1731,7 @@ This project adheres to [Semantic Versioning].
 [#8665]: https://github.com/contao/contao/pull/8665
 [#8675]: https://github.com/contao/contao/pull/8675
 [#8681]: https://github.com/contao/contao/pull/8681
+[#8688]: https://github.com/contao/contao/pull/8688
 [#8694]: https://github.com/contao/contao/pull/8694
 [#8698]: https://github.com/contao/contao/pull/8698
 [#8701]: https://github.com/contao/contao/pull/8701
@@ -1601,3 +1820,112 @@ This project adheres to [Semantic Versioning].
 [#9597]: https://github.com/contao/contao/pull/9597
 [#9611]: https://github.com/contao/contao/pull/9611
 [#9617]: https://github.com/contao/contao/pull/9617
+[#9625]: https://github.com/contao/contao/pull/9625
+[#9635]: https://github.com/contao/contao/pull/9635
+[#9638]: https://github.com/contao/contao/pull/9638
+[#9656]: https://github.com/contao/contao/pull/9656
+[#9665]: https://github.com/contao/contao/pull/9665
+[#9694]: https://github.com/contao/contao/pull/9694
+[#9701]: https://github.com/contao/contao/pull/9701
+[#9704]: https://github.com/contao/contao/pull/9704
+[#9711]: https://github.com/contao/contao/pull/9711
+[#9717]: https://github.com/contao/contao/pull/9717
+[#9730]: https://github.com/contao/contao/pull/9730
+[#9736]: https://github.com/contao/contao/pull/9736
+[#9756]: https://github.com/contao/contao/pull/9756
+[#9779]: https://github.com/contao/contao/pull/9779
+[#9783]: https://github.com/contao/contao/pull/9783
+[#9787]: https://github.com/contao/contao/pull/9787
+[#9795]: https://github.com/contao/contao/pull/9795
+[#9811]: https://github.com/contao/contao/pull/9811
+[#9812]: https://github.com/contao/contao/pull/9812
+[#9819]: https://github.com/contao/contao/pull/9819
+[#9823]: https://github.com/contao/contao/pull/9823
+[#9841]: https://github.com/contao/contao/pull/9841
+[#9844]: https://github.com/contao/contao/pull/9844
+[#9847]: https://github.com/contao/contao/pull/9847
+[#9848]: https://github.com/contao/contao/pull/9848
+[#9850]: https://github.com/contao/contao/pull/9850
+[#9868]: https://github.com/contao/contao/pull/9868
+[#9875]: https://github.com/contao/contao/pull/9875
+[#9878]: https://github.com/contao/contao/pull/9878
+[#9879]: https://github.com/contao/contao/pull/9879
+[#9880]: https://github.com/contao/contao/pull/9880
+[#9888]: https://github.com/contao/contao/pull/9888
+[#9894]: https://github.com/contao/contao/pull/9894
+[#9900]: https://github.com/contao/contao/pull/9900
+[#9903]: https://github.com/contao/contao/pull/9903
+[#9911]: https://github.com/contao/contao/pull/9911
+[#9915]: https://github.com/contao/contao/pull/9915
+[#9920]: https://github.com/contao/contao/pull/9920
+[#9926]: https://github.com/contao/contao/pull/9926
+[#9927]: https://github.com/contao/contao/pull/9927
+[#9931]: https://github.com/contao/contao/pull/9931
+[#9940]: https://github.com/contao/contao/pull/9940
+[#9996]: https://github.com/contao/contao/pull/9996
+[#10004]: https://github.com/contao/contao/pull/10004
+[#10007]: https://github.com/contao/contao/pull/10007
+[#10046]: https://github.com/contao/contao/pull/10046
+[#10059]: https://github.com/contao/contao/pull/10059
+[#10063]: https://github.com/contao/contao/pull/10063
+[#10065]: https://github.com/contao/contao/pull/10065
+[#10067]: https://github.com/contao/contao/pull/10067
+[#10076]: https://github.com/contao/contao/pull/10076
+[#10080]: https://github.com/contao/contao/pull/10080
+[#10086]: https://github.com/contao/contao/pull/10086
+[#10101]: https://github.com/contao/contao/pull/10101
+[#10111]: https://github.com/contao/contao/pull/10111
+[#10122]: https://github.com/contao/contao/pull/10122
+[#10123]: https://github.com/contao/contao/pull/10123
+[#10138]: https://github.com/contao/contao/pull/10138
+[#10157]: https://github.com/contao/contao/pull/10157
+[#10158]: https://github.com/contao/contao/pull/10158
+[#10172]: https://github.com/contao/contao/pull/10172
+[#10176]: https://github.com/contao/contao/pull/10176
+[#10179]: https://github.com/contao/contao/pull/10179
+[#10181]: https://github.com/contao/contao/pull/10181
+[#10183]: https://github.com/contao/contao/pull/10183
+[#10185]: https://github.com/contao/contao/pull/10185
+[#10188]: https://github.com/contao/contao/pull/10188
+[#10189]: https://github.com/contao/contao/pull/10189
+[#10191]: https://github.com/contao/contao/pull/10191
+[#10198]: https://github.com/contao/contao/pull/10198
+[#10228]: https://github.com/contao/contao/pull/10228
+[#10255]: https://github.com/contao/contao/pull/10255
+[#10259]: https://github.com/contao/contao/pull/10259
+[#10264]: https://github.com/contao/contao/pull/10264
+[#10268]: https://github.com/contao/contao/pull/10268
+[#10284]: https://github.com/contao/contao/pull/10284
+[#10288]: https://github.com/contao/contao/pull/10288
+[#10290]: https://github.com/contao/contao/pull/10290
+[#10320]: https://github.com/contao/contao/pull/10320
+[#10323]: https://github.com/contao/contao/pull/10323
+[#10327]: https://github.com/contao/contao/pull/10327
+[#10332]: https://github.com/contao/contao/pull/10332
+[#10336]: https://github.com/contao/contao/pull/10336
+[#10337]: https://github.com/contao/contao/pull/10337
+[#10350]: https://github.com/contao/contao/pull/10350
+[#10352]: https://github.com/contao/contao/pull/10352
+[#10368]: https://github.com/contao/contao/pull/10368
+[#10372]: https://github.com/contao/contao/pull/10372
+[#10373]: https://github.com/contao/contao/pull/10373
+[#10385]: https://github.com/contao/contao/pull/10385
+[#10390]: https://github.com/contao/contao/pull/10390
+[#10406]: https://github.com/contao/contao/pull/10406
+[#10408]: https://github.com/contao/contao/pull/10408
+[#10409]: https://github.com/contao/contao/pull/10409
+[#10427]: https://github.com/contao/contao/pull/10427
+[#10446]: https://github.com/contao/contao/pull/10446
+[#10449]: https://github.com/contao/contao/pull/10449
+[#10452]: https://github.com/contao/contao/pull/10452
+[#10461]: https://github.com/contao/contao/pull/10461
+[#10473]: https://github.com/contao/contao/pull/10473
+[#10488]: https://github.com/contao/contao/pull/10488
+[#10490]: https://github.com/contao/contao/pull/10490
+[#10499]: https://github.com/contao/contao/pull/10499
+[#10525]: https://github.com/contao/contao/pull/10525
+[#10533]: https://github.com/contao/contao/pull/10533
+[#10537]: https://github.com/contao/contao/pull/10537
+[#10539]: https://github.com/contao/contao/pull/10539
+[#10542]: https://github.com/contao/contao/pull/10542
+[#10545]: https://github.com/contao/contao/pull/10545

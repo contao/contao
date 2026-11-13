@@ -21,9 +21,7 @@ class FragmentReference extends ControllerReference
     {
         parent::__construct($fragment, $attributes, $query);
 
-        if (!isset($this->attributes['_scope'])) {
-            $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
-        }
+        $this->attributes['_scope'] ??= ContaoCoreBundle::SCOPE_FRONTEND;
     }
 
     public function setFrontendScope(): void

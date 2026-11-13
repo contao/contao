@@ -1,5 +1,5 @@
 
-<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<section class="<?= $this->class ?> ce_accordion ce_text content-text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
   <div<?= $this->attrs()->addClass($this->toggler)->addStyle($this->headlineStyle) ?>>
     <?= $this->headline ?>

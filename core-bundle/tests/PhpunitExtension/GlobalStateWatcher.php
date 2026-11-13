@@ -40,10 +40,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     {
         $this->globalKeys = $this->buildGlobalKeys();
         $this->globals = $this->buildGlobals();
-        $this->staticMembers = $this->buildStaticMembers();
+        $this->staticMembers ??= $this->buildStaticMembers();
         $this->phpIni = $this->buildPhpIni();
         $this->setFunctions = $this->buildSetFunctions();
-        $this->fileSystem = $this->buildFileSystem();
+        $this->fileSystem ??= $this->buildFileSystem();
         $this->constants = $this->buildConstants();
         $this->env = $this->buildEnv();
     }
@@ -153,12 +153,14 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
+                'Nette\Schema\TypeExpression',
                 'PHPUnit\\',
                 'ScssPhp\\',
                 'SebastianBergmann\\',
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
                 'Symfony\Component\Clock\Clock',
+                'Symfony\Component\Config\Resource\ClassExistenceResource',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
                 'Symfony\Component\Console\Terminal',
@@ -170,6 +172,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\Process\Process',
+                'Symfony\Component\PropertyAccess\PropertyAccessor',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',

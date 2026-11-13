@@ -57,8 +57,13 @@ class FormSubmit extends Widget
 				$this->arrConfiguration['imageSubmit'] = (bool) $varValue;
 				break;
 
+			case 'formaction':
+			case 'formenctype':
+			case 'formmethod':
+			case 'formnovalidate':
+			case 'formtarget':
 			case 'name':
-				$this->arrAttributes['name'] = $varValue;
+				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
 			case 'label':

@@ -44,7 +44,7 @@
             {# Media wrapped with link #}
             {% block media_link %}
                 {% set link_attributes = attrs(figure.linkAttributes(true)|default)
-                    .setIfExists('title', figure.hasLightbox and figure.hasMetadata ? figure.metadata.title : null)
+                    .setIfExists('title', figure.hasLightbox and figure.hasMetadata and figure.linkAttributes['title'] is not defined ? figure.metadata.title : null)
                     .mergeWith(figure.options.link_attr|default)
                     .mergeWith(link_attributes|default)
                 %}

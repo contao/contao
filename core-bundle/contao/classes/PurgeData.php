@@ -113,10 +113,10 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 					// Do not count the deferred images JSON files
 					if ($key == 'images')
 					{
-						$objFiles->notPath('deferred');
+						$objFiles->exclude('deferred');
 					}
 
-					$total = iterator_count($objFiles);
+					$total = $objFiles->count();
 				}
 
 				$arrJobs[$key]['affected'] .= '<br>' . $folder . ': <span>' . \sprintf($GLOBALS['TL_LANG']['MSC']['files'], $total) . '</span>';

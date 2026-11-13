@@ -570,6 +570,30 @@ class RouteProviderTest extends TestCase
     public function getRootRoutes(): iterable
     {
         $pages = [
+            2 => $this->mockRootPage('nl', 'domain-b'),
+            0 => $this->mockPage('nl', 'index', true, 'c.example.com'),
+            3 => $this->mockPage('zh', 'index', true, 'a.example.com'),
+            1 => $this->mockPage('nl', 'index', true, 'b.example.com'),
+        ];
+
+        $pages[2]->domain = 'b.example.com';
+        $pages[2]->rootSorting = 256;
+        $pages[0]->rootSorting = 384;
+        $pages[3]->rootSorting = 128;
+        $pages[1]->rootSorting = 256;
+
+        yield 'Sorts index before root with other domains and unmatched languages' => [
+            $pages,
+            ['en', 'de'],
+            [
+                'tl_page.'.$pages[0]->id.'.root',
+                'tl_page.'.$pages[1]->id.'.root',
+                'tl_page.'.$pages[2]->id.'.root',
+                'tl_page.'.$pages[3]->id.'.root',
+            ],
+        ];
+
+        $pages = [
             2 => $this->mockRootPage('en', 'english-root'),
             1 => $this->mockPage('en', 'index'),
             0 => $this->mockRootPage('de', 'german-root', false),

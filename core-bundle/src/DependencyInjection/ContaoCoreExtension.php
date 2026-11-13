@@ -251,8 +251,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             if ([] === $config['messenger']['web_worker']['transports']) {
                 $container->removeDefinition('contao.messenger.web_worker');
             } else {
-                $definition->setArgument(2, $config['messenger']['web_worker']['transports']);
-                $definition->setArgument(3, $config['messenger']['web_worker']['grace_period']);
+                $definition->setArgument('$transports', $config['messenger']['web_worker']['transports']);
+                $definition->setArgument('$gracePeriod', $config['messenger']['web_worker']['grace_period']);
             }
         }
 
@@ -514,10 +514,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $scheduler = $container->getDefinition('contao.listener.command_scheduler');
-        $scheduler->setArgument(3, false);
+        $scheduler->setArgument('$autoMode', false);
 
         if ('auto' === $config['cron']['web_listener']) {
-            $scheduler->setArgument(3, true);
+            $scheduler->setArgument('$autoMode', true);
 
             $container->getDefinition('contao.cron')->addMethodCall('addCronJob', [
                 new Definition(CronJob::class, [new Reference('contao.cron'), '* * * * *', 'updateMinutelyCliCron']),

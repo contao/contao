@@ -87,15 +87,15 @@
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
         <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Haber tanıtımı, haber listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Haber tanıtımı, haber listesinde tam yazının yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
-        <target>Haber yazısı</target>
+        <target>Haber içeriği</target>
       </trans-unit>
       <trans-unit id="tl_news.text.1">
         <source>Here you can enter the news text.</source>
-        <target>Buraya haber yazısını yazabilirsiniz.</target>
+        <target>Buraya haber içeriğini yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news.addImage.0">
         <source>Add an image</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Zarflar ekle</target>
+        <target>Dosyalar ekle</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.1">
         <source>Add one or more downloadable files to the news item.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -147,11 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_news.article.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_news.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>&quot;Devamını oku…&quot; düğmesine tıklayan ziyaretçiler bir makaleye yönlendirilir.</target>
+        <target>&quot;Devamını oku…&quot; düğmesine tıklayan ziyaretçiler bir yazıya yönlendirilir.</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
@@ -179,11 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
-        <target>Makale</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>Lütfen ziyaretçiler habere tıkladığında yönlendirilecekleri makaleyi seçin.</target>
+        <target>Lütfen ziyaretçiler habere tıkladığında yönlendirilecekleri yazıyı seçin.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_news.published.1">
         <source>Make the news item publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, haber sitede herkesin görebileceği şekilde yayınlanır.</target>
+        <target>Etkinleştirildiğinde, haber sitede herkesin görebileceği şekilde yayınlanır.</target>
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>

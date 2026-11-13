@@ -251,6 +251,7 @@ class FilesystemItem implements \Stringable
             'identifier' => $fileIdentifier,
             'contentUrl' => $this->getPath(),
             'encodingFormat' => $this->getMimeType(''),
+            'uploadDate' => 'VideoObject' === $type && $this->getLastModified() ? date('c', $this->getLastModified()) : null,
         ]);
 
         if ($this->getMetaData()) {

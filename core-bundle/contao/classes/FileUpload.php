@@ -154,6 +154,14 @@ class FileUpload extends Backend
 				{
 					$arrImageSize = getimagesize($file['tmp_name']);
 
+					if (false === $arrImageSize)
+					{
+						Message::addError($GLOBALS['TL_LANG']['ERR']['general']);
+						$this->blnHasError = true;
+
+						continue;
+					}
+
 					if ($arrImageSize[0] > Config::get('imageWidth') || $arrImageSize[1] > Config::get('imageHeight'))
 					{
 						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')));

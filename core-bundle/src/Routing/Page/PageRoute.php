@@ -53,14 +53,8 @@ class PageRoute extends Route implements RouteObjectInterface
 
         // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
-
-        if (!isset($options['utf8'])) {
-            $options['utf8'] = true;
-        }
-
-        if (!isset($options['compiler_class'])) {
-            $options['compiler_class'] = PageRouteCompiler::class;
-        }
+        $options['utf8'] ??= true;
+        $options['compiler_class'] ??= PageRouteCompiler::class;
 
         if ('' === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id);

@@ -41,6 +41,7 @@ use Twig\Extension\EscaperExtension;
 use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeTraverser;
@@ -102,6 +103,8 @@ class ContaoExtensionTest extends TestCase
             'csp_source' => [],
             'csp_hash' => [],
             'content_url' => [],
+            'backend_icon' => ['html'],
+            'file_icon' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -266,7 +269,7 @@ class ContaoExtensionTest extends TestCase
             ]),
             null,
             new Node(),
-            new Node(),
+            version_compare(Environment::VERSION, '3.29', '>=') ? new MacrosNode() : new Node(),
             new Node(),
             null,
             new Source('<code>', 'foo.html.twig'),

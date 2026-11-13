@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener;
 use Contao\FaqModel;
 use Contao\Search;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class FaqSearchListenerTest extends TestCase
+class FaqSearchListenerTest extends ContaoTestCase
 {
     public function testPurgesTheSearchIndexOnAliasChange(): void
     {
