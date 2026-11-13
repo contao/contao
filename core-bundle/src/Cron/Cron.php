@@ -130,11 +130,11 @@ class Cron
 
         $repository = ($this->repository)();
         $entityManager = ($this->entityManager)();
+
+        $jobIds = [];
         $cronJobsToBeRun = [];
 
         $now = new \DateTimeImmutable();
-
-        $jobIds = [];
 
         // Go through each cron job
         foreach ($cronJobs as $cron) {
@@ -160,7 +160,6 @@ class Cron
                 }
 
                 // Race condition: another process created the same entity at the same time
-
                 if (!$force) {
                     continue;
                 }
