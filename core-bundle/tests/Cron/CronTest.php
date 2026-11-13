@@ -37,7 +37,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron(
-            fn () => $this->createRepositoryMock(),
+            fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]),
             fn () => $this->createEntityManagerMock(false),
             $this->createStub(CacheItemPoolInterface::class),
         );
@@ -55,7 +55,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron(
-            fn () => $this->createRepositoryMock(),
+            fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]),
             fn () => $this->createEntityManagerMock(false),
             $this->createStub(CacheItemPoolInterface::class),
         );
@@ -97,7 +97,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron(
-            fn () => $this->createRepositoryMock(),
+            fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]),
             fn () => $this->createEntityManagerMock(false),
             $this->createStub(CacheItemPoolInterface::class),
             $logger,
@@ -177,7 +177,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron(
-            fn () => $this->createRepositoryMock(),
+            fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]),
             fn () => $this->createEntityManagerMock(false),
             $this->createStub(CacheItemPoolInterface::class),
         );
@@ -189,7 +189,7 @@ class CronTest extends TestCase
     public function testInvalidArgumentExceptionForScope(): void
     {
         $cron = new Cron(
-            fn () => $this->createRepositoryMock(),
+            fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]),
             fn () => $this->createEntityManagerMock(false),
             $this->createStub(CacheItemPoolInterface::class),
         );
@@ -701,9 +701,6 @@ class CronTest extends TestCase
         $cron->run(Cron::SCOPE_CLI);
     }
 
-    /**
-     * @group legacy
-     */
     public function testRunsSingleJobByItsOriginalUnicodeName(): void
     {
         $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
@@ -712,7 +709,7 @@ class CronTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
         ;
-        $cron = new Cron(fn () => $this->createRepositoryMock(), fn () => $this->createEntityManagerMock(false), new ArrayAdapter());
+        $cron = new Cron(fn () => $this->createConfiguredStub(CronJobRepository::class, ['createJob' => 1, 'updateLastRun' => true]), fn () => $this->createEntityManagerMock(false), new ArrayAdapter());
         $cron->addCronJob(new CronJob($service, '@hourly', name: 'täglich'));
         $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
         $cron->runJob('täglich', Cron::SCOPE_CLI);
@@ -791,7 +788,7 @@ class CronTest extends TestCase
         return $entity;
     }
 
-    private function createRepositoryMock(bool $updated = true, int|null $id = 1): MockObject&CronJobRepository
+    private function createRepositoryMock(bool $updated = true, int|null $id = 1): CronJobRepository&MockObject
     {
         $repository = $this->createMock(CronJobRepository::class);
         $repository
