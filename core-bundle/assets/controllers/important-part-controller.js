@@ -7,10 +7,6 @@ export default class extends Controller {
 
     static classes = ['enabled'];
 
-    static values = {
-        fields: Object,
-    };
-
     #origin = null;
     #pointerId = null;
 
@@ -108,8 +104,8 @@ export default class extends Controller {
     #getInputs() {
         const inputs = {};
 
-        for (const [key, id] of Object.entries(this.fieldsValue)) {
-            inputs[key] = this.contaoInputOutlets.find((outlet) => outlet.element.id === id);
+        for (const key of ['x', 'y', 'width', 'height']) {
+            inputs[key] = this.contaoInputOutlets.find((outlet) => outlet.nameValue === key);
         }
 
         return Object.values(inputs).every(Boolean) ? inputs : null;
