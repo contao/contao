@@ -17,12 +17,12 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[Table(name: 'tl_cron_job')]
 #[Entity(repositoryClass: CronJobRepository::class)]
-#[Index(name: 'name', columns: ['name'])]
+#[UniqueConstraint(name: 'name', columns: ['name'])]
 class CronJob
 {
     #[Id]
@@ -30,7 +30,7 @@ class CronJob
     #[GeneratedValue]
     protected int $id;
 
-    #[Column(type: 'string', length: 255, nullable: false)]
+    #[Column(type: 'string', length: 255, nullable: false, options: ['charset' => 'ascii', 'collation' => 'ascii_bin'])]
     protected string $name;
 
     #[Column(type: 'datetime_immutable', nullable: false)]
@@ -45,6 +45,11 @@ class CronJob
         }
 
         $this->lastRun = $lastRun ?? new \DateTimeImmutable();
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getName(): string

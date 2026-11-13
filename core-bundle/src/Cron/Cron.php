@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
-use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -103,6 +101,12 @@ class Cron
      */
     public function runJob(string $name, string $scope, bool $force = false): void
     {
+        if (preg_match('/[^\x00-\x7F]/', $name)) {
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
+
+            $name = preg_replace_callback('/[^\x00-\x7F]+/', static fn (array $match): string => bin2hex($match[0]), $name);
+        }
+
         foreach ($this->cronJobs as $cronJob) {
             if ($name === $cronJob->getName()) {
                 $this->doRun([$cronJob], $scope, $force);
@@ -130,59 +134,72 @@ class Cron
 
         $now = new \DateTime();
 
-        // Return if another cron process is already running
-        try {
-            $repository->lockTable();
-        } catch (LockWaitTimeoutException) {
-            return;
-        }
+        $jobIds = [];
 
-        try {
-            // Go through each cron job
-            foreach ($cronJobs as $cron) {
-                $interval = $cron->getInterval();
-                $name = $cron->getName();
+        // Go through each cron job
+        foreach ($cronJobs as $cron) {
+            $interval = $cron->getInterval();
+            $name = $cron->getName();
 
-                // Determine the last run date
-                $lastRunDate = null;
-                $lastRunEntity = $repository->findOneByName($name);
+            // Determine the last run date
+            $lastRunDate = null;
+            $lastRunEntity = $repository->findOneByName($name);
 
-                if ($lastRunEntity) {
-                    $lastRunDate = $lastRunEntity->getLastRun();
-                } else {
-                    $lastRunEntity = new CronJobEntity($name);
-                    $entityManager->persist($lastRunEntity);
-                }
+            if ($lastRunEntity) {
+                $lastRunDate = $lastRunEntity->getLastRun();
+            } else {
+                $id = $repository->createJob($name, $now);
 
-                // Check if the cron should be run
-                $expression = new CronExpression($interval);
+                // Successfully created the new cron job entity
+                if (null !== $id) {
+                    $cron->setPreviousRun($now);
+                    $jobIds[spl_object_id($cron)] = $id;
+                    $cronJobsToBeRun[] = $cron;
 
-                if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
-                // Store the previous run in case the cronjob skips itself
-                $cron->setPreviousRun($lastRunEntity->getLastRun());
+                // Race condition: another process created the same entity at the same time
 
-                // Update the cron entry
-                $lastRunEntity->setLastRun($now);
+                if (!$force) {
+                    continue;
+                }
 
-                // Add job to the cron jobs to be run
-                $cronJobsToBeRun[] = $cron;
+                $lastRunEntity = $repository->findOneByName($name);
+
+                if (null === $lastRunEntity) {
+                    throw new \LogicException(\sprintf('Cron job "%s" does not exist after a unique constraint violation.', $name));
+                }
             }
 
-            $entityManager->flush();
-            $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
-        } finally {
-            $repository->unlockTable();
+            // Check if the cron should be run
+            $expression = new CronExpression($interval);
+
+            if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                continue;
+            }
+
+            // Update the cron entry
+            $updated = $repository->updateLastRun($lastRunEntity->getId(), $now, $force ? null : $lastRunEntity->getLastRun());
+
+            // If the update was not successful, skip execution
+            if (!$updated && !$force) {
+                continue;
+            }
+
+            // Store the previous run in case the cronjob skips itself
+            $cron->setPreviousRun($lastRunEntity->getLastRun());
+            $jobIds[spl_object_id($cron)] = $lastRunEntity->getId();
+
+            // Add job to the cron jobs to be run
+            $cronJobsToBeRun[] = $cron;
         }
 
-        // Callback to restore previous run date in case cronjob skips itself
-        $onSkip = static function (CronJob $cron) use ($repository, $entityManager): void {
-            $lastRunEntity = $repository->findOneByName($cron->getName());
-            $lastRunEntity->setLastRun($cron->getPreviousRun());
+        $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
 
-            $entityManager->flush();
+        // Callback to restore previous run date in case cronjob skips itself
+        $onSkip = static function (CronJob $cron) use ($repository, $jobIds, $now): void {
+            $repository->updateLastRun($jobIds[spl_object_id($cron)], $cron->getPreviousRun(), $now);
         };
 
         $this->executeCrons($cronJobsToBeRun, $scope, $entityManager, $onSkip);
