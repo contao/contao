@@ -338,6 +338,11 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
+
     contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
         class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
         decorates: doctrine.orm.proxy_cache_warmer
