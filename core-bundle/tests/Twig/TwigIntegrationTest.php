@@ -84,22 +84,10 @@ class TwigIntegrationTest extends TestCase
 
         $requestStack = new RequestStack([$request = new Request()]);
 
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
-        $filesystemLoader
-            ->method('exists')
-            ->willReturnMap([['@Contao/form_text.html.twig', true]])
-        ;
-
-        $filesystemLoader
-            ->method('getFirst')
-            ->willReturnMap([['form_text', '/path/to/form_text.html.twig']])
-        ;
-
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory($this->createStub(ScopeMatcher::class)));
         $container->set('request_stack', $requestStack);
-        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         System::setContainer($container);
 
