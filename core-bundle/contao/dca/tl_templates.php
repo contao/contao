@@ -509,7 +509,7 @@ class tl_templates extends Backend
 		}
 		else
 		{
-			$operation['attributes']->set('onclick', 'Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false');
+			$operation['attributes']->set('onclick', 'Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), rawurldecode($row['id'])), false, true) . '\',\'url\':this.href});return false');
 		}
 	}
 

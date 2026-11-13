@@ -99,11 +99,16 @@ class Factory
         );
     }
 
+    public function createDoctrineQueue(): DoctrineQueue
+    {
+        return new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue');
+    }
+
     public function createLazyQueue(): LazyQueue
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue'),
+            $this->createDoctrineQueue(),
         );
     }
 
@@ -228,9 +233,15 @@ class Factory
             }
         }
 
-        foreach ($options['headers'] ?? [] as $header => $value) {
+        foreach ($options['headers'] ?? [] as $key => $value) {
+            $header = $key;
+
+            if (\is_int($key) && (\is_string($value) || $value instanceof \Stringable)) {
+                $header = explode(':', (string) $value, 2)[0];
+            }
+
             if (\in_array(strtolower((string) $header), ['authorization', 'cookie'], true)) {
-                unset($options['headers'][$header]);
+                unset($options['headers'][$key]);
             }
         }
 
