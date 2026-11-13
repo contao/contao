@@ -51,6 +51,7 @@ class AddCrossEnvCachePassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->register('cache.app', NullAdapter::class);
+
         $poolId = $alias ? 'custom.cache' : 'contao.cache.cross_env';
         $container->register($poolId, ArrayAdapter::class)->setPublic(true);
 
