@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 use Psr\Container\ContainerInterface;
@@ -25,17 +26,19 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 class DoctrineSchemaListener
 {
     public function __construct(
-        private readonly DcaSchemaProvider $provider,
+        private readonly DcaSchemaProvider $dcaSchemaProvider,
+        private readonly EscargotSchemaProvider $escargotSchemaProvider,
         private readonly ContainerInterface $messengerTransportLocator,
     ) {
     }
 
     /**
-     * Adds the Contao DCA information to the Doctrine schema.
+     * Adds the crawl queue and Contao DCA information to the Doctrine schema.
      */
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
-        $this->provider->appendToSchema($event->getSchema());
+        $this->escargotSchemaProvider->appendToSchema($event->getSchema());
+        $this->dcaSchemaProvider->appendToSchema($event->getSchema());
 
         foreach (['contao_prio_high', 'contao_prio_normal', 'contao_prio_low', 'contao_failure'] as $transportName) {
             if (!$this->messengerTransportLocator->has($transportName)) {
