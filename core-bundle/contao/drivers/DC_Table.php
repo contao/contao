@@ -1014,8 +1014,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
-			Input::setGet('pid', $id);
-			Input::setGet('mode', DataContainer::PASTE_AFTER);
+			Input::setGet('pid', (string) $id);
+			Input::setGet('mode', (string) DataContainer::PASTE_AFTER);
 		}
 
 		$this->redirect($this->getReferer());
@@ -1401,8 +1401,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($id)
 			{
-				Input::setGet('pid', $id);
-				Input::setGet('mode', 1);
+				Input::setGet('pid', (string) $id);
+				Input::setGet('mode', (string) DataContainer::PASTE_AFTER);
 			}
 		}
 
@@ -2331,14 +2331,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$security = System::getContainer()->get('security.helper');
 
+		// Check the position where save and new/duplicate buttons redirect to (see #10474 and #10475)
+		if ($this->treeView || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT && Database::getInstance()->fieldExists('sorting', $this->strTable)))
+		{
+			$arrNew = $this->addDynamicPtable(array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1));
+		}
+		else
+		{
+			$arrNew = $this->addDynamicPtable(array('pid' => $currentRecord['pid']));
+		}
+
 		// Form settings and buttons
 		$parameters['form_buttons'] = System::getContainer()
 			->get('contao.data_container.buttons_builder')
 			->generateEditButtons(
 				$this->strTable,
 				(bool) $this->ptable,
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $arrNew)),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null), $arrNew))),
 				$this
 			)
 		;

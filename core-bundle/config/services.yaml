@@ -136,7 +136,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.purge_expired_altcha_challenges:
@@ -337,6 +337,11 @@ services:
         arguments:
             - '@contao.framework'
             - '@doctrine'
+
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
 
     contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
         class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
@@ -761,7 +766,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 
