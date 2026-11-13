@@ -62,12 +62,14 @@ class CronJobMigration extends AbstractMigration
         }
 
         $this->connection->executeStatement('ALTER TABLE tl_cron_job MODIFY name VARCHAR(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL');
+
         $this->connection->executeStatement(<<<'SQL'
             DELETE older FROM tl_cron_job older
             INNER JOIN tl_cron_job newer ON older.name = newer.name
             WHERE older.lastRun < newer.lastRun OR (older.lastRun = newer.lastRun AND older.id < newer.id)
             SQL,
         );
+
         $this->connection->executeStatement('ALTER TABLE tl_cron_job ADD UNIQUE INDEX name (name)');
 
         return $this->createResult(true);
