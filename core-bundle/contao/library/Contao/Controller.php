@@ -656,19 +656,9 @@ abstract class Controller extends System
 			}
 		}
 
-		/** @var class-string<Form> $strClass */
-		$strClass = $blnModule ? Module::findClass('form') : ContentElement::findClass('form');
-
-		if (!class_exists($strClass))
-		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Form class "' . $strClass . '" does not exist');
-
-			return '';
-		}
-
 		$objRow->form = $objRow->id;
 
-		$objElement = new $strClass($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
+		$objElement = new Form($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
