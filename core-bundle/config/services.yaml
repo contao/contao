@@ -129,7 +129,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.invalidate_cache_tags:
@@ -354,6 +354,11 @@ services:
         arguments:
             - '@contao.framework'
             - '@doctrine'
+
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
 
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
@@ -807,7 +812,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 
