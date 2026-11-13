@@ -65,7 +65,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateDcaCache($cacheDir);
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
-        $this->generateTemplateMapper($cacheDir);
         $this->generateColumnInfos($cacheDir);
 
         return [];
@@ -221,26 +220,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    private function generateTemplateMapper(string $cacheDir): void
-    {
-        $files = $this->findTemplateFiles();
-
-        if (empty($files)) {
-            return;
-        }
-
-        $mapper = [];
-
-        foreach ($files as $file) {
-            $mapper[$file->getBasename('.html5')] = Path::makeRelative($file->getPath(), $this->projectDir);
-        }
-
-        $this->filesystem->dumpFile(
-            Path::join($cacheDir, 'contao/config/templates.php'),
-            \sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true)),
-        );
-    }
-
     private function generateColumnInfos(string $cacheDir): void
     {
         $this->filesystem->dumpFile(
@@ -295,18 +274,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 ->files()
                 ->name('/\.(php|xlf)$/')
             ;
-        } catch (\InvalidArgumentException) {
-            return [];
-        }
-    }
-
-    /**
-     * @return Finder|array<SplFileInfo>
-     */
-    private function findTemplateFiles(): Finder|array
-    {
-        try {
-            return $this->finder->findIn('templates')->name('*.html5');
         } catch (\InvalidArgumentException) {
             return [];
         }
