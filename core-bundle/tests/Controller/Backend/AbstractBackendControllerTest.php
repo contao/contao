@@ -329,6 +329,13 @@ class AbstractBackendControllerTest extends TestCase
             }
         };
 
+        // Legacy setup
+        ContaoEnvironment::reset();
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
+
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
             'dashboard' => 'dashboard',
@@ -339,6 +346,8 @@ class AbstractBackendControllerTest extends TestCase
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
         $_SERVER['HTTP_HOST'] = 'localhost';
+
+        TemplateLoader::addFile('be_main', '');
 
         $metaTag = (new HtmlAttributes())
             ->set('name', 'foo')
