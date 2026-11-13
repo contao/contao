@@ -225,7 +225,7 @@ class RowWizardTest extends TestCase
         $this->assertSame('error', $wizard->class);
         $this->assertSame([['unchanged' => 'one']], $wizard->value);
 
-        $widgets = (new \ReflectionProperty(RowWizard::class, 'widgets'))->getValue($wizard);
+        $widgets = new \ReflectionProperty(RowWizard::class, 'widgets')->getValue($wizard);
 
         $this->assertSame(['Invalid name'], $widgets[0]['name'][0]->getErrors());
         $this->assertSame('Keep', $widgets[0]['name'][0]->value);

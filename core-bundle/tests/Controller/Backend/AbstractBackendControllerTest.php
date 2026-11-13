@@ -78,7 +78,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
-        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -326,7 +325,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
-        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -339,9 +337,7 @@ class AbstractBackendControllerTest extends TestCase
 
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        TemplateLoader::addFile('be_main', '');
-
-        $metaTag = (new HtmlAttributes())
+        $metaTag = new HtmlAttributes()
             ->set('name', 'foo')
             ->set('content', 'bar')
         ;
@@ -350,7 +346,6 @@ class AbstractBackendControllerTest extends TestCase
             'version' => 'my version',
             'headline' => 'dashboard',
             'title' => '',
-            'theme' => 'flexible',
             'language' => 'en',
             'host' => 'localhost',
             'charset' => 'UTF-8',
