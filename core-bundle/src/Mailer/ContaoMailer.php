@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Mailer;
 
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;
@@ -22,11 +24,15 @@ use Symfony\Component\Mime\RawMessage;
 
 final class ContaoMailer implements MailerInterface
 {
+    public const EMBED_IMAGES_HEADER = 'X-Contao-Embed-Images';
+
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly AvailableTransports $transports,
         private readonly RequestStack $requestStack,
         private readonly string|null $overrideFrom = null,
+        private readonly ContaoFramework|null $framework = null,
+        private readonly InlineImageEmbedder|null $inlineImageEmbedder = null,
     ) {
     }
 
@@ -38,9 +44,28 @@ final class ContaoMailer implements MailerInterface
 
         if ($message instanceof Email) {
             $this->setFrom($message);
+            $this->embedImages($message);
         }
 
         $this->mailer->send($message, $envelope);
+    }
+
+    private function embedImages(Email $message): void
+    {
+        if (!$message->getHeaders()->has(self::EMBED_IMAGES_HEADER)) {
+            return;
+        }
+
+        $message->getHeaders()->remove(self::EMBED_IMAGES_HEADER);
+
+        if (!$this->inlineImageEmbedder) {
+            return;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+        $baseUrl = $request ? $request->getSchemeAndHttpHost().$request->getBasePath().'/' : '';
+
+        $this->inlineImageEmbedder->embedImages($message, $baseUrl);
     }
 
     /**
@@ -52,23 +77,11 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
-        if (!$request = $this->requestStack->getCurrentRequest()) {
+        $page = $this->getCurrentPage();
+
+        if (!$page) {
             return;
         }
-
-        $attributes = $request->attributes;
-
-        if (!$attributes->has('pageModel')) {
-            return;
-        }
-
-        $page = $attributes->get('pageModel');
-
-        if (!$page instanceof PageModel) {
-            return;
-        }
-
-        $page->loadDetails();
 
         if (empty($page->mailerTransport) || !$this->transports->getTransport($page->mailerTransport)) {
             return;
@@ -86,23 +99,28 @@ final class ContaoMailer implements MailerInterface
             $this->doSetFrom($message, $this->overrideFrom);
         }
 
+        if (null !== $from = $this->getTransportFrom($message)) {
+            $this->doSetFrom($message, $from);
+        }
+
+        if (!$message->getFrom() && !$message->getSender()) {
+            $this->setDefaultFrom($message);
+        }
+    }
+
+    private function getTransportFrom(Email $message): string|null
+    {
         if (!$message->getHeaders()->has('X-Transport')) {
-            return;
+            return null;
         }
 
         $transportName = $message->getHeaders()->get('X-Transport')->getBodyAsString();
 
         if (!$transport = $this->transports->getTransport($transportName)) {
-            return;
+            return null;
         }
 
-        $from = $transport->getFrom();
-
-        if (null === $from) {
-            return;
-        }
-
-        $this->doSetFrom($message, $from);
+        return $transport->getFrom();
     }
 
     private function doSetFrom(Email $message, string $from): void
@@ -116,6 +134,52 @@ final class ContaoMailer implements MailerInterface
 
         if ($message->getSender()) {
             $message->sender($from);
+        }
+    }
+
+    private function getCurrentPage(): PageModel|null
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            return null;
+        }
+
+        $attributes = $request->attributes;
+
+        if (!$attributes->has('pageModel')) {
+            return null;
+        }
+
+        $page = $attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            return null;
+        }
+
+        $page->loadDetails();
+
+        return $page;
+    }
+
+    private function setDefaultFrom(Email $message): void
+    {
+        $page = $this->getCurrentPage();
+
+        if ($page && $page->adminEmail) {
+            $this->doSetFrom($message, $page->adminEmail);
+
+            return;
+        }
+
+        if (!$this->framework) {
+            return;
+        }
+
+        $this->framework->initialize();
+
+        // Do not throw if there is no admin e-mail address, so the From header can still
+        // be set elsewhere (e.g. via "framework.mailer.headers")
+        if ($adminEmail = $this->framework->getAdapter(Config::class)->get('adminEmail')) {
+            $this->doSetFrom($message, $adminEmail);
         }
     }
 }
