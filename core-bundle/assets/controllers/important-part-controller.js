@@ -44,7 +44,7 @@ export default class extends Controller {
 
         const box = this.#getImageBox();
         const [x, y, width, height] = ['x', 'y', 'width', 'height'].map(
-            (key) => Number.parseFloat(inputs[key].value) || 0,
+            (key) => Number.parseFloat(inputs[key].element.value) || 0,
         );
 
         this.partTarget.hidden = !width || !height;
@@ -85,7 +85,7 @@ export default class extends Controller {
         const isEmpty = !values.width || !values.height;
 
         for (const [key, value] of Object.entries(values)) {
-            inputs[key].value = isEmpty ? '' : value.toFixed(15);
+            inputs[key].element.value = isEmpty ? '' : value.toFixed(15);
         }
 
         this.update();
@@ -105,7 +105,7 @@ export default class extends Controller {
         const inputs = {};
 
         for (const key of ['x', 'y', 'width', 'height']) {
-            inputs[key] = this.contaoInputOutlets.find((outlet) => outlet.nameValue === key);
+            inputs[key] = this.contaoInputOutlets.find((outlet) => outlet.element.dataset.importantPartField === key);
         }
 
         return Object.values(inputs).every(Boolean) ? inputs : null;

@@ -76,7 +76,7 @@ class FileImagePreviewListener
                 'width' => $objImage->width,
                 'height' => $objImage->height,
             ],
-            'input_selector' => '[data-contao--input-name-value]'.($suffix ? '[name$="'.$suffix.'"]' : ''),
+            'input_selector' => '[data-important-part-field]'.($suffix ? '[name$="'.$suffix.'"]' : ''),
             'show_help' => (bool) $this->framework->getAdapter(Config::class)->get('showHelp'),
         ]);
     }

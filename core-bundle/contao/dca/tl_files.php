@@ -232,25 +232,25 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'importantPartX' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-contao--input-name-value'=>'x'),
+			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-important-part-field'=>'x'),
 			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
 		),
 		'importantPartY' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-contao--input-name-value'=>'y'),
+			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-important-part-field'=>'y'),
 			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
 		),
 		'importantPartWidth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-contao--input-name-value'=>'width'),
+			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-important-part-field'=>'width'),
 			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
 		),
 		'importantPartHeight' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-contao--input-name-value'=>'height'),
+			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-important-part-field'=>'height'),
 			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
 		),
 		'textTrackLanguage' => array
