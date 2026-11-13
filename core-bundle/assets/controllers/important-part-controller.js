@@ -3,50 +3,52 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['image', 'part'];
 
+    static outlets = ['contao--input'];
+
     static classes = ['enabled'];
 
     static values = {
         fields: Object,
     };
 
-    #inputs = null;
     #origin = null;
     #pointerId = null;
 
     connect() {
-        const inputs = {};
-
-        for (const [key, id] of Object.entries(this.fieldsValue)) {
-            inputs[key] = document.getElementById(id);
-        }
-
-        if (Object.values(inputs).some((input) => !input)) {
-            return;
-        }
-
-        for (const input of Object.values(inputs)) {
-            input.closest('.widget').style.display = 'none';
-        }
-
-        this.#inputs = inputs;
-        this.element.classList.add(this.enabledClass);
         this.update();
     }
 
     disconnect() {
-        this.#inputs = null;
         this.#origin = null;
         this.#pointerId = null;
     }
 
+    contaoInputOutletConnected() {
+        this.update();
+    }
+
+    contaoInputOutletDisconnected() {
+        this.update();
+    }
+
     update() {
-        if (!this.#inputs) {
+        const inputs = this.#getInputs();
+
+        this.element.classList.toggle(this.enabledClass, !!inputs);
+
+        if (!inputs) {
+            this.partTarget.hidden = true;
             return;
+        }
+
+        // The preview replaces the input fields
+        for (const input of Object.values(inputs)) {
+            input.element.closest('.widget').style.display = 'none';
         }
 
         const box = this.#getImageBox();
         const [x, y, width, height] = ['x', 'y', 'width', 'height'].map(
-            (key) => Number.parseFloat(this.#inputs[key].value) || 0,
+            (key) => Number.parseFloat(inputs[key].value) || 0,
         );
 
         this.partTarget.hidden = !width || !height;
@@ -57,7 +59,7 @@ export default class extends Controller {
     }
 
     start(event) {
-        if (!this.#inputs || this.#pointerId !== null || event.button !== 0) {
+        if (!this.#getInputs() || this.#pointerId !== null || event.button !== 0) {
             return;
         }
 
@@ -67,7 +69,9 @@ export default class extends Controller {
     }
 
     draw(event) {
-        if (!this.#origin || event.pointerId !== this.#pointerId) {
+        const inputs = this.#getInputs();
+
+        if (!inputs || !this.#origin || event.pointerId !== this.#pointerId) {
             return;
         }
 
@@ -85,7 +89,7 @@ export default class extends Controller {
         const isEmpty = !values.width || !values.height;
 
         for (const [key, value] of Object.entries(values)) {
-            this.#inputs[key].value = isEmpty ? '' : value.toFixed(15);
+            inputs[key].value = isEmpty ? '' : value.toFixed(15);
         }
 
         this.update();
@@ -99,6 +103,16 @@ export default class extends Controller {
         this.draw(event);
         this.#origin = null;
         this.#pointerId = null;
+    }
+
+    #getInputs() {
+        const inputs = {};
+
+        for (const [key, id] of Object.entries(this.fieldsValue)) {
+            inputs[key] = this.contaoInputOutlets.find((outlet) => outlet.element.id === id);
+        }
+
+        return Object.values(inputs).every(Boolean) ? inputs : null;
     }
 
     #getPosition(event) {
