@@ -514,10 +514,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $scheduler = $container->getDefinition('contao.listener.command_scheduler');
-        $scheduler->setArgument(3, false);
+        $scheduler->setArgument('$autoMode', false);
 
         if ('auto' === $config['cron']['web_listener']) {
-            $scheduler->setArgument(3, true);
+            $scheduler->setArgument('$autoMode', true);
 
             $container->getDefinition('contao.cron')->addMethodCall('addCronJob', [
                 new Definition(CronJob::class, [new Reference('contao.cron'), '* * * * *', 'updateMinutelyCliCron']),
