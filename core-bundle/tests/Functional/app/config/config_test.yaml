@@ -30,10 +30,6 @@ framework:
     annotations:
         enabled: false
     handle_all_throwables: true
-    cache:
-        pools:
-            contao.cache.cross_env:
-                adapter: cache.adapter.array
 
 twig:
     debug: '%kernel.debug%'
