@@ -93,7 +93,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.purge_expired_data:
@@ -591,7 +591,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 
