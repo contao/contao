@@ -337,6 +337,7 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@contao.doctrine.escargot_schema_provider'
             - '@messenger.receiver_locator'
 
     contao.listener.exception_converter:
