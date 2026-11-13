@@ -398,23 +398,7 @@ class CronTest extends TestCase
     public function testMinutelyCronJobResetsLastRunInWebScope(): void
     {
         $lastRun = (new \DateTime())->modify('-1 hours');
-
-        $entity = $this->createMock(CronJobEntity::class);
-        $entity
-            ->expects($this->exactly(2))
-            ->method('setLastRun')
-            ->withConsecutive([$this->anything()], [$lastRun])
-        ;
-
-        $entity
-            ->method('getName')
-            ->willReturn('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron')
-        ;
-
-        $entity
-            ->method('getLastRun')
-            ->willReturn($lastRun)
-        ;
+        $entity = new CronJobEntity('Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron', $lastRun);
 
         $repository = $this->createMock(CronJobRepository::class);
         $repository
@@ -440,30 +424,27 @@ class CronTest extends TestCase
 
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
         $cron->run(Cron::SCOPE_WEB);
+
+        $this->assertSame($lastRun, $entity->getLastRun());
     }
 
     public function testResetsLastRunForSkippedCronJobs(): void
     {
         $lastRun = (new \DateTime())->modify('-1 hours');
-
-        $entity = $this->createMock(CronJobEntity::class);
-        $entity
-            ->expects($this->exactly(2))
-            ->method('setLastRun')
-            ->withConsecutive([$this->anything()], [$lastRun])
-        ;
-
-        $entity
-            ->method('getName')
-            ->willReturn('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod')
-        ;
-
-        $entity
-            ->method('getLastRun')
-            ->willReturn($lastRun)
-        ;
+        $entity = new CronJobEntity('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod', $lastRun);
 
         $repository = $this->createMock(CronJobRepository::class);
+        $repository
+            ->expects($this->exactly(2))
+            ->method('lockTable')
+        ;
+
+        $repository
+            ->expects($this->exactly(2))
+            ->method('unlockTable')
+            ->with(true)
+        ;
+
         $repository
             ->expects($this->exactly(2))
             ->method('__call')
@@ -496,28 +477,14 @@ class CronTest extends TestCase
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingMethod'));
         $cron->run(Cron::SCOPE_CLI);
+
+        $this->assertSame($lastRun, $entity->getLastRun());
     }
 
     public function testResetsLastRunForSkippedAsyncCronJobs(): void
     {
         $lastRun = (new \DateTime())->modify('-1 hours');
-
-        $entity = $this->createMock(CronJobEntity::class);
-        $entity
-            ->expects($this->exactly(2))
-            ->method('setLastRun')
-            ->withConsecutive([$this->anything()], [$lastRun])
-        ;
-
-        $entity
-            ->method('getName')
-            ->willReturn('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod')
-        ;
-
-        $entity
-            ->method('getLastRun')
-            ->willReturn($lastRun)
-        ;
+        $entity = new CronJobEntity('Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod', $lastRun);
 
         $repository = $this->createMock(CronJobRepository::class);
         $repository
@@ -552,6 +519,69 @@ class CronTest extends TestCase
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingAsyncMethod'));
         $cron->run(Cron::SCOPE_CLI);
+
+        $this->assertSame($lastRun, $entity->getLastRun());
+    }
+
+    /**
+     * @dataProvider provideSkippedJobLockTimeouts
+     */
+    public function testRetriesRestoringSkippedJobTimestamp(bool $async, int $timeouts): void
+    {
+        $restored = $timeouts < 5;
+        $previousRun = new \DateTimeImmutable('2000-01-01');
+        $entity = new CronJobEntity('test', $previousRun);
+        $timeout = $this->throwException(new LockWaitTimeoutException($this->createMock(DriverException::class), null));
+        $repository = $this->createMock(CronJobRepository::class);
+        $repository
+            ->expects($this->exactly($timeouts + ($restored ? 2 : 1)))
+            ->method('lockTable')
+            ->willReturnOnConsecutiveCalls(...[null, ...array_fill(0, $timeouts, $timeout), null])
+        ;
+
+        $repository
+            ->expects($this->exactly($restored ? 2 : 1))
+            ->method('unlockTable')
+            ->with(true)
+        ;
+
+        $repository
+            ->method('__call')
+            ->willReturn($entity)
+        ;
+
+        $manager = $this->createEntityManagerMock($async);
+        $manager
+            ->expects($this->exactly($restored ? 2 : 1))
+            ->method('flush')
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($restored ? $this->never() : $this->once())
+            ->method('error')
+            ->with($this->stringContains('Could not restore'))
+        ;
+
+        if (!$restored) {
+            $this->expectException(LockWaitTimeoutException::class);
+        }
+
+        $cron = new Cron(static fn () => $repository, static fn () => $manager, new ArrayAdapter(), $logger);
+        $cron->addCronJob(new CronJob(new TestCronJob(), '@hourly', $async ? 'skippingAsyncMethod' : 'skippingMethod'));
+        $cron->run(Cron::SCOPE_CLI);
+
+        if ($restored) {
+            $this->assertSame($previousRun, $entity->getLastRun());
+        }
+    }
+
+    public static function provideSkippedJobLockTimeouts(): iterable
+    {
+        yield 'synchronous recovery' => [false, 4];
+        yield 'asynchronous recovery' => [true, 4];
+        yield 'synchronous exhaustion' => [false, 5];
+        yield 'asynchronous exhaustion' => [true, 5];
     }
 
     public function testSkipsIfLockWaitTimeOut(): void

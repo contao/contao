@@ -31,6 +31,8 @@ class CronJobRepository extends ServiceEntityRepository
 {
     private readonly Connection $connection;
 
+    private int|null $previousAutoCommit = null;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CronJob::class);
@@ -57,19 +59,80 @@ class CronJobRepository extends ServiceEntityRepository
             $defaultLockTimeout = 86400;
         }
 
-        try {
-            // Set a short lock timeout, so that the next statement throws an exception sooner
-            $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
-            $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
-        } finally {
-            // Restore the previous lock timeout
-            $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
+        if ($this->connection->isTransactionActive()) {
+            throw new \LogicException('Cannot acquire the cron table lock within an active transaction.');
         }
+
+        $autoCommit = (int) $this->connection->fetchOne('SELECT @@autocommit');
+
+        try {
+            try {
+                $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
+                $this->connection->executeStatement('SET SESSION autocommit = 0');
+
+                // Begin first, so Doctrine's flush() can nest its own transaction
+                $this->connection->beginTransaction();
+
+                // LOCK TABLES commits implicitly, then InnoDB starts a new transaction
+                $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+            } finally {
+                $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
+            }
+        } catch (\Throwable $e) {
+            try {
+                if ($this->connection->isTransactionActive()) {
+                    // A failed LOCK TABLES also commits the original transaction
+                    $this->connection->executeStatement('START TRANSACTION');
+                    $this->connection->rollBack();
+                }
+            } finally {
+                $this->connection->executeStatement('SET SESSION autocommit = ?', [$autoCommit], [Types::INTEGER]);
+            }
+
+            throw $e;
+        }
+
+        $this->previousAutoCommit = $autoCommit;
     }
 
-    public function unlockTable(): void
+    /**
+     * Commits or rolls back the transaction before releasing the table lock.
+     */
+    public function unlockTable(bool $commit = true): void
     {
-        $this->connection->executeStatement('UNLOCK TABLES');
+        if (null === $this->previousAutoCommit) {
+            return;
+        }
+
+        try {
+            try {
+                if ($commit) {
+                    if (1 !== $this->connection->getTransactionNestingLevel()) {
+                        throw new \LogicException('The cron table lock transaction is unbalanced.');
+                    }
+
+                    $this->connection->commit();
+                } else {
+                    while ($this->connection->isTransactionActive()) {
+                        $this->connection->rollBack();
+                    }
+                }
+            } catch (\Throwable $e) {
+                while ($this->connection->isTransactionActive()) {
+                    $this->connection->rollBack();
+                }
+
+                throw $e;
+            }
+        } finally {
+            try {
+                $this->connection->executeStatement('UNLOCK TABLES');
+            } finally {
+                $autoCommit = $this->previousAutoCommit;
+                $this->previousAutoCommit = null;
+                $this->connection->executeStatement('SET SESSION autocommit = ?', [$autoCommit], [Types::INTEGER]);
+            }
+        }
     }
 
     /**
