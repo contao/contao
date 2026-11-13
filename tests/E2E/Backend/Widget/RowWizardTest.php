@@ -105,6 +105,158 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertTrue($this->ghost($backend, 'row_wizard_basic')->isVisible());
     }
 
+    public function testMandatoryFieldOfAnEmptyRowWizardDoesNotBlockSaving(): void
+    {
+        $backend = $this->openNewRowWizardMandatoryElement();
+
+        // Without a row, the browser must not validate the mandatory field
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+        $this->assertTrue($this->isFormValid($backend));
+
+        // Saving the untouched row wizard does not create a row either
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+
+        $this->add($backend, 'row_wizard_with_mandatory');
+        $this->assertFalse($this->isFormValid($backend));
+
+        $this->input($backend, 'row_wizard_with_mandatory', 0, 'name')->fill('Only');
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 1);
+
+        // The same applies after deleting the last row, which stores an empty value
+        $this->buttons($backend, 'row_wizard_with_mandatory', 'delete')->first()->click();
+        $this->assertTrue($this->isFormValid($backend));
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_mandatory', 0);
+    }
+
+    public function testCopyingARowKeepsTheRowsOfANestedRowWizard(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('Outer');
+
+        // The nested row wizard starts empty as well
+        $this->assertSame(0, $this->nestedRows($backend, 0)->count());
+
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('Inner');
+
+        // Copying the outer row reconnects the nested row wizards
+        $this->copyOuterRow($backend, 0);
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->assertSame(1, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(1, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+        $this->assertSame('Inner', $this->nestedInput($backend, 0, 0)->inputValue());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+    }
+
+    public function testNestedRowsAddedAfterCopyingBelongToTheirRow(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('Outer');
+
+        // Both nested row wizards are still empty after copying the outer row
+        $this->copyOuterRow($backend, 0);
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->assertSame(0, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(0, $this->nestedRows($backend, 1)->count());
+
+        // The nested rows are named after the outer row they have been added to
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('First');
+
+        $this->addNested($backend, 1);
+        $this->nestedInput($backend, 1, 0)->fill('Second');
+
+        $this->addNested($backend, 1);
+        $this->nestedInput($backend, 1, 1)->fill('Third');
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+        $this->assertSame(1, $this->nestedRows($backend, 0)->count());
+        $this->assertSame(2, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('First', $this->nestedInput($backend, 0, 0)->inputValue());
+        $this->assertSame('Second', $this->nestedInput($backend, 1, 0)->inputValue());
+        $this->assertSame('Third', $this->nestedInput($backend, 1, 1)->inputValue());
+    }
+
+    public function testMovingARowKeepsTheRowsOfANestedRowWizard(): void
+    {
+        $backend = $this->openNewTextElement();
+
+        $this->add($backend, 'row_wizard_nested');
+        $this->add($backend, 'row_wizard_nested');
+
+        $this->assertRows($backend, 'row_wizard_nested', 2);
+
+        $this->input($backend, 'row_wizard_nested', 0, 'title')->fill('First');
+        $this->input($backend, 'row_wizard_nested', 1, 'title')->fill('Second');
+
+        $this->addNested($backend, 0);
+        $this->nestedInput($backend, 0, 0)->fill('Inner');
+
+        // Moving the first row below the second one reconnects its nested row wizard
+        $this->outerRow($backend, 0, '> td:first-child > .drag-handle')->focus();
+
+        $backend->page()->keyboard()->press('ArrowDown');
+
+        $this->assertSame('First', $this->input($backend, 'row_wizard_nested', 1, 'title')->inputValue());
+        $this->assertSame(1, $this->nestedRows($backend, 1)->count());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertSame('Second', $this->input($backend, 'row_wizard_nested', 0, 'title')->inputValue());
+        $this->assertSame('First', $this->input($backend, 'row_wizard_nested', 1, 'title')->inputValue());
+        $this->assertSame('Inner', $this->nestedInput($backend, 1, 0)->inputValue());
+    }
+
+    public function testChosenSelectOfAnAddedRowIsUsable(): void
+    {
+        $backend = $this->openNewTextElement();
+        $page = $backend->page();
+
+        $choices = '#ctrl_row_wizard_with_chosen > tbody > tr:nth-child(1) .choices';
+
+        $this->assertRows($backend, 'row_wizard_with_chosen', 0);
+
+        $this->add($backend, 'row_wizard_with_chosen');
+
+        // The enhanced select menu of the first row is not disabled
+        $page->locator($choices)->waitFor(['state' => 'visible']);
+        $this->assertSame(0, $page->locator($choices.'.is-disabled')->count());
+
+        $page->locator($choices)->click();
+        $page->locator($choices.' .choices__item--choice[data-value="b"]')->click();
+
+        $this->assertSame('b', $this->input($backend, 'row_wizard_with_chosen', 0, 'type')->inputValue());
+
+        $backend->submitForm('Save');
+
+        $this->assertRows($backend, 'row_wizard_with_chosen', 1);
+        $this->assertSame('b', $this->input($backend, 'row_wizard_with_chosen', 0, 'type')->inputValue());
+    }
+
     public function testActionsAndSortableOptionsControlTheButtons(): void
     {
         $backend = $this->openNewTextElement();
@@ -180,14 +332,37 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         return $backend;
     }
 
+    private function openNewRowWizardMandatoryElement(): BackendBrowser
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        [$backend] = $this->openArticle($fixtures, 'article_main_home');
+
+        $backend->submitNew();
+        $backend->submitAction('Paste at the top');
+
+        // Changing the type auto-submits the form so we wait until the text palette is gone
+        $backend->select('type', 'row_wizard_mandatory');
+        $backend->page()->locator('textarea[name="text"]')->waitFor(['state' => 'detached']);
+
+        return $backend;
+    }
+
     private function add(BackendBrowser $backend, string $field): void
     {
-        $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-add', $field))->click();
+        $backend->page()->locator(\sprintf('#ctrl_%s > tfoot .row-wizard-add', $field))->click();
     }
 
     private function ghost(BackendBrowser $backend, string $field): LocatorInterface
     {
         return $backend->page()->locator(\sprintf('#ctrl_%s .row-wizard-ghost', $field));
+    }
+
+    /**
+     * Returns whether the browser would submit the edit form.
+     */
+    private function isFormValid(BackendBrowser $backend): bool
+    {
+        return $backend->page()->locator('#ctrl_row_wizard_with_mandatory')->evaluate('el => el.closest("form").checkValidity()');
     }
 
     /**
@@ -219,5 +394,36 @@ class RowWizardTest extends AbstractContaoMonorepoE2ETestCase
         }
 
         $this->assertSame($count, $rows->count());
+    }
+
+    /**
+     * Returns an element inside a row of the "row_wizard_nested" field.
+     */
+    private function outerRow(BackendBrowser $backend, int $row, string $selector): LocatorInterface
+    {
+        return $backend->page()->locator(\sprintf('#ctrl_row_wizard_nested > tbody > tr:nth-child(%d) %s', $row + 1, $selector));
+    }
+
+    private function copyOuterRow(BackendBrowser $backend, int $row): void
+    {
+        $this->outerRow($backend, $row, '> td.tl_right > button[data-contao--row-wizard-target="copy"]')->click();
+    }
+
+    private function addNested(BackendBrowser $backend, int $row): void
+    {
+        $this->outerRow($backend, $row, 'table.row_wizard .row-wizard-add')->click();
+    }
+
+    /**
+     * Returns the visible rows of the nested row wizard in the given row.
+     */
+    private function nestedRows(BackendBrowser $backend, int $row): LocatorInterface
+    {
+        return $this->outerRow($backend, $row, 'table.row_wizard > tbody > tr:visible');
+    }
+
+    private function nestedInput(BackendBrowser $backend, int $row, int $nestedRow): LocatorInterface
+    {
+        return $backend->page()->locator(\sprintf('#ctrl_row_wizard_nested > tbody table.row_wizard > tbody [name="row_wizard_nested[%d][items][%d][name]"]:visible', $row, $nestedRow));
     }
 }
