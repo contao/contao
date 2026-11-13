@@ -64,9 +64,9 @@ services:
         parent: cache.adapter.filesystem
         abstract: true
         arguments:
-            $directory: '%kernel.project_dir%/var/cache/cross_env'
+            $directory: '%kernel.project_dir%/var/cache/contao'
         tags:
-            - { name: cache.pool, namespace: contao_cross_env }
+            - { name: cache.pool, namespace: cross_env }
 
 # Contao configuration
 contao:
