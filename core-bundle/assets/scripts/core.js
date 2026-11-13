@@ -1647,6 +1647,10 @@ window.Backend =
 	 * @param {object} el The DOM element
 	 */
 	editPreviewWizard: function(el) {
+		if (window.console) {
+			console.warn('Backend.editPreviewWizard() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		el = $(el);
 		var imageElement = el.getElement('img'),
 			inputElements = {},
