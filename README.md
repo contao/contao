@@ -53,7 +53,7 @@ bundles:
 },
 ```
 
-Also update the config section so that Composer installs the monorepo from source instead of dist:
+Also update the `config` section so that Composer installs the monorepo from `source` instead of `dist`:
 
 ```json
 "config": {
