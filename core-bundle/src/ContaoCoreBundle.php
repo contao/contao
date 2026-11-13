@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddCrossEnvCachePass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
@@ -89,6 +90,7 @@ class ContaoCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
+        $container->addCompilerPass(new AddCrossEnvCachePass()); // Must be after Symfony's CachePoolPass
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
