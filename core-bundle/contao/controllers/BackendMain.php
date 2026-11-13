@@ -256,7 +256,6 @@ class BackendMain extends Backend
 		$data['headerMenu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled)) : '';
 		$data['isDebug'] = $container->getParameter('kernel.debug');
 
-		/** @var ResponseContext|null $responseContext */
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 		$data['metaTags'] = $responseContext->get(HtmlHeadBag::class)->getMetaTags();
 

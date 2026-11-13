@@ -383,7 +383,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $responseContext = new ResponseContext();
         $responseContext->addLazy(HtmlHeadBag::class);
-
         $responseContext->get(HtmlHeadBag::class)->addMetaTag($metaTag);
 
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);

@@ -75,9 +75,6 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
-		/** @var ResponseContext|null $responseContext */
-		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
 			$this->Template->showBackupCodes = true;
@@ -89,6 +86,7 @@ class ModuleTwoFactor extends BackendModule
 				->set('content', 'no-cache')
 			;
 
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 			$responseContext->get(HtmlHeadBag::class)->addMetaTag($metaTag);
 		}
 
