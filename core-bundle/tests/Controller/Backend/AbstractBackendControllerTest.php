@@ -24,7 +24,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
@@ -435,19 +434,6 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
-        $filesystemLoader
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $filesystemLoader
-            ->method('getFirst')
-            ->willReturnCallback(
-                static fn (string $identifier) => "templates/$identifier.html5",
-            )
-        ;
-
         $requestStack = new RequestStack([$request ?? new Request(server: $_SERVER)]);
 
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
@@ -477,7 +463,6 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('database_connection', $this->createStub(Connection::class));
         $container->set('session', $this->createStub(Session::class));
         $container->set('twig', $twig);
-        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
         $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
