@@ -265,8 +265,7 @@ final class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define the "attributes" key if href is set
 
-            // Use link "title" attribute for "linkTitle" as it is already output explicitly
-            // in image.html5 (see #3385)
+            // Use a link "title" attribute for "linkTitle" (see #3385)
             if (\array_key_exists('title', $linkAttributes)) {
                 $templateData['linkTitle'] = $linkAttributes['title'];
                 unset($linkAttributes['title']);
