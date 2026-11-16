@@ -61,6 +61,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
+        if ($attributes instanceof RecordingHtmlAttributes) {
+            $attributes->replay($this);
+
+            return $this;
+        }
+
         if ($attributes instanceof self) {
             foreach ($attributes->attributes as $name => $value) {
                 $this->mergeAttribute((string) $name, $value, true);
@@ -97,8 +103,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
-        static $validatedNames = [];
-
         if (!$this->test($condition)) {
             return $this;
         }
@@ -113,17 +117,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (!isset($validatedNames[$name])) {
-            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
-                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
-            }
-
-            $validatedNames[$name] = true;
-
-            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
-                unset($validatedNames[array_key_first($validatedNames)]);
-            }
-        }
+        $this->validateAttributeName($name);
 
         // Unset if value is set to false
         if (false === $value) {
@@ -406,10 +400,27 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return (object) $this->attributes;
     }
 
+    protected function validateAttributeName(string $name): void
+    {
+        static $validatedNames = [];
+
+        if (!isset($validatedNames[$name])) {
+            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
+                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            }
+
+            $validatedNames[$name] = true;
+
+            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
+                unset($validatedNames[array_key_first($validatedNames)]);
+            }
+        }
+    }
+
     /**
      * Returns true if the argument is truthy.
      */
-    private function test(mixed $condition): bool
+    protected function test(mixed $condition): bool
     {
         if ($condition instanceof \Stringable) {
             $condition = (string) $condition;
