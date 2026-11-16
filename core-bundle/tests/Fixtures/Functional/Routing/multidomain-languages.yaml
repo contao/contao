@@ -1,9 +1,8 @@
 tl_page:
-    -
-        id: 1
+    page_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 128
@@ -13,19 +12,10 @@ tl_page:
         language: de
         dns: example.com
         urlPrefix: de
-    -
-        id: 6
-        published: 1
-        pid: 1
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 159
+    page_s1_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 512
@@ -35,19 +25,10 @@ tl_page:
         language: de
         dns: s1.example.com
         urlPrefix: de
-    -
-        id: 164
-        published: 1
-        pid: 159
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 176
+    page_s2_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 768
@@ -57,19 +38,10 @@ tl_page:
         language: de
         dns: s2.example.com
         urlPrefix: de
-    -
-        id: 220
-        published: 1
-        pid: 176
-        sorting: 576
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 222
+    page_s9_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 640
@@ -78,21 +50,10 @@ tl_page:
         alias: de
         language: de
         dns: s9.example.com
-    -
-        id: 227
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 222
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 280
+    page_s10_example_com_en:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 0
         pid: 0
         sorting: 1152
@@ -101,19 +62,10 @@ tl_page:
         alias: en
         language: en
         dns: s10.example.com
-    -
-        id: 285
-        published: 1
-        pid: 280
-        sorting: 576
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 318
+    page_s5_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1280
@@ -123,21 +75,10 @@ tl_page:
         language: de
         dns: s5.example.com
         urlPrefix: de
-    -
-        id: 323
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 318
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 382
+    page_s6_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1536
@@ -147,20 +88,10 @@ tl_page:
         language: de
         dns: s6.example.com
         urlPrefix: de
-    -
-        id: 392
-        layout: 1
-        published: 1
-        pid: 382
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 449
+    page_s7_example_com_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1664
@@ -170,19 +101,10 @@ tl_page:
         language: de
         dns: s7.example.com
         urlPrefix: de
-    -
-        id: 454
-        published: 1
-        pid: 449
-        sorting: 704
-        title: Foo
-        type: redirect
-        alias: index
-    -
-        id: 597
+    page_example_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2048
@@ -192,19 +114,10 @@ tl_page:
         language: de
         dns: example.org
         urlPrefix: de
-    -
-        id: 602
-        published: 1
-        pid: 597
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 708
+    page_domain2_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2816
@@ -214,19 +127,10 @@ tl_page:
         language: de
         dns: domain2.org
         urlPrefix: de
-    -
-        id: 713
-        published: 1
-        pid: 708
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 784
+    page_domain3_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3200
@@ -236,19 +140,10 @@ tl_page:
         language: de
         dns: domain3.org
         urlPrefix: de
-    -
-        id: 789
-        published: 1
-        pid: 784
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 860
+    page_domain4_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3584
@@ -258,21 +153,10 @@ tl_page:
         language: de
         dns: domain4.org
         urlPrefix: de
-    -
-        id: 865
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 860
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 936
+    page_domain5_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3968
@@ -282,18 +166,9 @@ tl_page:
         language: de
         dns: domain5.org
         urlPrefix: de
-    -
-        id: 941
-        published: 1
-        pid: 936
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 1557
+    page_example_com_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 256
@@ -303,18 +178,9 @@ tl_page:
         language: en
         dns: example.com
         urlPrefix: en
-    -
-        id: 1562
-        published: 1
-        pid: 1557
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 1848
+    page_example_com_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 384
@@ -324,18 +190,9 @@ tl_page:
         language: fr
         dns: example.com
         urlPrefix: fr
-    -
-        id: 1853
-        published: 1
-        pid: 1848
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 2138
+    page_example_org_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2176
@@ -345,18 +202,9 @@ tl_page:
         language: en
         dns: example.org
         urlPrefix: en
-    -
-        id: 2143
-        published: 1
-        pid: 2138
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 2317
+    page_example_org_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2304
@@ -366,18 +214,9 @@ tl_page:
         language: fr
         dns: example.org
         urlPrefix: fr
-    -
-        id: 2322
-        published: 1
-        pid: 2317
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 2524
+    page_domain2_org_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2944
@@ -387,18 +226,9 @@ tl_page:
         language: en
         dns: domain2.org
         urlPrefix: en
-    -
-        id: 2529
-        published: 1
-        pid: 2524
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 2683
+    page_domain2_org_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3072
@@ -408,18 +238,9 @@ tl_page:
         language: fr
         dns: domain2.org
         urlPrefix: fr
-    -
-        id: 2688
-        published: 1
-        pid: 2683
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 2870
+    page_domain3_org_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3328
@@ -429,18 +250,9 @@ tl_page:
         language: en
         dns: domain3.org
         urlPrefix: en
-    -
-        id: 2875
-        published: 1
-        pid: 2870
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3025
+    page_domain3_org_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3456
@@ -450,18 +262,9 @@ tl_page:
         language: fr
         dns: domain3.org
         urlPrefix: fr
-    -
-        id: 3030
-        published: 1
-        pid: 3025
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3208
+    page_domain4_org_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3712
@@ -471,20 +274,9 @@ tl_page:
         language: en
         dns: domain4.org
         urlPrefix: en
-    -
-        id: 3213
+    page_domain4_org_fr:
         includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 3208
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3359
-        includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 3840
@@ -494,20 +286,9 @@ tl_page:
         language: fr
         dns: domain4.org
         urlPrefix: fr
-    -
-        id: 3364
+    page_domain5_org_en:
         includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 3359
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3538
-        includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4096
@@ -517,18 +298,9 @@ tl_page:
         language: en
         dns: domain5.org
         urlPrefix: en
-    -
-        id: 3543
-        published: 1
-        pid: 3538
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3695
+    page_domain5_org_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4224
@@ -538,18 +310,9 @@ tl_page:
         language: fr
         dns: domain5.org
         urlPrefix: fr
-    -
-        id: 3700
-        published: 1
-        pid: 3695
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3917
+    page_s2_example_com_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 896
@@ -559,18 +322,9 @@ tl_page:
         language: en
         dns: s2.example.com
         urlPrefix: en
-    -
-        id: 3922
-        published: 1
-        pid: 3917
-        sorting: 576
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 3950
+    page_s2_example_com_fr:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1024
@@ -580,19 +334,10 @@ tl_page:
         language: fr
         dns: s2.example.com
         urlPrefix: fr
-    -
-        id: 3955
-        published: 1
-        pid: 3950
-        sorting: 576
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4012
+    page_domain6_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2432
@@ -602,19 +347,10 @@ tl_page:
         language: de
         dns: domain6.org
         urlPrefix: de
-    -
-        id: 4017
-        published: 1
-        pid: 4012
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4180
+    page_domain7_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2560
@@ -624,18 +360,9 @@ tl_page:
         language: de
         dns: domain7.org
         urlPrefix: de
-    -
-        id: 4185
-        published: 1
-        pid: 4180
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4194
+    page_domain7_org_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2688
@@ -645,19 +372,10 @@ tl_page:
         language: en
         dns: domain7.org
         urlPrefix: en
-    -
-        id: 4199
-        published: 1
-        pid: 4194
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: home
-    -
-        id: 4221
+    page_s3_example_com_de_ch:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1792
@@ -667,21 +385,10 @@ tl_page:
         language: de_CH
         dns: s3.example.com
         urlPrefix: de
-    -
-        id: 4226
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4221
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4293
+    page_s4_example_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2752
@@ -691,20 +398,9 @@ tl_page:
         language: de
         dns: s4.example.org
         urlPrefix: de
-    -
-        id: 4298
+    page_s5_example_com_en:
         includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4293
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4378
-        includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1344
@@ -714,21 +410,10 @@ tl_page:
         language: en
         dns: s5.example.com
         urlPrefix: en
-    -
-        id: 4383
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4378
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4480
+    page_domain8_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 1920
@@ -738,21 +423,10 @@ tl_page:
         language: de
         dns: domain8.org
         urlPrefix: de
-    -
-        id: 4485
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4480
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4602
+    page_domain9_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4352
@@ -762,21 +436,10 @@ tl_page:
         language: de
         dns: domain9.org
         urlPrefix: de
-    -
-        id: 4607
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4602
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4646
+    page_domain10_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4480
@@ -786,21 +449,10 @@ tl_page:
         language: de
         dns: domain10.org
         urlPrefix: de
-    -
-        id: 4651
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4646
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4679
+    page_s8_example_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 2784
@@ -810,19 +462,10 @@ tl_page:
         language: de
         dns: s8.example.org
         urlPrefix: de
-    -
-        id: 4827
-        published: 1
-        pid: 4679
-        sorting: 576
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4901
+    page_domain1_org_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4608
@@ -832,20 +475,9 @@ tl_page:
         language: de
         dns: domain1.org
         urlPrefix: de
-    -
-        id: 4906
+    page_domain1_org_en:
         includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4901
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4954
-        includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4736
@@ -855,554 +487,10 @@ tl_page:
         language: en
         dns: domain1.org
         urlPrefix: en
-    -
-        id: 4959
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4954
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 4960
-        published: 0
-        pid: 4959
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4961
-        requireItem: 1
-        published: 0
-        pid: 4960
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4962
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 4959
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4963
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 4962
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4964
-        published: 1
-        pid: 4954
-        sorting: 848
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4965
-        published: 1
-        pid: 4954
-        sorting: 1888
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4966
-        layout: 1
-        published: 1
-        pid: 4965
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4967
-        layout: 1
-        published: 1
-        pid: 4966
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4968
-        layout: 1
-        published: 1
-        pid: 4966
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4969
-        layout: 1
-        published: 1
-        pid: 4965
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4970
-        layout: 1
-        published: 1
-        pid: 4965
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4971
-        published: 1
-        pid: 4954
-        sorting: 2096
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4972
-        layout: 1
-        published: 1
-        pid: 4971
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4973
-        layout: 1
-        published: 1
-        pid: 4971
-        sorting: 96
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4974
-        layout: 1
-        published: 1
-        pid: 4971
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4975
-        layout: 1
-        published: 1
-        pid: 4971
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4976
-        published: 1
-        pid: 4954
-        sorting: 2304
-        title: Foo
-        type: folder
-    -
-        id: 4977
-        layout: 1
-        published: 1
-        pid: 4976
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: search
-    -
-        id: 4978
-        published: 1
-        pid: 4976
-        sorting: 256
-        title: Foo
-        type: forward
-        alias: register
-    -
-        id: 4979
-        published: 1
-        pid: 4954
-        sorting: 2432
-        title: Foo
-        type: folder
-    -
-        id: 4980
-        published: 1
-        pid: 4954
-        sorting: 2560
-        title: Foo
-        type: folder
-    -
-        id: 4981
-        published: 0
-        pid: 4980
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4982
-        published: 0
-        pid: 4980
-        sorting: 96
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4983
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 4980
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4986
-        published: 1
-        pid: 635
-        sorting: 320
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4987
-        published: 1
-        pid: 2306
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4988
-        published: 1
-        pid: 2485
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 4989
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4152
-        sorting: 192
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 4990
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4408
-        sorting: 192
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5000
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 449
-        sorting: 728
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5006
-        published: 1
-        pid: 5005
-        sorting: 128
-        title: Foo
-        type: regular
-    -
-        id: 5009
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 5008
-        sorting: 128
-        title: Foo
-        type: regular
-    -
-        id: 5010
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 5008
-        sorting: 256
-        title: Foo
-        type: regular
-    -
-        id: 5011
-        published: 1
-        pid: 5008
-        sorting: 384
-        title: Foo
-        type: regular
-    -
-        id: 5033
-        published: 1
-        pid: 636
-        sorting: 288
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5035
-        layout: 1
-        published: 1
-        pid: 777
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5036
-        published: 1
-        pid: 2309
-        sorting: 288
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5037
-        published: 1
-        pid: 2488
-        sorting: 288
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5045
-        published: 1
-        pid: 1789
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5046
-        published: 1
-        pid: 1789
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5047
-        published: 1
-        pid: 1789
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5048
-        published: 1
-        pid: 1789
-        sorting: 512
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5049
-        published: 1
-        pid: 1789
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5050
-        published: 1
-        pid: 1789
-        sorting: 768
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5051
-        published: 1
-        pid: 1789
-        sorting: 896
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5052
-        published: 1
-        pid: 2080
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5053
-        published: 1
-        pid: 2080
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5054
-        published: 1
-        pid: 2080
-        sorting: 384
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5055
-        published: 1
-        pid: 2080
-        sorting: 512
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5056
-        published: 1
-        pid: 2080
-        sorting: 640
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5057
-        published: 1
-        pid: 2080
-        sorting: 768
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5058
-        published: 1
-        pid: 2080
-        sorting: 896
-        title: Foo
-        type: regular
-        alias: foo/foo/foo
-    -
-        id: 5059
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 4408
-        sorting: 224
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5067
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 1801
-        sorting: 32
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5068
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 635
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5069
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 2306
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5073
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 1801
-        sorting: 16
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5074
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 2092
-        sorting: 32
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5079
-        published: 1
-        pid: 9
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5080
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 929
-        sorting: 1024
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5103
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 929
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5106
-        published: 1
-        pid: 635
-        sorting: 32
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5107
+    page_domain11_org_de_ch:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4864
@@ -1412,19 +500,10 @@ tl_page:
         language: de_CH
         dns: domain11.org
         urlPrefix: de
-    -
-        id: 5108
-        published: 1
-        pid: 5107
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 5229
+    page_example_ch_de:
         fallback: 1
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 4992
@@ -1434,18 +513,9 @@ tl_page:
         language: de
         dns: example.ch
         urlPrefix: de
-    -
-        id: 5234
-        published: 1
-        pid: 5229
-        sorting: 128
-        title: Foo
-        type: regular
-        alias: index
-    -
-        id: 5299
+    page_example_ch_en:
         includeLayout: 1
-        layout: 1
+        layout: '@layout_default'
         published: 1
         pid: 0
         sorting: 5120
@@ -1455,222 +525,338 @@ tl_page:
         language: en
         dns: example.ch
         urlPrefix: en
-    -
-        id: 5300
+    page_example_com_de_index:
         published: 1
-        pid: 5299
+        pid: '@page_example_com_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s1_example_com_de_index:
+        published: 1
+        pid: '@page_s1_example_com_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s2_example_com_de_index:
+        published: 1
+        pid: '@page_s2_example_com_de'
+        sorting: 576
+        title: Foo
+        type: regular
+        alias: index
+    page_s9_example_com_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s9_example_com_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s10_example_com_en_index:
+        published: 1
+        pid: '@page_s10_example_com_en'
+        sorting: 576
+        title: Foo
+        type: regular
+        alias: index
+    page_s5_example_com_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s5_example_com_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s6_example_com_de_index:
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s6_example_com_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s7_example_com_de_index:
+        published: 1
+        pid: '@page_s7_example_com_de'
+        sorting: 704
+        title: Foo
+        type: redirect
+        alias: index
+    page_example_org_de_index:
+        published: 1
+        pid: '@page_example_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain2_org_de_index:
+        published: 1
+        pid: '@page_domain2_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain3_org_de_index:
+        published: 1
+        pid: '@page_domain3_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain4_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain4_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain5_org_de_index:
+        published: 1
+        pid: '@page_domain5_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_example_com_en_index:
+        published: 1
+        pid: '@page_example_com_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_example_com_fr_index:
+        published: 1
+        pid: '@page_example_com_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_example_org_en_index:
+        published: 1
+        pid: '@page_example_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_example_org_fr_index:
+        published: 1
+        pid: '@page_example_org_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain2_org_en_index:
+        published: 1
+        pid: '@page_domain2_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain2_org_fr_index:
+        published: 1
+        pid: '@page_domain2_org_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain3_org_en_index:
+        published: 1
+        pid: '@page_domain3_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain3_org_fr_index:
+        published: 1
+        pid: '@page_domain3_org_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain4_org_en_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain4_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain4_org_fr_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain4_org_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain5_org_en_index:
+        published: 1
+        pid: '@page_domain5_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain5_org_fr_index:
+        published: 1
+        pid: '@page_domain5_org_fr'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s2_example_com_en_index:
+        published: 1
+        pid: '@page_s2_example_com_en'
+        sorting: 576
+        title: Foo
+        type: regular
+        alias: index
+    page_s2_example_com_fr_index:
+        published: 1
+        pid: '@page_s2_example_com_fr'
+        sorting: 576
+        title: Foo
+        type: regular
+        alias: index
+    page_domain6_org_de_index:
+        published: 1
+        pid: '@page_domain6_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain7_org_de_index:
+        published: 1
+        pid: '@page_domain7_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain7_org_en_home:
+        published: 1
+        pid: '@page_domain7_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: home
+    page_s3_example_com_de_ch_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s3_example_com_de_ch'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s4_example_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s4_example_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s5_example_com_en_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_s5_example_com_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain8_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain8_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain9_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain9_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain10_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain10_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_s8_example_org_de_index:
+        published: 1
+        pid: '@page_s8_example_org_de'
+        sorting: 576
+        title: Foo
+        type: regular
+        alias: index
+    page_domain1_org_de_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain1_org_de'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain1_org_en_index:
+        includeLayout: 1
+        layout: '@layout_default'
+        published: 1
+        pid: '@page_domain1_org_en'
+        sorting: 640
+        title: Foo
+        type: regular
+        alias: index
+    page_domain11_org_de_ch_index:
+        published: 1
+        pid: '@page_domain11_org_de_ch'
         sorting: 128
         title: Foo
         type: regular
         alias: index
-    -
-        id: 5301
+    page_example_ch_de_index:
         published: 1
-        pid: 5299
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5303
-        published: 0
-        pid: 5296
+        pid: '@page_example_ch_de'
         sorting: 128
         title: Foo
         type: regular
-        alias: foo/foo
-    -
-        id: 5304
-        published: 0
-        pid: 5296
-        sorting: 256
+        alias: index
+    page_example_ch_en_index:
+        published: 1
+        pid: '@page_example_ch_en'
+        sorting: 128
         title: Foo
         type: regular
-        alias: foo/foo
-    -
-        id: 5305
+        alias: index
+    page_example_ch_de_bar:
         published: 1
-        pid: 5229
+        pid: '@page_example_ch_de'
         sorting: 608
         title: Foo
         type: regular
         alias: bar
-    -
-        id: 5306
+    page_example_ch_de_bar_bar:
         published: 1
-        pid: 5305
+        pid: '@page_example_ch_de_bar'
         sorting: 64
         title: Bar
         type: regular
         alias: bar/bar
-    -
-        id: 5313
-        published: 0
-        pid: 5311
-        sorting: 256
-        title: Foo
-        type: regular
-    -
-        id: 5315
-        published: 0
-        pid: 5313
-        sorting: 256
-        title: Foo
-        type: regular
-    -
-        id: 5316
-        published: 0
-        pid: 5313
-        sorting: 384
-        title: Foo
-        type: regular
-    -
-        id: 5317
-        published: 0
-        pid: 5313
-        sorting: 512
-        title: Foo
-        type: regular
-    -
-        id: 5318
-        published: 0
-        pid: 5311
-        sorting: 896
-        title: Foo
-        type: regular
-    -
-        id: 5319
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5311
-        sorting: 1024
-        title: Foo
-        type: regular
-    -
-        id: 5320
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5311
-        sorting: 1152
-        title: Foo
-        type: regular
-    -
-        id: 5321
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5311
-        sorting: 1280
-        title: Foo
-        type: regular
-    -
-        id: 5323
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5322
-        sorting: 128
-        title: Foo
-        type: regular
-    -
-        id: 5324
-        published: 0
-        pid: 5322
-        sorting: 256
-        title: Foo
-        type: regular
-    -
-        id: 5325
-        published: 0
-        pid: 5324
-        sorting: 128
-        title: Foo
-        type: regular
-    -
-        id: 5326
-        published: 0
-        pid: 5324
-        sorting: 256
-        title: Foo
-        type: regular
-    -
-        id: 5327
-        published: 0
-        pid: 5324
-        sorting: 384
-        title: Foo
-        type: regular
-    -
-        id: 5328
-        published: 0
-        pid: 5322
-        sorting: 768
-        title: Foo
-        type: regular
-    -
-        id: 5329
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5322
-        sorting: 896
-        title: Foo
-        type: regular
-    -
-        id: 5330
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5322
-        sorting: 1024
-        title: Foo
-        type: regular
-    -
-        id: 5331
-        includeLayout: 1
-        layout: 1
-        published: 0
-        pid: 5322
-        sorting: 1152
-        title: Foo
-        type: regular
-    -
-        id: 5341
-        published: 1
-        pid: 5290
-        sorting: 256
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5342
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 9
-        sorting: 64
-        title: Foo
-        type: regular
-        alias: foo
-    -
-        id: 5343
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 1801
-        sorting: 8
-        title: Foo
-        type: regular
-        alias: foo/foo
-    -
-        id: 5350
-        includeLayout: 1
-        layout: 1
-        published: 1
-        pid: 929
-        sorting: 4
-        title: Foo
-        type: regular
-        alias: foo

@@ -188,9 +188,12 @@
         "bamarni/composer-bin-plugin": "^1.4",
         "cmsig/seal-memory-adapter": "^0.12",
         "composer/composer": "^2.0",
+        "contao/e2e-testing": "dev-main",
+        "contao/installation-recipe": "dev-main",
         "doctrine/annotations": "^2.0",
         "doctrine/collections": "^2.1",
         "league/flysystem-memory": "^3.0",
+        "playwright-php/playwright": "^1.6",
         "sebastian/diff": "^7.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^7.4"
@@ -281,6 +284,7 @@
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
             "Contao\\CoreBundle\\Fixtures\\": "core-bundle/tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
+            "Contao\\E2eTests\\": "tests/E2E/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\MakerBundle\\Fixtures\\": "maker-bundle/tests/Fixtures/src/",
             "Contao\\MakerBundle\\Tests\\": "maker-bundle/tests/",
@@ -342,6 +346,11 @@
         "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
+        "e2e-tests": [
+            "Composer\\Config::disableProcessTimeout",
+            "@putenv XDEBUG_MODE=off",
+            "@php vendor/bin/phpunit --testsuite=e2e --cache-directory=.contao-e2e/cache/phpunit"
+        ],
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
