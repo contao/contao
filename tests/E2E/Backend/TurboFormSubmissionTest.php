@@ -62,6 +62,18 @@ class TurboFormSubmissionTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSelectorTextContains('.tl_message .tl_error', 'exists already');
     }
 
+    public function testShowsAnErrorIfTheUploadedFileTypeIsNotAllowed(): void
+    {
+        $backend = $this->login();
+        $backend->visit('/contao?do=files');
+        $backend->waitForNavigation(static fn () => $backend->clickButton('a[href*="act=move"][href*="mode=2"]'));
+
+        $backend->page()->locator('#tl_files input[type="file"]')->setInputFiles(__FILE__);
+        $backend->clickButton('#tl_files button[name="upload"]');
+
+        $this->assertSelectorTextContains('.tl_message .tl_error', 'is not allowed');
+    }
+
     private function enableTwoFactor(BackendBrowser $backend): void
     {
         $backend->visit('/contao?do=security&act=enable');
