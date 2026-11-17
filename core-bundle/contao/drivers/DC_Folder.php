@@ -1201,7 +1201,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// See #4086
 		if (!class_exists($class))
 		{
-			$class = DropZone::class;
+			$class = class_exists('Contao\\' . $class) ? 'Contao\\' . $class : DropZone::class;
 		}
 
 		$objUploader = new $class();
