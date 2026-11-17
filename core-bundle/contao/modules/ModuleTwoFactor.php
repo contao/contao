@@ -17,8 +17,10 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\PersonalAccessTokenRepository;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Security\AccessToken\AccessTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -81,6 +83,15 @@ class ModuleTwoFactor extends BackendModule
 		{
 			$this->Template->showBackupCodes = true;
 			$this->Template->backupCodes = System::getContainer()->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
+
+			// Do not allow backup codes to be stored in Turbo's cache
+			$metaTag = (new HtmlAttributes())
+				->set('name', 'turbo-cache-control')
+				->set('content', 'no-cache')
+			;
+
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+			$responseContext->get(HtmlHeadBag::class)->addMetaTag($metaTag);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
