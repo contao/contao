@@ -2110,6 +2110,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 		$intLatestVersion = $objVersions->getLatestVersion();
 
+		// A prefetched page has no initial version yet, it is created when the form is submitted (see #10584)
+		if ($intLatestVersion === 0)
+		{
+			$intLatestVersion = 1;
+		}
+
 		$this->strPalette = $this->getPalette();
 		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 

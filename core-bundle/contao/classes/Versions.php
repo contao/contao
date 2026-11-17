@@ -138,6 +138,12 @@ class Versions extends Controller
 			return;
 		}
 
+		// Do not create the initial version if the page is only prefetched (see #10584)
+		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->headers->get('X-Sec-Purpose') === 'prefetch')
+		{
+			return;
+		}
+
 		$objVersion = Database::getInstance()
 			->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE fromTable=? AND pid=?")
 			->limit(1)
