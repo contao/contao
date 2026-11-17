@@ -46,6 +46,7 @@ trait BackendTestTrait
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
             ->withConfigFile(self::configDirectory().'/security.yaml')
+            ->withConfigFile(self::configDirectory().'/mailer.yaml')
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
         ;
 
