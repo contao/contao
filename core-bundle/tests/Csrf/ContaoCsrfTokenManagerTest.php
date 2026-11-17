@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Csrf;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -130,9 +131,10 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $this->assertTrue($tokenManager->isTokenValid($token));
     }
 
-    public function testAnyTokenIsValidWithSecFetchSiteHeader(): void
+    public function testAnyTokenIsValidForPostRequestsWithSecFetchSiteHeader(): void
     {
-        $request = Request::create('https://example.com/', 'GET');
+        $request = Request::create('https://example.com/', 'POST');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $tokenManager = new ContaoCsrfTokenManager(
@@ -146,5 +148,27 @@ class ContaoCsrfTokenManagerTest extends TestCase
 
         $token = new CsrfToken('contao_csrf_token', 'any-value');
         $this->assertTrue($tokenManager->isTokenValid($token));
+    }
+
+    public function testAnyTokenIsNotValidForGetRequestsWithSecFetchSiteHeader(): void
+    {
+        $storage = new MemoryTokenStorage();
+        $storage->initialize(['contao_csrf_token' => 'foo']);
+
+        $request = Request::create('https://example.com/', 'GET');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+
+        $tokenManager = new ContaoCsrfTokenManager(
+            new RequestStack([$request]),
+            'csrf_',
+            $this->createStub(TokenGeneratorInterface::class),
+            $storage,
+            '',
+            'contao_csrf_token',
+        );
+
+        $token = new CsrfToken('contao_csrf_token', 'any-value');
+        $this->assertFalse($tokenManager->isTokenValid($token));
     }
 }

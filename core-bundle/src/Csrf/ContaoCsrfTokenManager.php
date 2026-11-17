@@ -79,10 +79,14 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     {
         if (
             ($request = $this->requestStack->getCurrentRequest())
-            && ('POST' === $request->getRealMethod() || 'same-origin' === $request->headers->get('Sec-Fetch-Site'))
+            && 'POST' === $request->getRealMethod()
             && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {
             return true;
+        }
+
+        if ($request && 'GET' === $request->getRealMethod()) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Validating CSRF tokens on GET requests is deprecated and will no longer work in Contao 7. Use a POST request instead.');
         }
 
         return parent::isTokenValid($token);
