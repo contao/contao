@@ -34,6 +34,7 @@ class AddCrossEnvCachePassTest extends TestCase
             ->addTag('cache.pool')
             ->setPublic(true)
         ;
+
         $container->setAlias('test.cross_env', 'contao.cache.cross_env')->setPublic(true);
         $container->addCompilerPass(new CachePoolPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 32);
         $container->addCompilerPass(new AddCrossEnvCachePass());

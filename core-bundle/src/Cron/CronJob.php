@@ -36,6 +36,12 @@ class CronJob
             $name .= '::'.$method;
         }
 
+        if (preg_match('/[^\x00-\x7F]/', $name)) {
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using non-ASCII characters in cron job names is deprecated and will no longer work in Contao 7.');
+
+            $name = preg_replace_callback('/[^\x00-\x7F]+/', static fn (array $match): string => bin2hex($match[0]), $name);
+        }
+
         $this->name = $name;
     }
 
