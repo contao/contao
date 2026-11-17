@@ -2,4 +2,4 @@
 # does not depend on a mail server on the machine that runs the tests.
 framework:
     mailer:
-        dsn: 'null://null'
+        dsn: null://null
