@@ -1,0 +1,72 @@
+tl_newsletter_channel:
+    newsletter_channel_foo:
+        tstamp: 1704067200
+        title: Foo
+        jumpTo: '@page_main_home'
+
+tl_newsletter:
+    newsletter_foo:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        subject: Foo
+        alias: foo
+        content: <p>Foo</p>
+        text: Foo
+        sender: foo@example.com
+
+tl_newsletter_recipients:
+    newsletter_recipient_01:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-01@example.com
+        active: 1
+    newsletter_recipient_02:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-02@example.com
+        active: 1
+    newsletter_recipient_03:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-03@example.com
+        active: 1
+    newsletter_recipient_04:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-04@example.com
+        active: 1
+    newsletter_recipient_05:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-05@example.com
+        active: 1
+    newsletter_recipient_06:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-06@example.com
+        active: 1
+    newsletter_recipient_07:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-07@example.com
+        active: 1
+    newsletter_recipient_08:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-08@example.com
+        active: 1
+    newsletter_recipient_09:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-09@example.com
+        active: 1
+    newsletter_recipient_10:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-10@example.com
+        active: 1
+    newsletter_recipient_11:
+        pid: '@newsletter_channel_foo'
+        tstamp: 1704067200
+        email: recipient-11@example.com
+        active: 1
