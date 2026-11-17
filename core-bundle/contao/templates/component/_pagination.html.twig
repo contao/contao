@@ -7,7 +7,7 @@
             .addClass('pagination')
             .set('role', 'navigation')
             .set('aria-label', 'MSC.pagination'|trans)
-            .mergeWith(pagination_attributes|default)
+            .mergeWith(pagination_attributes ?? null)
         %}
         <!-- indexer::stop -->
         <nav{{ pagination_attributes }}>
@@ -24,7 +24,7 @@
                                 {% set first_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.first))
                                     .addClass('first')
-                                    .mergeWith(first_attributes|default)
+                                    .mergeWith(first_attributes ?? null)
                                 %}
                                 <a{{ first_attributes }}>{% block pagination_first_label %}{{ 'MSC.first'|trans }}{% endblock %}</a>
                             </li>
@@ -36,7 +36,7 @@
                                 {% set previous_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.previous))
                                     .addClass('previous')
-                                    .mergeWith(previous_attributes|default)
+                                    .mergeWith(previous_attributes ?? null)
                                 %}
                                 <a{{ previous_attributes }}>{% block pagination_previous_label %}{{ 'MSC.previous'|trans }}{% endblock %}</a>
                             </li>
@@ -53,7 +53,7 @@
                                     {% set active_attributes = attrs()
                                         .set('aria-current', 'page')
                                         .addClass('active')
-                                        .mergeWith(active_attributes|default)
+                                        .mergeWith(active_attributes ?? null)
                                     %}
                                     <strong{{ active_attributes }}>{% block pagination_active_label %}{{ page }}{% endblock %}</strong>
                                 {% else %}
@@ -61,7 +61,7 @@
                                         .set('href', href)
                                         .set('aria-label', 'MSC.goToPage'|trans([page]))
                                         .addClass('link')
-                                        .mergeWith(link_attributes|default)
+                                        .mergeWith(link_attributes ?? null)
                                     %}
                                     <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
                                 {% endif %}
@@ -77,7 +77,7 @@
                                 {% set next_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.next))
                                     .addClass('next')
-                                    .mergeWith(next_attributes|default)
+                                    .mergeWith(next_attributes ?? null)
                                 %}
                                 <a{{ next_attributes }}>{% block pagination_next_label %}{{ 'MSC.next'|trans }}{% endblock %}</a>
                             </li>
@@ -89,7 +89,7 @@
                                 {% set last_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.last))
                                     .addClass('last')
-                                    .mergeWith(last_attributes|default)
+                                    .mergeWith(last_attributes ?? null)
                                 %}
                                 <a{{ last_attributes }}>{% block pagination_last_label %}{{ 'MSC.last'|trans }}{% endblock %}</a>
                             </li>

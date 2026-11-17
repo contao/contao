@@ -2,7 +2,7 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .setIfExists('aria-label', ariaLabel|insert_tag)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 <!-- indexer::stop -->

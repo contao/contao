@@ -11,7 +11,7 @@
             {% set code_attributes = attrs()
                 .addClass('hljs')
                 .addClass(highlighted.language)
-                .mergeWith(code_attributes|default)
+                .mergeWith(code_attributes ?? null)
             %}
             <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
                 {{- highlighted.value|raw -}}

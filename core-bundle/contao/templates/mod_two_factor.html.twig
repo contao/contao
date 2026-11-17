@@ -3,7 +3,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass('two-factor')
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% block content %}

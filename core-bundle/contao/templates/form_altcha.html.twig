@@ -4,7 +4,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass('altcha-hidden', this.altchaFloating|default)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% block label %}

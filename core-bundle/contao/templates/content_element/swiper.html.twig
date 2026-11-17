@@ -18,12 +18,12 @@
     {% set slider_attributes = attrs()
         .addClass('swiper')
         .set('data-settings', slider_settings|json_encode)
-        .mergeWith(slider_attributes|default)
+        .mergeWith(slider_attributes ?? null)
     %}
     <div{{ slider_attributes }}>
         {% set slider_wrapper_attributes = attrs()
             .addClass('swiper-wrapper')
-            .mergeWith(slider_wrapper_attributes|default)
+            .mergeWith(slider_wrapper_attributes ?? null)
         %}
         <div{{ slider_wrapper_attributes }}>
             {% block slides %}
@@ -31,7 +31,7 @@
                     {% block slide %}
                         {% set slide_attributes = attrs()
                             .addClass('swiper-slide')
-                            .mergeWith(slide_attributes|default)
+                            .mergeWith(slide_attributes ?? null)
                         %}
                         <div{{ slide_attributes }}>
                             {% block slide_inner %}
@@ -46,17 +46,17 @@
             {% if not as_editor_view %}
                 {% set button_prev_attributes = attrs()
                     .addClass('swiper-button-prev')
-                    .mergeWith(button_prev_attributes|default)
+                    .mergeWith(button_prev_attributes ?? null)
                 %}
                 <div{{ button_prev_attributes }}></div>
                 {% set button_next_attributes = attrs()
                     .addClass('swiper-button-next')
-                    .mergeWith(button_next_attributes|default)
+                    .mergeWith(button_next_attributes ?? null)
                 %}
                 <div{{ button_next_attributes }}></div>
                 {% set pagination_attributes = attrs()
                     .addClass('swiper-pagination')
-                    .mergeWith(pagination_attributes|default)
+                    .mergeWith(pagination_attributes ?? null)
                 %}
                 <div{{ pagination_attributes }}></div>
             {% endif %}
@@ -68,7 +68,7 @@
     {% add 'swiper_js' to body %}
         {% set script_attributes = attrs()
             .setIfExists('nonce', csp_nonce('script-src'))
-            .mergeWith(script_attributes|default)
+            .mergeWith(script_attributes ?? null)
         %}
         <script src="{{ asset('js/swiper-bundle.min.js', 'contao-components/swiper') }}"></script>
         <script{{ script_attributes }}>

@@ -24,7 +24,7 @@
                                         .set('href', href)
                                         .set('target', '_blank')
                                         .set('rel', 'noreferrer noopener')
-                                        .mergeWith(link_attributes|default)
+                                        .mergeWith(link_attributes ?? null)
                                     -%}
                                     <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
                                         {{- text -}}

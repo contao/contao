@@ -9,7 +9,7 @@
 {% set attributes = attrs()
     .setIfExists('id', element_html_id)
     .addClass([element_css_classes, "content-#{type|replace({_: '-'})}"])
-    .mergeWith(attributes|default)
+    .mergeWith(attributes ?? null)
 %}
 
 {% block wrapper %}

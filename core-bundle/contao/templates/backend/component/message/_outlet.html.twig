@@ -4,7 +4,7 @@
     .set('id', id)
     .set('data-controller', 'contao--message-outlet')
     .set('data-action', 'contao--message@document->contao--message-outlet#renderMessage', id == default_id)
-    .mergeWith(message_outlet_attributes|default)
+    .mergeWith(message_outlet_attributes ?? null)
 %}
 <div{{ message_outlet_attributes }}>
     <template data-contao--message-outlet-target="messagePrototype" data-type="info">

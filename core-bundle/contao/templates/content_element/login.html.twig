@@ -14,7 +14,7 @@
     .addClass(logout|default ? 'logout' : 'login')
     .set('data-passkey-login', not logout|default)
     .set('data-passkey-config', passkey_config|json_encode, not logout|default)
-    .mergeWith(attributes|default)
+    .mergeWith(attributes ?? null)
 %}
 
 {% block content %}
