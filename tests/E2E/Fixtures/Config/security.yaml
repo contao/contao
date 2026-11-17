@@ -1,0 +1,5 @@
+# The fixture users have plaintext passwords so that logging in is fast and
+# does not trigger a rehash, which would invalidate the cached sessions.
+security:
+    password_hashers:
+        Contao\User: plaintext
