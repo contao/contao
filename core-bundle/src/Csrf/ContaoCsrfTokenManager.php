@@ -79,7 +79,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     {
         if (
             ($request = $this->requestStack->getCurrentRequest())
-            && 'POST' === $request->getRealMethod()
+            && ('POST' === $request->getRealMethod() || 'same-origin' === $request->headers->get('Sec-Fetch-Site'))
             && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {
             return true;
@@ -94,16 +94,18 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
      */
     public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
     {
+        // Modern browsers on HTTPS sites do not need a cookie for the CSRF check
+        if ('same-origin' === $request->headers->get('Sec-Fetch-Site')) {
+            return true;
+        }
+
         return
             !$request->getUserInfo()
             && (
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
             )
-            && (
-                'same-origin' === $request->headers->get('Sec-Fetch-Site')
-                || $request->getSchemeAndHttpHost() === $request->headers->get('Origin')
-            )
+            && str_starts_with($request->headers->get('Origin', $request->headers->get('Referer')).'/', $request->getSchemeAndHttpHost().'/')
             && $this->isSessionEmpty($request);
     }
 

@@ -104,6 +104,26 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertSame('lax', $cookie->getSameSite());
     }
 
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfSecFetchSiteHeaderIsPresent(): void
+    {
+        $request = Request::create('https://foobar.com');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->headers->set('Sec-Fetch-Site', 'none');
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
+        ;
+
+        $response = new Response();
+
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertCount(0, $response->headers->getCookies());
+    }
+
     public function testDoesNotAddTheTokenCookiesToTheResponseIfAllCookiesAreDeleted(): void
     {
         $request = Request::create('https://foobar.com');
