@@ -31,8 +31,8 @@
 
 {% block figure_component %}
     {% set figure_attributes = attrs()
-        .mergeWith(figure.options.attr|default)
-        .mergeWith(figure_attributes|default)
+        .mergeWith(figure.options.attr ?? null)
+        .mergeWith(figure_attributes ?? null)
     %}
     <figure{{ figure_attributes }}>
         {% if not figure.linkHref|default %}
@@ -45,8 +45,8 @@
             {% block media_link %}
                 {% set link_attributes = attrs(figure.linkAttributes(true)|default)
                     .setIfExists('title', figure.hasLightbox and figure.hasMetadata and figure.linkAttributes['title'] is not defined ? figure.metadata.title : null)
-                    .mergeWith(figure.options.link_attr|default)
-                    .mergeWith(link_attributes|default)
+                    .mergeWith(figure.options.link_attr ?? null)
+                    .mergeWith(link_attributes ?? null)
                 %}
                 <a{{ link_attributes }}>{{ block('media') }}</a>
             {% endblock %}
@@ -56,8 +56,8 @@
         {% block caption %}
             {% if figure.metadata and figure.metadata.caption %}
                 {% set caption_attributes = attrs()
-                    .mergeWith(figure.options.caption_attr|default)
-                    .mergeWith(caption_attributes|default)
+                    .mergeWith(figure.options.caption_attr ?? null)
+                    .mergeWith(caption_attributes ?? null)
                 %}
                 <figcaption{{ caption_attributes }}>
                     {%- block caption_inner -%}

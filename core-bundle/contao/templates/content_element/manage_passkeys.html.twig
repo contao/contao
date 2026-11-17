@@ -13,7 +13,7 @@
 {% set attributes = attrs()
     .set('data-passkey-create')
     .set('data-passkey-config', passkey_config|json_encode)
-    .mergeWith(attributes|default)
+    .mergeWith(attributes ?? null)
 %}
 
 {% block content %}

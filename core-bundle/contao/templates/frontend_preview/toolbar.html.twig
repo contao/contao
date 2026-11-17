@@ -2,7 +2,7 @@
 
 {% set toolbar_attributes = attrs(attributes)
     .addClass('cto-toolbar__inside')
-    .mergeWith(toolbar_attributes|default)
+    .mergeWith(toolbar_attributes ?? null)
 %}
 
 <div class="cto-toolbar__open">

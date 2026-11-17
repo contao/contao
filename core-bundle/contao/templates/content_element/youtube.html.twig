@@ -3,7 +3,7 @@
 
 {% set iframe_attributes = attrs()
     .set('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen')
-    .mergeWith(iframe_attributes|default)
+    .mergeWith(iframe_attributes ?? null)
 %}
 
 {% block splash_screen_text %}

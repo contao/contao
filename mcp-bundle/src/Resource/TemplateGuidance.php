@@ -142,7 +142,7 @@ final class TemplateGuidance
                 ```twig
                 {% set accordion_header_attributes = attrs()
                     .addClass('handorgel__header')
-                    .mergeWith(accordion_header_attributes|default)
+                    .mergeWith(accordion_header_attributes ?? null)
                 %}
                 ```
 
@@ -152,8 +152,8 @@ final class TemplateGuidance
 
                 ```twig
                 {% set figure_attributes = attrs()
-                    .mergeWith(figure.options.attr|default)
-                    .mergeWith(figure_attributes|default)
+                    .mergeWith(figure.options.attr ?? null)
+                    .mergeWith(figure_attributes ?? null)
                 %}
                 ```
 
@@ -177,7 +177,7 @@ final class TemplateGuidance
                 {% set image_attributes = attrs()
                     .setIfExists('loading', loading|default)
                     .addClass('is-enhanced')
-                    .mergeWith(image_attributes|default)
+                    .mergeWith(image_attributes ?? null)
                 %}
 
                 <img{{ image_attributes }}>

@@ -26,7 +26,7 @@
 {% block splash_screen_component %}
     {% set splash_button_attributes = attrs()
         .set('data-splash-screen')
-        .mergeWith(splash_button_attributes|default)
+        .mergeWith(splash_button_attributes ?? null)
     %}
     <button{{ splash_button_attributes }}>
         {% block splash_screen_button_content %}
@@ -44,7 +44,7 @@
         {% add 'splash_screen_script' to body %}
             {% set script_attributes = attrs()
                 .setIfExists('nonce', csp_nonce('script-src'))
-                .mergeWith(script_attributes|default)
+                .mergeWith(script_attributes ?? null)
             %}
             <script{{ script_attributes }}>
                 document.querySelectorAll('*[data-splash-screen]').forEach(button => {

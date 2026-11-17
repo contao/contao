@@ -3,7 +3,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass(logout|default ? 'logout' : 'login')
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% block content %}

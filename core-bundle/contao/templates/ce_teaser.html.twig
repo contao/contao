@@ -2,7 +2,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass(['ce_text', 'content-text'])
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% set hl = 'h1' %}

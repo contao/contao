@@ -5,7 +5,7 @@
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--hugerte:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
     .set('data-turbo-prefetch', 'false', isDebug)
-    .mergeWith(rootAttributes|default)
+    .mergeWith(rootAttributes ?? null)
 -%}
 
 {% set bodyAttributes = attrs(attributes|default)
@@ -15,13 +15,13 @@
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
     .set('data-action', 'pointerover->contao--tooltips#show pointermove->contao--tooltips#setPosition pointerout->contao--tooltips#hide click->contao--tooltips#hide:capture')
-    .mergeWith(bodyAttributes|default)
+    .mergeWith(bodyAttributes ?? null)
 -%}
 
 {% set mainAttributes = attrs()
     .set('id', 'main')
     .set('aria-labelledby', 'main_headline')
-    .mergeWith(mainAttributes|default)
+    .mergeWith(mainAttributes ?? null)
 -%}
 
 {% set asideAttributes = attrs()
@@ -30,7 +30,7 @@
     .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
     .set('data-contao--toggle-receiver-active-class', 'active')
     .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
-    .mergeWith(asideAttributes|default)
+    .mergeWith(asideAttributes ?? null)
 -%}
 
 <!DOCTYPE html>

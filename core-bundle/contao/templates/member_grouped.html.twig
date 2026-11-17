@@ -3,7 +3,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
     .addStyle(style|default)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% block content %}

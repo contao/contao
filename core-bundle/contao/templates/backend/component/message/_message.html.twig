@@ -13,7 +13,7 @@
         .set('data-contao--message-outlet-target', 'message')
         .set('data-contao--message-outlet-autoclose', 5000, autoclose)
         .set('data-turbo-temporary')
-        .mergeWith(message_attributes|default)
+        .mergeWith(message_attributes ?? null)
     %}
     <div{{ message_attributes }}>
         <div class="inner">
@@ -22,7 +22,7 @@
                 .set('type', 'button')
                 .set('data-action', 'contao--message-outlet#close')
                 .set('aria-label', 'MSC.cancelBT'|trans)
-                .mergeWith(close_button_attributes|default)
+                .mergeWith(close_button_attributes ?? null)
             %}
             <button{{ close_button_attributes }}>
                 {{ backend_icon('close', attributes: attrs().set('width', 12).set('height', 12)) }}

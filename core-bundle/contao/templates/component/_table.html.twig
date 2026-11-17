@@ -152,7 +152,7 @@
             {% add 'tablesort_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
-                    .mergeWith(script_attributes|default)
+                    .mergeWith(script_attributes ?? null)
                 %}
                 <script{{ script_attributes }}>
                     {

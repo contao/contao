@@ -3,8 +3,8 @@
     .set('method', method)
     .set('enctype', enctype)
     .set('data-ajax-form', id|default, ajax|default)
-    .mergeWith(attributes|default)
-    .mergeWith(novalidate|default)
+    .mergeWith(attributes ?? null)
+    .mergeWith(novalidate ?? null)
 }}>
     <div class="formbody">
         {% if errors|default %}

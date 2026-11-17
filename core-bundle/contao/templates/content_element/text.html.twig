@@ -4,7 +4,7 @@
 
 {% set content_layout_attributes = attrs()
     .addClass('media media--' ~ layout, layout and image)
-    .mergeWith(content_layout_attributes|default)
+    .mergeWith(content_layout_attributes ?? null)
 %}
 
 {# By default we add the layout attributes to the wrapper element. If you want to

@@ -23,7 +23,7 @@
     {% set read_more_link_attributes = attrs()
         .set('href', read_more.href)
         .setIfExists('title', read_more.title|default)
-        .mergeWith(read_more_link_attributes|default)
+        .mergeWith(read_more_link_attributes ?? null)
     %}
     <a{% block read_more_link_attributes %}{{ read_more_link_attributes }}{% endblock %}>
         {%- block read_more_content %}{{ read_more.text|default('MSC.more'|trans) }}{% endblock -%}

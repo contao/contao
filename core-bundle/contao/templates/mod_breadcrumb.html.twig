@@ -4,7 +4,7 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .set('aria-label', 'MSC.breadcrumbMenu'|trans)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 <!-- indexer::stop -->

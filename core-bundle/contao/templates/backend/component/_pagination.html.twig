@@ -46,7 +46,7 @@
                                         {% set active_attributes = attrs()
                                             .set('aria-current', 'page')
                                             .addClass('active')
-                                            .mergeWith(active_attributes|default)
+                                            .mergeWith(active_attributes ?? null)
                                         %}
                                         <strong{{ active_attributes }}>{% block pagination_active_label %}{{ page }}{% endblock %}</strong>
                                     {% else %}
@@ -54,7 +54,7 @@
                                             .set(link_attribute, pagination.urlForPage(page))
                                             .set('aria-label', 'MSC.goToPage'|trans([page]))
                                             .addClass('link')
-                                            .mergeWith(link_attributes|default)
+                                            .mergeWith(link_attributes ?? null)
                                         %}
                                         <{{ link_element }}{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</{{ link_element }}>
                                     {% endif %}

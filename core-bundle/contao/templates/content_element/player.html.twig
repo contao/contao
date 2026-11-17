@@ -20,7 +20,7 @@
 
 {% block media %}
     {% set media_attributes = attrs(figure.media.attributes)
-        .mergeWith(media_attributes|default)
+        .mergeWith(media_attributes ?? null)
     %}
     <{{ figure.media.type }}{{ media_attributes }}>
         {% for source_attributes in figure.media.sources %}

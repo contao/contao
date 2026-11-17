@@ -9,7 +9,7 @@
                 .addClass('hyperlink_img')
                 .set('href', href|insert_tag)
                 .setIfExists('title', linkTitle|default|insert_tag)
-                .mergeWith(attribute|default)
+                .mergeWith(attribute ?? null)
                 .mergeWith(target)
                 .mergeWith(rel)
             }}>
@@ -26,7 +26,7 @@
             .addClass('hyperlink_txt')
             .set('href', href|insert_tag)
             .setIfExists('title', linkTitle|default|insert_tag)
-            .mergeWith(attribute|default)
+            .mergeWith(attribute ?? null)
             .mergeWith(target)
             .mergeWith(rel)
         }}>

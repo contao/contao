@@ -28,12 +28,12 @@
         .set('method', 'post')
         .set('enctype', 'multipart/form-data', is_upload_form)
         .set('onsubmit', form_onsubmit|default([])|join(' '), form_onsubmit|default)
-        .mergeWith(form_attributes|default)
+        .mergeWith(form_attributes ?? null)
     %}
     <form{{ form_attributes }}>
         {% set form_body_attributes = attrs()
             .addClass('tl_formbody_edit')
-            .mergeWith(form_body_attributes|default)
+            .mergeWith(form_body_attributes ?? null)
         %}
         <div{{ form_body_attributes }}>
             {% block form_body %}{% endblock %}

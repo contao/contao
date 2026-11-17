@@ -2,7 +2,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass('listing')
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapperAttributes ?? null)
 %}
 
 {% block content %}

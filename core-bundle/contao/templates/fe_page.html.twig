@@ -1,14 +1,14 @@
 {% set rootAttributes = attrs()
     .set('lang', app.locale|language_tag)
     .set('dir', 'rtl', isRTL)
-    .mergeWith(rootAttributes|default)
+    .mergeWith(rootAttributes ?? null)
 -%}
 
 {% set bodyAttributes = attrs()
     .set('id', 'top')
     .addClass(class)
     .setIfExists('onload', onload)
-    .mergeWith(bodyAttributes|default)
+    .mergeWith(bodyAttributes ?? null)
 -%}
 
 <!DOCTYPE html>
