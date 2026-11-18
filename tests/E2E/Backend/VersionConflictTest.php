@@ -32,8 +32,8 @@ class VersionConflictTest extends AbstractContaoMonorepoE2ETestCase
             [$fixtures->value('article_main_home')],
         );
 
-        // The author is mandatory and the conflict page is not a Turbo visit, so
-        // there is no navigation to wait for
+        // The author is mandatory and the conflict page is not a Turbo visit, so there
+        // is no navigation to wait for
         $backend->select('author', (string) $fixtures->value('kevin_jones'));
         $backend->page()->getByRole('button', ['name' => 'Save', 'exact' => true])->click();
 
