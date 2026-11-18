@@ -38,11 +38,11 @@ class TurboSnapshotCacheTest extends AbstractContaoMonorepoE2ETestCase
     {
         $backend = $this->login();
         $backend->visit('/contao?do=files');
-        $backend->waitFor('#tl_listing > .dropzone-filetree');
+        $backend->waitFor('#tl_listing .dropzone-filetree');
 
         $this->leaveAndGoBack($backend);
 
-        $this->assertSame(1, $backend->page()->locator('#tl_listing > .dropzone-filetree')->count());
+        $this->assertSame(1, $backend->page()->locator('#tl_listing .dropzone-filetree')->count());
     }
 
     private function leaveAndGoBack(BackendBrowser $backend): void
