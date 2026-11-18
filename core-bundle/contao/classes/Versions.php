@@ -125,7 +125,8 @@ class Versions extends Controller
 			->limit(1)
 			->execute($this->strTable, $this->intPid);
 
-		return (int) $objVersion->version;
+		// A prefetched page has no initial version yet, it is created when the form is submitted (see #10584)
+		return max(1, (int) $objVersion->version);
 	}
 
 	/**
