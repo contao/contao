@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
 use Contao\ApiBundle\Dto\UserTemplateUpdate;
@@ -109,6 +110,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                 ->withDefaults(['_scope' => 'backend'])
                 ->withStateless(true)
                 ->withSecurity("is_granted('ROLE_ADMIN')")
+                ->withOpenapi(new OpenApiOperation(description: $operation->getDescription()))
             ;
         }
 

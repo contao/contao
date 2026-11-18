@@ -14,13 +14,16 @@ namespace Contao\ApiBundle\Tests\ApiPlatform\Metadata;
 
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use Contao\ApiBundle\ApiPlatform\Metadata\UserTemplateResourceMetadataCollectionFactory;
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
+use Contao\CoreBundle\Twig\Studio\Operation\CreateOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -198,5 +201,37 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $parameters = new UrlMatcher($routes, new RequestContext(method: 'POST'))->match('/contao/_api/user_template_operations/custom');
 
         $this->assertSame('contao_api_user_template_operation_custom', $parameters['_route']);
+    }
+
+    public function testDocumentsEachOperationInTheOpenApiDocument(): void
+    {
+        foreach ($this->createDescribedOperations() as $operation) {
+            $openapi = $operation->getOpenapi();
+
+            $this->assertInstanceOf(OpenApiOperation::class, $openapi);
+            $this->assertSame($operation->getDescription(), $openapi->getDescription());
+        }
+    }
+
+    /**
+     * @return array<string, HttpOperation>
+     */
+    private function createDescribedOperations(): array
+    {
+        $save = $this->createStub(AbstractOperation::class);
+        $save
+            ->method('getName')
+            ->willReturn('save')
+        ;
+
+        $create = new CreateOperation();
+        $create->setName('create');
+
+        $delete = new DeleteOperation();
+        $delete->setName('delete');
+
+        $factory = new UserTemplateResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class), [$save, $create, $delete]);
+
+        return iterator_to_array($factory->create(UserTemplate::class)[0]->getOperations());
     }
 }
