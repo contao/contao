@@ -317,6 +317,9 @@ class tl_templates extends Backend
 			{
 				$this->redirect($referer);
 			}
+
+			// Set the status code to 422, so that Turbo can handle the error (see #10584)
+			System::getContainer()->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
 		}
 
 		$strAllTemplates = '';

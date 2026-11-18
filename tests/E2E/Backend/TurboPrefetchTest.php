@@ -90,6 +90,37 @@ class TurboPrefetchTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertStringStartsWith('Pages |', $page->title());
     }
 
+    public function testDoesNotStoreATwoFactorSecretWhenTheEnableLinkIsHovered(): void
+    {
+        $backend = $this->login();
+        $backend->visit('/contao?do=security');
+
+        $this->hoverAndWaitForPrefetch($backend->page(), '.two-factor a[href*="act=enable"]');
+
+        $database = self::managedEdition()->database();
+        $secret = $database->connection()->fetchOne('SELECT secret FROM tl_user WHERE id = ?', [$database->fixtures()->value('kevin_jones')]);
+
+        $this->assertNull($secret);
+    }
+
+    /**
+     * Returns immediately if the link is not prefetched.
+     */
+    private function hoverAndWaitForPrefetch(PageInterface $page, string $selector): void
+    {
+        $page->evaluate(
+            <<<'JS'
+                () => {
+                    window.addEventListener('turbo:before-prefetch', (event) => window.prefetching = !event.defaultPrevented);
+                    window.addEventListener('turbo:before-fetch-response', () => window.prefetching = false);
+                }
+                JS,
+        );
+
+        $page->locator($selector)->hover();
+        $page->waitForFunction('() => !window.prefetching');
+    }
+
     /**
      * Holds back the responses to the URL and returns the callback that releases them.
      *
