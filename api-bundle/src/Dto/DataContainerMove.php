@@ -20,9 +20,9 @@ final class DataContainerMove
     public const SCHEMA = [
         'type' => 'object',
         'properties' => [
-            'target' => ['type' => 'integer', 'minimum' => 0, 'description' => 'Parent ID for first/last, sibling ID for after. Zero denotes the root.'],
+            'target' => ['type' => 'integer', 'minimum' => 0, 'description' => 'The destination: the parent for first/last, the sibling for after. Zero denotes the root. The ID is a record of ptable if sent, otherwise of the default parent table of the data container (tl_article for content elements of an article); it is never looked up in other tables.'],
             'position' => ['type' => 'string', 'enum' => ['first', 'last', 'after'], 'default' => 'last'],
-            'ptable' => ['type' => 'string', 'description' => 'Destination parent table for data containers supporting dynamic parents.'],
+            'ptable' => ['type' => 'string', 'description' => 'Table of the destination parent for data containers with dynamic parents, e.g. tl_content to move a content element into an element group. Without ptable, the destination is a record of the default parent table.'],
         ],
         'required' => ['target'],
         'additionalProperties' => false,

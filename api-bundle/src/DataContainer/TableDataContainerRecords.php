@@ -338,6 +338,10 @@ class TableDataContainerRecords
         $destinationTable = 'after' === $move->position ? $table : ($dc->parentTable ?: $table);
         $destination = $dc->getCurrentRecord($move->target, $destinationTable);
 
+        if (null === $destination && 'after' !== $move->position && null === $move->ptable && ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false)) {
+            throw new ResourceNotFoundException(\sprintf('The destination record does not exist in %1$s. Without "ptable", the target ID is a record of %1$s. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group).', $destinationTable));
+        }
+
         if (null === $destination) {
             throw new ResourceNotFoundException('The destination record does not exist.');
         }
