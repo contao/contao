@@ -26,7 +26,7 @@ class LayoutTest extends AbstractContaoMonorepoE2ETestCase
         $backend = $this->login();
         $backend->visit($path);
         $backend->page()->locator('fieldset.collapsed:has(select[name="template"]) legend button')->click();
-        $backend->select('template', 'fe_page');
+        $backend->waitForNavigation(static fn () => $backend->select('template', 'fe_page'));
         $backend->submitForm('Save');
 
         $backend->waitForNavigation(static fn () => $backend->select('type', 'modern'));
@@ -50,7 +50,7 @@ class LayoutTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame('', $backend->page()->locator('select[name="template"]')->inputValue());
         $this->assertSame(0, $backend->page()->locator('form#tl_layout .tl_error')->count());
 
-        $backend->select('template', 'fe_page');
+        $backend->waitForNavigation(static fn () => $backend->select('template', 'fe_page'));
         $backend->submitForm('Save');
         $backend->visit($path);
 
