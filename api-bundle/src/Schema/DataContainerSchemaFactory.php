@@ -359,16 +359,18 @@ final class DataContainerSchemaFactory
         $normalized = [];
 
         foreach ($options as $key => $label) {
-            if (\is_array($label)) {
-                continue;
-            }
+            // An option group decides on its own whether it is associative (see Widget::getAttributesFromDca())
+            $group = \is_array($label) ? $label : [$key => $label];
+            $isAssociativeGroup = \is_array($label) ? !array_is_list($label) : $isAssociative;
 
-            if (null === $label || \is_object($label)) {
-                continue;
-            }
+            foreach ($group as $groupKey => $groupLabel) {
+                if (!\is_scalar($groupLabel)) {
+                    continue;
+                }
 
-            $choice = $isAssociative ? $key : $label;
-            $normalized[] = 'string' === $type ? (string) $choice : $choice;
+                $choice = $isAssociativeGroup ? $groupKey : $groupLabel;
+                $normalized[] = 'string' === $type ? (string) $choice : $choice;
+            }
         }
 
         // The widget accepts an empty value if the field is not mandatory
