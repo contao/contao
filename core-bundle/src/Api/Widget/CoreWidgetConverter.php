@@ -122,7 +122,13 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
             return $value ? date(\DateTimeInterface::ATOM, (int) $value) : null;
         }
 
-        $value = match ($schema['type'] ?? null) {
+        $types = (array) ($schema['type'] ?? null);
+
+        if (null === $value && \in_array('null', $types, true)) {
+            return null;
+        }
+
+        $value = match ($types[0] ?? null) {
             'boolean' => (bool) $value,
             'integer' => (int) $value,
             'number' => (float) $value,

@@ -282,6 +282,14 @@ final class DataContainerSchemaFactory
                 : $sql['default'];
         }
 
+        if (false === ($sql['notnull'] ?? true) && !($eval['multiple'] ?? false) && \is_string($schema['type'] ?? null)) {
+            $schema['type'] = [$schema['type'], 'null'];
+
+            if (isset($schema['enum'])) {
+                $schema['enum'][] = null;
+            }
+        }
+
         return $schema;
     }
 

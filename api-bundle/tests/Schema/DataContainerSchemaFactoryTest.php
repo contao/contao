@@ -420,6 +420,26 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertFalse($validator->validate((object) ['eventDate' => 'not a date'], $schema)->isValid());
     }
 
+    public function testAllowsNullForNullableColumns(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'height' => ['inputType' => 'text', 'eval' => ['rgxp' => 'digit'], 'sql' => ['type' => 'integer', 'notnull' => false]],
+            'price' => ['inputType' => 'text', 'sql' => ['type' => 'decimal', 'notnull' => false]],
+            'mode' => ['inputType' => 'select', 'options' => ['a', 'b'], 'sql' => ['type' => 'string', 'notnull' => false]],
+            'formats' => ['inputType' => 'select', 'options' => ['a', 'b'], 'eval' => ['multiple' => true], 'sql' => ['type' => 'blob', 'notnull' => false]],
+            'width' => ['inputType' => 'text', 'sql' => ['type' => 'integer', 'default' => 0]],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['integer', 'null'], $properties['height']['type']);
+        $this->assertSame(['number', 'null'], $properties['price']['type']);
+        $this->assertSame(['type' => ['string', 'null'], 'enum' => ['a', 'b', null]], $properties['mode']);
+        $this->assertSame(['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['a', 'b']]], $properties['formats']);
+        $this->assertSame('integer', $properties['width']['type']);
+    }
+
     public function testCreatesDifferentRequestAndResponseSchemas(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [

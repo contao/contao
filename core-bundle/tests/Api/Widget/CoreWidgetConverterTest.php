@@ -245,6 +245,17 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame([], $converter->convertToFormValue([], $config, $schema));
     }
 
+    public function testKeepsNullForNullableValues(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $config = ['inputType' => 'text'];
+
+        $this->assertNull($converter->convertToApiValue(null, $config, ['type' => ['integer', 'null']]));
+        $this->assertSame(12, $converter->convertToApiValue('12', $config, ['type' => ['integer', 'null']]));
+        $this->assertSame(0, $converter->convertToApiValue(null, $config, ['type' => 'integer']));
+        $this->assertSame('', $converter->convertToFormValue(null, $config, ['type' => ['integer', 'null']]));
+    }
+
     public function testSupportsAdditionalSelections(): void
     {
         $GLOBALS['BE_FFL']['wizard'] = CheckBoxWizard::class;
