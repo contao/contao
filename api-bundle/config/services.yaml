@@ -194,6 +194,8 @@ services:
 
     contao_api.data_container.widget_factory:
         class: Contao\ApiBundle\DataContainer\DataContainerWidgetFactory
+        arguments:
+            $logger: '@?logger'
 
     contao_api.dto.virtual_filesystem_item_factory:
         class: Contao\ApiBundle\Dto\VirtualFilesystemItemFactory
