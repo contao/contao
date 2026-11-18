@@ -79,7 +79,7 @@ class UploaderMigrationTest extends TestCase
         );
     }
 
-    private function mockConnection(bool $tableExists, array|null $columns = null, false|int|null $result = null): Connection
+    private function mockConnection(bool $tableExists, array|null $columns = null, int|false|null $result = null): Connection
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
