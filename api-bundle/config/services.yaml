@@ -226,6 +226,12 @@ services:
     contao_api.json_schema_validator:
         class: Opis\JsonSchema\Validator
 
+    contao_api.listener.api_method_not_allowed:
+        class: Contao\ApiBundle\EventListener\ApiMethodNotAllowedListener
+        arguments:
+            $router: '@router'
+            $apiPrefix: '%contao.backend.route_prefix%/api'
+
     contao_api.listener.api_version:
         class: Contao\ApiBundle\EventListener\ApiVersionListener
         arguments:
