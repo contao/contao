@@ -368,6 +368,50 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->assertNotSame($requests[0], $requests[1]);
     }
 
+    public function testCreationEditsTheNewRecordInTheSessionOfTheCreate(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('create')
+            ->willReturnCallback(
+                function (): never {
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+
+                    $bag->set('new_records', ['tl_content' => [47]]);
+
+                    throw new ResponseException(new RedirectResponse('/contao?act=edit&id=47'));
+                },
+            )
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'tstamp' => 0, 'title' => ''])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function (): never {
+                    $session = $this->requestStack->getCurrentRequest()->getSession();
+                    $bag = $session->getBag('contao_backend');
+
+                    $this->assertNotSame($this->requestStack->getMainRequest()->getSession(), $session);
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['tl_content' => [47]], $bag->get('new_records'));
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $this->requestStack->getCurrentRequest()->setSession(new Session(new MockArraySessionStorage()));
+
+        $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+    }
+
     #[DataProvider('provideDefaultSubmissions')]
     public function testSubmitsDefaultsAccordingToThePaletteAndRecordState(int $tstamp, bool $mandatory, bool $changed): void
     {

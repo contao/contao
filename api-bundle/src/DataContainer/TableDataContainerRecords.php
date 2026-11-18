@@ -486,6 +486,14 @@ class TableDataContainerRecords
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
         $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_locale' => $parent->getLocale()]);
 
+        // A nested back end request continues the session of its parent, so the edit
+        // pass of a create finds the new record in the session
+        if ('contao_backend' === $parent->attributes->get('_route') && $parent->attributes->getBoolean('_stateless') && $parent->hasSession()) {
+            $request->setSession($parent->getSession());
+
+            return $request;
+        }
+
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());
 
