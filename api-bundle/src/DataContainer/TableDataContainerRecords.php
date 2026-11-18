@@ -272,20 +272,25 @@ class TableDataContainerRecords
         $main->attributes->remove('_contao_widget_errors');
 
         try {
-            if (!$create) {
-                $submitOnChangeValues = array_filter(
-                    $values,
-                    static fn (string $field): bool => true === ($GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['submitOnChange'] ?? false),
-                    ARRAY_FILTER_USE_KEY,
+            $submitOnChangeValues = array_filter(
+                $values,
+                static fn (string $field): bool => true === ($GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['submitOnChange'] ?? false),
+                ARRAY_FILTER_USE_KEY,
+            );
+
+            if ($submitOnChangeValues) {
+                // These fields can change the palette and field options, so persist them in
+                // their own back end request before submitting the complete request data against
+                // the updated DCA state
+                $this->run(
+                    $record->table,
+                    ['act' => 'edit', 'id' => $record->id],
+                    function (DC_Table $dc, Request $request) use ($submitOnChangeValues): void {
+                        $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
+
+                        $this->submitFormValues($dc, $submitOnChangeValues, []);
+                    },
                 );
-
-                if ($submitOnChangeValues) {
-                    // These fields can change the palette and field options, so persist them before
-                    // submitting the complete request data against the updated DCA state
-                    $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
-
-                    $this->submitFormValues($dc, $submitOnChangeValues, []);
-                }
             }
 
             $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$values]);
