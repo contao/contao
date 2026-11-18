@@ -213,6 +213,20 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         }
     }
 
+    public function testAddsTheApiNoteAsAParagraphOfItsOwn(): void
+    {
+        $create = new CreateOperation();
+        $create->setName('create');
+
+        $factory = new UserTemplateResourceMetadataCollectionFactory($this->createStub(ResourceMetadataCollectionFactoryInterface::class), [$create]);
+        $operations = iterator_to_array($factory->create(UserTemplate::class)[0]->getOperations());
+        $paragraphs = explode("\n\n", $operations['contao_api_user_template_operation_create']->getDescription());
+
+        $this->assertCount(2, $paragraphs);
+        $this->assertSame($create->getDescription(), $paragraphs[0]);
+        $this->assertStringStartsWith('Send the template name', $paragraphs[1]);
+    }
+
     /**
      * @return array<string, HttpOperation>
      */
