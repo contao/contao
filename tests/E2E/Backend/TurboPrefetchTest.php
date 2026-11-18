@@ -103,51 +103,6 @@ class TurboPrefetchTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertNull($secret);
     }
 
-    public function testDoesNotCreateAVersionWhenTheEditLinkIsHovered(): void
-    {
-        $backend = $this->login();
-        $backend->visit('/contao?do=user');
-
-        $this->hoverAndWaitForPrefetch($backend->page(), $this->editLink());
-
-        $this->assertSame(0, $this->countVersions());
-    }
-
-    public function testSavesAPrefetchedEditFormWithoutAVersionConflict(): void
-    {
-        $backend = $this->login();
-        $backend->visit('/contao?do=user');
-
-        $this->hoverAndWaitForPrefetch($backend->page(), $this->editLink());
-
-        $backend->waitForTurboNavigation(fn () => $backend->clickButton($this->editLink()));
-        $backend->submitForm('Save', ['name' => 'Kevin M. Jones']);
-
-        // The edit form is shown again with the saved value
-        $this->assertSelectorExists('#tl_user input[name="name"][value="Kevin M. Jones"]');
-
-        // The initial version and the saved one
-        $this->assertSame(2, $this->countVersions());
-    }
-
-    private function editLink(): string
-    {
-        return \sprintf('.tl_listing a[href*="act=edit"][href*="id=%d"]:visible', $this->userId());
-    }
-
-    private function countVersions(): int
-    {
-        return (int) self::managedEdition()->database()->connection()->fetchOne(
-            "SELECT COUNT(*) FROM tl_version WHERE fromTable = 'tl_user' AND pid = ?",
-            [$this->userId()],
-        );
-    }
-
-    private function userId(): int
-    {
-        return (int) self::managedEdition()->database()->fixtures()->value('kevin_jones');
-    }
-
     /**
      * Returns immediately if the link is not prefetched.
      */

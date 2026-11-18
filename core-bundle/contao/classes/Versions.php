@@ -125,8 +125,7 @@ class Versions extends Controller
 			->limit(1)
 			->execute($this->strTable, $this->intPid);
 
-		// A prefetched page has no initial version yet, it is created when the form is submitted (see #10584)
-		return max(1, (int) $objVersion->version);
+		return (int) $objVersion->version;
 	}
 
 	/**
@@ -135,12 +134,6 @@ class Versions extends Controller
 	public function initialize()
 	{
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null))
-		{
-			return;
-		}
-
-		// Do not create the initial version if the page is only prefetched (see #10584)
-		if (System::getContainer()->get('request_stack')->getCurrentRequest()?->headers->get('X-Sec-Purpose') === 'prefetch')
 		{
 			return;
 		}
