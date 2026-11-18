@@ -75,6 +75,12 @@ class FieldValueSchemaTest extends AbstractContaoMonorepoE2ETestCase
             ['type' => 'hyperlink', 'url' => '/main-home', 'linkTitle' => 'Relative path'],
             'url',
         ];
+
+        yield 'decimal in a digit field' => [
+            '/contao/api/dc/form/{form_contact}/form_field',
+            ['type' => 'range', 'name' => 'volume', 'minval' => '0', 'maxval' => '1', 'step' => '0.5'],
+            'step',
+        ];
     }
 
     protected static function createApplicationConfig(): ManagedEditionConfig

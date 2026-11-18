@@ -153,7 +153,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['type' => 'boolean'], $schema['properties']['published']);
         $this->assertSame(['type' => 'string', 'maxLength' => 1, 'enum' => ['a', 'b']], $schema['properties']['type']);
         $this->assertSame(['type' => 'string', 'format' => 'email'], $schema['properties']['email']);
-        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT], $schema['properties']['digits']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_NUMERIC], $schema['properties']['digits']);
         $this->assertSame(['type' => 'string', 'contentMediaType' => 'text/html'], $schema['properties']['text']);
     }
 
@@ -424,12 +424,18 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'url' => ['inputType' => 'text', 'eval' => ['rgxp' => 'url'], 'sql' => ['type' => 'text', 'notnull' => false]],
+            'step' => ['inputType' => 'text', 'eval' => ['rgxp' => 'digit'], 'sql' => ['type' => 'string', 'default' => '']],
+            'perPage' => ['inputType' => 'text', 'eval' => ['rgxp' => 'natural'], 'sql' => ['type' => 'string', 'default' => '']],
+            'quality' => ['inputType' => 'text', 'eval' => ['rgxp' => 'prcnt'], 'sql' => ['type' => 'integer', 'default' => 0]],
         ];
 
         $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
         $properties = $factory->create('tl_content')['properties'];
 
         $this->assertSame(['type' => ['string', 'null']], $properties['url']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_NUMERIC, 'default' => ''], $properties['step']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT, 'default' => ''], $properties['perPage']);
+        $this->assertSame(['type' => 'integer', 'minimum' => 0, 'maximum' => 100, 'default' => 0], $properties['quality']);
 
         $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
         $validator = new \Opis\JsonSchema\Validator();
@@ -437,6 +443,15 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         foreach (['{{link_url::1}}', '/main-home', 'https://example.com'] as $url) {
             $this->assertTrue($validator->validate((object) ['url' => $url], $schema)->isValid());
         }
+
+        foreach (['3', '-3', '3.9'] as $step) {
+            $this->assertTrue($validator->validate((object) ['step' => $step], $schema)->isValid());
+        }
+
+        $this->assertFalse($validator->validate((object) ['step' => '3.'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['step' => '3,9'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['perPage' => '3.9'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['quality' => 101], $schema)->isValid());
     }
 
     public function testAllowsNullForNullableColumns(): void

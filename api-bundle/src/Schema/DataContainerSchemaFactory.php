@@ -384,7 +384,9 @@ final class DataContainerSchemaFactory
     {
         return match ($rgxp) {
             'email' => ['format' => 'email'],
-            'digit' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'digit' => ['pattern' => ContaoValidator::REGEXP_NUMERIC],
+            'natural' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'prcnt' => ['minimum' => 0, 'maximum' => 100],
             'alpha' => ['pattern' => ContaoValidator::REGEXP_ALPHA],
             'alnum' => ['pattern' => ContaoValidator::REGEXP_ALNUM],
             default => [],
