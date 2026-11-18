@@ -92,6 +92,8 @@ class ModuleTwoFactor extends BackendModule
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
 		{
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+
+			$this->reload();
 		}
 
 		/** @var WebauthnCredentialRepository $credentialRepo */
@@ -176,6 +178,9 @@ class ModuleTwoFactor extends BackendModule
 
 				throw new RedirectResponseException($return);
 			}
+
+			// Set the status code to 422, so that Turbo can handle the error (see #10584)
+			$container->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
 
 			$this->Template->error = true;
 			$verifyHelp = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];

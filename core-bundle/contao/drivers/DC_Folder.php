@@ -1384,6 +1384,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				throw new ResponseException(new Response(Message::generateUnwrapped($strMode, true), 500));
 			}
+			else
+			{
+				// Set the status code to 422, so that Turbo can handle the error (see #10584)
+				System::getContainer()->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
+			}
 		}
 
 		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateUploadButtons($this->strTable, $this);
