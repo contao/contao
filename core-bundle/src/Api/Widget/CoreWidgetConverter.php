@@ -136,6 +136,10 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
             default => $value,
         };
 
+        if ('url' === ($config['eval']['rgxp'] ?? null) && \is_string($value)) {
+            $value = str_replace('|urlattr}}', '}}', $value);
+        }
+
         return match ($this->getWidgetType($config)) {
             FileTree::class => $this->convertFileReference($value, false !== ($config['eval']['binary'] ?? true)),
             default => $value,

@@ -256,6 +256,16 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame('', $converter->convertToFormValue(null, $config, ['type' => ['integer', 'null']]));
     }
 
+    public function testRemovesTheUrlAttributeFlagFromInsertTags(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $config = ['inputType' => 'text', 'eval' => ['rgxp' => 'url']];
+
+        $this->assertSame('{{link_url::1}}', $converter->convertToApiValue('{{link_url::1|urlattr}}', $config, ['type' => ['string', 'null']]));
+        $this->assertSame('/main-home', $converter->convertToApiValue('/main-home', $config, ['type' => ['string', 'null']]));
+        $this->assertSame('{{link_url::1|urlattr}}', $converter->convertToApiValue('{{link_url::1|urlattr}}', ['inputType' => 'text'], ['type' => 'string']));
+    }
+
     public function testSupportsAdditionalSelections(): void
     {
         $GLOBALS['BE_FFL']['wizard'] = CheckBoxWizard::class;

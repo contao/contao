@@ -16,9 +16,31 @@ use Contao\E2eTesting\Http\HttpRequest;
 use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
 use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Recipe\InstallationRecipe;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FieldValueSchemaTest extends AbstractContaoMonorepoE2ETestCase
 {
+    #[DataProvider('getValuesTheBackEndAccepts')]
+    public function testAcceptsValuesTheBackEndAccepts(string $parentPath, array $payload, string $field): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+
+        $request = HttpRequest::json('POST', $fixtures->interpolate($parentPath))
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson($payload)
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(201, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($payload[$field], $data[$field]);
+    }
+
     public function testAcceptsNullForANullableColumn(): void
     {
         $fixtures = self::managedEdition()->database()->fixtures();
@@ -38,6 +60,21 @@ class FieldValueSchemaTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
         $this->assertNull($data['height']);
+    }
+
+    public static function getValuesTheBackEndAccepts(): iterable
+    {
+        yield 'insert tag in a hyperlink URL' => [
+            '/contao/api/dc/article/{article_main_home}/content',
+            ['type' => 'hyperlink', 'url' => '{{link_url::1}}', 'linkTitle' => 'Insert tag'],
+            'url',
+        ];
+
+        yield 'relative hyperlink URL' => [
+            '/contao/api/dc/article/{article_main_home}/content',
+            ['type' => 'hyperlink', 'url' => '/main-home', 'linkTitle' => 'Relative path'],
+            'url',
+        ];
     }
 
     protected static function createApplicationConfig(): ManagedEditionConfig

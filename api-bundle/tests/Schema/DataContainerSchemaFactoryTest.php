@@ -420,6 +420,25 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertFalse($validator->validate((object) ['eventDate' => 'not a date'], $schema)->isValid());
     }
 
+    public function testDescribesTheValuesTheWidgetsAccept(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'url' => ['inputType' => 'text', 'eval' => ['rgxp' => 'url'], 'sql' => ['type' => 'text', 'notnull' => false]],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['type' => ['string', 'null']], $properties['url']);
+
+        $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+        $validator = new \Opis\JsonSchema\Validator();
+
+        foreach (['{{link_url::1}}', '/main-home', 'https://example.com'] as $url) {
+            $this->assertTrue($validator->validate((object) ['url' => $url], $schema)->isValid());
+        }
+    }
+
     public function testAllowsNullForNullableColumns(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
