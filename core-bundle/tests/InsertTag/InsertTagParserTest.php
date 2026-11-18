@@ -304,6 +304,18 @@ class InsertTagParserTest extends TestCase
         ];
 
         yield [
+            OutputType::url,
+            'mailto:{{type::html::test&#64;example.com}}',
+            'mailto:test@example.com',
+        ];
+
+        yield [
+            OutputType::url,
+            'https://trusted.example{{type::html::@evil.example.com/}}',
+            'https://trusted.example%40evil.example.com%2F',
+        ];
+
+        yield [
             OutputType::js,
             'var foo = "{{type::text::bar"baz}}";',
             'var foo = "bar\u0022baz";',

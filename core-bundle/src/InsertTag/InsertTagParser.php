@@ -194,7 +194,7 @@ class InsertTagParser implements ResetInterface
         return implode(
             '',
             array_map(
-                fn ($result, $key) => $this->toOutputType($result, $outputType, 0 === $key),
+                fn ($result, $key) => $this->toOutputType($result, $outputType, 0 === $key || ('mailto:' === $parts[0] && 1 === $key)),
                 $parts,
                 array_keys($parts),
             ),
@@ -615,7 +615,7 @@ class InsertTagParser implements ResetInterface
         }
     }
 
-    private function toOutputType(InsertTagResult|string $result, OutputType $outputType, bool $firstTag = false): string
+    private function toOutputType(InsertTagResult|string $result, OutputType $outputType, bool $allowFullUrl = false): string
     {
         if (\is_string($result)) {
             return $result;
@@ -636,7 +636,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (
-            $firstTag
+            $allowFullUrl
             && OutputType::url === $outputType
             && OutputType::html === $result->getOutputType()
             && (preg_match($this->allowedUrlProtocolsRegex, $value) || !preg_match('/^[\x00-\x20]*[a-z][a-z0-9+.-]*:/i', $value))
