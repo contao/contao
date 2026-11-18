@@ -268,7 +268,7 @@ final class DataContainerSchemaFactory
             $schema += $this->createStringSchema($config, $sql);
         }
 
-        if ($choices = $this->normalizeChoices($config, $schema['type'] ?? null)) {
+        if ('boolean' !== ($schema['type'] ?? null) && $choices = $this->normalizeChoices($config, $schema['type'] ?? null)) {
             $schema['enum'] = $choices;
         }
 
