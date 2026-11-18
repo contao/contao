@@ -2379,7 +2379,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		else
 		{
-			$arrNew = $this->addDynamicPtable(array('pid' => $currentRecord['pid']));
+			$arrNew = $this->addDynamicPtable(array('pid' => $currentRecord['pid'] ?? null));
 		}
 
 		// Form settings and buttons

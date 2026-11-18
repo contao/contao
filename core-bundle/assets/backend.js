@@ -66,7 +66,6 @@ const mooDomready = () => {
 };
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
-document.documentElement.addEventListener('turbo:frame-render', mooDomready);
 
 // Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
