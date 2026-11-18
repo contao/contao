@@ -728,7 +728,7 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         ;
 
         $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('The destination record does not exist in tl_page. Without "ptable", the target ID is a record of tl_page. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group).');
+        $this->expectExceptionMessage('The destination record does not exist in tl_page. Without "ptable", the target ID is a record of tl_page. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group) or the destination IRI as "target".');
 
         $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42));
     }

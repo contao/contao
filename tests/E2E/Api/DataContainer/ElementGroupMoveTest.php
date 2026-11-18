@@ -41,6 +41,14 @@ class ElementGroupMoveTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame(200, $status, json_encode($data, JSON_PRETTY_PRINT));
         $this->assertSame($group['@id'], $data['pid']['@id'] ?? null);
 
+        // The IRI of the destination names its table
+        [$status, $data] = $this->sendJson('POST', $data['@id'].'/move', ['target' => $article, 'position' => 'first']);
+        $this->assertSame(200, $status, json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($article, $data['pid']['@id'] ?? null);
+
+        [$status, $data] = $this->sendJson('POST', $data['@id'].'/move', ['target' => $group['@id'], 'position' => 'last']);
+        $this->assertSame(200, $status, json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($group['@id'], $data['pid']['@id'] ?? null);
     }
 
     protected static function createApplicationConfig(): ManagedEditionConfig
