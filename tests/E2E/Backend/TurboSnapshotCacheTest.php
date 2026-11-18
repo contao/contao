@@ -48,6 +48,10 @@ class TurboSnapshotCacheTest extends AbstractContaoMonorepoE2ETestCase
     private function leaveAndGoBack(BackendBrowser $backend): void
     {
         $backend->clickLink('Pages');
-        $backend->waitForTurboNavigation(static fn () => $backend->page()->goBack());
+        $backend->waitForTurboNavigation(
+            static function () use ($backend): void {
+                $backend->page()->goBack();
+            },
+        );
     }
 }
