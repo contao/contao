@@ -227,6 +227,14 @@ class UserTemplateResourceMetadataCollectionFactoryTest extends TestCase
         $this->assertStringStartsWith('Send the template name', $paragraphs[1]);
     }
 
+    public function testDescribesTheImmediateDelete(): void
+    {
+        $description = $this->createDescribedOperations()['contao_api_user_template_operation_delete']->getDescription();
+
+        $this->assertStringContainsString('deletion is immediate', $description);
+        $this->assertStringNotContainsString('confirm_delete', $description);
+    }
+
     /**
      * @return array<string, HttpOperation>
      */

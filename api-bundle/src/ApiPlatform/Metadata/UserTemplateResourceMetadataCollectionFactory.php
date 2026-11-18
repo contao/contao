@@ -131,15 +131,15 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
         $name = $operation->getName();
 
         if ('delete' === $name) {
-            $note = <<<'MARKDOWN'
-                When using the API, deletion is immediate: no confirmation parameter or request body is required. Pass
-                the optional "theme" query parameter to delete a template in a theme.
-                MARKDOWN;
-
             return new Delete(
                 uriTemplate: '/user_templates/{name}',
                 requirements: ['name' => '.+'],
-                description: $this->describe($operation, $note),
+                description: <<<'MARKDOWN'
+                    Delete the user template. When using the API, deletion is immediate: no confirmation parameter or
+                    request body is required. For content element and frontend module variants, stored database
+                    selections are also reset. Pass the optional "theme" query parameter to delete the user template
+                    of a theme; omit it for a global user template.
+                    MARKDOWN,
                 input: false,
                 read: false,
                 name: 'contao_api_user_template_operation_delete',
