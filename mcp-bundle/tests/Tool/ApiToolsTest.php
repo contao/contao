@@ -35,6 +35,7 @@ use Contao\McpBundle\Tool\ApiTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Discovery\DocBlockParser;
 use Mcp\Capability\Discovery\SchemaGenerator;
+use Mcp\Capability\Discovery\SchemaValidator;
 use Mcp\Exception\ToolCallException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -200,12 +201,29 @@ final class ApiToolsTest extends TestCase
         }
 
         $this->assertSame(['contao_api_discover', 'contao_api_describe', 'contao_api_execute'], array_keys($tools));
-        $this->assertSame('object', $tools['contao_api_execute']['properties']['parameters']['type']);
+        $this->assertSame('object', $tools['contao_api_execute']['properties']['parameters']['anyOf'][0]['type']);
         $this->assertCount(6, $tools['contao_api_execute']['properties']['data']['anyOf']);
 
         foreach ($descriptions as $description) {
             $this->assertStringContainsString('Last resort', $description);
             $this->assertStringContainsString('Prefer any applicable specific MCP tool', $description);
+        }
+    }
+
+    public function testAcceptsAnEmptyParameterObject(): void
+    {
+        $schema = new SchemaGenerator(new DocBlockParser())->generate(new \ReflectionMethod(ApiTools::class, 'execute'));
+
+        // A default of [] would be sent as a JSON list
+        $this->assertSame('{}', json_encode($schema['properties']['parameters']['default']));
+
+        $validator = new SchemaValidator();
+
+        // The SDK decodes the arguments into arrays, so {} arrives as []
+        foreach (['{"operation":"contao_api_files_move","parameters":[]}', '{"operation":"contao_api_files_move","parameters":{}}'] as $json) {
+            $arguments = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+
+            $this->assertSame([], $validator->validateAgainstJsonSchema($arguments, $schema), $json);
         }
     }
 
