@@ -55,6 +55,9 @@ class ChoiceValueSchemaTest extends AbstractContaoMonorepoE2ETestCase
 
     public static function getChoiceValuesReturnedByTheApi(): iterable
     {
+        // tl_page.robots has no blank option, but its column default is ""
+        yield 'robots' => ['robots', 'page_main_home'];
+
         // useSSL is a boolean column with associative options
         yield 'useSSL' => ['useSSL', 'page_main_website'];
     }

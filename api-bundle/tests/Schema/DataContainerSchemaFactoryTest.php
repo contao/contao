@@ -151,7 +151,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame('iri-reference', $schema['properties']['id']['properties']['iri']['format']);
         $this->assertSame(['type' => 'string', 'maxLength' => 64], $schema['properties']['title']);
         $this->assertSame(['type' => 'boolean'], $schema['properties']['published']);
-        $this->assertSame(['type' => 'string', 'maxLength' => 1, 'enum' => ['a', 'b']], $schema['properties']['type']);
+        $this->assertSame(['type' => 'string', 'maxLength' => 1, 'enum' => ['a', 'b', '']], $schema['properties']['type']);
         $this->assertSame(['type' => 'string', 'format' => 'email'], $schema['properties']['email']);
         $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT], $schema['properties']['digits']);
         $this->assertSame(['type' => 'string', 'contentMediaType' => 'text/html'], $schema['properties']['text']);
@@ -359,6 +359,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [
             'format' => ['inputType' => 'select', 'options' => ['rss' => 'RSS 2.0', 'atom' => 'Atom'], 'eval' => ['mandatory' => true], 'sql' => ['type' => 'string', 'length' => 32, 'default' => 'rss']],
             'protocol' => ['inputType' => 'select', 'options' => ['http://', 'https://'], 'eval' => ['isAssociative' => true], 'sql' => ['type' => 'boolean', 'default' => true]],
+            'robots' => ['inputType' => 'select', 'options' => ['index', 'noindex'], 'eval' => ['mandatory' => true], 'sql' => ['type' => 'string', 'length' => 32, 'default' => '']],
             'size' => ['inputType' => 'select', 'options' => [1 => 'Small', 2 => 'Large'], 'sql' => ['type' => 'string', 'length' => 8, 'default' => '']],
             'level' => ['inputType' => 'select', 'options' => [1 => 'One', 2 => 'Two'], 'sql' => ['type' => 'integer', 'default' => 1]],
             'sizes' => ['inputType' => 'select', 'options' => ['s' => 'Small', 'l' => 'Large'], 'eval' => ['multiple' => true], 'sql' => ['type' => 'blob', 'notnull' => false]],
@@ -369,7 +370,8 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
         $this->assertSame(['rss', 'atom'], $properties['format']['enum']);
         $this->assertSame(['type' => 'boolean', 'default' => true], $properties['protocol']);
-        $this->assertSame(['1', '2'], $properties['size']['enum']);
+        $this->assertSame(['index', 'noindex'], $properties['robots']['enum']);
+        $this->assertSame(['1', '2', ''], $properties['size']['enum']);
         $this->assertSame([1, 2], $properties['level']['enum']);
         $this->assertSame(['s', 'l'], $properties['sizes']['items']['enum']);
     }

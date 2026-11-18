@@ -371,6 +371,11 @@ final class DataContainerSchemaFactory
             $normalized[] = 'string' === $type ? (string) $choice : $choice;
         }
 
+        // The widget accepts an empty value if the field is not mandatory
+        if ([] !== $normalized && 'string' === $type && !($eval['multiple'] ?? false) && !($eval['mandatory'] ?? false) && !\in_array('', $normalized, true)) {
+            $normalized[] = '';
+        }
+
         return $normalized;
     }
 
