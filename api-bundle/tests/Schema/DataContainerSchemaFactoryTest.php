@@ -354,6 +354,24 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['one', 'two'], $properties['options']['items']['enum']);
     }
 
+    public function testListsTheChoiceValuesTheApiReturns(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'format' => ['inputType' => 'select', 'options' => ['rss' => 'RSS 2.0', 'atom' => 'Atom'], 'eval' => ['mandatory' => true], 'sql' => ['type' => 'string', 'length' => 32, 'default' => 'rss']],
+            'size' => ['inputType' => 'select', 'options' => [1 => 'Small', 2 => 'Large'], 'sql' => ['type' => 'string', 'length' => 8, 'default' => '']],
+            'level' => ['inputType' => 'select', 'options' => [1 => 'One', 2 => 'Two'], 'sql' => ['type' => 'integer', 'default' => 1]],
+            'sizes' => ['inputType' => 'select', 'options' => ['s' => 'Small', 'l' => 'Large'], 'eval' => ['multiple' => true], 'sql' => ['type' => 'blob', 'notnull' => false]],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['rss', 'atom'], $properties['format']['enum']);
+        $this->assertSame(['1', '2'], $properties['size']['enum']);
+        $this->assertSame([1, 2], $properties['level']['enum']);
+        $this->assertSame(['s', 'l'], $properties['sizes']['items']['enum']);
+    }
+
     public function testDistinguishesMoveManagedFieldsFromReadOnlyFields(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields'] = [

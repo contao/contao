@@ -268,7 +268,7 @@ final class DataContainerSchemaFactory
             $schema += $this->createStringSchema($config, $sql);
         }
 
-        if ($choices = $this->normalizeChoices($config['options'] ?? null)) {
+        if ($choices = $this->normalizeChoices($config, $schema['type'] ?? null)) {
             $schema['enum'] = $choices;
         }
 
@@ -346,24 +346,29 @@ final class DataContainerSchemaFactory
     /**
      * @return list<scalar>
      */
-    private function normalizeChoices(mixed $choices): array
+    private function normalizeChoices(array $config, mixed $type): array
     {
-        if (!\is_array($choices)) {
+        $options = $config['options'] ?? null;
+
+        if (!\is_array($options)) {
             return [];
         }
 
+        $eval = $config['eval'] ?? [];
+        $isAssociative = ($eval['isAssociative'] ?? false) || !array_is_list($options);
         $normalized = [];
 
-        foreach ($choices as $choice) {
-            if (\is_array($choice)) {
+        foreach ($options as $key => $label) {
+            if (\is_array($label)) {
                 continue;
             }
 
-            if (null === $choice || \is_object($choice)) {
+            if (null === $label || \is_object($label)) {
                 continue;
             }
 
-            $normalized[] = $choice;
+            $choice = $isAssociative ? $key : $label;
+            $normalized[] = 'string' === $type ? (string) $choice : $choice;
         }
 
         return $normalized;
