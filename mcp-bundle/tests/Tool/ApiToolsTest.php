@@ -41,7 +41,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ApiToolsTest extends TestCase
@@ -129,6 +133,24 @@ final class ApiToolsTest extends TestCase
 
         $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory($this->createStub(UrlGeneratorInterface::class)), $stack, new ApiResponseConverter(), $handler);
         $tools->execute('unknown');
+    }
+
+    public function testNamesAMissingPathParameter(): void
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_api_files_upload', new Route('/contao/api/files/{path}'));
+
+        $stack = new RequestStack();
+        $stack->push(Request::create('https://example.org/contao/mcp'));
+
+        $handler = $this->createBinaryPayloadHandler();
+
+        $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory(new UrlGenerator($routes, new RequestContext())), $stack, new ApiResponseConverter(), $handler);
+
+        $this->expectException(ToolCallException::class);
+        $this->expectExceptionMessage('Some mandatory parameters are missing ("path")');
+
+        $tools->execute('contao_api_files_upload', ['file' => 'example.txt'], base64_encode('binary content'));
     }
 
     public function testRequiresHttpContextBeforeDispatch(): void

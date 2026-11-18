@@ -23,6 +23,7 @@ use Mcp\Schema\Result\CallToolResult;
 use Mcp\Schema\ToolAnnotations;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
 
 final class ApiTools
@@ -76,6 +77,8 @@ final class ApiTools
             throw new ToolCallException($exception->getMessage().' Use contao_api_discover first.', previous: $exception);
         } catch (UnsupportedFormatException $exception) {
             throw new ToolCallException($exception->getMessage(), previous: $exception);
+        } catch (ExceptionInterface $exception) {
+            throw new ToolCallException($exception->getMessage().' Use contao_api_describe for the path parameters.', previous: $exception);
         }
 
         // Use the API pipeline so serialization, validation and operation security also
