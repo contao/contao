@@ -80,7 +80,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             ->expects($this->exactly(2))
             ->method('replaceInline')
             ->willReturnMap([
-                ['mailto:{{email_url::info@example.org}}', OutputType::text, 'mailto:info@example.org'],
+                ['mailto:{{email_url::info@example.org}}', OutputType::url, 'mailto:info@example.org'],
                 ['{{page::title}}', OutputType::text, 'A & B'],
             ])
         ;

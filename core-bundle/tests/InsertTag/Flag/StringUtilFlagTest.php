@@ -70,8 +70,8 @@ class StringUtilFlagTest extends TestCase
     public static function getEncodingFlags(): iterable
     {
         yield ['attr', 'A &amp; B', OutputType::text, 'A &amp;amp; B'];
-        yield ['attr', 'A &amp; B', OutputType::html, 'A &amp; B'];
+        yield ['attr', 'A <span title="&quot;"> B', OutputType::html, 'A &lt;span title=&quot;&amp;quot;&quot;&gt; B'];
         yield ['urlattr', 'a=1&amp;b=2', OutputType::text, 'a=1&amp;amp;b=2'];
-        yield ['urlattr', '&#105;&#x6E;&#102;&#x6F;&#64;example.org', OutputType::html, '&#105;&#x6E;&#102;&#x6F;&#64;example.org'];
+        yield ['urlattr', 'A <span title="&quot;"> B', OutputType::html, 'A &lt;span title=&quot;&amp;quot;&quot;&gt; B'];
     }
 }

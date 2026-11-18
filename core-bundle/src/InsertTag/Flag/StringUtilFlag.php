@@ -25,7 +25,7 @@ class StringUtilFlag
     public function attr(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         return $result
-            ->withValue(StringUtil::specialcharsAttribute($result->getValue(), false, OutputType::html !== $result->getOutputType()))
+            ->withValue(StringUtil::specialcharsAttribute($result->getValue()))
             ->withOutputType(OutputType::html)
         ;
     }
@@ -34,7 +34,7 @@ class StringUtilFlag
     public function urlattr(InsertTagFlag $flag, InsertTagResult $result): InsertTagResult
     {
         return $result
-            ->withValue(StringUtil::specialcharsUrl($result->getValue(), false, OutputType::html !== $result->getOutputType()))
+            ->withValue(StringUtil::specialcharsUrl($result->getValue()))
             ->withOutputType(OutputType::html) // Not type URL because HTML entities are encoded here
         ;
     }

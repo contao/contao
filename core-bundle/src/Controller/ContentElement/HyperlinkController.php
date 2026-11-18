@@ -35,7 +35,7 @@ class HyperlinkController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Link with attributes
-        $href = $this->insertTagParser->replaceInline($model->url ?? '', OutputType::text);
+        $href = $this->insertTagParser->replaceInline($model->url ?? '', OutputType::url);
 
         if (Validator::isRelativeUrl($href)) {
             $href = $request->getBasePath().'/'.$href;
