@@ -1,11 +1,6 @@
 {% trans_default_domain 'contao_default' %}
 {% extends '@Contao/backend/data_container/table/edit/_edit.html.twig' %}
 
-{% set form_attributes = attrs(form_attributes|default)
-    .set('data-controller', 'contao--version-conflict')
-    .set('data-action', 'turbo:before-fetch-response->contao--version-conflict#render')
-%}
-
 {% block header %}
     {{ version_dropdown|raw }}
 
