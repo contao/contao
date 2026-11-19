@@ -117,7 +117,7 @@ class BackendTest extends AbstractContaoMonorepoE2ETestCase
         $backend->waitFor('select[name="layout"]');
         $backend->select('layout', (string) $layout);
         $backend->check('published');
-        $backend->check('fallback');
+        $backend->waitForNavigation(static fn () => $backend->check('fallback'));
 
         $backend->submitForm('Save', [
             'title' => 'Root Page',
