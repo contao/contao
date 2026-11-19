@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Back end module "two factor".
@@ -281,7 +282,8 @@ class ModuleTwoFactor extends BackendModule
 			}
 
 			// Set the status code to 422, so that Turbo can handle the error (see #10584)
-			$container->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
+			$mainRequest = $container->get('request_stack')->getMainRequest();
+			$mainRequest->attributes->set('_contao_widget_errors', $mainRequest->attributes->get('_contao_widget_errors', new ConstraintViolationList()));
 
 			$this->Template->error = true;
 			$verifyHelp = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
