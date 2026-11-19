@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     #template;
+    #templateName;
 
     static targets = ['body', 'row', 'copy', 'delete', 'ghost'];
 
@@ -14,13 +15,15 @@ export default class extends Controller {
 
     connect() {
         this.#template = this.rowTargets[0].cloneNode(true);
+        this.#templateName = this.nameValue;
 
         if (this.hasGhostTarget) {
             this.#buildGhostRow();
         }
 
         if (this.emptyValue) {
-            this.rowTargets[0].hidden = true;
+            this.#disableRow(this.rowTargets[0]);
+            this.emptyValue = false;
         }
 
         this.#updatePermissions();
@@ -76,8 +79,16 @@ export default class extends Controller {
             return;
         }
 
+        // A nested row wizard gets renamed if its row has been moved or copied
+        if (this.#templateName !== this.nameValue) {
+            this.#updateNames(this.#template, this.#templateName, this.#templateName, this.nameValue);
+            this.#templateName = this.nameValue;
+        }
+
         const newRow = this.#template.cloneNode(true);
 
+        // The template can be a clone of the hidden row (see #10564)
+        this.#enableRow(newRow);
         this.#resetInputs(newRow);
         this.bodyTarget.appendChild(newRow);
         this.#focus(newRow);
@@ -170,21 +181,7 @@ export default class extends Controller {
         const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll(
-                `[for^=${selector}\\[], [for^=opt_${selector}\\[], [name^=${selector}\\[], [id*=${selector}\\[]`,
-            )) {
-                if (el.name) {
-                    el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
-                }
-
-                if (el.id) {
-                    el.id = el.id.replace(regexPattern, `${this.nameValue}[${i}]`);
-                }
-
-                if (el.getAttribute('for')) {
-                    el.setAttribute('for', el.getAttribute('for').replace(regexPattern, `${this.nameValue}[${i}]`));
-                }
-            }
+            this.#updateNames(tr, this.nameValue, regexPattern, `${this.nameValue}[${i}]`);
 
             const pickerScript = tr.querySelector('.selector_container > script');
 
@@ -217,6 +214,33 @@ export default class extends Controller {
                 }
             }
         });
+    }
+
+    #updateNames(container, name, search, replacement) {
+        const selector = name.replaceAll('[', '\\[').replaceAll(']', '\\]');
+        const nameAttribute = `data-${this.identifier}-name-value`;
+
+        for (const el of container.querySelectorAll(
+            `[for^=${selector}\\[], [for^=opt_${selector}\\[], [name^=${selector}\\[], [id*=${selector}\\[]`,
+        )) {
+            const nestedName = el.getAttribute(nameAttribute);
+
+            if (nestedName) {
+                el.setAttribute(nameAttribute, nestedName.replace(search, replacement));
+            }
+
+            if (el.name) {
+                el.name = el.name.replace(search, replacement);
+            }
+
+            if (el.id) {
+                el.id = el.id.replace(search, replacement);
+            }
+
+            if (el.getAttribute('for')) {
+                el.setAttribute('for', el.getAttribute('for').replace(search, replacement));
+            }
+        }
     }
 
     #buildGhostRow() {
@@ -261,6 +285,13 @@ export default class extends Controller {
         }
 
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = true;
+
+        // Remove required as the browser validates fields of a hidden row (see #10563)
+        for (const el of row.querySelectorAll('[required]')) {
+            el.required = false;
+            el.dataset.rowWizardRequired = '';
+        }
+
         row.hidden = true;
     }
 
@@ -271,6 +302,14 @@ export default class extends Controller {
 
         row.hidden = false;
         row.querySelector(`input[name="${this.nameValue}[_rows][]"]`).disabled = false;
+
+        // Skip the fields of nested rows that are still hidden (see #10563)
+        for (const el of row.querySelectorAll('[data-row-wizard-required]')) {
+            if (!el.closest('[hidden]')) {
+                el.required = true;
+                delete el.dataset.rowWizardRequired;
+            }
+        }
     }
 
     #resetInputs(row) {

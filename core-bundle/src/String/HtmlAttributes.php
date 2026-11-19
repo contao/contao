@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\String;
 use Contao\StringUtil;
 
 /**
- * @implements \IteratorAggregate<string, string>
+ * @implements \IteratorAggregate<string, string|false>
  * @implements \ArrayAccess<string, \Stringable|bool|float|int|string|null>
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
@@ -495,7 +495,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * @return \Generator<string, string>
+     * @return \Generator<string, string|false>
      */
     public function getIterator(): \Generator
     {
@@ -573,11 +573,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
     {
-        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
+        if ('class' === $name && false !== $value && (!$trusted || isset($this->attributes[$name]))) {
             $this->addClass((string) $value);
-        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
+        } elseif ('style' === $name && false !== $value && (!$trusted || isset($this->attributes[$name]))) {
             $this->addStyle((string) $value);
-        } elseif ($trusted) {
+        } elseif ($trusted && false !== $value) {
             $this->attributes[$name] = (string) $value;
         } else {
             $this->set($name, $value);

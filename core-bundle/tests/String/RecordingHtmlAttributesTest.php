@@ -131,6 +131,27 @@ class RecordingHtmlAttributesTest extends AbstractHtmlAttributesTestCase
         $this->assertSame('keep first second', $attributes['data-controller']);
     }
 
+    #[DataProvider('provideMergeTargets')]
+    public function testPreservesDeletionsThroughArrayRoundTrip(string $targetClass): void
+    {
+        $source = new RecordingHtmlAttributes();
+        $source->unset('title')->removeClass('foo')->removeStyle('color');
+
+        $expected = ['title' => false, 'class' => false, 'style' => false];
+        $this->assertSame($expected, iterator_to_array($source));
+
+        $copy = new RecordingHtmlAttributes(iterator_to_array($source));
+
+        $this->assertSame('', (string) $copy);
+        $this->assertSame($expected, iterator_to_array($copy));
+
+        $target = new $targetClass(['title' => 'old', 'class' => 'foo bar', 'style' => 'color: red; display: block;', 'id' => 'keep']);
+        $target->mergeWith($copy);
+
+        // The array preserves whole-attribute deletions, not individual class/style removals.
+        $this->assertSame(' id="keep"', (string) $target);
+    }
+
     public function testSelfMergeAndConstructionPreserveOperations(): void
     {
         $attributes = new RecordingHtmlAttributes();
@@ -210,10 +231,11 @@ class RecordingHtmlAttributesTest extends AbstractHtmlAttributesTestCase
         $attributes = new class(['id' => 'first']) extends RecordingHtmlAttributes {
             public int $replays = 0;
 
-            protected function replay(HtmlAttributes $attributes): void
+            protected function replay(HtmlAttributes $attributes): array
             {
                 ++$this->replays;
-                parent::replay($attributes);
+
+                return parent::replay($attributes);
             }
         };
 
@@ -277,14 +299,16 @@ class RecordingHtmlAttributesTest extends AbstractHtmlAttributesTestCase
             public bool $fail = true;
             public int $replays = 0;
 
-            protected function replay(HtmlAttributes $attributes): void
+            protected function replay(HtmlAttributes $attributes): array
             {
                 ++$this->replays;
-                parent::replay($attributes);
+                $return = parent::replay($attributes);
 
                 if ($this->fail) {
                     throw new \RuntimeException('Replay failed.');
                 }
+
+                return $return;
             }
         };
 
@@ -304,5 +328,10 @@ class RecordingHtmlAttributesTest extends AbstractHtmlAttributesTestCase
     protected function createAttributes(HtmlAttributes|iterable|string|null $attributes = null): RecordingHtmlAttributes
     {
         return new RecordingHtmlAttributes($attributes);
+    }
+
+    protected function assertSameAttributes(array $expected, HtmlAttributes $attributes, string $message = ''): void
+    {
+        $this->assertSame($expected, iterator_to_array($attributes), $message);
     }
 }
