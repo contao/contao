@@ -87,14 +87,6 @@ services:
         arguments:
             $decorated: '@.inner'
 
-    contao_api.api_platform.query_parameter_state_provider:
-        class: Contao\ApiBundle\ApiPlatform\State\QueryParameterStateProvider
-        autoconfigure: false
-        decorates: api_platform.state_provider.parameter
-        arguments:
-            $decorated: '@.inner'
-            $paginationOptions: '@api_platform.pagination_options'
-
     contao_api.api_platform.serializer.api_version_context_builder:
         class: Contao\ApiBundle\ApiPlatform\Serializer\ApiVersionContextBuilder
         decorates: api_platform.serializer.context_builder

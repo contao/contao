@@ -31,9 +31,6 @@ class QueryParameterTest extends AbstractContaoMonorepoE2ETestCase
 
         $this->assertSame(400, $response->getStatusCode(), $content);
         $this->assertStringContainsString('"pid"', $detail, $content);
-        $this->assertStringContainsString('page', $detail, $content);
-        $this->assertStringContainsString('itemsPerPage', $detail, $content);
-        $this->assertStringContainsString('sort', $detail, $content);
     }
 
     public function testRejectsAnUnknownQueryParameterOfARecord(): void
