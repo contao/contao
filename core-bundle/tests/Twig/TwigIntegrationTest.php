@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\String\RecordingHtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -98,6 +99,29 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
         $this->assertCount(1, $request->attributes->get('_contao_widget_errors'));
         $this->assertSame('bar', $request->attributes->get('_contao_widget_errors')[0]->getMessage());
+    }
+
+    public function testReplaysAttributesAcrossTemplateInheritance(): void
+    {
+        $environment = new Environment(
+            new ArrayLoader([
+                'parent.html.twig' => '{% block attributes %}{% set attributes = attrs({class: "foo bar", title: "<safe>"}).mergeWith(attributes|default) %}<div{{ attributes }}></div>{% endblock %}',
+                'child.html.twig' => '{% extends "parent.html.twig" %}{% block attributes %}{% set attributes = attrs().removeClass("foo") %}{{ parent() }}{% endblock %}',
+            ]),
+            ['autoescape' => 'html'],
+        );
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        $this->assertInstanceOf(RecordingHtmlAttributes::class, ($environment->getFunction('attrs')->getCallable())());
+        $this->assertSame('<div class="bar" title="&lt;safe&gt;"></div>', $environment->render('child.html.twig'));
     }
 
     public function testRendersAttributes(): void
