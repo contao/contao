@@ -30,20 +30,20 @@ $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 		'id' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['id'],
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['pid'],
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'relTable' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
+			'sql'                     => array('type' => 'string', 'length' => 64, 'notnull' => false)
 		),
 		'relId' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		)
 	)
 );
