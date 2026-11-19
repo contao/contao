@@ -31,12 +31,15 @@ final class ApiOperationRegistry
     public function discover(string $query = ''): array
     {
         $operations = [];
+        $words = preg_split('/\s+/', strtolower($query), -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($this->getOperations() as $name => $operation) {
-            $haystack = $name.' '.$operation->getShortName().' '.$operation->getDescription();
+            $haystack = strtolower($name.' '.$operation->getShortName().' '.$operation->getDescription());
 
-            if ('' !== $query && !str_contains(strtolower($haystack), strtolower($query))) {
-                continue;
+            foreach ($words as $word) {
+                if (!str_contains($haystack, $word)) {
+                    continue 2;
+                }
             }
 
             $operations[] = [
