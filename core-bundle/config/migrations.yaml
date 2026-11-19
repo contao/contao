@@ -95,6 +95,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_503.uploader:
+        class: Contao\CoreBundle\Migration\Version503\UploaderMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_505.form_store_session:
         class: Contao\CoreBundle\Migration\Version505\FormStoreSessionMigration
         arguments:
