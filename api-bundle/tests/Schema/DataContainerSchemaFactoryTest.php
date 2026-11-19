@@ -153,7 +153,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['type' => 'boolean'], $schema['properties']['published']);
         $this->assertSame(['type' => 'string', 'maxLength' => 1, 'enum' => ['a', 'b']], $schema['properties']['type']);
         $this->assertSame(['type' => 'string', 'format' => 'email'], $schema['properties']['email']);
-        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT], $schema['properties']['digits']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_NUMERIC], $schema['properties']['digits']);
         $this->assertSame(['type' => 'string', 'contentMediaType' => 'text/html'], $schema['properties']['text']);
     }
 
@@ -418,6 +418,60 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertTrue($validator->validate((object) ['eventDate' => null], $schema)->isValid());
         $this->assertFalse($validator->validate((object) ['eventDate' => 123], $schema)->isValid());
         $this->assertFalse($validator->validate((object) ['eventDate' => 'not a date'], $schema)->isValid());
+    }
+
+    public function testDescribesTheValuesTheWidgetsAccept(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'url' => ['inputType' => 'text', 'eval' => ['rgxp' => 'url'], 'sql' => ['type' => 'text', 'notnull' => false]],
+            'step' => ['inputType' => 'text', 'eval' => ['rgxp' => 'digit'], 'sql' => ['type' => 'string', 'default' => '']],
+            'perPage' => ['inputType' => 'text', 'eval' => ['rgxp' => 'natural'], 'sql' => ['type' => 'string', 'default' => '']],
+            'quality' => ['inputType' => 'text', 'eval' => ['rgxp' => 'prcnt'], 'sql' => ['type' => 'integer', 'default' => 0]],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['type' => ['string', 'null']], $properties['url']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_NUMERIC, 'default' => ''], $properties['step']);
+        $this->assertSame(['type' => 'string', 'pattern' => Validator::REGEXP_DIGIT, 'default' => ''], $properties['perPage']);
+        $this->assertSame(['type' => 'integer', 'minimum' => 0, 'maximum' => 100, 'default' => 0], $properties['quality']);
+
+        $schema = json_decode(json_encode($factory->create('tl_content'), JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+        $validator = new \Opis\JsonSchema\Validator();
+
+        foreach (['{{link_url::1}}', '/main-home', 'https://example.com'] as $url) {
+            $this->assertTrue($validator->validate((object) ['url' => $url], $schema)->isValid());
+        }
+
+        foreach (['3', '-3', '3.9'] as $step) {
+            $this->assertTrue($validator->validate((object) ['step' => $step], $schema)->isValid());
+        }
+
+        $this->assertFalse($validator->validate((object) ['step' => '3.'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['step' => '3,9'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['perPage' => '3.9'], $schema)->isValid());
+        $this->assertFalse($validator->validate((object) ['quality' => 101], $schema)->isValid());
+    }
+
+    public function testAllowsNullForNullableColumns(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'height' => ['inputType' => 'text', 'eval' => ['rgxp' => 'digit'], 'sql' => ['type' => 'integer', 'notnull' => false]],
+            'price' => ['inputType' => 'text', 'sql' => ['type' => 'decimal', 'notnull' => false]],
+            'mode' => ['inputType' => 'select', 'options' => ['a', 'b'], 'sql' => ['type' => 'string', 'notnull' => false]],
+            'formats' => ['inputType' => 'select', 'options' => ['a', 'b'], 'eval' => ['multiple' => true], 'sql' => ['type' => 'blob', 'notnull' => false]],
+            'width' => ['inputType' => 'text', 'sql' => ['type' => 'integer', 'default' => 0]],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $properties = $factory->create('tl_content')['properties'];
+
+        $this->assertSame(['integer', 'null'], $properties['height']['type']);
+        $this->assertSame(['number', 'null'], $properties['price']['type']);
+        $this->assertSame(['type' => ['string', 'null'], 'enum' => ['a', 'b', null]], $properties['mode']);
+        $this->assertSame(['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['a', 'b']]], $properties['formats']);
+        $this->assertSame('integer', $properties['width']['type']);
     }
 
     public function testCreatesDifferentRequestAndResponseSchemas(): void

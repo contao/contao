@@ -282,6 +282,14 @@ final class DataContainerSchemaFactory
                 : $sql['default'];
         }
 
+        if (false === ($sql['notnull'] ?? true) && !($eval['multiple'] ?? false) && \is_string($schema['type'] ?? null)) {
+            $schema['type'] = [$schema['type'], 'null'];
+
+            if (isset($schema['enum'])) {
+                $schema['enum'][] = null;
+            }
+        }
+
         return $schema;
     }
 
@@ -376,8 +384,9 @@ final class DataContainerSchemaFactory
     {
         return match ($rgxp) {
             'email' => ['format' => 'email'],
-            'url' => ['format' => 'uri'],
-            'digit' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'digit' => ['pattern' => ContaoValidator::REGEXP_NUMERIC],
+            'natural' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'prcnt' => ['minimum' => 0, 'maximum' => 100],
             'alpha' => ['pattern' => ContaoValidator::REGEXP_ALPHA],
             'alnum' => ['pattern' => ContaoValidator::REGEXP_ALNUM],
             default => [],
