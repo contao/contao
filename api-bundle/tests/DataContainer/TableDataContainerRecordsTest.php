@@ -43,6 +43,8 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Contao\TextField;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Exception as PdoException;
+use Doctrine\DBAL\Exception\DeadlockException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,6 +53,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
@@ -486,6 +489,89 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $records->delete(new DataContainerRecord('tl_content', [], 17));
 
         $this->assertSame('saved backend state', $session->get('marker'));
+    }
+
+    public function testCreationEditsTheNewRecordInTheTransactionOfTheCreate(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao')))
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'title' => 'New'])
+        ;
+
+        $active = false;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('transactional')
+            ->willReturnCallback(
+                static function (\Closure $callback) use (&$active): mixed {
+                    $active = true;
+
+                    try {
+                        return $callback();
+                    } finally {
+                        $active = false;
+                    }
+                },
+            )
+        ;
+        $connection
+            ->method('isTransactionActive')
+            ->willReturnCallback(
+                static function () use (&$active): bool {
+                    return $active;
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc, $connection);
+        $result = $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+
+        $this->assertSame(47, $result->id);
+    }
+
+    public function testReportsADeadlockAsARetryableConflict(): void
+    {
+        $deadlock = new DeadlockException(PdoException::new(new \PDOException('Deadlock found when trying to get lock')), null);
+
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willThrowException($deadlock)
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'title' => ''])
+        ;
+
+        $records = $this->createRecords($dc);
+
+        try {
+            $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+
+            $this->fail('The deadlock was not reported.');
+        } catch (ConflictHttpException $exception) {
+            $this->assertSame(409, $exception->getStatusCode());
+            $this->assertSame($deadlock, $exception->getPrevious());
+        }
     }
 
     public function testReportsTheMaximumPageForTheRequestedPageSize(): void

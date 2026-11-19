@@ -28,11 +28,13 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\RetryableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TableDataContainerRecords
@@ -421,7 +423,13 @@ class TableDataContainerRecords
     private function write(DataContainerRecord $record, array $parameters, callable $callback): mixed
     {
         try {
+            if ($this->connection->isTransactionActive()) {
+                return $this->run($record->table, $parameters, $callback);
+            }
+
             return $this->connection->transactional(fn () => $this->run($record->table, $parameters, $callback));
+        } catch (RetryableException $exception) {
+            throw new ConflictHttpException('The record could not be saved because of a concurrent write. Retry the request.', $exception);
         } finally {
             // A rollback must not leave records from the failed write in the static cache
             DataContainer::clearCurrentRecordCache(table: $record->table);
