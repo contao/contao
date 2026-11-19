@@ -654,6 +654,40 @@ final class DataContainerRecordMapperTest extends ContaoTestCase
         $this->assertSame(['alias' => '', 'password' => ''], $mapper->toFormDefaults('tl_content', $row, ['alias', 'password', 'locked', 'unsupported']));
     }
 
+    public function testFormDefaultsKeepOptionalEmptyValuesAsTheyAreStored(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'alias' => ['inputType' => 'text', 'sql' => ['type' => 'string', 'default' => '']],
+            'height' => ['inputType' => 'text', 'sql' => ['type' => 'integer', 'notnull' => false]],
+            'formats' => ['inputType' => 'checkbox', 'options' => ['png', 'jpg'], 'eval' => ['multiple' => true], 'sql' => ['type' => 'string', 'default' => '']],
+            'styles' => ['inputType' => 'checkbox', 'options' => ['png', 'jpg'], 'eval' => ['multiple' => true, 'mandatory' => true], 'sql' => ['type' => 'string', 'default' => '']],
+            'width' => ['inputType' => 'text', 'sql' => ['type' => 'integer', 'notnull' => false]],
+        ];
+
+        $controller = $this->createAdapterStub(['loadDataContainer']);
+
+        $mapper = new DataContainerRecordMapper(
+            new DataContainerSchemaFactory(
+                $this->createContaoFrameworkStub([
+                    Controller::class => $controller,
+                    System::class => $this->createAdapterStub(['loadLanguageFile']),
+                ]),
+                $this->converters,
+                $this->relationResolver,
+                $this->localeSwitcher,
+                $this->createRelationDefinitionFactory($this->converters),
+                new DataContainerWidgetFactory(),
+            ),
+            $this->converters,
+            $this->relationResolver,
+            $this->createRelationDefinitionFactory($this->converters),
+        );
+
+        $row = ['alias' => '', 'height' => null, 'formats' => '', 'styles' => ''];
+
+        $this->assertSame(['alias' => '', 'styles' => []], $mapper->toFormDefaults('tl_content', $row, ['alias', 'height', 'formats', 'styles', 'width']));
+    }
+
     public function testRejectsChangesToReadOnlyFields(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['locked'] = ['inputType' => 'text', 'api' => ['schema' => ['type' => 'string', 'readOnly' => true]]];
