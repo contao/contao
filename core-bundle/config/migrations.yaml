@@ -94,3 +94,8 @@ services:
         class: Contao\CoreBundle\Migration\Version503\RememberMeMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_503.uploader:
+        class: Contao\CoreBundle\Migration\Version503\UploaderMigration
+        arguments:
+            - '@database_connection'
