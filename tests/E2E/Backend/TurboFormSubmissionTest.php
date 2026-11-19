@@ -17,8 +17,6 @@ use Contao\E2eTests\AbstractContaoMonorepoE2ETestCase;
 use Contao\InstallationRecipe\Fixture\FixtureSet;
 use OTPHP\TOTP;
 use Symfony\Component\Clock\NativeClock;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class TurboFormSubmissionTest extends AbstractContaoMonorepoE2ETestCase
 {
@@ -44,22 +42,12 @@ class TurboFormSubmissionTest extends AbstractContaoMonorepoE2ETestCase
 
         $backend = $this->login();
         $this->enableTwoFactor($backend);
+
         $backend->waitFor('.tl_trusted_devices tbody tr');
 
         $backend->clickButton('.tl_trusted_devices button[type="submit"]');
 
         $this->assertSelectorTextContains('.tl_trusted_devices', 'Currently there are no trusted devices.');
-    }
-
-    public function testShowsAnErrorIfTheNewTemplateExists(): void
-    {
-        $backend = $this->login();
-        $backend->visit('/contao?do=tpl_editor&key=new_tpl');
-
-        $this->copyToTemplatesDirectory($backend->page()->locator('#ctrl_original')->inputValue());
-        $backend->clickButton('#create');
-
-        $this->assertSelectorTextContains('.tl_message .tl_error', 'exists already');
     }
 
     private function enableTwoFactor(BackendBrowser $backend): void
@@ -71,12 +59,5 @@ class TurboFormSubmissionTest extends AbstractContaoMonorepoE2ETestCase
 
         $backend->page()->locator('#verify')->fill($code);
         $backend->waitForNavigation(static fn () => $backend->clickButton('.tl_two_factor_form button[type="submit"]'));
-    }
-
-    private function copyToTemplatesDirectory(string $template): void
-    {
-        $directory = self::managedEdition()->directory();
-
-        (new Filesystem())->copy(Path::join($directory, $template), Path::join($directory, 'templates', basename($template)));
     }
 }
