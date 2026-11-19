@@ -20,4 +20,9 @@ class HtmlAttributesTest extends AbstractHtmlAttributesTestCase
     {
         return new HtmlAttributes($attributes);
     }
+
+    protected function assertSameAttributes(array $expected, HtmlAttributes $attributes, string $message = ''): void
+    {
+        $this->assertSame(array_filter($expected, static fn ($value) => false !== $value), iterator_to_array($attributes), $message);
+    }
 }

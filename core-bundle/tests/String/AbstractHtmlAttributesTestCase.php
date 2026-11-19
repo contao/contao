@@ -23,11 +23,11 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
     {
         $attributes = $this->createAttributes($attributeString);
 
-        $this->assertSame($expectedAttributes, iterator_to_array($attributes));
+        $this->assertSameAttributes($expectedAttributes, $attributes);
 
         $attributes = $this->createAttributes($attributes->toString());
 
-        $this->assertSame($expectedAttributes, iterator_to_array($attributes));
+        $this->assertSameAttributes($expectedAttributes, $attributes);
     }
 
     public static function provideAttributeStrings(): iterable
@@ -265,14 +265,14 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
             'other' => '',
         ];
 
-        $this->assertSame(
+        $this->assertSameAttributes(
             $expectedProperties,
-            iterator_to_array($this->createAttributes($properties)),
+            $this->createAttributes($properties),
         );
 
-        $this->assertSame(
+        $this->assertSameAttributes(
             $expectedProperties,
-            iterator_to_array($this->createAttributes(new \ArrayIterator($properties))),
+            $this->createAttributes(new \ArrayIterator($properties)),
         );
     }
 
@@ -285,7 +285,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
             'other' => null,
         ]);
 
-        $this->assertSame(iterator_to_array($attributes), iterator_to_array($this->createAttributes($attributes)));
+        $this->assertSameAttributes(iterator_to_array($attributes), $this->createAttributes($attributes));
     }
 
     public function testMergesAttributesFromAttributesClass(): void
@@ -318,18 +318,28 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
             'bar-bar' => '42',
             'baz123' => '',
             'other' => '',
+            'foo-foo' => false,
         ];
 
         $attributes = $attributesA->mergeWith($attributesB)->mergeWith($attributesC)->mergeWith($attributesD);
 
-        $this->assertSame($expectedProperties, iterator_to_array($attributes));
+        $this->assertSameAttributes($expectedProperties, $attributes);
+    }
+
+    public function testMergingFalseValuesUnsetsAttributes(): void
+    {
+        $attributes = $this->createAttributes(['title' => 'old', 'class' => 'foo', 'style' => 'color: red;', 'id' => 'keep']);
+        $attributes->mergeWith(['title' => false, 'class' => false, 'style' => false]);
+
+        $this->assertSameAttributes(['id' => 'keep', 'title' => false, 'class' => false, 'style' => false], $attributes);
+        $this->assertSame(' id="keep"', (string) $attributes);
     }
 
     public function testSkipsInvalidAttributeNamesWhenParsingString(): void
     {
         $attributes = $this->createAttributes("foo=bar f\xC2o\x00o=b&#xC2;ar baz=42");
 
-        $this->assertSame(['foo' => 'bar', "f\u{FFFD}o\u{FFFD}o" => "b\u{C2}ar", 'baz' => '42'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['foo' => 'bar', "f\u{FFFD}o\u{FFFD}o" => "b\u{C2}ar", 'baz' => '42'], $attributes);
     }
 
     #[DataProvider('provideInvalidAttributeNames')]
@@ -366,20 +376,20 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
     {
         $attributes = $this->createAttributes();
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes([], $attributes);
 
         // Set and overwrite properties
         $attributes->set('foo', 'bar');
         $attributes->set('bar', 42);
         $attributes->set('foo', '{{baz}}');
 
-        $this->assertSame(['foo' => '{{baz}}', 'bar' => '42'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['foo' => '{{baz}}', 'bar' => '42'], $attributes);
 
         // Unset existing and non-existing properties
         $attributes->unset('foo');
         $attributes->unset('other');
 
-        $this->assertSame(['bar' => '42'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['bar' => '42', 'foo' => false, 'other' => false], $attributes);
 
         // Set values that should get ignored
         $attributes->setIfExists('a', null);
@@ -393,20 +403,20 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->setIfExists('f', 'abc');
         $attributes->setIfExists('g', $this->toStringable(' '));
 
-        $this->assertSame(['bar' => '42', 'e' => ' ', 'f' => 'abc', 'g' => ' '], iterator_to_array($attributes));
+        $this->assertSameAttributes(['bar' => '42', 'e' => ' ', 'f' => 'abc', 'g' => ' ', 'foo' => false, 'other' => false], $attributes);
 
         // Unset properties by setting them to false
         $attributes->set('bar', false);
         $attributes->setIfExists('f', false); // should not alter the list
         $attributes->mergeWith(['g' => false]);
 
-        $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['e' => ' ', 'f' => 'abc', 'foo' => false, 'bar' => false, 'other' => false, 'g' => false], $attributes);
 
         // Uppercase names
         $attributes->set('E', 'UPPER');
         $attributes->unset('F');
 
-        $this->assertSame(['e' => 'UPPER'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['e' => 'UPPER', 'foo' => false, 'bar' => false, 'other' => false, 'f' => false, 'g' => false], $attributes);
     }
 
     public function testSetAndUnsetConditionalProperties(): void
@@ -435,10 +445,10 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
             $attributes = $this->createAttributes();
             $attributes->set('data-feature', condition: $value);
 
-            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+            $this->assertSameAttributes(['data-feature' => ''], $attributes);
 
             $attributes->unset('data-feature', condition: $value);
-            $this->assertSame([], iterator_to_array($attributes));
+            $this->assertSameAttributes(['data-feature' => false], $attributes);
         }
 
         // Test falsy values do not fulfil the condition
@@ -446,10 +456,10 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
             $attributes = $this->createAttributes(['data-feature' => '']);
             $attributes->set('data-foo', condition: $value);
 
-            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+            $this->assertSameAttributes(['data-feature' => ''], $attributes);
 
             $attributes->unset('data-feature', condition: $value);
-            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+            $this->assertSameAttributes(['data-feature' => ''], $attributes);
         }
     }
 
@@ -479,28 +489,28 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addClass('c', 0);
         $attributes->addClass('d', '');
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes([], $attributes);
 
         $attributes->addClass('a', condition: true);
         $attributes->addClass('b', condition: 1);
         $attributes->addClass('c', condition: 'true');
         $attributes->addClass('d', condition: '1');
 
-        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['class' => 'a b c d'], $attributes);
 
         $attributes->removeClass('a', null);
         $attributes->removeClass('b', false);
         $attributes->removeClass('c', 0);
         $attributes->removeClass('d', '');
 
-        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['class' => 'a b c d'], $attributes);
 
         $attributes->removeClass('a', condition: true);
         $attributes->removeClass('b', condition: 1);
         $attributes->removeClass('c', condition: 'true');
         $attributes->removeClass('d', condition: '1');
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes(['class' => false], $attributes);
     }
 
     public function testDoesNotOutputEmptyClassAttribute(): void
@@ -597,28 +607,28 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addStyle('foo: c', 0);
         $attributes->addStyle('foo: d', '');
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes([], $attributes);
 
         $attributes->addStyle('a: foo', condition: true);
         $attributes->addStyle('b: foo', condition: 1);
         $attributes->addStyle('c: foo', condition: 'true');
         $attributes->addStyle('d: foo', condition: '1');
 
-        $this->assertSame(['style' => 'a: foo; b: foo; c: foo; d: foo;'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => 'a: foo; b: foo; c: foo; d: foo;'], $attributes);
 
         $attributes->removeStyle('a: foo', null);
         $attributes->removeStyle('b: foo', false);
         $attributes->removeStyle('c', 0);
         $attributes->removeStyle('d: foo', '');
 
-        $this->assertSame(['style' => 'a: foo; b: foo; c: foo; d: foo;'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => 'a: foo; b: foo; c: foo; d: foo;'], $attributes);
 
         $attributes->removeStyle('a: foo', condition: true);
         $attributes->removeStyle('b', condition: 1);
         $attributes->removeStyle('c: foo', condition: 'true');
         $attributes->removeStyle(['d'], condition: '1');
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => false], $attributes);
 
         $attributes->addStyle('foo1:');
         $attributes->addStyle('foo2:;');
@@ -628,7 +638,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addStyle(['foo6' => '']);
         $attributes->addStyle(['foo7' => ';']);
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => false], $attributes);
 
         $attributes->addStyle('a: 0;');
         $attributes->addStyle('b: "";');
@@ -639,7 +649,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addStyle(['g' => '1']);
         $attributes->addStyle(['g' => null]);
 
-        $this->assertSame(['style' => 'a: 0; b: ""; c: false; d: 1; e: 0; f: "";'], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => 'a: 0; b: ""; c: false; d: 1; e: 0; f: "";'], $attributes);
 
         $attributes->set('style', '--a:;');
         $attributes->addStyle('--b:;');
@@ -649,9 +659,9 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addStyle(['--f' => null]);
         $attributes->addStyle(['--g' => false]);
 
-        $this->assertSame(
+        $this->assertSameAttributes(
             ['style' => '--a: ; --b: ; --c: ; --d: ;'],
-            iterator_to_array($attributes),
+            $attributes,
             'Custom properties with empty values should not get stripped',
         );
 
@@ -660,7 +670,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->addStyle(['--c' => false]);
         $attributes->addStyle(['--d' => '']);
 
-        $this->assertSame([], iterator_to_array($attributes));
+        $this->assertSameAttributes(['style' => false], $attributes);
     }
 
     public function testDoesNotOutputEmptyStyleAttribute(): void
@@ -720,7 +730,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
     public function testCorrectlySerializesBooleanAttributes(array $attrArray, string $attrString): void
     {
         $this->assertSame($attrString, $this->createAttributes($attrArray)->toString(false));
-        $this->assertSame($attrArray, iterator_to_array($this->createAttributes($attrString)));
+        $this->assertSameAttributes($attrArray, $this->createAttributes($attrString));
     }
 
     public static function provideBooleanAttributes(): iterable
@@ -782,7 +792,7 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes['baz'] = false;
         unset($attributes['foo']);
 
-        $this->assertSame(['other' => ''], iterator_to_array($attributes));
+        $this->assertSameAttributes(['other' => '', 'baz' => false, 'foo' => false], $attributes);
     }
 
     public function testThrowsWhenSettingInvalidNameUsingArrayAccess(): void
@@ -830,6 +840,11 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
      * @param iterable<string, \Stringable|bool|float|int|string|null>|string|HtmlAttributes|null $attributes
      */
     abstract protected function createAttributes(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes;
+
+    /**
+     * @param array<array-key, string|false> $expected
+     */
+    abstract protected function assertSameAttributes(array $expected, HtmlAttributes $attributes, string $message = ''): void;
 
     private function toStringable(string $string): \Stringable
     {

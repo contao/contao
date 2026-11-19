@@ -25,6 +25,11 @@ class RecordingHtmlAttributes extends HtmlAttributes
 
     private HtmlAttributes|null $cachedAttributes = null;
 
+    /**
+     * @var array<string, true>
+     */
+    private array $touchedAttributes = [];
+
     public function mergeWith(HtmlAttributes|iterable|string|null $attributes = null, mixed $condition = true): self
     {
         if (empty($attributes) || !$this->test($condition)) {
@@ -34,6 +39,7 @@ class RecordingHtmlAttributes extends HtmlAttributes
         if ($attributes instanceof self) {
             $this->calls = [...$this->calls, ...$attributes->calls];
             $this->cachedAttributes = null;
+            $this->touchedAttributes = [];
 
             return $this;
         }
@@ -50,8 +56,12 @@ class RecordingHtmlAttributes extends HtmlAttributes
         foreach ($attributes as $name => $value) {
             $this->validateAttributeName(strtolower((string) $name));
 
-            // Record each entry separately to retain duplicate iterable keys.
-            $this->record(__FUNCTION__, [[$name => self::capture($value)]]);
+            if (false === $value) {
+                $this->set($name, false);
+            } else {
+                // Record each entry separately to retain duplicate iterable keys.
+                $this->record(__FUNCTION__, [[$name => self::capture($value)]]);
+            }
         }
 
         return $this;
@@ -105,9 +115,24 @@ class RecordingHtmlAttributes extends HtmlAttributes
         return $this->getAttributes()->toString($leadingSpace);
     }
 
+    /**
+     * @return \Generator<string, string|false>
+     */
     public function getIterator(): \Generator
     {
-        return $this->getAttributes()->getIterator();
+        $iterator = static function ($parentIterator, $touchedAttributes): \Generator {
+            foreach ($parentIterator as $name => $value) {
+                yield $name => $value;
+
+                unset($touchedAttributes[$name]);
+            }
+
+            foreach (array_keys($touchedAttributes) as $name) {
+                yield (string) $name => false;
+            }
+        };
+
+        return $iterator($this->getAttributes()->getIterator(), $this->touchedAttributes);
     }
 
     public function offsetExists(mixed $offset): bool
@@ -130,11 +155,26 @@ class RecordingHtmlAttributes extends HtmlAttributes
         return $this->getAttributes()->jsonSerialize();
     }
 
-    protected function replay(HtmlAttributes $attributes): void
+    /**
+     * @return array<string, true>
+     */
+    protected function replay(HtmlAttributes $attributes): array
     {
+        $touchedAttributes = [];
+
         foreach ($this->calls as [$method, $arguments]) {
+            if ('mergeWith' !== $method) {
+                $touchedAttributes[match ($method) {
+                    'addClass', 'removeClass' => 'class',
+                    'addStyle', 'removeStyle' => 'style',
+                    default => strtolower($arguments[0]),
+                }] = true;
+            }
+
             $attributes->$method(...$arguments);
         }
+
+        return $touchedAttributes;
     }
 
     /**
@@ -144,6 +184,7 @@ class RecordingHtmlAttributes extends HtmlAttributes
     {
         $this->calls[] = [$method, $arguments];
         $this->cachedAttributes = null;
+        $this->touchedAttributes = [];
 
         return $this;
     }
@@ -152,8 +193,7 @@ class RecordingHtmlAttributes extends HtmlAttributes
     {
         if (!$this->cachedAttributes) {
             $attributes = new HtmlAttributes();
-            $this->replay($attributes);
-
+            $this->touchedAttributes = $this->replay($attributes);
             $this->cachedAttributes = $attributes;
         }
 
