@@ -14,9 +14,19 @@ namespace Contao\ApiBundle\DataContainer;
 
 use Contao\DC_Table;
 use Contao\Widget;
+use Psr\Log\LoggerInterface;
 
 final class DataContainerWidgetFactory
 {
+    /**
+     * @var array<string, true>
+     */
+    private array $warned = [];
+
+    public function __construct(private readonly LoggerInterface|null $logger = null)
+    {
+    }
+
     public function resolve(DataContainerFieldContext $field, DC_Table|null $dc = null): DataContainerFieldContext
     {
         /** @var class-string<Widget>|null $class */
@@ -38,6 +48,18 @@ final class DataContainerWidgetFactory
         try {
             $config['eval'] = $class::getAttributesFromDca($config, $field->name ?? '', null, $field->name ?? '', $field->table ?? '', $dc);
         } catch (\Throwable $exception) {
+            if (isset($config['options_callback'])) {
+                // The schema is built several times per request, so only log the first failure
+                if (!isset($this->warned[$key = $field->table.'.'.$field->name])) {
+                    $this->warned[$key] = true;
+                    $this->logger?->warning(\sprintf('The options_callback of field "%s" failed without a record, so the field is resolved without it.', $key), ['exception' => $exception]);
+                }
+
+                unset($config['options_callback']);
+
+                return $this->resolve(new DataContainerFieldContext($config, $field->table, $field->name), $dc);
+            }
+
             throw new \RuntimeException(\sprintf('Could not resolve the widget attributes for field "%s.%s". Make sure the DCA callbacks work statically without a record.', $field->table, $field->name), previous: $exception);
         } finally {
             $dc->field = $previous;
