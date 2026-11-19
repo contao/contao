@@ -45,8 +45,8 @@ final class TemplateGuidanceTest extends TestCase
         $this->assertStringContainsString('mergeWith', $guidance);
         $this->assertStringContainsString('addClass', $guidance);
         $this->assertStringContainsString('setIfExists', $guidance);
-        $this->assertStringContainsString('.mergeWith(accordion_header_attributes ?? null)', $guidance);
-        $this->assertStringContainsString('.mergeWith(figure.options.attr ?? null)', $guidance);
+        $this->assertStringContainsString('.mergeWith(accordion_header_attributes|default)', $guidance);
+        $this->assertStringContainsString('.mergeWith(figure.options.attr|default)', $guidance);
         $this->assertStringContainsString('The order matters', $guidance);
         $this->assertStringContainsString('<img{{ image_attributes }}>', $guidance);
     }

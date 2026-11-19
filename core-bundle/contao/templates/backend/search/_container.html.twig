@@ -15,7 +15,7 @@
     .set('data-contao--backend-search-shortcut-label-value', 'MSC.searchShortcut'|trans)
     .set('data-contao--backend-search-shortcut-macos-label-value', 'MSC.searchShortcutMacos'|trans)
     .addClass(['backend-search', 'search--hidden'])
-    .mergeWith(search_container_attributes ?? null)
+    .mergeWith(search_container_attributes|default)
 %}
 <div {{ search_container_attributes }}>
     <div class="backend-search_overlay"></div>

@@ -8,7 +8,7 @@
         .set('data-action', 'contao--simple-modal:show@document->contao--dialog#suspend contao--simple-modal:hide@document->contao--dialog#resume')
         .set('id', id)
         .set('data-turbo-temporary')
-        .mergeWith(dialog_attributes ?? null)
+        .mergeWith(dialog_attributes|default)
     %}
     <dialog{{ dialog_attributes }}>
         {% block inner %}
@@ -25,7 +25,7 @@
                             .set('action', app.request.uri)
                             .set('method', 'post')
                             .set('data-action', 'contao--dialog#close')
-                            .mergeWith(form_attributes ?? null)
+                            .mergeWith(form_attributes|default)
                         %}
                         <form{{ form_attributes }}>
                             {% block content %}{% endblock %}
@@ -37,7 +37,7 @@
                                         .set('type', 'button')
                                         .set('aria-controls', id)
                                         .set('data-action', 'contao--dialog#close')
-                                        .mergeWith(cancel_button_attributes ?? null)
+                                        .mergeWith(cancel_button_attributes|default)
                                     %}
                                     <button{{ cancel_button_attributes }}>
                                         {%- block cancel_button_text %}{{ 'MSC.cancelBT'|trans }}{% endblock -%}

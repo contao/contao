@@ -1,7 +1,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass(class)
     .addStyle(style|default)
-    .mergeWith(wrapperAttributes ?? null)
+    .mergeWith(wrapperAttributes|default)
 %}
 
 <{{ hl }}{{ wrapperAttributes }}>

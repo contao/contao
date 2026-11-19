@@ -40,16 +40,16 @@
                 .setIfExists('fetchpriority', img.fetchpriority|default)
                 .setIfExists('decoding', img.decoding|default)
                 .addClass(img.class|default)
-                .mergeWith(figure.options.img_attr ?? null)
-                .mergeWith(img_attributes ?? null)
+                .mergeWith(figure.options.img_attr|default)
+                .mergeWith(img_attributes|default)
             %}
             <img{{ img_attributes }}>
         {% endblock %}
     {% else %}
         {# Picture with image and sources #}
         {% set picture_attributes = attrs()
-            .mergeWith(figure.options.picture_attr ?? null)
-            .mergeWith(picture_attributes ?? null)
+            .mergeWith(figure.options.picture_attr|default)
+            .mergeWith(picture_attributes|default)
         %}
         <picture{{ picture_attributes }}>
             {% block sources %}
@@ -63,8 +63,8 @@
                             .setIfExists('type', source.type|default)
                             .setIfExists('width', define_proportions ? source.width : null)
                             .setIfExists('height', define_proportions ? source.height : null)
-                            .mergeWith(figure.options.source_attr ?? null)
-                            .mergeWith(source_attributes ?? null)
+                            .mergeWith(figure.options.source_attr|default)
+                            .mergeWith(source_attributes|default)
                         %}
                         <source{{ source_attributes }}>
                     {% endblock %}

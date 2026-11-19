@@ -25,7 +25,7 @@
     .setIfExists('title', title|default|insert_tag)
     .addClass(class|default)
     .addClass(img.class|default)
-    .mergeWith(attributes ?? null)
+    .mergeWith(attributes|default)
 }}>
 
 {% if sources|default %}

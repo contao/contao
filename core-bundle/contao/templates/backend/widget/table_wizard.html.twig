@@ -220,7 +220,7 @@
         .addClass('table-wizard-menu-item')
         .set('data-operation', operation)
         .set('data-axis', show_in_axis)
-        .mergeWith(attributes ?? null)
+        .mergeWith(attributes|default)
     %}
     <button{{ menu_operation_attributes }}>
         {{ backend_icon("#{icon}", '', attrs().set('width', 16).set('height', 16)) }} {{ translation_key|trans }}

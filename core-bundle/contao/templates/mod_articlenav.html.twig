@@ -2,7 +2,7 @@
 
 {% set wrapperAttributes = attrs()
     .addClass('pagination')
-    .mergeWith(wrapperAttributes ?? null)
+    .mergeWith(wrapperAttributes|default)
 %}
 
 {% block content %}

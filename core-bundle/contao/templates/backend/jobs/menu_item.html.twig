@@ -8,7 +8,7 @@
     .set('data-contao--jobs-enabled-value', item.extra('has_pending_jobs', false))
     .set('data-contao--jobs-all-jobs-processed-message-value', 'jobs.all_jobs_processed'|trans({}, 'contao_jobs'))
     .set('data-action', 'contao--watch-pending-jobs@document->contao--jobs#enable')
-    .mergeWith(controller_attributes ?? null)
+    .mergeWith(controller_attributes|default)
 %}
 <div{{ controller_attributes }}>
     {% set menu_item_attributes = attrs()
@@ -17,7 +17,7 @@
         .set('class', 'icon-jobs')
         .set('data-turbo-prefetch', false)
         .set('data-contao--tooltips-target', 'tooltip')
-        .mergeWith(menu_item_attributes ?? null) %}
+        .mergeWith(menu_item_attributes|default) %}
     <a{{ menu_item_attributes }}>{{ 'MSC.jobs'|trans }}</a>
     <sup data-contao--jobs-target="count"></sup>
 

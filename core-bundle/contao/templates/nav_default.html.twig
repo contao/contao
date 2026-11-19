@@ -15,8 +15,8 @@
                     .addClass(item.class)
                     .setIfExists('accesskey', item.accesskey|default)
                     .set('aria-haspopup', true, item.subitems|default)
-                    .mergeWith(item.target ?? null)
-                    .mergeWith(item.rel ?? null)
+                    .mergeWith(item.target|default)
+                    .mergeWith(item.rel|default)
                 }}>{{ item.link }}</a>
                 {{- item.subitems|default|raw -}}
             </li>

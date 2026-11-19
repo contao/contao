@@ -3,6 +3,6 @@
 {% set button_attributes = attrs()
     .set('formaction', path('_contao_template_studio_editor_tab.stream', {identifier}))
     .set('aria-label', 'MSC.openTab'|trans)
-    .mergeWith(button_attributes ?? null)
+    .mergeWith(button_attributes|default)
 %}
 <button{{ button_attributes }}>{% block inner %}{{ identifier }}{% endblock %}</button>

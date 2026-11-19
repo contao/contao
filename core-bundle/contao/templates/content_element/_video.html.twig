@@ -6,7 +6,7 @@
 {% block content %}
     {% set video_attributes = attrs()
         .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
-        .mergeWith(video_attributes ?? null)
+        .mergeWith(video_attributes|default)
     %}
 
     {% if as_editor_view %}
@@ -19,7 +19,7 @@
                 {% block iframe %}
                     {% set iframe_attributes = attrs({width, height, src: source.url, allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin'})
                         .setIfExists('title', title|default)
-                        .mergeWith(iframe_attributes ?? null)
+                        .mergeWith(iframe_attributes|default)
                     %}
                     {% do csp_source('frame-src', iframe_attributes.src) %}
                     <iframe{{ iframe_attributes }}></iframe>
