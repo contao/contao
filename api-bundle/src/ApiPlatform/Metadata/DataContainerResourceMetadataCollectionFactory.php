@@ -21,6 +21,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
@@ -114,6 +115,7 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
             paginationClientItemsPerPage: true, // Clients can choose the page size within the configured maximum
             paginationItemsPerPage: min(DataContainerPage::DEFAULT_ITEMS_PER_PAGE, $maximum),
             paginationMaximumItemsPerPage: $maximum,
+            parameters: ['sort' => new QueryParameter(key: 'sort')],
         );
     }
 
@@ -184,6 +186,8 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
                     ->withProcessor('contao_api.api_platform.data_container_state_processor')
                     ->withDefaults(['_scope' => 'backend'])
                     ->withStateless(true)
+                    ->withParameters($operation->getParameters() ?? [])
+                    ->withStrictQueryParameterValidation(true)
                     ->withSecurity("is_granted('ROLE_USER')")
                     ->withExtraProperties(['contao' => $extra])
                 ;
