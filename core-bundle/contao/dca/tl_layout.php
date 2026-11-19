@@ -202,7 +202,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'mandatory' => true, 'chosen'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
+			'eval'                    => array('includeBlankOption'=>true, 'mandatory'=>true, 'chosen'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'minifyMarkup' => array

@@ -237,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'description' => array

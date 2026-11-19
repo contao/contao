@@ -464,7 +464,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('http://', 'https://'),
-			'eval'                    => array('tl_class'=>'w50', 'isAssociative' => true),
+			'eval'                    => array('tl_class'=>'w50', 'isAssociative'=>true),
 			'sql'                     => array('type'=>'boolean', 'default'=>true)
 		),
 		'autoforward' => array
@@ -700,22 +700,22 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
-			'eval'                    => array('tl_class' => 'w50'),
+			'options'                 => array('rss'=>'RSS 2.0', 'atom'=>'Atom', 'json'=>'JSON'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'maxFeedItems' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'tl_class' => 'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>25)
 		),
 		'feedDescription' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style' => 'height:60px', 'tl_class' => 'clr'),
+			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'imgSize' => array
@@ -724,15 +724,15 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'feedBase' => array
 		(
-			'exclude' => true,
-			'inputType' => 'text',
-			'eval' => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'alwaysSave'=>true),
-			'sql' => array('type' => 'string', 'length' => 255, 'default' => ''),
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'alwaysSave'=>true),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>''),
 		)
 	)
 );

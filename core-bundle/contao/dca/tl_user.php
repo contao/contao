@@ -142,7 +142,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'backendWidth' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('mw1280' => '1280px', 'mw1440' => '1440px', 'mw1920' => '1920px'),
+			'options'                 => array('mw1280'=>'1280px', 'mw1440'=>'1440px', 'mw1920'=>'1920px'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'')
 		),

@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'sorting'                 => true,
 			'search'                  => true,
-			'sql'                     =>array('type' => 'integer', 'unsigned' => true, 'default' => 0)
+			'sql'                     =>array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		)
 	)
 );

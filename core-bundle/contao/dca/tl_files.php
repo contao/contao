@@ -257,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('mandatory' => true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
@@ -280,7 +280,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
-					'caption'         => array('type'=>'textarea', 'basicEntities'=>true, 'allowHtml' => true),
+					'caption'         => array('type'=>'textarea', 'basicEntities'=>true, 'allowHtml'=>true),
 					'license'         => array(
 						'attributes'  => 'maxlength="255"',
 						'dcaPicker'   => true,
