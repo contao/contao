@@ -493,7 +493,7 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
 
         $this->assertSame(['integer', 'null'], $properties['height']['type']);
         $this->assertSame(['number', 'null'], $properties['price']['type']);
-        $this->assertSame(['type' => ['string', 'null'], 'enum' => ['a', 'b', null]], $properties['mode']);
+        $this->assertSame(['type' => ['string', 'null'], 'enum' => ['a', 'b', '', null]], $properties['mode']);
         $this->assertSame(['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['a', 'b']]], $properties['formats']);
         $this->assertSame('integer', $properties['width']['type']);
     }
