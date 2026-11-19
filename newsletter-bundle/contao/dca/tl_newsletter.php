@@ -91,17 +91,17 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'subject' => array
 		(
@@ -109,32 +109,32 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 128, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'alias' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_newsletter', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'preheader' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'content' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyNews', 'basicEntities'=>true, 'helpwizard'=>true),
+			'eval'                    => array('rte' => 'tinyNews', 'basicEntities' => true, 'helpwizard' => true),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
@@ -144,95 +144,95 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'convertRelativeLinks')
 			),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false)
 		),
 		'text' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('autogrow' => false),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false)
 		),
 		'addFile' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'files' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'mandatory'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'fieldType' => 'checkbox', 'filesOnly' => true, 'mandatory' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'template' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'),
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'sendText' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'externalImages' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w33', 'includeBlankOption'=>true),
+			'eval'                    => array('tl_class' => 'w33', 'includeBlankOption' => true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'sender' => array
 		(
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'tl_class'=>'w33'),
+			'eval'                    => array('rgxp' => 'email', 'maxlength' => 255, 'tl_class' => 'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'senderName' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'tl_class'=>'w33'),
+			'eval'                    => array('maxlength' => 128, 'tl_class' => 'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 128, 'default' => '')
 		),
 		'sent' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
-			'eval'                    => array('doNotCopy'=>true, 'isBoolean'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('doNotCopy' => true, 'isBoolean' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'date' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		)
 	)
 );

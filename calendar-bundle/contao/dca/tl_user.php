@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 (
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar.title',
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+	'eval'                    => array('multiple' => true),
+	'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+	'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 );
