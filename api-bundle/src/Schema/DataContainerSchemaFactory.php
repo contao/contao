@@ -359,7 +359,8 @@ final class DataContainerSchemaFactory
         $normalized = [];
 
         foreach ($options as $key => $label) {
-            // An option group decides on its own whether it is associative (see Widget::getAttributesFromDca())
+            // An option group decides on its own whether it is associative (see
+            // Widget::getAttributesFromDca())
             $group = \is_array($label) ? $label : [$key => $label];
             $isAssociativeGroup = \is_array($label) ? !array_is_list($label) : $isAssociative;
 
