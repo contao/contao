@@ -31,7 +31,7 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
         }
 
         $accessDecisionManager = $container->getDefinition('security.access.decision_manager');
-        $originalStrategy = $accessDecisionManager->getArgument(1);
+        $originalStrategy = $accessDecisionManager->getArgument('$strategy');
 
         $strategy = new Definition(ContaoStrategy::class, [
             $originalStrategy,
@@ -40,6 +40,6 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
             new Reference('security.firewall.map'),
         ]);
 
-        $accessDecisionManager->replaceArgument(1, $strategy);
+        $accessDecisionManager->replaceArgument('$strategy', $strategy);
     }
 }
