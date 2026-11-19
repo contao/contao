@@ -419,6 +419,9 @@
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
         <target>Musí být povolené pozvolné načítání (lazy loud), pokud je atribut rozměru &quot;auto&quot;. </target>
       </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím sečtěte %d a %d.</target>

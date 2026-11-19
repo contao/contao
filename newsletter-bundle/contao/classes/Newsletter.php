@@ -291,7 +291,7 @@ class Newsletter extends Backend
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="' . System::getContainer()->get('router')->generate('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
+<form action="' . System::getContainer()->get('router')->generate('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get" data-turbo="false">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . Input::get('do') . '">
 <input type="hidden" name="table" value="' . Input::get('table') . '">
@@ -354,7 +354,7 @@ class Newsletter extends Backend
 <div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">' . $GLOBALS['TL_LANG']['tl_newsletter']['preview'] . '</button>
-<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
+<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
 </div>
 </div>
 

@@ -61,7 +61,7 @@
                             .setIfExists('type', source.type|default)
                             .setIfExists('width', define_proportions ? source.width : null)
                             .setIfExists('height', define_proportions ? source.height : null)
-                            .mergeWith(figure.options.picture_attr|default)
+                            .mergeWith(figure.options.source_attr|default)
                             .mergeWith(source_attributes|default)
                         %}
                         <source{{ source_attributes }}>

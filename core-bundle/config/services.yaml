@@ -127,7 +127,7 @@ services:
         arguments:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@?logger'
 
     contao.cron.purge_expired_altcha_challenges:
@@ -333,6 +333,11 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
+    contao.doctrine.escargot_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider
+        arguments:
+            - '@contao.crawl.escargot.factory'
+
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
         arguments:
@@ -457,6 +462,7 @@ services:
 
     contao.http_client.no_private_network_except_root_pages:
         class: Contao\CoreBundle\HttpClient\NoPrivateNetworkExceptRootPagesHttpClient
+        public: true
         arguments:
             - '@http_client'
             - '@contao.framework'
@@ -762,7 +768,7 @@ services:
     contao.messenger.web_worker:
         class: Contao\CoreBundle\Messenger\WebWorker
         arguments:
-            - '@cache.app'
+            - '@contao.cache.cross_env'
             - '@console.command.messenger_consume_messages'
             - '@contao.routing.scope_matcher'
 

@@ -1,0 +1,8 @@
+tl_trusted_device:
+    trusted_device:
+        created: '2026-01-01 12:00:00'
+        userClass: Contao\BackendUser
+        userId: '@kevin_jones'
+        ua_family: Firefox
+        os_family: Linux
+        device_family: Desktop

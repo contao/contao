@@ -313,14 +313,6 @@
         <source>Generates a login form</source>
         <target>ログインフォームを生成</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>自動ログアウト</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>メンバーを自動的にログアウト</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>個人データ</target>

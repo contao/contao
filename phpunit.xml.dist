@@ -37,6 +37,7 @@
     <env name="APP_ENV" value="test"/>
     <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
+    <env name="PW_TIMEOUT_MS" value="5000"/>
     <env name="COLUMNS" value="120" force="true"/>
   </php>
   <testsuites>
@@ -49,6 +50,9 @@
       <directory>./core-bundle/tests/Functional</directory>
       <exclude>./core-bundle/tests/Functional/app</exclude>
     </testsuite>
+    <testsuite name="e2e">
+      <directory>./tests/E2E</directory>
+    </testsuite>
     <testsuite name="coverage">
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
@@ -58,5 +62,8 @@
   <extensions>
     <bootstrap class="Contao\TestCase\ClearCachePhpunitExtension"/>
     <bootstrap class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
+    <bootstrap class="Contao\E2eTesting\PhpUnit\DockerWarmUpExtension">
+      <parameter name="testsuites" value="e2e"/>
+    </bootstrap>
   </extensions>
 </phpunit>

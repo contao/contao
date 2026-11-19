@@ -28,6 +28,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_600.cron_job:
+        class: Contao\CoreBundle\Migration\Version600\CronJobMigration
+        arguments:
+            - '@database_connection'
+
     contao.migration.version_600.default_dbafs_hashing_algorithm:
         class: Contao\CoreBundle\Migration\Version600\DefaultDbafsHashingAlgorithmMigration
         arguments:

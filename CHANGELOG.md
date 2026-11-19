@@ -2,6 +2,32 @@
 
 This project adheres to [Semantic Versioning].
 
+## [6.0.6] (2026-11-11)
+
+**Security fixes:**
+
+- [GHSA-xh3r-77ch-frm3]: Stored cross-site scripting in the file manager via crafted filenames
+- [GHSA-wvj5-rchg-986m]: NoPrivateNetworkExceptRootPagesHttpClient does not pin the checked IP of cached hosts
+- [GHSA-6m74-9w88-r3fh]: Insert tag injection in the breadcrumb module on 404 pages
+- [GHSA-5mg3-mv6j-57wc]: Session invalidation upon enabling or disabling 2FA
+- [GHSA-pc2r-hvrc-f4v6]: Cross-site scripting in the figure insert tag
+- [GHSA-rgq4-cg48-xjxj]: Insufficient CSRF protection for backend login
+- [GHSA-5mw8-wv8h-h6hx]: Insufficient scope validation for passkey authentication
+- [GHSA-26h3-f97j-vj85]: Contao crawler leaks confidental headers
+- [GHSA-9jfh-v443-w3fj]: Filemount access-control bypass in DC_Folder::editAll
+- [GHSA-r7cf-mfp4-r23h]: Path traversal via decode-after-check in the image insert tag
+- [GHSA-4mx5-xq7q-77cm]: Server-side request forgery via unvalidated feed URL in the legacy RSS reader module
+- [GHSA-58r4-2p86-jp4x]: HTML sanitizer is vulnerable to DOM clobbering
+
+## [6.0.5] (2026-11-06)
+
+**Fixed issues:**
+
+- [#10547] Add `aria-describedby` to the back end tooltips ([zoglo])
+- [#10489] Fix the CSS class names in the two-factor Twig templates ([mdollde])
+- [#10455] Replace a leftover `&nbsp;` with the actual character ([m-vo])
+- [#10453] Skip missing table columns in the `OutputEncodingMigration` ([ausi])
+
 ## [6.0.4] (2026-10-09)
 
 ## [6.0.3] (2026-10-09)
@@ -169,6 +195,8 @@ This project adheres to [Semantic Versioning].
 - [#9497] Increase the minimum Doctrine ORM version ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[6.0.6]: https://github.com/contao/contao/releases/tag/6.0.6
+[6.0.5]: https://github.com/contao/contao/releases/tag/6.0.5
 [6.0.4]: https://github.com/contao/contao/releases/tag/6.0.4
 [6.0.3]: https://github.com/contao/contao/releases/tag/6.0.3
 [6.0.2]: https://github.com/contao/contao/releases/tag/6.0.2
@@ -176,6 +204,18 @@ This project adheres to [Semantic Versioning].
 [6.0.0]: https://github.com/contao/contao/releases/tag/6.0.0
 [6.0.0-RC2]: https://github.com/contao/contao/releases/tag/6.0.0-RC2
 [6.0.0-RC1]: https://github.com/contao/contao/releases/tag/6.0.0-RC1
+[GHSA-xh3r-77ch-frm3]: https://github.com/contao/contao/security/advisories/GHSA-xh3r-77ch-frm3
+[GHSA-wvj5-rchg-986m]: https://github.com/contao/contao/security/advisories/GHSA-wvj5-rchg-986m
+[GHSA-6m74-9w88-r3fh]: https://github.com/contao/contao/security/advisories/GHSA-6m74-9w88-r3fh
+[GHSA-5mg3-mv6j-57wc]: https://github.com/contao/contao/security/advisories/GHSA-5mg3-mv6j-57wc
+[GHSA-pc2r-hvrc-f4v6]: https://github.com/contao/contao/security/advisories/GHSA-pc2r-hvrc-f4v6
+[GHSA-rgq4-cg48-xjxj]: https://github.com/contao/contao/security/advisories/GHSA-rgq4-cg48-xjxj
+[GHSA-5mw8-wv8h-h6hx]: https://github.com/contao/contao/security/advisories/GHSA-5mw8-wv8h-h6hx
+[GHSA-26h3-f97j-vj85]: https://github.com/contao/contao/security/advisories/GHSA-26h3-f97j-vj85
+[GHSA-9jfh-v443-w3fj]: https://github.com/contao/contao/security/advisories/GHSA-9jfh-v443-w3fj
+[GHSA-r7cf-mfp4-r23h]: https://github.com/contao/contao/security/advisories/GHSA-r7cf-mfp4-r23h
+[GHSA-4mx5-xq7q-77cm]: https://github.com/contao/contao/security/advisories/GHSA-4mx5-xq7q-77cm
+[GHSA-58r4-2p86-jp4x]: https://github.com/contao/contao/security/advisories/GHSA-58r4-2p86-jp4x
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
@@ -183,6 +223,7 @@ This project adheres to [Semantic Versioning].
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[mdollde]: https://github.com/mdollde
 [Toflar]: https://github.com/Toflar
 [vstelmakh]: https://github.com/vstelmakh
 [zoglo]: https://github.com/zoglo
@@ -320,3 +361,7 @@ This project adheres to [Semantic Versioning].
 [#10275]: https://github.com/contao/contao/pull/10275
 [#10303]: https://github.com/contao/contao/pull/10303
 [#10305]: https://github.com/contao/contao/pull/10305
+[#10453]: https://github.com/contao/contao/pull/10453
+[#10455]: https://github.com/contao/contao/pull/10455
+[#10489]: https://github.com/contao/contao/pull/10489
+[#10547]: https://github.com/contao/contao/pull/10547

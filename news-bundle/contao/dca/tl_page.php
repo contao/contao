@@ -10,15 +10,7 @@
 
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
-/*
- * This file is part of Contao.
- *
- * (c) Leo Feyer
- *
- * @license LGPL-3.0-or-later
- */
-
-$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedBase,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,

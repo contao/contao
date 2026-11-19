@@ -2,10 +2,10 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/contaocore/backend.316393e9.css"
+        "/bundles/contaocore/backend.97402044.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.7daea209.js"
+        "/bundles/contaocore/backend.ed04f363.js"
       ]
     },
     "navigation": {
@@ -18,17 +18,17 @@
     },
     "passkey_login": {
       "js": [
-        "/bundles/contaocore/passkey_login.afe616fc.js"
+        "/bundles/contaocore/passkey_login.b02349f0.js"
       ]
     },
     "passkey_create": {
       "js": [
-        "/bundles/contaocore/passkey_create.4dd30716.js"
+        "/bundles/contaocore/passkey_create.0e3a19e1.js"
       ]
     },
     "login": {
       "css": [
-        "/bundles/contaocore/login.c0a8664b.css"
+        "/bundles/contaocore/login.1f811d01.css"
       ]
     },
     "hugerte": {

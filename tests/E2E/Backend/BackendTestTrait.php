@@ -1,0 +1,182 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\E2eTests\Backend;
+
+use Contao\E2eTesting\Browser\BackendBrowser;
+use Contao\E2eTesting\Browser\BrowserOptions;
+use Contao\E2eTesting\ManagedEdition\ManagedEditionConfig;
+use Contao\InstallationRecipe\File\FileMapping;
+use Contao\InstallationRecipe\Fixture\FixtureResult;
+use Contao\InstallationRecipe\Recipe\InstallationRecipe;
+use Symfony\Component\Uid\Uuid;
+
+trait BackendTestTrait
+{
+    private const string DUMMY_IMAGE = 'files/images/dummy.jpg';
+
+    protected const string FIXTURE_USERS = 'users.yaml';
+
+    protected const string FIXTURE_DEFAULT = 'default.yaml';
+
+    protected const string DCA_CONTENT = 'tl_content.php';
+
+    protected static function createApplicationConfig(): ManagedEditionConfig
+    {
+        $composer = self::createMonorepoComposerConfig(
+            'calendar-bundle',
+            'core-bundle',
+            'faq-bundle',
+            'news-bundle',
+            'newsletter-bundle',
+        );
+
+        $dummyImage = self::projectDirectory().'/core-bundle/tests/Fixtures/images/dummy.jpg';
+
+        $recipe = InstallationRecipe::create($composer)
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
+            ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
+            ->withConfigFile(self::configDirectory().'/security.yaml')
+            ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
+        ;
+
+        return ManagedEditionConfig::create($recipe, self::projectDirectory())
+            ->withDcaFile(self::customDcaDirectory().'/'.self::DCA_CONTENT)
+        ;
+    }
+
+    private static function fixtureDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Backend';
+    }
+
+    private static function customDcaDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Dca';
+    }
+
+    private static function configDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Config';
+    }
+
+    /**
+     * Synchronizes a mapped file into tl_files and returns its UUID.
+     */
+    private function registerDummyImage(string $path = self::DUMMY_IMAGE): Uuid
+    {
+        self::managedEdition()->synchronizeFiles($path);
+
+        $uuid = self::managedEdition()
+            ->database()
+            ->connection()
+            ->fetchOne('SELECT uuid FROM tl_files WHERE path = ?', [$path])
+        ;
+
+        if (!\is_string($uuid)) {
+            throw new \LogicException(\sprintf('Could not find the synchronized file "%s".', $path));
+        }
+
+        return Uuid::fromBinary($uuid);
+    }
+
+    private function login(string $userFixture = 'kevin_jones', BrowserOptions|null $options = null): BackendBrowser
+    {
+        $username = self::managedEdition()->database()->fixtures()->value($userFixture, 'username');
+
+        $backend = self::managedEdition()->createBackendBrowser(options: $options);
+        $backend->loginOrReuseSessionAs(
+            $username,
+            self::backendPassword($userFixture),
+            fn (BackendBrowser $browser) => $this->assertBackendLogin($browser, $username),
+        );
+
+        return $backend;
+    }
+
+    private function assertBackendLogin(BackendBrowser $backend, string $username): void
+    {
+        $backend->waitFor('h1');
+
+        $this->assertSelectorTextContains('h1', 'Dashboard');
+
+        $cookies = $backend->browser()->context()->cookies();
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => 'PHPSESSID' === $cookie['name'],
+        ));
+
+        $this->assertNotEmpty(array_filter(
+            $cookies,
+            static fn (array $cookie) => str_ends_with($cookie['name'], 'contao_csrf_token'),
+        ));
+
+        $this->assertSelectorTextContains('#tmenu', $username);
+    }
+
+    /**
+     * Logs in and opens the content elements of the given article fixture.
+     *
+     * @return array{BackendBrowser, string}
+     */
+    private function openArticle(FixtureResult $fixtures, string $articleFixture): array
+    {
+        $backend = $this->login();
+
+        $articleUrl = $fixtures->interpolate('/contao?do=article&table=tl_content&id={'.$articleFixture.'}');
+        $backend->visit($articleUrl);
+
+        return [$backend, $articleUrl];
+    }
+
+    /**
+     * Puts a record into the clipboard via its operations menu (Move or Copy).
+     */
+    private function clipboard(BackendBrowser $backend, string $record, string $operation): void
+    {
+        $backend->clickButton($record.' [data-contao--operations-menu-target="controller"]');
+        $backend->waitFor('.operations-menu.show');
+        $backend->waitForNavigation(static fn () => $backend->clickButton(\sprintf('.operations-menu.show button[title^="%s content element"]', $operation)));
+    }
+
+    /**
+     * Asserts whether an enabled paste button (PASTE_AFTER or PASTE_INTO) exists in
+     * the given container. Paste at the top uses the PASTE_AFTER icon.
+     */
+    private function assertPasteButton(BackendBrowser $backend, string $container, string $icon, bool $enabled): void
+    {
+        $this->assertSame($enabled, $backend->page()->locator(\sprintf('%s button img[src*="/%s."]', $container, $icon))->count() > 0);
+    }
+
+    private function createElementGroup(BackendBrowser $backend): void
+    {
+        $backend->submitNew();
+        $backend->submitAction('Paste at the top');
+
+        // Changing the type auto-submits the form so we wait until the text palette is gone
+        $backend->select('type', 'element_group');
+        $backend->page()->locator('textarea[name="text"]')->waitFor(['state' => 'detached']);
+        $backend->submitForm('Save and close');
+
+        $this->assertSelectorTextContains('.cte_type', 'Element group');
+    }
+
+    private function createTextElement(BackendBrowser $backend, string $text = 'Lorem ipsum'): void
+    {
+        $backend->submitNew();
+        $backend->submitAction('Paste at the top');
+        $backend->waitFor('textarea[name="text"]');
+        $backend->fillRichText('text', $text);
+        $backend->submitForm('Save and close');
+    }
+}

@@ -313,14 +313,6 @@
         <source>Generates a login form</source>
         <target>genera un modulo di login</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>Logout automatico</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>Disconnetti automaticamente un membro</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Dati personali</target>

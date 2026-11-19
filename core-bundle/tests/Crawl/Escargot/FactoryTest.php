@@ -285,7 +285,11 @@ class FactoryTest extends TestCase
             $this->assertStringStartsNotWith('auth_', (string) $key);
         }
 
-        foreach (array_keys($options['headers']) as $header) {
+        foreach ($options['headers'] as $header => $value) {
+            if (\is_int($header)) {
+                $header = explode(':', (string) $value, 2)[0];
+            }
+
             $this->assertNotContains(
                 strtolower((string) $header),
                 ['authorization', 'cookie'],
@@ -307,11 +311,15 @@ class FactoryTest extends TestCase
 
         yield 'authorization (uppercase)' => [['headers' => ['AUTHORIZATION' => 'Bearer token']]];
 
+        yield 'authorization (raw)' => [['headers' => ['Authorization: Bearer token']]];
+
         yield 'session cookie' => [['headers' => ['Cookie' => 'Confidential']]];
 
         yield 'session cookie (lowercase)' => [['headers' => ['cookie' => 'Confidential']]];
 
         yield 'session cookie (uppercase)' => [['headers' => ['COOKIE' => 'Confidential']]];
+
+        yield 'session cookie (raw)' => [['headers' => ['Cookie: Confidential']]];
 
         yield 'strips only confidential options' => [
             [

@@ -52,8 +52,8 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 /*
  * Attributes based on the safe default configuration from the HTML
  * specification with the following modifications:
- * - added for all elements: data-*,id,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
- * - added for the <a> element: rel,target,download,referrerpolicy
+ * - added for all elements: data-lightbox,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
+ * - added for the <a> element: rel,target
  * - added for the <table> element: border,cellspacing,cellpadding,width,height
  * - added for the <td> and <th> element: width,height
  * - added elements: img, map, area, video, audio, source, style, details
@@ -61,11 +61,11 @@ $GLOBALS['TL_CONFIG']['allowedTags']
  * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#built-in-safe-default-configuration
  */
 $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
-	array('key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
-	array('key' => 'a', 'value' => 'href,hreflang,type,rel,target,download,referrerpolicy'),
-	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'),
+	array('key' => '*', 'value' => 'data-lightbox,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
+	array('key' => 'a', 'value' => 'href,hreflang,type,rel,target'),
+	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap'),
 	array('key' => 'map', 'value' => 'name'),
-	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'),
+	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target'),
 	array('key' => 'video', 'value' => 'src,crossorigin,width,height,autoplay,controls,controlslist,loop,muted,poster,preload,playsinline'),
 	array('key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'),
 	array('key' => 'source', 'value' => 'src,srcset,media,sizes,type'),

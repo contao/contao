@@ -1780,6 +1780,7 @@ window.Backend =
 		var fallbackUrl = options.url,
 			dzElement = new Element('div', {
 				'class': 'dropzone dropzone-filetree',
+				'data-turbo-temporary': '',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;
