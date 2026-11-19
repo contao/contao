@@ -120,6 +120,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'email_url':
+                        trigger_deprecation('contao/core-bundle', '6.0', 'Using the email_url insert tag to encode the email address is deprecated and will no longer work in Contao 7.');
                         $result = $strEmail;
                         break;
                 }
